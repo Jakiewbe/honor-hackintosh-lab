@@ -10,7 +10,7 @@ R14C0既有接口/许可/配置闭包仍blocked，不进入native/kext。
 ## 已完成工作
 SaSsdt与SSDT9在PEG1.PEGP重复_S0W已定位；PEG0/GFX0方法体结论不变。
 35项findings；12个跨表条目明确复核边界；方法参数仅文本对照。
-36表哈希/长度/checksum一致；原调查目录不改；日志环境路径规范化。
+36表哈希/长度/checksum一致；离线52通过0失败；原调查目录不改，环境路径扫描0命中。
 OpRegion/VBT内容仍未取得，MUX无法判断；没有AML执行或硬件操作。
 
 ## 当前阻塞
@@ -19,7 +19,7 @@ OpRegion/VBT内容仍未取得，MUX无法判断；没有AML执行或硬件操�
 
 ## 下一步动作
 仍为R1.4-C0 T0→T4；T2复用平台声明，补真实ACPI evaluator和ASLS映射/内容合同。
-用户已授权本研究分支推送和草稿PR；不合并、不触发Actions、不强推。
+研究分支已推送；草稿PR #2已开到main：https://github.com/Jakiewbe/honor-hackintosh-lab/pull/2。未合并、未触发Actions、未强推。
 
 ## 状态修订
 以state.json/tasks.json为准，写入前status；验证细节见verification.json。

@@ -3,17 +3,17 @@
   "kit_version": "1.2.0",
   "project_id": "f6a08808-ada4-48fe-b2ad-82c0c827154b",
   "name": "HONOR Hackintosh Lab",
-  "revision": 19,
+  "revision": 20,
   "task_revision": 10,
   "current_task_revision": 10,
   "goal_version": 2,
   "goal_approved": true,
-  "updated_at": "2026-10-12T16:02:30.278553+00:00",
+  "updated_at": "2026-10-12T16:08:52.298582+00:00",
   "snapshot_keep": 20,
   "log_max_bytes": 65536,
   "hashes": {
     "GOAL.md": "75e971a616ff73ca8bb457c3089308f5f1a5fefdf8a95e36ebcd29828fa7af7e",
-    "CURRENT.md": "a5d0db282d0008be4cef5b72cd57efab33b68c935fcd31b58605772b74c252b0",
+    "CURRENT.md": "fa8e3908c4e7ff458c5b110ebaa3f31a0b9ed06c2ff4d27e606d912fe3bb58df",
     "DECISIONS.md": "a8ef5b38c12681ce49c9741cfb2849f845306ae80a18f87dbc1a6b7e806bcab8",
     "LESSONS.md": "b92fda952e78bc49e72c5f314136ff04c841c180308154389135b3adefe18538",
     "tasks.json": "10b9d7b31ce1fd18b211e898a7b0b2a186c57395167eb34b29d5309f05b758c1"
@@ -204,6 +204,20 @@
       "action": "state:update",
       "reason": "用户授权本轮修订、推送与PR，保留解析及运行阻塞",
       "timestamp": "2026-10-12T16:02:30.278553+00:00"
+    },
+    {
+      "action": "document-version",
+      "file": "CURRENT.md",
+      "previous_sha256": "a5d0db282d0008be4cef5b72cd57efab33b68c935fcd31b58605772b74c252b0",
+      "content": "# 当前断点\n\n## 当前阶段\nR1.4-C0-pre SOURCE-STATIC修订；-e全外部表逐表解析失败，RUNTIME_NO_GO。\n\n## 当前任务\nR14C0PRE保留blocked；同一iasl20250404 -e其余15表-d目标，0通过16失败。\nR14C0既有接口/许可/配置闭包仍blocked，不进入native/kext。\n\n## 已完成工作\nSaSsdt与SSDT9在PEG1.PEGP重复_S0W已定位；PEG0/GFX0方法体结论不变。\n35项findings；12个跨表条目明确复核边界；方法参数仅文本对照。\n36表哈希/长度/checksum一致；离线52通过0失败；原调查目录不改，环境路径扫描0命中。\nOpRegion/VBT内容仍未取得，MUX无法判断；没有AML执行或硬件操作。\n\n## 当前阻塞\n全外部引用解析失败；NVS运行值、EDMX绑定、ASLB初始化者未知。\n完整源/许可/实际配置与XNU合同仍未闭合；没有驱动/实机/恢复证据。\n\n## 下一步动作\n仍为R1.4-C0 T0→T4；T2复用平台声明，补真实ACPI evaluator和ASLS映射/内容合同。\n研究分支已推送；草稿PR #2已开到main：https://github.com/Jakiewbe/honor-hackintosh-lab/pull/2。未合并、未触发Actions、未强推。\n\n## 状态修订\n以state.json/tasks.json为准，写入前status；验证细节见verification.json。\n\n## Git 检查\n从563e69e在用户授权分支research/acpi-static-external-review继续，保留main历史。\n原调查目录/旧实验/workflows不改；本次解析容器已删除。\n",
+      "user_approved": false,
+      "timestamp": "2026-10-12T16:08:52.288159+00:00"
+    },
+    {
+      "revision": 20,
+      "action": "state:update",
+      "reason": "记录修订a3e7f7b已推送及草稿PR2创建，52离线检查通过，解析仍失败",
+      "timestamp": "2026-10-12T16:08:52.298582+00:00"
     }
   ]
 }
