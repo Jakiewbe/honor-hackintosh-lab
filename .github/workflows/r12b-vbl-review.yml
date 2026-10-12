@@ -1,0 +1,167 @@
+name: HONOR R1.2-B VBL candidate qualification
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: honor-r12b-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  vbl-review-only:
+    runs-on: macos-15-intel
+    timeout-minutes: 18
+    env:
+      NULLMOTH_COMMIT: 0960b2ef5dbc4a573056d4c8e042a5bd2e15d651
+    steps:
+      - name: Checkout research patch and test scripts
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Verify Intel macOS Xcode 16
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$(uname -m)" == x86_64 ]] || { echo 'BLOCKED: not Intel macOS'; exit 2; }
+          version="$(xcodebuild -version)"
+          if [[ "$version" != "Xcode 16."* ]]; then
+            found=''
+            for app in /Applications/Xcode_16*.app; do
+              if [[ -d "$app/Contents/Developer" ]]; then
+                found="$app/Contents/Developer"
+                break
+              fi
+            done
+            [[ -n "$found" ]] || { echo 'BLOCKED: Xcode 16 not available'; exit 2; }
+            echo "DEVELOPER_DIR=$found" >> "$GITHUB_ENV"
+          fi
+
+      - name: Fetch and verify exact NullMoth source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/r12b-logs"
+          src="$RUNNER_TEMP/r12b-upstream"
+          git init -q "$src"
+          git -C "$src" remote add origin https://github.com/nullmoth/nvidia-macos-driver.git
+          git -C "$src" fetch --no-tags --depth 1 origin "$NULLMOTH_COMMIT"
+          git -C "$src" checkout --detach -q FETCH_HEAD
+          [[ "$(git -C "$src" rev-parse HEAD)" == "$NULLMOTH_COMMIT" ]]
+          python3 scripts/verify_pinned_source.py --repo "$src" | tee "$RUNNER_TEMP/r12b-logs/source-integrity.json"
+          echo 'R12B_ORIGINAL_TREE_VERIFIED'
+
+      - name: Apply R1.1 and R1.2-B review patches in order
+        shell: bash
+        run: |
+          set -euo pipefail
+          src="$RUNNER_TEMP/r12b-upstream"
+          log="$RUNNER_TEMP/r12b-logs"
+          r11="$GITHUB_WORKSPACE/patches/r11_scanout_bounds_and_mmio.patch"
+          r12="$GITHUB_WORKSPACE/patches/r12b_vbl_workloop_gate.patch"
+          git -C "$src" apply --check "$r11"
+          git -C "$src" apply "$r11"
+          git -C "$src" apply --check "$r12"
+          git -C "$src" apply "$r12"
+          git -C "$src" diff --check
+          git -C "$src" diff --name-only | LC_ALL=C sort > "$log/changed.txt"
+          printf '%s\n' kexts/NMIntelFB/intelfb.cpp kexts/NVRM/accel/nvrm-accel.cpp | LC_ALL=C sort > "$log/expected.txt"
+          diff -u "$log/expected.txt" "$log/changed.txt"
+          git -C "$src" apply --reverse --check "$r12"
+          git -C "$src" diff --stat | tee "$log/patch-stat.txt"
+          echo 'R12B_STACKED_PATCHES_APPLIED_AND_REVERSIBLE'
+
+      - name: Run offline models and post-apply source invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          log="$RUNNER_TEMP/r12b-logs"
+          src="$RUNNER_TEMP/r12b-upstream"
+          python3 tests/test_r10_bounds_model.py > "$log/r10-bounds-model.txt" 2>&1 || {
+            cat "$log/r10-bounds-model.txt"; exit 2;
+          }
+          python3 tests/test_r12_vbl_lifecycle_model.py > "$log/r12-vbl-model.txt" 2>&1 || {
+            cat "$log/r12-vbl-model.txt"; exit 2;
+          }
+          cat "$log/r10-bounds-model.txt" "$log/r12-vbl-model.txt"
+          python3 tests/test_r11_patch_contract.py --source "$src" | tee "$log/r11-guards.json"
+          python3 tests/test_r12b_patch_guards.py --source "$src" | tee "$log/r12b-guards.json"
+          echo 'R12B_MODEL_AND_SOURCE_GATES_PASS (not a kernel runtime proof)'
+
+      - name: Compile and link changed NMIntelFB against the macOS kernel SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          src="$RUNNER_TEMP/r12b-upstream/kexts/NMIntelFB"
+          log="$RUNNER_TEMP/r12b-logs"
+          out="$RUNNER_TEMP/r12b-binaries"
+          sdk="$(xcrun --sdk macosx --show-sdk-path)"
+          headers="$sdk/System/Library/Frameworks/Kernel.framework/Headers"
+          [[ -d "$headers/IOKit" ]] || { echo 'BLOCKED: no Kernel.framework headers'; exit 2; }
+          mkdir -p "$out"
+          {
+            xcodebuild -version
+            printf 'SDK=%s\n' "$sdk"
+            echo 'macOS deployment target=15.5, arch=x86_64'
+          } | tee "$log/toolchain.txt"
+          plutil -lint "$src/Info.plist" | tee "$log/plist.txt"
+          xcrun clang++ -arch x86_64 -mmacosx-version-min=15.5 \
+            -fapple-kext -mkernel -nostdinc \
+            -I "$headers" -I "$src" \
+            -DKERNEL -DKERNEL_PRIVATE -DDRIVER_PRIVATE -DAPPLE -DNeXT \
+            -std=c++17 -fno-rtti -fno-exceptions -fno-builtin -fno-common \
+            -Wall -Wno-unused-parameter -Wno-inconsistent-missing-override -O2 \
+            -c "$src/intelfb.cpp" -o "$out/intelfb.o" > "$log/compile.txt" 2>&1 || {
+              cat "$log/compile.txt"
+              echo 'R12B_NATIVE_COMPILE_FAILED'
+              exit 2
+            }
+          xcrun clang++ -arch x86_64 -mmacosx-version-min=15.5 \
+            -fapple-kext -nostdlib -Xlinker -kext \
+            -lkmodc++ -lkmod -lcc_kext "$out/intelfb.o" \
+            -o "$out/NMIntelFB" > "$log/link.txt" 2>&1 || {
+              cat "$log/link.txt"
+              echo 'R12B_NATIVE_LINK_FAILED'
+              exit 2
+            }
+          cat "$log/compile.txt" "$log/link.txt"
+          file "$out/NMIntelFB" | tee "$log/file.txt"
+          grep -q 'Mach-O 64-bit kext bundle x86_64' "$log/file.txt"
+          xcrun nm -u "$out/NMIntelFB" > "$log/undefined-imports.txt" || true
+          echo 'R12B_PATCHED_INTELFB_NATIVE_BUILD_PASS (not loaded or deployable)'
+
+      - name: Record R1.2-B unresolved safety blockers
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/r12b-logs"
+          {
+            echo 'R1.2-B is a RESEARCH-ONLY patch.'
+            echo 'Still UNPROVEN: callback-reentrant IOFramebuffer::stop, workloop/timer teardown ownership, concurrent external service termination and callback target ref stability.'
+            echo 'Still UNPROVEN: NVAccel compilation, Intel panel hardware startup and NVIDIA Ampere Metal.'
+            echo 'No kext was signed, installed, loaded or uploaded.'
+          } > "$RUNNER_TEMP/r12b-logs/safety-limitations.txt"
+
+      - name: Upload diagnostic text files only
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: honor-r12b-review-diagnostics
+          path: ${{ runner.temp }}/r12b-logs/
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Summary
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          {
+            echo '## R1.2-B — VBL lifecycle candidate (static review only)'
+            echo '- Uses pinned NullMoth 0960b2ef + stacked R1.1 and R1.2-B patches.'
+            echo '- Model and source guards do not establish XNU concurrency safety.'
+            echo '- Only modified NMIntelFB is compiled; NVAccel full build remains unavailable.'
+            echo '- Never install or load the output on the HONOR primary Windows laptop.'
+          } >> "$GITHUB_STEP_SUMMARY"
