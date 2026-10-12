@@ -1,12 +1,15 @@
 # 02｜当前事实、阻塞与决策（Codex 最新状态）
 
-**汇总时点：2026-10-12；研究最新里程碑：R1.4-B 批判性设计审查。**
+**汇总时点：2026-10-12；最新里程碑：R1.4-C0 首轮源码/接口基线，完整闭包未验收。**
 
-**主状态：`OWN_INTEL_SCANOUT_PORT_DESIGNED / SOURCE_CLOSURE_PENDING / NO_INDEPENDENT_DRIVER_BUILD / NO_HARDWARE_RUNTIME / RUNTIME_NO_GO`。**
+**主状态：`R14C0_SOURCE_SLICE_RECORDED / FREEBSD_BASE_CANDIDATE_PINNED / DEPENDENCY_CLOSURE_BLOCKED / NO_INDEPENDENT_DRIVER_BUILD / NO_HARDWARE_RUNTIME / RUNTIME_NO_GO`。**
 
 > 这份文件是“现在怎么样”的**单一入口**。历史报告记录当时的事实，不因后来发生新判断而回写成“当时已经知道”。下一阶段完成后必须同步更新此文件。
 
 ## 现在已经确定的事情
+
+- [R1.4-C0](../docs/R1.4-C0_独立i915源码与接口依赖基线.md)：按固定上游测试矩阵解析 FreeBSD `release/14.3.0` 为候选 `8c9ce319fef765890ce518cab85d3a470b669849`；156 条源码/头文件/配置/许可文本锁，92 定义/79 源码关系。新增离线测试 **25 通过、0 失败**；完整闭包门禁**退出 2，拒绝放行**，没有 native/ABI/硬件成功。
+- base PM 空成功、GT/uc 完整 probe 依赖和 ADL-P plane 回调已定位；DMC 缺 payload 时上游保留电源引用。14 类必需 XNU 协议未实现，见 [接口合同](../research/independent-i915/required-apis.md)。
 
 - 荣耀 GLO-FX6P、Intel 12500H、Intel 46A6、RTX 2050 25A9 的真实硬件身份与**当前内屏连接 Intel** 已确认；不能按 RTX 3050 或内屏归属未知开展新研究。
 - `NMIntelFB` 曾经在 GitHub `macos-15-intel` Runner 上完成 **x86_64 real + virtual 两种分支原生编译和 kext 静态链接**，R1.2-C 正式 [Actions #38205791450](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38205791450)。这是**旧候选的 BUILD-PASS**，不是我们的自主 Intel-only kext。
@@ -21,7 +24,7 @@
 
 | Gate | 现在缺什么 | 不应如何“解决” |
 |---|---|---|
-| **P0-SOURCE** | 自主 FreeBSD base/LinuxKPI SHA 未选择；6.1 候选 KMS→DRM→XNU 真实调用/对象依赖和许可证未闭合 | 不简单照搬 NullMoth 的开发者私有路径；不混用 master 6.14 当作 6.1 |
+| **P0-SOURCE** | base 候选已固定；生成配置/传递 includes/对象依赖未闭合，12 条本文件内许可证明缺失，组合许可未审完 | 不把测试矩阵当运行成功；不把源码 slice 当完整闭包 |
 | **P0-ABI** | XNU 与 LinuxKPI 的锁、中断、内存/PM/DMA、IOKit 资源协议尚未通过可执行的等价性验证 | 不用 `return 0` Stub 伪造供电/固件/映射成功 |
 | **P0-SCANOUT** | eDP VBT、AUX、CDCLK/Power Well/PLL/PHY、GGTT backing、真实 plane pitch/format、IOFramebuffer 扫描输出未证明 | 不假定 Stolen base = GGTT 0 = Framebuffer；不直接写未知物理/PCI 寄存器 |
 | **P0-PLATFORM** | Intel 12500H P/E 混合核与 macOS 内核/ACPI/启动可靠性未独立验收 | 不把 GPU 构建通过当整机能启动 |
@@ -31,7 +34,7 @@
 
 ## 正在做什么／马上做什么
 
-**下一项唯一合理的自研交接任务：R1.4-C0（也可以延续命名 R1.4-B/B0）——独立版本对齐与最小依赖调用图。** 先固定兼容 FreeBSD base/LinuxKPI commit，创建源码 manifest / license manifest / C ABI contracts 和精确的 **46A6 PCI → i915 probe → VBT/OpRegion → power/clock → eDP AUX/KMS → GGTT/plane → XNU IOFramebuffer** 调用图；对每一条缺失符号作明确阻塞，只有输入闭合才能规划原生编译。
+**下一任务 R1.4-C0.1：固定 FreeBSD 14.3 生成头文件/配置及 include 次序，补齐 PCI→probe→Power Well 最小 slice 的直接/传递提供者和许可，制定 XNU 电源状态/所有权/失败清理合同。** 完整闭包和必要接口关闭前，不进入 native 编译或 kext 原型。
 
 **本知识库/AGENTS.md 的提交只是一项“移交文档”完成，并不推进 kernel 驱动运行等级。**
 

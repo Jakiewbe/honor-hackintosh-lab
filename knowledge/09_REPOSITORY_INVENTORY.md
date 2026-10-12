@@ -77,4 +77,6 @@
 
 ## 仓库新增交接资产
 
+R1.4-C0 新增：`research/independent-i915/` 中 source lock、license/symbol/include inventories、callgraph/edges、API contracts、compat/delta、provenance 与实际 verification；`scripts/r14c0_fetch_locked_sources.py`（公开文本源取得，与离线校验分离）、`scripts/r14c0_validate_dependency_baseline.py`、`tests/test_r14c0_dependency_gate.py`、[正式首轮报告](../docs/R1.4-C0_独立i915源码与接口依赖基线.md)。第三方代码仅忽略缓存，未提交；治理状态新增 `.agent/`。
+
 根目录 [`AGENTS.md`](../AGENTS.md)，`knowledge/00–11` 汇总和决策文件。新的研发工作在 `research/independent-i915/` 下以可核对的 manifest 和调用图为起点；另有 [11 早期 1401/OpenCore 调查及引文纠错](11_EARLY_RESEARCH_AND_1401.md)。首次实现需按 [10](10_CODEX_HANDOFF.md) 的验收工作，不是再复制一批旧模型。

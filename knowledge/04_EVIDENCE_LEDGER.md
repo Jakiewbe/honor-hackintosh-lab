@@ -19,6 +19,8 @@
 
 ## 仅静态/离线而非正式云端硬件测试
 
+- [R1.4-C0 首轮](../docs/R1.4-C0_独立i915源码与接口依赖基线.md)：Windows/Python 3.11，156 条固定公开文本源记录，92 定义/79 关系；结构核验通过；新增负向测试 **25 通过、0 失败**。完整闭包门禁 **退出 2、拒绝放行**。实际 [命令/输出](../research/independent-i915/verification.json)。仅 SOURCE-STATIC，无 Actions/native/kext/hardware。
+
 - [R1.3-A](../docs/R1.3-A_IntelXe46A6显示输出双路线源码核验.md)：直接核对 7 份固定 NullMoth Git blob 和 18/18 源码结构条件；`scripts/r13a_intel_scanout_source_audit.py` 已提交，**没有标为 CI PASS**。
 - [R1.2-D/E/G](../docs/R1.2-G_VBL门锁外派发与生命周期审查.md)：锁序/状态机是参考模型，不能模拟真实的 Apple 内核锁、对象析构或 GPU 中断。
 - [R1.4-B](../docs/R1.4-B_方案批判性审查与独立源码基准.md)：Linux/FreeBSD 候选源码已核实接口位置，**没有**自己的 Intel-only native object、完整 kext 或实物测试。

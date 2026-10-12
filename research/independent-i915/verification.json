@@ -1,0 +1,78 @@
+{
+  "date": "2026-10-12",
+  "level": "SOURCE-STATIC",
+  "platform": "Windows",
+  "python_version": "3.11.5",
+  "baseline_git_commit": "6105f08842de41732a61036507d725fa1a5a9941",
+  "tests_passed": 25,
+  "tests_failed": 0,
+  "new_workflows": 0,
+  "workflows_triggered": 0,
+  "objects_compiled": 0,
+  "kernel_extensions_loaded": 0,
+  "runtime_decision": "RUNTIME_NO_GO",
+  "runs": [
+    {
+      "name": "locked_source_cache",
+      "command": [
+        "Python 3.11",
+        "-X",
+        "utf8",
+        "scripts/r14c0_fetch_locked_sources.py"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "stdout": "{\"locked_text_files\": 156, \"compiled\": 0, \"executed_upstream\": 0}\n",
+      "stderr": ""
+    },
+    {
+      "name": "structure",
+      "command": [
+        "Python 3.11",
+        "-X",
+        "utf8",
+        "scripts/r14c0_validate_dependency_baseline.py",
+        "--mode",
+        "structure"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "stdout": "{\n  \"structure\": \"PASS\",\n  \"files\": 156,\n  \"symbols\": 92,\n  \"edges\": 79,\n  \"objects_compiled\": 0,\n  \"closure\": \"BLOCKED\",\n  \"upstream_pm_empty_success_observed\": true,\n  \"blockers\": [\n    \"TRANSITIVE_INCLUDE_AND_LINK_CLOSURE_INCOMPLETE\",\n    \"XNU_REQUIRED_APIS_NOT_IMPLEMENTED\",\n    \"FREEBSD_PAIR_BUILD_ABI_NOT_VALIDATED\",\n    \"GENERATED_HEADERS_CONFIG_TOOLCHAIN_UNPINNED\",\n    \"FIRMWARE_BYTES_AND_LICENSE_UNPINNED\",\n    \"COMBINED_DISTRIBUTION_LICENSE_REVIEW_BLOCKED\",\n    \"IOFRAMEBUFFER_BRIDGE_NOT_IMPLEMENTED\",\n    \"NO_TARGET_RUNTIME_OR_ISOLATED_RECOVERY_EVIDENCE\",\n    \"LICENSE:drm-kmod/.github/workflows/test.yaml\",\n    \"LICENSE:drm-kmod/Makefile\",\n    \"LICENSE:drm-kmod/README.md\",\n    \"LICENSE:drm-kmod/compiler_flags.mk\",\n    \"LICENSE:drm-kmod/dmabuf/Makefile\",\n    \"LICENSE:drm-kmod/drivers/gpu/drm/i915/intel_freebsd.c\",\n    \"LICENSE:drm-kmod/drm/Makefile\",\n    \"LICENSE:drm-kmod/i915/Makefile\",\n    \"LICENSE:drm-kmod/kconfig.mk\",\n    \"LICENSE:drm-kmod/linuxkpi_version.mk\",\n    \"LICENSE:drm-kmod/ttm/Makefile\",\n    \"LICENSE:freebsd-src/sys/compat/linuxkpi/dummy/include/uapi/linux/sched/types.h\",\n    \"API:PCI_MMIO_OWNERSHIP\",\n    \"API:POWER_RUNTIME_PM\",\n    \"API:LOCKS_ATOMICS\",\n    \"API:WORKQUEUE_DRAIN\",\n    \"API:IRQ_VBL_AUX_WAKE\",\n    \"API:DMA_GEM_GGTT\",\n    \"API:CPU_FB_MAPPING\",\n    \"API:ACPI_VBT_EDID\",\n    \"API:FIRMWARE_DMC\",\n    \"API:DISPLAY_CLOCK_PLL_PPS\",\n    \"API:AUX_LINK_TRAINING\",\n    \"API:DRM_ATOMIC_FENCE\",\n    \"API:IOFRAMEBUFFER_BRIDGE\",\n    \"API:GT_NOT_YET_REMOVABLE\"\n  ],\n  \"runtime_decision\": \"RUNTIME_NO_GO\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "name": "closure",
+      "command": [
+        "Python 3.11",
+        "-X",
+        "utf8",
+        "scripts/r14c0_validate_dependency_baseline.py",
+        "--mode",
+        "closure"
+      ],
+      "exit_code": 2,
+      "expected_exit_code": 2,
+      "stdout": "{\n  \"structure\": \"PASS\",\n  \"files\": 156,\n  \"symbols\": 92,\n  \"edges\": 79,\n  \"objects_compiled\": 0,\n  \"closure\": \"BLOCKED\",\n  \"upstream_pm_empty_success_observed\": true,\n  \"blockers\": [\n    \"TRANSITIVE_INCLUDE_AND_LINK_CLOSURE_INCOMPLETE\",\n    \"XNU_REQUIRED_APIS_NOT_IMPLEMENTED\",\n    \"FREEBSD_PAIR_BUILD_ABI_NOT_VALIDATED\",\n    \"GENERATED_HEADERS_CONFIG_TOOLCHAIN_UNPINNED\",\n    \"FIRMWARE_BYTES_AND_LICENSE_UNPINNED\",\n    \"COMBINED_DISTRIBUTION_LICENSE_REVIEW_BLOCKED\",\n    \"IOFRAMEBUFFER_BRIDGE_NOT_IMPLEMENTED\",\n    \"NO_TARGET_RUNTIME_OR_ISOLATED_RECOVERY_EVIDENCE\",\n    \"LICENSE:drm-kmod/.github/workflows/test.yaml\",\n    \"LICENSE:drm-kmod/Makefile\",\n    \"LICENSE:drm-kmod/README.md\",\n    \"LICENSE:drm-kmod/compiler_flags.mk\",\n    \"LICENSE:drm-kmod/dmabuf/Makefile\",\n    \"LICENSE:drm-kmod/drivers/gpu/drm/i915/intel_freebsd.c\",\n    \"LICENSE:drm-kmod/drm/Makefile\",\n    \"LICENSE:drm-kmod/i915/Makefile\",\n    \"LICENSE:drm-kmod/kconfig.mk\",\n    \"LICENSE:drm-kmod/linuxkpi_version.mk\",\n    \"LICENSE:drm-kmod/ttm/Makefile\",\n    \"LICENSE:freebsd-src/sys/compat/linuxkpi/dummy/include/uapi/linux/sched/types.h\",\n    \"API:PCI_MMIO_OWNERSHIP\",\n    \"API:POWER_RUNTIME_PM\",\n    \"API:LOCKS_ATOMICS\",\n    \"API:WORKQUEUE_DRAIN\",\n    \"API:IRQ_VBL_AUX_WAKE\",\n    \"API:DMA_GEM_GGTT\",\n    \"API:CPU_FB_MAPPING\",\n    \"API:ACPI_VBT_EDID\",\n    \"API:FIRMWARE_DMC\",\n    \"API:DISPLAY_CLOCK_PLL_PPS\",\n    \"API:AUX_LINK_TRAINING\",\n    \"API:DRM_ATOMIC_FENCE\",\n    \"API:IOFRAMEBUFFER_BRIDGE\",\n    \"API:GT_NOT_YET_REMOVABLE\"\n  ],\n  \"runtime_decision\": \"RUNTIME_NO_GO\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "name": "negative_tests",
+      "command": [
+        "Python 3.11",
+        "-X",
+        "utf8",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_r14c0_dependency_gate.py"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "stdout": "",
+      "stderr": ".........................\n----------------------------------------------------------------------\nRan 25 tests in 5.833s\n\nOK\n"
+    }
+  ]
+}

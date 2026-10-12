@@ -4,13 +4,15 @@
 >
 > **最新策略：自主 Intel `8086:46A6` 内屏 L1 研究；FreeBSD/Linux 6.1 同系列源码仅为候选；自主驱动未进行 native build 或实机运行；`RUNTIME_NO_GO`。** 已确认内屏在 Windows 连接 Intel 核显、独显实测为 RTX 2050 `10DE:25A9`（非 3050）。**不得触碰主力 Windows、EFI、BIOS、磁盘、安全设置，不得加载/签名 kext；不得代用户启动 Actions。**
 
+> **R1.4-C0 首轮新增：** FreeBSD 14.3.0 base 候选已固定为 `8c9ce319fef765890ce518cab85d3a470b669849`；156 条文本源锁、92 函数定义、79 条源码关系；新增离线测试 **25 通过、0 失败**。**完整依赖闭包仍 BLOCKED，禁止进入编译/部署**。见 [正式报告](docs/R1.4-C0_独立i915源码与接口依赖基线.md) 与 [工程入口](research/independent-i915/README.md)。
+
 ## Codex 交接与研发知识库
 
 - **[项目目标与愿景](knowledge/00_PROJECT_CHARTER.md)** · **[硬件档案](knowledge/01_HARDWARE_BASELINE.md)** · **[当前状态](knowledge/02_CURRENT_STATE.md)** · **[首个开发任务包](knowledge/10_CODEX_HANDOFF.md)**
 - **[全部研究历史](knowledge/03_RESEARCH_HISTORY.md)** · **[真实 CI/证据账本](knowledge/04_EVIDENCE_LEDGER.md)** · **[外部源码版本锁定](knowledge/05_SOURCE_LOCKS.md)**
 - **[架构与风险](knowledge/06_ARCHITECTURE_AND_RISKS.md)** · **[决策日志](knowledge/07_DECISIONS.md)** · **[自主开发路线](knowledge/08_ENGINEERING_ROADMAP.md)** · **[原有文件完整索引](knowledge/09_REPOSITORY_INVENTORY.md)** · **[1401/OpenCore 早期调查与纠错](knowledge/11_EARLY_RESEARCH_AND_1401.md)**
 
-**Codex 的第一件事**：不是编译全套 kext，也不是重跑 VBL；而是为独立 Intel-only i915 研究选择 FreeBSD base/LinuxKPI 的可核对 commit，建立 46A6 PCI/eDP/GGTT→IOFramebuffer 的**源文件/符号/许可证/接口依赖闭包**。详细验收和禁止事项见 [10_CODEX_HANDOFF.md](knowledge/10_CODEX_HANDOFF.md)。
+**Codex 下一任务 R1.4-C0.1**：固定 FreeBSD 14.3 生成配置/include 次序，补齐 PCI→probe→Power Well 的直接/传递接口与许可，制定 XNU 电源状态和资源清理合同。已有源码 slice 不等于完整闭包。详细验收与禁止事项见 [10_CODEX_HANDOFF.md](knowledge/10_CODEX_HANDOFF.md)。
 
 ---
 

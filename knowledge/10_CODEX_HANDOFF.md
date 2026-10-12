@@ -2,6 +2,10 @@
 
 **交接时点：2026-10-12。仓库主分支 main；依据 R1.4-B 审核后的方案。此文档是执行任务说明而不是“驱动已实现”。**
 
+**最新断点：** R1.4-C0 首轮台账和负向静态检查已交付，base 候选 `release/14.3.0 / 8c9ce319fef765890ce518cab85d3a470b669849` 已固定；完整 B0/B1 闭包仍 BLOCKED。下方保留原任务定义，当时“base 待查”不代表现在未取得 SHA。见 [结果](../docs/R1.4-C0_独立i915源码与接口依赖基线.md)。
+
+**Next Task R1.4-C0.1：** 固定 FreeBSD 14.3 生成头文件/配置及 include 次序，补齐 PCI→probe→Power Well 最小 slice 的直接/传递提供者与许可，制定 XNU 电源状态/所有权/失败清理合同。必要语义缺证据即停止，不直接继承 PM 空成功，不进入 B2/B3 或 kext 原型。
+
 ## 先读清楚底线
 
 1. 执行 [`AGENTS.md`](../AGENTS.md)，再读 [当前状态](02_CURRENT_STATE.md)、[目标](00_PROJECT_CHARTER.md)、[版本锁](05_SOURCE_LOCKS.md)、[技术风险](06_ARCHITECTURE_AND_RISKS.md)、[决策](07_DECISIONS.md)。
