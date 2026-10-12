@@ -24,6 +24,10 @@
 | **R1.3-C** | 固定 v1.14.2 的 `srclist.py` 缺失诊断被重定向、i915 构建失败计数不强制中止、旧对象 glob 链接风险；对已发布二进制完整性没有证明。 | [R1.3-C](../docs/R1.3-C_NMXGPU构建来源与对象完整性门禁.md) |
 | **R1.3-D** | [Actions #38217837373](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38217837373) 发布包 SHA256 一致、172 路径、1 个 NMXGPU 二进制、已知名称的源码/对象清单 0；上游 [Issue #146](https://github.com/nullmoth/nvidia-macos-driver/issues/146) 已提交。发现 `NVRMFBClaim` 广域匹配 Intel framebuffer，[Issue #119](https://github.com/nullmoth/nvidia-macos-driver/issues/119)、[PR #131](https://github.com/nullmoth/nvidia-macos-driver/pull/131)。 | [R1.3-D](../docs/R1.3-D_发行包证据入口与Intel屏幕抢占风险.md) |
 | **R1.4-A** | 不再以复现 NullMoth 预编译包为自主开发前提；自主 i915 Intel-only，先 L1 真实内屏、后 L2 Metal、最后 L3 RTX 混合渲染。 | [R1.4-A](../docs/R1.4-A_自主适配Intel46A6_技术架构与最小可行路线.md) |
-| **R1.4-B（最新）** | 第一性原理审查：拒绝 `Stolen base == GGTT 0 == 活动 scanout`、关键初始化假成功 Stub、CI=可加载；定位 Linux v6.1 / FreeBSD drm-kmod 6.1-lts **候选**，尚未做自己的驱动 native build。 | [R1.4-B](../docs/R1.4-B_方案批判性审查与独立源码基准.md) |
+| **R1.4-B** | 第一性原理审查：拒绝 `Stolen base == GGTT 0 == 活动 scanout`、关键初始化假成功 Stub、CI=可加载；定位 Linux v6.1 / FreeBSD drm-kmod 6.1-lts **候选**，尚未做自己的驱动 native build。 | [R1.4-B](../docs/R1.4-B_方案批判性审查与独立源码基准.md) |
+| **R1.4-C0 首轮** | 接管后固定 FreeBSD 14.3.0 base 候选，156 条源锁/许可、92 定义/79 关系、14 类 XNU 必需接口；25 项离线负向测试通过。完整闭包门禁退出 2；没有 native/硬件，仍 NO-GO。 | [首轮交付](../docs/R1.4-C0_独立i915源码与接口依赖基线.md) |
 
 **历史结论不需要反复跑：** R1.2-C 的旧 Intel 编译、R1.2-F/G 的 Apple 源码/模型、R1.3-D 的发布包路径索引。只有新版本、出现与旧结论冲突的新证据或新增独立可证伪假设才启动新的实验。**整个项目至今没有 Intel 46A6 的 macOS 内屏实机画面，也没有 RTX2050 Metal 运行证明。**
+
+## 2026-10-12 R1.4-C0.1
+新增BSD构建/生成输入、PCI实际提供者、电源超时不传播及XNU PM确认语义证据；21通过0失败，闭包仍拒绝。见[报告](../docs/R1.4-C0.1_PCI与电源井接口合同.md)。

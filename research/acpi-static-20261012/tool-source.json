@@ -1,0 +1,26 @@
+{
+  "package": {
+    "Package": "acpica-tools",
+    "Source": "acpica-unix",
+    "Version": "20250404-1",
+    "Installed-Size": "2649",
+    "Maintainer": "Ivan Hu <ivan.hu@canonical.com>",
+    "Architecture": "amd64",
+    "Replaces": "acpidump (<< 20100513-4), iasl (<< 20130214-0.1)",
+    "Provides": "acpidump, iasl",
+    "Depends": "libc6 (>= 2.38)",
+    "Breaks": "acpidump (<< 20100513-4), iasl (<< 20130214-0.1)",
+    "Description": "ACPICA tools for the development and debug of ACPI tables",
+    "Homepage": "https://www.acpica.org",
+    "Description-md5": "47130f63ef3687d8243fb5d20706b56e",
+    "Section": "devel",
+    "Priority": "optional",
+    "Filename": "pool/main/a/acpica-unix/acpica-tools_20250404-1_amd64.deb",
+    "Size": "865580",
+    "MD5sum": "496f3a9ff34d6c1d7a4aeaf95540a50c",
+    "SHA256": "eea598bdb5d10ae51801f7c586a51f33335c60d964f5f18203cdda47fd5ab069"
+  },
+  "download_url": "https://deb.debian.org/debian/pool/main/a/acpica-unix/acpica-tools_20250404-1_amd64.deb",
+  "metadata_url": "https://deb.debian.org/debian/dists/trixie/main/binary-amd64/Packages.xz",
+  "metadata_archive_sha256": "7778d3e3f303b7ddb8ce0fe7c8d57473a076c6bf2e8f241f75421d2396352498"
+}

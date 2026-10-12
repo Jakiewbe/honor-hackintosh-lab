@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-12",
+  "evidence": "SOURCE_STATIC",
+  "tests_pass": 21,
+  "tests_fail": 0,
+  "expected_exit_codes": [
+    0,
+    0,
+    0,
+    2
+  ],
+  "runs": [
+    {
+      "argv": [
+        "scripts/r14c0_fetch_locked_sources.py",
+        "--lock",
+        "research\\independent-i915\\c01\\source-lock.json"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"locked_text_files\": 55, \"compiled\": 0, \"executed_upstream\": 0}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "scripts/r14c01_validate_power_contract.py",
+        "--mode",
+        "structure"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"structure\": \"PASS\", \"closure\": \"BLOCKED\", \"runtime\": \"RUNTIME_NO_GO\", \"sources\": 55, \"provider_definitions\": 32, \"contracts\": 4, \"scope\": \"LEXICAL_STATIC; NOT PREPROCESSED/COMPILED/HARDWARE\"}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_r14c01_power_contract.py"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ".....................\n----------------------------------------------------------------------\nRan 21 tests in 2.787s\n\nOK\n"
+    },
+    {
+      "argv": [
+        "scripts/r14c01_validate_power_contract.py",
+        "--mode",
+        "closure"
+      ],
+      "exit_code": 2,
+      "stdout": "{\"structure\": \"PASS\", \"closure\": \"BLOCKED\", \"runtime\": \"RUNTIME_NO_GO\", \"sources\": 55, \"provider_definitions\": 32, \"contracts\": 4, \"scope\": \"LEXICAL_STATIC; NOT PREPROCESSED/COMPILED/HARDWARE\"}\n",
+      "stderr": ""
+    }
+  ],
+  "upstream_executed": false,
+  "hardware_accessed": false,
+  "actions_triggered": false,
+  "runtime": "RUNTIME_NO_GO"
+}

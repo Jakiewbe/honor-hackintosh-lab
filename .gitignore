@@ -1,4 +1,17 @@
 # Read-only upstream clones; pinned SHAs are recorded in upstream/README.md
 upstream/1401/
 upstream/nvidia-macos-driver/
+
+# codex-rules runtime and secrets
+.agent/runtime/
+.agent/.lock
+.agent/.transaction.json
 __pycache__/
+*.py[cod]
+.env
+.env.*
+*.pem
+*.key
+
+# Unexecuted upstream source evidence cache (never vendor firmware/binaries).
+.cache/

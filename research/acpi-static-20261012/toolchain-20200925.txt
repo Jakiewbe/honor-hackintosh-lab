@@ -1,0 +1,16 @@
+
+Intel ACPI Component Architecture
+ASL+ Optimizing Compiler/Disassembler version 20200925
+Copyright (c) 2000 - 2020 Intel Corporation
+
+
+Source: https://deb.debian.org/debian/pool/main/a/acpica-unix/acpica-tools_20200925-8_amd64.deb
+Debian package: 20200925-8
+Package SHA256: 1f80236e9af631b2a0ed50ae9bb74613d6970b844714aba33eb3710241494fb2
+iasl executable SHA256: 1d1e369ce68805a903b54adf36665c8856ee9716fca8329ef935284947c0e21a
+Container image ID: sha256:1a6ab3f5345eb6dbe04a1349529caabdb0ab09293a09590fad07b2246bfa4b54
+Isolation: readonly rootfs=True; network=none; user=65534:65534; no host mounts=False; <WORKDIR> tmpfs
+Command: docker exec -w <WORKDIR>/input honor-acpi-static-20261012 <WORKDIR>/pkg/usr/bin/iasl -da <WORKDIR>/input/reg_DSDT_HONOR_ADL-P-M_00000002.bin <WORKDIR>/input/reg_SSD1_HONOR_Pmax_Dev_00000001.bin <WORKDIR>/input/reg_SSD2_HONOR_CpuSsdt_00003000.bin <WORKDIR>/input/reg_SSD3_HONOR_SaSsdt__00003000.bin <WORKDIR>/input/reg_SSD4_HONOR_IgfxSsdt_00003000.bin <WORKDIR>/input/reg_SSD5_HONOR_TcssSsdt_00001000.bin <WORKDIR>/input/reg_SSD6_HONOR_Tpm2Tabl_00001000.bin <WORKDIR>/input/reg_SSD7_HONOR_WmiTable_00001000.bin <WORKDIR>/input/reg_SSD8_HONOR_PtidDevc_00001000.bin <WORKDIR>/input/reg_SSD9_HONOR_ADL-P-M_00000002.bin <WORKDIR>/input/reg_SSDA_HONOR_NvdTable_00001000.bin <WORKDIR>/input/reg_SSDB_HONOR_xh_adlLP_00000000.bin <WORKDIR>/input/reg_SSDC_HONOR_SocGpe__00003000.bin <WORKDIR>/input/reg_SSDD_HONOR_SocCmn__00003000.bin <WORKDIR>/input/reg_SSDE_HONOR_PcdTabl_00001000.bin <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
+Exit: 255
+
+Clarification: the earlier no-host-mount boolean counted tmpfs as a mount; actual configuration had no bind mounts.

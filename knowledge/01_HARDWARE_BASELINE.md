@@ -27,7 +27,7 @@
 | RTX 2050 25A9 | `01:00.0`、`\_SB.PC00.PEG0.PEGP`，REV `A1`，VBIOS 94.07.69.00.22，4 GiB，当前链路 Gen4 x4；WDDM `HybridDiscrete`、`DisplaySupported=false`、0 源 0 目标 | 主板没有 MUX；永远不能直连 |
 | 显示连接器 | 当前模式下 Intel 驱动暴露 1 INTERNAL + 2 HDMI + 14 DP_EXTERNAL 目标，NVIDIA 为 0 | 物理端口走线、外接口 GPU 归属（外屏未接，**未测**） |
 | 内屏 | BOE `0x0893` / EDID 文本 `TV140WTM-NH0`，2160x1440 @ 60.001 Hz，8 bpc，EDID 接口 DisplayPort，ACPI `\_SB.PC00.GFX0.DD1F`；Windows 只枚举到 60 Hz | eDP lane/速率/PSR/背光参数 |
-| ACPI | DSDT + 15 个 SSDT 已保存；`NvdTable` 含 NVOP/JT/NBCI/GPS/MXM `_DSM` GUID 与 `MXDS`/`MXMX`（手工字节解读疑似空实现，待 iasl）；`IgfxSsdt` 声明 `IGDM` OpRegion（`ASLB`，0x2000） | MUX/Advanced Optimus 存在与否 |
+| ACPI | DSDT+15 SSDT经哈希/长度/校验核对；单表iasl16份通过，联合namespace冲突仍阻塞。MXDS为空；MXMX为调试路径；MXM读取NVS；IGD另有经EDMX的位读写路径。ASLB是SANV首个32bit字段，IGDM声明0x2000。详见[静态证据](../research/acpi-static-20261012/README.md) | MUX结论：无法判断；NVS/OpRegion运行值、赋值者及实际GPIO含义UNKNOWN；非运行时证据 |
 | VBT / OpRegion 内容 / DDI 映射 | **未取得**：没有受支持的 Windows 只读接口 | — |
 | 存储 / 启动 | UEFI，Secure Boot 开（注册表）；GPT，ESP 200 MiB；C: 剩约 6.75 GiB | BitLocker、WinRE 状态（需管理员）；恢复条件仍**需要用户确认** |
 

@@ -1,0 +1,245 @@
+{
+  "base_commit": "ffbc8fd87602026f0d39bc6fac5b5c3f075b7458",
+  "external_pass": 16,
+  "external_fail": 0,
+  "first_selection_pass": 2,
+  "first_selection_fail": 14,
+  "semantic_or_status_changed": [
+    "MXMX",
+    "MUX三选一",
+    "ASLB来源与赋值者",
+    "联合命名空间验收",
+    "_S0W重复定义"
+  ],
+  "added": [
+    "HS10.SADX重复定义",
+    "I2C0.TPD0电源方法重复",
+    "选表-e的External增量"
+  ],
+  "all_changed": [
+    {
+      "question": "NVOP _DSM function0",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "JT/GC6 _DSM function0",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "NBCI _DSM function0",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "GPS _DSM function0",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "MXM_/MXM _DSM function0",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "JT bitmap与方法体差异",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "MXDS",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "MXMX",
+      "changed_fields": [
+        "unknown_reason",
+        "external_review"
+      ]
+    },
+    {
+      "question": "MXM_真实语义",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "PEGP._DOD",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "PEG0电源资源",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "GC6路径",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "MUX三选一",
+      "changed_fields": [
+        "conclusion",
+        "unknown_reason",
+        "external_review"
+      ]
+    },
+    {
+      "question": "GFX0._DOD列表",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "DD1F._ADR",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "DD1F._DCS",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "DD1F._DGS",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "DD1F._DSS",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "DD1F._BCL",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "DD1F._BCM/_BQC",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "IGD _DSM function0",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "IGD OpRegion字段",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "ASLB来源与赋值者",
+      "changed_fields": [
+        "conclusion",
+        "external_review"
+      ]
+    },
+    {
+      "question": "ASLS vs ASLB",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "TDM0._STA",
+      "changed_fields": [
+        "evidence_location",
+        "external_review"
+      ]
+    },
+    {
+      "question": "TDM1._STA",
+      "changed_fields": [
+        "evidence_location",
+        "external_review"
+      ]
+    },
+    {
+      "question": "OpRegion/VBT取得状态",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "联合命名空间验收",
+      "changed_fields": [
+        "conclusion",
+        "evidence_location",
+        "verdict",
+        "unknown_reason",
+        "external_review"
+      ]
+    },
+    {
+      "question": "T2 ASLS读取/映射",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "T2 VBT内容",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "T2 ACPI视频",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "T2 BSD ACPI桥缺口",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "T2 BSD背光策略",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "T2 MUX GUID不能混用",
+      "changed_fields": [
+        "external_review"
+      ]
+    },
+    {
+      "question": "_S0W重复定义",
+      "changed_fields": [
+        "conclusion",
+        "evidence_location",
+        "unknown_reason",
+        "external_review"
+      ]
+    }
+  ],
+  "critical_method_bodies": "IgfxSsdt and NvdTable byte-identical to base; other changes listed in dsl-changes.json"
+}

@@ -1,0 +1,3 @@
+# Preserve disassembler bytes and its own whitespace; do not reformat evidence.
+*.dsl -text -whitespace
+*.log -text -whitespace

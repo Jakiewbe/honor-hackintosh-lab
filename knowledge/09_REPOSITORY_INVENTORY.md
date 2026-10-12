@@ -83,4 +83,12 @@
 
 ## 仓库新增交接资产
 
+R1.4-C0 新增：`research/independent-i915/` 中 source lock、license/symbol/include inventories、callgraph/edges、API contracts、compat/delta、provenance 与实际 verification；`scripts/r14c0_fetch_locked_sources.py`（公开文本源取得，与离线校验分离）、`scripts/r14c0_validate_dependency_baseline.py`、`tests/test_r14c0_dependency_gate.py`、[正式首轮报告](../docs/R1.4-C0_独立i915源码与接口依赖基线.md)。第三方代码仅忽略缓存，未提交；治理状态新增 `.agent/`。
+
 根目录 [`AGENTS.md`](../AGENTS.md)，`knowledge/00–11` 汇总和决策文件。新的研发工作在 `research/independent-i915/` 下以可核对的 manifest 和调用图为起点；另有 [11 早期 1401/OpenCore 调查及引文纠错](11_EARLY_RESEARCH_AND_1401.md)。首次实现需按 [10](10_CODEX_HANDOFF.md) 的验收工作，不是再复制一批旧模型。
+
+R1.4-C0.1新增[工程目录](../research/independent-i915/c01/README.md)、[正式报告](../docs/R1.4-C0.1_PCI与电源井接口合同.md)、scripts/r14c01_validate_power_contract.py与tests/test_r14c01_power_contract.py。C0数据不回写，旧实验资产不改。
+
+R1.4-C0-pre新增[research/acpi-static-20261012/](../research/acpi-static-20261012/README.md)：inputs、toolchain/来源、联合失败与单表日志、16份DSL及哈希、38项findings及external-review、external-runs、findings-changes、path-normalization、external-plan/selected-external-runs、dsl-changes、17个DD_ADR方法体、98项IGDM字段布局、T2平台映射与校验记录。scripts/acpi_static_validate_inputs.py、tests/test_acpi_static_inputs.py均为离线文本/manifest验证。docs/hardware-survey-20261012原证据不改。
+
+选表-e复核新增scripts/acpi_static_external_plan.py和tests/test_acpi_static_external_plan.py：纯离线manifest选表，检验冲突组与原目标集合，不读取硬件或执行AML。
