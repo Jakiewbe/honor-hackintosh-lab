@@ -1,0 +1,121 @@
+name: HONOR R1.2-F macOS 15.5 source lock audit
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: honor-r12f-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  macos-155-source-audit:
+    runs-on: macos-15-intel
+    timeout-minutes: 15
+    steps:
+      - name: Checkout research tests without credentials
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Verify Apple official macOS 15.5 distribution pointers
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$(uname -m)" == x86_64 ]] || { echo "BLOCKED: require Intel macOS runner"; exit 2; }
+          mkdir -p "$RUNNER_TEMP/r12f-logs"
+          git clone -q --depth 1 --branch macos-155 --no-recurse-submodules \
+            https://github.com/apple-oss-distributions/distribution-macOS.git \
+            "$RUNNER_TEMP/apple-dist-macos155"
+          dist="$RUNNER_TEMP/apple-dist-macos155"
+          [[ "$(git -C "$dist" rev-parse HEAD:IOGraphics)" == "4d3fd008c80d1414c9da8f02ea67d534b47158c2" ]] || {
+            echo "BLOCKED: Apple macOS 15.5 IOGraphics pointer changed"; exit 2;
+          }
+          [[ "$(git -C "$dist" rev-parse HEAD:xnu)" == "a1e26a70f38d1d7daa7b49b258e2f8538ad81650" ]] || {
+            echo "BLOCKED: Apple macOS 15.5 xnu pointer changed"; exit 2;
+          }
+          printf '%s\n' "macOS distribution ref=macos-155" \
+            "IOGraphics tag=IOGraphics-599" \
+            "IOGraphics commit=4d3fd008c80d1414c9da8f02ea67d534b47158c2" \
+            "XNU tag=xnu-11417.121.6" \
+            "XNU commit=a1e26a70f38d1d7daa7b49b258e2f8538ad81650" \
+            > "$RUNNER_TEMP/r12f-logs/release-pointers.txt"
+          cat "$RUNNER_TEMP/r12f-logs/release-pointers.txt"
+          echo "R12F_APPLE_OFFICIAL_DISTRIBUTION_POINTERS_PASS"
+
+      - name: Download only four immutable Apple source files
+        shell: bash
+        run: |
+          set -euo pipefail
+          gfx="$RUNNER_TEMP/r12f-apple-graphics"
+          xnu="$RUNNER_TEMP/r12f-apple-xnu"
+          get_exact_file() {
+            local repository="$1" commit="$2" path="$3" destination="$4"
+            mkdir -p "$destination/$(dirname "$path")"
+            curl --fail --location --silent --show-error --retry 2 \
+              --connect-timeout 12 --max-time 70 \
+              "https://raw.githubusercontent.com/apple-oss-distributions/$repository/$commit/$path" \
+              --output "$destination/$path"
+            [[ -s "$destination/$path" ]] || { echo "BLOCKED: empty Apple source $path"; exit 2; }
+          }
+          get_exact_file IOGraphics 4d3fd008c80d1414c9da8f02ea67d534b47158c2 \
+            IOGraphicsFamily/IOFramebuffer.cpp "$gfx"
+          for filename in IOWorkLoop.cpp IOTimerEventSource.cpp IOEventSource.cpp; do
+            get_exact_file xnu a1e26a70f38d1d7daa7b49b258e2f8538ad81650 \
+              "iokit/Kernel/$filename" "$xnu"
+          done
+          python3 scripts/r12f_verify_macos155_sources.py \
+            --manifest "$RUNNER_TEMP/apple-dist-macos155/release.json" \
+            --graphics "$gfx" --xnu "$xnu" \
+            | tee "$RUNNER_TEMP/r12f-logs/official-source-contract.json"
+          echo "R12F_VERSION_PINNED_SOURCE_LOCK_ORDER_PASS"
+
+      - name: Run offline lock-order and two-stage stop models
+        shell: bash
+        run: |
+          set -euo pipefail
+          log="$RUNNER_TEMP/r12f-logs"
+          for t in test_r12d_lock_order_model.py test_r12e_quiesce_finalize_model.py; do
+            python3 "tests/$t" > "$log/$t.txt" 2>&1 || {
+              cat "$log/$t.txt"
+              echo "BLOCKED: model $t"; exit 2
+            }
+            cat "$log/$t.txt"
+          done
+          echo "R12F_LOCK_ORDER_AND_STOP_MODELS_PASS (not driver runtime proof)"
+
+      - name: Record remaining no-go reasons
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/r12f-logs"
+          {
+            echo "RUNTIME_NO_GO: this is an Apple-source-only ABI/lock-order evidence check."
+            echo "Matched sources belong to the Apple macOS 15.5 public release."
+            echo "Still UNPROVEN: shipped kernel binary identity, callback target stop reentrancy, legal IOService::stop deferral, stable owner and callback destructor lifetimes."
+            echo "Still UNPROVEN: physical Intel screen scanout, NVIDIA Darwin NVAccel, RTX2050/Metal."
+            echo "No kext has been compiled, signed, installed, loaded or uploaded by this workflow."
+          } > "$RUNNER_TEMP/r12f-logs/limitations.txt"
+
+      - name: Upload plain-text diagnostics only
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: honor-r12f-apple-macos155-source-evidence
+          path: ${{ runner.temp }}/r12f-logs/
+          retention-days: 7
+          if-no-files-found: warn
+
+      - name: Summarize review-only conclusion
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          {
+            echo "## R1.2-F: macOS 15.5 version-matched Apple OSS lock review"
+            echo "- Apple official distribution-macOS/macos-155 manifest pins IOGraphics-599 and xnu-11417.121.6."
+            echo "- Scripts verify exact Apple git blob SHAs and known SYS->FB acquisition patterns."
+            echo "- Even on SUCCESS, the only safety decision is RUNTIME_NO_GO."
+            echo "- No hardware changes or kernel driver execution."
+          } >> "$GITHUB_STEP_SUMMARY"
