@@ -1,0 +1,62 @@
+# R1.2-C REVIEW ONLY: apply after r11_scanout_bounds_and_mmio.patch and r12b_vbl_workloop_gate.patch.
+# Explicit owner/sender lifetime in vblFire. Does not prove reentrant IOFramebuffer::stop is safe.
+diff --git a/kexts/NMIntelFB/intelfb.cpp b/kexts/NMIntelFB/intelfb.cpp
+--- a/kexts/NMIntelFB/intelfb.cpp
++++ b/kexts/NMIntelFB/intelfb.cpp
+@@ -132,27 +132,37 @@
+         unregisterGate(owner, &me->fVbl, nullptr, nullptr, nullptr);
+         unregisterGate(owner, &me->fConnect, nullptr, nullptr, nullptr);
+         return kIOReturnSuccess;
+     }
+-    static void vblFire(OSObject *owner, IOTimerEventSource *timer) {
+-        NMIntelFB *me = (NMIntelFB *)owner;
+-        if (!me || me->fVblPhase != kVblArmed || me->fVblTimer != timer) return;
+-        const Irq snapshot = me->fVbl;
+-        if (snapshot.enabled && snapshot.proc) {
+-            if (snapshot.target) snapshot.target->retain();
+-            snapshot.proc(snapshot.target, snapshot.ref);
+-            if (snapshot.target) snapshot.target->release();
+-            me->fVblCalls++;
+-        }
+-        if (me->fVblPhase != kVblArmed || me->fVblTimer != timer) return;
+-        uint64_t us = me->fFrameNs / 1000;
+-        if (us < 1000) us = 1000;
+-        if (us > 1000000) us = 1000000;
+-        if (timer->setTimeoutUS((UInt32)us) != kIOReturnSuccess) {
+-            me->fVblPhase = kVblStopping;
+-            IFBLOG("VBL reschedule failed; refusing subsequent callbacks");
+-        }
+-    }
++    static void vblFire(OSObject *owner, IOTimerEventSource *timer) {
++        NMIntelFB *me = (NMIntelFB *)owner;
++        if (!me || !timer || me->fVblPhase != kVblArmed || me->fVblTimer != timer) return;
++        // R1.2-C: IOEventSource::owner is not retained by IOEventSource::init.
++        // An external VBL target may synchronously unregister or stop this FB.
++        // Keep both owner and sender alive until our last post-callback access.
++        me->retain();
++        timer->retain();
++        const Irq snapshot = me->fVbl;
++        if (snapshot.enabled && snapshot.proc) {
++            if (snapshot.target) snapshot.target->retain();
++            snapshot.proc(snapshot.target, snapshot.ref);
++            if (snapshot.target) snapshot.target->release();
++            me->fVblCalls++;
++        }
++        // A callback may have stopped/removed the timer while under the
++        // recursive workloop gate. No requeue or dereference after release.
++        if (me->fVblPhase == kVblArmed && me->fVblTimer == timer) {
++            uint64_t us = me->fFrameNs / 1000;
++            if (us < 1000) us = 1000;
++            if (us > 1000000) us = 1000000;
++            if (timer->setTimeoutUS((UInt32)us) != kIOReturnSuccess) {
++                me->fVblPhase = kVblStopping;
++                IFBLOG("VBL reschedule failed; refusing subsequent callbacks");
++            }
++        }
++        timer->release();
++        me->release(); // Last use of me; it may be destroyed here.
++    }
+     bool armVbl() {
+         IOWorkLoop *wl = getWorkLoop();
+         if (!wl || fVblPhase != kVblNew) return false;
+         IOTimerEventSource *timer = IOTimerEventSource::timerEventSource(this, vblFire);
