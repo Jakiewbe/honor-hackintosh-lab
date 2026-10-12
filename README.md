@@ -109,6 +109,16 @@ The currently published [NullMoth v1.14.2 release](https://github.com/nullmoth/n
 
 **The HONOR internal panel is already confirmed connected to Intel Iris Xe in Windows** (previous user test, re-affirmed on 2026-10-12): do **not** request the same “Advanced display → Connected to” internal-screen screenshot again. The user also reported a working USB-C→DP 1080p/200 Hz external screen, which establishes display capability, **not** which GPU owns that port. HDMI/USB-C GPU ownership and MUX switching are still unverified. The [canonical hardware evidence ledger](docs/HONOR_GLO-FX6P_硬件实测与证据等级.md) differentiates these facts. Focus next on Intel `8086:46A6` macOS scanout (or a proven NVIDIA→Intel scanout bridge), independent RTX 2050 Metal evidence, and only optionally external-port routing. The [Windows read-only probe](scripts/r12h_windows_readonly_display_probe.ps1) is available for non-duplicative follow-up, but is **not required to re-prove panel ownership**. No Windows, EFI, BIOS, partition, SIP or macOS security changes; do not run third-party installers.
 
+## R1.3-A: Intel Iris Xe 8086:46A6 scanout is now the primary feasibility gate
+
+The HONOR internal panel is **already confirmed to scan out through Intel Iris Xe in Windows**. [R1.3-A source-anchored route review](docs/R1.3-A_IntelXe46A6显示输出双路线源码核验.md) compares two **unverified macOS** approaches against NullMoth [v1.14.2 commit `1083a98db33a0bb824290556de255f9a95ca5403`](https://github.com/nullmoth/nvidia-macos-driver/tree/1083a98db33a0bb824290556de255f9a95ca5403):
+
+- **Old `NMIntelFB` + NVIDIA NVAccel** only adopts a **still-active firmware Intel pipe** with a **linear XRGB8888 plane**, then exposes an Intel scanout CPU mapping for NVIDIA's head-4 copy path. Its successful R1.2-C native build does **not** show this firmware state survives actual macOS takeover or that RTX 2050 accelerates.
+- **New `NMXGPU` Intel `i915` + DRM client modeset + `NMXGPUFB`** has a real source path for setting display modes and publishing a scanout buffer, more directly aligned with the HONOR panel. However upstream explicitly states its GPU port **has not been loaded on hardware**. `NMXGPUFB::unregisterInterrupt()` and `setInterruptState()` are currently no-ops, and its raw VBL timer and synchronous `stop()` still lack proven lifetime synchronization. No Intel 46A6 macOS scanout or Metal runtime evidence.
+- The [source-only R1.3-A gate](scripts/r13a_intel_scanout_source_audit.py) pins seven upstream Git blob SHAs and 18 observed structures; **18/18 were inspected directly from GitHub, not run as CI**. It always retains **RUNTIME_NO_GO**.
+
+**Decision: VBL PATCHES FROZEN; prioritize independent physical evidence for the Intel `8086:46A6` i915 bridge, then consider the NVIDIA→Intel display-copy route only if hardware evidence justifies it.** The AMD/Intel `vk_chip_matrix` 41/41 results use a mock/noop DRM shim, not real GPU execution. No GitHub workflow launched, kernel patch installed, or HONOR Windows/EFI/BIOS/disk change.
+
 ## Safety and evidence
 
 The original NullMoth source carries a PolyForm Noncommercial license. No upstream source code or vendor firmware is copied into this repository. All upstream code is fetched from its public GitHub repository into an ephemeral runner only when source mode is explicitly requested.
