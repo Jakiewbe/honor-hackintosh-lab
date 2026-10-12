@@ -18,6 +18,7 @@
 | 9 | [06 架构风险与技术门禁](06_ARCHITECTURE_AND_RISKS.md) | Intel 显示链、NV 混合路径、驱动安全风险 |
 | 10 | [08 自主开发阶段计划](08_ENGINEERING_ROADMAP.md) | R1.4-B 下一步阶段与准入/停止条件 |
 | 11 | [09 全量资料索引](09_REPOSITORY_INVENTORY.md) | 所有现存报告、脚本、补丁、测试、workflow 的用途 |
+| 12 | [11 早期线索与 1401/OpenCore](11_EARLY_RESEARCH_AND_1401.md) | 1041 名称澄清、1401 研究以及 Issue #26 误引纠正 |
 
 **历史阶段事实的唯一原始依据**仍是 [docs/](../docs/) 的对应报告、[测试源代码](../tests/)、[研究脚本](../scripts/)、[GitHub Actions](https://github.com/Jakiewbe/honor-hackintosh-lab/actions) 的正式运行日志，以及固定 commit 的上游源码。知识库汇总若有争议，回到原始证据核对，不要凭旧概述直接编码。
 

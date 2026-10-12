@@ -18,6 +18,7 @@
 | **D-12 否决关键功能假成功 Stub** | **拒绝** 为便于编译把 DMC/电源/MMIO/内存/同步直接 `return 0`；无法完成必需操作应 fail closed。GuC/HuC/DMC 分别证明。 | 证明对应操作非必需且调用方显式支持关闭 |
 | **D-13 源码裁剪以真实调用图为准** | **采用** FreeBSD DRM `6.1-lts` + Linux v6.1 **候选版本对齐**，不能按网上固定文件矩阵删除（v6.1 无独立 `intel_edp.c`；GGTT 在 `gt/intel_ggtt.c`）。 | 完整 LinuxKPI FreeBSD base commit、符号/对象闭包和许可证台账 |
 | **D-14 CI 成功分级** | **强制**：编译/链接/静态 ABI ≠ kext 可加载 ≠ 真实 scanout ≠ Metal ≠ 可安全安装。 | 每级独立实测证据 |
+| **D-15 1401 并非 46A6 显示驱动** | 用户早期称“1041”的工具可核对为 [NullMoth 1401](https://github.com/nullmoth/1401) OpenCore/USB 配置工具支线；禁在主力机执行。早期错引 [Issue #26](https://github.com/nullmoth/nvidia-macos-driver/issues/26) 的情况已经在 [11](11_EARLY_RESEARCH_AND_1401.md) 明确纠正。 | 需要隔离环境的完整启动/显示/恢复证据才能讨论实际部署 |
 
 ### 当前冻结/允许范围
 

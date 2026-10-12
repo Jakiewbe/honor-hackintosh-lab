@@ -4,6 +4,7 @@
 
 | 阶段 | 研究内容及重大结论 | 权威记录 |
 |---|---|---|
+| **R0 前置线索** | 初步调研 “NVIDIA macOS 驱动攻克”、所谓“1041”自动适配 OpenCore；后续对照官方源码识别为 **NullMoth 1401** 安装/引导工具，不代表 46A6 显示可用；此前错把 [Issue #26](https://github.com/nullmoth/nvidia-macos-driver/issues/26) 引作 12500H 启动失败案例，**已纠正、不得引用**。 | [早期调查补录](11_EARLY_RESEARCH_AND_1401.md) |
 | **R0.6** | 建立 macOS Intel 云端 **手动** preflight，不触碰主力 HONOR。最早探索适配基础与源码校验。 | [README R0.6](../README.md)、[preflight workflow](../.github/workflows/macos-preflight.yml) |
 | **R0.7** | NVIDIA `610.57.04` 公开源码缺少 `src/nvidia/_out/Darwin_x86_64/compile_cmds.sh`；不能按上游说明复现 NVAccel Darwin native build。云端 [#38210653466](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38210653466) 的 prerequisites SUCCESS **不是 NVAccel 编译通过**。 | [R0.7](../docs/R0.7_build_gate.md) |
 | **R0.8** | 对固定 NullMoth 源码 `NMIntelFB/intelfb.cpp` 做 macOS x86_64 kernel object/link；[run #38197014657](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38197014657) 成功但有 SDK deployment target 警告。 | [R0.8](../docs/R0.8_intelfb_compile.md)、[R0.9 静态审计](../docs/R0.9_static_kext_audit.md) |

@@ -77,4 +77,4 @@
 
 ## 仓库新增交接资产
 
-根目录 [`AGENTS.md`](../AGENTS.md)，`knowledge/00–10` 汇总和决策文件。新的研发工作在 `research/independent-i915/` 下以可核对的 manifest 和调用图为起点；首次实现需按 [10](10_CODEX_HANDOFF.md) 的验收工作，不是再复制一批旧模型。
+根目录 [`AGENTS.md`](../AGENTS.md)，`knowledge/00–11` 汇总和决策文件。新的研发工作在 `research/independent-i915/` 下以可核对的 manifest 和调用图为起点；另有 [11 早期 1401/OpenCore 调查及引文纠错](11_EARLY_RESEARCH_AND_1401.md)。首次实现需按 [10](10_CODEX_HANDOFF.md) 的验收工作，不是再复制一批旧模型。
