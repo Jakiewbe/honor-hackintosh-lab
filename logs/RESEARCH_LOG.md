@@ -168,3 +168,11 @@ GitHub API 只读 GET `acpica/acpica/releases`：20260930 只有 Unix 资产，2
 
 7. **Q-18**：对本地缓存的 1401#26 OpenCore 日志（SHA256 `E70C38D0…`）检索 `OCABC`：Booter quirk 与本机生成配置逐项相同，`FEXITBS 0`；第 392 行 `disable-gpu` 设在核显。Issue 正文：无 MUX、内屏接 Iris Xe、屏幕照片停在 `EXITBS:START`。结论保持 OPEN，并写明单变量对照建议。
 8. **Q-19**：`rustup target list --installed` 只有 `x86_64-pc-windows-msvc`（未安装 UEFI 目标，未做任何安装）。用 Python 提取 `NullMothLogo.efi` 可打印字符串并与 `main.rs` 字面量比对：crate 名、`uefi-0.41.0`、6 个运行期字符串一致；rustc 提交 `8bab26f4…`。阅读 `main.rs`（95 行）：替换 GOP Blt 指针；**每次启动写 NVRAM 非易失变量 `nm-logo`**。更新 R-19、Q-19 为 PARTIAL。
+9. 用户批准普通 push（`ec517c3..9a93198`）。
+
+### 上游跟踪（2026-10-13 01:04，用户：“继续”）
+
+10. `git fetch --tags`：两个上游最新标签仍为 v1.14.3。GitHub API 匿名额度 0/60，改用网页只读抓取。
+11. 驱动 PR #131（NVRMFBClaim 加 NVIDIA 厂商与类码匹配）、#133（Intel 内屏笔记本 BAR 改 `-1/0`、0302 类 GPU 的 Turing 等待）：均 open、未合并、最后更新 2026-10-11，作者声明**未上真机**。1401#26：open，最后评论仍是 10-11 的 Ryzen 台式机修复。Q-08/Q-10/Q-18 结论不变。
+12. **推送副作用**：1401#26 页面时间线出现 “Referenced in commit 8869796”。原因是会话 1 提交信息含完整引用 `nullmoth/1401#26`，本仓库为公开仓库，push 后 GitHub 自动生成反向链接。该链接只指向提交，不含个人数据；去除需改写已公开历史（AGENTS.md 禁止 force-push），未处理，交用户决定。今后提交信息只写 `1401 Issue 26` 之类的非链接写法。
+13. 已推送树敏感信息复查：无用户目录名、BitLocker 恢复密钥格式、MAC 地址；MLB/序列号/UUID/ROM 均为 `<redacted>`。
