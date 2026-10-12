@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-13",
+  "level": "OFFLINE-TEST-MAINTENANCE; NOT HARDWARE EVIDENCE",
+  "upstream_main": "9b2093cf0fa3e1967652cdd481ecb643b2271ccf",
+  "command": "python -B -X utf8 -m unittest discover -s tests -v",
+  "clean_input": "git archive of upstream_main plus the five test changes; no .cache or upstream clones",
+  "test_results": {
+    "full": {
+      "tests": 151,
+      "passed": 151,
+      "failed": 0,
+      "skipped": 0,
+      "1401": {
+        "passed": 13,
+        "skipped": 0
+      }
+    },
+    "clean": {
+      "tests": 151,
+      "passed": 137,
+      "failed": 0,
+      "skipped": 14,
+      "1401": {
+        "passed": 3,
+        "skipped": 10
+      },
+      "skip_reasons": {
+        "missing_i915_source_cache": 4,
+        "missing_pinned_upstream_clones": 10
+      }
+    }
+  },
+  "upstream_pins": {
+    "1401": "46d9fee308bbb8e373807d59773823e6a93c1f63",
+    "nvidia-macos-driver": "1083a98db33a0bb824290556de255f9a95ca5403"
+  },
+  "production_missing_cache_checks": [
+    {
+      "script": "scripts/r14c0_validate_dependency_baseline.py",
+      "missing_cache_exit": 1
+    },
+    {
+      "script": "scripts/r14c01_validate_power_contract.py",
+      "missing_cache_exit": 1
+    }
+  ],
+  "unchanged": [
+    "docs/hardware-survey-20261012/",
+    ".github/",
+    "tests/test_1401_static_audit.py",
+    "production validators",
+    "A1401 and all existing tasks"
+  ],
+  "runtime": "RUNTIME_NO_GO"
+}

@@ -84,3 +84,7 @@
 > **2026-10-13 附注**：另有用户授权的 1401 只读审计支线（D-16），其断点和续做方式在 [`logs/RESEARCH_LOG.md`](../logs/RESEARCH_LOG.md) 顶部，不影响下方 R1.4-C0 交接内容。用户未指定支线时，以下方主线为准。
 
 > 阅读根目录 AGENTS.md、knowledge/README.md、knowledge/02_CURRENT_STATE.md、knowledge/10_CODEX_HANDOFF.md 及所引原始文档。按 R1.4-C0 的 T0→T4 执行：先在 GitHub 核对既有成果避免重复，追溯 FreeBSD drm-kmod 6.1-lts 需要的 FreeBSD base/LinuxKPI 固定 commit，建立最小 Intel 8086:46A6 i915/eDP 的源/符号/许可证/接口依赖清单与 FAIL-CLOSED 检查。不得加载、安装或签名内核驱动，不触碰主力 Windows/EFI/BIOS，不自行启动 Actions，不写假成功 Stub。提交代码与报告，标明真实测试和未关闭阻塞，保持 RUNTIME_NO_GO。
+
+## 2026-10-13 测试交接补充
+
+缓存测试修正已在 main `9b2093c` 基础上验证，A1401及原任务/记录保留。完整缓存151通过0失败；干净检出137通过0失败14跳过，条件见 [测试说明](../tests/README.md)。生产校验仍失败即停止，无硬件增量。用户本轮只授权新分支推送与 PR，不授权合并；研究下一步仍按既有 R1.4-C0 T0→T4 和已登记1401范围执行。

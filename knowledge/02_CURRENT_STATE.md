@@ -57,3 +57,7 @@
 
 ## R1.4-C0-pre（SOURCE-STATIC）
 [原表静态证据](../research/acpi-static-20261012/README.md)：36表校验通过；同一iasl20250404选择外部代表逐表16通过0失败；历史失败日志保留。38项findings有定位；两组重复对应空闲PEG1和蓝牙HS10，与MUX/内屏/OpRegion无关。DSDT外部方法警告与EDMX UnknownObj仍保留；NVS/OpRegion内容未取得，RUNTIME_NO_GO。
+
+## 2026-10-13 离线测试缓存修正
+
+同步 main `9b2093c`，保留 A1401 与全部既有研究记录。4项 i915 缓存测试缺源码时明确跳过，损坏缓存仍失败；生产校验不变。完整缓存151通过0失败0跳过（含1401的13项）；干净检出137通过0失败14跳过（i915 4项、1401缺克隆10项）。仅测试维护，不增加驱动或硬件证据，保持 `RUNTIME_NO_GO`。见 [验证记录](../tests/cache-fixture-verification.json)。

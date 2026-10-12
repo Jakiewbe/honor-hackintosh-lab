@@ -3,17 +3,17 @@
   "kit_version": "1.2.0",
   "project_id": "f6a08808-ada4-48fe-b2ad-82c0c827154b",
   "name": "HONOR Hackintosh Lab",
-  "revision": 28,
+  "revision": 30,
   "task_revision": 14,
   "current_task_revision": 14,
   "goal_version": 2,
   "goal_approved": true,
-  "updated_at": "2026-10-12T16:59:08.232981+00:00",
+  "updated_at": "2026-10-12T17:14:30.987860+00:00",
   "snapshot_keep": 20,
   "log_max_bytes": 65536,
   "hashes": {
     "GOAL.md": "75e971a616ff73ca8bb457c3089308f5f1a5fefdf8a95e36ebcd29828fa7af7e",
-    "CURRENT.md": "cc8a6c0a864fe37f90239437d5a96b3222751e439def447a0c310d11b7825591",
+    "CURRENT.md": "340e52bc8dcd7dd600e7d4a2725bbf6ffa3f514c7f856bc78c5a13261f648f8f",
     "DECISIONS.md": "55d171bc2b36607c55841579e507a9eb13eedc833b2821c6d0a645d88dbb229e",
     "LESSONS.md": "bc132e21024d06589d7643874c14814b2b026eccc1478f1bba288c3b421cfc4a",
     "tasks.json": "c52234b4f91b70d28ed92ba0f1e810b423ad99f4cf546e49b4331868e4832bba"
@@ -298,6 +298,34 @@
       "action": "state:update",
       "reason": "CURRENT登记A1401支线与合并状态",
       "timestamp": "2026-10-12T16:59:08.232981+00:00"
+    },
+    {
+      "action": "document-version",
+      "file": "CURRENT.md",
+      "previous_sha256": "cc8a6c0a864fe37f90239437d5a96b3222751e439def447a0c310d11b7825591",
+      "content": "# 当前断点\n\n## 当前阶段\nPR #2已合并；同步1401远端并提交离线缓存测试修正；RUNTIME_NO_GO。\n\n## 当前任务\nR14C0PRE静态交付done；16张原目标按冲突组选择外部代表，16通过0失败。\nR14C0完整源/许可/配置/接口闭包仍blocked，不进入native/kext。\nA1401支线done（D-16，用户10-13授权）：1401审计+沙箱build，ocvalidate仅结构校验；不改GOAL，见logs/RESEARCH_LOG.md。\n\n## 已完成工作\nPEG1._S0W、HS10.SADX与触摸板_PS0/_PS3重复已定位，不改原AML。\n每个目标13外部表，两组各排除一个成员；第一次2/14、改组内代表后16/0。\n38项findings与跨表复核；NV/Igfx文本不变；TCSS新增PCIC(1)/PCID(4)。\n135离线测试通过0失败；36表输入匹配，环境路径/身份信息0命中。\nAGENTS状态约定支持无仓库工具时直接维护revision，原有安全条款不变。\n缓存测试修正：完整151通过0失败；干净137通过0失败14跳过。\n1401完整13通过；干净3通过10跳过；生产缺缓存仍退出1。\n\n## 当前阻塞\nDSDT仍有外部方法警告、EDMX仍UnknownObj；NVS值、ASLB初始化者未知。\nOpRegion/VBT内容未取得；完整依赖/XNU合同/驱动/实机/恢复证据仍缺。\n\n## 下一步动作\nR1.4-C0 T0→T4；T2复用声明并补真实ACPI evaluator、ASLS映射/内容合同。\nPR #2于2026-10-13经用户允许合并，merge ec517c3。\n用户现授权新分支推送缓存测试修正并开PR；不合并、不触发Actions、不强推。\n\n## 状态修订\n以state.json/tasks.json为准；远端revision28/task14优于原本地27/task12。\n保留远端全部任务及历史；旧本地修改已备份，验证见tests/cache-fixture-verification.json。\n\n## Git 检查\nmain从ec517c3快进到9a93198；新分支test/cache-fixture-clean-checkout，保留历史。\n原调查目录/旧实验/workflows不改；本轮解析容器已删除。\nA1401在e379252整合后已随9a93198入远端；原任务、沙箱证据及记录保留。\n",
+      "user_approved": false,
+      "timestamp": "2026-10-12T17:10:16.888590+00:00"
+    },
+    {
+      "revision": 29,
+      "action": "state:update",
+      "reason": "以远端revision28和task14整合本地缓存修正，保留A1401及全部任务历史，用户授权新分支PR",
+      "timestamp": "2026-10-12T17:10:16.898589+00:00"
+    },
+    {
+      "action": "document-version",
+      "file": "CURRENT.md",
+      "previous_sha256": "50164bcda669ac967065f4f6fe3965749ffab900a0e4ee60b7b8dd957ce25297",
+      "content": "# 当前断点\n\n## 当前阶段\nPR #2已合并；同步1401远端并提交离线缓存测试修正；RUNTIME_NO_GO。\n\n## 当前任务\nR14C0PRE静态交付done；16张原目标按冲突组选择外部代表，16通过0失败。\nR14C0完整源/许可/配置/接口闭包仍blocked，不进入native/kext。\nA1401支线done（D-16，用户10-13授权）：1401审计+沙箱build，ocvalidate仅结构校验；不改GOAL，见logs/RESEARCH_LOG.md。\n\n## 已完成工作\nPEG1._S0W、HS10.SADX与触摸板_PS0/_PS3重复已定位，不改原AML。\n每个目标13外部表，两组各排除一个成员；第一次2/14、改组内代表后16/0。\n38项findings与跨表复核；NV/Igfx文本不变；TCSS新增PCIC(1)/PCID(4)。\n135离线测试通过0失败；36表输入匹配，环境路径/身份信息0命中。\nAGENTS状态约定支持无仓库工具时直接维护revision，原有安全条款不变。\n缓存测试修正：完整151通过0失败；干净137通过0失败14跳过。\n1401完整13通过；干净3通过10跳过；生产缺缓存仍退出1。\n\n## 当前阻塞\nDSDT仍有外部方法警告、EDMX仍UnknownObj；NVS值、ASLB初始化者未知。\nOpRegion/VBT内容未取得；完整依赖/XNU合同/驱动/实机/恢复证据仍缺。\n\n## 下一步动作\nR1.4-C0 T0→T4；T2复用声明并补真实ACPI evaluator、ASLS映射/内容合同。\nPR #2于2026-10-13经用户允许合并，merge ec517c3。\n用户现授权新分支推送缓存测试修正并开PR；不合并、不触发Actions、不强推。\n\n## 状态修订\n以state.json/tasks.json为准；远端revision28/task14优于原本地27/task12。\n保留远端全部任务及历史；旧本地修改已备份，验证见tests/cache-fixture-verification.json。\n\n## Git 检查\nmain整合ec517c3和9a93198后，再快进同步9b2093c；新分支test/cache-fixture-clean-checkout，保留历史。\n原调查目录/旧实验/workflows不改；本轮解析容器已删除。\nA1401在e379252整合后已随9a93198入远端；原任务、沙箱证据及记录保留。\n",
+      "user_approved": false,
+      "timestamp": "2026-10-12T17:14:30.977851+00:00"
+    },
+    {
+      "revision": 30,
+      "action": "state:update",
+      "reason": "最终同步新增研究日志9b2093c并复跑两种测试输入，保留所有1401任务与状态记录",
+      "timestamp": "2026-10-12T17:14:30.987860+00:00"
     }
   ]
 }
