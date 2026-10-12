@@ -120,12 +120,14 @@ jobs:
           } | tee "$log/toolchain.txt"
           plutil -lint "$src/Info.plist" | tee "$log/plist.txt"
           for variant in real virtual; do
-            flags=()
+            # macOS Bash 3.2 + set -u rejects expansion of an empty array.
+            # Keep the original -DAPPLE define in a nonempty argument array.
+            flags=( -DAPPLE )
             if [[ "$variant" == virtual ]]; then flags+=( -DNMINTELFB_VIRTUAL ); fi
             set +e
             xcrun clang++ -arch x86_64 -mmacosx-version-min=15.5 \
               -fapple-kext -mkernel -nostdinc -I "$headers" -I "$src" \
-              -DKERNEL -DKERNEL_PRIVATE -DDRIVER_PRIVATE -DAPPLE -DNeXT \
+              -DKERNEL -DKERNEL_PRIVATE -DDRIVER_PRIVATE -DNeXT \
               -std=c++17 -fno-rtti -fno-exceptions -fno-builtin -fno-common \
               -Wall -Wno-unused-parameter -Wno-inconsistent-missing-override -O2 \
               "${flags[@]}" -c "$src/intelfb.cpp" -o "$out/$variant.o" > "$log/compile-$variant.txt" 2>&1
