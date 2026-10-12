@@ -25,7 +25,9 @@ class Gates:
         if current is None or current == thread:
             self.owner[gate] = thread
             self.depth[gate] += 1
-            self.waiting.pop(thread, None)
+            # Re-entering FB must not erase a pending wait for SYS.
+            if self.waiting.get(thread) == gate:
+                self.waiting.pop(thread, None)
             return True
         self.waiting[thread] = gate
         return False
