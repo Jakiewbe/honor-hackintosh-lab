@@ -2,7 +2,7 @@
 
 **不能推出：物理 MUX 有无、GPIO 电气走线、Windows 未枚举 NHI 的真实原因、OpRegion/VBT 内容、有效 eDP/DDI/AUX 参数、macOS 显示/背光/电源成功。不能把 `_DSM` 位图或单表反汇编成功当作运行时证据。** 当前内屏接 Intel `8086:46A6` 已知；独显是 RTX2050 `10DE:25A9`。保持 **RUNTIME_NO_GO**。
 
-本轮交付为 **SOURCE-STATIC 部分结果**。固定20250404改用 `-e <其余15表> -d <目标表>` 后 **0通过、16失败**，仍未达到全表外部引用验收；下文仅确认所列方法体/声明中的常量与条件，跨表运行结果均 UNKNOWN。
+本轮为 **SOURCE-STATIC**：同一20250404按显式冲突组选择13张外部表后，**逐表16通过、0失败**。目标16张原表都解析，原AML不改。退出0不是所有External已闭合，更不是运行时证据；DSDT仍有外部方法警告，EDMX仍UnknownObj。
 
 ## 输入和工具实际执行
 
@@ -15,9 +15,12 @@
 解析器仅在无网络、只读根目录、非root UID65534、无宿主目录挂载、无特权的临时Linux容器执行。原字节通过标准输入复制到容器内存目录；未在Windows安装或运行iasl；未执行AML方法，未访问宿主ACPI/PCI/物理内存。
 
 - `iasl -da <reg_DSDT及全部15个reg_SSDT>`：两个固定版本均退出255。首先在 `\_SB.PC00.PEG1.PEGP._S0W` 创建时报AE_ALREADY_EXISTS，随后命名空间出现连带错误。[20250404日志第19–20行](iasl-disassembly.log)、[20200925日志](iasl-20200925-joint-failed.log)。未删除表、未改AML、未忽略错误来制造成功。
-- `iasl -d <单表>`：16份分别退出0，输出本目录16个DSL。[逐表命令/输出](individual-runs.json)、[清单与哈希](disassembly-manifest.json)。DSDT单表日志还有外部方法警告，其“141 found/397 resolved/4294967040 unresolved”计数不可靠，不能按巨大无符号数声称缺了这么多方法。
-- 本次 `iasl -e <其余全部15张表> -d <目标>`：**0通过、16失败**，均退出255。完整命令/输出摘要见 [external-runs.json](external-runs.json)，逐项复核见 [external-review.md](external-review.md)。未重跑-da，未添加猜测-fe声明。重复_S0W位于SaSsdt:2105–2112与SSDT9:2554–2567的同一PEG1.PEGP作用域；本轮PEG0/GFX0方法体常量不变，外部解析仍阻塞。
-- 离线校验测试：**6通过、0失败**；联合解析：**0通过、2失败**；单表解析：**16通过、0失败**。成功范围不得混淆。
+- 历史 `iasl -d <单表>`：16份分别退出0，命令/输出见 [individual-runs.json](individual-runs.json)。当时DSL见ffbc8fd；当前 [清单与哈希](disassembly-manifest.json) 已对应本轮选表-e输出。DSDT外部方法警告中的“141 found/397 resolved/4294967040 unresolved”计数不可靠，不能按巨大无符号数声称缺了这么多方法。
+- 本次按 [external-plan.json](external-plan.json) 执行 `iasl -e <13张选定外部表> -d <目标>`：**16通过、0失败**。每次完整列表、两个排除理由、退出码和输出摘要见 [selected-external-runs.json](selected-external-runs.json)。
+- 两组重复为PEG1.PEGP._S0W（SaSsdt/SSDT9）及HS10.SADX（DSDT/xh_adlLP）。用户确认PEG1为空闲端口，调查记录独显在PEG0、NVMe在PEG2，HS10是蓝牙；两组重复与MUX/内屏/OpRegion无关。
+- 首次组内选SSD9+DSDT暴露触摸板I2C0.TPD0._PS0/_PS3重复（2通过14失败）；改选SaSsdt+DSDT，SSD9作目标时改选xh_adlLP，仍只排除两组各一个成员，随后16通过。原始失败日志保留，详见 [external-review.md](external-review.md)。不忽略错误，不改目标表。
+- 旧单表16通过、旧-da两版本失败及全外部表-e16失败是历史诊断；当前DSL为选表-e成功输出。DSDT外部方法警告仍存在，其下溢计数不可靠，不按该数值宣称缺多少方法。
+- [findings-changes.json](findings-changes.json)、[dsl-changes.json](dsl-changes.json) 对照ffbc8fd列变化；NvdTable和IgfxSsdt文本完全相同，位图和关键显示方法结论未变。离线测试记录见verification.json。
 
 ## 混合显卡：位图、stub 与非空路径
 
@@ -31,13 +34,13 @@
 | GPS | `01 00 08 00 01 04 00 00` | 19、32、42 | Arg1=0x200且GPSS!=0；368–385 |
 | MXM（AML NameSeg为MXM_） | `01 00 01 01` | 16、24 | function0无revision门禁；1314–1324 |
 
-**MXDS**：1307–1312两个空If后返回0，是本方法体的stub。**MXMX**：1282–1305调用P8XH，参数0/1返回1，2/其他返回0；DSDT31353–31381的P8XH→D8XH是受MDBG存在条件控制的调试端口写，不是已证明的显示切换。**MXM_**：1325–1346在revision0x300和MXBS非零时读取NOPR中的MXMB；function24返回Unicode("0")。它不是完全空实现；MXBS/MXMB实际内容未取得。
+**MXDS**：1307–1312两个空If后返回0，是本方法体的stub。**MXMX**：1282–1305调用P8XH，参数0/1返回1，2/其他返回0；DSDT31346–31374的P8XH→D8XH是受MDBG存在条件控制的调试端口写，不是已证明的显示切换。**MXM_**：1325–1346在revision0x300和MXBS非零时读取NOPR中的MXMB；function24返回Unicode("0")。它不是完全空实现；MXBS/MXMB实际内容未取得。
 
 **PEGP._DOD**：NvdTable1274–1280返回 `Package{0x80087330}`，核实旧手工解读。这只确认ACPI输出ID常量，不证明NVIDIA物理连接或活动输出。
 
-**PEG0电源**：SSDT9 `ADL-P-M`3145起的PEG0 scope中，4405–4419的_PR0/_PR3都返回PXP；4251–4304的PXP._ON/_OFF及4377–4403的PON/POFF包含PCI字段、PIN方法和EC.ENSG操作，非空。RSTG/PWRG从DG2R/DGR2/DG2P/DGP2得到，见3147–3162；名称不能代替GPIO含义。NvdTable465–507的GC6I/GC6O还访问EC.IGC6/RGC6和SGOV，含无计次等待，不能继承为有时限的XNU错误合同。
+**PEG0电源**：SSDT9 `ADL-P-M`3146起的PEG0 scope中，4406–4420的_PR0/_PR3都返回PXP；4252–4305的PXP._ON/_OFF及4378–4404的PON/POFF包含PCI字段、PIN方法和EC.ENSG操作，非空。RSTG/PWRG从DG2R/DGR2/DG2P/DGP2得到，见3148–3163；名称不能代替GPIO含义。NvdTable465–507的GC6I/GC6O还访问EC.IGC6/RGC6和SGOV，含无计次等待，不能继承为有时限的XNU错误合同。
 
-**三选一结论：无法判断。** Intel IgfxSsdt function21在2936–2964经EDMX调用GGOV/SGOV；DSDT13711–13740有对应的SystemMemory位读写路径，DSDT另声明GNVS中的同名EDMX字段（4867）；它与单表Igfx中EDMX引用的确切绑定尚未通过联合解析。这是一条非空候选控制路径；EDMX实际值、引脚功能、运行条件及联合命名空间未证明，不能确认为MUX控制实现，也不能把所有ACPI路径称为只有stub。更不能写“确认没有MUX”。
+**三选一结论：无法判断。** Intel IgfxSsdt function21在2936–2964经EDMX调用GGOV/SGOV；DSDT13704–13733有对应的SystemMemory位读写路径，DSDT另声明GNVS中的同名EDMX字段（4860）；Igfx的GFX0.EDMX在成功输出中仍为UnknownObj，不能与GNVS同名字段自动等同。这是一条非空候选控制路径；EDMX对象绑定、实际值、引脚功能和运行条件未证明，不能确认为MUX控制实现，也不能把所有ACPI路径称为只有stub。更不能写“确认没有MUX”。
 
 ## Intel 显示声明
 
@@ -51,13 +54,13 @@ IGD _DSM GUID `3e5b41c6-eb1d-4260-9d15-c71fbadae414` 在Arg1=1的function0返回
 
 **IGDM字段布局**：2080声明 `OperationRegion(IGDM,SystemMemory,ASLB,0x2000)`，2081–2187的98项字段详见 [opregion-layout.csv](opregion-layout.csv)，bit/byte偏移全部来自声明。Header从0起；视频mailbox0x100（DIDL0x120）、SWSCI0x200、ASLE0x300（BCLP/CBLV/RVDA/RVDS）、RVBT0x400，RVBT之后还有PHED/BDDC声明。
 
-**ASLB由谁赋值：UNKNOWN。** DSDT2768–2771中它是SANV首个32bit字段、偏移0；SANV使用SANB/SANL（943–944）。在本轮16个单表DSL里没有找到ASLB赋值语句；外部固件填充只是一种推断，不能当已确认赋值者。Igfx的PCI_Config IGDP区域从0x40起，区域内0xBC声明ASLS（2051–2077），位置计算0x40+0xBC=0xFC；IGDM却使用ASLB，两个运行值是否一致UNKNOWN。
+**ASLB由谁赋值：UNKNOWN。** DSDT2761–2764中它是SANV首个32bit字段、偏移0；SANV使用SANB/SANL（936–937）。在本轮16个选表-e DSL里没有找到ASLB赋值语句；外部固件填充只是一种推断，不能当已确认赋值者。Igfx的PCI_Config IGDP区域从0x40起，区域内0xBC声明ASLS（2051–2077），位置计算0x40+0xBC=0xFC；IGDM却使用ASLB，两个运行值是否一致UNKNOWN。
 
 **OpRegion/VBT实际内容仍然未取得。ACPI只给出声明。** P41的两个obtained均false；RVBT字段声明并不是VBT数据，ASLB声明也不是实测物理指针。未读未知寄存器或内存。
 
 ## TcssSsdt：只能解释条件，不能确认原因
 
-TDM0 _ADR=0xD0002，_STA在DME0==1时返回0x0F，否则0（1503–1519）。TDM1 _ADR=0xD0003，条件为DME1（2199–2215）。DME0/1是DSDT SANV字段（2896–2897），本次无内容。
+TDM0 _ADR=0xD0002，_STA在DME0==1时返回0x0F，否则0（1505–1521）。TDM1 _ADR=0xD0003，条件为DME1（2201–2217）。DME0/1是DSDT SANV字段（2889–2890），本次无内容。
 
 **推断**：若对应DME!=1，该DMA的ACPI节点会报告不在位状态，PCI枚举并不完全由_STA决定。这是Windows未枚举NHI的可能解释；实际DME值、固件策略、PCI设备可达性及硬件实现UNKNOWN。不能从未枚举推断没有Thunderbolt/USB4硬件。
 
@@ -65,4 +68,4 @@ TDM0 _ADR=0xD0002，_STA在DME0==1时返回0x0F，否则0（1503–1519）。TDM
 
 [T2-platform-map.md](T2-platform-map.md) 对照固定 Linux v6.1 `830b3c68c1fb1e9176028d02ef86f3cf76aa2476` 与 drm-kmod6.1-lts `dba60e1e9465d4d6b2d4e7916174f7b915c35fb4` 的实际源码，pin/blob/许可头见 [upstream-sources.json](upstream-sources.json)。只新增声明与接口要求，不关闭VBT/OpRegion节点。
 
-下一步仍为 **R1.4-C0 T0→T4**：T0先记录联合namespace冲突并判断如何在不改原表/不猜NVS的前提下解释；T1固定原表/工具/上游源；T2以本轮ASLB/IGDM/DSM/显示方法声明作为平台输入，补真实ACPI evaluator、PCI配置/物理映射/资源所有权、通知消费者和背光语义；T3失败停止；T4交付证据。OpRegion/VBT内容和eDP实际参数缺口不因本报告消失，不进入驱动实现或硬件读取。
+下一步仍为 **R1.4-C0 T0→T4**：T0复用选表-e成功与重复对象记录，保留外部方法警告，不重复解析或已知硬件归属调查；T1固定原表/工具/上游源；T2以本轮ASLB/IGDM/DSM/显示方法声明作为平台输入，补真实ACPI evaluator、PCI配置/物理映射/资源所有权、通知消费者和背光语义；T3失败停止；T4交付证据。OpRegion/VBT内容和eDP实际参数缺口不因本报告消失，不进入驱动实现或硬件读取。

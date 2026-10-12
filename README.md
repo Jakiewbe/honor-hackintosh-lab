@@ -6,6 +6,8 @@
 
 > **R1.4-C0 首轮新增：** FreeBSD 14.3.0 base 候选已固定为 `8c9ce319fef765890ce518cab85d3a470b669849`；156 条文本源锁、92 函数定义、79 条源码关系；新增离线测试 **25 通过、0 失败**。**完整依赖闭包仍 BLOCKED，禁止进入编译/部署**。见 [正式报告](docs/R1.4-C0_独立i915源码与接口依赖基线.md) 与 [工程入口](research/independent-i915/README.md)。
 
+**R1.4-C0-pre（2026-10-13）**：[本机ACPI静态解析](research/acpi-static-20261012/README.md)。固定iasl选取冲突组中的外部代表后，16张目标反汇编全部通过，原表未改；两组重复对应空闲PEG1与蓝牙HS10，与MUX/内屏/OpRegion无关。DSDT外部方法警告和EDMX未知对象仍保留，OpRegion/VBT实际内容未取得；仅SOURCE-STATIC，保持RUNTIME_NO_GO。
+
 ## Codex 交接与研发知识库
 
 - **[项目目标与愿景](knowledge/00_PROJECT_CHARTER.md)** · **[硬件档案](knowledge/01_HARDWARE_BASELINE.md)** · **[当前状态](knowledge/02_CURRENT_STATE.md)** · **[首个开发任务包](knowledge/10_CODEX_HANDOFF.md)**

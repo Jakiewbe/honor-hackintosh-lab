@@ -10,3 +10,6 @@ IOServicePM.cpp notifyControllingDriverDone将result<0作为已完成确认。Li
 
 ## 2026-10-12 Git树查询范围要写入证据
 GitHub JSON的url不保留recursive查询串；用响应url推导缓存名会错读非递归树。新增门禁实际失败后定位并保存request_url和完整未截断树snapshot，21检查最终通过。只修证据索引，没有重写旧实验。
+
+## 2026-10-13 外部表本身可互相重复
+全15外部表-e失败不能推断目标原表有错。SaSsdt/SSDT9的PEG1._S0W与DSDT/xh_adlLP的HS10.SADX互相重复，另有DSDT/SSDT9触摸板电源重复；按用户授权两组选择代表后16目标全部退出0。证据见selected-external-runs.json与首次失败记录。限制：不是全表同时装载成功，不关闭DSDT警告/UnknownObj或任何运行值。

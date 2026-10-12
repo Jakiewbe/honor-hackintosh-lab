@@ -1,0 +1,584 @@
+{
+  "schema": 1,
+  "evidence_level": "SOURCE-STATIC",
+  "runtime": "RUNTIME_NO_GO",
+  "policy": "Exclude exactly two members of the declared groups; choose representatives also avoiding the observed DSDT/SSDT9 touchpad collision; never change target AML",
+  "runs": [
+    {
+      "target": "reg_DSDT_HONOR_ADL-P-M_00000002.bin",
+      "externals": [
+        "reg_SSD1_HONOR_Pmax_Dev_00000001.bin",
+        "reg_SSD2_HONOR_CpuSsdt_00003000.bin",
+        "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+        "reg_SSD4_HONOR_IgfxSsdt_00003000.bin",
+        "reg_SSD5_HONOR_TcssSsdt_00001000.bin",
+        "reg_SSD6_HONOR_Tpm2Tabl_00001000.bin",
+        "reg_SSD7_HONOR_WmiTable_00001000.bin",
+        "reg_SSD8_HONOR_PtidDevc_00001000.bin",
+        "reg_SSDA_HONOR_NvdTable_00001000.bin",
+        "reg_SSDC_HONOR_SocGpe__00003000.bin",
+        "reg_SSDD_HONOR_SocCmn__00003000.bin",
+        "reg_SSDE_HONOR_PcdTabl_00001000.bin",
+        "reg_SSDT_HONOR_DptfTabl_00001000.bin"
+      ],
+      "excluded": [
+        {
+          "file": "reg_SSD9_HONOR_ADL-P-M_00000002.bin",
+          "reason": "Prefer SaSsdt; DSDT and SSDT9 also collide at I2C0.TPD0._PS0/_PS3",
+          "group": [
+            "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+            "reg_SSD9_HONOR_ADL-P-M_00000002.bin"
+          ]
+        },
+        {
+          "file": "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+          "reason": "Target belongs to this group; exclude its other member",
+          "group": [
+            "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+            "reg_DSDT_HONOR_ADL-P-M_00000002.bin"
+          ]
+        }
+      ]
+    },
+    {
+      "target": "reg_SSD1_HONOR_Pmax_Dev_00000001.bin",
+      "externals": [
+        "reg_DSDT_HONOR_ADL-P-M_00000002.bin",
+        "reg_SSD2_HONOR_CpuSsdt_00003000.bin",
+        "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+        "reg_SSD4_HONOR_IgfxSsdt_00003000.bin",
+        "reg_SSD5_HONOR_TcssSsdt_00001000.bin",
+        "reg_SSD6_HONOR_Tpm2Tabl_00001000.bin",
+        "reg_SSD7_HONOR_WmiTable_00001000.bin",
+        "reg_SSD8_HONOR_PtidDevc_00001000.bin",
+        "reg_SSDA_HONOR_NvdTable_00001000.bin",
+        "reg_SSDC_HONOR_SocGpe__00003000.bin",
+        "reg_SSDD_HONOR_SocCmn__00003000.bin",
+        "reg_SSDE_HONOR_PcdTabl_00001000.bin",
+        "reg_SSDT_HONOR_DptfTabl_00001000.bin"
+      ],
+      "excluded": [
+        {
+          "file": "reg_SSD9_HONOR_ADL-P-M_00000002.bin",
+          "reason": "Prefer SaSsdt; DSDT and SSDT9 also collide at I2C0.TPD0._PS0/_PS3",
+          "group": [
+            "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+            "reg_SSD9_HONOR_ADL-P-M_00000002.bin"
+          ]
+        },
+        {
+          "file": "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+          "reason": "Prefer DSDT when SSDT9 is neither target nor external",
+          "group": [
+            "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+            "reg_DSDT_HONOR_ADL-P-M_00000002.bin"
+          ]
+        }
+      ]
+    },
+    {
+      "target": "reg_SSD2_HONOR_CpuSsdt_00003000.bin",
+      "externals": [
+        "reg_DSDT_HONOR_ADL-P-M_00000002.bin",
+        "reg_SSD1_HONOR_Pmax_Dev_00000001.bin",
+        "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+        "reg_SSD4_HONOR_IgfxSsdt_00003000.bin",
+        "reg_SSD5_HONOR_TcssSsdt_00001000.bin",
+        "reg_SSD6_HONOR_Tpm2Tabl_00001000.bin",
+        "reg_SSD7_HONOR_WmiTable_00001000.bin",
+        "reg_SSD8_HONOR_PtidDevc_00001000.bin",
+        "reg_SSDA_HONOR_NvdTable_00001000.bin",
+        "reg_SSDC_HONOR_SocGpe__00003000.bin",
+        "reg_SSDD_HONOR_SocCmn__00003000.bin",
+        "reg_SSDE_HONOR_PcdTabl_00001000.bin",
+        "reg_SSDT_HONOR_DptfTabl_00001000.bin"
+      ],
+      "excluded": [
+        {
+          "file": "reg_SSD9_HONOR_ADL-P-M_00000002.bin",
+          "reason": "Prefer SaSsdt; DSDT and SSDT9 also collide at I2C0.TPD0._PS0/_PS3",
+          "group": [
+            "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+            "reg_SSD9_HONOR_ADL-P-M_00000002.bin"
+          ]
+        },
+        {
+          "file": "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+          "reason": "Prefer DSDT when SSDT9 is neither target nor external",
+          "group": [
+            "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+            "reg_DSDT_HONOR_ADL-P-M_00000002.bin"
+          ]
+        }
+      ]
+    },
+    {
+      "target": "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+      "externals": [
+        "reg_DSDT_HONOR_ADL-P-M_00000002.bin",
+        "reg_SSD1_HONOR_Pmax_Dev_00000001.bin",
+        "reg_SSD2_HONOR_CpuSsdt_00003000.bin",
+        "reg_SSD4_HONOR_IgfxSsdt_00003000.bin",
+        "reg_SSD5_HONOR_TcssSsdt_00001000.bin",
+        "reg_SSD6_HONOR_Tpm2Tabl_00001000.bin",
+        "reg_SSD7_HONOR_WmiTable_00001000.bin",
+        "reg_SSD8_HONOR_PtidDevc_00001000.bin",
+        "reg_SSDA_HONOR_NvdTable_00001000.bin",
+        "reg_SSDC_HONOR_SocGpe__00003000.bin",
+        "reg_SSDD_HONOR_SocCmn__00003000.bin",
+        "reg_SSDE_HONOR_PcdTabl_00001000.bin",
+        "reg_SSDT_HONOR_DptfTabl_00001000.bin"
+      ],
+      "excluded": [
+        {
+          "file": "reg_SSD9_HONOR_ADL-P-M_00000002.bin",
+          "reason": "Target belongs to this group; exclude its other member",
+          "group": [
+            "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+            "reg_SSD9_HONOR_ADL-P-M_00000002.bin"
+          ]
+        },
+        {
+          "file": "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+          "reason": "Prefer DSDT when SSDT9 is neither target nor external",
+          "group": [
+            "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+            "reg_DSDT_HONOR_ADL-P-M_00000002.bin"
+          ]
+        }
+      ]
+    },
+    {
+      "target": "reg_SSD4_HONOR_IgfxSsdt_00003000.bin",
+      "externals": [
+        "reg_DSDT_HONOR_ADL-P-M_00000002.bin",
+        "reg_SSD1_HONOR_Pmax_Dev_00000001.bin",
+        "reg_SSD2_HONOR_CpuSsdt_00003000.bin",
+        "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+        "reg_SSD5_HONOR_TcssSsdt_00001000.bin",
+        "reg_SSD6_HONOR_Tpm2Tabl_00001000.bin",
+        "reg_SSD7_HONOR_WmiTable_00001000.bin",
+        "reg_SSD8_HONOR_PtidDevc_00001000.bin",
+        "reg_SSDA_HONOR_NvdTable_00001000.bin",
+        "reg_SSDC_HONOR_SocGpe__00003000.bin",
+        "reg_SSDD_HONOR_SocCmn__00003000.bin",
+        "reg_SSDE_HONOR_PcdTabl_00001000.bin",
+        "reg_SSDT_HONOR_DptfTabl_00001000.bin"
+      ],
+      "excluded": [
+        {
+          "file": "reg_SSD9_HONOR_ADL-P-M_00000002.bin",
+          "reason": "Prefer SaSsdt; DSDT and SSDT9 also collide at I2C0.TPD0._PS0/_PS3",
+          "group": [
+            "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+            "reg_SSD9_HONOR_ADL-P-M_00000002.bin"
+          ]
+        },
+        {
+          "file": "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+          "reason": "Prefer DSDT when SSDT9 is neither target nor external",
+          "group": [
+            "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+            "reg_DSDT_HONOR_ADL-P-M_00000002.bin"
+          ]
+        }
+      ]
+    },
+    {
+      "target": "reg_SSD5_HONOR_TcssSsdt_00001000.bin",
+      "externals": [
+        "reg_DSDT_HONOR_ADL-P-M_00000002.bin",
+        "reg_SSD1_HONOR_Pmax_Dev_00000001.bin",
+        "reg_SSD2_HONOR_CpuSsdt_00003000.bin",
+        "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+        "reg_SSD4_HONOR_IgfxSsdt_00003000.bin",
+        "reg_SSD6_HONOR_Tpm2Tabl_00001000.bin",
+        "reg_SSD7_HONOR_WmiTable_00001000.bin",
+        "reg_SSD8_HONOR_PtidDevc_00001000.bin",
+        "reg_SSDA_HONOR_NvdTable_00001000.bin",
+        "reg_SSDC_HONOR_SocGpe__00003000.bin",
+        "reg_SSDD_HONOR_SocCmn__00003000.bin",
+        "reg_SSDE_HONOR_PcdTabl_00001000.bin",
+        "reg_SSDT_HONOR_DptfTabl_00001000.bin"
+      ],
+      "excluded": [
+        {
+          "file": "reg_SSD9_HONOR_ADL-P-M_00000002.bin",
+          "reason": "Prefer SaSsdt; DSDT and SSDT9 also collide at I2C0.TPD0._PS0/_PS3",
+          "group": [
+            "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+            "reg_SSD9_HONOR_ADL-P-M_00000002.bin"
+          ]
+        },
+        {
+          "file": "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+          "reason": "Prefer DSDT when SSDT9 is neither target nor external",
+          "group": [
+            "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+            "reg_DSDT_HONOR_ADL-P-M_00000002.bin"
+          ]
+        }
+      ]
+    },
+    {
+      "target": "reg_SSD6_HONOR_Tpm2Tabl_00001000.bin",
+      "externals": [
+        "reg_DSDT_HONOR_ADL-P-M_00000002.bin",
+        "reg_SSD1_HONOR_Pmax_Dev_00000001.bin",
+        "reg_SSD2_HONOR_CpuSsdt_00003000.bin",
+        "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+        "reg_SSD4_HONOR_IgfxSsdt_00003000.bin",
+        "reg_SSD5_HONOR_TcssSsdt_00001000.bin",
+        "reg_SSD7_HONOR_WmiTable_00001000.bin",
+        "reg_SSD8_HONOR_PtidDevc_00001000.bin",
+        "reg_SSDA_HONOR_NvdTable_00001000.bin",
+        "reg_SSDC_HONOR_SocGpe__00003000.bin",
+        "reg_SSDD_HONOR_SocCmn__00003000.bin",
+        "reg_SSDE_HONOR_PcdTabl_00001000.bin",
+        "reg_SSDT_HONOR_DptfTabl_00001000.bin"
+      ],
+      "excluded": [
+        {
+          "file": "reg_SSD9_HONOR_ADL-P-M_00000002.bin",
+          "reason": "Prefer SaSsdt; DSDT and SSDT9 also collide at I2C0.TPD0._PS0/_PS3",
+          "group": [
+            "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+            "reg_SSD9_HONOR_ADL-P-M_00000002.bin"
+          ]
+        },
+        {
+          "file": "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+          "reason": "Prefer DSDT when SSDT9 is neither target nor external",
+          "group": [
+            "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+            "reg_DSDT_HONOR_ADL-P-M_00000002.bin"
+          ]
+        }
+      ]
+    },
+    {
+      "target": "reg_SSD7_HONOR_WmiTable_00001000.bin",
+      "externals": [
+        "reg_DSDT_HONOR_ADL-P-M_00000002.bin",
+        "reg_SSD1_HONOR_Pmax_Dev_00000001.bin",
+        "reg_SSD2_HONOR_CpuSsdt_00003000.bin",
+        "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+        "reg_SSD4_HONOR_IgfxSsdt_00003000.bin",
+        "reg_SSD5_HONOR_TcssSsdt_00001000.bin",
+        "reg_SSD6_HONOR_Tpm2Tabl_00001000.bin",
+        "reg_SSD8_HONOR_PtidDevc_00001000.bin",
+        "reg_SSDA_HONOR_NvdTable_00001000.bin",
+        "reg_SSDC_HONOR_SocGpe__00003000.bin",
+        "reg_SSDD_HONOR_SocCmn__00003000.bin",
+        "reg_SSDE_HONOR_PcdTabl_00001000.bin",
+        "reg_SSDT_HONOR_DptfTabl_00001000.bin"
+      ],
+      "excluded": [
+        {
+          "file": "reg_SSD9_HONOR_ADL-P-M_00000002.bin",
+          "reason": "Prefer SaSsdt; DSDT and SSDT9 also collide at I2C0.TPD0._PS0/_PS3",
+          "group": [
+            "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+            "reg_SSD9_HONOR_ADL-P-M_00000002.bin"
+          ]
+        },
+        {
+          "file": "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+          "reason": "Prefer DSDT when SSDT9 is neither target nor external",
+          "group": [
+            "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+            "reg_DSDT_HONOR_ADL-P-M_00000002.bin"
+          ]
+        }
+      ]
+    },
+    {
+      "target": "reg_SSD8_HONOR_PtidDevc_00001000.bin",
+      "externals": [
+        "reg_DSDT_HONOR_ADL-P-M_00000002.bin",
+        "reg_SSD1_HONOR_Pmax_Dev_00000001.bin",
+        "reg_SSD2_HONOR_CpuSsdt_00003000.bin",
+        "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+        "reg_SSD4_HONOR_IgfxSsdt_00003000.bin",
+        "reg_SSD5_HONOR_TcssSsdt_00001000.bin",
+        "reg_SSD6_HONOR_Tpm2Tabl_00001000.bin",
+        "reg_SSD7_HONOR_WmiTable_00001000.bin",
+        "reg_SSDA_HONOR_NvdTable_00001000.bin",
+        "reg_SSDC_HONOR_SocGpe__00003000.bin",
+        "reg_SSDD_HONOR_SocCmn__00003000.bin",
+        "reg_SSDE_HONOR_PcdTabl_00001000.bin",
+        "reg_SSDT_HONOR_DptfTabl_00001000.bin"
+      ],
+      "excluded": [
+        {
+          "file": "reg_SSD9_HONOR_ADL-P-M_00000002.bin",
+          "reason": "Prefer SaSsdt; DSDT and SSDT9 also collide at I2C0.TPD0._PS0/_PS3",
+          "group": [
+            "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+            "reg_SSD9_HONOR_ADL-P-M_00000002.bin"
+          ]
+        },
+        {
+          "file": "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+          "reason": "Prefer DSDT when SSDT9 is neither target nor external",
+          "group": [
+            "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+            "reg_DSDT_HONOR_ADL-P-M_00000002.bin"
+          ]
+        }
+      ]
+    },
+    {
+      "target": "reg_SSD9_HONOR_ADL-P-M_00000002.bin",
+      "externals": [
+        "reg_SSD1_HONOR_Pmax_Dev_00000001.bin",
+        "reg_SSD2_HONOR_CpuSsdt_00003000.bin",
+        "reg_SSD4_HONOR_IgfxSsdt_00003000.bin",
+        "reg_SSD5_HONOR_TcssSsdt_00001000.bin",
+        "reg_SSD6_HONOR_Tpm2Tabl_00001000.bin",
+        "reg_SSD7_HONOR_WmiTable_00001000.bin",
+        "reg_SSD8_HONOR_PtidDevc_00001000.bin",
+        "reg_SSDA_HONOR_NvdTable_00001000.bin",
+        "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+        "reg_SSDC_HONOR_SocGpe__00003000.bin",
+        "reg_SSDD_HONOR_SocCmn__00003000.bin",
+        "reg_SSDE_HONOR_PcdTabl_00001000.bin",
+        "reg_SSDT_HONOR_DptfTabl_00001000.bin"
+      ],
+      "excluded": [
+        {
+          "file": "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+          "reason": "Target belongs to this group; exclude its other member",
+          "group": [
+            "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+            "reg_SSD9_HONOR_ADL-P-M_00000002.bin"
+          ]
+        },
+        {
+          "file": "reg_DSDT_HONOR_ADL-P-M_00000002.bin",
+          "reason": "SSDT9 is the target; keep xh_adlLP to avoid DSDT/SSDT9 touchpad collision",
+          "group": [
+            "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+            "reg_DSDT_HONOR_ADL-P-M_00000002.bin"
+          ]
+        }
+      ]
+    },
+    {
+      "target": "reg_SSDA_HONOR_NvdTable_00001000.bin",
+      "externals": [
+        "reg_DSDT_HONOR_ADL-P-M_00000002.bin",
+        "reg_SSD1_HONOR_Pmax_Dev_00000001.bin",
+        "reg_SSD2_HONOR_CpuSsdt_00003000.bin",
+        "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+        "reg_SSD4_HONOR_IgfxSsdt_00003000.bin",
+        "reg_SSD5_HONOR_TcssSsdt_00001000.bin",
+        "reg_SSD6_HONOR_Tpm2Tabl_00001000.bin",
+        "reg_SSD7_HONOR_WmiTable_00001000.bin",
+        "reg_SSD8_HONOR_PtidDevc_00001000.bin",
+        "reg_SSDC_HONOR_SocGpe__00003000.bin",
+        "reg_SSDD_HONOR_SocCmn__00003000.bin",
+        "reg_SSDE_HONOR_PcdTabl_00001000.bin",
+        "reg_SSDT_HONOR_DptfTabl_00001000.bin"
+      ],
+      "excluded": [
+        {
+          "file": "reg_SSD9_HONOR_ADL-P-M_00000002.bin",
+          "reason": "Prefer SaSsdt; DSDT and SSDT9 also collide at I2C0.TPD0._PS0/_PS3",
+          "group": [
+            "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+            "reg_SSD9_HONOR_ADL-P-M_00000002.bin"
+          ]
+        },
+        {
+          "file": "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+          "reason": "Prefer DSDT when SSDT9 is neither target nor external",
+          "group": [
+            "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+            "reg_DSDT_HONOR_ADL-P-M_00000002.bin"
+          ]
+        }
+      ]
+    },
+    {
+      "target": "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+      "externals": [
+        "reg_SSD1_HONOR_Pmax_Dev_00000001.bin",
+        "reg_SSD2_HONOR_CpuSsdt_00003000.bin",
+        "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+        "reg_SSD4_HONOR_IgfxSsdt_00003000.bin",
+        "reg_SSD5_HONOR_TcssSsdt_00001000.bin",
+        "reg_SSD6_HONOR_Tpm2Tabl_00001000.bin",
+        "reg_SSD7_HONOR_WmiTable_00001000.bin",
+        "reg_SSD8_HONOR_PtidDevc_00001000.bin",
+        "reg_SSDA_HONOR_NvdTable_00001000.bin",
+        "reg_SSDC_HONOR_SocGpe__00003000.bin",
+        "reg_SSDD_HONOR_SocCmn__00003000.bin",
+        "reg_SSDE_HONOR_PcdTabl_00001000.bin",
+        "reg_SSDT_HONOR_DptfTabl_00001000.bin"
+      ],
+      "excluded": [
+        {
+          "file": "reg_SSD9_HONOR_ADL-P-M_00000002.bin",
+          "reason": "Prefer SaSsdt; DSDT and SSDT9 also collide at I2C0.TPD0._PS0/_PS3",
+          "group": [
+            "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+            "reg_SSD9_HONOR_ADL-P-M_00000002.bin"
+          ]
+        },
+        {
+          "file": "reg_DSDT_HONOR_ADL-P-M_00000002.bin",
+          "reason": "Target belongs to this group; exclude its other member",
+          "group": [
+            "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+            "reg_DSDT_HONOR_ADL-P-M_00000002.bin"
+          ]
+        }
+      ]
+    },
+    {
+      "target": "reg_SSDC_HONOR_SocGpe__00003000.bin",
+      "externals": [
+        "reg_DSDT_HONOR_ADL-P-M_00000002.bin",
+        "reg_SSD1_HONOR_Pmax_Dev_00000001.bin",
+        "reg_SSD2_HONOR_CpuSsdt_00003000.bin",
+        "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+        "reg_SSD4_HONOR_IgfxSsdt_00003000.bin",
+        "reg_SSD5_HONOR_TcssSsdt_00001000.bin",
+        "reg_SSD6_HONOR_Tpm2Tabl_00001000.bin",
+        "reg_SSD7_HONOR_WmiTable_00001000.bin",
+        "reg_SSD8_HONOR_PtidDevc_00001000.bin",
+        "reg_SSDA_HONOR_NvdTable_00001000.bin",
+        "reg_SSDD_HONOR_SocCmn__00003000.bin",
+        "reg_SSDE_HONOR_PcdTabl_00001000.bin",
+        "reg_SSDT_HONOR_DptfTabl_00001000.bin"
+      ],
+      "excluded": [
+        {
+          "file": "reg_SSD9_HONOR_ADL-P-M_00000002.bin",
+          "reason": "Prefer SaSsdt; DSDT and SSDT9 also collide at I2C0.TPD0._PS0/_PS3",
+          "group": [
+            "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+            "reg_SSD9_HONOR_ADL-P-M_00000002.bin"
+          ]
+        },
+        {
+          "file": "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+          "reason": "Prefer DSDT when SSDT9 is neither target nor external",
+          "group": [
+            "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+            "reg_DSDT_HONOR_ADL-P-M_00000002.bin"
+          ]
+        }
+      ]
+    },
+    {
+      "target": "reg_SSDD_HONOR_SocCmn__00003000.bin",
+      "externals": [
+        "reg_DSDT_HONOR_ADL-P-M_00000002.bin",
+        "reg_SSD1_HONOR_Pmax_Dev_00000001.bin",
+        "reg_SSD2_HONOR_CpuSsdt_00003000.bin",
+        "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+        "reg_SSD4_HONOR_IgfxSsdt_00003000.bin",
+        "reg_SSD5_HONOR_TcssSsdt_00001000.bin",
+        "reg_SSD6_HONOR_Tpm2Tabl_00001000.bin",
+        "reg_SSD7_HONOR_WmiTable_00001000.bin",
+        "reg_SSD8_HONOR_PtidDevc_00001000.bin",
+        "reg_SSDA_HONOR_NvdTable_00001000.bin",
+        "reg_SSDC_HONOR_SocGpe__00003000.bin",
+        "reg_SSDE_HONOR_PcdTabl_00001000.bin",
+        "reg_SSDT_HONOR_DptfTabl_00001000.bin"
+      ],
+      "excluded": [
+        {
+          "file": "reg_SSD9_HONOR_ADL-P-M_00000002.bin",
+          "reason": "Prefer SaSsdt; DSDT and SSDT9 also collide at I2C0.TPD0._PS0/_PS3",
+          "group": [
+            "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+            "reg_SSD9_HONOR_ADL-P-M_00000002.bin"
+          ]
+        },
+        {
+          "file": "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+          "reason": "Prefer DSDT when SSDT9 is neither target nor external",
+          "group": [
+            "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+            "reg_DSDT_HONOR_ADL-P-M_00000002.bin"
+          ]
+        }
+      ]
+    },
+    {
+      "target": "reg_SSDE_HONOR_PcdTabl_00001000.bin",
+      "externals": [
+        "reg_DSDT_HONOR_ADL-P-M_00000002.bin",
+        "reg_SSD1_HONOR_Pmax_Dev_00000001.bin",
+        "reg_SSD2_HONOR_CpuSsdt_00003000.bin",
+        "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+        "reg_SSD4_HONOR_IgfxSsdt_00003000.bin",
+        "reg_SSD5_HONOR_TcssSsdt_00001000.bin",
+        "reg_SSD6_HONOR_Tpm2Tabl_00001000.bin",
+        "reg_SSD7_HONOR_WmiTable_00001000.bin",
+        "reg_SSD8_HONOR_PtidDevc_00001000.bin",
+        "reg_SSDA_HONOR_NvdTable_00001000.bin",
+        "reg_SSDC_HONOR_SocGpe__00003000.bin",
+        "reg_SSDD_HONOR_SocCmn__00003000.bin",
+        "reg_SSDT_HONOR_DptfTabl_00001000.bin"
+      ],
+      "excluded": [
+        {
+          "file": "reg_SSD9_HONOR_ADL-P-M_00000002.bin",
+          "reason": "Prefer SaSsdt; DSDT and SSDT9 also collide at I2C0.TPD0._PS0/_PS3",
+          "group": [
+            "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+            "reg_SSD9_HONOR_ADL-P-M_00000002.bin"
+          ]
+        },
+        {
+          "file": "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+          "reason": "Prefer DSDT when SSDT9 is neither target nor external",
+          "group": [
+            "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+            "reg_DSDT_HONOR_ADL-P-M_00000002.bin"
+          ]
+        }
+      ]
+    },
+    {
+      "target": "reg_SSDT_HONOR_DptfTabl_00001000.bin",
+      "externals": [
+        "reg_DSDT_HONOR_ADL-P-M_00000002.bin",
+        "reg_SSD1_HONOR_Pmax_Dev_00000001.bin",
+        "reg_SSD2_HONOR_CpuSsdt_00003000.bin",
+        "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+        "reg_SSD4_HONOR_IgfxSsdt_00003000.bin",
+        "reg_SSD5_HONOR_TcssSsdt_00001000.bin",
+        "reg_SSD6_HONOR_Tpm2Tabl_00001000.bin",
+        "reg_SSD7_HONOR_WmiTable_00001000.bin",
+        "reg_SSD8_HONOR_PtidDevc_00001000.bin",
+        "reg_SSDA_HONOR_NvdTable_00001000.bin",
+        "reg_SSDC_HONOR_SocGpe__00003000.bin",
+        "reg_SSDD_HONOR_SocCmn__00003000.bin",
+        "reg_SSDE_HONOR_PcdTabl_00001000.bin"
+      ],
+      "excluded": [
+        {
+          "file": "reg_SSD9_HONOR_ADL-P-M_00000002.bin",
+          "reason": "Prefer SaSsdt; DSDT and SSDT9 also collide at I2C0.TPD0._PS0/_PS3",
+          "group": [
+            "reg_SSD3_HONOR_SaSsdt__00003000.bin",
+            "reg_SSD9_HONOR_ADL-P-M_00000002.bin"
+          ]
+        },
+        {
+          "file": "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+          "reason": "Prefer DSDT when SSDT9 is neither target nor external",
+          "group": [
+            "reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+            "reg_DSDT_HONOR_ADL-P-M_00000002.bin"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -26,7 +26,7 @@
 |---|---|---|
 | **P0-SOURCE** | base 候选已固定；生成配置/传递 includes/对象依赖未闭合，12 条本文件内许可证明缺失，组合许可未审完 | 不把测试矩阵当运行成功；不把源码 slice 当完整闭包 |
 | **P0-ABI** | XNU 与 LinuxKPI 的锁、中断、内存/PM/DMA、IOKit 资源协议尚未通过可执行的等价性验证 | 不用 `return 0` Stub 伪造供电/固件/映射成功 |
-| **P0-SCANOUT** | 本机ACPI已给IGDM/ASLB字段、条件_DOD/_ADR与背光通知声明；OpRegion/VBT内容仍未取得，ASLB赋值者UNKNOWN，固定20250404的-e全外部表逐表解析仍0通过16失败。AUX/CDCLK/Power Well/PLL/PHY、GGTT backing与实际scanout仍未证明 | 不假定 Stolen base = GGTT 0 = Framebuffer；不直接写未知物理/PCI 寄存器 |
+| **P0-SCANOUT** | 本机ACPI已给IGDM/ASLB字段、条件_DOD/_ADR与背光通知声明；OpRegion/VBT内容仍未取得，ASLB赋值者UNKNOWN，固定20250404选表-e逐表16通过0失败；DSDT仍有外部方法警告，EDMX仍UnknownObj。AUX/CDCLK/Power Well/PLL/PHY、GGTT backing与实际scanout仍未证明 | 不假定 Stolen base = GGTT 0 = Framebuffer；不直接写未知物理/PCI 寄存器 |
 | **P0-PLATFORM** | Intel 12500H P/E 混合核与 macOS 内核/ACPI/启动可靠性未独立验收 | 不把 GPU 构建通过当整机能启动 |
 | **P0-LIFETIME** | VBL 注册/注销、停止/回调释放、SYS/FB 锁序等对新实现的证明缺失 | 不重复堆叠原 `NMIntelFB` VBL 微调 |
 | **P0-NV** | RTX2050 `10DE:25A9` ACPI位图/PEGP._DOD/电源方法已有静态记录；MUX仍无法判断，NOPR/GPIO/EC实际状态未知。完整GSP/NVRM/NVAccel/Metal无实机证据；r610仍缺Darwin参数 | 不把 PCI ID 在表中或 Metal 信息字符串视为真实加速 |
@@ -34,7 +34,7 @@
 
 ## 正在做什么／马上做什么
 
-**当前R1.4-C0-pre部分结果已交付，联合ACPI namespace仍BLOCKED。下一步保持R1.4-C0 T0→T4：已定位PEG1.PEGP._S0W重复且-e仍失败，T2引入本机声明及真实ACPI/PCI/OpRegion消费者合同。C0.1实际配置/预处理与IOPCIFamily来源等缺口继续保留。** 完整闭包和必要接口关闭前，不进入 native 编译或 kext 原型。
+**当前R1.4-C0-pre静态结果已交付，选表-e逐表16通过0失败，原表冲突不再列为解析阻塞。下一步保持R1.4-C0 T0→T4：已定位PEG1/HS10重复和触摸板电源重复，选表解析成功，T2引入本机声明及真实ACPI/PCI/OpRegion消费者合同。C0.1实际配置/预处理与IOPCIFamily来源等缺口继续保留。** 完整闭包和必要接口关闭前，不进入 native 编译或 kext 原型。
 
 **本知识库/AGENTS.md 的提交只是一项“移交文档”完成，并不推进 kernel 驱动运行等级。**
 
@@ -46,5 +46,5 @@
 16条文件内许可未证明、76条slice外include、四项XNU合同BLOCKED；无新编译或硬件证据。
 下一项C0.2固定IOPCIFamily/PCI-MMIO-PM生命周期与独立树核验，详见[报告](../docs/R1.4-C0.1_PCI与电源井接口合同.md)。
 
-## R1.4-C0-pre（SOURCE-STATIC，部分交付）
-[原表静态证据](../research/acpi-static-20261012/README.md)：36表校验通过；6测试通过0失败；单表16通过0失败，联合0通过2失败，未验收完整namespace。35项发现有DSL行号；本次-e全外部表逐表0通过16失败（均255），重复_S0W的PEG1作用域不改变本轮PEG0/GFX0方法体常量；位图是声明，NVS/OpRegion内容UNKNOWN。保持RUNTIME_NO_GO。
+## R1.4-C0-pre（SOURCE-STATIC）
+[原表静态证据](../research/acpi-static-20261012/README.md)：36表校验通过；同一iasl20250404选择外部代表逐表16通过0失败；历史失败日志保留。38项findings有定位；两组重复对应空闲PEG1和蓝牙HS10，与MUX/内屏/OpRegion无关。DSDT外部方法警告与EDMX UnknownObj仍保留；NVS/OpRegion内容未取得，RUNTIME_NO_GO。

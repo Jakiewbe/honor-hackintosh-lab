@@ -24,6 +24,8 @@ DefinitionBlock ("", "SSDT", 2, "HONOR", "TcssSsdt", 0x00001000)
     External (_SB_.PC00.GFX0, DeviceObj)
     External (_SB_.PC00.GMHB, MethodObj)    // 0 Arguments
     External (_SB_.PC00.GPCB, MethodObj)    // 0 Arguments
+    External (_SB_.PC00.PCIC, MethodObj)    // 1 Arguments
+    External (_SB_.PC00.PCID, MethodObj)    // 4 Arguments
     External (_SB_.PC00.TDM0.SCME, UnknownObj)
     External (_SB_.PC00.TDM1.SCME, UnknownObj)
     External (_SB_.PC01, DeviceObj)

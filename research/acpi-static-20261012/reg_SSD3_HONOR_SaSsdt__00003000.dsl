@@ -20,7 +20,11 @@
  */
 DefinitionBlock ("", "SSDT", 2, "HONOR", "SaSsdt ", 0x00003000)
 {
+    External (_SB_.AR02, PkgObj)
+    External (_SB_.AR0A, PkgObj)
+    External (_SB_.AR0B, PkgObj)
     External (_SB_.CAGS, MethodObj)    // 1 Arguments
+    External (_SB_.CPID, FieldUnitObj)
     External (_SB_.ISME, MethodObj)    // 1 Arguments
     External (_SB_.PC00, DeviceObj)
     External (_SB_.PC00.B0D3, DeviceObj)
@@ -80,6 +84,9 @@ DefinitionBlock ("", "SSDT", 2, "HONOR", "SaSsdt ", 0x00003000)
     External (_SB_.PC00.PEG3.PPS3, MethodObj)    // 0 Arguments
     External (_SB_.PC00.PEG3.UPRD, MethodObj)    // 1 Arguments
     External (_SB_.PC00.PEG3.VDID, FieldUnitObj)
+    External (_SB_.PD02, PkgObj)
+    External (_SB_.PD0A, PkgObj)
+    External (_SB_.PD0B, PkgObj)
     External (_SB_.SHPO, MethodObj)    // 2 Arguments
     External (AR02, UnknownObj)
     External (AR0A, UnknownObj)
@@ -194,10 +201,10 @@ DefinitionBlock ("", "SSDT", 2, "HONOR", "SaSsdt ", 0x00003000)
         {
             If (PICM)
             {
-                Return (AR02) /* External reference */
+                Return (AR02) /* \_SB_.AR02 */
             }
 
-            Return (PD02) /* External reference */
+            Return (PD02) /* \_SB_.PD02 */
         }
 
         Name (PRTP, 0x04)
@@ -658,10 +665,10 @@ DefinitionBlock ("", "SSDT", 2, "HONOR", "SaSsdt ", 0x00003000)
         {
             If (PICM)
             {
-                Return (AR02) /* External reference */
+                Return (AR02) /* \_SB_.AR02 */
             }
 
-            Return (PD02) /* External reference */
+            Return (PD02) /* \_SB_.PD02 */
         }
 
         Name (PRTP, 0x04)
@@ -1125,19 +1132,19 @@ DefinitionBlock ("", "SSDT", 2, "HONOR", "SaSsdt ", 0x00003000)
             {
                 If (PICM)
                 {
-                    Return (AR02) /* External reference */
+                    Return (AR02) /* \_SB_.AR02 */
                 }
 
-                Return (PD02) /* External reference */
+                Return (PD02) /* \_SB_.PD02 */
             }
             Else
             {
                 If (PICM)
                 {
-                    Return (AR0A) /* External reference */
+                    Return (AR0A) /* \_SB_.AR0A */
                 }
 
-                Return (PD0A) /* External reference */
+                Return (PD0A) /* \_SB_.PD0A */
             }
         }
 
@@ -1601,10 +1608,10 @@ DefinitionBlock ("", "SSDT", 2, "HONOR", "SaSsdt ", 0x00003000)
             {
                 If (PICM)
                 {
-                    Return (AR0B) /* External reference */
+                    Return (AR0B) /* \_SB_.AR0B */
                 }
 
-                Return (PD0B) /* External reference */
+                Return (PD0B) /* \_SB_.PD0B */
             }
 
             Name (PRTP, 0x04)

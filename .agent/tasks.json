@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project_id": "f6a08808-ada4-48fe-b2ad-82c0c827154b",
-  "revision": 10,
+  "revision": 12,
   "tasks": [
     {
       "task_id": "R14C0",
@@ -45,29 +45,30 @@
       "dependencies": [],
       "acceptance_criteria": [
         "P40/FILES_SHA256输入逐项核验，原调查目录不变",
-        "固定iasl版本/沙箱日志，16表联合反汇编；每项结论有行号或AML偏移，缺证据UNKNOWN",
-        "平台声明映射固定i915源码T2，知识库状态与下一步更新，保持RUNTIME_NO_GO"
+        "固定iasl版本/沙箱日志，按用户冲突组选择外部代表逐表反汇编16原目标；每项结论有行号，未证实项UNKNOWN",
+        "平台声明映射固定i915源码T2；知识库、便携治理规则与PR描述更新，保持RUNTIME_NO_GO"
       ],
-      "status": "blocked",
+      "status": "done",
       "evidence": [
         {
           "type": "test",
           "criterion": 1,
-          "detail": "inputs.json/verification.json：36原表校验通过；原调查目录git diff为空；离线校验通过"
+          "detail": "verification.json：36表SHA/长度/checksum一致，原调查目录差异为空；135离线测试通过0失败"
         },
         {
           "type": "command",
           "criterion": 2,
-          "detail": "external-runs.json：16条完整-e/-d命令与退出255；external-review.md与35项findings有定位；未声称成功"
+          "detail": "selected-external-runs.json：每个目标13外部表，两项明确排除，16退出0；38项findings，UnknownObj与DSDT警告保留"
         },
         {
           "type": "file",
           "criterion": 3,
-          "detail": "T2-platform-map.md与知识库同步；OpRegion/VBT未取得；RUNTIME_NO_GO"
+          "detail": "T2-platform-map.md、knowledge02/04/09/10、AGENTS便携状态规则、PR2三工作线描述；SOURCE-STATIC/RUNTIME_NO_GO"
         }
       ],
-      "blocker": "同一20250404以-e全部其余15原表逐表解析仍0通过16失败、均255；重复PEG1.PEGP._S0W已定位，External绑定与NVS实际内容未闭合。",
-      "updated_at": "2026-10-12T16:02:29.828550+00:00"
+      "blocker": "",
+      "updated_at": "2026-10-12T16:33:03.848799+00:00",
+      "completed_at": "2026-10-12T16:33:03.848799+00:00"
     }
   ],
   "history": [
@@ -261,6 +262,50 @@
         ]
       },
       "reason": "记录-e全表16次失败及精确重复定义，不冒充成功"
+    },
+    {
+      "revision": 11,
+      "timestamp": "2026-10-12T16:30:52.311550+00:00",
+      "action": "update",
+      "payload": {
+        "task_id": "R14C0PRE",
+        "status": "doing",
+        "blocker": "",
+        "acceptance_criteria": [
+          "P40/FILES_SHA256输入逐项核验，原调查目录不变",
+          "固定iasl版本/沙箱日志，按用户冲突组选择外部代表逐表反汇编16原目标；每项结论有行号，未证实项UNKNOWN",
+          "平台声明映射固定i915源码T2；知识库、便携治理规则与PR描述更新，保持RUNTIME_NO_GO"
+        ]
+      },
+      "reason": "用户明确修订验收为冲突组外部代表逐表解析并更新同一PR，开始修订"
+    },
+    {
+      "revision": 12,
+      "timestamp": "2026-10-12T16:33:03.848799+00:00",
+      "action": "update",
+      "payload": {
+        "task_id": "R14C0PRE",
+        "status": "done",
+        "blocker": "",
+        "evidence": [
+          {
+            "type": "test",
+            "criterion": 1,
+            "detail": "verification.json：36表SHA/长度/checksum一致，原调查目录差异为空；135离线测试通过0失败"
+          },
+          {
+            "type": "command",
+            "criterion": 2,
+            "detail": "selected-external-runs.json：每个目标13外部表，两项明确排除，16退出0；38项findings，UnknownObj与DSDT警告保留"
+          },
+          {
+            "type": "file",
+            "criterion": 3,
+            "detail": "T2-platform-map.md、knowledge02/04/09/10、AGENTS便携状态规则、PR2三工作线描述；SOURCE-STATIC/RUNTIME_NO_GO"
+          }
+        ]
+      },
+      "reason": "按用户修订标准验收16原目标选表反汇编和SOURCE-STATIC交付，不代表运行成功"
     }
   ]
 }

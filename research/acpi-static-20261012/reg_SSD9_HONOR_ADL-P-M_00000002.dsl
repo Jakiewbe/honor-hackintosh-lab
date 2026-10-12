@@ -28,6 +28,7 @@ DefinitionBlock ("", "SSDT", 2, "HONOR", "ADL-P-M", 0x00000002)
     External (_SB_.ISME, MethodObj)    // 1 Arguments
     External (_SB_.OSCO, UnknownObj)
     External (_SB_.PC00, DeviceObj)
+    External (_SB_.PC00.DGBA, FieldUnitObj)
     External (_SB_.PC00.DGCX, IntObj)
     External (_SB_.PC00.DSSV, FieldUnitObj)
     External (_SB_.PC00.GC6I, MethodObj)    // 0 Arguments

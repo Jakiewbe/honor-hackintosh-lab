@@ -9,11 +9,8 @@ Debian package: 20250404-1
 Package SHA256: eea598bdb5d10ae51801f7c586a51f33335c60d964f5f18203cdda47fd5ab069
 iasl executable SHA256: bbc9710408dfd0551549d2d1528e4d9514a8782ae5b5117fc7b3d5488ce42f07
 Container image ID: sha256:1a6ab3f5345eb6dbe04a1349529caabdb0ab09293a09590fad07b2246bfa4b54
-Isolation: readonly rootfs=True; network=none; user=65534:65534; no host mounts=True; <WORKDIR> tmpfs
-Command: docker exec -w <WORKDIR>/input honor-acpi-static-20261012 <WORKDIR>/pkg/usr/bin/iasl -da <WORKDIR>/input/reg_DSDT_HONOR_ADL-P-M_00000002.bin <WORKDIR>/input/reg_SSD1_HONOR_Pmax_Dev_00000001.bin <WORKDIR>/input/reg_SSD2_HONOR_CpuSsdt_00003000.bin <WORKDIR>/input/reg_SSD3_HONOR_SaSsdt__00003000.bin <WORKDIR>/input/reg_SSD4_HONOR_IgfxSsdt_00003000.bin <WORKDIR>/input/reg_SSD5_HONOR_TcssSsdt_00001000.bin <WORKDIR>/input/reg_SSD6_HONOR_Tpm2Tabl_00001000.bin <WORKDIR>/input/reg_SSD7_HONOR_WmiTable_00001000.bin <WORKDIR>/input/reg_SSD8_HONOR_PtidDevc_00001000.bin <WORKDIR>/input/reg_SSD9_HONOR_ADL-P-M_00000002.bin <WORKDIR>/input/reg_SSDA_HONOR_NvdTable_00001000.bin <WORKDIR>/input/reg_SSDB_HONOR_xh_adlLP_00000000.bin <WORKDIR>/input/reg_SSDC_HONOR_SocGpe__00003000.bin <WORKDIR>/input/reg_SSDD_HONOR_SocCmn__00003000.bin <WORKDIR>/input/reg_SSDE_HONOR_PcdTabl_00001000.bin <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
-Exit: 255
-
-Correction run: same package/executable SHA256, isolation and iasl -v as above.
-Current commands: external-runs.json (iasl -e all other 15 tables -d target).
-Result: 0 passed, 16 failed; each exit 255. No -da rerun; no -fe used: failure is object creation, not a missing argument declaration.
-Paths normalized to <WORKDIR>; original AML inputs unchanged.
+Isolation: readonly rootfs; network=none; user=65534:65534; no host mounts; tmpfs
+Commands, lists, exit codes and summaries: selected-external-runs.json
+Mode: iasl -e <13 selected externals> -d <unchanged target>; no -fe used
+Policy: external-plan.json; exclude only the two explicit conflicting counterparts, all original tables remain targets.
+Path normalization: sandbox paths -> <WORKDIR>; generated text hashes reflect normalization.

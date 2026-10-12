@@ -24,6 +24,7 @@ DefinitionBlock ("", "SSDT", 2, "HONOR", "SocGpe ", 0x00003000)
     External (_GPE.P1L6, MethodObj)    // 0 Arguments
     External (_GPE.P2L6, MethodObj)    // 0 Arguments
     External (_SB_.PC00, DeviceObj)
+    External (_SB_.PC00.CNVW, UnknownObj)
     External (_SB_.PC00.CNVW.GPEH, MethodObj)    // 0 Arguments
     External (_SB_.PC00.D3C_, PowerResObj)
     External (_SB_.PC00.D3C_._ON_, MethodObj)    // 0 Arguments
@@ -31,7 +32,9 @@ DefinitionBlock ("", "SSDT", 2, "HONOR", "SocGpe ", 0x00003000)
     External (_SB_.PC00.GFX0, DeviceObj)
     External (_SB_.PC00.GFX0.GSCI, MethodObj)    // 0 Arguments
     External (_SB_.PC00.GFX0.GSSE, FieldUnitObj)
+    External (_SB_.PC00.GLAN, UnknownObj)
     External (_SB_.PC00.GLAN.GPEH, MethodObj)    // 0 Arguments
+    External (_SB_.PC00.HDAS, UnknownObj)
     External (_SB_.PC00.HDAS.GPEH, MethodObj)    // 0 Arguments
     External (_SB_.PC00.MC__, DeviceObj)
     External (_SB_.PC00.MC__.D1F0, FieldUnitObj)
@@ -281,7 +284,9 @@ DefinitionBlock ("", "SSDT", 2, "HONOR", "SocGpe ", 0x00003000)
     External (_SB_.PC00.TXHC._STA, MethodObj)    // 0 Arguments
     External (_SB_.PC00.TXHC.D0D3, FieldUnitObj)
     External (_SB_.PC00.TXHC.PMES, FieldUnitObj)
+    External (_SB_.PC00.XDCI, UnknownObj)
     External (_SB_.PC00.XDCI.GPEH, MethodObj)    // 0 Arguments
+    External (_SB_.PC00.XHCI, UnknownObj)
     External (_SB_.PC00.XHCI.GPEH, MethodObj)    // 0 Arguments
     External (_SB_.PC01, DeviceObj)
     External (_SB_.PC01.TRP0, DeviceObj)

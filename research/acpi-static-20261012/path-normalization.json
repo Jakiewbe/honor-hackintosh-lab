@@ -140,5 +140,6 @@
       "after_sha256": "a24694e8adef88e242d0b736c2e1e3fdddceaccf0c3854850cd589b630bb7ee6",
       "line_count_unchanged": true
     }
-  ]
+  ],
+  "historical_scope": "Normalization records from a3e7f7b; current regenerated DSL hashes are in disassembly-manifest.json"
 }

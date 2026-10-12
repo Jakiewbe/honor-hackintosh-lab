@@ -63,3 +63,6 @@ C0.1已交付；下一项C0.2固定IOPCIFamily与PCI/MMIO/PM生命周期；不�
 
 ## 2026-10-13 C0-pre 外部引用复核
 按用户指定的-e其余全部15表-d目标执行，同一20250404工具0通过16失败。重复_S0W精确定位到SaSsdt与SSDT9的PEG1.PEGP；方法体常量没有改变，但不能删除外部解析阻塞。12个跨表条目明确复核边界，新增重复定义finding；环境路径规范化，原表不改。离线52通过0失败（本轮ACPI6、待推C0/C0.1共46），原证据与workflows差异为空；保持RUNTIME_NO_GO。用户授权研究分支推送与草稿PR，不合并或触发Actions。
+
+## 2026-10-13 C0-pre 冲突组代表选择验收
+用户补充PEG1._S0W和HS10.SADX两组冲突，要求外部代表选择。第一选择2通过14失败，进一步定位DSDT/SSDT9触摸板_PS0/_PS3重复；仅调整两组内代表，仍每目标13外部表，随后16通过0失败。原表均保留为目标、字节未改。NV/Igfx全文不变，TCSS新增PCIC(1)/PCID(4)；38项findings和精确行号已复核。全量离线135通过0失败；隐私0命中；原调查目录/workflows及原AGENTS安全段不改。AGENTS治理约定改为不依赖仓库外工具。阶段SOURCE-STATIC验收不等于全部External或硬件成功；DSDT警告、EDMX未知、VBT/OpRegion内容缺口保留。

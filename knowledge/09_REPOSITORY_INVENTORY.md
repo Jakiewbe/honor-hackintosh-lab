@@ -89,4 +89,6 @@ R1.4-C0 新增：`research/independent-i915/` 中 source lock、license/symbol/i
 
 R1.4-C0.1新增[工程目录](../research/independent-i915/c01/README.md)、[正式报告](../docs/R1.4-C0.1_PCI与电源井接口合同.md)、scripts/r14c01_validate_power_contract.py与tests/test_r14c01_power_contract.py。C0数据不回写，旧实验资产不改。
 
-R1.4-C0-pre新增[research/acpi-static-20261012/](../research/acpi-static-20261012/README.md)：inputs、toolchain/来源、联合失败与单表日志、16份DSL及哈希、35项findings及external-review、external-runs、findings-changes、path-normalization、17个DD_ADR方法体、98项IGDM字段布局、T2平台映射与校验记录。scripts/acpi_static_validate_inputs.py、tests/test_acpi_static_inputs.py均为离线文本/manifest验证。docs/hardware-survey-20261012原证据不改。
+R1.4-C0-pre新增[research/acpi-static-20261012/](../research/acpi-static-20261012/README.md)：inputs、toolchain/来源、联合失败与单表日志、16份DSL及哈希、38项findings及external-review、external-runs、findings-changes、path-normalization、external-plan/selected-external-runs、dsl-changes、17个DD_ADR方法体、98项IGDM字段布局、T2平台映射与校验记录。scripts/acpi_static_validate_inputs.py、tests/test_acpi_static_inputs.py均为离线文本/manifest验证。docs/hardware-survey-20261012原证据不改。
+
+选表-e复核新增scripts/acpi_static_external_plan.py和tests/test_acpi_static_external_plan.py：纯离线manifest选表，检验冲突组与原目标集合，不读取硬件或执行AML。

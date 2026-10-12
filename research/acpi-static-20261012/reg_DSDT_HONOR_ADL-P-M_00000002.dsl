@@ -29,13 +29,6 @@ DefinitionBlock ("", "DSDT", 2, "HONOR", "ADL-P-M", 0x00000002)
      * unresolved methods. Note: SSDTs can be dynamically loaded at
      * runtime and may or may not be available via the host OS.
      *
-     * To specify the tables needed to resolve external control method
-     * references, the -e option can be used to specify the filenames.
-     * Example iASL invocations:
-     *     iasl -e ssdt1.aml ssdt2.aml ssdt3.aml -d dsdt.aml
-     *     iasl -e dsdt.aml ssdt2.aml -d ssdt1.aml
-     *     iasl -e ssdt*.aml -d dsdt.aml
-     *
      * In addition, the -fe option can be used to specify a file containing
      * control method external declarations with the associated method
      * argument counts. Each line of the file must be of the form:

@@ -44,3 +44,6 @@
 
 ## R1.4-C0-pre｜本机原表静态解析
 等级SOURCE-STATIC，非运行时证据。[记录](../research/acpi-static-20261012/README.md)：36表SHA/长度/checksum一致；6离线测试通过0失败；iasl单表16通过0失败，20200925/20250404联合16表均退出255（0通过2失败）。2026-10-13同一20250404工具改用-e全部其余15表逐表解析，0通过16失败、均255；重复_S0W两处已定位（SaSsdt/SSDT9，PEG1.PEGP），35项findings见external-review.md。全外部引用仍BLOCKED，DSDT单表有外部方法警告；没有执行AML/触发Actions或访问硬件。
+
+## 2026-10-13 C0-pre选表-e修订
+同一ACPICA20250404/包20250404-1，无网络非root无宿主挂载容器。第一选择2通过14失败，精确新对象为DSDT/SSDT9的I2C0.TPD0._PS0/_PS3；仅改变两组内代表后16通过0失败。每目标13外部表及两项排除见selected-external-runs.json；原16张表全部仍作目标且不改。38项findings，NV/Igfx方法体未变，TCSS新增PCIC(1)/PCID(4)声明。DSDT外部方法警告及EDMX UnknownObj不因退出0消失；仅SOURCE-STATIC，RUNTIME_NO_GO。原调查目录/workflows不变，没有执行AML或硬件操作。
