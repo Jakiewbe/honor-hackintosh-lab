@@ -1,0 +1,189 @@
+name: HONOR R1.2-C VBL reentrancy qualification
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: honor-r12c-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  callback-lifetime:
+    runs-on: macos-15-intel
+    timeout-minutes: 20
+    env:
+      UPSTREAM_NULLMOTH: 0960b2ef5dbc4a573056d4c8e042a5bd2e15d651
+    steps:
+      - name: Checkout research scripts and candidate patches
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Qualify Intel Mac and Xcode 16
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$(uname -m)" == "x86_64" ]] || { echo 'BLOCKED: not Intel macOS'; exit 2; }
+          version="$(xcodebuild -version)"
+          if [[ "$version" != "Xcode 16."* ]]; then
+            found=''
+            for app in /Applications/Xcode_16*.app; do
+              if [[ -d "$app/Contents/Developer" ]]; then
+                found="$app/Contents/Developer"
+                break
+              fi
+            done
+            [[ -n "$found" ]] || { echo 'BLOCKED: no Xcode 16'; exit 2; }
+            echo "DEVELOPER_DIR=$found" >> "$GITHUB_ENV"
+          fi
+
+      - name: Fetch and verify pristine NullMoth commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/r12c-logs"
+          src="$RUNNER_TEMP/r12c-source"
+          git init -q "$src"
+          git -C "$src" remote add origin https://github.com/nullmoth/nvidia-macos-driver.git
+          git -C "$src" fetch --no-tags --depth 1 origin "$UPSTREAM_NULLMOTH"
+          git -C "$src" checkout -q --detach FETCH_HEAD
+          [[ "$(git -C "$src" rev-parse HEAD)" == "$UPSTREAM_NULLMOTH" ]]
+          python3 scripts/verify_pinned_source.py --repo "$src" | tee "$RUNNER_TEMP/r12c-logs/upstream-integrity.json"
+          echo 'R12C_PRISTINE_SOURCE_VERIFIED'
+
+      - name: Apply all three independent patches in sequence
+        shell: bash
+        run: |
+          set -euo pipefail
+          src="$RUNNER_TEMP/r12c-source"
+          log="$RUNNER_TEMP/r12c-logs"
+          r11="$GITHUB_WORKSPACE/patches/r11_scanout_bounds_and_mmio.patch"
+          r12b="$GITHUB_WORKSPACE/patches/r12b_vbl_workloop_gate.patch"
+          r12c="$GITHUB_WORKSPACE/patches/r12c_vbl_callback_lifetime.patch"
+          for p in "$r11" "$r12b" "$r12c"; do
+            git -C "$src" apply --check "$p"
+            git -C "$src" apply "$p"
+          done
+          git -C "$src" diff --check
+          git -C "$src" diff --name-only | LC_ALL=C sort > "$log/changed-paths.txt"
+          printf '%s\n' "kexts/NMIntelFB/intelfb.cpp" "kexts/NVRM/accel/nvrm-accel.cpp" | LC_ALL=C sort > "$log/expected-paths.txt"
+          diff -u "$log/expected-paths.txt" "$log/changed-paths.txt"
+          for p in "$r12c" "$r12b" "$r11"; do
+            git -C "$src" apply --reverse --check "$p"
+            # Reverse-apply and reapply to prove each stacked transition,
+            # without mutating or pushing the original upstream repository.
+            git -C "$src" apply --reverse "$p"
+          done
+          [[ -z "$(git -C "$src" status --porcelain)" ]] || { echo 'BLOCKED: patch stack not cleanly reversible'; exit 2; }
+          for p in "$r11" "$r12b" "$r12c"; do
+            git -C "$src" apply --check "$p"
+            git -C "$src" apply "$p"
+          done
+          git -C "$src" diff --stat | tee "$log/diff-summary.txt"
+          echo 'R12C_THREE_PATCH_STACK_REVERSIBLE'
+
+      - name: Run all deterministic models and patch invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          log="$RUNNER_TEMP/r12c-logs"
+          src="$RUNNER_TEMP/r12c-source"
+          for test in test_r10_bounds_model.py test_r12_vbl_lifecycle_model.py test_r12c_reentrant_stop_model.py; do
+            python3 "tests/$test" > "$log/$test.log" 2>&1 || {
+              cat "$log/$test.log"; echo "BLOCKED: model $test"; exit 2
+            }
+            cat "$log/$test.log"
+          done
+          for test in test_r11_patch_contract.py test_r12b_patch_guards.py test_r12c_patch_guards.py; do
+            python3 "tests/$test" --source "$src" | tee "$log/$test.json"
+          done
+          echo 'R12C_MODELS_AND_SOURCE_CHECKS_PASS (reference models only)'
+
+      - name: Build physical and virtual NMIntelFB targets without loading
+        shell: bash
+        run: |
+          set -euo pipefail
+          src="$RUNNER_TEMP/r12c-source/kexts/NMIntelFB"
+          log="$RUNNER_TEMP/r12c-logs"
+          out="$RUNNER_TEMP/r12c-binaries"
+          mkdir -p "$out"
+          sdk="$(xcrun --sdk macosx --show-sdk-path)"
+          headers="$sdk/System/Library/Frameworks/Kernel.framework/Headers"
+          [[ -d "$headers/IOKit" ]] || { echo 'BLOCKED: XNU kernel headers unavailable'; exit 2; }
+          {
+            xcodebuild -version
+            echo "SDK=$sdk"
+            echo 'arch=x86_64; minimum deployment target=15.5'
+          } | tee "$log/toolchain.txt"
+          plutil -lint "$src/Info.plist" | tee "$log/plist.txt"
+          for variant in real virtual; do
+            flags=()
+            if [[ "$variant" == virtual ]]; then flags+=( -DNMINTELFB_VIRTUAL ); fi
+            set +e
+            xcrun clang++ -arch x86_64 -mmacosx-version-min=15.5 \
+              -fapple-kext -mkernel -nostdinc -I "$headers" -I "$src" \
+              -DKERNEL -DKERNEL_PRIVATE -DDRIVER_PRIVATE -DAPPLE -DNeXT \
+              -std=c++17 -fno-rtti -fno-exceptions -fno-builtin -fno-common \
+              -Wall -Wno-unused-parameter -Wno-inconsistent-missing-override -O2 \
+              "${flags[@]}" -c "$src/intelfb.cpp" -o "$out/$variant.o" > "$log/compile-$variant.txt" 2>&1
+            compile_rc=$?
+            set -e
+            if [[ "$compile_rc" -ne 0 ]]; then
+              cat "$log/compile-$variant.txt"
+              echo "R12C_${variant^^}_COMPILE_FAILED exit=$compile_rc"
+              exit 2
+            fi
+            set +e
+            xcrun clang++ -arch x86_64 -mmacosx-version-min=15.5 \
+              -fapple-kext -nostdlib -Xlinker -kext -lkmodc++ -lkmod -lcc_kext \
+              "$out/$variant.o" -o "$out/$variant" > "$log/link-$variant.txt" 2>&1
+            link_rc=$?
+            set -e
+            if [[ "$link_rc" -ne 0 ]]; then
+              cat "$log/link-$variant.txt"
+              echo "R12C_${variant^^}_LINK_FAILED exit=$link_rc"
+              exit 2
+            fi
+            file "$out/$variant" | tee "$log/file-$variant.txt"
+            grep -q 'Mach-O 64-bit kext bundle x86_64' "$log/file-$variant.txt"
+            xcrun nm -u "$out/$variant" > "$log/undefined-$variant.txt" || true
+            echo "R12C_${variant^^}_OBJECT_AND_KEXT_LINK_PASS (not loaded)"
+          done
+
+      - name: Note remaining runtime blockers
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/r12c-logs"
+          {
+            echo 'This workflow ONLY tests deterministic abstract callback lifetimes and source/compile compatibility.'
+            echo 'IOEventSource owner is unretained by the event source itself. R1.2-C pins owner and sender only during callback execution.'
+            echo 'Not proven: synchronous stop and removeEventSource legality on the callback stack, target destructor reentrancy, concurrent stop convergence and runtime timer failures.'
+            echo 'Not proven: macOS kernel collection approval or physical Intel display scanout.'
+            echo 'Not proven: NVAccel native build and NVIDIA RTX 2050 Metal acceleration.'
+            echo 'No kext binaries, executable objects or GPU firmware are uploaded.'
+          } > "$RUNNER_TEMP/r12c-logs/limitations.txt"
+
+      - name: Upload text diagnostics only
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: honor-r12c-reentrancy-diagnostics
+          path: ${{ runner.temp }}/r12c-logs/
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Append evidence-qualified conclusion
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          {
+            echo '## R1.2-C — callback reentrancy candidate'
+            echo '- Three pinned reversible patches in temporary upstream copy.'
+            echo '- Source guards and abstract negative fault injection do not prove kernel concurrent execution.'
+            echo '- Real and virtual source build tests are compile-only; no kext was loaded or uploaded.'
+            echo '- Even if green: BUILD-PASS / RUNTIME-BLOCKED. Do not install on HONOR GLO-FX6P.'
+          } >> "$GITHUB_STEP_SUMMARY"
