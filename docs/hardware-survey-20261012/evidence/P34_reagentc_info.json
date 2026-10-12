@@ -1,0 +1,21 @@
+{
+    "probe_id":  "P34_reagentc_info",
+    "title":  "Windows RE status (reagentc /info)",
+    "source_interface":  "reagentc.exe /info (read-only; requires elevation)",
+    "command":  "$ErrorActionPreference = 'Continue'\r\n    $o = & \"$env:SystemRoot\\System32\\<REDACTED_UNIQUE_ID>\" /info 2>&1\r\n    @($o | ForEach-Object { [string]$_ })",
+    "started_local":  "2026-10-12T22:48:20.950+08:00",
+    "duration_ms":  21,
+    "status":  "error",
+    "native_exit_code":  5,
+    "errors":  [
+
+               ],
+    "data":  [
+                 "此命令只能从提升的命令提示符执行。",
+                 "",
+                 "REAGENTC.EXE: 操作失败: 5",
+                 "System.Management.Automation.RemoteException",
+                 "REAGENTC.EXE: 出现错误。",
+                 "    "
+             ]
+}

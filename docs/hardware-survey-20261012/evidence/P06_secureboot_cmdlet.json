@@ -1,0 +1,14 @@
+{
+    "probe_id":  "P06_secureboot_cmdlet",
+    "title":  "Confirm-SecureBootUEFI (cmdlet cross-check)",
+    "source_interface":  "PowerShell SecureBoot module Confirm-SecureBootUEFI (read-only; requires elevation)",
+    "command":  "[ordered]@{ Confirm_SecureBootUEFI = (Confirm-SecureBootUEFI) }",
+    "started_local":  "2026-10-12T22:47:27.054+08:00",
+    "duration_ms":  59,
+    "status":  "error",
+    "native_exit_code":  null,
+    "errors":  [
+                   "System.UnauthorizedAccessException: 无法设置正确的权限。访问被拒绝。"
+               ],
+    "data":  null
+}

@@ -1,0 +1,71 @@
+{
+    "probe_id":  "P02_system",
+    "title":  "System model, baseboard, BIOS",
+    "source_interface":  "CIM Win32_ComputerSystem / Win32_ComputerSystemProduct / Win32_BaseBoard / Win32_BIOS (serial/UUID fields not selected)",
+    "command":  "$csys = Get-CimInstance Win32_ComputerSystem | Select-Object Manufacturer, Model, SystemFamily, SystemSKUNumber, SystemType, PCSystemType, NumberOfProcessors, NumberOfLogicalProcessors, TotalPhysicalMemory, HypervisorPresent\r\n    $prod = Get-CimInstance Win32_ComputerSystemProduct | Select-Object Vendor, Name, Version\r\n    $bb = Get-CimInstance Win32_BaseBoard | Select-Object Manufacturer, Product, Version\r\n    $bios = Get-CimInstance Win32_BIOS | Select-Object Manufacturer, Name, SMBIOSBIOSVersion, BIOSVersion, SMBIOSMajorVersion, SMBIOSMinorVersion, SystemBiosMajorVersion, SystemBiosMinorVersion, EmbeddedControllerMajorVersion, EmbeddedControllerMinorVersion, @{n = 'ReleaseDate'; e = { Format-Date $_.ReleaseDate } }\r\n    $hwbios = $null\r\n    try { $hwbios = Get-RegValues 'HKLM:\\HARDWARE\\DESCRIPTION\\System\\BIOS' @('BIOSVendor', 'BIOSVersion', 'BIOSReleaseDate', 'SystemManufacturer', 'SystemProductName', 'SystemFamily', 'SystemVersion', 'SystemSKU', 'BaseBoardManufacturer', 'BaseBoardProduct', 'BaseBoardVersion', 'BiosMajorRelease', 'BiosMinorRelease', 'ECFirmwareMajorRelease', 'ECFirmwareMinorRelease') } catch { Add-ProbeError ('registry HARDWARE\\DESCRIPTION\\System\\BIOS: ' + $_.Exception.Message) }\r\n    [ordered]@{ computer_system = $csys; computer_system_product = $prod; baseboard = $bb; bios = $bios; registry_hardware_description_bios = $hwbios }",
+    "started_local":  "2026-10-12T22:47:25.819+08:00",
+    "duration_ms":  68,
+    "status":  "ok",
+    "native_exit_code":  null,
+    "errors":  [
+
+               ],
+    "data":  {
+                 "computer_system":  {
+                                         "Manufacturer":  "HONOR",
+                                         "Model":  "GLO-FX6P",
+                                         "SystemFamily":  "HONOR MagicBook",
+                                         "SystemSKUNumber":  "C233",
+                                         "SystemType":  "x64-based PC",
+                                         "PCSystemType":  2,
+                                         "NumberOfProcessors":  1,
+                                         "NumberOfLogicalProcessors":  16,
+                                         "TotalPhysicalMemory":  16890978304,
+                                         "HypervisorPresent":  true
+                                     },
+                 "computer_system_product":  {
+                                                 "Vendor":  "HONOR",
+                                                 "Name":  "GLO-FX6P",
+                                                 "Version":  "M2080"
+                                             },
+                 "baseboard":  {
+                                   "Manufacturer":  "HONOR",
+                                   "Product":  "GLO-FX6P-PCB",
+                                   "Version":  "M2080"
+                               },
+                 "bios":  {
+                              "Manufacturer":  "HONOR",
+                              "Name":  "3.09",
+                              "SMBIOSBIOSVersion":  "3.09",
+                              "BIOSVersion":  [
+                                                  "HONOR - 2",
+                                                  "3.09",
+                                                  "QUANTA - 30009"
+                                              ],
+                              "SMBIOSMajorVersion":  3,
+                              "SMBIOSMinorVersion":  3,
+                              "SystemBiosMajorVersion":  3,
+                              "SystemBiosMinorVersion":  9,
+                              "EmbeddedControllerMajorVersion":  3,
+                              "EmbeddedControllerMinorVersion":  9,
+                              "ReleaseDate":  "2023-07-10"
+                          },
+                 "registry_hardware_description_bios":  {
+                                                            "BIOSVendor":  "HONOR",
+                                                            "BIOSVersion":  "3.09",
+                                                            "BIOSReleaseDate":  "07/10/2023",
+                                                            "SystemManufacturer":  "HONOR",
+                                                            "SystemProductName":  "GLO-FX6P",
+                                                            "SystemFamily":  "HONOR MagicBook",
+                                                            "SystemVersion":  "M2080",
+                                                            "SystemSKU":  "C233",
+                                                            "BaseBoardManufacturer":  "HONOR",
+                                                            "BaseBoardProduct":  "GLO-FX6P-PCB",
+                                                            "BaseBoardVersion":  "M2080",
+                                                            "BiosMajorRelease":  3,
+                                                            "BiosMinorRelease":  9,
+                                                            "ECFirmwareMajorRelease":  3,
+                                                            "ECFirmwareMinorRelease":  9
+                                                        }
+             }
+}

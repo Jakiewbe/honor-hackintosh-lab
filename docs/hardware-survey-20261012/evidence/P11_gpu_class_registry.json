@@ -1,0 +1,142 @@
+{
+    "probe_id":  "P11_gpu_class_registry",
+    "title":  "Display class registry keys (driver, HardwareInformation.*)",
+    "source_interface":  "registry HKLM\\SYSTEM\\CurrentControlSet\\Control\\Class\\{4d36e968-e325-11ce-bfc1-08002be10318}\\NNNN (read-only)",
+    "command":  "$rel = 'SYSTEM\\CurrentControlSet\\Control\\Class\\{4d36e968-e325-11ce-bfc1-08002be10318}'\r\n    $root = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey($rel, $false)\r\n    if ($null -eq $root) { throw 'display class key not readable' }\r\n    $subs = @($root.GetSubKeyNames() | Where-Object { $_ -match '^\\d{4}$' })\r\n    $root.Close()\r\n    $out = @()\r\n    foreach ($sub in $subs) {\r\n        $k = [pscustomobject]@{ PSChildName = $sub; PSPath = \"HKLM:\\$rel\\$sub\" }\r\n        try {\r\n            $vals = Get-RegValues $k.PSPath @('DriverDesc', 'ProviderName', 'DriverVersion', 'DriverDate', 'MatchingDeviceId', 'InfPath', 'InfSection', 'HardwareInformation.qwMemorySize', 'HardwareInformation.MemorySize', 'HardwareInformation.AdapterString', 'HardwareInformation.BiosString', 'HardwareInformation.ChipType', 'HardwareInformation.DacType')\r\n            $names = @((Get-Item -LiteralPath $k.PSPath).GetValueNames())\r\n            $interesting = @($names | Where-Object { $_ -match '(?i)vbt|opregion|edp|panel|mux|optimus|hybrid|dds|psr|lane|linkrate|backlight|dmc' })\r\n            $ivals = [ordered]@{}\r\n            if ($interesting.Count) {\r\n                $ip = Get-ItemProperty -LiteralPath $k.PSPath\r\n                foreach ($n in $interesting) {\r\n                    $v = $ip.$n\r\n                    if ($v -is [byte[]]) { $v = $(if ($v.Length -le 16) { 'hex:' + (($v | ForEach-Object { $_.ToString('X2') }) -join '') } else { 'binary(' + $v.Length + ' bytes)' }) }\r\n                    elseif ($v -is [string] -and $v.Length -gt 64) { $v = $v.Substring(0, 64) + '...' }\r\n                    $ivals[$n] = $v\r\n                }\r\n            }\r\n            $out += [ordered]@{ key = $k.PSChildName; values = $vals; value_name_count = $names.Count; display_related_values = $ivals }\r\n        } catch { Add-ProbeError (\"$($k.PSChildName): \" + $_.Exception.Message) }\r\n    }\r\n    $out",
+    "started_local":  "2026-10-12T22:47:27.165+08:00",
+    "duration_ms":  138,
+    "status":  "ok",
+    "native_exit_code":  null,
+    "errors":  [
+
+               ],
+    "data":  [
+                 {
+                     "key":  "0000",
+                     "values":  {
+                                    "DriverDesc":  "GameViewer Virtual Display Adapter",
+                                    "ProviderName":  "GameViewer",
+                                    "DriverVersion":  "15.6.5.199",
+                                    "DriverDate":  "2-28-2026",
+                                    "MatchingDeviceId":  "Root\\GameViewerIddDriver",
+                                    "InfPath":  "oem4.inf",
+                                    "InfSection":  "MyDevice_Install_WIN11.NT",
+                                    "HardwareInformation.qwMemorySize":  null,
+                                    "HardwareInformation.MemorySize":  null,
+                                    "HardwareInformation.AdapterString":  null,
+                                    "HardwareInformation.BiosString":  null,
+                                    "HardwareInformation.ChipType":  null,
+                                    "HardwareInformation.DacType":  null
+                                },
+                     "value_name_count":  10,
+                     "display_related_values":  {
+
+                                                }
+                 },
+                 {
+                     "key":  "0001",
+                     "values":  {
+                                    "DriverDesc":  "Honor Virtual Display Device",
+                                    "ProviderName":  "Honor",
+                                    "DriverVersion":  "1.0.23.3",
+                                    "DriverDate":  "7-4-2024",
+                                    "MatchingDeviceId":  "IndirectDSP\\VirtualDisplayDriver",
+                                    "InfPath":  "oem45.inf",
+                                    "InfSection":  "VDDDevice_Install.NT",
+                                    "HardwareInformation.qwMemorySize":  null,
+                                    "HardwareInformation.MemorySize":  null,
+                                    "HardwareInformation.AdapterString":  null,
+                                    "HardwareInformation.BiosString":  null,
+                                    "HardwareInformation.ChipType":  null,
+                                    "HardwareInformation.DacType":  null
+                                },
+                     "value_name_count":  10,
+                     "display_related_values":  {
+
+                                                }
+                 },
+                 {
+                     "key":  "0002",
+                     "values":  {
+                                    "DriverDesc":  "Intel(R) Iris(R) Xe Graphics",
+                                    "ProviderName":  "Intel Corporation",
+                                    "DriverVersion":  "31.0.101.3358",
+                                    "DriverDate":  "8-4-2022",
+                                    "MatchingDeviceId":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7",
+                                    "InfPath":  "oem44.inf",
+                                    "InfSection":  "iADLPD_w10_DS",
+                                    "HardwareInformation.qwMemorySize":  null,
+                                    "HardwareInformation.MemorySize":  1073741824,
+                                    "HardwareInformation.AdapterString":  "Intel(R) Iris(R) Xe Graphics",
+                                    "HardwareInformation.BiosString":  "Intel Video BIOS",
+                                    "HardwareInformation.ChipType":  "Intel(R) Iris(R) Xe Graphics Family",
+                                    "HardwareInformation.DacType":  "Internal"
+                                },
+                     "value_name_count":  223,
+                     "display_related_values":  {
+                                                    "eDPFecDisable":  1,
+                                                    "EdpHDRTotalOUICount":  10,
+                                                    "ForceDefaultHDRMetadataEdp":  1,
+                                                    "LinkRateSupport":  3,
+                                                    "NoFastLinkTrainingForeDP":  1,
+                                                    "OUI_EDP_HDR_1":  8889,
+                                                    "OUI_EDP_HDR_10":  3201345,
+                                                    "OUI_EDP_HDR_2":  24749,
+                                                    "OUI_EDP_HDR_3":  3730449,
+                                                    "OUI_EDP_HDR_4":  12206425,
+                                                    "OUI_EDP_HDR_5":  3303,
+                                                    "OUI_EDP_HDR_6":  7416,
+                                                    "OUI_EDP_HDR_7":  3303,
+                                                    "OUI_EDP_HDR_8":  5466455,
+                                                    "OUI_EDP_HDR_9":  1608159,
+                                                    "ParadeMuxEdpLinkRateDataReloadTrigger":  0,
+                                                    "PSR2Disable":  0,
+                                                    "Psr2DrrsEnable":  1
+                                                }
+                 },
+                 {
+                     "key":  "0003",
+                     "values":  {
+                                    "DriverDesc":  "NVIDIA GeForce RTX 2050",
+                                    "ProviderName":  "NVIDIA",
+                                    "DriverVersion":  "32.0.15.7283",
+                                    "DriverDate":  "3-14-2025",
+                                    "MatchingDeviceId":  "pci\\ven_10de&dev_25a9&subsys_20271ee7",
+                                    "InfPath":  "oem7.inf",
+                                    "InfSection":  "Section016",
+                                    "HardwareInformation.qwMemorySize":  4294967296,
+                                    "HardwareInformation.MemorySize":  4293918720,
+                                    "HardwareInformation.AdapterString":  "NVIDIA GeForce RTX 2050",
+                                    "HardwareInformation.BiosString":  "Version94.7.69.0.22",
+                                    "HardwareInformation.ChipType":  "NVIDIA GeForce RTX 2050",
+                                    "HardwareInformation.DacType":  "Integrated RAMDAC"
+                                },
+                     "value_name_count":  56,
+                     "display_related_values":  {
+                                                    "RMI2cValidatedPortMask":  2
+                                                }
+                 },
+                 {
+                     "key":  "0004",
+                     "values":  {
+                                    "DriverDesc":  "IddDesk Device",
+                                    "ProviderName":  "Honor",
+                                    "DriverVersion":  "25.0.0.4",
+                                    "DriverDate":  "8-5-2025",
+                                    "MatchingDeviceId":  "Root\\IddDesk",
+                                    "InfPath":  "oem93.inf",
+                                    "InfSection":  "MyDevice_Install.NT",
+                                    "HardwareInformation.qwMemorySize":  null,
+                                    "HardwareInformation.MemorySize":  null,
+                                    "HardwareInformation.AdapterString":  null,
+                                    "HardwareInformation.BiosString":  null,
+                                    "HardwareInformation.ChipType":  null,
+                                    "HardwareInformation.DacType":  null
+                                },
+                     "value_name_count":  10,
+                     "display_related_values":  {
+
+                                                }
+                 }
+             ]
+}

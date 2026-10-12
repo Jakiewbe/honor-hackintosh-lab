@@ -1,0 +1,33 @@
+{
+    "probe_id":  "P32_bitlocker_shell",
+    "title":  "BitLocker protection status per fixed drive letter (no key material)",
+    "source_interface":  "Shell.Application ExtendedProperty System.Volume.BitLockerProtection (non-elevated; status code only)",
+    "command":  "$map = @{ 0 = 'not BitLocker-capable / no value'; 1 = 'On (encrypted, protection on)'; 2 = 'Off (not encrypted)'; 3 = 'Encrypting'; 4 = 'Decrypting'; 5 = 'Suspended (encrypted, protection off)'; 6 = 'On (locked)'; 8 = 'Waiting for activation (encrypted with clear key, protection off)' }\r\n    $sh = New-Object -ComObject Shell.Application\r\n    $out = @()\r\n    foreach ($v in (Get-CimInstance Win32_LogicalDisk -Filter 'DriveType=3' | Select-Object DeviceID, FileSystem, Size)) {\r\n        $val = $null\r\n        try { $val = $sh.NameSpace($v.DeviceID + '\\').Self.ExtendedProperty('System.Volume.BitLockerProtection') } catch { Add-ProbeError (\"$($v.DeviceID): \" + $_.Exception.Message) }\r\n        $out += [ordered]@{ drive = $v.DeviceID; file_system = $v.FileSystem; size = $v.Size; bitlocker_protection_raw = $val; interpretation = $(if ($null -ne $val -and $map.ContainsKey([int]$val)) { $map[[int]$val] } else { $null }) }\r\n    }\r\n    [Runtime.InteropServices.Marshal]::ReleaseComObject($sh) | Out-Null\r\n    $boot = $null; try { $boot = (Get-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\BitLockerStatus' -ErrorAction Stop).BootStatus } catch { Add-ProbeError ('BitLockerStatus: ' + $_.Exception.Message) }\r\n    [ordered]@{ volumes = $out; registry_BitLockerStatus_BootStatus = $boot; interpretation_source = 'Community-documented mapping of the shell property; not an official Microsoft table. Raw 0 is ambiguous and does not by itself prove the volume is unencrypted. BootStatus meaning is undocumented.' }",
+    "started_local":  "2026-10-12T22:48:15.835+08:00",
+    "duration_ms":  66,
+    "status":  "ok",
+    "native_exit_code":  null,
+    "errors":  [
+
+               ],
+    "data":  {
+                 "volumes":  [
+                                 {
+                                     "drive":  "C:",
+                                     "file_system":  "NTFS",
+                                     "size":  128849014784,
+                                     "bitlocker_protection_raw":  0,
+                                     "interpretation":  "not BitLocker-capable / no value"
+                                 },
+                                 {
+                                     "drive":  "D:",
+                                     "file_system":  "NTFS",
+                                     "size":  368539160576,
+                                     "bitlocker_protection_raw":  0,
+                                     "interpretation":  "not BitLocker-capable / no value"
+                                 }
+                             ],
+                 "registry_BitLockerStatus_BootStatus":  0,
+                 "interpretation_source":  "Community-documented mapping of the shell property; not an official Microsoft table. Raw 0 is ambiguous and does not by itself prove the volume is unencrypted. BootStatus meaning is undocumented."
+             }
+}

@@ -1,0 +1,32 @@
+{
+    "probe_id":  "P01_os",
+    "title":  "Windows version and build",
+    "source_interface":  "CIM Win32_OperatingSystem + registry HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion",
+    "command":  "$os = Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, BuildNumber, OSArchitecture, MUILanguages\r\n    $cv = Get-RegValues 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion' @('ProductName', 'DisplayVersion', 'EditionID', 'CurrentBuild', 'UBR', 'InstallationType')\r\n    [ordered]@{ win32_operatingsystem = $os; currentversion = $cv }",
+    "started_local":  "2026-10-12T22:47:25.522+08:00",
+    "duration_ms":  243,
+    "status":  "ok",
+    "native_exit_code":  null,
+    "errors":  [
+
+               ],
+    "data":  {
+                 "win32_operatingsystem":  {
+                                               "Caption":  "Microsoft Windows 11 家庭版 中文版",
+                                               "Version":  "10.0.26200",
+                                               "BuildNumber":  "26200",
+                                               "OSArchitecture":  "64 位",
+                                               "MUILanguages":  [
+                                                                    "zh-CN"
+                                                                ]
+                                           },
+                 "currentversion":  {
+                                        "ProductName":  "Windows 10 Home China",
+                                        "DisplayVersion":  "25H2",
+                                        "EditionID":  "CoreCountrySpecific",
+                                        "CurrentBuild":  "26200",
+                                        "UBR":  9457,
+                                        "InstallationType":  "Client"
+                                    }
+             }
+}

@@ -1,0 +1,21 @@
+{
+    "probe_id":  "P19_nvidia_smi",
+    "title":  "nvidia-smi limited field query (driver-bundled tool; no serial/UUID fields requested)",
+    "source_interface":  "nvidia-smi --query-gpu (installed with NVIDIA driver; not downloaded)",
+    "command":  "$ErrorActionPreference = 'Continue'\r\n    $exe = @(\"$env:SystemRoot\\System32\\<REDACTED_UNIQUE_ID>\", \"$env:ProgramFiles\\NVIDIA Corporation\\NVSMI\\nvidia-smi.exe\") | Where-Object { Test-Path $_ } | Select-Object -First 1\r\n    if (-not $exe) { throw 'nvidia-smi.exe not found in System32 or NVSMI' }\r\n    $fields = 'name,pci.bus_id,pci.device_id,pci.sub_device_id,driver_version,vbios_version,memory.total,display_mode,display_active,pstate,driver_model.current,pcie.link.gen.max,pcie.link.width.max'\r\n    $o = & $exe \"--query-gpu=$fields\" '--format=csv' 2>&1\r\n    [ordered]@{ executable = ($exe -replace [regex]::Escape($env:SystemRoot), '%SystemRoot%'); fields = $fields; output = @($o | ForEach-Object { [string]$_ }) }",
+    "started_local":  "2026-10-12T22:47:29.000+08:00",
+    "duration_ms":  66,
+    "status":  "ok",
+    "native_exit_code":  0,
+    "errors":  [
+
+               ],
+    "data":  {
+                 "executable":  "%SystemRoot%\\System32\\nvidia-smi.exe",
+                 "fields":  "name,pci.bus_id,pci.device_id,pci.sub_device_id,driver_version,vbios_version,memory.total,display_mode,display_active,pstate,driver_model.current,pcie.link.gen.max,pcie.link.width.max",
+                 "output":  [
+                                "name, pci.bus_id, pci.device_id, pci.sub_device_id, driver_version, vbios_version, memory.total [MiB], display_mode, display_active, pstate, driver_model.current, pcie.link.gen.max, pcie.link.width.max",
+                                "NVIDIA GeForce RTX 2050, 00000000:01:00.0, 0x25A910DE, 0x20271EE7, 572.83, 94.07.69.00.22, 4096 MiB, Disabled, Disabled, P5, WDDM, 4, 16"
+                            ]
+             }
+}

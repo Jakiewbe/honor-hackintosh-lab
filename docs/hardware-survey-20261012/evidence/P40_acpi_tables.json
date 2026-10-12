@@ -1,0 +1,1023 @@
+{
+    "probe_id":  "P40_acpi_tables",
+    "title":  "ACPI tables (firmware-table API + HKLM\\HARDWARE\\ACPI registry copies incl. DSDT and all SSDTs); MSDM/SLIC/FACS not read; AML name/GUID byte scan",
+    "source_interface":  "kernel32 EnumSystemFirmwareTables/GetSystemFirmwareTable(provider ACPI); registry HKLM\\HARDWARE\\ACPI\\<sig>\\<oem>\\<table>\\<rev> value 00000000 (read-only)",
+    "command":  "$ACPI = [uint32]0x41435049\r\n    $list = [HonorSurvey.Fw]::Enum($ACPI)\r\n    $sigs = @()\r\n    if ($null -eq $list) { Add-ProbeError ('EnumSystemFirmwareTables(ACPI) failed, Win32 error ' + [HonorSurvey.Fw]::LastError) }\r\n    else { for ($i = 0; $i + 4 -le $list.Length; $i += 4) { $sigs += , ([byte[]]$list[$i..($i + 3)]) } }\r\n    $fw = @(); $seenSig = @{}\r\n    foreach ($sb in $sigs) {\r\n        $sig = [Text.Encoding]::ASCII.GetString($sb)\r\n        $occ = 1; if ($seenSig.ContainsKey($sig)) { $seenSig[$sig]++; $occ = $seenSig[$sig] } else { $seenSig[$sig] = 1 }\r\n        if ($sig -in @('MSDM', 'SLIC')) { $fw += [ordered]@{ signature = $sig; enumeration_occurrence = $occ; skipped = 'not read: may contain an OEM product key' }; continue }\r\n        if ($occ -gt 1) { $fw += [ordered]@{ signature = $sig; enumeration_occurrence = $occ; skipped = 'GetSystemFirmwareTable returns only the first table of a signature; see registry copies below' }; continue }\r\n        $data = [HonorSurvey.Fw]::Get($ACPI, [BitConverter]::ToUInt32($sb, 0))\r\n        if ($null -eq $data) { $err = 'GetSystemFirmwareTable failed, Win32 error ' + [HonorSurvey.Fw]::LastError; Add-ProbeError \"$sig : $err\"; $fw += [ordered]@{ signature = $sig; error = $err }; continue }\r\n        $t = Get-AcpiTableInfo $data (\"acpi/fw_$sig.bin\"); $t.Insert(0, 'enumeration_occurrence', $occ); $fw += $t\r\n    }\r\n    $dsdtFw = [HonorSurvey.Fw]::Get($ACPI, [BitConverter]::ToUInt32([Text.Encoding]::ASCII.GetBytes('DSDT'), 0))\r\n    $dsdtNote = $(if ($null -eq $dsdtFw) { 'explicit GetSystemFirmwareTable(DSDT) failed, Win32 error ' + [HonorSurvey.Fw]::LastError } else { 'explicit GetSystemFirmwareTable(DSDT) ok, length ' + $dsdtFw.Length })\r\n    if ($dsdtFw) { $t = Get-AcpiTableInfo $dsdtFw 'acpi/fw_DSDT.bin'; $t.Insert(0, 'enumeration_occurrence', 'explicit'); $fw += $t }\r\n    $reg = @()\r\n    foreach ($top in (Get-ChildItem -LiteralPath 'HKLM:\\HARDWARE\\ACPI' -ErrorAction Stop)) {\r\n        $key = $top.PSChildName\r\n        if ($key -in @('FACS', 'MSDM', 'SLIC')) { $reg += [ordered]@{ registry_key = \"HKLM\\HARDWARE\\ACPI\\$key\"; skipped = $(if ($key -eq 'FACS') { 'not read: FACS holds a hardware signature/waking vector, not needed' } else { 'not read: may contain an OEM product key' }) }; continue }\r\n        foreach ($leaf in (@(Get-Item -LiteralPath $top.PSPath) + @(Get-ChildItem -LiteralPath $top.PSPath -Recurse))) {\r\n            if (-not ($leaf.GetValueNames() -contains '00000000')) { continue }\r\n            $rel = $leaf.Name -replace '^HKEY_LOCAL_MACHINE\\\\HARDWARE\\\\ACPI\\\\', ''\r\n            try {\r\n                $data = [byte[]]$leaf.GetValue('00000000')\r\n                $t = Get-AcpiTableInfo $data ('acpi/reg_' + ($rel -replace '[\\\\/:*?\"<>| ]', '_') + '.bin')\r\n                $t.Insert(0, 'registry_key', \"HKLM\\HARDWARE\\ACPI\\$rel\"); $reg += $t\r\n            } catch { Add-ProbeError (\"$rel : \" + $_.Exception.Message) }\r\n        }\r\n    }\r\n    [ordered]@{ enumerated_signatures = @($sigs | ForEach-Object { [Text.Encoding]::ASCII.GetString($_) }); dsdt_firmware_api = $dsdtNote; firmware_api_tables = $fw; registry_tables = $reg; note = 'String hits are byte-pattern matches inside AML, not a disassembly. Presence of a name or _DSM GUID does not prove the method is functional.' }",
+    "started_local":  "2026-10-12T22:48:20.974+08:00",
+    "duration_ms":  480,
+    "status":  "ok",
+    "native_exit_code":  null,
+    "errors":  [
+
+               ],
+    "data":  {
+                 "enumerated_signatures":  [
+                                               "DBGP",
+                                               "MCFG",
+                                               "FACP",
+                                               "APIC",
+                                               "DMAR",
+                                               "HPET",
+                                               "FPDT",
+                                               "UEFI",
+                                               "SSDT",
+                                               "SSDT",
+                                               "SSDT",
+                                               "SSDT",
+                                               "SSDT",
+                                               "SSDT",
+                                               "SSDT",
+                                               "TPM2",
+                                               "MSDM",
+                                               "SSDT",
+                                               "LPIT",
+                                               "WSMT",
+                                               "SSDT",
+                                               "DBG2",
+                                               "NHLT",
+                                               "SSDT",
+                                               "$H2O",
+                                               "SSDT",
+                                               "SSDT",
+                                               "SSDT",
+                                               "SSDT",
+                                               "SSDT",
+                                               "BGRT",
+                                               "PHAT"
+                                           ],
+                 "dsdt_firmware_api":  "explicit GetSystemFirmwareTable(DSDT) ok, length 307077",
+                 "firmware_api_tables":  [
+                                             {
+                                                 "enumeration_occurrence":  1,
+                                                 "signature":  "DBGP",
+                                                 "length":  52,
+                                                 "header_length":  52,
+                                                 "revision":  1,
+                                                 "oem_id":  "HONOR",
+                                                 "oem_table_id":  "ADL-P-M",
+                                                 "oem_revision":  "0x00000002",
+                                                 "creator_id":  "ACPI",
+                                                 "creator_revision":  "0x00040000",
+                                                 "checksum_ok":  true,
+                                                 "aml_name_hits":  {
+
+                                                                   },
+                                                 "dsm_guid_hits":  {
+
+                                                                   },
+                                                 "file":  "evidence/acpi/fw_DBGP.bin",
+                                                 "sha256":  "A2E66D5C54CDBA8C6E87555C1B6A26FC15D7FDCD6FC009C6CEE817EAAEAB02B0"
+                                             },
+                                             {
+                                                 "enumeration_occurrence":  1,
+                                                 "signature":  "MCFG",
+                                                 "length":  60,
+                                                 "header_length":  60,
+                                                 "revision":  1,
+                                                 "oem_id":  "HONOR",
+                                                 "oem_table_id":  "ADL-P-M",
+                                                 "oem_revision":  "0x00000002",
+                                                 "creator_id":  "ACPI",
+                                                 "creator_revision":  "0x00040000",
+                                                 "checksum_ok":  true,
+                                                 "aml_name_hits":  {
+
+                                                                   },
+                                                 "dsm_guid_hits":  {
+
+                                                                   },
+                                                 "file":  "evidence/acpi/fw_MCFG.bin",
+                                                 "sha256":  "73F9E1D2ED4B006E59FC1E6B037F41983E1F816113C77241FB33BBBBBFC68480"
+                                             },
+                                             {
+                                                 "enumeration_occurrence":  1,
+                                                 "signature":  "FACP",
+                                                 "length":  276,
+                                                 "header_length":  276,
+                                                 "revision":  6,
+                                                 "oem_id":  "HONOR",
+                                                 "oem_table_id":  "ADL-P-M",
+                                                 "oem_revision":  "0x00000002",
+                                                 "creator_id":  "ACPI",
+                                                 "creator_revision":  "0x00040000",
+                                                 "checksum_ok":  true,
+                                                 "aml_name_hits":  {
+
+                                                                   },
+                                                 "dsm_guid_hits":  {
+
+                                                                   },
+                                                 "file":  "evidence/acpi/fw_FACP.bin",
+                                                 "sha256":  "D32F09BD9E9D559F7BCAB5380485AF3D99D4B75AFC92630B483B85E946C9EEC7"
+                                             },
+                                             {
+                                                 "enumeration_occurrence":  1,
+                                                 "signature":  "APIC",
+                                                 "length":  476,
+                                                 "header_length":  476,
+                                                 "revision":  4,
+                                                 "oem_id":  "HONOR",
+                                                 "oem_table_id":  "ADL-P-M",
+                                                 "oem_revision":  "0x00000002",
+                                                 "creator_id":  "ACPI",
+                                                 "creator_revision":  "0x00040000",
+                                                 "checksum_ok":  true,
+                                                 "aml_name_hits":  {
+
+                                                                   },
+                                                 "dsm_guid_hits":  {
+
+                                                                   },
+                                                 "file":  "evidence/acpi/fw_APIC.bin",
+                                                 "sha256":  "9E01C648F16E4B518EB186C0F2FFF7A8DFF3D8224A1834EB2702870F520C794A"
+                                             },
+                                             {
+                                                 "enumeration_occurrence":  1,
+                                                 "signature":  "DMAR",
+                                                 "length":  136,
+                                                 "header_length":  136,
+                                                 "revision":  2,
+                                                 "oem_id":  "HONOR",
+                                                 "oem_table_id":  "ADL-P-M",
+                                                 "oem_revision":  "0x00000002",
+                                                 "creator_id":  "ACPI",
+                                                 "creator_revision":  "0x00040000",
+                                                 "checksum_ok":  true,
+                                                 "aml_name_hits":  {
+
+                                                                   },
+                                                 "dsm_guid_hits":  {
+
+                                                                   },
+                                                 "file":  "evidence/acpi/fw_DMAR.bin",
+                                                 "sha256":  "E84C886DFCC89640FAF9C3386D5FBB4DC77483901C816EB38FDCB22A6C298F86"
+                                             },
+                                             {
+                                                 "enumeration_occurrence":  1,
+                                                 "signature":  "HPET",
+                                                 "length":  56,
+                                                 "header_length":  56,
+                                                 "revision":  1,
+                                                 "oem_id":  "HONOR",
+                                                 "oem_table_id":  "ADL-P-M",
+                                                 "oem_revision":  "0x00000002",
+                                                 "creator_id":  "ACPI",
+                                                 "creator_revision":  "0x00040000",
+                                                 "checksum_ok":  true,
+                                                 "aml_name_hits":  {
+
+                                                                   },
+                                                 "dsm_guid_hits":  {
+
+                                                                   },
+                                                 "file":  "evidence/acpi/fw_HPET.bin",
+                                                 "sha256":  "B7F3405EA460C4684A8A7FA64E47EB4AB356B3EA8BFBA265C08DB7F44EDB0E1A"
+                                             },
+                                             {
+                                                 "enumeration_occurrence":  1,
+                                                 "signature":  "FPDT",
+                                                 "length":  68,
+                                                 "header_length":  68,
+                                                 "revision":  1,
+                                                 "oem_id":  "HONOR",
+                                                 "oem_table_id":  "ADL-P-M",
+                                                 "oem_revision":  "0x00000002",
+                                                 "creator_id":  "ACPI",
+                                                 "creator_revision":  "0x00040000",
+                                                 "checksum_ok":  true,
+                                                 "aml_name_hits":  {
+
+                                                                   },
+                                                 "dsm_guid_hits":  {
+
+                                                                   },
+                                                 "file":  "evidence/acpi/fw_FPDT.bin",
+                                                 "sha256":  "63C51D1E839BDD823E56D50211477780E79B6FC0DC41661F06F8CB24D58E81DD"
+                                             },
+                                             {
+                                                 "enumeration_occurrence":  1,
+                                                 "signature":  "UEFI",
+                                                 "length":  566,
+                                                 "header_length":  566,
+                                                 "revision":  1,
+                                                 "oem_id":  "HONOR",
+                                                 "oem_table_id":  "ADL-P-M",
+                                                 "oem_revision":  "0x00000001",
+                                                 "creator_id":  "ACPI",
+                                                 "creator_revision":  "0x00040000",
+                                                 "checksum_ok":  true,
+                                                 "aml_name_hits":  {
+
+                                                                   },
+                                                 "dsm_guid_hits":  {
+
+                                                                   },
+                                                 "file":  "evidence/acpi/fw_UEFI.bin",
+                                                 "sha256":  "B7B7A03490E8053E1BFB56E1B35B0B01DB4D237ED9142171878878858E7A7FEF"
+                                             },
+                                             {
+                                                 "enumeration_occurrence":  1,
+                                                 "signature":  "SSDT",
+                                                 "length":  19335,
+                                                 "header_length":  19335,
+                                                 "revision":  2,
+                                                 "oem_id":  "HONOR",
+                                                 "oem_table_id":  "DptfTabl",
+                                                 "oem_revision":  "0x00001000",
+                                                 "creator_id":  "INTL",
+                                                 "creator_revision":  "0x20200717",
+                                                 "checksum_ok":  true,
+                                                 "aml_name_hits":  {
+                                                                       "_DSM":  1,
+                                                                       "_PR3":  4
+                                                                   },
+                                                 "dsm_guid_hits":  {
+
+                                                                   },
+                                                 "file":  "evidence/acpi/fw_SSDT.bin",
+                                                 "sha256":  "FF4AD140B6560AED08B5AA2AA15A8C5AE7CC4D7D41A4A4E4029968CA4D93FAD8"
+                                             },
+                                             {
+                                                 "signature":  "SSDT",
+                                                 "enumeration_occurrence":  2,
+                                                 "skipped":  "GetSystemFirmwareTable returns only the first table of a signature; see registry copies below"
+                                             },
+                                             {
+                                                 "signature":  "SSDT",
+                                                 "enumeration_occurrence":  3,
+                                                 "skipped":  "GetSystemFirmwareTable returns only the first table of a signature; see registry copies below"
+                                             },
+                                             {
+                                                 "signature":  "SSDT",
+                                                 "enumeration_occurrence":  4,
+                                                 "skipped":  "GetSystemFirmwareTable returns only the first table of a signature; see registry copies below"
+                                             },
+                                             {
+                                                 "signature":  "SSDT",
+                                                 "enumeration_occurrence":  5,
+                                                 "skipped":  "GetSystemFirmwareTable returns only the first table of a signature; see registry copies below"
+                                             },
+                                             {
+                                                 "signature":  "SSDT",
+                                                 "enumeration_occurrence":  6,
+                                                 "skipped":  "GetSystemFirmwareTable returns only the first table of a signature; see registry copies below"
+                                             },
+                                             {
+                                                 "signature":  "SSDT",
+                                                 "enumeration_occurrence":  7,
+                                                 "skipped":  "GetSystemFirmwareTable returns only the first table of a signature; see registry copies below"
+                                             },
+                                             {
+                                                 "enumeration_occurrence":  1,
+                                                 "signature":  "TPM2",
+                                                 "length":  76,
+                                                 "header_length":  76,
+                                                 "revision":  4,
+                                                 "oem_id":  "HONOR",
+                                                 "oem_table_id":  "ADL-P-M",
+                                                 "oem_revision":  "0x00000002",
+                                                 "creator_id":  "ACPI",
+                                                 "creator_revision":  "0x00040000",
+                                                 "checksum_ok":  true,
+                                                 "aml_name_hits":  {
+
+                                                                   },
+                                                 "dsm_guid_hits":  {
+
+                                                                   },
+                                                 "file":  "evidence/acpi/fw_TPM2.bin",
+                                                 "sha256":  "8EA9B87CA2F3624EFD59225B0CCD7D79F6A6018B66FBA15734C1C0AA15D0B479"
+                                             },
+                                             {
+                                                 "signature":  "MSDM",
+                                                 "enumeration_occurrence":  1,
+                                                 "skipped":  "not read: may contain an OEM product key"
+                                             },
+                                             {
+                                                 "signature":  "SSDT",
+                                                 "enumeration_occurrence":  8,
+                                                 "skipped":  "GetSystemFirmwareTable returns only the first table of a signature; see registry copies below"
+                                             },
+                                             {
+                                                 "enumeration_occurrence":  1,
+                                                 "signature":  "LPIT",
+                                                 "length":  204,
+                                                 "header_length":  204,
+                                                 "revision":  1,
+                                                 "oem_id":  "HONOR",
+                                                 "oem_table_id":  "ADL-P-M",
+                                                 "oem_revision":  "0x00000002",
+                                                 "creator_id":  "ACPI",
+                                                 "creator_revision":  "0x00040000",
+                                                 "checksum_ok":  true,
+                                                 "aml_name_hits":  {
+
+                                                                   },
+                                                 "dsm_guid_hits":  {
+
+                                                                   },
+                                                 "file":  "evidence/acpi/fw_LPIT.bin",
+                                                 "sha256":  "06AC40B4EA09711A6B523520BC64FE903BB8995ECD6AE84EF10CE837687CAFCC"
+                                             },
+                                             {
+                                                 "enumeration_occurrence":  1,
+                                                 "signature":  "WSMT",
+                                                 "length":  40,
+                                                 "header_length":  40,
+                                                 "revision":  1,
+                                                 "oem_id":  "HONOR",
+                                                 "oem_table_id":  "ADL-P-M",
+                                                 "oem_revision":  "0x00000002",
+                                                 "creator_id":  "ACPI",
+                                                 "creator_revision":  "0x00040000",
+                                                 "checksum_ok":  true,
+                                                 "aml_name_hits":  {
+
+                                                                   },
+                                                 "dsm_guid_hits":  {
+
+                                                                   },
+                                                 "file":  "evidence/acpi/fw_WSMT.bin",
+                                                 "sha256":  "6C747EE2868DC8FDFEA4653E59E06248B98295E491011D41385E1D290452FB39"
+                                             },
+                                             {
+                                                 "signature":  "SSDT",
+                                                 "enumeration_occurrence":  9,
+                                                 "skipped":  "GetSystemFirmwareTable returns only the first table of a signature; see registry copies below"
+                                             },
+                                             {
+                                                 "enumeration_occurrence":  1,
+                                                 "signature":  "DBG2",
+                                                 "length":  84,
+                                                 "header_length":  84,
+                                                 "revision":  0,
+                                                 "oem_id":  "HONOR",
+                                                 "oem_table_id":  "ADL-P-M",
+                                                 "oem_revision":  "0x00000002",
+                                                 "creator_id":  "ACPI",
+                                                 "creator_revision":  "0x00040000",
+                                                 "checksum_ok":  true,
+                                                 "aml_name_hits":  {
+
+                                                                   },
+                                                 "dsm_guid_hits":  {
+
+                                                                   },
+                                                 "file":  "evidence/acpi/fw_DBG2.bin",
+                                                 "sha256":  "C16923A2E732F7B7517C7368D888DEA92ADA869004F4938F35420154ACEB159F"
+                                             },
+                                             {
+                                                 "enumeration_occurrence":  1,
+                                                 "signature":  "NHLT",
+                                                 "length":  45,
+                                                 "header_length":  45,
+                                                 "revision":  0,
+                                                 "oem_id":  "HONOR",
+                                                 "oem_table_id":  "ADL-P-M",
+                                                 "oem_revision":  "0x00000002",
+                                                 "creator_id":  "ACPI",
+                                                 "creator_revision":  "0x00040000",
+                                                 "checksum_ok":  true,
+                                                 "aml_name_hits":  {
+
+                                                                   },
+                                                 "dsm_guid_hits":  {
+
+                                                                   },
+                                                 "file":  "evidence/acpi/fw_NHLT.bin",
+                                                 "sha256":  "70B3AAC44780EAE1C7F147F534435EA16731D2E3CAD2605B1118BCE171BBF324"
+                                             },
+                                             {
+                                                 "signature":  "SSDT",
+                                                 "enumeration_occurrence":  10,
+                                                 "skipped":  "GetSystemFirmwareTable returns only the first table of a signature; see registry copies below"
+                                             },
+                                             {
+                                                 "enumeration_occurrence":  1,
+                                                 "signature":  "$H2O",
+                                                 "length":  44,
+                                                 "header_length":  44,
+                                                 "revision":  1,
+                                                 "oem_id":  "HONOR",
+                                                 "oem_table_id":  "ADL-P-M",
+                                                 "oem_revision":  "0x00000001",
+                                                 "creator_id":  "ACPI",
+                                                 "creator_revision":  "0x00040000",
+                                                 "checksum_ok":  true,
+                                                 "aml_name_hits":  {
+
+                                                                   },
+                                                 "dsm_guid_hits":  {
+
+                                                                   },
+                                                 "file":  "evidence/acpi/fw_$H2O.bin",
+                                                 "sha256":  "2C9E0CB74D482D63CACE22073B927139F239A2FACA742F50CD39C2D867562106"
+                                             },
+                                             {
+                                                 "signature":  "SSDT",
+                                                 "enumeration_occurrence":  11,
+                                                 "skipped":  "GetSystemFirmwareTable returns only the first table of a signature; see registry copies below"
+                                             },
+                                             {
+                                                 "signature":  "SSDT",
+                                                 "enumeration_occurrence":  12,
+                                                 "skipped":  "GetSystemFirmwareTable returns only the first table of a signature; see registry copies below"
+                                             },
+                                             {
+                                                 "signature":  "SSDT",
+                                                 "enumeration_occurrence":  13,
+                                                 "skipped":  "GetSystemFirmwareTable returns only the first table of a signature; see registry copies below"
+                                             },
+                                             {
+                                                 "signature":  "SSDT",
+                                                 "enumeration_occurrence":  14,
+                                                 "skipped":  "GetSystemFirmwareTable returns only the first table of a signature; see registry copies below"
+                                             },
+                                             {
+                                                 "signature":  "SSDT",
+                                                 "enumeration_occurrence":  15,
+                                                 "skipped":  "GetSystemFirmwareTable returns only the first table of a signature; see registry copies below"
+                                             },
+                                             {
+                                                 "enumeration_occurrence":  1,
+                                                 "signature":  "BGRT",
+                                                 "length":  56,
+                                                 "header_length":  56,
+                                                 "revision":  1,
+                                                 "oem_id":  "HONOR",
+                                                 "oem_table_id":  "ADL-P-M",
+                                                 "oem_revision":  "0x00000001",
+                                                 "creator_id":  "ACPI",
+                                                 "creator_revision":  "0x00040000",
+                                                 "checksum_ok":  true,
+                                                 "aml_name_hits":  {
+
+                                                                   },
+                                                 "dsm_guid_hits":  {
+
+                                                                   },
+                                                 "file":  "evidence/acpi/fw_BGRT.bin",
+                                                 "sha256":  "0F8EB74B0E820831C5A94CA46538A78AC9AB313E14E64203A61F334148E6FABD"
+                                             },
+                                             {
+                                                 "enumeration_occurrence":  1,
+                                                 "signature":  "PHAT",
+                                                 "length":  2044,
+                                                 "header_length":  2044,
+                                                 "revision":  1,
+                                                 "oem_id":  "HONOR",
+                                                 "oem_table_id":  "ADL-P-M",
+                                                 "oem_revision":  "0x00000005",
+                                                 "creator_id":  "ACPI",
+                                                 "creator_revision":  "0x00040000",
+                                                 "checksum_ok":  true,
+                                                 "aml_name_hits":  {
+
+                                                                   },
+                                                 "dsm_guid_hits":  {
+
+                                                                   },
+                                                 "file":  "evidence/acpi/fw_PHAT.bin",
+                                                 "sha256":  "EFDBC0076A47ED5E290D2485B1EE3B05F704E4EE38A3691BB4ACF7A867ED33EC"
+                                             },
+                                             {
+                                                 "enumeration_occurrence":  "explicit",
+                                                 "signature":  "DSDT",
+                                                 "length":  307077,
+                                                 "header_length":  307077,
+                                                 "revision":  2,
+                                                 "oem_id":  "HONOR",
+                                                 "oem_table_id":  "ADL-P-M",
+                                                 "oem_revision":  "0x00000002",
+                                                 "creator_id":  "ACPI",
+                                                 "creator_revision":  "0x00040000",
+                                                 "checksum_ok":  true,
+                                                 "aml_name_hits":  {
+                                                                       "GFX0":  28,
+                                                                       "PEG0":  28,
+                                                                       "PEG1":  35,
+                                                                       "PEG2":  21,
+                                                                       "PEGP":  46,
+                                                                       "PXSX":  812,
+                                                                       "RP05":  46,
+                                                                       "RP09":  46,
+                                                                       "RP12":  41,
+                                                                       "_DSM":  107,
+                                                                       "DD1F":  4,
+                                                                       "ASLB":  1,
+                                                                       "NPCF":  3,
+                                                                       "TXHC":  5,
+                                                                       "TDM0":  10,
+                                                                       "XHCI":  55,
+                                                                       "I2C0":  19,
+                                                                       "I2C1":  15,
+                                                                       "TPD0":  4,
+                                                                       "ELAN2616":  4,
+                                                                       "HDAS":  14,
+                                                                       "CNVW":  238,
+                                                                       "PS2K":  1
+                                                                   },
+                                                 "dsm_guid_hits":  {
+
+                                                                   },
+                                                 "file":  "evidence/acpi/fw_DSDT.bin",
+                                                 "sha256":  "56F65CC89927C82AFE22F43141F67D16E56FCEEF1DBF2441CBA6D1ABAA2A612A"
+                                             }
+                                         ],
+                 "registry_tables":  [
+                                         {
+                                             "registry_key":  "HKLM\\HARDWARE\\ACPI\\DSDT\\HONOR\\ADL-P-M\\00000002",
+                                             "signature":  "DSDT",
+                                             "length":  307077,
+                                             "header_length":  307077,
+                                             "revision":  2,
+                                             "oem_id":  "HONOR",
+                                             "oem_table_id":  "ADL-P-M",
+                                             "oem_revision":  "0x00000002",
+                                             "creator_id":  "ACPI",
+                                             "creator_revision":  "0x00040000",
+                                             "checksum_ok":  true,
+                                             "aml_name_hits":  {
+                                                                   "GFX0":  28,
+                                                                   "PEG0":  28,
+                                                                   "PEG1":  35,
+                                                                   "PEG2":  21,
+                                                                   "PEGP":  46,
+                                                                   "PXSX":  812,
+                                                                   "RP05":  46,
+                                                                   "RP09":  46,
+                                                                   "RP12":  41,
+                                                                   "_DSM":  107,
+                                                                   "DD1F":  4,
+                                                                   "ASLB":  1,
+                                                                   "NPCF":  3,
+                                                                   "TXHC":  5,
+                                                                   "TDM0":  10,
+                                                                   "XHCI":  55,
+                                                                   "I2C0":  19,
+                                                                   "I2C1":  15,
+                                                                   "TPD0":  4,
+                                                                   "ELAN2616":  4,
+                                                                   "HDAS":  14,
+                                                                   "CNVW":  238,
+                                                                   "PS2K":  1
+                                                               },
+                                             "dsm_guid_hits":  {
+
+                                                               },
+                                             "file":  "evidence/acpi/reg_DSDT_HONOR_ADL-P-M_00000002.bin",
+                                             "sha256":  "56F65CC89927C82AFE22F43141F67D16E56FCEEF1DBF2441CBA6D1ABAA2A612A"
+                                         },
+                                         {
+                                             "registry_key":  "HKLM\\HARDWARE\\ACPI\\FACS",
+                                             "skipped":  "not read: FACS holds a hardware signature/waking vector, not needed"
+                                         },
+                                         {
+                                             "registry_key":  "HKLM\\HARDWARE\\ACPI\\FADT\\HONOR\\ADL-P-M\\00000002",
+                                             "signature":  "FACP",
+                                             "length":  276,
+                                             "header_length":  276,
+                                             "revision":  6,
+                                             "oem_id":  "HONOR",
+                                             "oem_table_id":  "ADL-P-M",
+                                             "oem_revision":  "0x00000002",
+                                             "creator_id":  "ACPI",
+                                             "creator_revision":  "0x00040000",
+                                             "checksum_ok":  true,
+                                             "aml_name_hits":  {
+
+                                                               },
+                                             "dsm_guid_hits":  {
+
+                                                               },
+                                             "file":  "evidence/acpi/reg_FADT_HONOR_ADL-P-M_00000002.bin",
+                                             "sha256":  "D32F09BD9E9D559F7BCAB5380485AF3D99D4B75AFC92630B483B85E946C9EEC7"
+                                         },
+                                         {
+                                             "registry_key":  "HKLM\\HARDWARE\\ACPI\\RSDT\\HONOR\\ADL-P-M\\00000002",
+                                             "signature":  "XSDT",
+                                             "length":  292,
+                                             "header_length":  292,
+                                             "revision":  1,
+                                             "oem_id":  "HONOR",
+                                             "oem_table_id":  "ADL-P-M",
+                                             "oem_revision":  "0x00000002",
+                                             "creator_id":  "",
+                                             "creator_revision":  "0x01000013",
+                                             "checksum_ok":  true,
+                                             "aml_name_hits":  {
+
+                                                               },
+                                             "dsm_guid_hits":  {
+
+                                                               },
+                                             "file":  "evidence/acpi/reg_RSDT_HONOR_ADL-P-M_00000002.bin",
+                                             "sha256":  "72D0CCB8983E087EC4FC41AD4A65310F4E327D562F4312BA17C14E6D1D9BD87A"
+                                         },
+                                         {
+                                             "registry_key":  "HKLM\\HARDWARE\\ACPI\\SSD1\\HONOR\\Pmax_Dev\\00000001",
+                                             "signature":  "SSDT",
+                                             "length":  908,
+                                             "header_length":  908,
+                                             "revision":  2,
+                                             "oem_id":  "HONOR",
+                                             "oem_table_id":  "Pmax_Dev",
+                                             "oem_revision":  "0x00000001",
+                                             "creator_id":  "INTL",
+                                             "creator_revision":  "0x20200717",
+                                             "checksum_ok":  true,
+                                             "aml_name_hits":  {
+                                                                   "_DSM":  1,
+                                                                   "HDAS":  1
+                                                               },
+                                             "dsm_guid_hits":  {
+
+                                                               },
+                                             "file":  "evidence/acpi/reg_SSD1_HONOR_Pmax_Dev_00000001.bin",
+                                             "sha256":  "B4DDFD02D05722CDE5098143CDD9E80DAC582BDF1C6FA587B8CD4C957141E23C"
+                                         },
+                                         {
+                                             "registry_key":  "HKLM\\HARDWARE\\ACPI\\SSD2\\HONOR\\CpuSsdt\\00003000",
+                                             "signature":  "SSDT",
+                                             "length":  23852,
+                                             "header_length":  23852,
+                                             "revision":  2,
+                                             "oem_id":  "HONOR",
+                                             "oem_table_id":  "CpuSsdt",
+                                             "oem_revision":  "0x00003000",
+                                             "creator_id":  "INTL",
+                                             "creator_revision":  "0x20200717",
+                                             "checksum_ok":  true,
+                                             "aml_name_hits":  {
+                                                                   "_PR3":  30
+                                                               },
+                                             "dsm_guid_hits":  {
+
+                                                               },
+                                             "file":  "evidence/acpi/reg_SSD2_HONOR_CpuSsdt_00003000.bin",
+                                             "sha256":  "B4AC9C30C11CC2A68A6D8A47B686081BE9173B0986052A7B6EEED0665B258C79"
+                                         },
+                                         {
+                                             "registry_key":  "HKLM\\HARDWARE\\ACPI\\SSD3\\HONOR\\SaSsdt_\\00003000",
+                                             "signature":  "SSDT",
+                                             "length":  11042,
+                                             "header_length":  11042,
+                                             "revision":  2,
+                                             "oem_id":  "HONOR",
+                                             "oem_table_id":  "SaSsdt",
+                                             "oem_revision":  "0x00003000",
+                                             "creator_id":  "INTL",
+                                             "creator_revision":  "0x20200717",
+                                             "checksum_ok":  true,
+                                             "aml_name_hits":  {
+                                                                   "GFX0":  1,
+                                                                   "PEG0":  25,
+                                                                   "PEG1":  30,
+                                                                   "PEG2":  26,
+                                                                   "PEGP":  27,
+                                                                   "_DSM":  4
+                                                               },
+                                             "dsm_guid_hits":  {
+
+                                                               },
+                                             "file":  "evidence/acpi/reg_SSD3_HONOR_SaSsdt__00003000.bin",
+                                             "sha256":  "06E11F9D282AFF2B4833FF94CA78A5C495FB3CD5419A4DCB14873A06E79731F2"
+                                         },
+                                         {
+                                             "registry_key":  "HKLM\\HARDWARE\\ACPI\\SSD4\\HONOR\\IgfxSsdt\\00003000",
+                                             "signature":  "SSDT",
+                                             "length":  13267,
+                                             "header_length":  13267,
+                                             "revision":  2,
+                                             "oem_id":  "HONOR",
+                                             "oem_table_id":  "IgfxSsdt",
+                                             "oem_revision":  "0x00003000",
+                                             "creator_id":  "INTL",
+                                             "creator_revision":  "0x20200717",
+                                             "checksum_ok":  true,
+                                             "aml_name_hits":  {
+                                                                   "GFX0":  13,
+                                                                   "_DOD":  1,
+                                                                   "_DOS":  1,
+                                                                   "_DSM":  1,
+                                                                   "_BCL":  2,
+                                                                   "_BCM":  2,
+                                                                   "_BQC":  2,
+                                                                   "_DGS":  17,
+                                                                   "_DCS":  17,
+                                                                   "_DSS":  17,
+                                                                   "DD1F":  1,
+                                                                   "ASLS":  1,
+                                                                   "ASLB":  2,
+                                                                   "IGDM":  2
+                                                               },
+                                             "dsm_guid_hits":  {
+                                                                   "Intel_IGD_DSM_3e5b41c6-eb1d-4260-9d15-c71fbadae414":  1
+                                                               },
+                                             "file":  "evidence/acpi/reg_SSD4_HONOR_IgfxSsdt_00003000.bin",
+                                             "sha256":  "C0944327E1E9567964F9D5393001A33CA61E7564F02B029B68E65FDB36C93859"
+                                         },
+                                         {
+                                             "registry_key":  "HKLM\\HARDWARE\\ACPI\\SSD5\\HONOR\\TcssSsdt\\00001000",
+                                             "signature":  "SSDT",
+                                             "length":  54175,
+                                             "header_length":  54175,
+                                             "revision":  2,
+                                             "oem_id":  "HONOR",
+                                             "oem_table_id":  "TcssSsdt",
+                                             "oem_revision":  "0x00001000",
+                                             "creator_id":  "INTL",
+                                             "creator_revision":  "0x20200717",
+                                             "checksum_ok":  true,
+                                             "aml_name_hits":  {
+                                                                   "GFX0":  1,
+                                                                   "PXSX":  16,
+                                                                   "_DSM":  17,
+                                                                   "_PR3":  11,
+                                                                   "TCSS":  32,
+                                                                   "TXHC":  7,
+                                                                   "TDM0":  132,
+                                                                   "XHCI":  14
+                                                               },
+                                             "dsm_guid_hits":  {
+
+                                                               },
+                                             "file":  "evidence/acpi/reg_SSD5_HONOR_TcssSsdt_00001000.bin",
+                                             "sha256":  "357C5F30CD0F89A35B534D39E0D22FEE255402E6A59F22F1858F4AD23E3BCCB1"
+                                         },
+                                         {
+                                             "registry_key":  "HKLM\\HARDWARE\\ACPI\\SSD6\\HONOR\\Tpm2Tabl\\00001000",
+                                             "signature":  "SSDT",
+                                             "length":  1915,
+                                             "header_length":  1915,
+                                             "revision":  2,
+                                             "oem_id":  "HONOR",
+                                             "oem_table_id":  "Tpm2Tabl",
+                                             "oem_revision":  "0x00001000",
+                                             "creator_id":  "INTL",
+                                             "creator_revision":  "0x20200717",
+                                             "checksum_ok":  true,
+                                             "aml_name_hits":  {
+                                                                   "_DSM":  1
+                                                               },
+                                             "dsm_guid_hits":  {
+
+                                                               },
+                                             "file":  "evidence/acpi/reg_SSD6_HONOR_Tpm2Tabl_00001000.bin",
+                                             "sha256":  "2596A05FF02AAFECA1E4CCCB3D827D4F4600208A61DC78CA22D718E57730AA9E"
+                                         },
+                                         {
+                                             "registry_key":  "HKLM\\HARDWARE\\ACPI\\SSD7\\HONOR\\WmiTable\\00001000",
+                                             "signature":  "SSDT",
+                                             "length":  3700,
+                                             "header_length":  3700,
+                                             "revision":  1,
+                                             "oem_id":  "HONOR",
+                                             "oem_table_id":  "WmiTable",
+                                             "oem_revision":  "0x00001000",
+                                             "creator_id":  "INTL",
+                                             "creator_revision":  "0x20200717",
+                                             "checksum_ok":  true,
+                                             "aml_name_hits":  {
+
+                                                               },
+                                             "dsm_guid_hits":  {
+
+                                                               },
+                                             "file":  "evidence/acpi/reg_SSD7_HONOR_WmiTable_00001000.bin",
+                                             "sha256":  "970F5BA86A8765F376E242F5E398E0873D06CDD36E44965FFAE0301F33F53F35"
+                                         },
+                                         {
+                                             "registry_key":  "HKLM\\HARDWARE\\ACPI\\SSD8\\HONOR\\PtidDevc\\00001000",
+                                             "signature":  "SSDT",
+                                             "length":  2777,
+                                             "header_length":  2777,
+                                             "revision":  2,
+                                             "oem_id":  "HONOR",
+                                             "oem_table_id":  "PtidDevc",
+                                             "oem_revision":  "0x00001000",
+                                             "creator_id":  "INTL",
+                                             "creator_revision":  "0x20200717",
+                                             "checksum_ok":  true,
+                                             "aml_name_hits":  {
+
+                                                               },
+                                             "dsm_guid_hits":  {
+
+                                                               },
+                                             "file":  "evidence/acpi/reg_SSD8_HONOR_PtidDevc_00001000.bin",
+                                             "sha256":  "FD5194710B7F7B3C5B6896134B5082CF7E2CADE3679E03EB4C16286AD2EA09CA"
+                                         },
+                                         {
+                                             "registry_key":  "HKLM\\HARDWARE\\ACPI\\SSD9\\HONOR\\ADL-P-M\\00000002",
+                                             "signature":  "SSDT",
+                                             "length":  41954,
+                                             "header_length":  41954,
+                                             "revision":  2,
+                                             "oem_id":  "HONOR",
+                                             "oem_table_id":  "ADL-P-M",
+                                             "oem_revision":  "0x00000002",
+                                             "creator_id":  "",
+                                             "creator_revision":  "0x01000013",
+                                             "checksum_ok":  true,
+                                             "aml_name_hits":  {
+                                                                   "PEG0":  59,
+                                                                   "PEG1":  58,
+                                                                   "PEG2":  48,
+                                                                   "PEGP":  61,
+                                                                   "PXSX":  25,
+                                                                   "RP05":  12,
+                                                                   "RP09":  48,
+                                                                   "RP12":  11,
+                                                                   "_DOD":  1,
+                                                                   "_DOS":  1,
+                                                                   "_DSM":  1,
+                                                                   "_BCL":  1,
+                                                                   "_BCM":  1,
+                                                                   "_BQC":  1,
+                                                                   "_PR3":  55,
+                                                                   "GC6I":  13,
+                                                                   "GC6O":  13,
+                                                                   "XHCI":  8,
+                                                                   "I2C0":  12,
+                                                                   "I2C1":  3,
+                                                                   "TPD0":  4,
+                                                                   "HDAS":  4
+                                                               },
+                                             "dsm_guid_hits":  {
+
+                                                               },
+                                             "file":  "evidence/acpi/reg_SSD9_HONOR_ADL-P-M_00000002.bin",
+                                             "sha256":  "258D8A0BE0486537BF565C584D57FF4EAF0958419EB81278855F871A59808555"
+                                         },
+                                         {
+                                             "registry_key":  "HKLM\\HARDWARE\\ACPI\\SSDA\\HONOR\\NvdTable\\00001000",
+                                             "signature":  "SSDT",
+                                             "length":  8357,
+                                             "header_length":  8357,
+                                             "revision":  1,
+                                             "oem_id":  "HONOR",
+                                             "oem_table_id":  "NvdTable",
+                                             "oem_revision":  "0x00001000",
+                                             "creator_id":  "INTL",
+                                             "creator_revision":  "0x20200717",
+                                             "checksum_ok":  true,
+                                             "aml_name_hits":  {
+                                                                   "PEG0":  41,
+                                                                   "PEGP":  24,
+                                                                   "_DOD":  1,
+                                                                   "_DSM":  2,
+                                                                   "NVOP":  8,
+                                                                   "NBCI":  10,
+                                                                   "NVJT":  2,
+                                                                   "GPS_":  2,
+                                                                   "MXDS":  1,
+                                                                   "MXMX":  1,
+                                                                   "MXM_":  2,
+                                                                   "GC6I":  4,
+                                                                   "GC6O":  4,
+                                                                   "DGPS":  5,
+                                                                   "NPCF":  4,
+                                                                   "NVDA0820":  1,
+                                                                   "NVDA":  1
+                                                               },
+                                             "dsm_guid_hits":  {
+                                                                   "NVIDIA_Optimus_NVOP_a486d8f8-0bda-471b-a72b-6042a6b5bee0":  1,
+                                                                   "NVIDIA_JT_GC6_cbeca351-067b-4924-9cbd-b46b00b86f34":  1,
+                                                                   "NVIDIA_NBCI_d4a50b75-65c7-46f7-bfb7-41514cea0244":  1,
+                                                                   "NVIDIA_GPS_a3132d01-8cda-49ba-a52e-bc9d46df6b81":  1,
+                                                                   "NVIDIA_MXM_4004a400-917d-4cf2-b89c-79b62fd55665":  1
+                                                               },
+                                             "file":  "evidence/acpi/reg_SSDA_HONOR_NvdTable_00001000.bin",
+                                             "sha256":  "1E3DB35E0E082926598F812C7FE4CCE8183638294748C4E3F93F1E841E609FE0"
+                                         },
+                                         {
+                                             "registry_key":  "HKLM\\HARDWARE\\ACPI\\SSDB\\HONOR\\xh_adlLP\\00000000",
+                                             "signature":  "SSDT",
+                                             "length":  2945,
+                                             "header_length":  2945,
+                                             "revision":  2,
+                                             "oem_id":  "HONOR",
+                                             "oem_table_id":  "xh_adlLP",
+                                             "oem_revision":  "0x00000000",
+                                             "creator_id":  "INTL",
+                                             "creator_revision":  "0x20200717",
+                                             "checksum_ok":  true,
+                                             "aml_name_hits":  {
+                                                                   "PXSX":  2,
+                                                                   "RP05":  2,
+                                                                   "_DSM":  2,
+                                                                   "TXHC":  6,
+                                                                   "XHCI":  30
+                                                               },
+                                             "dsm_guid_hits":  {
+
+                                                               },
+                                             "file":  "evidence/acpi/reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+                                             "sha256":  "51582972FA82C42E54C8442A19A0A988069E5CFC5252EC28FCA98E9BFD7AF38D"
+                                         },
+                                         {
+                                             "registry_key":  "HKLM\\HARDWARE\\ACPI\\SSDC\\HONOR\\SocGpe_\\00003000",
+                                             "signature":  "SSDT",
+                                             "length":  15082,
+                                             "header_length":  15082,
+                                             "revision":  2,
+                                             "oem_id":  "HONOR",
+                                             "oem_table_id":  "SocGpe",
+                                             "oem_revision":  "0x00003000",
+                                             "creator_id":  "INTL",
+                                             "creator_revision":  "0x20200717",
+                                             "checksum_ok":  true,
+                                             "aml_name_hits":  {
+                                                                   "GFX0":  6,
+                                                                   "PEG0":  8,
+                                                                   "PEG1":  6,
+                                                                   "PEG2":  6,
+                                                                   "PEGP":  2,
+                                                                   "RP05":  18,
+                                                                   "RP09":  18,
+                                                                   "RP12":  18,
+                                                                   "TXHC":  11,
+                                                                   "TDM0":  18,
+                                                                   "XHCI":  3,
+                                                                   "HDAS":  3,
+                                                                   "CNVW":  3
+                                                               },
+                                             "dsm_guid_hits":  {
+
+                                                               },
+                                             "file":  "evidence/acpi/reg_SSDC_HONOR_SocGpe__00003000.bin",
+                                             "sha256":  "421045105A132E5E4D97E43C184D6CC41782F3830AEFB3157046AA98088A8DD1"
+                                         },
+                                         {
+                                             "registry_key":  "HKLM\\HARDWARE\\ACPI\\SSDD\\HONOR\\SocCmn_\\00003000",
+                                             "signature":  "SSDT",
+                                             "length":  14810,
+                                             "header_length":  14810,
+                                             "revision":  2,
+                                             "oem_id":  "HONOR",
+                                             "oem_table_id":  "SocCmn",
+                                             "oem_revision":  "0x00003000",
+                                             "creator_id":  "INTL",
+                                             "creator_revision":  "0x20200717",
+                                             "checksum_ok":  true,
+                                             "aml_name_hits":  {
+                                                                   "RP05":  12,
+                                                                   "RP09":  12,
+                                                                   "RP12":  12,
+                                                                   "_PR3":  30,
+                                                                   "TXHC":  7
+                                                               },
+                                             "dsm_guid_hits":  {
+
+                                                               },
+                                             "file":  "evidence/acpi/reg_SSDD_HONOR_SocCmn__00003000.bin",
+                                             "sha256":  "F35F378E30CEA93E0C01E17287B07CF9438E32BCC3757109B345EAF39A267991"
+                                         },
+                                         {
+                                             "registry_key":  "HKLM\\HARDWARE\\ACPI\\SSDE\\HONOR\\PcdTabl\\00001000",
+                                             "signature":  "SSDT",
+                                             "length":  248,
+                                             "header_length":  248,
+                                             "revision":  1,
+                                             "oem_id":  "HONOR",
+                                             "oem_table_id":  "PcdTabl",
+                                             "oem_revision":  "0x00001000",
+                                             "creator_id":  "INTL",
+                                             "creator_revision":  "0x20200717",
+                                             "checksum_ok":  true,
+                                             "aml_name_hits":  {
+
+                                                               },
+                                             "dsm_guid_hits":  {
+
+                                                               },
+                                             "file":  "evidence/acpi/reg_SSDE_HONOR_PcdTabl_00001000.bin",
+                                             "sha256":  "ED0009387BEE2FE6C9A89626E8BE11C398A770F612EB3B653CEE21943CCD4A81"
+                                         },
+                                         {
+                                             "registry_key":  "HKLM\\HARDWARE\\ACPI\\SSDT\\HONOR\\DptfTabl\\00001000",
+                                             "signature":  "SSDT",
+                                             "length":  19335,
+                                             "header_length":  19335,
+                                             "revision":  2,
+                                             "oem_id":  "HONOR",
+                                             "oem_table_id":  "DptfTabl",
+                                             "oem_revision":  "0x00001000",
+                                             "creator_id":  "INTL",
+                                             "creator_revision":  "0x20200717",
+                                             "checksum_ok":  true,
+                                             "aml_name_hits":  {
+                                                                   "_DSM":  1,
+                                                                   "_PR3":  4
+                                                               },
+                                             "dsm_guid_hits":  {
+
+                                                               },
+                                             "file":  "evidence/acpi/reg_SSDT_HONOR_DptfTabl_00001000.bin",
+                                             "sha256":  "FF4AD140B6560AED08B5AA2AA15A8C5AE7CC4D7D41A4A4E4029968CA4D93FAD8"
+                                         }
+                                     ],
+                 "note":  "String hits are byte-pattern matches inside AML, not a disassembly. Presence of a name or _DSM GUID does not prove the method is functional."
+             }
+}

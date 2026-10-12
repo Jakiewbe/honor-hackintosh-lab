@@ -1,0 +1,59 @@
+{
+    "probe_id":  "P41_intel_display_firmware",
+    "title":  "Intel VBT / OpRegion / eDP parameter availability via supported read-only interfaces",
+    "source_interface":  "Summary of: display class registry value names (P11), D3DKMT ADAPTERREGISTRYINFO (P12), ACPI DSDT/SSDT scan (P40), Intel driver service registry key names",
+    "command":  "$svc = @()\r\n    foreach ($s in 'igfxn', 'igfx', 'igfxnd', 'iigd_dch') {\r\n        $p = \"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\$s\"\r\n        if (Test-Path -LiteralPath $p) {\r\n            try {\r\n                $keys = @(Get-ChildItem -LiteralPath $p -Recurse -ErrorAction Stop | ForEach-Object { $_.Name -replace '^HKEY_LOCAL_MACHINE', 'HKLM' })\r\n                $vn = @(); foreach ($k in (@(Get-Item -LiteralPath $p) + @(Get-ChildItem -LiteralPath $p -Recurse))) { $vn += @($k.GetValueNames() | Where-Object { $_ -match '(?i)vbt|opregion|edp|panel|psr|dmc|lane|link' } | ForEach-Object { ($k.Name -replace '^HKEY_LOCAL_MACHINE', 'HKLM') + ' :: ' + $_ }) }\r\n                $svc += [ordered]@{ service = $s; subkeys = $keys; display_related_value_names = $vn }\r\n            } catch { Add-ProbeError (\"$s : \" + $_.Exception.Message) }\r\n        }\r\n    }\r\n    [ordered]@{\r\n        intel_service_keys = $svc\r\n        vbt = [ordered]@{ obtained = $false; tried = @('display class registry value-name scan (P11)', 'Intel service registry value-name scan', 'D3DKMT ADAPTERREGISTRYINFO BiosString (P12, gives a version string only)'); reason = 'Windows exposes no supported user-mode API that returns the VBT. The VBT lives in the IGD OpRegion (system memory at the address in PCI config register ASLS) or inside the GOP/firmware image; reading either needs physical-memory or PCI-config access, which is out of scope.' }\r\n        opregion = [ordered]@{ obtained = $false; tried = @('ACPI DSDT/SSDT byte scan for IGDO/ASLS/ASLB/OPRG (P40)'); reason = 'ACPI tables only declare the OperationRegion; its base address is a runtime value and its contents are in physical memory. Not read.' }\r\n        edp_link_parameters = [ordered]@{ obtained = $false; tried = @('DisplayConfig target info (P13)', 'EDID decode (P17)'); reason = 'Lane count, link rate, PSR, backlight control and DPCD are not exposed by any supported read-only Windows API; EDID gives timings only.' }\r\n        port_mapping = [ordered]@{ obtained = $false; tried = @('DisplayConfig QDC_ALL_PATHS connector enumeration (P14)'); reason = 'Connector enumeration lists driver-exposed targets and output technology, not DDI port numbers / AUX channels / physical routing (that data is in the VBT child-device table).' }\r\n    }",
+    "started_local":  "2026-10-12T22:48:21.541+08:00",
+    "duration_ms":  102,
+    "status":  "ok",
+    "native_exit_code":  null,
+    "errors":  [
+
+               ],
+    "data":  {
+                 "intel_service_keys":  [
+                                            {
+                                                "service":  "igfxn",
+                                                "subkeys":  [
+                                                                "HKLM\\SYSTEM\\CurrentControlSet\\Services\\igfxn\\Parameters",
+                                                                "HKLM\\SYSTEM\\CurrentControlSet\\Services\\igfxn\\Video",
+                                                                "HKLM\\SYSTEM\\CurrentControlSet\\Services\\igfxn\\Enum"
+                                                            ],
+                                                "display_related_value_names":  [
+
+                                                                                ]
+                                            }
+                                        ],
+                 "vbt":  {
+                             "obtained":  false,
+                             "tried":  [
+                                           "display class registry value-name scan (P11)",
+                                           "Intel service registry value-name scan",
+                                           "D3DKMT ADAPTERREGISTRYINFO BiosString (P12, gives a version string only)"
+                                       ],
+                             "reason":  "Windows exposes no supported user-mode API that returns the VBT. The VBT lives in the IGD OpRegion (system memory at the address in PCI config register ASLS) or inside the GOP/firmware image; reading either needs physical-memory or PCI-config access, which is out of scope."
+                         },
+                 "opregion":  {
+                                  "obtained":  false,
+                                  "tried":  [
+                                                "ACPI DSDT/SSDT byte scan for IGDO/ASLS/ASLB/OPRG (P40)"
+                                            ],
+                                  "reason":  "ACPI tables only declare the OperationRegion; its base address is a runtime value and its contents are in physical memory. Not read."
+                              },
+                 "edp_link_parameters":  {
+                                             "obtained":  false,
+                                             "tried":  [
+                                                           "DisplayConfig target info (P13)",
+                                                           "EDID decode (P17)"
+                                                       ],
+                                             "reason":  "Lane count, link rate, PSR, backlight control and DPCD are not exposed by any supported read-only Windows API; EDID gives timings only."
+                                         },
+                 "port_mapping":  {
+                                      "obtained":  false,
+                                      "tried":  [
+                                                    "DisplayConfig QDC_ALL_PATHS connector enumeration (P14)"
+                                                ],
+                                      "reason":  "Connector enumeration lists driver-exposed targets and output technology, not DDI port numbers / AUX channels / physical routing (that data is in the VBT child-device table)."
+                                  }
+             }
+}

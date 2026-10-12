@@ -75,6 +75,12 @@
 
 上述三补丁的历史依赖顺序 `R1.1 → R1.2-B → R1.2-C`；R1.2-D/E/F/G 发现了尚未关闭的 stop/callback 安全问题，**不得将其视为可投产或已加载的驱动**。
 
+## 本机硬件调查材料包
+
+| 路径 | 内容 |
+|---|---|
+| [`docs/hardware-survey-20261012/`](../docs/hardware-survey-20261012/REPORT.md) | 2026-10-12 Windows 只读硬件调查：`REPORT.md`（中文报告）、`hardware.json`、`evidence/`（每项采集的命令/时间/接口/状态/错误、去敏 EDID、ACPI DSDT/SSDT 原表）、`collect.ps1` / `build_hardware_json.ps1` / `selfcheck.ps1`、`FILES_SHA256.txt`。目录内 `.gitattributes` 关闭换行转换以保持哈希可核验。**不是 MUX/走线证明，也不是 macOS 验证** |
+
 ## 仓库新增交接资产
 
 R1.4-C0 新增：`research/independent-i915/` 中 source lock、license/symbol/include inventories、callgraph/edges、API contracts、compat/delta、provenance 与实际 verification；`scripts/r14c0_fetch_locked_sources.py`（公开文本源取得，与离线校验分离）、`scripts/r14c0_validate_dependency_baseline.py`、`tests/test_r14c0_dependency_gate.py`、[正式首轮报告](../docs/R1.4-C0_独立i915源码与接口依赖基线.md)。第三方代码仅忽略缓存，未提交；治理状态新增 `.agent/`。
