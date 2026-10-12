@@ -1,0 +1,126 @@
+name: HONOR R1.3-D upstream release provenance index (read-only)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: honor-r13d-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release-archive-index:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Inspect published source-audit workflow
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Download pinned upstream release artifact and validate SHA256
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/r13d-evidence"
+          cd "$RUNNER_TEMP"
+          release=https://github.com/nullmoth/nvidia-macos-driver/releases/download/v1.14.2
+          name=nullmoth-nvidia-1.14.2.tar.gz
+          curl --fail --location --show-error --silent --retry 3 \
+            --connect-timeout 15 --max-time 120 \
+            --output SHA256SUMS.txt "$release/SHA256SUMS.txt"
+          expected=$(awk '$NF ~ /nullmoth-nvidia-1[.]14[.]2[.]tar[.]gz$/ {print $1}' SHA256SUMS.txt)
+          [[ "$expected" =~ ^[0-9a-fA-F]{64}$ ]] || {
+            echo "BLOCKED: missing/invalid published SHA256 for exact package"; exit 2;
+          }
+          curl --fail --location --show-error --silent --retry 3 \
+            --connect-timeout 15 --max-time 700 \
+            --output "$name" "$release/$name"
+          actual=$(sha256sum "$name" | awk '{print $1}')
+          [[ "${expected,,}" == "${actual,,}" ]] || {
+            echo "BLOCKED: package SHA256 does not match release"; exit 2;
+          }
+          printf 'Release: v1.14.2\nPackage: %s\nExpected SHA256: %s\nActual SHA256: %s\n' \
+            "$name" "$expected" "$actual" | tee r13d-evidence/hash-proof.txt
+          echo "R13D_RELEASE_ARCHIVE_SHA256_PASS"
+
+      - name: List archive filenames only (no extraction or execution)
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          tar -tzf nullmoth-nvidia-1.14.2.tar.gz > r13d-evidence/archive-paths.txt
+          wc -l r13d-evidence/archive-paths.txt | tee r13d-evidence/path-count.txt
+          python3 - <<'PY' | tee r13d-evidence/provenance-classification.json
+          import json
+          from pathlib import Path
+
+          entries = Path("r13d-evidence/archive-paths.txt").read_text(
+              encoding="utf-8", errors="replace").splitlines()
+          patterns = {
+              "nmxgpu_binary": ("/NMXGPU.kext/Contents/MacOS/NMXGPU",),
+              "compiler_flags": ("amd.flags",),
+              "actual_i915_source_list": ("srcs-i915.txt", "srcs-i915.all"),
+              "build_logs": ("logs-i915/", "link.log", "xlog_nmx_kext"),
+              "dependency_manifests": (".d", "compile_commands.json", "build-manifest", "build_manifest"),
+              "drm_kmod_sources": ("drm-kmod/",),
+              "freebsd_linuxkpi_sources": ("freebsd-src/",),
+              "linux_614_sources": ("linux-6.14/",),
+              "i915_object_files": ("obj-i915/",),
+              "nmxgpu_source": ("gpu-port/xkpi/xnu/nmx_kext.cpp", "gpu-port/xkpi/kext/build.sh"),
+          }
+          out = {
+              "source": "NullMoth v1.14.2 published distribution tarball",
+              "archive_entries": len(entries),
+              "inventory_only": True,
+              "binary_or_scripts_executed": False,
+              "matches": {},
+              "interpretation": (
+                  "A filename match does not prove build provenance. No match means "
+                  "this particular archive did not expose the expected pathname, "
+                  "not that no source exists elsewhere."
+              ),
+          }
+          for label, parts in patterns.items():
+              matched = [p for p in entries if any(term in p for term in parts)]
+              out["matches"][label] = {"count": len(matched), "sample": matched[:30]}
+          print(json.dumps(out, indent=2, ensure_ascii=False))
+          PY
+          echo "R13D_DISTRIBUTION_PATHS_INDEXED (not source-verified or runtime-qualified)"
+
+      - name: Record persistent no-go decision
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/r13d-evidence"
+          {
+            echo "R1.3-D inventory-only. RUNTIME_NO_GO."
+            echo "Downloaded public release archive to ephemeral GitHub runner only."
+            echo "No archive extraction, installer invocation, kext load, signature change,"
+            echo "BIOS/EFI/disk changes, or native build occurred."
+            echo "SHA256 verification proves published bytes, not compilable source completeness."
+          } > "$RUNNER_TEMP/r13d-evidence/limitations.txt"
+
+      - name: Upload filename and hash evidence ONLY (no archive, binaries or firmware)
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: honor-r13d-v1142-distribution-index-text
+          path: ${{ runner.temp }}/r13d-evidence/
+          retention-days: 7
+          if-no-files-found: warn
+
+      - name: Summarize read-only research
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          {
+            echo "## R1.3-D: published release archive filename inventory"
+            echo "- Upstream release v1.14.2 only, SHA256 checked before listing."
+            echo "- This is **not** NMXGPU source provenance certification."
+            echo "- Evidence is text only; no drivers loaded or binaries uploaded."
+            echo "- Unresolved: exact compiler inputs, source Git SHAs, object list and link map."
+            echo "- **RUNTIME_NO_GO**, regardless of successful file-index run."
+          } >> "$GITHUB_STEP_SUMMARY"
