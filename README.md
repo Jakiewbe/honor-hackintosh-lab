@@ -99,6 +99,16 @@ The [R1.2-G architecture review](docs/R1.2-G_VBL门锁外派发与生命周期�
 
 The [out-of-gate callback ticket/epoch reference model](tests/test_r12g_vbl_ticket_model.py) passed **16/16 local tests**, enumerating **363 states at depth 8**. The [IOGraphics-599 pinned VBL contract checker](scripts/r12g_verify_iofb_vbl_consumer.py) confirms 10 source facts (checked against pinned Apple source through the GitHub connector). The [manual-only R1.2-G workflow](.github/workflows/r12g-vbl-dispatch-review.yml) **passed in [Actions #38211816141](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38211816141)**: 10/10 pinned IOGraphics VBL source contracts, 40/40 D/E/G reference tests, R1.2-E 113 states and R1.2-G 363 states. Passing these offline models does not establish that an out-of-gate callback worker or synchronous `IOService::stop` can be implemented safely. No kernel patch, kext load or primary-Windows change. **R1.2-G remains RUNTIME_NO_GO.**
 
+## R1.2-H: Re-focus on actual HONOR graphics feasibility — freeze VBL patches
+
+**Project goal:** determine whether the HONOR GLO-FX6P / i5-12500H / Intel Iris Xe `8086:46A6` / NVIDIA RTX 2050 Laptop `10DE:25A9` can obtain **usable macOS graphics**, not just compile an isolated Intel framebuffer object. [R1.2-H route evaluation and strict no-go gates](docs/R1.2-H_HONOR技术路线重评与准入门禁.md).
+
+**Decision: VBL PATCHES FROZEN / RUNTIME-NO-GO.** R1.2-C real and virtual modules compile; R1.2-F/G confirm version-matched Apple source contracts and reference models, but no runtime or hardware proof follows. Further VBL micro-patches should wait until real graphics routing and accelerator viability are established.
+
+The currently published [NullMoth v1.14.2 release](https://github.com/nullmoth/nvidia-macos-driver/releases/tag/v1.14.2) is a relevant **unverified vendor-supplied** build lead, not approval for installation. [CARD-SUPPORT.md](https://github.com/nullmoth/nvidia-macos-driver/blob/main/docs/CARD-SUPPORT.md) still lists Ampere physical validation as pending; the `25A9` RTX 2050 device ID is in the table but has no qualifying test. The new **NMXGPU** path for Intel Iris Xe is explicitly a test driver with **no verified Intel GPU run** as of its release notes. [An issue on a muxless MSI laptop (#135)](https://github.com/nullmoth/nvidia-macos-driver/issues/135) reports an NVIDIA device showing Metal 3 while the internal panel remains frozen — independent self-report, not evidence about this HONOR.
+
+Immediate best use of effort: **read-only map the actual eDP/HDMI/USB-C GPU owners** and seek GPU-specific Ampere/NMXGPU physical reports. The [Windows read-only preflight](scripts/r12h_windows_readonly_display_probe.ps1) collects minimal non-identifying adapter/monitor evidence and makes no system changes; it **cannot establish actual MUX or port wiring on its own**. Combine it with Windows “Advanced display → Connected to” and the NVIDIA PhysX display wiring view. No Windows, EFI, BIOS, partition, SIP or macOS security changes; do not run third-party installers.
+
 ## Safety and evidence
 
 The original NullMoth source carries a PolyForm Noncommercial license. No upstream source code or vendor firmware is copied into this repository. All upstream code is fetched from its public GitHub repository into an ephemeral runner only when source mode is explicitly requested.
