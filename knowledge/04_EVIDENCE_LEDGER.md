@@ -32,3 +32,6 @@
 任何新报告必须同时写明：**输入 commit + macOS SDK + 实际执行命令（或明确没有执行）+ 成功/失败日志 + 结果分级 + 不证明的项目**。新增 CI 仅在能独立回答当前 P0 问题时考虑，且须用户手动发起，默认上传纯文本。
 
 **当前历史最高层级仅覆盖旧 NMIntelFB 的 KEXT-LINK-FORMAT；没有我们的自研 kext link，更没有任何目标实物运行。**
+
+## R1.4-C0.1 本地实际验证
+[source/运行记录](../research/independent-i915/c01/verification.json)：55锁源字节核验；21通过0失败；结构退出0，闭包退出2。仅SOURCE-STATIC；XNU四项固定raw源尚缺独立树核验。无Actions/native/硬件。

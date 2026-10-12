@@ -4,3 +4,6 @@
 
 ## 2026-10-12 接管与源码阶段边界
 用户明确授权L1及R1.4-C0；采用四个旧固定commit和测试矩阵支持的FreeBSD14.3.0精确候选。拒绝以版本名、上游PM空成功或source slice冒充XNU实现。首轮证据见正式报告和verification；完整B0/B1未验收，任务blocked，不进入B2/B3。其他候选base与裁剪路线未采用；改变需新的真实源码/接口证据。
+
+## 2026-10-12 C0.1源码证据限定电源适配接口
+按用户既定失败停止要求，真实power void超时链与XNU PM确认语义不可继承为硬件成功。采用独立实际状态/所有权/故障与有限时退出合同；未实现全部BLOCKED。版本候选不变，不进入kext。证据c01/build-and-providers.md及verification.json；不是平台运行结论。

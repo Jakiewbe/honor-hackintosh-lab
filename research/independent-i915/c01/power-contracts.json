@@ -1,0 +1,57 @@
+[
+  {
+    "id": "PCI_MMIO_OWNER",
+    "pre": "Exclusive provider/resource ownership; validate BAR bounds and memory attributes before access",
+    "post": "Mapped resources owned exactly once; no register access after teardown",
+    "failure": "Reject start; unwind only owned resources",
+    "status": "BLOCKED",
+    "implemented": false,
+    "evidence": [
+      "linux_pci_attach_device",
+      "linux_pdev_dma_init"
+    ],
+    "missing": "IOPCIFamily commit/header/ABI and macOS provider/resource implementation"
+  },
+  {
+    "id": "POWER_WELL_TRANSITION",
+    "pre": "Sleepable serialized thread, device accessible, power-map selected from ADLP display13, wakeref owned",
+    "post": "Request + state bits and required fuse status observed before software enabled=true",
+    "failure": "Poll timeout records register/mask/value/deadline; stop initialization; reverse only acquired ownership; do not claim usable display",
+    "status": "BLOCKED",
+    "implemented": false,
+    "evidence": [
+      "hsw_power_well_enable",
+      "hsw_wait_for_power_well_enable",
+      "hsw_power_well_enabled",
+      "intel_power_well_enable"
+    ],
+    "missing": "Error-return adapter and hardware postconditions; caller propagation; safe device reset policy"
+  },
+  {
+    "id": "PM_ACK_SEMANTICS",
+    "pre": "PMinit/parent join/registerPowerDriver; gate serializes lifetime; actual state distinguished from requested state",
+    "post": "Ack indicates PM protocol completion only; usable display separately gated by actual verified state",
+    "failure": "setPowerState return is ack/wait semantics, not Linux errno; negative values are treated as completed ack by XNU; failure recovery/termination must be separately defined",
+    "status": "BLOCKED",
+    "implemented": false,
+    "evidence": [
+      "setPowerState",
+      "acknowledgeSetPowerState",
+      "registerPowerDriver"
+    ],
+    "missing": "Bounded failure recovery policy; no unbounded deferred ack; no fake powered success"
+  },
+  {
+    "id": "STOP_AND_DRAIN",
+    "pre": "Reject new display work; asynchronous users/reference owners tracked",
+    "post": "Drain owned work/IRQ before freeing resources; PMstop prevents further PM calls; release in reverse order",
+    "failure": "Do not release mapped memory while callback/IRQ can still access it",
+    "status": "BLOCKED",
+    "implemented": false,
+    "evidence": [
+      "intel_power_well_put",
+      "linux_pdev_dma_uninit"
+    ],
+    "missing": "Actual XNU workloop/IRQ lifetime implementation and race validation"
+  }
+]

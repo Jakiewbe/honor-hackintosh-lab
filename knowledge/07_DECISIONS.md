@@ -29,3 +29,6 @@
 **允许立即做**：审查 GitHub 资料、选取对齐的 FreeBSD base SHA、整理候选 i915 依赖/许可证/符号图，编写纯离线 fail-closed 检查；未来如有新可证伪假设，可设计仅手动的托管 CI。**不允许任何宿主硬件内核部署**。
 
 当前最高优先级：下一阶段自主 Intel-only **最小源码/符号/许可闭包**。详见 [10](10_CODEX_HANDOFF.md)。
+
+## 2026-10-12 R1.4-C0.1 电源失败不能依赖返回值名称
+按真实源码，ADLP选择xelpd表，power void链吞掉poll失败而缓存置真；XNU PM负返回值也被当作确认完成。独立接口必须有真实后置条件/故障状态/所有权及有限时退出合同；不能只返回Linux errno，也不能无限等待。四项合同BLOCKED，必要语义未闭合前不写kext。见[证据](../research/independent-i915/c01/build-and-providers.md)。

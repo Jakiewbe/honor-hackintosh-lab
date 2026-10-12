@@ -1,8 +1,8 @@
 # 02｜当前事实、阻塞与决策（Codex 最新状态）
 
-**汇总时点：2026-10-12；最新里程碑：R1.4-C0 首轮源码/接口基线，完整闭包未验收。**
+**汇总时点：2026-10-12；最新里程碑：R1.4-C0.1 PCI/电源接口合同，完整闭包未验收。**
 
-**主状态：`R14C0_SOURCE_SLICE_RECORDED / FREEBSD_BASE_CANDIDATE_PINNED / DEPENDENCY_CLOSURE_BLOCKED / NO_INDEPENDENT_DRIVER_BUILD / NO_HARDWARE_RUNTIME / RUNTIME_NO_GO`。**
+**主状态：`R14C01_POWER_CONTRACTS_BLOCKED / R14C0_SOURCE_SLICE_RECORDED / FREEBSD_BASE_CANDIDATE_PINNED / DEPENDENCY_CLOSURE_BLOCKED / NO_INDEPENDENT_DRIVER_BUILD / NO_HARDWARE_RUNTIME / RUNTIME_NO_GO`。**
 
 > 这份文件是“现在怎么样”的**单一入口**。历史报告记录当时的事实，不因后来发生新判断而回写成“当时已经知道”。下一阶段完成后必须同步更新此文件。
 
@@ -34,8 +34,14 @@
 
 ## 正在做什么／马上做什么
 
-**下一任务 R1.4-C0.1：固定 FreeBSD 14.3 生成头文件/配置及 include 次序，补齐 PCI→probe→Power Well 最小 slice 的直接/传递提供者和许可，制定 XNU 电源状态/所有权/失败清理合同。** 完整闭包和必要接口关闭前，不进入 native 编译或 kext 原型。
+**下一任务 R1.4-C0.2：固定匹配 macOS15.5 的 IOPCIFamily 原始来源/commit，查 PCI BAR、PM、IRQ 与释放接口并补 XNU 独立树核验。C0.1已记录生成规则/电源合同，实际配置与预处理仍未执行。** 完整闭包和必要接口关闭前，不进入 native 编译或 kext 原型。
 
 **本知识库/AGENTS.md 的提交只是一项“移交文档”完成，并不推进 kernel 驱动运行等级。**
 
 查看 [10 Codex 交接](10_CODEX_HANDOFF.md) 和 [08 自主开发计划](08_ENGINEERING_ROADMAP.md)。旧实验和每一个正式 CI 的索引见 [03 历史](03_RESEARCH_HISTORY.md)／[04 证据](04_EVIDENCE_LEDGER.md)。
+
+## R1.4-C0.1 最新增量与下一步
+55条源锁（相对C0新增26文件）、32定义/14直接调用；实际BSD生成输入已锁，配置/预处理仍未执行。
+21通过0失败；结构退出0，闭包退出2。电源超时不能用hw_enabled真值证明成功；XNU PM负值不是拒绝请求。
+16条文件内许可未证明、76条slice外include、四项XNU合同BLOCKED；无新编译或硬件证据。
+下一项C0.2固定IOPCIFamily/PCI-MMIO-PM生命周期与独立树核验，详见[报告](../docs/R1.4-C0.1_PCI与电源井接口合同.md)。

@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project_id": "f6a08808-ada4-48fe-b2ad-82c0c827154b",
-  "revision": 3,
+  "revision": 5,
   "tasks": [
     {
       "task_id": "R14C0",
@@ -20,21 +20,21 @@
         {
           "type": "file",
           "criterion": 1,
-          "detail": "docs/R1.4-C0_独立i915源码与接口依赖基线.md 已列复用及新证据"
+          "detail": "docs/R1.4-C0.1_PCI与电源井接口合同.md：复用与三项新结论"
         },
         {
           "type": "file",
           "criterion": 2,
-          "detail": "research/independent-i915/source-lock.json 与 callgraph.md：固定候选、156源锁、92定义/79关系，完整闭包BLOCKED"
+          "detail": "c01/source-lock/build-contract/power-contracts/provider-inventory：55源锁32定义，生成输入和未实现合同"
         },
         {
           "type": "test",
           "criterion": 3,
-          "detail": "research/independent-i915/verification.json：25通过0失败，structure退出0，closure退出2"
+          "detail": "c01/verification.json：21通过0失败；结构退出0、闭包退出2，RUNTIME_NO_GO"
         }
       ],
-      "blocker": "首轮 SOURCE-STATIC 交付通过；完整 B0/B1 未验收：生成配置、传递提供者、许可和 XNU 必需接口未闭合。门禁退出2，不进入驱动实现。",
-      "updated_at": "2026-10-12T12:52:00.135915+00:00"
+      "blocker": "C0.1源码增量完成；生成配置/预处理、传递依赖/许可及XNU PCI/电源/失败退出语义仍未闭合，不进入kext。",
+      "updated_at": "2026-10-12T13:17:34.100018+00:00"
     }
   ],
   "history": [
@@ -93,6 +93,45 @@
         ]
       },
       "reason": "真实依赖未闭合，停止在源码调查阶段"
+    },
+    {
+      "revision": 4,
+      "timestamp": "2026-10-12T12:58:28.346624+00:00",
+      "action": "update",
+      "payload": {
+        "task_id": "R14C0",
+        "status": "doing",
+        "blocker": ""
+      },
+      "reason": "用户要求继续，实施已交接的R1.4-C0.1范围"
+    },
+    {
+      "revision": 5,
+      "timestamp": "2026-10-12T13:17:34.100018+00:00",
+      "action": "update",
+      "payload": {
+        "task_id": "R14C0",
+        "status": "blocked",
+        "blocker": "C0.1源码增量完成；生成配置/预处理、传递依赖/许可及XNU PCI/电源/失败退出语义仍未闭合，不进入kext。",
+        "evidence": [
+          {
+            "type": "file",
+            "criterion": 1,
+            "detail": "docs/R1.4-C0.1_PCI与电源井接口合同.md：复用与三项新结论"
+          },
+          {
+            "type": "file",
+            "criterion": 2,
+            "detail": "c01/source-lock/build-contract/power-contracts/provider-inventory：55源锁32定义，生成输入和未实现合同"
+          },
+          {
+            "type": "test",
+            "criterion": 3,
+            "detail": "c01/verification.json：21通过0失败；结构退出0、闭包退出2，RUNTIME_NO_GO"
+          }
+        ]
+      },
+      "reason": "完成用户要求继续的C0.1源码调查，保留真实阻塞"
     }
   ]
 }

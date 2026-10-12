@@ -4,7 +4,9 @@
 
 **最新断点：** R1.4-C0 首轮台账和负向静态检查已交付，base 候选 `release/14.3.0 / 8c9ce319fef765890ce518cab85d3a470b669849` 已固定；完整 B0/B1 闭包仍 BLOCKED。下方保留原任务定义，当时“base 待查”不代表现在未取得 SHA。见 [结果](../docs/R1.4-C0_独立i915源码与接口依赖基线.md)。
 
-**Next Task R1.4-C0.1：** 固定 FreeBSD 14.3 生成头文件/配置及 include 次序，补齐 PCI→probe→Power Well 最小 slice 的直接/传递提供者与许可，制定 XNU 电源状态/所有权/失败清理合同。必要语义缺证据即停止，不直接继承 PM 空成功，不进入 B2/B3 或 kext 原型。
+**最新增量 R1.4-C0.1：** [正式报告](../docs/R1.4-C0.1_PCI与电源井接口合同.md)：实际固定生成规则/输入，真实提供者与电源失败传播；21通过0失败。没有完成实际配置展开/预处理闭包。Power Well 超时缓存仍置真，XNU setPowerState 负值仍确认；四项合同未实现。
+
+**Next Task R1.4-C0.2：** 固定 macOS15.5 IOPCIFamily 原始来源/commit，查 PCI BAR、PM、IRQ 与释放生命周期，对照 PCI_MMIO_OWNER/PM_ACK_SEMANTICS；补 XNU 四源树核验。必要语义缺证据即停止，不进入 B2/B3 或 kext。
 
 ## 先读清楚底线
 

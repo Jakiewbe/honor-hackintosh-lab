@@ -3,20 +3,20 @@
   "kit_version": "1.2.0",
   "project_id": "f6a08808-ada4-48fe-b2ad-82c0c827154b",
   "name": "HONOR Hackintosh Lab",
-  "revision": 7,
-  "task_revision": 3,
-  "current_task_revision": 3,
+  "revision": 12,
+  "task_revision": 5,
+  "current_task_revision": 5,
   "goal_version": 2,
   "goal_approved": true,
-  "updated_at": "2026-10-12T12:52:03.500586+00:00",
+  "updated_at": "2026-10-12T13:17:36.840617+00:00",
   "snapshot_keep": 20,
   "log_max_bytes": 65536,
   "hashes": {
     "GOAL.md": "75e971a616ff73ca8bb457c3089308f5f1a5fefdf8a95e36ebcd29828fa7af7e",
-    "CURRENT.md": "7d1c71749afae5d0950563e8a5d60d6bda94b68fc41af1fc4d264252b7af6e10",
-    "DECISIONS.md": "cf8b6551b721f269888704e72db9e6a0881d455045f601511d755a451195dcbc",
-    "LESSONS.md": "0266e66cd1f68e8108d13c0032da5e28111f1f9129cde8d6a069e9482e68e5ae",
-    "tasks.json": "e5750598930a3690a01fa05c7f37d9231049f5357172782914de02177b97d15b"
+    "CURRENT.md": "5bf08e77d027a945ba4aa8c8e1f6cbb7df00f8309f1b1893812c974e44f1fd28",
+    "DECISIONS.md": "a8ef5b38c12681ce49c9741cfb2849f845306ae80a18f87dbc1a6b7e806bcab8",
+    "LESSONS.md": "b92fda952e78bc49e72c5f314136ff04c841c180308154389135b3adefe18538",
+    "tasks.json": "779d7c7544871f933f04e9af58fa012aa76b43b9718a9a4c168492c37e1d0cb6"
   },
   "history": [
     {
@@ -92,6 +92,60 @@
       "action": "state:update",
       "reason": "R1.4-C0 首轮真实证据与阻塞交接",
       "timestamp": "2026-10-12T12:52:03.500586+00:00"
+    },
+    {
+      "revision": 8,
+      "action": "task:update",
+      "reason": "用户要求继续，实施已交接的R1.4-C0.1范围",
+      "timestamp": "2026-10-12T12:58:28.358174+00:00"
+    },
+    {
+      "revision": 9,
+      "action": "task:update",
+      "reason": "完成用户要求继续的C0.1源码调查，保留真实阻塞",
+      "timestamp": "2026-10-12T13:17:34.110569+00:00"
+    },
+    {
+      "action": "document-version",
+      "file": "CURRENT.md",
+      "previous_sha256": "7d1c71749afae5d0950563e8a5d60d6bda94b68fc41af1fc4d264252b7af6e10",
+      "content": "# 当前断点\n\n## 当前阶段\nR1.4-C0.1 SOURCE-STATIC交付；完整B0/B1闭包BLOCKED，RUNTIME_NO_GO。\n\n## 当前任务\nR14C0 blocked；不进入native/kext。C0.1实际生成规则已锁，配置和预处理未执行。\n\n## 已完成工作\n复用C0固定候选/旧证据，新增26个不同源文件；C0.1共55源锁、32定义/14直接调用。\n七组生成输入、89 include（76在slice无候选）、四项未实现合同。\n确认ADLP选xelpd；power timeout仍设缓存真；XNU PM负值是完成确认。\n21通过0失败，结构退出0/闭包退出2；报告docs/R1.4-C0.1_PCI与电源井接口合同.md。\n\n## 当前阻塞\n实际make/配置/预处理闭包、16条文件内许可、IOPCIFamily来源/ABI尚缺。\nXNU四个raw源独立树核验受API403阻塞；电源失败退出策略未实现。\n无自主对象/加载/scanout/WindowServer/恢复硬件证明。\n\n## 下一步动作\nR1.4-C0.2固定macOS15.5 IOPCIFamily原始来源/commit，PCI BAR/PM/IRQ/释放合同，补XNU树核验。\n\n## 状态修订\n以state.json/tasks.json为准，写入前status。\n\n## Git 检查\n起点027bd7c，同main本地提交；不建分支/工作树/推送。\nC0历史manifest和旧报告/patch/tests/workflows未改；没有Actions/硬件部署。\n",
+      "user_approved": false,
+      "timestamp": "2026-10-12T13:17:35.019784+00:00"
+    },
+    {
+      "revision": 10,
+      "action": "state:update",
+      "reason": "C0.1实际检查和C0.2交接",
+      "timestamp": "2026-10-12T13:17:35.030375+00:00"
+    },
+    {
+      "action": "document-version",
+      "file": "DECISIONS.md",
+      "previous_sha256": "cf8b6551b721f269888704e72db9e6a0881d455045f601511d755a451195dcbc",
+      "content": "# 重要决策\n\n仅记录已经确认的决策。每条包含时间、背景、备选方案、选择、原因、适用范围及变更情况。\n\n## 2026-10-12 接管与源码阶段边界\n用户明确授权L1及R1.4-C0；采用四个旧固定commit和测试矩阵支持的FreeBSD14.3.0精确候选。拒绝以版本名、上游PM空成功或source slice冒充XNU实现。首轮证据见正式报告和verification；完整B0/B1未验收，任务blocked，不进入B2/B3。其他候选base与裁剪路线未采用；改变需新的真实源码/接口证据。\n\n## 2026-10-12 C0.1源码证据限定电源适配接口\n按用户既定失败停止要求，真实power void超时链与XNU PM确认语义不可继承为硬件成功。采用独立实际状态/所有权/故障与有限时退出合同；未实现全部BLOCKED。版本候选不变，不进入kext。证据c01/build-and-providers.md及verification.json；不是平台运行结论。\n",
+      "user_approved": false,
+      "timestamp": "2026-10-12T13:17:35.930900+00:00"
+    },
+    {
+      "revision": 11,
+      "action": "state:update",
+      "reason": "保存有原始源码与实际检查支持的C0.1结论",
+      "timestamp": "2026-10-12T13:17:35.941568+00:00"
+    },
+    {
+      "action": "document-version",
+      "file": "LESSONS.md",
+      "previous_sha256": "0266e66cd1f68e8108d13c0032da5e28111f1f9129cde8d6a069e9482e68e5ae",
+      "content": "# 项目教训\n\n仅记录验证过的失败模式、根因、解决办法、适用条件、证据及局限；猜测明确标为未验证。\n\n## 2026-10-12 宿主兼容层的成功返回不能跨系统继承\nFreeBSD14.3.0 pm_runtime.h的pm_runtime_get_sync仅return0，而i915通过它取wakeref；不能据此声明XNU设备已供电。验证：固定blob/函数体检查和25项负向测试中拒绝将其标为XNU implemented。限制：不证明BSD驱动有错误，必须研究host实际PM策略。见research/independent-i915/compat-notes.md与verification.json。\n\n## 2026-10-12 PM返回类型名不等于故障传播\nIOServicePM.cpp notifyControllingDriverDone将result<0作为已完成确认。Linux errno不能直接代表XNU拒绝上电；必须分离PM协议与驱动故障状态。固定raw源/body和21负向检查有据，API独立树仍未闭合。\n\n## 2026-10-12 Git树查询范围要写入证据\nGitHub JSON的url不保留recursive查询串；用响应url推导缓存名会错读非递归树。新增门禁实际失败后定位并保存request_url和完整未截断树snapshot，21检查最终通过。只修证据索引，没有重写旧实验。\n",
+      "user_approved": false,
+      "timestamp": "2026-10-12T13:17:36.830616+00:00"
+    },
+    {
+      "revision": 12,
+      "action": "state:update",
+      "reason": "保存有原始源码与实际检查支持的C0.1结论",
+      "timestamp": "2026-10-12T13:17:36.840617+00:00"
     }
   ]
 }

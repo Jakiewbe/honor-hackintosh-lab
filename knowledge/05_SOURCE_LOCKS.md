@@ -44,3 +44,5 @@
 **后续锁定规则**：生成 `source_manifest.json`（repo、commit、relative_path、Git blob、license、patch）、`object_manifest.json`（源码→编译命令→对象 SHA→符号）、`compat_matrix.md` 和 delta 摘要；不因某个仓库有“6.1”标签就宣称全栈互通。
 
 R1.4-C0 实际基线：[source-lock.json](../research/independent-i915/source-lock.json)、[license-manifest.csv](../research/independent-i915/license-manifest.csv)、[compat-notes.md](../research/independent-i915/compat-notes.md)。仅 source slice 和对象候选，无已编译 object/compiler/link manifest。
+
+R1.4-C0.1独立[源锁](../research/independent-i915/c01/source-lock.json)：版本不变，55记录/相对C0新增26文件。27条BSD构建与接口输入有树/blob核验；XNU四源固定raw bytes/blob，tree_verified=false（API403）。没有暗换base或声称ABI兼容。

@@ -1,0 +1,72 @@
+[
+  {
+    "caller": "i915_pci_register_driver",
+    "callee": "linux_pci_register_drm_driver",
+    "kind": "LEXICAL_DIRECT_CALL_NOT_PREPROCESSED"
+  },
+  {
+    "caller": "linux_pci_register_drm_driver",
+    "callee": "_linux_pci_register_driver",
+    "kind": "LEXICAL_DIRECT_CALL_NOT_PREPROCESSED"
+  },
+  {
+    "caller": "linux_pci_attach",
+    "callee": "linux_pci_attach_device",
+    "kind": "LEXICAL_DIRECT_CALL_NOT_PREPROCESSED"
+  },
+  {
+    "caller": "linux_pci_attach_device",
+    "callee": "linux_pdev_dma_init",
+    "kind": "LEXICAL_DIRECT_CALL_NOT_PREPROCESSED"
+  },
+  {
+    "caller": "i915_pci_probe",
+    "callee": "i915_driver_probe",
+    "kind": "LEXICAL_DIRECT_CALL_NOT_PREPROCESSED"
+  },
+  {
+    "caller": "i915_driver_probe",
+    "callee": "intel_modeset_init_noirq",
+    "kind": "LEXICAL_DIRECT_CALL_NOT_PREPROCESSED"
+  },
+  {
+    "caller": "intel_modeset_init_noirq",
+    "callee": "intel_power_domains_init_hw",
+    "kind": "LEXICAL_DIRECT_CALL_NOT_PREPROCESSED"
+  },
+  {
+    "caller": "intel_power_domains_init_hw",
+    "callee": "icl_display_core_init",
+    "kind": "LEXICAL_DIRECT_CALL_NOT_PREPROCESSED"
+  },
+  {
+    "caller": "icl_display_core_init",
+    "callee": "intel_power_well_enable",
+    "kind": "LEXICAL_DIRECT_CALL_NOT_PREPROCESSED"
+  },
+  {
+    "caller": "intel_power_well_get",
+    "callee": "intel_power_well_enable",
+    "kind": "LEXICAL_DIRECT_CALL_NOT_PREPROCESSED"
+  },
+  {
+    "caller": "hsw_power_well_enable",
+    "callee": "hsw_wait_for_power_well_enable",
+    "kind": "LEXICAL_DIRECT_CALL_NOT_PREPROCESSED"
+  },
+  {
+    "caller": "hsw_power_well_enable",
+    "callee": "gen9_wait_for_power_well_fuses",
+    "kind": "LEXICAL_DIRECT_CALL_NOT_PREPROCESSED"
+  },
+  {
+    "caller": "hsw_wait_for_power_well_enable",
+    "callee": "intel_de_wait_for_set",
+    "kind": "LEXICAL_DIRECT_CALL_NOT_PREPROCESSED"
+  },
+  {
+    "caller": "intel_de_wait_for_set",
+    "callee": "intel_de_wait_for_register",
+    "kind": "LEXICAL_DIRECT_CALL_NOT_PREPROCESSED"
+  }
+]

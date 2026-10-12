@@ -1,0 +1,56 @@
+component,path,blob_sha,evidence_line,evidence,status
+freebsd-src,share/mk/bsd.sysdir.mk,52b841a51feaf321f44b2a11bb9f71989c7f0c51,,,BLOCKED_NO_FILE_HEADER
+freebsd-src,share/mk/bsd.opts.mk,b4761333d8c5f7873818a3baa50ac06099a651d7,,,BLOCKED_NO_FILE_HEADER
+freebsd-src,sys/conf/kmod.opts.mk,88a74f3e62b3c7d28831ed8dddd06287d597601c,,,BLOCKED_NO_FILE_HEADER
+freebsd-src,sys/conf/kern.pre.mk,6c027ca7c208c4fa9de0549fa209b738696ea28a,,,BLOCKED_NO_FILE_HEADER
+freebsd-src,sys/kern/vnode_if.src,d13e7efb4bb5e08a31280102b861f860130f5910,5,"# Redistribution and use in source and binary forms, with or without",HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+freebsd-src,sys/dev/acpica/acpi_if.m,6b7a770f88124b23eff67f367e95d1c69485036b,5,"# Redistribution and use in source and binary forms, with or without",HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+freebsd-src,sys/dev/fb/fb_if.m,938cececa409badf6f0bd599422079aefa80db9a,,,BLOCKED_NO_FILE_HEADER
+freebsd-src,sys/compat/linuxkpi/common/include/linux/kconfig.h,c1d186b56e1f7ff243a6f4492bdc4fee670b1c27,2,* SPDX-License-Identifier: BSD-2-Clause,HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+freebsd-src,share/mk/bsd.kmod.mk,0acf07c54b15fc7d0aa430934bcd8f50d92b52d7,,,BLOCKED_NO_FILE_HEADER
+freebsd-src,share/mk/bsd.sys.mk,061c6b36f84d1985abe057f89255b0f230f69507,,,BLOCKED_NO_FILE_HEADER
+freebsd-src,share/mk/bsd.init.mk,64fdd23ce7ad5f6e186383b0d033e3d52d69249e,,,BLOCKED_NO_FILE_HEADER
+freebsd-src,share/mk/bsd.compiler.mk,fd236b2e6b8fed1ee6b8fea900d03d6d37e210d0,,,BLOCKED_NO_FILE_HEADER
+freebsd-src,sys/conf/kmod.mk,9310f1572b4144b95b14b73becb8fbd4f2de4aec,,,BLOCKED_NO_FILE_HEADER
+freebsd-src,sys/conf/kern.opts.mk,de32da2acebbfdc22a48b142cd6c43b708c348b2,,,BLOCKED_NO_FILE_HEADER
+freebsd-src,sys/conf/kern.mk,e37665ac374cae90c3d9ba12613fabc4f7b75f1d,,,BLOCKED_NO_FILE_HEADER
+freebsd-src,sys/tools/makeobjops.awk,ea0bef3404b89775766134400fe1fd1558068fe3,4,# SPDX-License-Identifier: BSD-3-Clause,HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+freebsd-src,sys/tools/vnode_if.awk,b477bbc91c43bab7ba72ea3cad9f9791ac6346a8,4,# SPDX-License-Identifier: BSD-3-Clause,HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+freebsd-src,sys/kern/bus_if.m,7078683911b83c0e583f41d75f24717e137f9771,5,"# Redistribution and use in source and binary forms, with or without",HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+freebsd-src,sys/kern/device_if.m,c02e5a46f3268c99c31813a78db045d167bd20da,5,"# Redistribution and use in source and binary forms, with or without",HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+freebsd-src,sys/dev/pci/pci_if.m,a366c9c1d58bad85023b53d5dd97612178092348,5,"# Redistribution and use in source and binary forms, with or without",HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+freebsd-src,sys/dev/pci/pci_iov_if.m,6f2a53ada2ed937e3b60f5e26fcde952f5a27347,5,"# Redistribution and use in source and binary forms, with or without",HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+freebsd-src,sys/compat/linuxkpi/common/include/linux/pci.h,ccf86c7778e946150e5edcf9a9bf8ffe3599751e,12,"* Redistribution and use in source and binary forms, with or without",HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+freebsd-src,sys/compat/linuxkpi/common/src/linux_pci.c,36dbac24496b80b41265a9c579f21277b78e20d5,9,"* Redistribution and use in source and binary forms, with or without",HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+freebsd-src,sys/compat/linuxkpi/common/include/linux/io.h,164347dbc4e765b992757f89ddd5e57ce399d93f,8,"* Redistribution and use in source and binary forms, with or without",HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+freebsd-src,sys/compat/linuxkpi/common/include/linux/mutex.h,6fb6a7744a89df4d58fa765c6c920e29a83543c0,8,"* Redistribution and use in source and binary forms, with or without",HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+freebsd-src,sys/compat/linuxkpi/common/include/linux/delay.h,f19d1a759c26b31dcdb0edfd79aed94fcc112c50,9,"* Redistribution and use in source and binary forms, with or without",HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+freebsd-src,sys/compat/linuxkpi/common/include/linux/wait.h,309c7816aa7bc644e751b40822f20efbeedd5a41,9,"* Redistribution and use in source and binary forms, with or without",HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+xnu,iokit/IOKit/IOService.h,8760283652f76e6319e6e8dad99c06c7469c956d,7,* as defined in and that are subject to the Apple Public Source License,HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+xnu,iokit/Kernel/IOServicePM.cpp,fe889408973462e233f26dc6566a128b65411851,7,* as defined in and that are subject to the Apple Public Source License,HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+xnu,iokit/IOKit/IOWorkLoop.h,a392ea642341532e9ed35d40ed7ee41a030aff77,7,* as defined in and that are subject to the Apple Public Source License,HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+xnu,iokit/IOKit/IOLocks.h,79531f24370a2656b83c127f430af7e9737f636a,7,* as defined in and that are subject to the Apple Public Source License,HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+drm-kmod,compiler_flags.mk,056cb81d44c6e7f5d791bab9c95ee29fb50d7cd7,,,BLOCKED_NO_FILE_HEADER
+drm-kmod,drivers/gpu/drm/i915/display/intel_display.c,ee9ee36a9c23e8872fa0b782de4cebc8af43a050,4,"* Permission is hereby granted, free of charge, to any person obtaining a",HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+drm-kmod,drivers/gpu/drm/i915/display/intel_display_power.c,1a63da28f33002ad04baaca89c5a5510f552092c,1,/* SPDX-License-Identifier: MIT */,HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+drm-kmod,drivers/gpu/drm/i915/display/intel_display_power_map.c,dc04afc6cc8ff98ed3aed36b449f84cadfa2b86a,1,// SPDX-License-Identifier: MIT,HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+drm-kmod,drivers/gpu/drm/i915/display/intel_display_power_well.c,7c0118df89e44e4648d1e67dc9d7d603fcde1e35,1,// SPDX-License-Identifier: MIT,HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+drm-kmod,drivers/gpu/drm/i915/i915_driver.c,b1b7256a1b93e785a998e4924464f4008617c526,8,"* Permission is hereby granted, free of charge, to any person obtaining a",HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+drm-kmod,drivers/gpu/drm/i915/i915_pci.c,0e24e0a0fa340ccba1dcac225ee47abe93668a23,4,"* Permission is hereby granted, free of charge, to any person obtaining a",HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+drm-kmod,drivers/gpu/drm/i915/intel_runtime_pm.c,e10be2a43e5182dc0c659644ed68954aa204c621,4,"* Permission is hereby granted, free of charge, to any person obtaining a",HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+drm-kmod,drivers/gpu/drm/i915/intel_uncore.c,5cd423c7b64649f4e19f26d9e78780e70ce85a12,4,"* Permission is hereby granted, free of charge, to any person obtaining a",HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+drm-kmod,i915/Makefile,7dd6b3c463b3b86975d8cbd07f8d2410d5648046,,,BLOCKED_NO_FILE_HEADER
+drm-kmod,include/drm/i915_pciids.h,8f648c32a965778d6f5e96ae0f313d9c0a48cc1a,5,"* Permission is hereby granted, free of charge, to any person obtaining a",HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+drm-kmod,kconfig.mk,50a1e7e3a2f7ff1cb09c7e7c191e9a173ba4ffab,,,BLOCKED_NO_FILE_HEADER
+drm-kmod,linuxkpi_version.mk,25ec18ad75fb18834c600dbcdf8af1ae280c3129,,,BLOCKED_NO_FILE_HEADER
+freebsd-src,sys/compat/linuxkpi/common/include/linux/pm_runtime.h,616dd508e5623db2c929c6501dbe6645c9a16c8d,1,/* Public domain. */,HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+linux,drivers/gpu/drm/i915/display/intel_display.c,de77054195c6812652e5cad596af6cd9f6e63f45,4,"* Permission is hereby granted, free of charge, to any person obtaining a",HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+linux,drivers/gpu/drm/i915/display/intel_display_power.c,1a63da28f33002ad04baaca89c5a5510f552092c,1,/* SPDX-License-Identifier: MIT */,HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+linux,drivers/gpu/drm/i915/display/intel_display_power_map.c,dc04afc6cc8ff98ed3aed36b449f84cadfa2b86a,1,// SPDX-License-Identifier: MIT,HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+linux,drivers/gpu/drm/i915/display/intel_display_power_well.c,1d18eee562534581782e19c8d79100c52f3eecb9,1,// SPDX-License-Identifier: MIT,HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+linux,drivers/gpu/drm/i915/i915_driver.c,f2a15d8155f4a1be085d86b7eb86d4ddfc018121,8,"* Permission is hereby granted, free of charge, to any person obtaining a",HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+linux,drivers/gpu/drm/i915/i915_pci.c,cd4487a1d3be0f5b5b4d9f476f1a89cd04b7f1fb,4,"* Permission is hereby granted, free of charge, to any person obtaining a",HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+linux,drivers/gpu/drm/i915/intel_runtime_pm.c,744cca507946be24b93a566adeaa16182a95c6da,4,"* Permission is hereby granted, free of charge, to any person obtaining a",HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+linux,drivers/gpu/drm/i915/intel_uncore.c,5cd423c7b64649f4e19f26d9e78780e70ce85a12,4,"* Permission is hereby granted, free of charge, to any person obtaining a",HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+drm-kmod,drivers/gpu/drm/i915/i915_drv.h,0a0ec6956e53285d24dcd63e9a1c2cc6b304fcc0,8,"* Permission is hereby granted, free of charge, to any person obtaining a",HEADER_OBSERVED_NOT_LEGAL_CLOSURE
+drm-kmod,drivers/gpu/drm/i915/display/intel_de.h,9c104f65e4c88c35cb55478554a19ee9abb29b28,1,/* SPDX-License-Identifier: MIT */,HEADER_OBSERVED_NOT_LEGAL_CLOSURE

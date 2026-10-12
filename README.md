@@ -12,7 +12,7 @@
 - **[全部研究历史](knowledge/03_RESEARCH_HISTORY.md)** · **[真实 CI/证据账本](knowledge/04_EVIDENCE_LEDGER.md)** · **[外部源码版本锁定](knowledge/05_SOURCE_LOCKS.md)**
 - **[架构与风险](knowledge/06_ARCHITECTURE_AND_RISKS.md)** · **[决策日志](knowledge/07_DECISIONS.md)** · **[自主开发路线](knowledge/08_ENGINEERING_ROADMAP.md)** · **[原有文件完整索引](knowledge/09_REPOSITORY_INVENTORY.md)** · **[1401/OpenCore 早期调查与纠错](knowledge/11_EARLY_RESEARCH_AND_1401.md)**
 
-**Codex 下一任务 R1.4-C0.1**：固定 FreeBSD 14.3 生成配置/include 次序，补齐 PCI→probe→Power Well 的直接/传递接口与许可，制定 XNU 电源状态和资源清理合同。已有源码 slice 不等于完整闭包。详细验收与禁止事项见 [10_CODEX_HANDOFF.md](knowledge/10_CODEX_HANDOFF.md)。
+**R1.4-C0.1 已交付**：[电源接口报告](docs/R1.4-C0.1_PCI与电源井接口合同.md)，55 条源锁、32 个提供者定义、七组生成输入与四项阻塞合同；21 通过、0 失败。定位电源超时仍置启用标志、XNU 负返回值仍确认完成两个关键语义差异。**下一项 R1.4-C0.2**：固定 IOPCIFamily 来源与 PCI/MMIO/PM 生命周期，补 XNU 树核验；完整闭包仍 BLOCKED。详细验收与禁止事项见 [10_CODEX_HANDOFF.md](knowledge/10_CODEX_HANDOFF.md)。
 
 ---
 
