@@ -1,0 +1,16 @@
+---
+description: Upstream clones under upstream/ are read-only pinned references
+globs: upstream/**
+alwaysApply: false
+---
+
+# upstream/ is read-only
+
+- `upstream/1401` is pinned at v1.14.2 `46d9fee3…`; `upstream/nvidia-macos-driver` at v1.14.2 `1083a98d…`.
+  Record any SHA change in `research/SOURCES.md` and `upstream/README.md`, then re-run
+  `python tests/test_1401_static_audit.py`.
+- Do not edit, build, install or run anything in place. PolyForm Noncommercial: do not copy code
+  into this repo or redistribute binaries.
+- To run upstream tests, copy the tree to a fresh `%TEMP%\hk-1401-sandbox-*` and review each test's
+  side effects first (network, subprocess, disk APIs). Never run `tests/corpus/fetch.py`,
+  `scan --selftest`, `plan`/`build`, or `usbwriter` without explicit approval.

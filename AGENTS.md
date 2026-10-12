@@ -39,3 +39,24 @@
 ## 工作完成汇报模板
 
 `本轮新增事实 | 证据链接及 commit | 改动文件 | 实际运行的测试（如无写“未运行”） | 未证实或阻塞项 | 风险与回退 | 下一步`。始终保持 `RUNTIME_NO_GO` 直至满足真实硬件与安全门禁。
+
+## 1401 审计研究线（2026-10-13 起，用户授权的只读支线，见决策 D-16）
+
+**目标**：以源码可追溯的方式评估 [NullMoth 1401](https://github.com/nullmoth/1401) 与 [NullMoth NVIDIA 驱动](https://github.com/nullmoth/nvidia-macos-driver) 对本机的适用性，为后续 OpenCore 适配研究提供证据；**产出是研究结论，不是 macOS 安装盘或 EFI**。不改变上文 L1 主目标的优先级。
+
+**默认模式 `READ_ONLY_RESEARCH`**（细则见 [`.cursor/rules/read-only-research.mdc`](.cursor/rules/read-only-research.mdc)）：
+- 禁止：修改 Windows EFI/BCD/引导配置/NVRAM 启动项；覆盖任何 EFI 分区；新建/删除/格式化/调整分区；修改 BIOS、Secure Boot、TPM、BitLocker；执行磁盘写入工具或 macOS U 盘制作；未经许可运行需要管理员权限的 1401 程序；未经许可安装 macOS 驱动/kext/系统组件；自动向第三方服务器发送硬件报告、启动日志或设备信息；未经代码审查执行来源不明的脚本或可执行文件；导出或上传 BitLocker 恢复密钥、序列号、个人身份信息。
+- 允许：Git 克隆、阅读源码、读取系统信息、检测开发工具、在 `%TEMP%` 隔离沙箱中做非破坏性测试。
+- 所有具有系统副作用的命令必须先解释风险并取得用户**单独批准**；自动化流程的默认动作不等于授权。遇到风险操作：停止该项，继续其他安全任务。
+
+**证据标准**：兼容性结论一律按 A–E 分级，并区分“代码测试 / ocvalidate 配置校验 / UEFI 能引导 / macOS 能安装 / 完整 GPU 加速”五个验证层级（[`.cursor/rules/evidence-standard.mdc`](.cursor/rules/evidence-standard.mdc)）。不修改原始证据，不伪造检测结果，不为让测试通过而改结论；冲突证据并列保留。
+
+**文件布局**：`research/`（HARDWARE、SOURCES、COMPATIBILITY、RISK_ASSESSMENT、OPEN_QUESTIONS）、`reports/INITIAL_AUDIT.md`、`logs/RESEARCH_LOG.md`（工作日志 + 当前断点）、`tests/test_1401_static_audit.py`、`upstream/`（只读克隆，不入库，SHA 见 [`upstream/README.md`](upstream/README.md)）。
+
+**阶段进度（2026-10-13）**：Phase 1 结构 DONE；Phase 2 源码审计 PARTIAL（核心模块已审，部分模块未审）；Phase 3 环境检测 PARTIAL（管理员项未查）；Phase 4 离线验证 PARTIAL（单元测试已跑，候选 EFI/ocvalidate BLOCKED）；Phase 5 兼容性分析 DONE（全部未经实机验证）；Phase 6 报告 DONE。详见 [`reports/INITIAL_AUDIT.md`](reports/INITIAL_AUDIT.md)。
+
+**断点续做流程**：
+1. 读本文件 → `logs/RESEARCH_LOG.md` 顶部“当前断点” → `reports/INITIAL_AUDIT.md` 第 9–10 节 → `research/OPEN_QUESTIONS.md`。
+2. 运行 `python tests/test_1401_static_audit.py`；若 SHA 断言失败说明上游已变，先更新 `research/SOURCES.md` 再继续。
+3. 只做 OPEN_QUESTIONS 中状态为 `OPEN` 的只读项；`NEEDS_ADMIN`/`NEEDS_USER`/`BLOCKED` 项先向用户申请。
+4. 结束前更新 `logs/RESEARCH_LOG.md`（追加日志 + 改写当前断点）以及受影响的 `research/*`、`knowledge/02`、`knowledge/10`。

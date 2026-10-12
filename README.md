@@ -195,3 +195,9 @@ New independently pinned **candidate version pairing**: [FreeBSD drm-kmod 6.1-lt
 The original NullMoth source carries a PolyForm Noncommercial license. No upstream source code or vendor firmware is copied into this repository. All upstream code is fetched from its public GitHub repository into an ephemeral runner only when source mode is explicitly requested.
 
 The NVIDIA and Intel graphics bridge remains experimental. PCI device IDs in a source table and simulated tests are not sufficient proof of hardware acceleration or a working laptop screen.
+
+## 1401 compatibility audit (2026-10-13, read-only side track)
+
+A source-level audit of [NullMoth 1401 v1.14.2](https://github.com/nullmoth/1401/tree/46d9fee308bbb8e373807d59773823e6a93c1f63) and [nvidia-macos-driver v1.14.2](https://github.com/nullmoth/nvidia-macos-driver/tree/1083a98db33a0bb824290556de255f9a95ca5403) against this laptop: [initial audit report](reports/INITIAL_AUDIT.md), [hardware facts](research/HARDWARE.md), [sources](research/SOURCES.md), [compatibility matrix](research/COMPATIBILITY.md), [risks](research/RISK_ASSESSMENT.md), [open questions](research/OPEN_QUESTIONS.md), [research log](logs/RESEARCH_LOG.md).
+
+Key finding: the RTX 2050 is a PCI 3D controller (class `0x0302`) with no display sources, and the panel is on Intel 46A6, which macOS cannot accelerate. 1401 still marks `10DE:25A9` as macOS 15 capable because the ID is in NVIDIA's table (never hardware-tested), while emitting contradictory panel notes. No 1401 binary was run, no EFI was generated, nothing was written to disks or firmware.

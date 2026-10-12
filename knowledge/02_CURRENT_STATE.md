@@ -36,3 +36,11 @@
 **本知识库/AGENTS.md 的提交只是一项“移交文档”完成，并不推进 kernel 驱动运行等级。**
 
 查看 [10 Codex 交接](10_CODEX_HANDOFF.md) 和 [08 自主开发计划](08_ENGINEERING_ROADMAP.md)。旧实验和每一个正式 CI 的索引见 [03 历史](03_RESEARCH_HISTORY.md)／[04 证据](04_EVIDENCE_LEDGER.md)。
+
+## 2026-10-13 补充：1401 只读审计支线（D-16）
+
+- 完成 1401 v1.14.2（`46d9fee`）与驱动 v1.14.2（`1083a98`）的源码审计，报告见 [INITIAL_AUDIT](../reports/INITIAL_AUDIT.md)。**未运行 1401、未生成 EFI、未写任何磁盘/固件。**
+- 新提取的硬件事实：RTX 2050 PCI 类码 **`0x0302`（3D 控制器）**，与显示源 0、连接目标 0 一致 → 强烈指向 muxless（推断）。
+- 1401 仅凭设备表把 `25A9` 标为 macOS 15 可用（`tested` 只有 `2D05`），同时对本机给出相互矛盾的内屏提示；装驱动后 `NVRMFBClaim` 抢占 Intel 帧缓冲（driver#119，修复 PR #131/#133 未合并）。
+- 更正：`nullmoth/1401#26` 是真实的同 CPU（i5-12500H）案例，见 [11 第 5 节](11_EARLY_RESEARCH_AND_1401.md)。
+- 主状态不变：`RUNTIME_NO_GO`；L1 主线下一步仍是 R1.4-C0。

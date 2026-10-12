@@ -27,3 +27,13 @@ NullMoth 的 NVIDIA 设备表涵盖部分 Ampere 设备并不意味着 RTX2050 �
 ## 4. 对自主研发路线的影响
 
 `1401` 与 OpenCore 构建属于**后置的启动配置研究分支**。当前研发优先级仍为 [Codex 交接任务](10_CODEX_HANDOFF.md) 的 **R1.4-C0：Intel 46A6、FreeBSD DRM/LinuxKPI/XNU 源码及符号依赖闭包**。直到 Intel 内屏和整机启动具备可信隔离测试路径，不能转而投入 1401 自动安装、EFI 生成或安全策略修改。
+
+## 5. 2026-10-13 更正：第 3 节核对的是另一个仓库的 #26
+
+> 第 3 节原文保留不改；此处只追加更正。
+
+第 3 节核对的是 [`nullmoth/nvidia-macos-driver#26`](https://github.com/nullmoth/nvidia-macos-driver/issues/26)（Alienware 51MR2）。而 [`nullmoth/1401#26`](https://github.com/nullmoth/1401/issues/26)（2026-10-10 创建，开放中）标题为“i5 12500H (Iris Xe igpu connected to internal display), RTX 3050 Ti Laptop gets stuck at [EB|LOG:EXITBS:START] on MacOS Sequoia recovery boot”——**这正是早期讨论所指的同平台案例**。两个仓库的 Issue 编号相同，导致当时误判为“误引”。
+
+按第 3 节要求固定该案例：机器 Monster Abra A5 V19.2，i5-12500H，Iris Xe 接内屏，RTX 3050 Ti Laptop，无 MUX；附件 OpenCore 日志（SHA256 `E70C38D0…2F47CBB31C`）显示 OpenCore `DBG-109-2026-09-30`、SMBIOS `MacBookPro16,2`、核显被设 `disable-gpu`、独显 `acpi-wake-type`，日志止于 `EB|LOG:EXITBS:START`（macOS 恢复镜像 `boot.efi` 退出启动服务）。**注意**：`EXITBS:START` 是 OpenCore 能记录的最后一行，不能区分内核挂死与内屏失去输出；该构建禁用了驱动内屏的核显，1401 v1.14.2 新增的 `panel_guard` 已改变这一行为。
+
+修正后的判定：`nullmoth/1401#26` **可以**作为“同 CPU/同核显、无 MUX、旧版 1401 配置失败”的 E 级证据引用；`nvidia-macos-driver#26` 仍与本机无关。详见 [COMPATIBILITY](../research/COMPATIBILITY.md) 第 2.2 节。

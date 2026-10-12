@@ -1,0 +1,24 @@
+---
+description: READ_ONLY_RESEARCH safety boundary for the HONOR main machine
+alwaysApply: true
+---
+
+# READ_ONLY_RESEARCH（默认模式）
+
+This laptop is the user's only Windows machine (one NVMe disk, Secure Boot on, BitLocker/WinRE unknown).
+
+Never, without the user's separate explicit approval for that exact action:
+- Modify Windows EFI, BCD, boot config, NVRAM boot entries, BIOS, Secure Boot, TPM, BitLocker.
+- Create/delete/format/resize partitions, write any disk or ESP, run USB writers or macOS installer creation.
+- Run `1401.exe` or any admin-requiring 1401 step; install kexts, drivers or system components.
+- Send hardware reports, boot logs or device info to third parties (1401 upload dialog defaults to "send").
+- Execute unreviewed scripts/binaries (incl. OpCore-Simplify's unpinned iasl download).
+- Read/export BitLocker recovery keys, serial numbers, UUIDs or personal data.
+- Trigger GitHub Actions, open public issues/PRs, force-push or rebase public branches.
+
+Allowed: git clone, reading source, read-only system queries, detecting tools, and
+non-destructive tests in an isolated `%TEMP%` sandbox (source copy, own venv, HOME/TEMP/APPDATA
+redirected, proxy pointed at an unreachable address).
+
+A default action of an automated flow is NOT authorization. On a risky step: stop that step,
+explain the risk, ask, and continue other safe tasks.

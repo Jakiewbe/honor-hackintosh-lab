@@ -1,0 +1,23 @@
+---
+description: Evidence grading and verification-level separation for compatibility claims
+alwaysApply: true
+---
+
+# Evidence standard
+
+Grade every compatibility claim (see `research/COMPATIBILITY.md`):
+- A: same device ID fully verified (reviewable logs)
+- B: same architecture/series verified
+- C: source code, device table or upstream docs claim only
+- D: speculation or a single unreviewed community report
+- E: known unsupported / known failure
+
+Keep verification levels separate; a lower level never stands in for a higher one:
+code tests → ocvalidate config check → UEFI boots → macOS installs → full GPU acceleration.
+
+- A PCI ID in a support table (e.g. `25A9` in `nvidia_gsp_ids.json`) is grade C, not verification.
+- Do not assume Iris Xe 46A6 acceleration; Apple has no Gen12 driver (grade E).
+- Mark inferences 【推断】 and unknowns 【未知】; never fill gaps with plausible values.
+- Keep conflicting evidence side by side; do not resolve conflicts by deleting one side.
+- Never edit raw evidence (`docs/hardware-survey-*/evidence/`) or past conclusions; append dated corrections.
+- Cite upstream code by repo + commit SHA + path.

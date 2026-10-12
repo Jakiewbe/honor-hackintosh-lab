@@ -19,6 +19,7 @@
 | **D-13 源码裁剪以真实调用图为准** | **采用** FreeBSD DRM `6.1-lts` + Linux v6.1 **候选版本对齐**，不能按网上固定文件矩阵删除（v6.1 无独立 `intel_edp.c`；GGTT 在 `gt/intel_ggtt.c`）。 | 完整 LinuxKPI FreeBSD base commit、符号/对象闭包和许可证台账 |
 | **D-14 CI 成功分级** | **强制**：编译/链接/静态 ABI ≠ kext 可加载 ≠ 真实 scanout ≠ Metal ≠ 可安全安装。 | 每级独立实测证据 |
 | **D-15 1401 并非 46A6 显示驱动** | 用户早期称“1041”的工具可核对为 [NullMoth 1401](https://github.com/nullmoth/1401) OpenCore/USB 配置工具支线；禁在主力机执行。早期错引 [Issue #26](https://github.com/nullmoth/nvidia-macos-driver/issues/26) 的情况已经在 [11](11_EARLY_RESEARCH_AND_1401.md) 明确纠正。 | 需要隔离环境的完整启动/显示/恢复证据才能讨论实际部署 |
+| **D-16 1401 只读审计支线（2026-10-13）** | **采用**：用户明确授权对 1401 v1.14.2 / 驱动 v1.14.2 做源码审计、只读环境检测、`%TEMP%` 沙箱内经审查的单元测试，模式 `READ_ONLY_RESEARCH`。**仍禁止**运行 `1401.exe`、生成/写入 EFI、制作 U 盘、上传日志、管理员操作。不改变 D-10 的 L1 优先级。结论见 [INITIAL_AUDIT](../reports/INITIAL_AUDIT.md)。 | 用户对具体高风险步骤单独授权；独立测试硬件与恢复能力就绪 |
 
 ### 当前冻结/允许范围
 

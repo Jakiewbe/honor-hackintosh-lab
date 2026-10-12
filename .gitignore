@@ -1,0 +1,4 @@
+# Read-only upstream clones; pinned SHAs are recorded in upstream/README.md
+upstream/1401/
+upstream/nvidia-macos-driver/
+__pycache__/
