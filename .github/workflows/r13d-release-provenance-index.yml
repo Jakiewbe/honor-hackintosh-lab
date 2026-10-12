@@ -64,7 +64,7 @@ jobs:
               "compiler_flags": ("amd.flags",),
               "actual_i915_source_list": ("srcs-i915.txt", "srcs-i915.all"),
               "build_logs": ("logs-i915/", "link.log", "xlog_nmx_kext"),
-              "dependency_manifests": (".d", "compile_commands.json", "build-manifest", "build_manifest"),
+              "dependency_manifests": ("compile_commands.json", "build-manifest", "build_manifest"),
               "drm_kmod_sources": ("drm-kmod/",),
               "freebsd_linuxkpi_sources": ("freebsd-src/",),
               "linux_614_sources": ("linux-6.14/",),
@@ -84,7 +84,8 @@ jobs:
               ),
           }
           for label, parts in patterns.items():
-              matched = [p for p in entries if any(term in p for term in parts)]
+              matched = [p for p in entries if any(term in p for term in parts)
+                         or (label == "dependency_manifests" and p.endswith(".d"))]
               out["matches"][label] = {"count": len(matched), "sample": matched[:30]}
           print(json.dumps(out, indent=2, ensure_ascii=False))
           PY
