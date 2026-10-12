@@ -1,16 +1,16 @@
 {
-  "mode": "INDIVIDUAL_ONLY; JOINT_NAMESPACE_FAILED",
+  "mode": "INDIVIDUAL_ONLY; ALL_EXTERNAL_TABLES_PER_TARGET_FAILED",
   "runs": [
     {
       "argv": [
         "docker",
         "exec",
         "-w",
-        "/work/input",
+        "<WORKDIR>/input",
         "honor-acpi-static-20261012",
-        "/work/pkg/usr/bin/iasl",
+        "<WORKDIR>/pkg/usr/bin/iasl",
         "-d",
-        "/work/input/reg_DSDT_HONOR_ADL-P-M_00000002.bin"
+        "<WORKDIR>/input/reg_DSDT_HONOR_ADL-P-M_00000002.bin"
       ],
       "exit_code": 0
     },
@@ -19,11 +19,11 @@
         "docker",
         "exec",
         "-w",
-        "/work/input",
+        "<WORKDIR>/input",
         "honor-acpi-static-20261012",
-        "/work/pkg/usr/bin/iasl",
+        "<WORKDIR>/pkg/usr/bin/iasl",
         "-d",
-        "/work/input/reg_SSD1_HONOR_Pmax_Dev_00000001.bin"
+        "<WORKDIR>/input/reg_SSD1_HONOR_Pmax_Dev_00000001.bin"
       ],
       "exit_code": 0
     },
@@ -32,11 +32,11 @@
         "docker",
         "exec",
         "-w",
-        "/work/input",
+        "<WORKDIR>/input",
         "honor-acpi-static-20261012",
-        "/work/pkg/usr/bin/iasl",
+        "<WORKDIR>/pkg/usr/bin/iasl",
         "-d",
-        "/work/input/reg_SSD2_HONOR_CpuSsdt_00003000.bin"
+        "<WORKDIR>/input/reg_SSD2_HONOR_CpuSsdt_00003000.bin"
       ],
       "exit_code": 0
     },
@@ -45,11 +45,11 @@
         "docker",
         "exec",
         "-w",
-        "/work/input",
+        "<WORKDIR>/input",
         "honor-acpi-static-20261012",
-        "/work/pkg/usr/bin/iasl",
+        "<WORKDIR>/pkg/usr/bin/iasl",
         "-d",
-        "/work/input/reg_SSD3_HONOR_SaSsdt__00003000.bin"
+        "<WORKDIR>/input/reg_SSD3_HONOR_SaSsdt__00003000.bin"
       ],
       "exit_code": 0
     },
@@ -58,11 +58,11 @@
         "docker",
         "exec",
         "-w",
-        "/work/input",
+        "<WORKDIR>/input",
         "honor-acpi-static-20261012",
-        "/work/pkg/usr/bin/iasl",
+        "<WORKDIR>/pkg/usr/bin/iasl",
         "-d",
-        "/work/input/reg_SSD4_HONOR_IgfxSsdt_00003000.bin"
+        "<WORKDIR>/input/reg_SSD4_HONOR_IgfxSsdt_00003000.bin"
       ],
       "exit_code": 0
     },
@@ -71,11 +71,11 @@
         "docker",
         "exec",
         "-w",
-        "/work/input",
+        "<WORKDIR>/input",
         "honor-acpi-static-20261012",
-        "/work/pkg/usr/bin/iasl",
+        "<WORKDIR>/pkg/usr/bin/iasl",
         "-d",
-        "/work/input/reg_SSD5_HONOR_TcssSsdt_00001000.bin"
+        "<WORKDIR>/input/reg_SSD5_HONOR_TcssSsdt_00001000.bin"
       ],
       "exit_code": 0
     },
@@ -84,11 +84,11 @@
         "docker",
         "exec",
         "-w",
-        "/work/input",
+        "<WORKDIR>/input",
         "honor-acpi-static-20261012",
-        "/work/pkg/usr/bin/iasl",
+        "<WORKDIR>/pkg/usr/bin/iasl",
         "-d",
-        "/work/input/reg_SSD6_HONOR_Tpm2Tabl_00001000.bin"
+        "<WORKDIR>/input/reg_SSD6_HONOR_Tpm2Tabl_00001000.bin"
       ],
       "exit_code": 0
     },
@@ -97,11 +97,11 @@
         "docker",
         "exec",
         "-w",
-        "/work/input",
+        "<WORKDIR>/input",
         "honor-acpi-static-20261012",
-        "/work/pkg/usr/bin/iasl",
+        "<WORKDIR>/pkg/usr/bin/iasl",
         "-d",
-        "/work/input/reg_SSD7_HONOR_WmiTable_00001000.bin"
+        "<WORKDIR>/input/reg_SSD7_HONOR_WmiTable_00001000.bin"
       ],
       "exit_code": 0
     },
@@ -110,11 +110,11 @@
         "docker",
         "exec",
         "-w",
-        "/work/input",
+        "<WORKDIR>/input",
         "honor-acpi-static-20261012",
-        "/work/pkg/usr/bin/iasl",
+        "<WORKDIR>/pkg/usr/bin/iasl",
         "-d",
-        "/work/input/reg_SSD8_HONOR_PtidDevc_00001000.bin"
+        "<WORKDIR>/input/reg_SSD8_HONOR_PtidDevc_00001000.bin"
       ],
       "exit_code": 0
     },
@@ -123,11 +123,11 @@
         "docker",
         "exec",
         "-w",
-        "/work/input",
+        "<WORKDIR>/input",
         "honor-acpi-static-20261012",
-        "/work/pkg/usr/bin/iasl",
+        "<WORKDIR>/pkg/usr/bin/iasl",
         "-d",
-        "/work/input/reg_SSD9_HONOR_ADL-P-M_00000002.bin"
+        "<WORKDIR>/input/reg_SSD9_HONOR_ADL-P-M_00000002.bin"
       ],
       "exit_code": 0
     },
@@ -136,11 +136,11 @@
         "docker",
         "exec",
         "-w",
-        "/work/input",
+        "<WORKDIR>/input",
         "honor-acpi-static-20261012",
-        "/work/pkg/usr/bin/iasl",
+        "<WORKDIR>/pkg/usr/bin/iasl",
         "-d",
-        "/work/input/reg_SSDA_HONOR_NvdTable_00001000.bin"
+        "<WORKDIR>/input/reg_SSDA_HONOR_NvdTable_00001000.bin"
       ],
       "exit_code": 0
     },
@@ -149,11 +149,11 @@
         "docker",
         "exec",
         "-w",
-        "/work/input",
+        "<WORKDIR>/input",
         "honor-acpi-static-20261012",
-        "/work/pkg/usr/bin/iasl",
+        "<WORKDIR>/pkg/usr/bin/iasl",
         "-d",
-        "/work/input/reg_SSDB_HONOR_xh_adlLP_00000000.bin"
+        "<WORKDIR>/input/reg_SSDB_HONOR_xh_adlLP_00000000.bin"
       ],
       "exit_code": 0
     },
@@ -162,11 +162,11 @@
         "docker",
         "exec",
         "-w",
-        "/work/input",
+        "<WORKDIR>/input",
         "honor-acpi-static-20261012",
-        "/work/pkg/usr/bin/iasl",
+        "<WORKDIR>/pkg/usr/bin/iasl",
         "-d",
-        "/work/input/reg_SSDC_HONOR_SocGpe__00003000.bin"
+        "<WORKDIR>/input/reg_SSDC_HONOR_SocGpe__00003000.bin"
       ],
       "exit_code": 0
     },
@@ -175,11 +175,11 @@
         "docker",
         "exec",
         "-w",
-        "/work/input",
+        "<WORKDIR>/input",
         "honor-acpi-static-20261012",
-        "/work/pkg/usr/bin/iasl",
+        "<WORKDIR>/pkg/usr/bin/iasl",
         "-d",
-        "/work/input/reg_SSDD_HONOR_SocCmn__00003000.bin"
+        "<WORKDIR>/input/reg_SSDD_HONOR_SocCmn__00003000.bin"
       ],
       "exit_code": 0
     },
@@ -188,11 +188,11 @@
         "docker",
         "exec",
         "-w",
-        "/work/input",
+        "<WORKDIR>/input",
         "honor-acpi-static-20261012",
-        "/work/pkg/usr/bin/iasl",
+        "<WORKDIR>/pkg/usr/bin/iasl",
         "-d",
-        "/work/input/reg_SSDE_HONOR_PcdTabl_00001000.bin"
+        "<WORKDIR>/input/reg_SSDE_HONOR_PcdTabl_00001000.bin"
       ],
       "exit_code": 0
     },
@@ -201,11 +201,11 @@
         "docker",
         "exec",
         "-w",
-        "/work/input",
+        "<WORKDIR>/input",
         "honor-acpi-static-20261012",
-        "/work/pkg/usr/bin/iasl",
+        "<WORKDIR>/pkg/usr/bin/iasl",
         "-d",
-        "/work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin"
+        "<WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin"
       ],
       "exit_code": 0
     }
@@ -214,83 +214,84 @@
   "outputs": [
     {
       "file": "reg_SSDT_HONOR_DptfTabl_00001000.dsl",
-      "sha256": "ffe03357894e4cc0e6cd68dddb7a36185a6f9f4f5c6bdf35a91dd63ac0b7f85f",
+      "sha256": "63b8e7832ee728b34205b52e0e906c35ff1d10904fb34b6e973897ddb2ad8dea",
       "lines": 3228
     },
     {
       "file": "reg_SSDE_HONOR_PcdTabl_00001000.dsl",
-      "sha256": "3315eb80d1a43453391a936e90a73096f1361b62d4d754a0e51453bc258cb754",
+      "sha256": "d68915b29d635200fa8531f53756687be610f9f8e1fad6dbe550ae886529c2c1",
       "lines": 73
     },
     {
       "file": "reg_SSDD_HONOR_SocCmn__00003000.dsl",
-      "sha256": "234b3233d500c7fdbe380f47be9223abed5a397a14006b408f75752532237209",
+      "sha256": "c7191a20ae142ba04376737cf6e3341ffbdf87488b5ba8c7037f584c07c960f7",
       "lines": 1514
     },
     {
       "file": "reg_SSDC_HONOR_SocGpe__00003000.dsl",
-      "sha256": "689aaf9919bcfbe563864b492a52f96c3dda00f90af5319071f2f9269062ea44",
+      "sha256": "bad87273c8ffe9bccf6e1fcf2292444931a2809872df7e228b05ebc307592f7b",
       "lines": 1289
     },
     {
       "file": "reg_SSDB_HONOR_xh_adlLP_00000000.dsl",
-      "sha256": "b3c8cda61598d74f3c527671c3ce5bdd6f8642f77e875f21020f6fb5caa319ee",
+      "sha256": "f005ab12900402f4032cf29c2739a312e3f434e1fbf6ca85f8e6fdd1d0d225d5",
       "lines": 637
     },
     {
       "file": "reg_SSDA_HONOR_NvdTable_00001000.dsl",
-      "sha256": "1462aedc17dc297e495fe6e8bea3b7fc2f34108dc6e0686047c72ad061e1f630",
+      "sha256": "373fd80eee9e00919290bea215b7b7392e8caf56510674233ff431e61ebdd02e",
       "lines": 1349
     },
     {
       "file": "reg_SSD9_HONOR_ADL-P-M_00000002.dsl",
-      "sha256": "6d0399d45d7ad060ba32c272b564f2b0b21a12e9e6665b028990cd5fc8c7d53c",
+      "sha256": "97db88594b4fcab0ed9aa0f26f9c49928fac9d86792b021e792dbeb65b731150",
       "lines": 7730
     },
     {
       "file": "reg_SSD8_HONOR_PtidDevc_00001000.dsl",
-      "sha256": "e6fa04e7d908439007bdaaeeb7df5b9c3ce4d76c17cdbd896618971c16e4300a",
+      "sha256": "d431ce0345694968477100530a39b38e4ebb8d7c10fd29f1562548a8e27b2940",
       "lines": 397
     },
     {
       "file": "reg_SSD7_HONOR_WmiTable_00001000.dsl",
-      "sha256": "aa42540df594b7f2efb09e0d6043f310c3cb5471740957ed7d88388bf12ca2ca",
+      "sha256": "a395418e4f2c67ff5a5c41e358901f042d1adedc5ee9251cd49292a9490d041e",
       "lines": 648
     },
     {
       "file": "reg_SSD6_HONOR_Tpm2Tabl_00001000.dsl",
-      "sha256": "9f038c45bf8dc604c5769852cd515d90100ee84b94d8b596115349febe31a524",
+      "sha256": "deeea074951b3e0a1230fa343ab10c7e7561120e4b7ef1d8e6dddfec06ff1ac6",
       "lines": 515
     },
     {
       "file": "reg_SSD5_HONOR_TcssSsdt_00001000.dsl",
-      "sha256": "76198c39f59d1ec3bf1f04a19360fb359a45bf563109765bd0bd2e101001e5d7",
+      "sha256": "5e6e882df7e904d236547c612edfbfd82c75d320a5c31dfb4580844a6a965380",
       "lines": 9465
     },
     {
       "file": "reg_SSD4_HONOR_IgfxSsdt_00003000.dsl",
-      "sha256": "2c2c2590eade69022139f74aae7be782f13cc4082142bee21ae36b5f9862128d",
+      "sha256": "9d13e99c78c5dc36b802dc2a445c12f9548e6ac05869da126b13a4a945ba456d",
       "lines": 2994
     },
     {
       "file": "reg_SSD3_HONOR_SaSsdt__00003000.dsl",
-      "sha256": "b67054f019ce3f52a6627d425c921c291f7c706b1644015f5b04d10da1acc455",
+      "sha256": "74eae263666195d8166a39a056a2eed88373e23fcae4195ace383ead672ee7b9",
       "lines": 2574
     },
     {
       "file": "reg_SSD2_HONOR_CpuSsdt_00003000.dsl",
-      "sha256": "94f3be1d1631036681145ca5cfcfaaa97ef1c7bc7fcd0221abf45b58050fd4ec",
+      "sha256": "6d9cd9bdadf6545fa06b7e03502362058075af76015a05d8746655c870e542cf",
       "lines": 4273
     },
     {
       "file": "reg_SSD1_HONOR_Pmax_Dev_00000001.dsl",
-      "sha256": "f82aae06d36cdcd61629d9429da98af0ca4196e590e20c120789fd713f618e3a",
+      "sha256": "2646930d3fbd4505ca49aae3eec90807b9ae1cd72811119a023eac66b769cb0a",
       "lines": 320
     },
     {
       "file": "reg_DSDT_HONOR_ADL-P-M_00000002.dsl",
-      "sha256": "644b4d86e697c1f5f059a5f1f5520f9b17080899617cb419ec18c9317f43e518",
+      "sha256": "a756598bf641d50273b5d43a1b93c8dbcf4b065c2af8e434924c8e98f051a8bd",
       "lines": 70161
     }
-  ]
+  ],
+  "path_normalization": "Environment paths replaced with <WORKDIR>; text hashes below are normalized; line numbers unchanged"
 }

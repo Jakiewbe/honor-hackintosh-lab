@@ -10,9 +10,9 @@
 
 ## R1.4-C0-pre最新平台输入与下一步
 
-[本机ACPI静态结果](../research/acpi-static-20261012/README.md)已给_DSM位图、PEGP_DOD、DD节点条件和IGDM布局；联合命名空间失败，不能声称完整解析成功。OpRegion/VBT内容仍未取得，MUX三选一为无法判断。固定BSD的intel_acpi两个桥接函数为空，不能当XNU成功实现。
+[本机ACPI静态结果](../research/acpi-static-20261012/README.md)已给_DSM位图、PEGP_DOD、DD节点条件和IGDM布局；同一iasl20250404的-e全部其余表逐表解析0通过16失败；SaSsdt与SSDT9在PEG1.PEGP重复_S0W已定位，未改变PEG0/GFX0方法体结论，不能声称完整解析成功。OpRegion/VBT内容仍未取得，MUX三选一为无法判断。固定BSD的intel_acpi两个桥接函数为空，不能当XNU成功实现。
 
-**下一步仍为R1.4-C0 T0→T4**：T0复核namespace冲突/不重复硬件归属调查；T1复用原表、工具与上游锁；T2将ASLB/SANV、IGDM/ASLS、_DSM/_DOD/_ADR和ASLE背光声明输入VBT/OpRegion节点，保留真实内容/ACPI evaluator/PCI映射/消费者/失败清理缺口；T3失败停止；T4证据交付。IOPCIFamily和C0.1配置闭包仍须完成，但本次不进入native/kext或硬件读取。
+**下一步仍为R1.4-C0 T0→T4**：T0复用-da与-e失败证据/不重复硬件归属调查；T1复用原表、工具与上游锁；T2将ASLB/SANV、IGDM/ASLS、_DSM/_DOD/_ADR和ASLE背光声明输入VBT/OpRegion节点，保留真实内容/ACPI evaluator/PCI映射/消费者/失败清理缺口；T3失败停止；T4证据交付。IOPCIFamily和C0.1配置闭包仍须完成，但本次不进入native/kext或硬件读取。
 
 ## 先读清楚底线
 

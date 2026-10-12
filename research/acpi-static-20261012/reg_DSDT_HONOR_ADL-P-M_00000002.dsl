@@ -5,7 +5,7 @@
  * 
  * Disassembling to symbolic ASL+ operators
  *
- * Disassembly of /work/input/reg_DSDT_HONOR_ADL-P-M_00000002.bin
+ * Disassembly of <WORKDIR>/input/reg_DSDT_HONOR_ADL-P-M_00000002.bin
  *
  * Original Table Header:
  *     Signature        "DSDT"

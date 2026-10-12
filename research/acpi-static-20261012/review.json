@@ -54,8 +54,14 @@
   "hardware_baseline_edit": "exactly one ACPI row",
   "workflows_unchanged": true,
   "broken_local_links": [],
-  "bug_review": "All joint failures retained. Namespace bindings and NVS actual values stay UNKNOWN; corrected EDMX same-name assumption and relative ASLS offset. Checked 16 raw DSL hashes and CSV anchors.",
-  "first_principles": "No AML rewriting or runtime emulation; immutable manifest + offline checks. Individual success cannot discharge requested joint-namespace requirement.",
+  "bug_review": "Checked exact duplicate scope and both bodies; all 16 -e failures retained. Parameter declarations text-matched only, EDMX remains unbound. No unchanged semantics promoted to runtime.",
+  "first_principles": "Keep immutable AML and fail-closed results; do not omit tables, suppress errors, or fabricate -fe definitions. Normalize environment text only and rehash published DSLs.",
   "task_status": "BLOCKED_JOINT_NAMESPACE",
-  "runtime": "RUNTIME_NO_GO"
+  "runtime": "RUNTIME_NO_GO",
+  "external_pass": 0,
+  "external_fail": 16,
+  "privacy_hits": 0,
+  "external_records_checked": 16,
+  "all_csv_anchors_checked": true,
+  "original_evidence_unchanged": true
 }

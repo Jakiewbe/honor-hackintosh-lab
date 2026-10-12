@@ -5,7 +5,7 @@
  * 
  * Disassembling to symbolic ASL+ operators
  *
- * Disassembly of /work/input/reg_SSD1_HONOR_Pmax_Dev_00000001.bin
+ * Disassembly of <WORKDIR>/input/reg_SSD1_HONOR_Pmax_Dev_00000001.bin
  *
  * Original Table Header:
  *     Signature        "SSDT"

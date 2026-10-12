@@ -1,4 +1,4 @@
-COMMAND docker exec -w /work/input honor-acpi-static-20261012 /work/pkg/usr/bin/iasl -d /work/input/reg_DSDT_HONOR_ADL-P-M_00000002.bin
+COMMAND docker exec -w <WORKDIR>/input honor-acpi-static-20261012 <WORKDIR>/pkg/usr/bin/iasl -d <WORKDIR>/input/reg_DSDT_HONOR_ADL-P-M_00000002.bin
 EXIT 0
 
 Intel ACPI Component Architecture
@@ -7,7 +7,7 @@ Copyright (c) 2000 - 2025 Intel Corporation
 
 File appears to be binary: found 100020 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_DSDT_HONOR_ADL-P-M_00000002.bin, Length 0x4AF85 (307077) bytes
+Input file <WORKDIR>/input/reg_DSDT_HONOR_ADL-P-M_00000002.bin, Length 0x4AF85 (307077) bytes
 ACPI: DSDT 0x0000000000000000 04AF85 (v02 HONOR  ADL-P-M  00000002 ACPI 00040000)
 Pass 1 parse of [DSDT]
 Pass 2 parse of [DSDT]
@@ -15,7 +15,7 @@ Parsing Deferred Opcodes (Methods/Buffers/Packages/Regions)
 
 Parsing completed
 Disassembly completed
-ASL Output:    /work/input/reg_DSDT_HONOR_ADL-P-M_00000002.dsl - 2106230 bytes
+ASL Output:    <WORKDIR>/input/reg_DSDT_HONOR_ADL-P-M_00000002.dsl - 2106230 bytes
 
  iASL Warning: There were 141 external control methods found during
  disassembly, but only 397 were resolved (4294967040 unresolved). Additional
@@ -40,7 +40,7 @@ ASL Output:    /work/input/reg_DSDT_HONOR_ADL-P-M_00000002.dsl - 2106230 bytes
      iasl -fe refs.txt -d dsdt.aml
 
 
-COMMAND docker exec -w /work/input honor-acpi-static-20261012 /work/pkg/usr/bin/iasl -d /work/input/reg_SSD1_HONOR_Pmax_Dev_00000001.bin
+COMMAND docker exec -w <WORKDIR>/input honor-acpi-static-20261012 <WORKDIR>/pkg/usr/bin/iasl -d <WORKDIR>/input/reg_SSD1_HONOR_Pmax_Dev_00000001.bin
 EXIT 0
 
 Intel ACPI Component Architecture
@@ -49,7 +49,7 @@ Copyright (c) 2000 - 2025 Intel Corporation
 
 File appears to be binary: found 491 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSD1_HONOR_Pmax_Dev_00000001.bin, Length 0x38C (908) bytes
+Input file <WORKDIR>/input/reg_SSD1_HONOR_Pmax_Dev_00000001.bin, Length 0x38C (908) bytes
 ACPI: SSDT 0x0000000000000000 00038C (v02 HONOR  Pmax_Dev 00000001 INTL 20200717)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
@@ -57,9 +57,9 @@ Parsing Deferred Opcodes (Methods/Buffers/Packages/Regions)
 
 Parsing completed
 Disassembly completed
-ASL Output:    /work/input/reg_SSD1_HONOR_Pmax_Dev_00000001.dsl - 10000 bytes
+ASL Output:    <WORKDIR>/input/reg_SSD1_HONOR_Pmax_Dev_00000001.dsl - 10000 bytes
 
-COMMAND docker exec -w /work/input honor-acpi-static-20261012 /work/pkg/usr/bin/iasl -d /work/input/reg_SSD2_HONOR_CpuSsdt_00003000.bin
+COMMAND docker exec -w <WORKDIR>/input honor-acpi-static-20261012 <WORKDIR>/pkg/usr/bin/iasl -d <WORKDIR>/input/reg_SSD2_HONOR_CpuSsdt_00003000.bin
 EXIT 0
 
 Intel ACPI Component Architecture
@@ -68,7 +68,7 @@ Copyright (c) 2000 - 2025 Intel Corporation
 
 File appears to be binary: found 5060 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSD2_HONOR_CpuSsdt_00003000.bin, Length 0x5D2C (23852) bytes
+Input file <WORKDIR>/input/reg_SSD2_HONOR_CpuSsdt_00003000.bin, Length 0x5D2C (23852) bytes
 ACPI: SSDT 0x0000000000000000 005D2C (v02 HONOR  CpuSsdt  00003000 INTL 20200717)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
@@ -76,9 +76,9 @@ Parsing Deferred Opcodes (Methods/Buffers/Packages/Regions)
 
 Parsing completed
 Disassembly completed
-ASL Output:    /work/input/reg_SSD2_HONOR_CpuSsdt_00003000.dsl - 117152 bytes
+ASL Output:    <WORKDIR>/input/reg_SSD2_HONOR_CpuSsdt_00003000.dsl - 117152 bytes
 
-COMMAND docker exec -w /work/input honor-acpi-static-20261012 /work/pkg/usr/bin/iasl -d /work/input/reg_SSD3_HONOR_SaSsdt__00003000.bin
+COMMAND docker exec -w <WORKDIR>/input honor-acpi-static-20261012 <WORKDIR>/pkg/usr/bin/iasl -d <WORKDIR>/input/reg_SSD3_HONOR_SaSsdt__00003000.bin
 EXIT 0
 
 Intel ACPI Component Architecture
@@ -87,7 +87,7 @@ Copyright (c) 2000 - 2025 Intel Corporation
 
 File appears to be binary: found 3554 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSD3_HONOR_SaSsdt__00003000.bin, Length 0x2B22 (11042) bytes
+Input file <WORKDIR>/input/reg_SSD3_HONOR_SaSsdt__00003000.bin, Length 0x2B22 (11042) bytes
 ACPI: SSDT 0x0000000000000000 002B22 (v02 HONOR  SaSsdt   00003000 INTL 20200717)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
@@ -95,9 +95,9 @@ Parsing Deferred Opcodes (Methods/Buffers/Packages/Regions)
 
 Parsing completed
 Disassembly completed
-ASL Output:    /work/input/reg_SSD3_HONOR_SaSsdt__00003000.dsl - 75198 bytes
+ASL Output:    <WORKDIR>/input/reg_SSD3_HONOR_SaSsdt__00003000.dsl - 75198 bytes
 
-COMMAND docker exec -w /work/input honor-acpi-static-20261012 /work/pkg/usr/bin/iasl -d /work/input/reg_SSD4_HONOR_IgfxSsdt_00003000.bin
+COMMAND docker exec -w <WORKDIR>/input honor-acpi-static-20261012 <WORKDIR>/pkg/usr/bin/iasl -d <WORKDIR>/input/reg_SSD4_HONOR_IgfxSsdt_00003000.bin
 EXIT 0
 
 Intel ACPI Component Architecture
@@ -106,7 +106,7 @@ Copyright (c) 2000 - 2025 Intel Corporation
 
 File appears to be binary: found 4429 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSD4_HONOR_IgfxSsdt_00003000.bin, Length 0x33D3 (13267) bytes
+Input file <WORKDIR>/input/reg_SSD4_HONOR_IgfxSsdt_00003000.bin, Length 0x33D3 (13267) bytes
 ACPI: SSDT 0x0000000000000000 0033D3 (v02 HONOR  IgfxSsdt 00003000 INTL 20200717)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
@@ -114,9 +114,9 @@ Parsing Deferred Opcodes (Methods/Buffers/Packages/Regions)
 
 Parsing completed
 Disassembly completed
-ASL Output:    /work/input/reg_SSD4_HONOR_IgfxSsdt_00003000.dsl - 85260 bytes
+ASL Output:    <WORKDIR>/input/reg_SSD4_HONOR_IgfxSsdt_00003000.dsl - 85260 bytes
 
-COMMAND docker exec -w /work/input honor-acpi-static-20261012 /work/pkg/usr/bin/iasl -d /work/input/reg_SSD5_HONOR_TcssSsdt_00001000.bin
+COMMAND docker exec -w <WORKDIR>/input honor-acpi-static-20261012 <WORKDIR>/pkg/usr/bin/iasl -d <WORKDIR>/input/reg_SSD5_HONOR_TcssSsdt_00001000.bin
 EXIT 0
 
 Intel ACPI Component Architecture
@@ -125,7 +125,7 @@ Copyright (c) 2000 - 2025 Intel Corporation
 
 File appears to be binary: found 13245 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSD5_HONOR_TcssSsdt_00001000.bin, Length 0xD39F (54175) bytes
+Input file <WORKDIR>/input/reg_SSD5_HONOR_TcssSsdt_00001000.bin, Length 0xD39F (54175) bytes
 ACPI: SSDT 0x0000000000000000 00D39F (v02 HONOR  TcssSsdt 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
@@ -133,9 +133,9 @@ Parsing Deferred Opcodes (Methods/Buffers/Packages/Regions)
 
 Parsing completed
 Disassembly completed
-ASL Output:    /work/input/reg_SSD5_HONOR_TcssSsdt_00001000.dsl - 344679 bytes
+ASL Output:    <WORKDIR>/input/reg_SSD5_HONOR_TcssSsdt_00001000.dsl - 344679 bytes
 
-COMMAND docker exec -w /work/input honor-acpi-static-20261012 /work/pkg/usr/bin/iasl -d /work/input/reg_SSD6_HONOR_Tpm2Tabl_00001000.bin
+COMMAND docker exec -w <WORKDIR>/input honor-acpi-static-20261012 <WORKDIR>/pkg/usr/bin/iasl -d <WORKDIR>/input/reg_SSD6_HONOR_Tpm2Tabl_00001000.bin
 EXIT 0
 
 Intel ACPI Component Architecture
@@ -144,7 +144,7 @@ Copyright (c) 2000 - 2025 Intel Corporation
 
 File appears to be binary: found 724 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSD6_HONOR_Tpm2Tabl_00001000.bin, Length 0x77B (1915) bytes
+Input file <WORKDIR>/input/reg_SSD6_HONOR_Tpm2Tabl_00001000.bin, Length 0x77B (1915) bytes
 ACPI: SSDT 0x0000000000000000 00077B (v02 HONOR  Tpm2Tabl 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
@@ -152,9 +152,9 @@ Parsing Deferred Opcodes (Methods/Buffers/Packages/Regions)
 
 Parsing completed
 Disassembly completed
-ASL Output:    /work/input/reg_SSD6_HONOR_Tpm2Tabl_00001000.dsl - 16596 bytes
+ASL Output:    <WORKDIR>/input/reg_SSD6_HONOR_Tpm2Tabl_00001000.dsl - 16596 bytes
 
-COMMAND docker exec -w /work/input honor-acpi-static-20261012 /work/pkg/usr/bin/iasl -d /work/input/reg_SSD7_HONOR_WmiTable_00001000.bin
+COMMAND docker exec -w <WORKDIR>/input honor-acpi-static-20261012 <WORKDIR>/pkg/usr/bin/iasl -d <WORKDIR>/input/reg_SSD7_HONOR_WmiTable_00001000.bin
 EXIT 0
 
 Intel ACPI Component Architecture
@@ -163,7 +163,7 @@ Copyright (c) 2000 - 2025 Intel Corporation
 
 File appears to be binary: found 1466 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSD7_HONOR_WmiTable_00001000.bin, Length 0xE74 (3700) bytes
+Input file <WORKDIR>/input/reg_SSD7_HONOR_WmiTable_00001000.bin, Length 0xE74 (3700) bytes
 ACPI: SSDT 0x0000000000000000 000E74 (v01 HONOR  WmiTable 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
@@ -171,9 +171,9 @@ Parsing Deferred Opcodes (Methods/Buffers/Packages/Regions)
 
 Parsing completed
 Disassembly completed
-ASL Output:    /work/input/reg_SSD7_HONOR_WmiTable_00001000.dsl - 32044 bytes
+ASL Output:    <WORKDIR>/input/reg_SSD7_HONOR_WmiTable_00001000.dsl - 32044 bytes
 
-COMMAND docker exec -w /work/input honor-acpi-static-20261012 /work/pkg/usr/bin/iasl -d /work/input/reg_SSD8_HONOR_PtidDevc_00001000.bin
+COMMAND docker exec -w <WORKDIR>/input honor-acpi-static-20261012 <WORKDIR>/pkg/usr/bin/iasl -d <WORKDIR>/input/reg_SSD8_HONOR_PtidDevc_00001000.bin
 EXIT 0
 
 Intel ACPI Component Architecture
@@ -182,7 +182,7 @@ Copyright (c) 2000 - 2025 Intel Corporation
 
 File appears to be binary: found 574 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSD8_HONOR_PtidDevc_00001000.bin, Length 0xAD9 (2777) bytes
+Input file <WORKDIR>/input/reg_SSD8_HONOR_PtidDevc_00001000.bin, Length 0xAD9 (2777) bytes
 ACPI: SSDT 0x0000000000000000 000AD9 (v02 HONOR  PtidDevc 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
@@ -190,9 +190,9 @@ Parsing Deferred Opcodes (Methods/Buffers/Packages/Regions)
 
 Parsing completed
 Disassembly completed
-ASL Output:    /work/input/reg_SSD8_HONOR_PtidDevc_00001000.dsl - 11779 bytes
+ASL Output:    <WORKDIR>/input/reg_SSD8_HONOR_PtidDevc_00001000.dsl - 11779 bytes
 
-COMMAND docker exec -w /work/input honor-acpi-static-20261012 /work/pkg/usr/bin/iasl -d /work/input/reg_SSD9_HONOR_ADL-P-M_00000002.bin
+COMMAND docker exec -w <WORKDIR>/input honor-acpi-static-20261012 <WORKDIR>/pkg/usr/bin/iasl -d <WORKDIR>/input/reg_SSD9_HONOR_ADL-P-M_00000002.bin
 EXIT 0
 
 Intel ACPI Component Architecture
@@ -201,7 +201,7 @@ Copyright (c) 2000 - 2025 Intel Corporation
 
 File appears to be binary: found 11507 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSD9_HONOR_ADL-P-M_00000002.bin, Length 0xA3E2 (41954) bytes
+Input file <WORKDIR>/input/reg_SSD9_HONOR_ADL-P-M_00000002.bin, Length 0xA3E2 (41954) bytes
 ACPI: SSDT 0x0000000000000000 00A3E2 (v02 HONOR  ADL-P-M  00000002      01000013)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
@@ -209,9 +209,9 @@ Parsing Deferred Opcodes (Methods/Buffers/Packages/Regions)
 
 Parsing completed
 Disassembly completed
-ASL Output:    /work/input/reg_SSD9_HONOR_ADL-P-M_00000002.dsl - 294274 bytes
+ASL Output:    <WORKDIR>/input/reg_SSD9_HONOR_ADL-P-M_00000002.dsl - 294274 bytes
 
-COMMAND docker exec -w /work/input honor-acpi-static-20261012 /work/pkg/usr/bin/iasl -d /work/input/reg_SSDA_HONOR_NvdTable_00001000.bin
+COMMAND docker exec -w <WORKDIR>/input honor-acpi-static-20261012 <WORKDIR>/pkg/usr/bin/iasl -d <WORKDIR>/input/reg_SSDA_HONOR_NvdTable_00001000.bin
 EXIT 0
 
 Intel ACPI Component Architecture
@@ -220,7 +220,7 @@ Copyright (c) 2000 - 2025 Intel Corporation
 
 File appears to be binary: found 2215 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSDA_HONOR_NvdTable_00001000.bin, Length 0x20A5 (8357) bytes
+Input file <WORKDIR>/input/reg_SSDA_HONOR_NvdTable_00001000.bin, Length 0x20A5 (8357) bytes
 ACPI: SSDT 0x0000000000000000 0020A5 (v01 HONOR  NvdTable 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
@@ -228,9 +228,9 @@ Parsing Deferred Opcodes (Methods/Buffers/Packages/Regions)
 
 Parsing completed
 Disassembly completed
-ASL Output:    /work/input/reg_SSDA_HONOR_NvdTable_00001000.dsl - 49238 bytes
+ASL Output:    <WORKDIR>/input/reg_SSDA_HONOR_NvdTable_00001000.dsl - 49238 bytes
 
-COMMAND docker exec -w /work/input honor-acpi-static-20261012 /work/pkg/usr/bin/iasl -d /work/input/reg_SSDB_HONOR_xh_adlLP_00000000.bin
+COMMAND docker exec -w <WORKDIR>/input honor-acpi-static-20261012 <WORKDIR>/pkg/usr/bin/iasl -d <WORKDIR>/input/reg_SSDB_HONOR_xh_adlLP_00000000.bin
 EXIT 0
 
 Intel ACPI Component Architecture
@@ -239,7 +239,7 @@ Copyright (c) 2000 - 2025 Intel Corporation
 
 File appears to be binary: found 934 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSDB_HONOR_xh_adlLP_00000000.bin, Length 0xB81 (2945) bytes
+Input file <WORKDIR>/input/reg_SSDB_HONOR_xh_adlLP_00000000.bin, Length 0xB81 (2945) bytes
 ACPI: SSDT 0x0000000000000000 000B81 (v02 HONOR  xh_adlLP 00000000 INTL 20200717)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
@@ -247,9 +247,9 @@ Parsing Deferred Opcodes (Methods/Buffers/Packages/Regions)
 
 Parsing completed
 Disassembly completed
-ASL Output:    /work/input/reg_SSDB_HONOR_xh_adlLP_00000000.dsl - 19902 bytes
+ASL Output:    <WORKDIR>/input/reg_SSDB_HONOR_xh_adlLP_00000000.dsl - 19902 bytes
 
-COMMAND docker exec -w /work/input honor-acpi-static-20261012 /work/pkg/usr/bin/iasl -d /work/input/reg_SSDC_HONOR_SocGpe__00003000.bin
+COMMAND docker exec -w <WORKDIR>/input honor-acpi-static-20261012 <WORKDIR>/pkg/usr/bin/iasl -d <WORKDIR>/input/reg_SSDC_HONOR_SocGpe__00003000.bin
 EXIT 0
 
 Intel ACPI Component Architecture
@@ -258,7 +258,7 @@ Copyright (c) 2000 - 2025 Intel Corporation
 
 File appears to be binary: found 2498 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSDC_HONOR_SocGpe__00003000.bin, Length 0x3AEA (15082) bytes
+Input file <WORKDIR>/input/reg_SSDC_HONOR_SocGpe__00003000.bin, Length 0x3AEA (15082) bytes
 ACPI: SSDT 0x0000000000000000 003AEA (v02 HONOR  SocGpe   00003000 INTL 20200717)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
@@ -266,9 +266,9 @@ Parsing Deferred Opcodes (Methods/Buffers/Packages/Regions)
 
 Parsing completed
 Disassembly completed
-ASL Output:    /work/input/reg_SSDC_HONOR_SocGpe__00003000.dsl - 48251 bytes
+ASL Output:    <WORKDIR>/input/reg_SSDC_HONOR_SocGpe__00003000.dsl - 48251 bytes
 
-COMMAND docker exec -w /work/input honor-acpi-static-20261012 /work/pkg/usr/bin/iasl -d /work/input/reg_SSDD_HONOR_SocCmn__00003000.bin
+COMMAND docker exec -w <WORKDIR>/input honor-acpi-static-20261012 <WORKDIR>/pkg/usr/bin/iasl -d <WORKDIR>/input/reg_SSDD_HONOR_SocCmn__00003000.bin
 EXIT 0
 
 Intel ACPI Component Architecture
@@ -277,7 +277,7 @@ Copyright (c) 2000 - 2025 Intel Corporation
 
 File appears to be binary: found 3114 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSDD_HONOR_SocCmn__00003000.bin, Length 0x39DA (14810) bytes
+Input file <WORKDIR>/input/reg_SSDD_HONOR_SocCmn__00003000.bin, Length 0x39DA (14810) bytes
 ACPI: SSDT 0x0000000000000000 0039DA (v02 HONOR  SocCmn   00003000 INTL 20200717)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
@@ -285,9 +285,9 @@ Parsing Deferred Opcodes (Methods/Buffers/Packages/Regions)
 
 Parsing completed
 Disassembly completed
-ASL Output:    /work/input/reg_SSDD_HONOR_SocCmn__00003000.dsl - 46435 bytes
+ASL Output:    <WORKDIR>/input/reg_SSDD_HONOR_SocCmn__00003000.dsl - 46435 bytes
 
-COMMAND docker exec -w /work/input honor-acpi-static-20261012 /work/pkg/usr/bin/iasl -d /work/input/reg_SSDE_HONOR_PcdTabl_00001000.bin
+COMMAND docker exec -w <WORKDIR>/input honor-acpi-static-20261012 <WORKDIR>/pkg/usr/bin/iasl -d <WORKDIR>/input/reg_SSDE_HONOR_PcdTabl_00001000.bin
 EXIT 0
 
 Intel ACPI Component Architecture
@@ -296,7 +296,7 @@ Copyright (c) 2000 - 2025 Intel Corporation
 
 File appears to be binary: found 72 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSDE_HONOR_PcdTabl_00001000.bin, Length 0xF8 (248) bytes
+Input file <WORKDIR>/input/reg_SSDE_HONOR_PcdTabl_00001000.bin, Length 0xF8 (248) bytes
 ACPI: SSDT 0x0000000000000000 0000F8 (v01 HONOR  PcdTabl  00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
@@ -304,9 +304,9 @@ Parsing Deferred Opcodes (Methods/Buffers/Packages/Regions)
 
 Parsing completed
 Disassembly completed
-ASL Output:    /work/input/reg_SSDE_HONOR_PcdTabl_00001000.dsl - 1965 bytes
+ASL Output:    <WORKDIR>/input/reg_SSDE_HONOR_PcdTabl_00001000.dsl - 1965 bytes
 
-COMMAND docker exec -w /work/input honor-acpi-static-20261012 /work/pkg/usr/bin/iasl -d /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
+COMMAND docker exec -w <WORKDIR>/input honor-acpi-static-20261012 <WORKDIR>/pkg/usr/bin/iasl -d <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
 EXIT 0
 
 Intel ACPI Component Architecture
@@ -315,7 +315,7 @@ Copyright (c) 2000 - 2025 Intel Corporation
 
 File appears to be binary: found 6939 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
+Input file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
 ACPI: SSDT 0x0000000000000000 004B87 (v02 HONOR  DptfTabl 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
@@ -323,4 +323,4 @@ Parsing Deferred Opcodes (Methods/Buffers/Packages/Regions)
 
 Parsing completed
 Disassembly completed
-ASL Output:    /work/input/reg_SSDT_HONOR_DptfTabl_00001000.dsl - 129698 bytes
+ASL Output:    <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.dsl - 129698 bytes

@@ -1,0 +1,28 @@
+{
+  "base_commit": "563e69e555756b1c874c7ec8cd884bc0eab91fb4",
+  "semantic_or_status_changed": [
+    "MXMX",
+    "MUX三选一",
+    "联合命名空间验收"
+  ],
+  "added": [
+    "_S0W重复定义"
+  ],
+  "cross_table_reviewed": [
+    "MXMX",
+    "PEG0电源资源",
+    "GC6路径",
+    "MUX三选一",
+    "GFX0._DOD列表",
+    "DD1F._DGS",
+    "DD1F._BCL",
+    "DD1F._BCM/_BQC",
+    "ASLB来源与赋值者",
+    "ASLS vs ASLB",
+    "TDM0._STA",
+    "TDM1._STA"
+  ],
+  "other_changes": "全部34个旧条目新增external_review；原DSL行号和方法体未改变",
+  "external_pass": 0,
+  "external_fail": 16
+}

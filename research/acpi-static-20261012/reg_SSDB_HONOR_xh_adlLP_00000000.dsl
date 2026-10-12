@@ -5,7 +5,7 @@
  * 
  * Disassembling to symbolic ASL+ operators
  *
- * Disassembly of /work/input/reg_SSDB_HONOR_xh_adlLP_00000000.bin
+ * Disassembly of <WORKDIR>/input/reg_SSDB_HONOR_xh_adlLP_00000000.bin
  *
  * Original Table Header:
  *     Signature        "SSDT"

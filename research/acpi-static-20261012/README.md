@@ -2,7 +2,7 @@
 
 **不能推出：物理 MUX 有无、GPIO 电气走线、Windows 未枚举 NHI 的真实原因、OpRegion/VBT 内容、有效 eDP/DDI/AUX 参数、macOS 显示/背光/电源成功。不能把 `_DSM` 位图或单表反汇编成功当作运行时证据。** 当前内屏接 Intel `8086:46A6` 已知；独显是 RTX2050 `10DE:25A9`。保持 **RUNTIME_NO_GO**。
 
-本轮交付为 **SOURCE-STATIC 部分结果**。完整 16 表联合命名空间反汇编仍 **BLOCKED**，没有达到联合解析验收；下文仅确认所列方法体/声明中的常量与条件，跨表运行结果均 UNKNOWN。
+本轮交付为 **SOURCE-STATIC 部分结果**。固定20250404改用 `-e <其余15表> -d <目标表>` 后 **0通过、16失败**，仍未达到全表外部引用验收；下文仅确认所列方法体/声明中的常量与条件，跨表运行结果均 UNKNOWN。
 
 ## 输入和工具实际执行
 
@@ -16,6 +16,7 @@
 
 - `iasl -da <reg_DSDT及全部15个reg_SSDT>`：两个固定版本均退出255。首先在 `\_SB.PC00.PEG1.PEGP._S0W` 创建时报AE_ALREADY_EXISTS，随后命名空间出现连带错误。[20250404日志第19–20行](iasl-disassembly.log)、[20200925日志](iasl-20200925-joint-failed.log)。未删除表、未改AML、未忽略错误来制造成功。
 - `iasl -d <单表>`：16份分别退出0，输出本目录16个DSL。[逐表命令/输出](individual-runs.json)、[清单与哈希](disassembly-manifest.json)。DSDT单表日志还有外部方法警告，其“141 found/397 resolved/4294967040 unresolved”计数不可靠，不能按巨大无符号数声称缺了这么多方法。
+- 本次 `iasl -e <其余全部15张表> -d <目标>`：**0通过、16失败**，均退出255。完整命令/输出摘要见 [external-runs.json](external-runs.json)，逐项复核见 [external-review.md](external-review.md)。未重跑-da，未添加猜测-fe声明。重复_S0W位于SaSsdt:2105–2112与SSDT9:2554–2567的同一PEG1.PEGP作用域；本轮PEG0/GFX0方法体常量不变，外部解析仍阻塞。
 - 离线校验测试：**6通过、0失败**；联合解析：**0通过、2失败**；单表解析：**16通过、0失败**。成功范围不得混淆。
 
 ## 混合显卡：位图、stub 与非空路径

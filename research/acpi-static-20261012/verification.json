@@ -19,14 +19,9 @@
   "runs": [
     {
       "argv": [
-        "scripts/acpi_static_validate_inputs.py"
-      ],
-      "exit_code": 0,
-      "stdout": "{\"inputs\": \"PASS\", \"primary_tables\": 16, \"verified_tables\": 36}\n",
-      "stderr": ""
-    },
-    {
-      "argv": [
+        "python",
+        "-X",
+        "utf8",
         "-m",
         "unittest",
         "discover",
@@ -37,7 +32,74 @@
       ],
       "exit_code": 0,
       "stdout": "",
-      "stderr": "......\n----------------------------------------------------------------------\nRan 6 tests in 0.748s\n\nOK\n"
+      "stderr": "......\n----------------------------------------------------------------------\nRan 6 tests in 0.747s\n\nOK\n"
+    },
+    {
+      "argv": [
+        "python",
+        "-X",
+        "utf8",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_r14c0_dependency_gate.py"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ".........................\n----------------------------------------------------------------------\nRan 25 tests in 6.503s\n\nOK\n"
+    },
+    {
+      "argv": [
+        "python",
+        "-X",
+        "utf8",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_r14c01_power_contract.py"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ".....................\n----------------------------------------------------------------------\nRan 21 tests in 2.779s\n\nOK\n"
     }
-  ]
+  ],
+  "external_disassembly_pass": 0,
+  "external_disassembly_fail": 16,
+  "external_exit_codes": [
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255
+  ],
+  "findings_count": 35,
+  "correction_date": "2026-10-13",
+  "publication_privacy_scan": {
+    "files_checked": 102,
+    "hits": 0
+  },
+  "input_validation": "36 matched",
+  "workflows_unchanged": true,
+  "normalized_dsl_hashes_verified": 16,
+  "correction_tests_pass": 6,
+  "correction_tests_fail": 0,
+  "pending_c0_tests_pass": 46,
+  "pending_c0_tests_fail": 0
 }

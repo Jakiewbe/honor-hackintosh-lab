@@ -3,241 +3,241 @@ Intel ACPI Component Architecture
 ASL+ Optimizing Compiler/Disassembler version 20250404
 Copyright (c) 2000 - 2025 Intel Corporation
 
-External object resolution file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
-External object resolution file /work/input/reg_SSDE_HONOR_PcdTabl_00001000.bin
-External object resolution file /work/input/reg_SSDD_HONOR_SocCmn__00003000.bin
-External object resolution file /work/input/reg_SSDC_HONOR_SocGpe__00003000.bin
-External object resolution file /work/input/reg_SSDB_HONOR_xh_adlLP_00000000.bin
-External object resolution file /work/input/reg_SSDA_HONOR_NvdTable_00001000.bin
-External object resolution file /work/input/reg_SSD9_HONOR_ADL-P-M_00000002.bin
-External object resolution file /work/input/reg_SSD8_HONOR_PtidDevc_00001000.bin
-External object resolution file /work/input/reg_SSD7_HONOR_WmiTable_00001000.bin
-External object resolution file /work/input/reg_SSD6_HONOR_Tpm2Tabl_00001000.bin
-External object resolution file /work/input/reg_SSD5_HONOR_TcssSsdt_00001000.bin
-External object resolution file /work/input/reg_SSD4_HONOR_IgfxSsdt_00003000.bin
-External object resolution file /work/input/reg_SSD3_HONOR_SaSsdt__00003000.bin
+External object resolution file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
+External object resolution file <WORKDIR>/input/reg_SSDE_HONOR_PcdTabl_00001000.bin
+External object resolution file <WORKDIR>/input/reg_SSDD_HONOR_SocCmn__00003000.bin
+External object resolution file <WORKDIR>/input/reg_SSDC_HONOR_SocGpe__00003000.bin
+External object resolution file <WORKDIR>/input/reg_SSDB_HONOR_xh_adlLP_00000000.bin
+External object resolution file <WORKDIR>/input/reg_SSDA_HONOR_NvdTable_00001000.bin
+External object resolution file <WORKDIR>/input/reg_SSD9_HONOR_ADL-P-M_00000002.bin
+External object resolution file <WORKDIR>/input/reg_SSD8_HONOR_PtidDevc_00001000.bin
+External object resolution file <WORKDIR>/input/reg_SSD7_HONOR_WmiTable_00001000.bin
+External object resolution file <WORKDIR>/input/reg_SSD6_HONOR_Tpm2Tabl_00001000.bin
+External object resolution file <WORKDIR>/input/reg_SSD5_HONOR_TcssSsdt_00001000.bin
+External object resolution file <WORKDIR>/input/reg_SSD4_HONOR_IgfxSsdt_00003000.bin
+External object resolution file <WORKDIR>/input/reg_SSD3_HONOR_SaSsdt__00003000.bin
 Firmware Error (ACPI): Failure creating named object [\_SB.PC00.PEG1.PEGP._S0W], AE_ALREADY_EXISTS (20250404/dswload-387)
 Could not parse external ACPI tables, AE_ALREADY_EXISTS
-External object resolution file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
+External object resolution file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
 Firmware Error (ACPI): Failure creating named object [\_SB.IETM], AE_ALREADY_EXISTS (20250404/dswload-387)
 Could not parse external ACPI tables, AE_ALREADY_EXISTS
-External object resolution file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
+External object resolution file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
 Firmware Error (ACPI): Failure creating named object [\_SB.IETM], AE_ALREADY_EXISTS (20250404/dswload-387)
 Could not parse external ACPI tables, AE_ALREADY_EXISTS
-External object resolution file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
+External object resolution file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
 Firmware Error (ACPI): Failure creating named object [\_SB.IETM], AE_ALREADY_EXISTS (20250404/dswload-387)
 Could not parse external ACPI tables, AE_ALREADY_EXISTS
-External object resolution file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
+External object resolution file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
 Firmware Error (ACPI): Failure creating named object [\_SB.IETM], AE_ALREADY_EXISTS (20250404/dswload-387)
 Could not parse external ACPI tables, AE_ALREADY_EXISTS
-External object resolution file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
+External object resolution file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
 Firmware Error (ACPI): Failure creating named object [\_SB.IETM], AE_ALREADY_EXISTS (20250404/dswload-387)
 Could not parse external ACPI tables, AE_ALREADY_EXISTS
-External object resolution file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
+External object resolution file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
 Firmware Error (ACPI): Failure creating named object [\_SB.IETM], AE_ALREADY_EXISTS (20250404/dswload-387)
 Could not parse external ACPI tables, AE_ALREADY_EXISTS
-External object resolution file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
+External object resolution file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
 Firmware Error (ACPI): Failure creating named object [\_SB.IETM], AE_ALREADY_EXISTS (20250404/dswload-387)
 Could not parse external ACPI tables, AE_ALREADY_EXISTS
-External object resolution file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
+External object resolution file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
 Firmware Error (ACPI): Failure creating named object [\_SB.IETM], AE_ALREADY_EXISTS (20250404/dswload-387)
 Could not parse external ACPI tables, AE_ALREADY_EXISTS
-External object resolution file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
+External object resolution file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
 Firmware Error (ACPI): Failure creating named object [\_SB.IETM], AE_ALREADY_EXISTS (20250404/dswload-387)
 Could not parse external ACPI tables, AE_ALREADY_EXISTS
-External object resolution file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
+External object resolution file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
 Firmware Error (ACPI): Failure creating named object [\_SB.IETM], AE_ALREADY_EXISTS (20250404/dswload-387)
 Could not parse external ACPI tables, AE_ALREADY_EXISTS
-External object resolution file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
+External object resolution file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
 Firmware Error (ACPI): Failure creating named object [\_SB.IETM], AE_ALREADY_EXISTS (20250404/dswload-387)
 Could not parse external ACPI tables, AE_ALREADY_EXISTS
-External object resolution file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
+External object resolution file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
 Firmware Error (ACPI): Failure creating named object [\_SB.IETM], AE_ALREADY_EXISTS (20250404/dswload-387)
 Could not parse external ACPI tables, AE_ALREADY_EXISTS
-External object resolution file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
+External object resolution file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
 Firmware Error (ACPI): Failure creating named object [\_SB.IETM], AE_ALREADY_EXISTS (20250404/dswload-387)
 Could not parse external ACPI tables, AE_ALREADY_EXISTS
-External object resolution file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
+External object resolution file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin
 Firmware Error (ACPI): Failure creating named object [\_SB.IETM], AE_ALREADY_EXISTS (20250404/dswload-387)
 Could not parse external ACPI tables, AE_ALREADY_EXISTS
-External object resolution file /work/input/reg_SSDE_HONOR_PcdTabl_00001000.bin
+External object resolution file <WORKDIR>/input/reg_SSDE_HONOR_PcdTabl_00001000.bin
 Firmware Error (ACPI): Failure creating named object [\_SB.MDSZ], AE_ALREADY_EXISTS (20250404/dswload-387)
 Could not parse external ACPI tables, AE_ALREADY_EXISTS
 
 --- STDERR ---
 File appears to be binary: found 100020 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_DSDT_HONOR_ADL-P-M_00000002.bin, Length 0x4AF85 (307077) bytes
+Input file <WORKDIR>/input/reg_DSDT_HONOR_ADL-P-M_00000002.bin, Length 0x4AF85 (307077) bytes
 ACPI: DSDT 0x0000000000000000 04AF85 (v02 HONOR  ADL-P-M  00000002 ACPI 00040000)
-Input file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
+Input file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
 ACPI: SSDT 0x0000000000000000 004B87 (v02 HONOR  DptfTabl 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
-Input file /work/input/reg_SSDE_HONOR_PcdTabl_00001000.bin, Length 0xF8 (248) bytes
+Input file <WORKDIR>/input/reg_SSDE_HONOR_PcdTabl_00001000.bin, Length 0xF8 (248) bytes
 ACPI: SSDT 0x0000000000000000 0000F8 (v01 HONOR  PcdTabl  00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
-Input file /work/input/reg_SSDD_HONOR_SocCmn__00003000.bin, Length 0x39DA (14810) bytes
+Input file <WORKDIR>/input/reg_SSDD_HONOR_SocCmn__00003000.bin, Length 0x39DA (14810) bytes
 ACPI: SSDT 0x0000000000000000 0039DA (v02 HONOR  SocCmn   00003000 INTL 20200717)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
-Input file /work/input/reg_SSDC_HONOR_SocGpe__00003000.bin, Length 0x3AEA (15082) bytes
+Input file <WORKDIR>/input/reg_SSDC_HONOR_SocGpe__00003000.bin, Length 0x3AEA (15082) bytes
 ACPI: SSDT 0x0000000000000000 003AEA (v02 HONOR  SocGpe   00003000 INTL 20200717)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
-Input file /work/input/reg_SSDB_HONOR_xh_adlLP_00000000.bin, Length 0xB81 (2945) bytes
+Input file <WORKDIR>/input/reg_SSDB_HONOR_xh_adlLP_00000000.bin, Length 0xB81 (2945) bytes
 ACPI: SSDT 0x0000000000000000 000B81 (v02 HONOR  xh_adlLP 00000000 INTL 20200717)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
-Input file /work/input/reg_SSDA_HONOR_NvdTable_00001000.bin, Length 0x20A5 (8357) bytes
+Input file <WORKDIR>/input/reg_SSDA_HONOR_NvdTable_00001000.bin, Length 0x20A5 (8357) bytes
 ACPI: SSDT 0x0000000000000000 0020A5 (v01 HONOR  NvdTable 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
-Input file /work/input/reg_SSD9_HONOR_ADL-P-M_00000002.bin, Length 0xA3E2 (41954) bytes
+Input file <WORKDIR>/input/reg_SSD9_HONOR_ADL-P-M_00000002.bin, Length 0xA3E2 (41954) bytes
 ACPI: SSDT 0x0000000000000000 00A3E2 (v02 HONOR  ADL-P-M  00000002      01000013)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
-Input file /work/input/reg_SSD8_HONOR_PtidDevc_00001000.bin, Length 0xAD9 (2777) bytes
+Input file <WORKDIR>/input/reg_SSD8_HONOR_PtidDevc_00001000.bin, Length 0xAD9 (2777) bytes
 ACPI: SSDT 0x0000000000000000 000AD9 (v02 HONOR  PtidDevc 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
-Input file /work/input/reg_SSD7_HONOR_WmiTable_00001000.bin, Length 0xE74 (3700) bytes
+Input file <WORKDIR>/input/reg_SSD7_HONOR_WmiTable_00001000.bin, Length 0xE74 (3700) bytes
 ACPI: SSDT 0x0000000000000000 000E74 (v01 HONOR  WmiTable 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
-Input file /work/input/reg_SSD6_HONOR_Tpm2Tabl_00001000.bin, Length 0x77B (1915) bytes
+Input file <WORKDIR>/input/reg_SSD6_HONOR_Tpm2Tabl_00001000.bin, Length 0x77B (1915) bytes
 ACPI: SSDT 0x0000000000000000 00077B (v02 HONOR  Tpm2Tabl 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
-Input file /work/input/reg_SSD5_HONOR_TcssSsdt_00001000.bin, Length 0xD39F (54175) bytes
+Input file <WORKDIR>/input/reg_SSD5_HONOR_TcssSsdt_00001000.bin, Length 0xD39F (54175) bytes
 ACPI: SSDT 0x0000000000000000 00D39F (v02 HONOR  TcssSsdt 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
-Input file /work/input/reg_SSD4_HONOR_IgfxSsdt_00003000.bin, Length 0x33D3 (13267) bytes
+Input file <WORKDIR>/input/reg_SSD4_HONOR_IgfxSsdt_00003000.bin, Length 0x33D3 (13267) bytes
 ACPI: SSDT 0x0000000000000000 0033D3 (v02 HONOR  IgfxSsdt 00003000 INTL 20200717)
 Pass 1 parse of [SSDT]
 Pass 2 parse of [SSDT]
-Input file /work/input/reg_SSD3_HONOR_SaSsdt__00003000.bin, Length 0x2B22 (11042) bytes
+Input file <WORKDIR>/input/reg_SSD3_HONOR_SaSsdt__00003000.bin, Length 0x2B22 (11042) bytes
 ACPI: SSDT 0x0000000000000000 002B22 (v02 HONOR  SaSsdt   00003000 INTL 20200717)
 Pass 1 parse of [SSDT]
 ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20250404/psobject-264)
 File appears to be binary: found 491 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSD1_HONOR_Pmax_Dev_00000001.bin, Length 0x38C (908) bytes
+Input file <WORKDIR>/input/reg_SSD1_HONOR_Pmax_Dev_00000001.bin, Length 0x38C (908) bytes
 ACPI: SSDT 0x0000000000000000 00038C (v02 HONOR  Pmax_Dev 00000001 INTL 20200717)
-Input file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
+Input file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
 ACPI: SSDT 0x0000000000000000 004B87 (v02 HONOR  DptfTabl 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20250404/psobject-264)
 File appears to be binary: found 5060 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSD2_HONOR_CpuSsdt_00003000.bin, Length 0x5D2C (23852) bytes
+Input file <WORKDIR>/input/reg_SSD2_HONOR_CpuSsdt_00003000.bin, Length 0x5D2C (23852) bytes
 ACPI: SSDT 0x0000000000000000 005D2C (v02 HONOR  CpuSsdt  00003000 INTL 20200717)
-Input file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
+Input file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
 ACPI: SSDT 0x0000000000000000 004B87 (v02 HONOR  DptfTabl 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20250404/psobject-264)
 File appears to be binary: found 3554 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSD3_HONOR_SaSsdt__00003000.bin, Length 0x2B22 (11042) bytes
+Input file <WORKDIR>/input/reg_SSD3_HONOR_SaSsdt__00003000.bin, Length 0x2B22 (11042) bytes
 ACPI: SSDT 0x0000000000000000 002B22 (v02 HONOR  SaSsdt   00003000 INTL 20200717)
-Input file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
+Input file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
 ACPI: SSDT 0x0000000000000000 004B87 (v02 HONOR  DptfTabl 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20250404/psobject-264)
 File appears to be binary: found 4429 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSD4_HONOR_IgfxSsdt_00003000.bin, Length 0x33D3 (13267) bytes
+Input file <WORKDIR>/input/reg_SSD4_HONOR_IgfxSsdt_00003000.bin, Length 0x33D3 (13267) bytes
 ACPI: SSDT 0x0000000000000000 0033D3 (v02 HONOR  IgfxSsdt 00003000 INTL 20200717)
-Input file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
+Input file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
 ACPI: SSDT 0x0000000000000000 004B87 (v02 HONOR  DptfTabl 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20250404/psobject-264)
 File appears to be binary: found 13245 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSD5_HONOR_TcssSsdt_00001000.bin, Length 0xD39F (54175) bytes
+Input file <WORKDIR>/input/reg_SSD5_HONOR_TcssSsdt_00001000.bin, Length 0xD39F (54175) bytes
 ACPI: SSDT 0x0000000000000000 00D39F (v02 HONOR  TcssSsdt 00001000 INTL 20200717)
-Input file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
+Input file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
 ACPI: SSDT 0x0000000000000000 004B87 (v02 HONOR  DptfTabl 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20250404/psobject-264)
 File appears to be binary: found 724 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSD6_HONOR_Tpm2Tabl_00001000.bin, Length 0x77B (1915) bytes
+Input file <WORKDIR>/input/reg_SSD6_HONOR_Tpm2Tabl_00001000.bin, Length 0x77B (1915) bytes
 ACPI: SSDT 0x0000000000000000 00077B (v02 HONOR  Tpm2Tabl 00001000 INTL 20200717)
-Input file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
+Input file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
 ACPI: SSDT 0x0000000000000000 004B87 (v02 HONOR  DptfTabl 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20250404/psobject-264)
 File appears to be binary: found 1466 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSD7_HONOR_WmiTable_00001000.bin, Length 0xE74 (3700) bytes
+Input file <WORKDIR>/input/reg_SSD7_HONOR_WmiTable_00001000.bin, Length 0xE74 (3700) bytes
 ACPI: SSDT 0x0000000000000000 000E74 (v01 HONOR  WmiTable 00001000 INTL 20200717)
-Input file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
+Input file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
 ACPI: SSDT 0x0000000000000000 004B87 (v02 HONOR  DptfTabl 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20250404/psobject-264)
 File appears to be binary: found 574 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSD8_HONOR_PtidDevc_00001000.bin, Length 0xAD9 (2777) bytes
+Input file <WORKDIR>/input/reg_SSD8_HONOR_PtidDevc_00001000.bin, Length 0xAD9 (2777) bytes
 ACPI: SSDT 0x0000000000000000 000AD9 (v02 HONOR  PtidDevc 00001000 INTL 20200717)
-Input file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
+Input file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
 ACPI: SSDT 0x0000000000000000 004B87 (v02 HONOR  DptfTabl 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20250404/psobject-264)
 File appears to be binary: found 11507 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSD9_HONOR_ADL-P-M_00000002.bin, Length 0xA3E2 (41954) bytes
+Input file <WORKDIR>/input/reg_SSD9_HONOR_ADL-P-M_00000002.bin, Length 0xA3E2 (41954) bytes
 ACPI: SSDT 0x0000000000000000 00A3E2 (v02 HONOR  ADL-P-M  00000002      01000013)
-Input file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
+Input file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
 ACPI: SSDT 0x0000000000000000 004B87 (v02 HONOR  DptfTabl 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20250404/psobject-264)
 File appears to be binary: found 2215 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSDA_HONOR_NvdTable_00001000.bin, Length 0x20A5 (8357) bytes
+Input file <WORKDIR>/input/reg_SSDA_HONOR_NvdTable_00001000.bin, Length 0x20A5 (8357) bytes
 ACPI: SSDT 0x0000000000000000 0020A5 (v01 HONOR  NvdTable 00001000 INTL 20200717)
-Input file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
+Input file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
 ACPI: SSDT 0x0000000000000000 004B87 (v02 HONOR  DptfTabl 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20250404/psobject-264)
 File appears to be binary: found 934 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSDB_HONOR_xh_adlLP_00000000.bin, Length 0xB81 (2945) bytes
+Input file <WORKDIR>/input/reg_SSDB_HONOR_xh_adlLP_00000000.bin, Length 0xB81 (2945) bytes
 ACPI: SSDT 0x0000000000000000 000B81 (v02 HONOR  xh_adlLP 00000000 INTL 20200717)
-Input file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
+Input file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
 ACPI: SSDT 0x0000000000000000 004B87 (v02 HONOR  DptfTabl 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20250404/psobject-264)
 File appears to be binary: found 2498 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSDC_HONOR_SocGpe__00003000.bin, Length 0x3AEA (15082) bytes
+Input file <WORKDIR>/input/reg_SSDC_HONOR_SocGpe__00003000.bin, Length 0x3AEA (15082) bytes
 ACPI: SSDT 0x0000000000000000 003AEA (v02 HONOR  SocGpe   00003000 INTL 20200717)
-Input file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
+Input file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
 ACPI: SSDT 0x0000000000000000 004B87 (v02 HONOR  DptfTabl 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20250404/psobject-264)
 File appears to be binary: found 3114 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSDD_HONOR_SocCmn__00003000.bin, Length 0x39DA (14810) bytes
+Input file <WORKDIR>/input/reg_SSDD_HONOR_SocCmn__00003000.bin, Length 0x39DA (14810) bytes
 ACPI: SSDT 0x0000000000000000 0039DA (v02 HONOR  SocCmn   00003000 INTL 20200717)
-Input file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
+Input file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
 ACPI: SSDT 0x0000000000000000 004B87 (v02 HONOR  DptfTabl 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20250404/psobject-264)
 File appears to be binary: found 72 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSDE_HONOR_PcdTabl_00001000.bin, Length 0xF8 (248) bytes
+Input file <WORKDIR>/input/reg_SSDE_HONOR_PcdTabl_00001000.bin, Length 0xF8 (248) bytes
 ACPI: SSDT 0x0000000000000000 0000F8 (v01 HONOR  PcdTabl  00001000 INTL 20200717)
-Input file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
+Input file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
 ACPI: SSDT 0x0000000000000000 004B87 (v02 HONOR  DptfTabl 00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20250404/psobject-264)
 File appears to be binary: found 6939 non-ASCII characters, disassembling
 Binary file appears to be a valid ACPI table, disassembling
-Input file /work/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
+Input file <WORKDIR>/input/reg_SSDT_HONOR_DptfTabl_00001000.bin, Length 0x4B87 (19335) bytes
 ACPI: SSDT 0x0000000000000000 004B87 (v02 HONOR  DptfTabl 00001000 INTL 20200717)
-Input file /work/input/reg_SSDE_HONOR_PcdTabl_00001000.bin, Length 0xF8 (248) bytes
+Input file <WORKDIR>/input/reg_SSDE_HONOR_PcdTabl_00001000.bin, Length 0xF8 (248) bytes
 ACPI: SSDT 0x0000000000000000 0000F8 (v01 HONOR  PcdTabl  00001000 INTL 20200717)
 Pass 1 parse of [SSDT]
 ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20250404/psobject-264)

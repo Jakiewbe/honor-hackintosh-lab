@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project_id": "f6a08808-ada4-48fe-b2ad-82c0c827154b",
-  "revision": 8,
+  "revision": 10,
   "tasks": [
     {
       "task_id": "R14C0",
@@ -53,21 +53,21 @@
         {
           "type": "test",
           "criterion": 1,
-          "detail": "inputs.json/verification.json：36表哈希长度校验一致；原调查目录Git diff为0，6离线检查通过"
+          "detail": "inputs.json/verification.json：36原表校验通过；原调查目录git diff为空；离线校验通过"
         },
         {
           "type": "command",
           "criterion": 2,
-          "detail": "toolchain.txt/联合失败日志与individual-runs.json：联合0通过2失败、单表16通过0失败；findings.csv34项有定位，未声称联合验收"
+          "detail": "external-runs.json：16条完整-e/-d命令与退出255；external-review.md与35项findings有定位；未声称成功"
         },
         {
           "type": "file",
           "criterion": 3,
-          "detail": "T2-platform-map.md与knowledge01/02/04/09/10更新；OpRegion/VBT未取得、MUX无法判断，RUNTIME_NO_GO"
+          "detail": "T2-platform-map.md与知识库同步；OpRegion/VBT未取得；RUNTIME_NO_GO"
         }
       ],
-      "blocker": "完整16表联合namespace反汇编：两固定版本均AE_ALREADY_EXISTS/退出255；单表结果保留为SOURCE-STATIC，外部引用与NVS运行值未闭合。",
-      "updated_at": "2026-10-12T15:35:49.077503+00:00"
+      "blocker": "同一20250404以-e全部其余15原表逐表解析仍0通过16失败、均255；重复PEG1.PEGP._S0W已定位，External绑定与NVS实际内容未闭合。",
+      "updated_at": "2026-10-12T16:02:29.828550+00:00"
     }
   ],
   "history": [
@@ -222,6 +222,45 @@
         ]
       },
       "reason": "交付ACPI静态部分结果，完整联合解析验收失败即停止"
+    },
+    {
+      "revision": 9,
+      "timestamp": "2026-10-12T15:54:27.924287+00:00",
+      "action": "update",
+      "payload": {
+        "task_id": "R14C0PRE",
+        "status": "doing",
+        "blocker": ""
+      },
+      "reason": "用户授权固定iasl外部逐表解析复核、去本地路径并推送PR"
+    },
+    {
+      "revision": 10,
+      "timestamp": "2026-10-12T16:02:29.828550+00:00",
+      "action": "update",
+      "payload": {
+        "task_id": "R14C0PRE",
+        "status": "blocked",
+        "blocker": "同一20250404以-e全部其余15原表逐表解析仍0通过16失败、均255；重复PEG1.PEGP._S0W已定位，External绑定与NVS实际内容未闭合。",
+        "evidence": [
+          {
+            "type": "test",
+            "criterion": 1,
+            "detail": "inputs.json/verification.json：36原表校验通过；原调查目录git diff为空；离线校验通过"
+          },
+          {
+            "type": "command",
+            "criterion": 2,
+            "detail": "external-runs.json：16条完整-e/-d命令与退出255；external-review.md与35项findings有定位；未声称成功"
+          },
+          {
+            "type": "file",
+            "criterion": 3,
+            "detail": "T2-platform-map.md与知识库同步；OpRegion/VBT未取得；RUNTIME_NO_GO"
+          }
+        ]
+      },
+      "reason": "记录-e全表16次失败及精确重复定义，不冒充成功"
     }
   ]
 }
