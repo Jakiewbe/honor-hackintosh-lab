@@ -1,0 +1,98 @@
+{
+  "schema": 1,
+  "project_id": "f6a08808-ada4-48fe-b2ad-82c0c827154b",
+  "revision": 3,
+  "tasks": [
+    {
+      "task_id": "R14C0",
+      "title": "独立 i915 版本与接口依赖基线",
+      "plan": "approved",
+      "milestone": "R1.4-C0",
+      "description": "用户明确授权 T0 至 T4；阻塞时不进入驱动实现",
+      "acceptance_criteria": [
+        "读取真实仓库和原始报告，说明复用及增量",
+        "固定源版本、Git blob、许可和真实调用关系，未闭合项明确 BLOCKED",
+        "离线负向检查和状态交接，保持 RUNTIME_NO_GO"
+      ],
+      "status": "blocked",
+      "dependencies": [],
+      "evidence": [
+        {
+          "type": "file",
+          "criterion": 1,
+          "detail": "docs/R1.4-C0_独立i915源码与接口依赖基线.md 已列复用及新证据"
+        },
+        {
+          "type": "file",
+          "criterion": 2,
+          "detail": "research/independent-i915/source-lock.json 与 callgraph.md：固定候选、156源锁、92定义/79关系，完整闭包BLOCKED"
+        },
+        {
+          "type": "test",
+          "criterion": 3,
+          "detail": "research/independent-i915/verification.json：25通过0失败，structure退出0，closure退出2"
+        }
+      ],
+      "blocker": "首轮 SOURCE-STATIC 交付通过；完整 B0/B1 未验收：生成配置、传递提供者、许可和 XNU 必需接口未闭合。门禁退出2，不进入驱动实现。",
+      "updated_at": "2026-10-12T12:52:00.135915+00:00"
+    }
+  ],
+  "history": [
+    {
+      "revision": 1,
+      "timestamp": "2026-10-12T12:20:34.054465+00:00",
+      "action": "add",
+      "payload": {
+        "task_id": "R14C0",
+        "title": "独立 i915 版本与接口依赖基线",
+        "plan": "approved",
+        "milestone": "R1.4-C0",
+        "description": "用户明确授权 T0 至 T4；阻塞时不进入驱动实现",
+        "acceptance_criteria": [
+          "读取真实仓库和原始报告，说明复用及增量",
+          "固定源版本、Git blob、许可和真实调用关系，未闭合项明确 BLOCKED",
+          "离线负向检查和状态交接，保持 RUNTIME_NO_GO"
+        ]
+      },
+      "reason": "用户明确要求立即实施"
+    },
+    {
+      "revision": 2,
+      "timestamp": "2026-10-12T12:20:35.050061+00:00",
+      "action": "update",
+      "payload": {
+        "task_id": "R14C0",
+        "status": "doing"
+      },
+      "reason": "开始已批准任务"
+    },
+    {
+      "revision": 3,
+      "timestamp": "2026-10-12T12:52:00.135915+00:00",
+      "action": "update",
+      "payload": {
+        "task_id": "R14C0",
+        "status": "blocked",
+        "blocker": "首轮 SOURCE-STATIC 交付通过；完整 B0/B1 未验收：生成配置、传递提供者、许可和 XNU 必需接口未闭合。门禁退出2，不进入驱动实现。",
+        "evidence": [
+          {
+            "type": "file",
+            "criterion": 1,
+            "detail": "docs/R1.4-C0_独立i915源码与接口依赖基线.md 已列复用及新证据"
+          },
+          {
+            "type": "file",
+            "criterion": 2,
+            "detail": "research/independent-i915/source-lock.json 与 callgraph.md：固定候选、156源锁、92定义/79关系，完整闭包BLOCKED"
+          },
+          {
+            "type": "test",
+            "criterion": 3,
+            "detail": "research/independent-i915/verification.json：25通过0失败，structure退出0，closure退出2"
+          }
+        ]
+      },
+      "reason": "真实依赖未闭合，停止在源码调查阶段"
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+
+# codex-rules: preserve state bytes across computers
+.agent/** -text
