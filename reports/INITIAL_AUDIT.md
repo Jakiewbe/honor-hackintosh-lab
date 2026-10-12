@@ -177,7 +177,7 @@ Cursor 规则格式：`.mdc` + YAML 头（`description`、`globs`、`alwaysApply
 | P2 维护状态、release↔源码关系、许可 | DONE | 含 1.0.21 基线发现 |
 | P2 审阅指定模块 | DONE（会话 2） | 会话 1 为 PARTIAL；会话 2 补审其余模块与驱动 Mac 端脚本（Q-12 DONE，附录 A） |
 | P2 十个问题 | DONE | 第 4 节；第 3 问的 SSDT 部分未逐行审 |
-| P3 只读环境检测 | PARTIAL | 管理员项（BitLocker/WinRE/Secure Boot 交叉验证）未执行；会话 2 已写好只读脚本 `scripts/readonly_admin_status.ps1`，等待批准 |
+| P3 只读环境检测 | DONE（会话 2） | 会话 1 为 PARTIAL；会话 2 经用户批准以 UAC 运行 `scripts/readonly_admin_status.ps1`：BitLocker 未加密、WinRE 启用、Secure Boot 开启（交叉验证）、ESP FAT32 剩 94 MiB。CFG Lock 仍无法在 Windows 只读获取 |
 | P4 静态检查与测试审查 | PARTIAL | 8 个上游模块 + 本项目测试已跑；其余未审查不运行 |
 | P4 隔离候选 EFI + ocvalidate | BLOCKED | 缺 `Report.json`；iasl 未固定（R-07）；会话 2 已拟分步方案（`research/NEXT_STEPS_PLAN.md` C1–C3），每步待批准 |
 | P4 缺失硬件报告的只读收集方案 | DONE | OPEN_QUESTIONS + 第 8、10 节 |
@@ -201,7 +201,9 @@ Cursor 规则格式：`.mdc` + YAML 头（`description`、`globs`、`alwaysApply
 | VoodooI2C `0x51E8` | 原版 v2.9.1 与 master 均不含，触控板原版评级 E |
 | 仓库 MSDM 检查 | 现有证据与所有分支历史均不含 MSDM/SLIC |
 | 本项目静态测试 | 扩展到 **13 项，13/13 通过**（新增驱动 SHA 固定检查与 `NVRMFBClaim` 匹配条件检查） |
-| 新文件 | `research/NEXT_STEPS_PLAN.md`（BIOS/外接口目视清单、管理员只读查询、沙箱 C1–C3 分步方案与回滚）；`scripts/readonly_admin_status.ps1`（**未运行**） |
+| 新文件 | `research/NEXT_STEPS_PLAN.md`（BIOS/外接口目视清单、管理员只读查询、沙箱 C1–C3 分步方案与回滚）；`scripts/readonly_admin_status.ps1` |
+| 管理员只读查询（用户批准，UAC） | BitLocker C:/D: 完全解密、无保护器；WinRE 启用；Secure Boot = True；ESP FAT32 约 196 MiB、剩 94 MiB；固件启动顺序 Windows Boot Manager 优先 |
+| iasl 版本（Q-16） | acpica 20260930 无 Windows 资产 → OCS 自动下载预计失败；候选固定 20260408 `iasl.exe`（SHA256 `739c597b…`），**未下载** |
 
 **关键更正与新事实**
 

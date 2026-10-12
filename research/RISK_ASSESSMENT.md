@@ -13,7 +13,7 @@
 | R-04 | 程序自更新：下载新版并用 `swap.cmd` 替换自身目录 | `MainForm.cs`（约 160–200 行）、`nullmoth.app_update` | 视目录 | 执行新下载的二进制（有 SHA256SUMS 校验） | 中 | **未运行** |
 | R-05 | 运行 Hardware-Sniffer / `hwcapture` / `acpidump.exe` 扫描 | `p1401/scan.py` | 部分 | 读取硬件与 ACPI；`acpidump.exe` 按 SHA256 固定下载并执行 | 中 | **未运行**；本项目已有独立只读调查结果替代 |
 | R-06 | 从 Apple 下载恢复镜像 | `p1401/apple.py` | 否 | 大流量下载；校验细节未审 | 低 | **未运行** |
-| R-07 | 下载并执行**未固定版本/哈希**的 iasl | OCS `Scripts/dsdt.py:check_iasl`（DSDT 处理初始化时触发） | 否 | 执行来源未锁定的可执行文件，违反“未经审查不得执行”约束 | 高 | **阻止 `plan`/`build` 运行的主因之一** |
+| R-07 | 下载并执行**未固定版本/哈希**的 iasl | OCS `Scripts/dsdt.py:check_iasl`（DSDT 处理初始化时触发） | 否 | 执行来源未锁定的可执行文件，违反“未经审查不得执行”约束 | 高 | **阻止 `plan`/`build` 运行的主因之一**。2026-10-13 补充：OCS 抓取 acpica 最新 release 找 `iasl*.zip`，而最新的 20260930 只发布 Unix 资产（API 核对，未直接验证 OCS 的 HTML 抓取），故当前在 Windows 上自动下载**预计会失败**并报 “Could not locate or download iasl!”；预置固定哈希的 `iasl.exe` 是唯一可行做法（Q-16） |
 | R-08 | 生成的 OpenCore 配置削弱 macOS 安全：SIP `0x0A43`、`amfi_get_out_of_my_way=0x1`、`amfi=0x80`、`SecureBootModel` 关闭（社区配置可见） | `p1401/nullmoth.py`、`policy.py` | — | macOS 代码签名与系统完整性保护被关闭 | 高 | 只记录，不生成 |
 | R-09 | Mac companion 安装非 Apple 签名 kext，修改 OpenCore `config.plist`（BAR、IONDRVSupport 排除等） | 驱动仓库 `nullmoth-setup.sh`（未逐行审） | 是（macOS） | 内核级代码；#119 机制会让本机内屏失去帧缓冲 | 高 | 不适用（无 macOS） |
 | R-10 | 将 EFI 写入内置磁盘 ESP、修改 NVRAM 启动项、BIOS 设置（Secure Boot 关闭、VMD 等） | 社区安装流程、1401 BIOS 指引 | 是 | 可导致 Windows 无法启动；BitLocker 可能要求恢复密钥 | **极高** | **禁止** |
@@ -29,7 +29,7 @@
 ## 2. 主力机自身的风险条件（实测）
 
 - **只有一块磁盘**（Samsung NVMe），Windows、恢复分区、ESP 都在上面；任何磁盘写工具的误判都直接命中系统盘。
-- C: 剩余约 10.2 GiB；Secure Boot 开启；BitLocker、WinRE 状态**未知**；没有已验证的 ESP 备份、恢复介质或恢复演练（`hardware.json` → `recovery_readiness = needs_user_confirmation`）。
+- C: 剩余约 10.2 GiB；Secure Boot 开启（两来源一致）；BitLocker **未加密**（2026-10-13 实测，因此误改引导不会触发恢复密钥，但也意味着磁盘数据无加密保护）；WinRE 已启用；ESP 仅约 94 MiB 剩余；没有已验证的 ESP 备份、恢复介质或恢复演练（`hardware.json` → `recovery_readiness = needs_user_confirmation`）。
 - 结论：在恢复能力被证明前，**任何引导/磁盘/固件层面的操作都不具备回退保证**。
 
 ## 3. 本轮实际执行过的操作及其副作用

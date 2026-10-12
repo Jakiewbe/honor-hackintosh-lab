@@ -10,8 +10,8 @@
 - **用户已同意的方向**：四项都做，但每条具体命令仍需单独批准。当前状态：
   1. 只读源码工作：**已完成**；剩余仅定期跟踪 PR #131/#133、1401#26（Q-08/Q-10）与选定 iasl 版本（Q-16）。
   2. 用户目视：BIOS 显示模式/MUX（Q-01）、外接口归属（Q-02）——清单见 [`research/NEXT_STEPS_PLAN.md`](../research/NEXT_STEPS_PLAN.md) A。**等待用户**。
-  3. 管理员只读：[`scripts/readonly_admin_status.ps1`](../scripts/readonly_admin_status.ps1) 已写好、**未运行**。**等待批准**。
-  4. 沙箱候选 EFI：C1 scan → C2 离线 plan → C3 联网 build + ocvalidate，每步副作用已列明。**等待逐步批准**；C1 前须选定固定 iasl。
+  3. 管理员只读：**已完成**（用户批准，UAC 运行一次；Q-04/Q-05 DONE）。
+  4. 沙箱候选 EFI：C1 scan → C2 离线 plan → C3 联网 build + ocvalidate，每步副作用已列明。iasl 候选已选出（20260408 Windows 版，Q-16），**等待用户确认 iasl 与批准 C1**。
 - **续做前先跑**：`python tests/test_1401_static_audit.py`（13 项；SHA 断言失败 = 上游已变，先更新 `research/SOURCES.md`）
 
 ---
@@ -98,6 +98,24 @@ python -m venv --without-pip "$sb\venv"
 新增：`research/NEXT_STEPS_PLAN.md`、`scripts/readonly_admin_status.ps1`（未运行）。
 修改（本支线自有文件）：`research/{COMPATIBILITY,RISK_ASSESSMENT,SOURCES,OPEN_QUESTIONS}.md`、`reports/INITIAL_AUDIT.md`（就地标注“会话 2”更正 + 附录 A）、`tests/test_1401_static_audit.py`、本日志。
 
-### 6. 明确没有做的事
+### 6. 本地提交
 
-未运行管理员脚本、`p1401.scan`/`plan`/`build`、iasl、ocvalidate；未下载 iasl 或 1.0.21 基线 ZIP；未 push；未修改 BIOS/EFI/NVRAM/分区/BitLocker。
+`4de917e docs(1401): session 2 read-only review, next-step plan, 13 static tests`。
+
+### 7. 用户批准后的管理员只读查询
+
+用户在 AskQuestion 中选择“通过 UAC 提权运行”。运行前复核脚本（无 set/enable/delete、无密钥读取），然后：
+
+```powershell
+Start-Process powershell.exe -Verb RunAs -Wait -PassThru -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command `"& '<repo>\scripts\readonly_admin_status.ps1' *> '$env:TEMP\hk-admin-status-20261013.txt'`""
+```
+
+`-ExecutionPolicy Bypass` 仅作用于该进程。退出码 0。结果：Secure Boot `True`；C:/D: 完全解密、保护关闭、无密钥保护器；WinRE Enabled（partition7）；ESP FAT32/`SYSTEM`/约 196 MiB/剩 94 MiB；固件启动顺序 Windows Boot Manager → USB → DVD → Network，超时 2 s。原始输出（含 BCD GUID）只留在 `%TEMP%`，不入库。
+
+### 8. iasl 版本核对（Q-16，用户选择“先查再决定 C1”）
+
+GitHub API 只读 GET `acpica/acpica/releases`：20260930 只有 Unix 资产，20260408 是最新的 Windows 版（`iasl.exe` SHA256 `739c597b…f9`）。OCS `dsdt.py:get_latest_iasl` 只看最新 release 的正文与资产里的 `iasl*.zip`，因此现在自动下载预计失败（据 API 推断；OCS 实际抓取 HTML，未直接验证）。未下载任何 iasl。
+
+### 9. 明确没有做的事
+
+未运行 `p1401.scan`/`plan`/`build`、iasl、ocvalidate；未下载 iasl 或 1.0.21 基线 ZIP；未 push；未修改 BIOS/EFI/NVRAM/分区/BitLocker。管理员操作仅限上述一次只读脚本。

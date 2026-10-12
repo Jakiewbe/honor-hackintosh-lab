@@ -14,7 +14,7 @@
 | BIOS | HONOR 3.09（2023-07-10），EC 3.9，SMBIOS 3.3 | 同上 | 实测 |
 | ACPI OEM | `HONOR` / `ADL-P-M` | 同上 | 实测 |
 | 启动模式 | UEFI（`GetFirmwareType`=2，2026-10-13 复核） | `logs/RESEARCH_LOG.md` | 实测 |
-| Secure Boot | 已开启（注册表 `UEFISecureBootEnabled=1`；`Confirm-SecureBootUEFI` 需管理员，未交叉验证） | 同上 | 实测（单一来源） |
+| Secure Boot | 已开启（注册表 `UEFISecureBootEnabled=1`；2026-10-13 管理员 `Confirm-SecureBootUEFI` = `True`，两来源一致） | 同上；`scripts/readonly_admin_status.ps1` | 实测 |
 | CFG Lock | 【未知】Windows 下无法只读获得；1401/Hardware-Sniffer 会探测，但未运行 | — | 未知 |
 | VMD/RST | 【推断】未启用：NVMe 以 `144D:A80A` 直接枚举，未被 VMD 控制器遮蔽 | P20 PnP | 推断 |
 | 操作系统 | Windows 11 家庭中文版 25H2，build 26200；Hyper-V/VBS 运行中（VBS status=2） | 同上 | 实测 |
@@ -53,8 +53,10 @@
 | 磁盘 | 1 块 Samsung MZVL2512HCJQ-00B00（PM9A1 系 OEM），NVMe `144D:A80A`，Gen4 x4，476.9 GiB，GPT | 实测 |
 | 分区 | ESP 200 MiB、MSR 16 MiB、C: 120 GiB（剩余约 10.2 GiB，2026-10-13）、D: 343.2 GiB（剩余约 105.5 GiB）、3 个恢复类分区（0.5/12/1 GiB） | 实测 |
 | 其他磁盘 | 2026-10-13 检查时**没有 U 盘或第二块磁盘** | 实测 |
-| BitLocker | 【未知】非管理员 Shell 属性值为 0，含义不明确；`manage-bde` 需管理员 | 未知 |
-| WinRE | 【未知】`reagentc` 需管理员 | 未知 |
+| BitLocker | C:、D: 均为“完全解密 / 保护关闭 / 无密钥保护器”（2026-10-13 管理员 `manage-bde -status`；未读取任何密钥） | 实测 |
+| WinRE | 已启用，位于磁盘 0 第 7 分区（`reagentc /info`，版本 10.0.26100.9168） | 实测 |
+| ESP | FAT32，卷标 `SYSTEM`，约 196 MiB，剩余约 94 MiB，健康（`Get-Volume`，未挂载） | 实测 |
+| 固件启动项 | 顺序：Windows Boot Manager → EFI USB Device → EFI DVD/CDROM → EFI Network；固件菜单超时 2 s（`bcdedit /enum firmware`；完整输出仅留在 `%TEMP%`，标识符 GUID 不入库） | 实测 |
 
 ## 5. 外设
 
@@ -74,5 +76,5 @@
 
 1. 是否存在 BIOS 级独显直连/MUX 选项（需用户在 BIOS 界面目视确认，不修改）。
 2. HDMI、USB-C DP Alt Mode 物理连接到哪块 GPU（需厂商资料或外接显示器只读观察）。
-3. CFG Lock、BitLocker、WinRE、ESP 文件系统状态（需管理员只读查询，必须单独审批）。
+3. CFG Lock 状态（BitLocker、WinRE、ESP 已于 2026-10-13 经批准的管理员只读查询补齐，见上表）。
 4. Hardware-Sniffer 格式的 `Report.json`（1401 `plan` 模式的输入），从未生成。

@@ -38,7 +38,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File docs\hardware-survey-2026101
 
 ## B. 管理员只读查询（Q-04 / Q-05）
 
-脚本：[`scripts/readonly_admin_status.ps1`](../scripts/readonly_admin_status.ps1)，**已写好、未运行**。
+脚本：[`scripts/readonly_admin_status.ps1`](../scripts/readonly_admin_status.ps1)。**2026-10-13 已完成**：用户批准后以 UAC 运行一次，退出码 0；结论已写入 HARDWARE（BitLocker 未加密、WinRE 启用、ESP FAT32 剩 94 MiB、Secure Boot 交叉验证为开启）。原始输出 `%TEMP%\hk-admin-status-20261013.txt` 不入库。
 
 | 步骤 | 命令 | 读取什么 | 风险 |
 |---|---|---|---|
@@ -76,7 +76,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File docs\hardware-survey-2026101
 
 ### C2. 离线 `plan`（低风险）
 
-前提：预置 `upstream/OpCore-Simplify/Scripts/iasl.exe`（在沙箱副本中），版本由我们固定并记录 SHA256（1401 注释提到 `iasl 20260930`，需要到 acpica 官方 release 核对）。环境：
+前提：预置 `upstream/OpCore-Simplify/Scripts/iasl.exe`（在沙箱副本中）。2026-10-13 核对 acpica 官方 release：1401 注释中的 20260930 **没有 Windows 资产**，候选为 **20260408 `iasl.exe`**（SHA256 `739c597bcee4563f18d13e73b2051bb661707713e6154cf5712a1b7eef4a5df9`，见 Q-16）。下载后先比对哈希与 Authenticode 签名信息，不一致即中止。不预置时 OCS 的自动下载按当前 release 情况预计会失败（R-07）。环境：
 
 ```powershell
 $sb = "$env:TEMP\hk-1401-plan-<时间戳>"   # 沙箱根：src\（1401 副本）、venv\、tmp\、localappdata\、home\
