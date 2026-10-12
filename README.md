@@ -140,6 +140,16 @@ The v1.14.2 GitHub Release has a compiler-input **NMXNPU** source archive genera
 
 **Decision:** No new kernel patch, repetitive build CI or host modification. Prioritize a **version-matched upstream build-input and object manifest** before resuming Intel GGTT/eDP scanout mapping research. **R1.3-C PROVENANCE-UNRESOLVED / RUNTIME-NO-GO**.
 
+## R1.3-D: obtain actual upstream release evidence; new Intel framebuffer conflict
+
+After reviewing the [research ledger](docs/研究状态账本_防重复工作规则.md) and [R1.3-C](docs/R1.3-C_NMXGPU构建来源与对象完整性门禁.md), the [R1.3-D source/evidence assessment](docs/R1.3-D_发行包证据入口与Intel屏幕抢占风险.md) found **one new release-artifact question and one new independent display-integration risk**:
+
+- Published NullMoth [v1.14.2](https://github.com/nullmoth/nvidia-macos-driver/releases/tag/v1.14.2) offers a complete compiler-dependency source bundle for **NMXNPU**, but no separately named NMXGPU/i915 source bundle. The **371,689,122-byte** main distribution tar has not yet been inventoried; its contents must not be guessed. The new [manual-only R1.3-D SHA256-verified release tar filename inventory](.github/workflows/r13d-release-provenance-index.yml) examines this exact release asset **without extracting or executing anything**, and uploads **text only**. It has **not run yet**.
+- [Upstream Issue #119](https://github.com/nullmoth/nvidia-macos-driver/issues/119) records a **different** muxless Intel-panel laptop without a working GUI because NVIDIA's `NVRMFBClaim` took Intel's `IOFramebuffer` matching category. The **exact v1.14.2** [`NVRMFB/fb/Info.plist`](https://github.com/nullmoth/nvidia-macos-driver/blob/1083a98db33a0bb824290556de255f9a95ca5403/kexts/NVRMFB/fb/Info.plist) still includes an unrestricted `IONameMatch=display` `NVRMFBClaim` with probe score 30000. [Upstream PR #131](https://github.com/nullmoth/nvidia-macos-driver/pull/131) proposing NVIDIA vendor/class matching is **open/unmerged as reviewed**. This is **conditional risk**, not proof the HONOR itself black-screens.
+- A carefully scoped [English upstream build-manifest request](docs/R1.3-D_NullMoth_NMXGPU_构建证据请求_EN.md) is prepared **but NOT posted publicly**. Only post from the linked GitHub account with explicit user authorization.
+
+**No repeat CI, new VBL patch, NMXGPU build, actual driver execution, or host change.** Release asset inventory is a new evidence question—not a claim of source or runtime success. **R1.3-D RELEASE-INDEX-PENDING / I915-PROVENANCE-BLOCKED / IGPU-FBCLAIM-RISK / RUNTIME-NO-GO.**
+
 ## Safety and evidence
 
 The original NullMoth source carries a PolyForm Noncommercial license. No upstream source code or vendor firmware is copied into this repository. All upstream code is fetched from its public GitHub repository into an ephemeral runner only when source mode is explicitly requested.
