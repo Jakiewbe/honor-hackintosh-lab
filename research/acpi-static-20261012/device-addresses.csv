@@ -1,0 +1,304 @@
+device,method,dsl,start_line,end_line,body,runtime_value,level
+DD01,_ADR,reg_SSD4_HONOR_IgfxSsdt_00003000.dsl,718,736,"{
+                If (((0x0F00 & DID1) == 0x0400))
+                {
+                    EDPV = One
+                    NXDX = NXD1 /* External reference */
+                    DIDX = DID1 /* External reference */
+                    Return (One)
+                }
+
+                If ((DID1 == Zero))
+                {
+                    Return (One)
+                }
+                Else
+                {
+                    Return ((0xFFFF & DID1))
+                }
+            }",UNKNOWN,SOURCE-STATIC
+DD02,_ADR,reg_SSD4_HONOR_IgfxSsdt_00003000.dsl,761,787,"{
+                If (((0x0F00 & DID2) == 0x0400))
+                {
+                    If (((0x0F & DID2) == One))
+                    {
+                        EDPV = 0x02
+                        NXDY = NXD2 /* External reference */
+                        DIDY = DID2 /* External reference */
+                        Return (0x02)
+                    }
+
+                    EDPV = 0x02
+                    NXDX = NXD2 /* External reference */
+                    DIDX = DID2 /* External reference */
+                    Return (0x02)
+                }
+
+                If ((DID2 == Zero))
+                {
+                    Return (0x02)
+                }
+                Else
+                {
+                    Return ((0xFFFF & DID2))
+                }
+            }",UNKNOWN,SOURCE-STATIC
+DD03,_ADR,reg_SSD4_HONOR_IgfxSsdt_00003000.dsl,817,835,"{
+                If (((0x0F00 & DID3) == 0x0400))
+                {
+                    EDPV = 0x03
+                    NXDX = NXD3 /* External reference */
+                    DIDX = DID3 /* External reference */
+                    Return (0x03)
+                }
+
+                If ((DID3 == Zero))
+                {
+                    Return (0x03)
+                }
+                Else
+                {
+                    Return ((0xFFFF & DID3))
+                }
+            }",UNKNOWN,SOURCE-STATIC
+DD04,_ADR,reg_SSD4_HONOR_IgfxSsdt_00003000.dsl,867,885,"{
+                If (((0x0F00 & DID4) == 0x0400))
+                {
+                    EDPV = 0x04
+                    NXDX = NXD4 /* External reference */
+                    DIDX = DID4 /* External reference */
+                    Return (0x04)
+                }
+
+                If ((DID4 == Zero))
+                {
+                    Return (0x04)
+                }
+                Else
+                {
+                    Return ((0xFFFF & DID4))
+                }
+            }",UNKNOWN,SOURCE-STATIC
+DD05,_ADR,reg_SSD4_HONOR_IgfxSsdt_00003000.dsl,917,935,"{
+                If (((0x0F00 & DID5) == 0x0400))
+                {
+                    EDPV = 0x05
+                    NXDX = NXD5 /* External reference */
+                    DIDX = DID5 /* External reference */
+                    Return (0x05)
+                }
+
+                If ((DID5 == Zero))
+                {
+                    Return (0x05)
+                }
+                Else
+                {
+                    Return ((0xFFFF & DID5))
+                }
+            }",UNKNOWN,SOURCE-STATIC
+DD06,_ADR,reg_SSD4_HONOR_IgfxSsdt_00003000.dsl,967,985,"{
+                If (((0x0F00 & DID6) == 0x0400))
+                {
+                    EDPV = 0x06
+                    NXDX = NXD6 /* External reference */
+                    DIDX = DID6 /* External reference */
+                    Return (0x06)
+                }
+
+                If ((DID6 == Zero))
+                {
+                    Return (0x06)
+                }
+                Else
+                {
+                    Return ((0xFFFF & DID6))
+                }
+            }",UNKNOWN,SOURCE-STATIC
+DD07,_ADR,reg_SSD4_HONOR_IgfxSsdt_00003000.dsl,1017,1035,"{
+                If (((0x0F00 & DID7) == 0x0400))
+                {
+                    EDPV = 0x07
+                    NXDX = NXD7 /* External reference */
+                    DIDX = DID7 /* External reference */
+                    Return (0x07)
+                }
+
+                If ((DID7 == Zero))
+                {
+                    Return (0x07)
+                }
+                Else
+                {
+                    Return ((0xFFFF & DID7))
+                }
+            }",UNKNOWN,SOURCE-STATIC
+DD08,_ADR,reg_SSD4_HONOR_IgfxSsdt_00003000.dsl,1067,1085,"{
+                If (((0x0F00 & DID8) == 0x0400))
+                {
+                    EDPV = 0x08
+                    NXDX = NXD8 /* External reference */
+                    DIDX = DID8 /* External reference */
+                    Return (0x08)
+                }
+
+                If ((DID8 == Zero))
+                {
+                    Return (0x08)
+                }
+                Else
+                {
+                    Return ((0xFFFF & DID8))
+                }
+            }",UNKNOWN,SOURCE-STATIC
+DD09,_ADR,reg_SSD4_HONOR_IgfxSsdt_00003000.dsl,1117,1135,"{
+                If (((0x0F00 & DID9) == 0x0400))
+                {
+                    EDPV = 0x09
+                    NXDX = NXD8 /* External reference */
+                    DIDX = DID9 /* External reference */
+                    Return (0x09)
+                }
+
+                If ((DID9 == Zero))
+                {
+                    Return (0x09)
+                }
+                Else
+                {
+                    Return ((0xFFFF & DID9))
+                }
+            }",UNKNOWN,SOURCE-STATIC
+DD0A,_ADR,reg_SSD4_HONOR_IgfxSsdt_00003000.dsl,1167,1185,"{
+                If (((0x0F00 & DIDA) == 0x0400))
+                {
+                    EDPV = 0x0A
+                    NXDX = NXD8 /* External reference */
+                    DIDX = DIDA /* External reference */
+                    Return (0x0A)
+                }
+
+                If ((DIDA == Zero))
+                {
+                    Return (0x0A)
+                }
+                Else
+                {
+                    Return ((0xFFFF & DIDA))
+                }
+            }",UNKNOWN,SOURCE-STATIC
+DD0B,_ADR,reg_SSD4_HONOR_IgfxSsdt_00003000.dsl,1217,1235,"{
+                If (((0x0F00 & DIDB) == 0x0400))
+                {
+                    EDPV = 0x0B
+                    NXDX = NXD8 /* External reference */
+                    DIDX = DIDB /* External reference */
+                    Return (0x0B)
+                }
+
+                If ((DIDB == Zero))
+                {
+                    Return (0x0B)
+                }
+                Else
+                {
+                    Return ((0xFFFF & DIDB))
+                }
+            }",UNKNOWN,SOURCE-STATIC
+DD0C,_ADR,reg_SSD4_HONOR_IgfxSsdt_00003000.dsl,1267,1285,"{
+                If (((0x0F00 & DIDC) == 0x0400))
+                {
+                    EDPV = 0x0C
+                    NXDX = NXD8 /* External reference */
+                    DIDX = DIDC /* External reference */
+                    Return (0x0C)
+                }
+
+                If ((DIDC == Zero))
+                {
+                    Return (0x0C)
+                }
+                Else
+                {
+                    Return ((0xFFFF & DIDC))
+                }
+            }",UNKNOWN,SOURCE-STATIC
+DD0D,_ADR,reg_SSD4_HONOR_IgfxSsdt_00003000.dsl,1317,1335,"{
+                If (((0x0F00 & DIDD) == 0x0400))
+                {
+                    EDPV = 0x0D
+                    NXDX = NXD8 /* External reference */
+                    DIDX = DIDD /* External reference */
+                    Return (0x0D)
+                }
+
+                If ((DIDD == Zero))
+                {
+                    Return (0x0D)
+                }
+                Else
+                {
+                    Return ((0xFFFF & DIDD))
+                }
+            }",UNKNOWN,SOURCE-STATIC
+DD0E,_ADR,reg_SSD4_HONOR_IgfxSsdt_00003000.dsl,1367,1385,"{
+                If (((0x0F00 & DIDE) == 0x0400))
+                {
+                    EDPV = 0x0E
+                    NXDX = NXD8 /* External reference */
+                    DIDX = DIDE /* External reference */
+                    Return (0x0E)
+                }
+
+                If ((DIDE == Zero))
+                {
+                    Return (0x0E)
+                }
+                Else
+                {
+                    Return ((0xFFFF & DIDE))
+                }
+            }",UNKNOWN,SOURCE-STATIC
+DD0F,_ADR,reg_SSD4_HONOR_IgfxSsdt_00003000.dsl,1417,1435,"{
+                If (((0x0F00 & DIDF) == 0x0400))
+                {
+                    EDPV = 0x0F
+                    NXDX = NXD8 /* External reference */
+                    DIDX = DIDF /* External reference */
+                    Return (0x0F)
+                }
+
+                If ((DIDF == Zero))
+                {
+                    Return (0x0F)
+                }
+                Else
+                {
+                    Return ((0xFFFF & DIDF))
+                }
+            }",UNKNOWN,SOURCE-STATIC
+DD1F,_ADR,reg_SSD4_HONOR_IgfxSsdt_00003000.dsl,1467,1477,"{
+                If ((EDPV == Zero))
+                {
+                    Return (0x1F)
+                }
+                Else
+                {
+                    Return ((0xFFFF & DIDX))
+                }
+            }",UNKNOWN,SOURCE-STATIC
+DD2F,_ADR,reg_SSD4_HONOR_IgfxSsdt_00003000.dsl,1652,1667,"{
+                If ((EDPV == Zero))
+                {
+                    Return (0x1F)
+                }
+
+                If ((EDPV == One))
+                {
+                    Return (0x1F)
+                }
+                Else
+                {
+                    Return ((0xFFFF & DIDY))
+                }
+            }",UNKNOWN,SOURCE-STATIC

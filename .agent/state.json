@@ -3,20 +3,20 @@
   "kit_version": "1.2.0",
   "project_id": "f6a08808-ada4-48fe-b2ad-82c0c827154b",
   "name": "HONOR Hackintosh Lab",
-  "revision": 12,
-  "task_revision": 5,
-  "current_task_revision": 5,
+  "revision": 16,
+  "task_revision": 8,
+  "current_task_revision": 8,
   "goal_version": 2,
   "goal_approved": true,
-  "updated_at": "2026-10-12T13:17:36.840617+00:00",
+  "updated_at": "2026-10-12T15:35:50.045252+00:00",
   "snapshot_keep": 20,
   "log_max_bytes": 65536,
   "hashes": {
     "GOAL.md": "75e971a616ff73ca8bb457c3089308f5f1a5fefdf8a95e36ebcd29828fa7af7e",
-    "CURRENT.md": "5bf08e77d027a945ba4aa8c8e1f6cbb7df00f8309f1b1893812c974e44f1fd28",
+    "CURRENT.md": "f9d3ef01acfe3ec40bc42f905426d28b13e5fbb5a0fe89c6fa9ae17a597b9e5c",
     "DECISIONS.md": "a8ef5b38c12681ce49c9741cfb2849f845306ae80a18f87dbc1a6b7e806bcab8",
     "LESSONS.md": "b92fda952e78bc49e72c5f314136ff04c841c180308154389135b3adefe18538",
-    "tasks.json": "779d7c7544871f933f04e9af58fa012aa76b43b9718a9a4c168492c37e1d0cb6"
+    "tasks.json": "a4cdacf5e3c2462f5697cb9016c99e15a87378ec1173c3f74d83191b0f72d042"
   },
   "history": [
     {
@@ -146,6 +146,38 @@
       "action": "state:update",
       "reason": "保存有原始源码与实际检查支持的C0.1结论",
       "timestamp": "2026-10-12T13:17:36.840617+00:00"
+    },
+    {
+      "revision": 13,
+      "action": "task:add",
+      "reason": "用户明确授权R1.4-C0-pre本机原表静态解析",
+      "timestamp": "2026-10-12T15:15:38.390760+00:00"
+    },
+    {
+      "revision": 14,
+      "action": "task:update",
+      "reason": "用户明确授权R1.4-C0-pre本机原表静态解析",
+      "timestamp": "2026-10-12T15:15:39.345452+00:00"
+    },
+    {
+      "revision": 15,
+      "action": "task:update",
+      "reason": "交付ACPI静态部分结果，完整联合解析验收失败即停止",
+      "timestamp": "2026-10-12T15:35:49.088888+00:00"
+    },
+    {
+      "action": "document-version",
+      "file": "CURRENT.md",
+      "previous_sha256": "5bf08e77d027a945ba4aa8c8e1f6cbb7df00f8309f1b1893812c974e44f1fd28",
+      "content": "# 当前断点\n\n## 当前阶段\nR1.4-C0-pre SOURCE-STATIC部分结果；完整联合namespace仍BLOCKED，RUNTIME_NO_GO。\n\n## 当前任务\nR14C0PRE blocked；两个iasl版本联合16表均AE_ALREADY_EXISTS退出255。\nR14C0既有接口/许可/配置闭包保持blocked，不进入native/kext。\n\n## 已完成工作\n同步PR1硬件调查195e465；原证据不改。36表SHA/长度/checksum一致。\n固定iasl20250404-1容器解析；单表16通过0失败，离线6通过0失败。\n34项findings、17个DD_ADR方法体、98项IGDM字段、T2平台映射。\nMXDS空分支、MXMX调试、MXM读NVS；IGD另有经EDMX的位操作；MUX无法判断。\nBSD两个ACPI桥接函数为空，不能继承为XNU实现。OpRegion/VBT内容未取得。\n\n## 当前阻塞\n联合namespace冲突/外部方法与运行条件UNKNOWN；ASLB初始化者、DME值、GPIO含义未知。\n完整源码/许可/实际配置/ACPI-PCI映射与通知消费者/电源退出合同未闭合。\n无驱动对象/加载/实际scanout/WindowServer/恢复证据。\n\n## 下一步动作\n仍为R1.4-C0 T0→T4：T0复核namespace冲突；T2引入本机声明，补真实evaluator/ASLS映射/内容/消费者合同。\n不读主力硬件、不触发Actions、不写假成功stub。\n\n## 状态修订\n以state.json/tasks.json为准，写入前status。\n\n## Git 检查\n起点8d133330（保留本地C0历史并同步已合并硬件原表），同main本地提交，不改写历史。\n原调查目录/旧实验/workflows不改；临时解析容器已删除；没有推送或合并PR。\n",
+      "user_approved": false,
+      "timestamp": "2026-10-12T15:35:50.034427+00:00"
+    },
+    {
+      "revision": 16,
+      "action": "state:update",
+      "reason": "保存静态证据、联合失败边界和T2交接",
+      "timestamp": "2026-10-12T15:35:50.045252+00:00"
     }
   ]
 }

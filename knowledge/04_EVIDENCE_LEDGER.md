@@ -41,3 +41,6 @@
 
 ## R1.4-C0.1 本地实际验证
 [source/运行记录](../research/independent-i915/c01/verification.json)：55锁源字节核验；21通过0失败；结构退出0，闭包退出2。仅SOURCE-STATIC；XNU四项固定raw源尚缺独立树核验。无Actions/native/硬件。
+
+## R1.4-C0-pre｜本机原表静态解析
+等级SOURCE-STATIC，非运行时证据。[记录](../research/acpi-static-20261012/README.md)：36表SHA/长度/checksum一致；6离线测试通过0失败；iasl单表16通过0失败，20200925/20250404联合16表均退出255（0通过2失败）。联合namespace仍BLOCKED，DSDT单表有外部方法警告；没有执行AML/触发Actions或访问硬件。

@@ -1,0 +1,43 @@
+{
+  "evidence_level": "SOURCE-STATIC",
+  "runtime": "RUNTIME_NO_GO",
+  "tests_pass": 6,
+  "tests_fail": 0,
+  "joint_disassembly_pass": 0,
+  "joint_disassembly_fail": 2,
+  "joint_exit_codes": [
+    255,
+    255
+  ],
+  "individual_disassembly_pass": 16,
+  "individual_disassembly_fail": 0,
+  "original_evidence_unchanged": true,
+  "dsl_hashes_verified": 16,
+  "device_anchor_count": 17,
+  "field_anchor_count": 98,
+  "input_commit": "195e465e0da9890e4945952d6f13c119fb16e70f",
+  "runs": [
+    {
+      "argv": [
+        "scripts/acpi_static_validate_inputs.py"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"inputs\": \"PASS\", \"primary_tables\": 16, \"verified_tables\": 36}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_acpi_static_inputs.py"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "......\n----------------------------------------------------------------------\nRan 6 tests in 0.748s\n\nOK\n"
+    }
+  ]
+}

@@ -8,6 +8,12 @@
 
 **Next Task R1.4-C0.2：** 固定 macOS15.5 IOPCIFamily 原始来源/commit，查 PCI BAR、PM、IRQ 与释放生命周期，对照 PCI_MMIO_OWNER/PM_ACK_SEMANTICS；补 XNU 四源树核验。必要语义缺证据即停止，不进入 B2/B3 或 kext。
 
+## R1.4-C0-pre最新平台输入与下一步
+
+[本机ACPI静态结果](../research/acpi-static-20261012/README.md)已给_DSM位图、PEGP_DOD、DD节点条件和IGDM布局；联合命名空间失败，不能声称完整解析成功。OpRegion/VBT内容仍未取得，MUX三选一为无法判断。固定BSD的intel_acpi两个桥接函数为空，不能当XNU成功实现。
+
+**下一步仍为R1.4-C0 T0→T4**：T0复核namespace冲突/不重复硬件归属调查；T1复用原表、工具与上游锁；T2将ASLB/SANV、IGDM/ASLS、_DSM/_DOD/_ADR和ASLE背光声明输入VBT/OpRegion节点，保留真实内容/ACPI evaluator/PCI映射/消费者/失败清理缺口；T3失败停止；T4证据交付。IOPCIFamily和C0.1配置闭包仍须完成，但本次不进入native/kext或硬件读取。
+
 ## 先读清楚底线
 
 1. 执行 [`AGENTS.md`](../AGENTS.md)，再读 [当前状态](02_CURRENT_STATE.md)、[目标](00_PROJECT_CHARTER.md)、[版本锁](05_SOURCE_LOCKS.md)、[技术风险](06_ARCHITECTURE_AND_RISKS.md)、[决策](07_DECISIONS.md)。

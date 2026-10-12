@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project_id": "f6a08808-ada4-48fe-b2ad-82c0c827154b",
-  "revision": 5,
+  "revision": 8,
   "tasks": [
     {
       "task_id": "R14C0",
@@ -35,6 +35,39 @@
       ],
       "blocker": "C0.1源码增量完成；生成配置/预处理、传递依赖/许可及XNU PCI/电源/失败退出语义仍未闭合，不进入kext。",
       "updated_at": "2026-10-12T13:17:34.100018+00:00"
+    },
+    {
+      "task_id": "R14C0PRE",
+      "title": "本机ACPI原表静态解析",
+      "description": "仅校验不可变原表与隔离iasl反汇编；UNKNOWN不冒充运行证明",
+      "milestone": "R1.4-C0-pre",
+      "plan": "approved",
+      "dependencies": [],
+      "acceptance_criteria": [
+        "P40/FILES_SHA256输入逐项核验，原调查目录不变",
+        "固定iasl版本/沙箱日志，16表联合反汇编；每项结论有行号或AML偏移，缺证据UNKNOWN",
+        "平台声明映射固定i915源码T2，知识库状态与下一步更新，保持RUNTIME_NO_GO"
+      ],
+      "status": "blocked",
+      "evidence": [
+        {
+          "type": "test",
+          "criterion": 1,
+          "detail": "inputs.json/verification.json：36表哈希长度校验一致；原调查目录Git diff为0，6离线检查通过"
+        },
+        {
+          "type": "command",
+          "criterion": 2,
+          "detail": "toolchain.txt/联合失败日志与individual-runs.json：联合0通过2失败、单表16通过0失败；findings.csv34项有定位，未声称联合验收"
+        },
+        {
+          "type": "file",
+          "criterion": 3,
+          "detail": "T2-platform-map.md与knowledge01/02/04/09/10更新；OpRegion/VBT未取得、MUX无法判断，RUNTIME_NO_GO"
+        }
+      ],
+      "blocker": "完整16表联合namespace反汇编：两固定版本均AE_ALREADY_EXISTS/退出255；单表结果保留为SOURCE-STATIC，外部引用与NVS运行值未闭合。",
+      "updated_at": "2026-10-12T15:35:49.077503+00:00"
     }
   ],
   "history": [
@@ -132,6 +165,63 @@
         ]
       },
       "reason": "完成用户要求继续的C0.1源码调查，保留真实阻塞"
+    },
+    {
+      "revision": 6,
+      "timestamp": "2026-10-12T15:15:38.380228+00:00",
+      "action": "add",
+      "payload": {
+        "task_id": "R14C0PRE",
+        "title": "本机ACPI原表静态解析",
+        "description": "仅校验不可变原表与隔离iasl反汇编；UNKNOWN不冒充运行证明",
+        "milestone": "R1.4-C0-pre",
+        "plan": "approved",
+        "dependencies": [],
+        "acceptance_criteria": [
+          "P40/FILES_SHA256输入逐项核验，原调查目录不变",
+          "固定iasl版本/沙箱日志，16表联合反汇编；每项结论有行号或AML偏移，缺证据UNKNOWN",
+          "平台声明映射固定i915源码T2，知识库状态与下一步更新，保持RUNTIME_NO_GO"
+        ]
+      },
+      "reason": "用户明确授权R1.4-C0-pre本机原表静态解析"
+    },
+    {
+      "revision": 7,
+      "timestamp": "2026-10-12T15:15:39.335921+00:00",
+      "action": "update",
+      "payload": {
+        "task_id": "R14C0PRE",
+        "status": "doing"
+      },
+      "reason": "用户明确授权R1.4-C0-pre本机原表静态解析"
+    },
+    {
+      "revision": 8,
+      "timestamp": "2026-10-12T15:35:49.077503+00:00",
+      "action": "update",
+      "payload": {
+        "task_id": "R14C0PRE",
+        "status": "blocked",
+        "blocker": "完整16表联合namespace反汇编：两固定版本均AE_ALREADY_EXISTS/退出255；单表结果保留为SOURCE-STATIC，外部引用与NVS运行值未闭合。",
+        "evidence": [
+          {
+            "type": "test",
+            "criterion": 1,
+            "detail": "inputs.json/verification.json：36表哈希长度校验一致；原调查目录Git diff为0，6离线检查通过"
+          },
+          {
+            "type": "command",
+            "criterion": 2,
+            "detail": "toolchain.txt/联合失败日志与individual-runs.json：联合0通过2失败、单表16通过0失败；findings.csv34项有定位，未声称联合验收"
+          },
+          {
+            "type": "file",
+            "criterion": 3,
+            "detail": "T2-platform-map.md与knowledge01/02/04/09/10更新；OpRegion/VBT未取得、MUX无法判断，RUNTIME_NO_GO"
+          }
+        ]
+      },
+      "reason": "交付ACPI静态部分结果，完整联合解析验收失败即停止"
     }
   ]
 }

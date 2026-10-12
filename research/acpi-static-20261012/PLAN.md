@@ -1,0 +1,7 @@
+# R1.4-C0-pre 小型方案
+
+输入：origin/main 195e465 的不可变硬件调查；本地同步提交8d1333307ae37329e1bb6442543a5d1fecc77d03。仅 registry DSDT+15 SSDT为主，fw表作交叉核对。P40和FILES_SHA256每项哈希/长度/校验失败立即停止。
+目标：固定iasl在无网络、无宿主挂载、非root容器联合反汇编，回答混合显卡、Intel OpRegion声明、TCSS_STA条件，并输入C0 T2。
+可证伪点：手工MXM stub/_DOD解读是否正确；ASLB赋值是否仅外部NVS；TDM0条件是否足以解释未枚举。所有平台实际值未知不得替入。
+验收：每项行号/AML偏移；原表不改；只能SOURCE-STATIC；不读取硬件/物理内存，不运行AML，不安装/加载驱动，不触发Actions。
+风险：反汇编外部类型、NVS运行值、GPIO电气含义未证实。保留原字节和完整日志；失败不修补AML冒充成功。本地提交可回退，原main历史不改写。
