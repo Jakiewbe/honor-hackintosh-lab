@@ -93,6 +93,12 @@ Apple's official [`distribution-macOS/macos-155/release.json`](https://github.co
 
 The [detailed R1.2-F evidence report](docs/R1.2-F_macOS15.5发行源码锁序核验.md) records source Git blob SHAs, matched functions and unresolved callback contracts. The [read-only pinned-source checker](scripts/r12f_verify_macos155_sources.py) and [manual-only GitHub Actions audit](.github/workflows/r12f-apple-155-lock-audit.yml) have now been verified by [successful run #38209066259](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38209066259): **5/5 Apple Git blobs**, **12/12 source contracts**, and **24/24 abstract lock-order/stop model tests** (113 enumerated stop states). No kernel patch, kext loading, deployment, or local machine action has occurred. Current state: **R1.2-C dual native BUILD-PASS / R1.2-F RELEASE-SOURCE-MATCHED / RUNTIME-NO-GO**.
 
+## R1.2-G: VBL dispatch outside FB gate — reference model, NOT a driver patch
+
+The [R1.2-G architecture review](docs/R1.2-G_VBL门锁外派发与生命周期审查.md) cross-checks macOS 15.5's IOGraphics `handleVBL` consumer against the published `IOFramebuffer::stop` resource-release path. **Moving the external VBL callback outside the FB workloop gate may avoid one ABBA path, but it introduces unresolved callback self-join and concurrent framebuffer shared-state teardown hazards.** `handleVBL` updates VBL timing/counters, signals semaphores and schedules timer events; retaining the target alone does not protect all associated resources.
+
+The [out-of-gate callback ticket/epoch reference model](tests/test_r12g_vbl_ticket_model.py) passed **16/16 local tests**, enumerating **363 states at depth 8**. The [IOGraphics-599 pinned VBL contract checker](scripts/r12g_verify_iofb_vbl_consumer.py) confirms 10 source facts (checked against pinned Apple source through the GitHub connector). A [manual-only R1.2-G workflow](.github/workflows/r12g-vbl-dispatch-review.yml) has been prepared but **not run**. No new kernel patch, kext load or primary-Windows change. **R1.2-G remains RUNTIME_NO_GO.**
+
 ## Safety and evidence
 
 The original NullMoth source carries a PolyForm Noncommercial license. No upstream source code or vendor firmware is copied into this repository. All upstream code is fetched from its public GitHub repository into an ephemeral runner only when source mode is explicitly requested.
