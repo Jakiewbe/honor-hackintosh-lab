@@ -78,3 +78,18 @@
 v1.14.3 发布包自带的 `iasl.exe` 经哈希比对是 ACPICA R2024_12_12（20241212）。把沙箱副本中的 iasl 换成该版本后离线重跑 plan：`ok=true`，kext、禁用设备、提示条数与第 3 节完全相同；合并反编译同样因 `PEG1.PEGP._S0W`、`RP06.BRST` 等重名对象失败。结论：该失败与 iasl 版本无关，是本机 ACPI 表之间的重复定义（与主线研究 `research/acpi-static-20261012` 一致）。
 
 **仍然不是启动证据**：ocvalidate 只校验配置结构与 OpenCore 版本一致性。
+
+## 6. 候选 EFI 变体（2026-10-13 02:08，用户：“先用 1401 做一套适配该电脑的文件”）
+
+沙箱脚本 `make_variants.py` 把第 4 节的 build 输出复制到仓库外的 `D:\Hactk\efi-candidates\GLO-FX6P-1401-20261013\`（含生成的序列号，不入库），并生成三个变体：
+
+| 变体 | 与 1401 原样输出的差异 | 依据 |
+|---|---|---|
+| `original-1401` | 无 | 留档 |
+| `A-main`（首选） | 删除 `NullMothLogo.efi`（文件 + `UEFI.Drivers` 条目） | R-19：每次开机写 NVRAM 非易失变量 |
+| `B-fexitbs` | `A-main` + `ForceExitBootServices=true` | Q-18：仅作单变量对照 |
+
+- 差异用 plistlib 逐键比对确认，只有上表所列项不同；文件数 143 / 142 / 142。
+- 三份均经 `ocvalidate`（从缓存的 `OpenCore-1.0.9-DEBUG.zip` 解出，SHA256 `b013ed85…bb6f`）：**No issues found**。
+- **没有**按研究结论去“修”的项：触控板（VoodooI2C 不匹配 `51E8`，需要改 kext 匹配，未验证）、PNLF（固件帧缓冲下无意义）、独显关闭（会改变 1401 的 NVIDIA 路线），这些留待引导实验有日志后再决定。
+- 未写入任何 U 盘、ESP 或 NVRAM。

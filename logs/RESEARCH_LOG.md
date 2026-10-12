@@ -14,6 +14,7 @@
   2. 用户目视：Q-01 **DONE**（用户称 BIOS 只有基础项，网络旁证一致，判定无 MUX）；Q-02 PARTIAL（推断外接口全部在 Intel，接外屏实测为可选，不改评级）。
   3. 管理员只读：**已完成**（用户批准，UAC 运行一次；Q-04/Q-05 DONE）。
   4. 沙箱候选 EFI：C1 扫描、C2 plan、C3 build + ocvalidate **全部完成**（[docs/1401-plan-run-20261013](../docs/1401-plan-run-20261013/SUMMARY.md)）；ocvalidate 0 问题。沙箱保留在 `%TEMP%\hk-1401-scan-20261013-004439`（含生成的 EFI，**不得复制到任何 U 盘或 ESP**，除非另行批准引导实验）。
+- **候选 EFI**：`D:\Hactk\efi-candidates\GLO-FX6P-1401-20261013\`（仓库外，含生成序列号）：`A-main` 首选、`B-fexitbs` 对照、`original-1401` 留档，均过 ocvalidate、未引导。说明见该目录 `README.md` 与 SUMMARY 第 6 节
 - **剩余待办**：Q-01 已关闭；Q-02 外接屏实测可选。下一阶段（保持只读 / 规划 U 盘实验 / 回 L1 主线）**等用户决定**；Q-18 静态比对已做，仍 OPEN（只能靠引导日志）；Q-19 PARTIAL，用户决定**不做**逐字节复现；定期跟踪 PR #131/#133（01:04 复查无变化）。**提交信息不要写 `owner/repo#N`**（仓库公开，会在上游 Issue 生成反向链接，见日志第 12 条）。下一层（U 盘引导）超出 READ_ONLY_RESEARCH，需要用户明确开启新阶段；届时应先从 `UEFI.Drivers` 移除 `NullMothLogo.efi`（它每次启动写 NVRAM，R-19）。
 - **续做前先跑**：`python tests/test_1401_static_audit.py`（13 项；SHA 断言失败 = 上游已变，先更新 `research/SOURCES.md`）
 
@@ -180,3 +181,7 @@ GitHub API 只读 GET `acpica/acpica/releases`：20260930 只有 Unix 资产，2
 ### BIOS 选项（2026-10-13 01:16）
 
 14. （01:16）用户：“BIOS 很垃圾，只能调最基础的东西，去网上找找”。网页检索：荣耀同代 BIOS 教程只列语言、Secure Boot、启动顺序、恢复出厂；荣耀俱乐部客服答复（MagicBook 14 Pro / Pro 16）称独显机型由核显输出、外接屏仅混合模式。检索摘要有一处把 GLO-FX6P 说成“集显版”，与本机 PnP 实测（RTX 2050 `10DE:25A9`）矛盾，**不采用**。Q-01 → DONE（无 MUX）；Q-02 → PARTIAL（推断强）。更新 OPEN_QUESTIONS、COMPATIBILITY、NEXT_STEPS_PLAN。
+
+### 候选 EFI 变体（2026-10-13 02:08）
+
+15. 用户：“先用 1401 做一套适配该电脑的文件呢？”。沙箱 build 输出完好（143 个文件）。从缓存的 `OpenCore-1.0.9-DEBUG.zip`（SHA256 `01e07a89…`）解出 `ocvalidate.exe` 到沙箱 `dl\`。沙箱脚本 `make_variants.py` 生成 `D:\Hactk\efi-candidates\GLO-FX6P-1401-20261013\{original-1401, A-main, B-fexitbs}` 与 `SHA256SUMS.txt`（427 个文件）、`README.md`。逐键 diff：A 只删 `NullMothLogo.efi`，B 只多 `ForceExitBootServices=true`。三份 ocvalidate 均 No issues found。未写 U 盘/ESP/NVRAM。
