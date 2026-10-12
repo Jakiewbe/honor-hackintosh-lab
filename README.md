@@ -119,6 +119,17 @@ The HONOR internal panel is **already confirmed to scan out through Intel Iris X
 
 **Decision: VBL PATCHES FROZEN; prioritize independent physical evidence for the Intel `8086:46A6` i915 bridge, then consider the NVIDIA→Intel display-copy route only if hardware evidence justifies it.** The AMD/Intel `vk_chip_matrix` 41/41 results use a mock/noop DRM shim, not real GPU execution. No GitHub workflow launched, kernel patch installed, or HONOR Windows/EFI/BIOS/disk change.
 
+## R1.3-B: Alder Lake-P 46A6 i915 build-input and GGTT scanout preconditions
+
+[**R1.3-B report**](docs/R1.3-B_46A6_i915构建依赖与GGTT_eDP准入核查.md) first cross-checked **all existing repository reports, scripts, tests and workflows**, then pursued the unresolved upstream i915 provenance and actual framebuffer mapping.
+
+- NullMoth [v1.14.2 `1083a98...`](https://github.com/nullmoth/nvidia-macos-driver/tree/1083a98db33a0bb824290556de255f9a95ca5403) builds i915 from **external** `drm-kmod` and FreeBSD LinuxKPI trees, and Linux 6.14, through local `/Volumes/MiniData/build/gpu-src/` paths and generated flags/object lists. The exact external dependencies and actual linked `46A6` path are **not established** by this release repository.
+- An **independent, candidate-only** [FreeBSD drm-kmod snapshot `c16de0f...`](https://github.com/freebsd/drm-kmod/tree/c16de0f9fa84f70b9551f69fde837a7f3a73c0e9) confirms `0x46A6` under `INTEL_ADLP_IDS` and the corresponding i915 PCI/display device tables, along with eDP and GGTT source code. **Its identity with NullMoth's build inputs is unverified.**
+- `nmx_fb_bridge.c` requires the scanout CPU mapping's page translations to present one **physically consecutive address range**, using `pmap_find_phys`; i915's GGTT address continuity alone does not prove that contract. The actual mapping may be RAM or BAR-backed, so this is a **conditional compatibility gate**, not a demonstrated failure on the HONOR.
+- **No further VBL patch or repeated CI** until the build provenance, buffer backing and i915 eDP scanout path are auditable. Intel internal-panel ownership is already confirmed; no screenshot repeat or host changes.
+
+To prevent repetitive work, **read the [persistent research gate ledger](docs/研究状态账本_防重复工作规则.md) before every future phase**: it lists verified CI outcomes, unresolved P0 gates, and explicit stop/duplication rules. **R1.3-B SOURCE-REVIEW COMPLETE / BUILD-PROVENANCE-BLOCKED / SCANOUT-UNPROVEN / RUNTIME-NO-GO.**
+
 ## Safety and evidence
 
 The original NullMoth source carries a PolyForm Noncommercial license. No upstream source code or vendor firmware is copied into this repository. All upstream code is fetched from its public GitHub repository into an ephemeral runner only when source mode is explicitly requested.
