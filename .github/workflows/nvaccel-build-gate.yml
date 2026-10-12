@@ -1,0 +1,167 @@
+name: HONOR R0.7 NVAccel build gate
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "prerequisites: source checks and kernel compile probe; build: attempt original NVAccel only when native dependencies exist"
+        required: true
+        type: choice
+        default: prerequisites
+        options:
+          - prerequisites
+          - build
+
+permissions:
+  contents: read
+
+concurrency:
+  group: honor-r07-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  nvaccel-build-gate:
+    runs-on: macos-15-intel
+    timeout-minutes: 20
+    env:
+      NULLMOTH_COMMIT: 0960b2ef5dbc4a573056d4c8e042a5bd2e15d651
+      NVIDIA_COMMIT: e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb
+    steps:
+      - name: Checkout lab scripts only
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Check Intel macOS and Xcode 16 toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$(uname -m)" == "x86_64" ]] || { echo 'BLOCKED: not an Intel macOS runner'; exit 2; }
+          selected="$(xcodebuild -version)"
+          if [[ "$selected" != "Xcode 16."* ]]; then
+            found=''
+            for app in /Applications/Xcode_16*.app; do
+              if [[ -d "$app/Contents/Developer" ]]; then
+                found="$app/Contents/Developer"
+                break
+              fi
+            done
+            [[ -n "$found" ]] || { echo 'BLOCKED: Xcode 16 unavailable'; exit 2; }
+            echo "DEVELOPER_DIR=$found" >> "$GITHUB_ENV"
+          fi
+          sw_vers
+          echo 'Xcode 16 toolchain will be checked again after selection.'
+
+      - name: Compile macOS kernel-header object without linking
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/r07-logs"
+          xcode_version="$(xcodebuild -version)"
+          printf '%s\n' "$xcode_version"
+          [[ "$xcode_version" == "Xcode 16."* ]] || { echo 'BLOCKED: Xcode 16 not selected'; exit 2; }
+          sdk="$(xcrun --sdk macosx --show-sdk-path)"
+          khdr="$sdk/System/Library/Frameworks/Kernel.framework/Headers"
+          [[ -d "$khdr/IOKit" ]] || { echo "BLOCKED: missing Kernel headers under $khdr"; exit 2; }
+          printf 'SDK=%s\n' "$sdk" > "$RUNNER_TEMP/r07-logs/toolchain.txt"
+          printf '%s\n' "$xcode_version" >> "$RUNNER_TEMP/r07-logs/toolchain.txt"
+          xcrun clang++ -arch x86_64 -fapple-kext -mkernel -nostdinc \
+            -I "$khdr" -DKERNEL -DKERNEL_PRIVATE -DDRIVER_PRIVATE -DAPPLE -DNeXT \
+            -std=c++17 -fno-rtti -fno-exceptions -fno-builtin -fno-common \
+            -c tests/kernel_header_smoke.cpp -o "$RUNNER_TEMP/kernel_header_smoke.o" \
+            > "$RUNNER_TEMP/r07-logs/kernel-smoke.log" 2>&1 || {
+              cat "$RUNNER_TEMP/r07-logs/kernel-smoke.log"
+              echo 'BLOCKED: kernel-header compile failed'
+              exit 2
+            }
+          file "$RUNNER_TEMP/kernel_header_smoke.o" | tee -a "$RUNNER_TEMP/r07-logs/toolchain.txt"
+          echo 'KERNEL_HEADER_OBJECT_COMPILE_PASS (not a kext)'
+
+      - name: Fetch and verify pinned NullMoth and NVIDIA sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/r07-logs"
+          nm="$RUNNER_TEMP/nullmoth-pinned"
+          nv="$RUNNER_TEMP/nvidia-r610-pinned"
+          git init -q "$nm"
+          git -C "$nm" remote add origin https://github.com/nullmoth/nvidia-macos-driver.git
+          git -C "$nm" fetch --no-tags --depth 1 origin "$NULLMOTH_COMMIT"
+          git -C "$nm" checkout --detach -q FETCH_HEAD
+          [[ "$(git -C "$nm" rev-parse HEAD)" == "$NULLMOTH_COMMIT" ]]
+          python3 scripts/verify_pinned_source.py --repo "$nm" | tee "$RUNNER_TEMP/r07-logs/nullmoth-integrity.json"
+          git init -q "$nv"
+          git -C "$nv" remote add origin https://github.com/NVIDIA/open-gpu-kernel-modules.git
+          git -C "$nv" fetch --no-tags --depth 1 origin "$NVIDIA_COMMIT"
+          git -C "$nv" checkout --detach -q FETCH_HEAD
+          [[ "$(git -C "$nv" rev-parse HEAD)" == "$NVIDIA_COMMIT" ]]
+          [[ -f "$nv/version.mk" && -d "$nv/src/nvidia" && -d "$nv/src/nvidia-modeset" ]]
+          {
+            printf 'NullMoth commit: %s\n' "$NULLMOTH_COMMIT"
+            printf 'NVIDIA r610 commit: %s\n' "$NVIDIA_COMMIT"
+            printf 'NVIDIA version file:\n'
+            head -15 "$nv/version.mk"
+          } | tee "$RUNNER_TEMP/r07-logs/pinned-sources.txt"
+          echo 'PINNED_SOURCE_TREES_VERIFIED'
+
+      - name: Qualify native RM metadata and optionally build unmodified NVAccel
+        shell: bash
+        env:
+          REQUEST_MODE: ${{ inputs.mode }}
+        run: |
+          set -euo pipefail
+          nm="$RUNNER_TEMP/nullmoth-pinned"
+          nv="$RUNNER_TEMP/nvidia-r610-pinned"
+          build_cmds="$nv/src/nvidia/_out/Darwin_x86_64/compile_cmds.sh"
+          out="$RUNNER_TEMP/r07-build"
+          mkdir -p "$out" "$RUNNER_TEMP/r07-logs"
+          if [[ ! -s "$build_cmds" ]]; then
+            {
+              echo 'BLOCKED: NVIDIA public r610 source does not provide generated Darwin_x86_64/compile_cmds.sh.'
+              echo 'NullMoth build/accel_build.sh reads RM build definitions from that file.'
+              echo 'The NVIDIA Linux Makefile does not produce the missing Darwin-specific metadata.'
+              echo 'A native NVAccel compile cannot be qualified with this dependency absent.'
+            } | tee "$RUNNER_TEMP/r07-logs/missing-native-dependency.txt"
+            echo '::warning title=Native NVAccel build blocked::Missing NVIDIA-generated Darwin compile_cmds.sh; kernel-header probe and source checks are separate.'
+            if [[ "$REQUEST_MODE" == "build" ]]; then
+              echo 'Requested full baseline build is BLOCKED; no upstream build or install script was executed.'
+              exit 3
+            fi
+          else
+            echo 'FOUND_GENERATED_DARWIN_METADATA' | tee "$RUNNER_TEMP/r07-logs/native-dependency.txt"
+            if [[ "$REQUEST_MODE" == "build" ]]; then
+              export OGKM="$nv"
+              set +e
+              bash "$nm/build/accel_build.sh" "$nm/kexts/NVRM" "$out" > "$RUNNER_TEMP/r07-logs/nvaccel-compile.log" 2>&1
+              rc=$?
+              set -e
+              cat "$RUNNER_TEMP/r07-logs/nvaccel-compile.log"
+              if [[ "$rc" -ne 0 ]]; then
+                printf 'NVACCEL_NATIVE_BUILD_FAILED exit=%s\n' "$rc"
+                exit "$rc"
+              fi
+              echo 'NVACCEL_NATIVE_BUILD_FINISHED (not loaded, signed, or released)'
+            fi
+          fi
+          echo 'R07_PREREQUISITE_CHECK_FINISHED'
+
+      - name: Publish diagnostic text logs only (no kext binaries)
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: honor-r07-diagnostic-logs
+          path: ${{ runner.temp }}/r07-logs/
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Summarize research boundary
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          {
+            echo '## HONOR R0.7 native build qualification'
+            echo '- Sources pinned: NullMoth 0960b2ef, NVIDIA 610.57.04 (e4a5faa).'
+            echo '- This workflow does **not** install, load, sign, distribute or publish kext binaries.'
+            echo '- Missing Darwin-generated RM metadata is a **build blocker**, not a GPU-driver test failure.'
+            echo '- There is no RTX 2050 or Intel Iris Xe hardware in this runner.'
+          } >> "$GITHUB_STEP_SUMMARY"
