@@ -6,7 +6,7 @@
 - **模式**：`READ_ONLY_RESEARCH`（未获得任何写盘、管理员、上传、运行 1401 的授权）
 - **已完成**：Phase 1–6 中全部非破坏性工作；会话 2 补审全部剩余模块（Q-12 DONE）、VoodooI2C 核实（Q-14 DONE）、下一步方案。报告 [`reports/INITIAL_AUDIT.md`](../reports/INITIAL_AUDIT.md)（含附录 A）
 - **上游固定点**：`upstream/1401` = v1.14.2 `46d9fee3`；`upstream/nvidia-macos-driver` = v1.14.2 `1083a98d`
-- **Git**：`main` 本地提交 `8869796`（会话 1）+ 会话 2 提交；**未 push**、未触发 Actions（用户选择“只本地提交”）
+- **Git**：`main` 本地提交 `8869796`（会话 1）+ 会话 2 提交；**未 push**、未触发 Actions（用户选择“只本地提交”）。**2026-10-13 00:45 后 `origin/main` 新增 9 个提交**（含 PR #2 “i915 dependency baseline and ACPI static evidence”），本地与远端已分叉；`git merge-tree` 试算显示 `.gitignore`、`AGENTS.md`、`knowledge/02_CURRENT_STATE.md` 三处冲突。未合并、未 rebase，等待用户决定
 - **用户已同意的方向**：四项都做，但每条具体命令仍需单独批准。当前状态：
   1. 只读源码工作：**已完成**；剩余仅定期跟踪 PR #131/#133、1401#26（Q-08/Q-10）与选定 iasl 版本（Q-16）。
   2. 用户目视：BIOS 显示模式/MUX（Q-01）、外接口归属（Q-02）——清单见 [`research/NEXT_STEPS_PLAN.md`](../research/NEXT_STEPS_PLAN.md) A。**等待用户**。
