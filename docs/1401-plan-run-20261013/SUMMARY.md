@@ -68,7 +68,7 @@
 | Kernel | `Cpuid1Data 55060a00…`（Comet Lake 伪装）、`ProvideCurrentCpuInfo`、`AppleXcpmCfgLock`、`DisableIoMapper`；3 条“force HT” 补丁 | 与源码推断一致；CFG Lock 未知时按锁定处理 |
 | Misc | `SecureBootModel=Disabled`、`Vault=Optional`、`ScanPolicy=0`、`Target=67`、`AppleDebug/ApplePanic`、`HideAuxiliary=False` | 日志写到 U 盘，便于失败后在 Windows 读取 |
 | NVRAM | `csr-active-config=430a0000`；boot-args：`-v debug=0x100 keepsyms=1 -vi2c-force-polling ctrsmt=full nvfb=1 nvaccel=1 nvfbheads=4 -nvkmsnosmooth amfi_get_out_of_my_way=0x1 amfi=0x80 ipc_control_port_options=0`；Delete 不含 boot-args | 与源码推断一致 |
-| UEFI | Drivers：HfsPlus、OpenRuntime、ResetNvramEntry、**NullMothLogo.efi**；`ProvideConsoleGop`；`ReleaseUsbOwnership`、`RequestBootVarRouting` | `NullMothLogo.efi`（539648 字节）在 1401 仓库中**只有二进制**（提交 `d94f056`），源码在驱动仓库 `app/efi-logo`（Rust），二者对应关系未验证 |
+| UEFI | Drivers：HfsPlus、OpenRuntime、ResetNvramEntry、**NullMothLogo.efi**；`ProvideConsoleGop`；`ReleaseUsbOwnership`、`RequestBootVarRouting` | `NullMothLogo.efi`（539648 字节）在 1401 仓库中**只有二进制**（提交 `d94f056`），源码在驱动仓库 `app/efi-logo`（Rust），静态字符串一致、未逐字节复现；源码显示它**每次启动写 NVRAM 非易失变量 `nm-logo`**（R-19） |
 | PlatformInfo | `MacBookPro16,2`、`UpdateSMBIOSMode=Custom`、`SpoofVendor`；序列号由 macserial 生成 | 序列号已脱敏，不入库 |
 
 **实际打包的 VoodooI2C 是 2.9.1**，其 7 个 `IOPCIMatch`（带掩码 `0xfffcffff`）经掩码计算**均不匹配 `0x51e88086`**——在真实产物上确认触控板原版不可用（E）。

@@ -236,3 +236,5 @@ Cursor 规则格式：`.mdc` + YAML 头（`description`、`globs`、`alwaysApply
 - 1.0.21 基线 ZIP 已从 GitHub 删除（R-22）。改用 HTTP Range 只读 v1.14.3 发布包的目录与清单：自带 iasl = ACPICA R2024_12_12（哈希一致），`NullMothLogo.efi` 与源码树一致。
 - 用 R2024_12_12 iasl 重跑离线 plan：结果与 20260408 完全相同，ACPI 合并反编译失败源于本机表间重名对象（与主线 `research/acpi-static-20261012` 一致），与 iasl 版本无关。
 - 本地 `main` 已合并 `origin/main`（PR #2 等 9 个提交），冲突仅三处追加段落，双方原文全部保留。
+- Q-18：1401#26 失败配置的 Booter quirk 与本机生成配置完全相同（均未开 `ForceExitBootServices`），唯一差异是 #26 禁用了核显；现有证据无法判断本机是否需要该项。
+- Q-19 / R-19：`NullMothLogo.efi` 与源码静态一致（未逐字节复现）；源码显示它**每次启动向固件 NVRAM 写非易失变量 `nm-logo`**，`-nmlogooff` 也会写，只有从 Drivers 移除才不写。若将来做引导实验，应先移除该驱动，避免 NVRAM 写入。

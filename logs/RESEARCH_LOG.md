@@ -162,4 +162,9 @@ GitHub API 只读 GET `acpica/acpica/releases`：20260930 只有 Unix 资产，2
 3. **基线 ZIP**：`v1.0.21` release 0 资产，下载 404。
 4. **发布包追溯**：Python `zipfile` + HTTP Range 读取 v1.14.3 ZIP 中央目录与 `BUILD-MANIFEST.json`、`iasl.exe`、`NullMothLogo.efi`（共约 0.9 MB，未下载整包、未执行）。下载 ACPICA R2024_12_12 `iasl.exe` 比对：哈希一致。另两个候选标签下载被连接重置，未再试。期间一次 API 分页请求触发 GitHub 匿名限流（不影响结论）。
 5. **用 R2024_12_12 iasl 重跑离线 plan**：结果与 20260408 完全相同。沙箱副本中 iasl 现为 R2024_12_12。
-6. 更新：SOURCES（v1.14.3 与发布包追溯）、RISK（R-21、R-22）、OPEN_QUESTIONS（Q-08、Q-13、Q-17、Q-19）、SUMMARY 第 5 节、INITIAL_AUDIT 附录 C、本日志、`.agent` 登记。
+6. 更新：SOURCES（v1.14.3 与发布包追溯）、RISK（R-21、R-22）、OPEN_QUESTIONS（Q-08、Q-13、Q-17、Q-19）、SUMMARY 第 5 节、INITIAL_AUDIT 附录 C、本日志、`.agent` 登记。本地提交 `76ec1e6`。
+
+### 再续（用户：“继续”）
+
+7. **Q-18**：对本地缓存的 1401#26 OpenCore 日志（SHA256 `E70C38D0…`）检索 `OCABC`：Booter quirk 与本机生成配置逐项相同，`FEXITBS 0`；第 392 行 `disable-gpu` 设在核显。Issue 正文：无 MUX、内屏接 Iris Xe、屏幕照片停在 `EXITBS:START`。结论保持 OPEN，并写明单变量对照建议。
+8. **Q-19**：`rustup target list --installed` 只有 `x86_64-pc-windows-msvc`（未安装 UEFI 目标，未做任何安装）。用 Python 提取 `NullMothLogo.efi` 可打印字符串并与 `main.rs` 字面量比对：crate 名、`uefi-0.41.0`、6 个运行期字符串一致；rustc 提交 `8bab26f4…`。阅读 `main.rs`（95 行）：替换 GOP Blt 指针；**每次启动写 NVRAM 非易失变量 `nm-logo`**。更新 R-19、Q-19 为 PARTIAL。
