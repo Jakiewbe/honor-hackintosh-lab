@@ -36,7 +36,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if ! xcodebuild -version | grep -q '^Xcode 16\.'; then
+          if [[ "$(xcodebuild -version)" != "Xcode 16."* ]]; then
             found=''
             for app in /Applications/Xcode_16*.app; do
               if [[ -d "$app/Contents/Developer" ]]; then
@@ -58,8 +58,9 @@ jobs:
           sw_vers
           uname -m
           [[ "$(uname -m)" == 'x86_64' ]]
-          xcodebuild -version
-          xcodebuild -version | grep -q '^Xcode 16\.'
+          xcode_version="$(xcodebuild -version)"
+          printf '%s\n' "$xcode_version"
+          [[ "$xcode_version" == "Xcode 16."* ]]
           xcrun --find clang++
           sdk="$(xcrun --sdk macosx --show-sdk-path)"
           printf 'macOS SDK: %s\n' "$sdk"
