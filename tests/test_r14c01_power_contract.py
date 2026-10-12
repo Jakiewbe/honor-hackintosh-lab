@@ -11,6 +11,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 from r14c01_validate_power_contract import BASE, validate
+from source_cache_support import require_source_cache
 
 
 class PowerEvidenceGate(unittest.TestCase):
@@ -31,6 +32,7 @@ class PowerEvidenceGate(unittest.TestCase):
             validate(self.base)
 
     def test_real_structure_stays_blocked(self):
+        require_source_cache(self, self.base / 'source-lock.json', ROOT / '.cache')
         result = validate(self.base)
         self.assertEqual((result['structure'], result['closure'], result['runtime']),
                          ('PASS', 'BLOCKED', 'RUNTIME_NO_GO'))
@@ -120,6 +122,7 @@ class PowerEvidenceGate(unittest.TestCase):
         self.rejected()
 
     def test_closure_exit_is_two(self):
+        require_source_cache(self, BASE / 'source-lock.json', ROOT / '.cache')
         r = subprocess.run([sys.executable, str(ROOT / 'scripts/r14c01_validate_power_contract.py')], capture_output=True, text=True)
         self.assertEqual(r.returncode, 2, r.stdout + r.stderr)
 

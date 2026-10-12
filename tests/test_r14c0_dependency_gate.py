@@ -11,6 +11,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 from r14c0_validate_dependency_baseline import inspect, function_region, safe_path
+from source_cache_support import require_source_cache
 
 
 class DependencyGateTests(unittest.TestCase):
@@ -40,6 +41,7 @@ class DependencyGateTests(unittest.TestCase):
             inspect(self.base, self.cache)
 
     def test_recorded_slice_valid_but_closure_blocked(self):
+        require_source_cache(self, self.base / 'source-lock.json', self.cache)
         result = inspect(self.base, self.cache)
         self.assertEqual(result['structure'], 'PASS')
         self.assertEqual(result['closure'], 'BLOCKED')
@@ -146,6 +148,7 @@ class DependencyGateTests(unittest.TestCase):
             function_region('/* int x() { return 0; } */\nchar *s="int x() {}";', 'x')
 
     def test_cli_closure_fails_and_structure_passes(self):
+        require_source_cache(self, self.base / 'source-lock.json', self.cache)
         script = ROOT / 'scripts/r14c0_validate_dependency_baseline.py'
         for mode, expected in [('structure', 0), ('closure', 2)]:
             p = subprocess.run([sys.executable, '-X', 'utf8', str(script), '--baseline', str(self.base),

@@ -47,3 +47,7 @@
 
 ## 2026-10-13 C0-pre选表-e修订
 同一ACPICA20250404/包20250404-1，无网络非root无宿主挂载容器。第一选择2通过14失败，精确新对象为DSDT/SSDT9的I2C0.TPD0._PS0/_PS3；仅改变两组内代表后16通过0失败。每目标13外部表及两项排除见selected-external-runs.json；原16张表全部仍作目标且不改。38项findings，NV/Igfx方法体未变，TCSS新增PCIC(1)/PCID(4)声明。DSDT外部方法警告及EDMX UnknownObj不因退出0消失；仅SOURCE-STATIC，RUNTIME_NO_GO。原调查目录/workflows不变，没有执行AML或硬件操作。
+
+## 2026-10-13 离线测试维护（不是新的硬件或源码研究成果）
+
+输入 main `9b2093c`，两个上游克隆沿用 A1401 固定 SHA；[命令与结果](../tests/cache-fixture-verification.json)、[缓存条件](../tests/README.md)。全部测试：完整缓存151通过0失败0跳过；干净检出137通过0失败14跳过。1401分别13通过0跳过、3通过10跳过；缺缓存的生产结构校验均退出1。未触发 Actions，原硬件调查和 `.github/` 不变；保持 `RUNTIME_NO_GO`。跳过不计通过，不提升 SOURCE-STATIC/运行等级。
