@@ -1,0 +1,233 @@
+# R1.2-B candidate; apply AFTER R1.1. NOT qualified for installation.
+# Reentrant stop, user callbacks and kernel loadability remain unproved.
+diff --git a/kexts/NMIntelFB/intelfb.cpp b/kexts/NMIntelFB/intelfb.cpp
+--- a/kexts/NMIntelFB/intelfb.cpp
++++ b/kexts/NMIntelFB/intelfb.cpp
+@@ -82,25 +82,109 @@
+     // WindowServer paces an accelerated display on its VBL interrupt: the NVIDIA display pipe completes each frame on it.
+     // Without one the first frame never completed and WindowServer stalled every display (studio test 10-10, the
+     // virtual panel froze the Mac). A 60 Hz timer is the VBL, as NVRMFB's fallback is.
+-    struct Irq { IOFBInterruptProc proc = nullptr; OSObject *target = nullptr; void *ref = nullptr; };
+-    Irq fVbl, fConnect;
+-    thread_call_t fVblTimer = nullptr;
+-    uint64_t fVblNext = 0, fVblCalls = 0;
+-    volatile bool fStopping = false;
+-    static void vblFire(thread_call_param_t p0, thread_call_param_t) {
+-        NMIntelFB *me = (NMIntelFB *)p0;
+-        if (me->fStopping) return;
+-        if (me->fVbl.proc) { me->fVbl.proc(me->fVbl.target, me->fVbl.ref); me->fVblCalls++; }
+-        uint64_t period; nanoseconds_to_absolutetime(me->fFrameNs, &period);
+-        uint64_t now = mach_absolute_time();
+-        me->fVblNext = (me->fVblNext && me->fVblNext + period > now) ? me->fVblNext + period : now + period;
+-        thread_call_enter_delayed(me->fVblTimer, me->fVblNext);
+-    }
+-    void armVbl() {
+-        fVblTimer = thread_call_allocate(vblFire, this);
+-        if (fVblTimer) { uint64_t d; clock_interval_to_deadline((uint32_t)(fFrameNs / 1000), kMicrosecondScale, &d); fVblNext = d; thread_call_enter_delayed(fVblTimer, d); }
+-        IFBLOG("vbl timer %s", fVblTimer ? "armed (60 Hz)" : "ALLOCATE FAILED");
+-    }
++    // R1.2-B candidate: timer action and interrupt table updates share the workloop gate.
++    // Reentrant IOFramebuffer::stop during a callback remains an audit blocker.
++    enum VblPhase { kVblNew, kVblArmed, kVblStopping, kVblDrained };
++    struct Irq { IOFBInterruptProc proc = nullptr; OSObject *target = nullptr; void *ref = nullptr; bool enabled = false; };
++    struct IrqUpdate { IOSelect type; IOFBInterruptProc proc; OSObject *target; void *ref; void **cookie; };
++    Irq fVbl, fConnect;
++    IOTimerEventSource *fVblTimer = nullptr;
++    VblPhase fVblPhase = kVblNew;
++    uint64_t fVblCalls = 0;
++
++    static IOReturn registerGate(OSObject *owner, void *arg, void *, void *, void *) {
++        NMIntelFB *me = (NMIntelFB *)owner;
++        IrqUpdate *u = (IrqUpdate *)arg;
++        if (!u || !u->proc || me->fVblPhase >= kVblStopping) return kIOReturnNotReady;
++        Irq *slot = u->type == kIOFBVBLInterruptType ? &me->fVbl :
++                    u->type == kIOFBConnectInterruptType ? &me->fConnect : nullptr;
++        if (!slot) return kIOReturnUnsupported;
++        if (u->target) u->target->retain();
++        OSObject *previous = slot->target;
++        *slot = {u->proc, u->target, u->ref, true};
++        if (u->cookie) *u->cookie = slot;
++        if (previous) previous->release();
++        return kIOReturnSuccess;
++    }
++    static IOReturn unregisterGate(OSObject *owner, void *cookie, void *, void *, void *) {
++        NMIntelFB *me = (NMIntelFB *)owner;
++        Irq *slot = cookie == &me->fVbl ? &me->fVbl :
++                    cookie == &me->fConnect ? &me->fConnect : nullptr;
++        if (!slot) return kIOReturnBadArgument;
++        OSObject *previous = slot->target;
++        *slot = {};
++        if (previous) previous->release();
++        return kIOReturnSuccess;
++    }
++    static IOReturn stateGate(OSObject *owner, void *cookie, void *state, void *, void *) {
++        NMIntelFB *me = (NMIntelFB *)owner;
++        Irq *slot = cookie == &me->fVbl ? &me->fVbl :
++                    cookie == &me->fConnect ? &me->fConnect : nullptr;
++        if (!slot || !slot->proc) return kIOReturnBadArgument;
++        if (me->fVblPhase >= kVblStopping) return kIOReturnNotReady;
++        slot->enabled = (uintptr_t)state != 0;
++        return kIOReturnSuccess;
++    }
++    static IOReturn stopGate(OSObject *owner, void *, void *, void *, void *) {
++        NMIntelFB *me = (NMIntelFB *)owner;
++        me->fVblPhase = kVblStopping;
++        if (me->fVblTimer) me->fVblTimer->cancelTimeout();
++        unregisterGate(owner, &me->fVbl, nullptr, nullptr, nullptr);
++        unregisterGate(owner, &me->fConnect, nullptr, nullptr, nullptr);
++        return kIOReturnSuccess;
++    }
++    static void vblFire(OSObject *owner, IOTimerEventSource *timer) {
++        NMIntelFB *me = (NMIntelFB *)owner;
++        if (!me || me->fVblPhase != kVblArmed || me->fVblTimer != timer) return;
++        const Irq snapshot = me->fVbl;
++        if (snapshot.enabled && snapshot.proc) {
++            if (snapshot.target) snapshot.target->retain();
++            snapshot.proc(snapshot.target, snapshot.ref);
++            if (snapshot.target) snapshot.target->release();
++            me->fVblCalls++;
++        }
++        if (me->fVblPhase != kVblArmed || me->fVblTimer != timer) return;
++        uint64_t us = me->fFrameNs / 1000;
++        if (us < 1000) us = 1000;
++        if (us > 1000000) us = 1000000;
++        if (timer->setTimeoutUS((UInt32)us) != kIOReturnSuccess) {
++            me->fVblPhase = kVblStopping;
++            IFBLOG("VBL reschedule failed; refusing subsequent callbacks");
++        }
++    }
++    bool armVbl() {
++        IOWorkLoop *wl = getWorkLoop();
++        if (!wl || fVblPhase != kVblNew) return false;
++        IOTimerEventSource *timer = IOTimerEventSource::timerEventSource(this, vblFire);
++        if (!timer) return false;
++        if (wl->addEventSource(timer) != kIOReturnSuccess) {
++            timer->release(); return false;
++        }
++        fVblTimer = timer;
++        fVblPhase = kVblArmed;
++        uint64_t us = fFrameNs / 1000;
++        if (us < 1000) us = 1000;
++        if (us > 1000000) us = 1000000;
++        if (timer->setTimeoutUS((UInt32)us) != kIOReturnSuccess) {
++            disarmVbl();
++            return false;
++        }
++        return true;
++    }
++    void disarmVbl() {
++        IOWorkLoop *wl = getWorkLoop();
++        if (wl) wl->runAction(stopGate, this);
++        else stopGate(this, nullptr, nullptr, nullptr, nullptr);
++        IOTimerEventSource *timer = fVblTimer;
++        fVblTimer = nullptr;
++        if (timer) {
++            timer->cancelTimeout();
++            timer->disable();
++            if (wl) wl->removeEventSource(timer);
++            timer->release();
++        }
++        fVblPhase = kVblDrained;
++    }
+ #ifdef NMINTELFB_VIRTUAL
+     IOBufferMemoryDescriptor *fVBuf = nullptr;
+     IOTimerEventSource *fTimer = nullptr;
+@@ -169,13 +253,20 @@
+     IOReturn setDisplayMode(IODisplayModeID mode, IOIndex depth) override { return (mode == 1 && depth == 0) ? kIOReturnSuccess : kIOReturnUnsupported; }
+     IOItemCount getConnectionCount() override { return 1; }
+     IOReturn callPlatformFunction(const OSSymbol *fn, bool wait, void *p1, void *p2, void *p3, void *p4) override;
+-    IOReturn registerForInterruptType(IOSelect type, IOFBInterruptProc proc, OSObject *target, void *ref, void **iref) override {
+-        if (type == kIOFBVBLInterruptType) { fVbl = { proc, target, ref }; if (iref) *iref = &fVbl; return kIOReturnSuccess; }
+-        if (type == kIOFBConnectInterruptType) { fConnect = { proc, target, ref }; if (iref) *iref = &fConnect; return kIOReturnSuccess; }
+-        return kIOReturnUnsupported;
+-    }
+-    IOReturn unregisterInterrupt(void *) override { return kIOReturnSuccess; }
+-    IOReturn setInterruptState(void *, UInt32) override { return kIOReturnSuccess; }
++    IOReturn registerForInterruptType(IOSelect type, IOFBInterruptProc proc, OSObject *target, void *ref, void **iref) override {
++        IOWorkLoop *wl = getWorkLoop();
++        if (!wl) return kIOReturnNotReady;
++        IrqUpdate update = {type, proc, target, ref, iref};
++        return wl->runAction(registerGate, this, &update);
++    }
++    IOReturn unregisterInterrupt(void *cookie) override {
++        IOWorkLoop *wl = getWorkLoop();
++        return wl ? wl->runAction(unregisterGate, this, cookie) : kIOReturnNotReady;
++    }
++    IOReturn setInterruptState(void *cookie, UInt32 state) override {
++        IOWorkLoop *wl = getWorkLoop();
++        return wl ? wl->runAction(stateGate, this, cookie, (void *)(uintptr_t)state) : kIOReturnNotReady;
++    }
+     IOReturn setGammaTable(UInt32, UInt32, UInt32, void *) override { return kIOReturnSuccess; }
+     IOReturn setGammaTable(UInt32, UInt32, UInt32, void *, bool) override { return kIOReturnSuccess; }
+     IOReturn setCLUTWithEntries(IOColorEntry *, UInt32, UInt32, IOOptionBits) override { return kIOReturnSuccess; }
+@@ -316,9 +407,20 @@
+             ((NMIntelFB *)o)->sample(); t->setTimeoutMS(2000); });
+         if (fTimer && wl->addEventSource(fTimer) == kIOReturnSuccess) fTimer->setTimeoutMS(2000);
+     }
+-    armVbl();
+-    registerPowerDriver(this, kPowerStates, 2);
+-    gVirt = this; sysctl_register_oid(&sysctl__debug_nmintelfb_sample);
++    if (!armVbl()) {
++        disarmVbl();
++        if (fTimer) {
++            fTimer->cancelTimeout();
++            if (IOWorkLoop *wl = getWorkLoop()) wl->removeEventSource(fTimer);
++            OSSafeReleaseNULL(fTimer);
++        }
++        OSSafeReleaseNULL(fSurfMap);
++        IOFramebuffer::stop(provider);
++        fVBuf->complete(); OSSafeReleaseNULL(fVBuf);
++        return false;
++    }
++    registerPowerDriver(this, kPowerStates, 2);
++    gVirt = this; sysctl_register_oid(&sysctl__debug_nmintelfb_sample);
+     IFBLOG("virtual panel published (1920x1080 at phys 0x%llx)", (unsigned long long)fApertureBase);
+     return true;
+ #endif
+@@ -352,22 +454,35 @@
+     setProperty("NMIntelFBPipe", fPipe, 32);
+     setProperty("NMIntelFBDisplayVersion", fVer, 32);
+     setProperty("built-in", kOSBooleanTrue);   // the panel is the laptop's own (kConnectionFlags says so too)
+-    armVbl();
+-    registerPowerDriver(this, kPowerStates, 2);
+-    IFBLOG("built-in panel published (%ux%u)", fWidth, fHeight);
++    if (!armVbl()) {
++        disarmVbl();
++        IOFramebuffer::stop(provider);
++        OSSafeReleaseNULL(fSurfMap);
++        OSSafeReleaseNULL(fMMIO);
++        fRegs = nullptr;
++        return false;
++    }
++    registerPowerDriver(this, kPowerStates, 2);
++    IFBLOG("built-in panel published (%ux%u)", fWidth, fHeight);
+     return true;
+ }
+ 
+ void NMIntelFB::stop(IOService *provider)
+ {
+-    fStopping = true;
+-#ifdef NMINTELFB_VIRTUAL
+-    if (gVirt == this) { sysctl_unregister_oid(&sysctl__debug_nmintelfb_sample); gVirt = nullptr; }
+-#endif
+-    // thread_call_cancel_wait is not exported to kexts: cancel and retry the free until the callback is out (as NVRMFB)
+-    if (fVblTimer) { thread_call_cancel(fVblTimer); while (!thread_call_free(fVblTimer)) { thread_call_cancel(fVblTimer); IOSleep(5); } fVblTimer = nullptr; }
+-    OSSafeReleaseNULL(fSurfMap); OSSafeReleaseNULL(fMMIO); fRegs = nullptr;
+-    IOFramebuffer::stop(provider);
++    disarmVbl();
++#ifdef NMINTELFB_VIRTUAL
++    if (gVirt == this) { sysctl_unregister_oid(&sysctl__debug_nmintelfb_sample); gVirt = nullptr; }
++    if (fTimer) {
++        fTimer->cancelTimeout();
++        if (IOWorkLoop *wl = getWorkLoop()) wl->removeEventSource(fTimer);
++        OSSafeReleaseNULL(fTimer);
++    }
++#endif
++    OSSafeReleaseNULL(fSurfMap); OSSafeReleaseNULL(fMMIO); fRegs = nullptr;
++#ifdef NMINTELFB_VIRTUAL
++    if (fVBuf) { fVBuf->complete(); OSSafeReleaseNULL(fVBuf); }
++#endif
++    IOFramebuffer::stop(provider);
+ }
+ 
+ IODeviceMemory *NMIntelFB::getApertureRange(IOPixelAperture aperture)
