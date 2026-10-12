@@ -66,7 +66,15 @@ OpCore-Simplify `Scripts/{dsdt,config_prodigy,kext_maestro,smbios,compatibility_
 | `upstream/` | 存在，只含 OpCore-Simplify、Hardware-Sniffer 副本与 `PINNED.json` |
 | `tests/` | 存在，约 70 个 `test_*.py` + `tests/native/*.c|cs` + `tests/corpus/fetch.py`（会下载公开报告） |
 
-未审阅（列入 OPEN_QUESTIONS）：`selftest.py`、`apple.py`、`report.py`、`probe_report.py`、`hwcapture.py`、`machine_handoff.py`、`dsdt_pass1.py`、`efidoctor.py`、`bootfix.py`（仅测试覆盖）、`mirror.py`、`downloads.py`，以及驱动仓库的 Mac 端安装脚本 `nullmoth-setup.sh`。
+会话 1 时未审阅（列入 OPEN_QUESTIONS）：`selftest.py`、`apple.py`、`report.py`、`probe_report.py`、`hwcapture.py`、`machine_handoff.py`、`dsdt_pass1.py`、`efidoctor.py`、`bootfix.py`（仅测试覆盖）、`mirror.py`、`downloads.py`，以及驱动仓库的 Mac 端安装脚本 `nullmoth-setup.sh`。
+
+**会话 2（2026-10-13）补审**（只读，结果并入 RISK_ASSESSMENT R-12～R-18 与 NEXT_STEPS_PLAN）：
+- 1401 `p1401/` 其余全部模块（含 `fwres`、`cpunative`、`peripheral_caps`、`job_guard`、`scan_evidence`、`archive_download`、`dependency_cache`、`kernel_patches`、`acpi_diagnostics`、`acpi_dupnames`、`guide`、`loc`）。结论：除 GUI 上传与 U 盘写入外，没有模块调用 `SetFirmwareEnvironmentVariable`、原始磁盘句柄、`DeviceIoControl`、注册表写入、`bcdedit`/`diskpart`/`mountvol`/`manage-bde`。
+- Hardware-Sniffer（`6570f91`）入口、采集方式与输出格式；OCS `dsdt.py`/`acpi_guru.py`/`smbios.py`/`gathering_files.py` 的 iasl、macserial、下载路径；1401 `validate.py` 的 ocvalidate 获取方式。
+- 驱动仓库 `app/Resources/nullmoth-{setup,install,uninstall}.sh`、`app/Sources/*.swift`、`kexts/NVRMFB/fb/Info.plist`、`kexts/NVRM/Info.plist`、`kexts/NVRM/accel/nvrm-accel.cpp`、`docs/RELEASE-1.11.0～1.14.2.md`、`docs/TROUBLESHOOTING.md`、`gpu-port/README.md`。
+- 外部：[VoodooI2C v2.9.1 `e3ac3ed`](https://github.com/VoodooI2C/VoodooI2C/tree/e3ac3ed207170c39db88d6a67a76cc9fd3a1895a) 与 master `5c0c99c` 的 `Info.plist`（只读获取）。
+
+关键更正：`plan` 路径**不生成 config.plist、不运行 ocvalidate/macserial**；生成 EFI 只能走联网的 `build`。ocvalidate 的哈希来自运行时 Dortania `latest.json`（经 OCK 缓存的 `history.json`），**不是静态固定**；`release-inputs.json` 中 OpenCore 1.0.8 的哈希仅用于发布流程。
 
 ## 6. 社区证据来源（只读获取）
 

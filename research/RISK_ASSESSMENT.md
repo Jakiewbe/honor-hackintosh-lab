@@ -18,7 +18,13 @@
 | R-09 | Mac companion 安装非 Apple 签名 kext，修改 OpenCore `config.plist`（BAR、IONDRVSupport 排除等） | 驱动仓库 `nullmoth-setup.sh`（未逐行审） | 是（macOS） | 内核级代码；#119 机制会让本机内屏失去帧缓冲 | 高 | 不适用（无 macOS） |
 | R-10 | 将 EFI 写入内置磁盘 ESP、修改 NVRAM 启动项、BIOS 设置（Secure Boot 关闭、VMD 等） | 社区安装流程、1401 BIOS 指引 | 是 | 可导致 Windows 无法启动；BitLocker 可能要求恢复密钥 | **极高** | **禁止** |
 | R-11 | NVRAM 残留：1401 故意**不删除** `boot-args`（仅删 `csr-active-config`） | `nullmoth.apply` 注释 | — | 旧 boot-args 会覆盖新配置（1401#26 日志 `boot-args - ignored, exists`），导致排障结论失真 | 中 | 记录 |
-| R-12 | `tests/corpus/fetch.py` 下载公开报告语料；`scan --selftest` 下载 acpidump | 上游测试 | 否 | 网络下载并执行 | 中 | **未运行** |
+| R-12 | `tests/corpus/fetch.py` 下载公开报告语料；`scan --selftest` 下载 acpidump；`apple --selftest` 向 Apple 恢复服务器发 POST 并下载约 10 MB | 上游测试 | 否 | 网络下载并执行 | 中 | **未运行** |
+| R-13 | OCS 构造时 `utils.clean_temporary_dir()` **删除 `%TEMP%\ocs_*` 下所有目录**；多个 `ocs_*`、`1401-plan-*` 临时目录遗留 | OCS `Scripts/utils.py:17-29`、`OpCore-Simplify.py:24`；`p1401/__main__.py:43-44` | 否 | 沙箱外文件被删除/遗留 | 中 | 记录；运行时必须重定向 TEMP/TMP/TMPDIR |
+| R-14 | 扫描导出 ACPI 时**可能包含 MSDM（Windows OEM 产品密钥）**：1401 用 `GetSystemFirmwareTable` 补齐 acpidump 漏掉的表 | `p1401/scan.py:104-146` | 部分 | 产品密钥落盘，若随报告上传则泄露 | 高（隐私） | 本仓库已核对：现有证据**不含** MSDM（2026-10-12 调查主动跳过），所有分支历史也无 MSDM/SLIC 文件 |
+| R-15 | Hardware-Sniffer 在进程内用 `VirtualAlloc` 分配 RWX 内存执行 CPUID 机器码 | `Hardware-Sniffer/.../cpuid.py:110-117` | 否 | 可能触发杀毒/漏洞防护拦截 | 低 | 记录 |
+| R-16 | Mac 端 setup 把 `SecureBootModel` 改为 `Disabled`、SIP OR `0x0A43`、写 `nvram boot-args`；卸载后 `com.nullmoth.wsreset`（每次开机在登录窗口杀一次 WindowServer）与 `com.nullmoth.displaytrace` 两个 LaunchDaemon **不会被删除** | 驱动 `app/Resources/nullmoth-setup.sh:987-991, 1359-1369, 1433-1445, 430-545` | 是（macOS） | 卸载不彻底 | 中 | 不适用（无 macOS） |
+| R-17 | 驱动 Mac App 的“更新”走 GitHub `releases/latest`，版本不固定（有 SHA256SUMS 校验） | 驱动 `app/Sources/main.swift:528-549` | — | 自动获取未审阅的新版本 | 中 | 记录 |
+| R-18 | 实验性 NMXGPU（i915）若启用，会重置驱动内屏的 Intel 显示引擎 | 驱动 `gpu-port/README.md:61-62`、`nullmoth-setup.sh:726-858` | 是（macOS） | 内屏黑屏 | 高 | 记录 |
 
 ## 2. 主力机自身的风险条件（实测）
 

@@ -80,7 +80,7 @@ Cursor 规则格式：`.mdc` + YAML 头（`description`、`globs`、`alwaysApply
 | 6 | SIP/boot-args/ReBAR 变更？ | SIP `430A0000`（0x0A43）；boot-args 追加 `nvfb=1 nvaccel=1 nvfbheads=4 -nvkmsnosmooth amfi_get_out_of_my_way=0x1 amfi=0x80 ipc_control_port_options=0`；NVRAM Delete 只含 `csr-active-config`（故意不删 boot-args）；安装阶段 `ResizeAppleGpuBars=0`、`ResizeGpuBars=-1`；笔记本独显加 `acpi-wake-type=1`；U 盘日志 `Target |= 0x41` |
 | 7 | 哪些步骤需要管理员？ | 整个 `1401.exe`（manifest `requireAdministrator`）；原始磁盘访问与分区（`rawdisk`/`diskpart`）；部分扫描（ACPI/固件表） |
 | 8 | 磁盘写入/系统修改/上传/删除风险？ | U 盘擦除与分区（R-02）；自更新替换程序目录（R-04）；上传扫描证据与日志（R-03，确认框默认“发送”）；生成的配置削弱 SIP/AMFI（R-08）；Mac companion 安装 kext（R-09）。完整表见 [RISK_ASSESSMENT](../research/RISK_ASSESSMENT.md) |
-| 9 | 能否不写盘、不改系统就生成候选 EFI？ | **原则上能**：`python -m p1401 plan <Report.json> <ACPI 目录>` 调用 `engine.build(download=False)`，输出到 `tempfile.mkdtemp("1401-plan-")`。**本轮未执行**，原因：没有 Hardware-Sniffer `Report.json`；OCS `dsdt.py:check_iasl` 会下载执行未固定 iasl；`scan_evidence`/`panel_guard` 需要配套采集数据 |
+| 9 | 能否不写盘、不改系统就生成候选 EFI？ | **原则上能**：`python -m p1401 plan <Report.json> <ACPI 目录>` 调用 `engine.build(download=False)`，输出到 `tempfile.mkdtemp("1401-plan-")`。**本轮未执行**，原因：没有 Hardware-Sniffer `Report.json`；OCS `dsdt.py:check_iasl` 会下载执行未固定 iasl；`scan_evidence`/`panel_guard` 需要配套采集数据。**会话 2 更正**：`plan` 只输出决策，**不生成 config.plist**，也不运行 macserial/ocvalidate；要得到候选 EFI 必须走联网的 `build`（同样不写 U 盘），见附录 A |
 | 10 | 测试覆盖？ | 约 70 个 Python 单元/回归测试（大量使用 mock 与夹具）、`tests/native/*.c|cs`、公开报告语料回归（`tests/corpus`，需下载）、Rust loader 的 QEMU 测试；CI `windows-candidate.yml` 对打包产物在 Optiplex 5050 夹具上验证。**没有任何真实机型的引导/安装测试** |
 
 ## 5. GLO-FX6P 硬件兼容性矩阵
@@ -100,7 +100,7 @@ Cursor 规则格式：`.mdc` + YAML 头（`description`、`globs`、`alwaysApply
 | 蓝牙 | C | — |
 | 音频 ALC256 / SST 麦克风 | C / E | 通用 layout 存在；SST 麦克风不支持 |
 | NVMe PM9A1 | C | 无已知问题记录 |
-| 触控板 ELAN2616 | D | 社区称 VoodooI2C 需补 ADL `0x51E8` |
+| 触控板 ELAN2616 | D → **E（原版）/ D（手工补丁）** | 会话 2 已核实原版 VoodooI2C `IOPCIMatch` 不含 `0x51E8` |
 | 键盘 / 电池 | C | 通用方案 |
 | USB / 摄像头 | D | 需本机映射/实测 |
 | 指纹 | E | 不支持 |
@@ -175,12 +175,40 @@ Cursor 规则格式：`.mdc` + YAML 头（`description`、`globs`、`alwaysApply
 | P1 AGENTS.md（目标/证据/安全/进度/续做） | DONE | 追加章节 |
 | P2 获取上游源码并固定 SHA | DONE | 部分克隆，SHA 见 SOURCES |
 | P2 维护状态、release↔源码关系、许可 | DONE | 含 1.0.21 基线发现 |
-| P2 审阅指定模块 | PARTIAL | 核心模块已审；`apple`、`selftest` 等未审（Q-12） |
+| P2 审阅指定模块 | DONE（会话 2） | 会话 1 为 PARTIAL；会话 2 补审其余模块与驱动 Mac 端脚本（Q-12 DONE，附录 A） |
 | P2 十个问题 | DONE | 第 4 节；第 3 问的 SSDT 部分未逐行审 |
-| P3 只读环境检测 | PARTIAL | 管理员项（BitLocker/WinRE/Secure Boot 交叉验证）未执行 |
+| P3 只读环境检测 | PARTIAL | 管理员项（BitLocker/WinRE/Secure Boot 交叉验证）未执行；会话 2 已写好只读脚本 `scripts/readonly_admin_status.ps1`，等待批准 |
 | P4 静态检查与测试审查 | PARTIAL | 8 个上游模块 + 本项目测试已跑；其余未审查不运行 |
-| P4 隔离候选 EFI + ocvalidate | BLOCKED | 缺 `Report.json`；iasl 未固定（R-07） |
+| P4 隔离候选 EFI + ocvalidate | BLOCKED | 缺 `Report.json`；iasl 未固定（R-07）；会话 2 已拟分步方案（`research/NEXT_STEPS_PLAN.md` C1–C3），每步待批准 |
 | P4 缺失硬件报告的只读收集方案 | DONE | OPEN_QUESTIONS + 第 8、10 节 |
 | P5 模块兼容性分析与 A–E 分级 | DONE | 无任何一项经本机实测 |
 | P5 同代真实案例检索 | DONE | 1401/驱动 Issue 12 条 + PR 2 条；同机型检索无结果 |
 | P6 研究文件、报告、日志、断点 | DONE | — |
+
+---
+
+## 附录 A｜会话 2 补充（2026-10-13，仍为 READ_ONLY_RESEARCH）
+
+本节只追加，不改写上文结论；上文中被更正处已就地标注“会话 2”。
+
+**已执行（全部只读或在仓库内写文档）**
+
+| 项 | 结果 |
+|---|---|
+| 本地提交 | `8869796 docs(1401): read-only audit of 1401 v1.14.2 against GLO-FX6P`（main，未 push） |
+| 补审 1401 其余模块、Hardware-Sniffer、OCS iasl/macserial 路径、驱动 Mac 端脚本与 App | 完成；新增风险 R-13～R-18，见 RISK_ASSESSMENT |
+| PR #131/#133 状态 | 仍为 open/未合并；v1.14.2 源码中 `NVRMFBClaim` 仍无厂商过滤 |
+| VoodooI2C `0x51E8` | 原版 v2.9.1 与 master 均不含，触控板原版评级 E |
+| 仓库 MSDM 检查 | 现有证据与所有分支历史均不含 MSDM/SLIC |
+| 本项目静态测试 | 扩展到 **13 项，13/13 通过**（新增驱动 SHA 固定检查与 `NVRMFBClaim` 匹配条件检查） |
+| 新文件 | `research/NEXT_STEPS_PLAN.md`（BIOS/外接口目视清单、管理员只读查询、沙箱 C1–C3 分步方案与回滚）；`scripts/readonly_admin_status.ps1`（**未运行**） |
+
+**关键更正与新事实**
+
+1. `plan` 不生成 config.plist；候选 EFI 只能经联网的 `build` 产出。`build` 会运行 macserial 与 ocvalidate，本身不写 U 盘。
+2. ocvalidate 哈希来自运行时 Dortania 数据，非静态固定；本项目若要复现须自行固定 OpenCore 1.0.8 RELEASE（SHA256 `2011e8b7…`，见 SOURCES）。
+3. 核显保持开启依赖与 `Report.json` 哈希一致的 `scan-evidence.json`；缺少时很可能被 `disable-gpu`（重现 1401#26 旧行为）。
+4. 驱动 release 1.12.0 声称“11 代以后 Intel 内屏机型可无加速显示 + NVIDIA 无头 Metal”，与 #119 的 `NVRMFBClaim` 缺陷互相冲突；评级保持 D，不裁决。
+5. OCS 启动时会删除 `%TEMP%\ocs_*`；扫描可能导出 MSDM（产品密钥）；Mac 端卸载会残留两个 LaunchDaemon。
+
+**结论不变**：本机没有 NVIDIA 显示路径（E），内屏只能寄望于 Iris Xe 固件帧缓冲（D，装驱动后 E），整体仍**不满足**进入 EFI 构建或引导实验的前置条件。下一步全部需要用户逐条批准，见 [NEXT_STEPS_PLAN](../research/NEXT_STEPS_PLAN.md)。

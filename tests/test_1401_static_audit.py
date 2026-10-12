@@ -11,14 +11,17 @@ Run: python tests/test_1401_static_audit.py
 """
 import json
 import os
+import plistlib
 import subprocess
 import sys
 import unittest
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 UP = os.path.join(ROOT, "upstream", "1401")
+DRV = os.path.join(ROOT, "upstream", "nvidia-macos-driver")
 HW = os.path.join(ROOT, "docs", "hardware-survey-20261012", "hardware.json")
 PINNED_SHA = "46d9fee308bbb8e373807d59773823e6a93c1f63"  # nullmoth/1401 tag v1.14.2
+DRIVER_SHA = "1083a98db33a0bb824290556de255f9a95ca5403"  # nullmoth/nvidia-macos-driver tag v1.14.2
 
 IGPU = "Intel(R) Iris(R) Xe Graphics"
 DGPU = "NVIDIA GeForce RTX 2050"
@@ -127,6 +130,27 @@ class PolicyText(unittest.TestCase):
         src = self.read("upstream", "OpCore-Simplify", "Scripts", "dsdt.py")
         self.assertIn("def check_iasl", src)
         self.assertIn("acpica", src)
+        # plan path: OCPE() -> ACPIGuru() -> DSDT() -> check_iasl() downloads when this file is missing
+        self.assertFalse(os.path.exists(os.path.join(UP, "upstream", "OpCore-Simplify", "Scripts", "iasl.exe")))
+
+
+@unittest.skipUnless(os.path.isdir(os.path.join(DRV, "kexts")), "upstream/nvidia-macos-driver not cloned")
+class DriverFramebufferClaim(unittest.TestCase):
+    """driver#119 / PR #131: NVRMFBClaim also takes an Intel iGPU's IOFramebuffer slot."""
+
+    def test_driver_checkout_is_the_audited_tag(self):
+        sha = subprocess.run(["git", "-C", DRV, "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+        self.assertEqual(sha, DRIVER_SHA, "nvidia-macos-driver moved: re-audit (PR #131 may have landed)")
+
+    def test_nvrmfbclaim_matches_any_display_named_pci_device(self):
+        with open(os.path.join(DRV, "kexts", "NVRMFB", "fb", "Info.plist"), "rb") as f:
+            claim = plistlib.load(f)["IOKitPersonalities"]["NVRMFBClaim"]
+        self.assertEqual(claim["IOProviderClass"], "IOPCIDevice")
+        self.assertEqual(claim["IONameMatch"], "display")
+        self.assertEqual(claim["IOMatchCategory"], "IOFramebuffer")
+        self.assertGreater(claim["IOProbeScore"], 20000)  # outranks IONDRVFramebuffer
+        for vendor_filter in ("IOPCIMatch", "IOPCIPrimaryMatch", "IOPCIClassMatch"):
+            self.assertNotIn(vendor_filter, claim)
 
 
 if __name__ == "__main__":

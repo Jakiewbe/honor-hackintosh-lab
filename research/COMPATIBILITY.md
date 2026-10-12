@@ -25,12 +25,12 @@
 | Iris Xe 46A6 固件帧缓冲（无加速）内屏 | `panel_guard.intel_panel_keys` 保留核显开启（不 `disable-gpu`），显示 `KEEP_NOTE` | 未验证；且安装驱动后会被 `NVRMFBClaim` 抢占 | **D**（未装驱动）/ **E**（装驱动后，机制同 [driver#119](https://github.com/nullmoth/nvidia-macos-driver/issues/119)） | 见第 2.2 节 |
 | RTX 2050 25A9 被选中 | `nvidia_gsp_ids.json` 含 `25A9`→`mark()` 标记“仅 macOS 15”，保留独显 | 表中列出 ≠ 验证；`tested` 只有 `2D05` | **C** | 本项目测试 `test_rtx_2050_is_in_the_gsp_table_but_never_hardware_tested` |
 | RTX 2050 驱动内屏/外接显示 | 显示 `mux_help`（“内屏在 macOS 中保持黑屏”） | 本机 NVIDIA 很可能没有任何显示接口 | **E** | 类码 `0x0302`、显示源 0、连接目标 0；[driver#119](https://github.com/nullmoth/nvidia-macos-driver/issues/119)（GA107M、0x0302、`heads 0 connectors 0`） |
-| RTX 2050 无头 Metal 加速 | 驱动包由 Mac companion 安装（需 SIP `0x0A43` + AMFI 放宽） | 仅 Turing 无 MUX 机型有单例报告；GA107 无 MUX 未见成功 | **D** | [driver#104](https://github.com/nullmoth/nvidia-macos-driver/issues/104)、#119 中 #76 跟进（GTX 1650 Max-Q 无头 Metal 3） |
+| RTX 2050 无头 Metal 加速 | 驱动包由 Mac companion 安装（需 SIP `0x0A43` + AMFI 放宽）；驱动 1.12 起有 headless 模式（开机约 60 s 无显示 head 时只做 Metal 设备） | 上游 release notes 声称 11 代以后 Intel 内屏机型“内屏无加速显示，应用可用 NVIDIA Metal”；仅 Turing 无 MUX 机型有单例报告；GA107 无 MUX 未见成功 | **C**（上游声称）/ **D**（本机） | 驱动 `docs/RELEASE-1.12.0.md:5-9`、`kexts/NVRM/accel/nvrm-accel.cpp:295-340`；[driver#104](https://github.com/nullmoth/nvidia-macos-driver/issues/104)、#119 中 #76 跟进（GTX 1650 Max-Q 无头 Metal 3） |
 | Wi-Fi AX201 | `8086-51F0` 在 OCS itlwm 设备表；选 itlwm（HeliPort）或 AirportItlwm | 同系列社区普遍可用 | **B** | OCS `datasets/pci_data.py:549`；[driver#87](https://github.com/nullmoth/nvidia-macos-driver/issues/87)（AX210 + HeliPort 可用，WPA3 个人版不行） |
 | 蓝牙 8087:0026 | IntelBluetoothFirmware + BlueToolFixup + IntelBTPatcher | 同系列社区可用 | **C** | 1401#26 日志中同组 kext 注入成功（仅注入，不代表可用） |
 | 音频 ALC256（经 SST 51C8） | AppleALC，按 `codec_layouts["10EC-0256"]` 自动选 `alcid` | codec 有通用 layout；SST 连接的数字麦克风不可用 | **C**（扬声器/耳机）/ **E**（SST 麦克风） | OCS `datasets/codec_layouts.py:197`；Dortania “Intel SST … will not work” |
 | NVMe Samsung PM9A1（MZVL2512HCJQ） | NVMeFix | 未见本型号已知问题；本机为唯一磁盘 | **C** | Dortania 只点名 PM981/PM991/2200S；[1401#5](https://github.com/nullmoth/1401/issues/5) 机器也有同系列盘（失败原因与盘无关联证据） |
-| 触控板 ELAN2616（I2C 51E8） | VoodooI2C + VoodooI2CHID，加 `-vi2c-force-polling` | 社区称 VoodooI2C 2.9.1 不匹配 ADL `0x51E8`，需改 Info.plist | **D** | [driver#87](https://github.com/nullmoth/nvidia-macos-driver/issues/87) 评论（AI 生成说明，未复核）；1401#26 日志含 `-vi2c-force-polling` |
+| 触控板 ELAN2616（I2C 51E8） | VoodooI2C + VoodooI2CHID，加 `-vi2c-force-polling`；OCS 无任何 `51E8` 处理 | **原版 VoodooI2C 不匹配本机 I2C 控制器**（2026-10-13 已核实 v2.9.1 `e3ac3ed` 与 master `5c0c99c` 的 `IOPCIMatch` 只到 Ice Lake `0x34E8`）；社区做法是手工把 `0x51e88086` 加进 Info.plist 并用轮询 | **E**（原版）/ **D**（手工补丁） | [VoodooI2C Info.plist @v2.9.1](https://github.com/VoodooI2C/VoodooI2C/blob/e3ac3ed207170c39db88d6a67a76cc9fd3a1895a/VoodooI2C/VoodooI2C/Info.plist)；[driver#87](https://github.com/nullmoth/nvidia-macos-driver/issues/87) 评论（补丁做法未复核） |
 | 键盘（PS/2 经 EC） | VoodooPS2Controller | 通用方案 | **C** | — |
 | USB（xHCI 51ED + TCSS 461E） | USB 映射 kext；15 端口限制 | 需本机端口映射，Type-C 热插拔未知 | **D** | — |
 | 摄像头 USB 3277:0003 | 无需 kext（UVC） | 未知 | **D** | — |
@@ -68,6 +68,10 @@
 | [driver#35](https://github.com/nullmoth/nvidia-macos-driver/issues/35) | 台式 i7-12700K：UHD 770（12 代，无 macOS 驱动） | 无驱动核显让 IOGraphics 启动多等约 60 s；用 `-wegnoigpu` 隐藏解决 | 本机若保留 46A6 也可能遇到；但本机不能隐藏它（内屏在它上面） |
 | [driver#26](https://github.com/nullmoth/nvidia-macos-driver/issues/26) | Alienware 51MR2（独显直连屏 + UHD 630） | 约 90 s 后独显屏黑屏仅剩光标 | **与本机无关**；旧知识库曾把它与 1401#26 混淆（见 [OPEN_QUESTIONS](OPEN_QUESTIONS.md) Q-11） |
 
+**驱动源码核实（2026-10-13，v1.14.2 `1083a98`）**：`kexts/NVRMFB/fb/Info.plist` 中 `NVRMFBClaim` 仅以 `IOProviderClass=IOPCIDevice`、`IONameMatch=display`、`IOMatchCategory=IOFramebuffer`、`IOProbeScore=30000` 匹配，**没有任何厂商或类码过滤**；`nvrm-fb.cpp:411-426` 也未重写 `probe()`。即 #119 的缺陷在当前发布版中仍然存在（本项目测试 `test_nvrmfbclaim_matches_any_display_named_pci_device` 固定了这一点）。同时 Mac 端 `nullmoth-setup.sh:1061-1076` 在检测到“Intel VGA 且无 `ig-platform-id`”时特意**不屏蔽** IONDRVSupport 以点亮 Intel 内屏——而这正是 `NVRMFBClaim` 会挡掉的那条路径。**上游声称（release 1.12.0）与上游缺陷（#119）互相冲突，保留不裁决。**
+
+另外两条驱动侧信息：驱动仓库的 `NMIntelFB` 设备表含 `{0x46a6, 13}`，但**不在 `install.sh` 的安装列表中**；实验性 NMXGPU（i915）路径默认关闭，上游写明“尚未在任何 Intel GPU 上运行过”，并警告接管驱动启动显示的 GPU 会**重置其显示引擎**（`gpu-port/README.md:61-62`），在本机即内屏。
+
 **本机显示结论**：经 1401 路线获得“有加速的内屏”= **E**；“无加速固件帧缓冲内屏、未装驱动”= **D**（无同代成功案例，有 Gen12 失败案例）；“装 NullMoth 驱动后仍保持内屏”= **E**（#119 机制，PR 未合并）。
 
 ### 2.3 RTX 2050（10DE:25A9，GA107 系）
@@ -88,8 +92,8 @@
 | boot-args 追加 | `nvfb=1 nvaccel=1 nvfbheads=4 -nvkmsnosmooth amfi_get_out_of_my_way=0x1 amfi=0x80 ipc_control_port_options=0` | `nullmoth.BOOT_ARGS` |
 | 安装阶段 BAR | `ResizeAppleGpuBars=0`、`ResizeGpuBars=-1`（Mac 端 setup 之后改为 13/-1，PR #133 指出对 Intel 内屏机型有害） | `policy.py`；PR #133 |
 | 独显 DeviceProperties | `acpi-wake-type=1`，写在独显 PCI 路径上；本机实测位置 `PCIROOT(0)#PCI(0600)#PCI(0000)`，即 `PciRoot(0x0)/Pci(0x6,0x0)/Pci(0x0,0x0)` | `nullmoth.laptop_gpu_awake`；`hardware.json` |
-| 核显 | 保持开启，不加属性 | `panel_guard`、`engine._unsupported_igpu_fix` |
+| 核显 | 保持开启、不加属性——**前提是**有与 `Report.json` 同次扫描、`report_sha256` 一致的 `scan-evidence.json`；缺少它时按引擎默认处理，很可能被设 `disable-gpu`（即 1401#26 的旧行为） | `panel_guard`、`engine._unsupported_igpu_fix`、`engine.py:629-636`、`scan_evidence.py:129-160` |
 | CPU | Comet Lake CPUID 伪装、ProvideCurrentCpuInfo、CpuTopologyRebuild、`ctrsmt=full` | OCS |
 | 日志 | `Target |= 0x41` 写 U 盘日志 | `policy.py` |
 
-**未生成真实候选 EFI**：缺 Hardware-Sniffer `Report.json`，且 OCS 会在缺 iasl 时下载并执行未固定版本的 iasl（见 RISK_ASSESSMENT R-07）。
+**未生成真实候选 EFI**：缺 Hardware-Sniffer `Report.json`，且 OCS 会在缺 iasl 时下载并执行未固定版本的 iasl（见 RISK_ASSESSMENT R-07）。会话 2 进一步确认：`plan` 只输出决策、不生成 `config.plist`；要得到 EFI 必须走联网的 `build`。方案见 [NEXT_STEPS_PLAN](NEXT_STEPS_PLAN.md) 第 C 节。
