@@ -150,6 +150,19 @@ After reviewing the [research ledger](docs/研究状态账本_防重复工作规
 
 **No repeat CI, new VBL patch, NMXGPU build, actual driver execution, or host change.** The v1.14.2 archive has now been inventoried with a verifiable hash and the **upstream source-provenance request was submitted as issue #146**. Next action: review substantive maintainer replies or a new version-matched source/manifest, **not** repeat CI or open duplicate issues. **R1.3-D RELEASE-INDEX-PASS / I915-PROVENANCE-BLOCKED / IGPU-FBCLAIM-RISK / RUNTIME-NO-GO.**
 
+## R1.4-A: independent Intel 46A6 macOS display-driver research
+
+**We are no longer blocked on NullMoth's own unreleased compiler manifests to begin original development.** They remain necessary only to reproduce **its particular published NMXGPU binary**. [R1.4-A engineering architecture and hardware gates](docs/R1.4-A_自主适配Intel46A6_技术架构与最小可行路线.md) defines a **new, independently version-pinned source and object chain** built from verifiable FreeBSD DRM/i915 + LinuxKPI + XNU/IOGraphics macOS 15.5 APIs. The target is the HONOR GLO-FX6P's **already verified Intel-connected internal panel**.
+
+**The development order is strict:**
+1. **L1 basic panel image:** firmware scanout handoff if its premises can be proven, otherwise independent Intel i915/DRM KMS→IOFramebuffer path; single internal panel, fixed mode, XRGB8888, no acceleration claim.
+2. **L2 Intel acceleration:** only after scanout/display/stop lifecycle is genuinely observed on isolated non-primary Intel Xe hardware; Linux i915 code alone does not provide macOS Metal/IOAccelerator.
+3. **L3 RTX 2050 Metal + NVIDIA→Intel composition:** independent future project after L1/L2 hardware evidence.
+
+**First engineering gate R1.4-B:** pin our own FreeBSD source SHA (the previous [drm-kmod `c16de0f...`](https://github.com/freebsd/drm-kmod/tree/c16de0f9fa84f70b9551f69fde837a7f3a73c0e9) is a **candidate**), FreeBSD LinuxKPI, XNU/IOGraphics references, compile flags, per-file licenses, source/object sets and missing symbols; fail closed when missing. Design an **Intel-only** object subset, not the entire AMD/xe/NVIDIA port. Existing R1.2 CI and R1.3-D release archive inventory stay frozen; NVRMFBClaim's Intel slot conflict and CPU P/E-core platform boot requirements remain unresolved.
+
+**Status: INDEPENDENT_PORT_DESIGN_ONLY / NO_NEW_DRIVER_BUILT / NO_RUNTIME_PROOF / RUNTIME_NO_GO.** No kernel extensions installed/loaded, no new Actions started, no main-Windows/BIOS/EFI/disk changes.
+
 ## Safety and evidence
 
 The original NullMoth source carries a PolyForm Noncommercial license. No upstream source code or vendor firmware is copied into this repository. All upstream code is fetched from its public GitHub repository into an ephemeral runner only when source mode is explicitly requested.
