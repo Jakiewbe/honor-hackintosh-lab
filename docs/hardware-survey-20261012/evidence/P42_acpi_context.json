@@ -1,0 +1,282 @@
+{
+    "probe_id":  "P42_acpi_context",
+    "title":  "Byte context around selected AML names in saved tables (no disassembler)",
+    "source_interface":  "Reads evidence/acpi/reg_*.bin written by P40; no system access",
+    "command":  "$targets = [ordered]@{\r\n        'reg_SSDA_HONOR_NvdTable_00001000.bin' = @('_DOD', 'MXDS', 'MXMX', 'MXM_', 'NVOP', 'NBCI', 'NVJT', 'GPS_')\r\n        'reg_SSD4_HONOR_IgfxSsdt_00003000.bin' = @('_DOD', 'DD1F', 'IGDM', '_DSM')\r\n        'reg_DSDT_HONOR_ADL-P-M_00000002.bin'  = @('DD1F', 'ASLB', 'NPCF')\r\n    }\r\n    $latin = [Text.Encoding]::GetEncoding(28591)\r\n    $out = [ordered]@{}\r\n    foreach ($f in $targets.Keys) {\r\n        $path = Join-Path $AcpiDir $f\r\n        if (-not (Test-Path -LiteralPath $path)) { Add-ProbeError \"$f not found\"; continue }\r\n        $b = [IO.File]::ReadAllBytes($path); $s = $latin.GetString($b)\r\n        $perName = [ordered]@{}\r\n        foreach ($n in $targets[$f]) {\r\n            $hits = @(); $i = 0\r\n            while (($i = $s.IndexOf($n, $i, [StringComparison]::Ordinal)) -ge 0 -and $hits.Count -lt 8) {\r\n                $st = [Math]::Max(0, $i - 8); $en = [Math]::Min($b.Length - 1, $i + 40)\r\n                $seg = $b[$st..$en]\r\n                $hits += [ordered]@{ offset = ('0x{0:X}' -f $i); preceding_byte = ('0x{0:X2}' -f $(if ($i -gt 0) { $b[$i - 1] } else { 0 })); hex = (($seg | ForEach-Object { $_.ToString('X2') }) -join ' '); ascii = (-join ($seg | ForEach-Object { if ($_ -ge 32 -and $_ -lt 127) { [char]$_ } else { '.' } })) }\r\n                $i++\r\n            }\r\n            $perName[$n] = $hits\r\n        }\r\n        $out[$f] = $perName\r\n    }\r\n    [ordered]@{ contexts = $out; note = 'Raw bytes only. Any reading of AML opcodes in REPORT.md is a manual decode and must be confirmed with a disassembler (iasl) offline.' }",
+    "started_local":  "2026-10-12T22:48:21.467+08:00",
+    "duration_ms":  67,
+    "status":  "ok",
+    "native_exit_code":  null,
+    "errors":  [
+
+               ],
+    "data":  {
+                 "contexts":  {
+                                  "reg_SSDA_HONOR_NvdTable_00001000.bin":  {
+                                                                               "_DOD":  [
+                                                                                            {
+                                                                                                "offset":  "0x1FC8",
+                                                                                                "preceding_byte":  "0x0F",
+                                                                                                "hex":  "47 30 50 45 47 50 14 0F 5F 44 4F 44 00 A4 12 07 01 0C 30 73 08 80 14 45 04 4D 58 4D 58 09 A0 13 93 68 00 50 38 58 48 01 0A 99 50 38 58 48 00 00 A4",
+                                                                                                "ascii":  "G0PEGP.._DOD......0s...E.MXMX....h.P8XH...P8XH..."
+                                                                                            }
+                                                                                        ],
+                                                                               "MXDS":  [
+                                                                                            {
+                                                                                                "offset":  "0x201E",
+                                                                                                "preceding_byte":  "0x12",
+                                                                                                "hex":  "48 00 0A 02 A4 00 14 12 4D 58 44 53 09 A0 04 93 68 00 A0 04 93 68 01 A4 00 14 45 07 4D 58 4D 5F 0C 08 5F 54 5F 30 00 A2 47 06 01 70 99 6A 00 5F 54",
+                                                                                                "ascii":  "H.......MXDS....h....h....E.MXM_.._T_0..G..p.j._T"
+                                                                                            }
+                                                                                        ],
+                                                                               "MXMX":  [
+                                                                                            {
+                                                                                                "offset":  "0x1FD9",
+                                                                                                "preceding_byte":  "0x04",
+                                                                                                "hex":  "0C 30 73 08 80 14 45 04 4D 58 4D 58 09 A0 13 93 68 00 50 38 58 48 01 0A 99 50 38 58 48 00 00 A4 01 A0 13 93 68 01 50 38 58 48 01 0A 99 50 38 58 48",
+                                                                                                "ascii":  ".0s...E.MXMX....h.P8XH...P8XH.......h.P8XH...P8XH"
+                                                                                            }
+                                                                                        ],
+                                                                               "MXM_":  [
+                                                                                            {
+                                                                                                "offset":  "0x6C5",
+                                                                                                "preceding_byte":  "0x50",
+                                                                                                "hex":  "50 45 47 30 50 45 47 50 4D 58 4D 5F 68 69 6A 6B A4 0C 01 00 00 80 10 4F 2D 5C 2F 04 5F 53 42 5F 50 43 30 30 50 45 47 30 50 45 47 50 08 56 47 41 42",
+                                                                                                "ascii":  "PEG0PEGPMXM_hijk.......O-\\/._SB_PC00PEG0PEGP.VGAB"
+                                                                                            },
+                                                                                            {
+                                                                                                "offset":  "0x2032",
+                                                                                                "preceding_byte":  "0x07",
+                                                                                                "hex":  "93 68 01 A4 00 14 45 07 4D 58 4D 5F 0C 08 5F 54 5F 30 00 A2 47 06 01 70 99 6A 00 5F 54 5F 30 A0 10 93 5F 54 5F 30 00 A4 11 07 0A 04 01 00 01 01 A1",
+                                                                                                "ascii":  ".h....E.MXM_.._T_0..G..p.j._T_0..._T_0..........."
+                                                                                            }
+                                                                                        ],
+                                                                               "NVOP":  [
+                                                                                            {
+                                                                                                "offset":  "0x59E",
+                                                                                                "preceding_byte":  "0x50",
+                                                                                                "hex":  "50 45 47 30 50 45 47 50 4E 56 4F 50 68 69 6A 6B A0 40 05 93 68 11 13 0A 10 01 2D 13 A3 DA 8C BA 49 A5 2E BC 9D 46 DF 6B 81 A0 37 92 93 5C 2F 05 5F",
+                                                                                                "ascii":  "PEG0PEGPNVOPhijk.@..h.....-.....I....F.k..7..\\/._"
+                                                                                            },
+                                                                                            {
+                                                                                                "offset":  "0x795",
+                                                                                                "preceding_byte":  "0x22",
+                                                                                                "hex":  "44 50 53 54 01 14 40 22 4E 56 4F 50 0C 08 5F 54 5F 30 00 70 0D 2D 2D 2D 2D 2D 2D 2D 20 4E 56 20 4F 50 54 49 4D 55 53 20 44 53 4D 20 2D 2D 2D 2D 2D",
+                                                                                                "ascii":  "DPST..@\"NVOP.._T_0.p.------- NV OPTIMUS DSM -----"
+                                                                                            },
+                                                                                            {
+                                                                                                "offset":  "0x7EB",
+                                                                                                "preceding_byte":  "0x20",
+                                                                                                "hex":  "5F 30 00 70 0D 20 20 20 4E 56 4F 50 20 66 75 6E 30 20 4E 56 4F 50 5F 46 55 4E 43 5F 53 55 50 50 4F 52 54 00 5B 31 A4 11 07 0A 04 01 00 00 0C A1 4F",
+                                                                                                "ascii":  "_0.p.   NVOP fun0 NVOP_FUNC_SUPPORT.[1..........O"
+                                                                                            },
+                                                                                            {
+                                                                                                "offset":  "0x7F5",
+                                                                                                "preceding_byte":  "0x20",
+                                                                                                "hex":  "4F 50 20 66 75 6E 30 20 4E 56 4F 50 5F 46 55 4E 43 5F 53 55 50 50 4F 52 54 00 5B 31 A4 11 07 0A 04 01 00 00 0C A1 4F 19 A0 49 11 93 5F 54 5F 30 0A",
+                                                                                                "ascii":  "OP fun0 NVOP_FUNC_SUPPORT.[1..........O..I.._T_0."
+                                                                                            },
+                                                                                            {
+                                                                                                "offset":  "0x824",
+                                                                                                "preceding_byte":  "0x20",
+                                                                                                "hex":  "30 0A 1A 70 0D 20 20 20 4E 56 4F 50 20 66 75 6E 32 36 20 4E 56 4F 50 5F 46 55 4E 43 5F 4F 50 54 49 4D 55 53 43 41 50 53 00 5B 31 5B 13 6B 00 01 46",
+                                                                                                "ascii":  "0..p.   NVOP fun26 NVOP_FUNC_OPTIMUSCAPS.[1[.k..F"
+                                                                                            },
+                                                                                            {
+                                                                                                "offset":  "0x82F",
+                                                                                                "preceding_byte":  "0x20",
+                                                                                                "hex":  "50 20 66 75 6E 32 36 20 4E 56 4F 50 5F 46 55 4E 43 5F 4F 50 54 49 4D 55 53 43 41 50 53 00 5B 31 5B 13 6B 00 01 46 4C 43 48 5B 13 6B 01 01 44 56 53",
+                                                                                                "ascii":  "P fun26 NVOP_FUNC_OPTIMUSCAPS.[1[.k..FLCH[.k..DVS"
+                                                                                            },
+                                                                                            {
+                                                                                                "offset":  "0x941",
+                                                                                                "preceding_byte":  "0x20",
+                                                                                                "hex":  "30 0A 1B 70 0D 20 20 20 4E 56 4F 50 20 66 75 6E 32 37 20 4E 56 4F 50 5F 46 55 4E 43 5F 4F 50 54 49 4D 55 53 46 4C 41 47 53 00 5B 31 5B 13 6B 00 01",
+                                                                                                "ascii":  "0..p.   NVOP fun27 NVOP_FUNC_OPTIMUSFLAGS.[1[.k.."
+                                                                                            },
+                                                                                            {
+                                                                                                "offset":  "0x94C",
+                                                                                                "preceding_byte":  "0x20",
+                                                                                                "hex":  "50 20 66 75 6E 32 37 20 4E 56 4F 50 5F 46 55 4E 43 5F 4F 50 54 49 4D 55 53 46 4C 41 47 53 00 5B 31 5B 13 6B 00 01 4F 41 43 43 5B 13 6B 01 01 55 4F",
+                                                                                                "ascii":  "P fun27 NVOP_FUNC_OPTIMUSFLAGS.[1[.k..OACC[.k..UO"
+                                                                                            }
+                                                                                        ],
+                                                                               "NBCI":  [
+                                                                                            {
+                                                                                                "offset":  "0x691",
+                                                                                                "preceding_byte":  "0x50",
+                                                                                                "hex":  "50 45 47 30 50 45 47 50 4E 42 43 49 68 69 6A 6B A0 33 93 68 11 13 0A 10 00 A4 04 40 7D 91 F2 4C B8 9C 79 B6 2F D5 56 65 A4 5C 2F 05 5F 53 42 5F 50",
+                                                                                                "ascii":  "PEG0PEGPNBCIhijk.3.h.......@}..L..y./.Ve.\\/._SB_P"
+                                                                                            },
+                                                                                            {
+                                                                                                "offset":  "0x1381",
+                                                                                                "preceding_byte":  "0x15",
+                                                                                                "hex":  "00 00 00 00 00 14 4B 15 4E 42 43 49 0C 70 0D 2D 2D 2D 2D 2D 2D 2D 20 4E 56 20 4E 42 43 49 20 44 53 4D 20 2D 2D 2D 2D 2D 2D 2D 2D 00 5B 31 A0 2B 92",
+                                                                                                "ascii":  "......K.NBCI.p.------- NV NBCI DSM --------.[1.+."
+                                                                                            },
+                                                                                            {
+                                                                                                "offset":  "0x1393",
+                                                                                                "preceding_byte":  "0x20",
+                                                                                                "hex":  "2D 2D 2D 2D 20 4E 56 20 4E 42 43 49 20 44 53 4D 20 2D 2D 2D 2D 2D 2D 2D 2D 00 5B 31 A0 2B 92 93 69 0B 02 01 70 0D 20 4E 42 43 49 20 44 53 4D 3A 20",
+                                                                                                "ascii":  "---- NV NBCI DSM --------.[1.+..i...p. NBCI DSM: "
+                                                                                            },
+                                                                                            {
+                                                                                                "offset":  "0x13B2",
+                                                                                                "preceding_byte":  "0x20",
+                                                                                                "hex":  "93 69 0B 02 01 70 0D 20 4E 42 43 49 20 44 53 4D 3A 20 4E 4F 54 20 53 55 50 50 4F 52 54 45 44 21 00 5B 31 A4 0C 02 00 00 80 A0 30 93 6A 00 70 0D 20",
+                                                                                                "ascii":  ".i...p. NBCI DSM: NOT SUPPORTED!.[1.......0.j.p. "
+                                                                                            },
+                                                                                            {
+                                                                                                "offset":  "0x13DD",
+                                                                                                "preceding_byte":  "0x20",
+                                                                                                "hex":  "93 6A 00 70 0D 20 20 20 4E 42 43 49 20 66 75 6E 30 20 4E 42 43 49 5F 46 55 4E 43 5F 53 55 50 50 4F 52 54 00 5B 31 A4 11 07 0A 04 01 00 11 00 A0 40",
+                                                                                                "ascii":  ".j.p.   NBCI fun0 NBCI_FUNC_SUPPORT.[1..........@"
+                                                                                            },
+                                                                                            {
+                                                                                                "offset":  "0x13E7",
+                                                                                                "preceding_byte":  "0x20",
+                                                                                                "hex":  "43 49 20 66 75 6E 30 20 4E 42 43 49 5F 46 55 4E 43 5F 53 55 50 50 4F 52 54 00 5B 31 A4 11 07 0A 04 01 00 11 00 A0 40 05 93 6A 0A 10 70 0D 20 20 20",
+                                                                                                "ascii":  "CI fun0 NBCI_FUNC_SUPPORT.[1..........@..j..p.   "
+                                                                                            },
+                                                                                            {
+                                                                                                "offset":  "0x1410",
+                                                                                                "preceding_byte":  "0x20",
+                                                                                                "hex":  "6A 0A 10 70 0D 20 20 20 4E 42 43 49 20 66 75 6E 31 36 20 4E 42 43 49 5F 46 55 4E 43 5F 47 45 54 4F 42 4A 42 59 54 59 50 45 00 5B 31 8B 6B 0A 02 42",
+                                                                                                "ascii":  "j..p.   NBCI fun16 NBCI_FUNC_GETOBJBYTYPE.[1.k..B"
+                                                                                            },
+                                                                                            {
+                                                                                                "offset":  "0x141B",
+                                                                                                "preceding_byte":  "0x20",
+                                                                                                "hex":  "49 20 66 75 6E 31 36 20 4E 42 43 49 5F 46 55 4E 43 5F 47 45 54 4F 42 4A 42 59 54 59 50 45 00 5B 31 8B 6B 0A 02 42 46 46 30 A0 09 93 42 46 46 30 0B",
+                                                                                                "ascii":  "I fun16 NBCI_FUNC_GETOBJBYTYPE.[1.k..BFF0...BFF0."
+                                                                                            }
+                                                                                        ],
+                                                                               "NVJT":  [
+                                                                                            {
+                                                                                                "offset":  "0x640",
+                                                                                                "preceding_byte":  "0x50",
+                                                                                                "hex":  "50 45 47 30 50 45 47 50 4E 56 4A 54 68 69 6A 6B A0 40 05 93 68 11 13 0A 10 75 0B A5 D4 C7 65 F7 46 BF B7 41 51 4C EA 02 44 A0 37 92 93 5C 2F 05 5F",
+                                                                                                "ascii":  "PEG0PEGPNVJThijk.@..h....u....e.F..AQL..D.7..\\/._"
+                                                                                            },
+                                                                                            {
+                                                                                                "offset":  "0xE0B",
+                                                                                                "preceding_byte":  "0x4A",
+                                                                                                "hex":  "30 50 45 47 50 14 42 4A 4E 56 4A 54 0C 08 5F 54 5F 30 00 70 0D 2D 2D 2D 2D 2D 2D 2D 20 4E 56 20 4A 54 20 44 53 4D 20 2D 2D 2D 2D 2D 2D 2D 2D 00 5B",
+                                                                                                "ascii":  "0PEGP.BJNVJT.._T_0.p.------- NV JT DSM --------.["
+                                                                                            }
+                                                                                        ],
+                                                                               "GPS_":  [
+                                                                                            {
+                                                                                                "offset":  "0x5EF",
+                                                                                                "preceding_byte":  "0x50",
+                                                                                                "hex":  "50 45 47 30 50 45 47 50 47 50 53 5F 68 69 6A 6B A0 40 05 93 68 11 13 0A 10 51 A3 EC CB 7B 06 24 49 9C BD B4 6B 00 B8 6F 34 A0 37 92 93 5C 2F 05 5F",
+                                                                                                "ascii":  "PEG0PEGPGPS_hijk.@..h....Q...{.$I...k..o4.7..\\/._"
+                                                                                            },
+                                                                                            {
+                                                                                                "offset":  "0xA43",
+                                                                                                "preceding_byte":  "0x1D",
+                                                                                                "hex":  "20 54 4D 50 32 14 4B 1D 47 50 53 5F 0C 08 5F 54 5F 31 00 08 5F 54 5F 30 00 70 0D 2D 2D 2D 2D 2D 2D 2D 20 4E 56 20 47 50 53 20 44 53 4D 20 2D 2D 2D",
+                                                                                                "ascii":  " TMP2.K.GPS_.._T_1.._T_0.p.------- NV GPS DSM ---"
+                                                                                            }
+                                                                                        ]
+                                                                           },
+                                  "reg_SSD4_HONOR_IgfxSsdt_00003000.bin":  {
+                                                                               "_DOD":  [
+                                                                                            {
+                                                                                                "offset":  "0x31D",
+                                                                                                "preceding_byte":  "0x01",
+                                                                                                "hex":  "48 44 4F 53 14 8C 15 01 5F 44 4F 44 00 70 0A 02 4E 44 49 44 A0 15 92 93 44 49 44 4C 00 70 53 44 44 4C 44 49 44 4C 44 49 44 31 A0 15 92 93 44 44 4C",
+                                                                                                "ascii":  "HDOS...._DOD.p..NDID....DIDL.pSDDLDIDLDID1....DDL"
+                                                                                            }
+                                                                                        ],
+                                                                               "DD1F":  [
+                                                                                            {
+                                                                                                "offset":  "0x1E2C",
+                                                                                                "preceding_byte":  "0x1B",
+                                                                                                "hex":  "53 53 54 68 5B 82 47 1B 44 44 31 46 14 1D 5F 41 44 52 08 A0 0A 93 45 44 50 56 00 A4 0A 1F A1 0B A4 7B 0B FF FF 44 49 44 58 00 14 1B 5F 44 43 53 00",
+                                                                                                "ascii":  "SSTh[.G.DD1F.._ADR....EDPV.......{...DIDX..._DCS."
+                                                                                            }
+                                                                                        ],
+                                                                               "IGDM":  [
+                                                                                            {
+                                                                                                "offset":  "0x23FC",
+                                                                                                "preceding_byte":  "0x80",
+                                                                                                "hex":  "30 41 53 4C 53 20 5B 80 49 47 44 4D 00 41 53 4C 42 0B 00 20 5B 81 4D 20 49 47 44 4D 00 53 49 47 4E 40 08 53 49 5A 45 20 4F 56 45 52 20 53 56 45 52",
+                                                                                                "ascii":  "0ASLS [.IGDM.ASLB.. [.M IGDM.SIGN@.SIZE OVER SVER"
+                                                                                            },
+                                                                                            {
+                                                                                                "offset":  "0x240C",
+                                                                                                "preceding_byte":  "0x20",
+                                                                                                "hex":  "42 0B 00 20 5B 81 4D 20 49 47 44 4D 00 53 49 47 4E 40 08 53 49 5A 45 20 4F 56 45 52 20 53 56 45 52 40 10 56 56 45 52 40 08 47 56 45 52 40 08 4D 42",
+                                                                                                "ascii":  "B.. [.M IGDM.SIGN@.SIZE OVER SVER@.VVER@.GVER@.MB"
+                                                                                            }
+                                                                                        ],
+                                                                               "_DSM":  [
+                                                                                            {
+                                                                                                "offset":  "0x2E05",
+                                                                                                "preceding_byte":  "0x5A",
+                                                                                                "hex":  "01 A1 01 A4 00 14 4E 5A 5F 44 53 4D 0C 08 5F 54 5F 30 00 A0 4B 59 93 68 11 13 0A 10 C6 41 5B 3E 1D EB 60 42 9D 15 C7 1F BA DA E4 14 A0 4E 05 91 93",
+                                                                                                "ascii":  "......NZ_DSM.._T_0..KY.h.....A[>..`B.........N..."
+                                                                                            }
+                                                                                        ]
+                                                                           },
+                                  "reg_DSDT_HONOR_ADL-P-M_00000002.bin":  {
+                                                                              "DD1F":  [
+                                                                                           {
+                                                                                               "offset":  "0xA7",
+                                                                                               "preceding_byte":  "0x30",
+                                                                                               "hex":  "50 43 30 30 47 46 58 30 44 44 31 46 06 00 15 5C 2F 04 5F 53 42 5F 50 43 30 30 47 46 58 30 44 44 32 46 06 00 15 5C 2F 04 5F 53 42 5F 50 43 30 30 53",
+                                                                                               "ascii":  "PC00GFX0DD1F...\\/._SB_PC00GFX0DD2F...\\/._SB_PC00S"
+                                                                                           },
+                                                                                           {
+                                                                                               "offset":  "0x20E68",
+                                                                                               "preceding_byte":  "0x30",
+                                                                                               "hex":  "5E 5E 5E 2E 47 46 58 30 44 44 31 46 0A 86 70 0B 82 02 57 4D 45 4E 86 57 4D 49 31 0A A0 14 24 5F 51 31 38 00 86 5E 5E 5E 2E 47 46 58 30 44 44 31 46",
+                                                                                               "ascii":  "^^^.GFX0DD1F..p...WMEN.WMI1...$_Q18..^^^.GFX0DD1F"
+                                                                                           },
+                                                                                           {
+                                                                                               "offset":  "0x20E8D",
+                                                                                               "preceding_byte":  "0x30",
+                                                                                               "hex":  "5E 5E 5E 2E 47 46 58 30 44 44 31 46 0A 87 70 0B 81 02 57 4D 45 4E 86 57 4D 49 31 0A A0 14 38 5F 51 31 39 00 A0 09 45 43 4F 4B 55 50 44 4C A0 20 49",
+                                                                                               "ascii":  "^^^.GFX0DD1F..p...WMEN.WMI1...8_Q19...ECOKUPDL. I"
+                                                                                           },
+                                                                                           {
+                                                                                               "offset":  "0x24366",
+                                                                                               "preceding_byte":  "0x30",
+                                                                                               "hex":  "50 43 30 30 47 46 58 30 44 44 31 46 68 A0 23 93 7B 44 49 44 59 0B 0F 0F 00 0B 01 04 86 5C 2F 04 5F 53 42 5F 50 43 30 30 47 46 58 30 44 44 32 46 68",
+                                                                                               "ascii":  "PC00GFX0DD1Fh.#.{DIDY........\\/._SB_PC00GFX0DD2Fh"
+                                                                                           }
+                                                                                       ],
+                                                                              "ASLB":  [
+                                                                                           {
+                                                                                               "offset":  "0x8DE4",
+                                                                                               "preceding_byte":  "0x10",
+                                                                                               "hex":  "81 48 3A 53 41 4E 56 10 41 53 4C 42 20 49 4D 4F 4E 08 49 47 44 53 08 49 42 54 54 08 49 50 41 54 08 49 50 53 43 08 49 42 49 41 08 49 53 53 43 08 49",
+                                                                                               "ascii":  ".H:SANV.ASLB IMON.IGDS.IBTT.IPAT.IPSC.IBIA.ISSC.I"
+                                                                                           }
+                                                                                       ],
+                                                                              "NPCF":  [
+                                                                                           {
+                                                                                               "offset":  "0x2B53",
+                                                                                               "preceding_byte":  "0x5F",
+                                                                                               "hex":  "00 15 5C 2E 5F 53 42 5F 4E 50 43 46 00 00 15 5C 48 47 4D 44 00 00 15 5C 2E 5F 53 42 5F 54 52 50 44 00 00 15 5C 2E 5F 53 42 5F 54 52 50 46 00 00 15",
+                                                                                               "ascii":  "..\\._SB_NPCF...\\HGMD...\\._SB_TRPD...\\._SB_TRPF..."
+                                                                                           },
+                                                                                           {
+                                                                                               "offset":  "0x20F95",
+                                                                                               "preceding_byte":  "0x86",
+                                                                                               "hex":  "50 0A C0 5B 22 0A 0A 86 4E 50 43 46 0A C0 5B 22 0A 0A 70 0B A0 02 57 4D 45 4E 86 57 4D 49 31 0A A0 14 49 07 5F 51 32 34 00 70 01 4F 44 56 33 70 00",
+                                                                                               "ascii":  "P..[\"...NPCF..[\"..p...WMEN.WMI1...I._Q24.p.ODV3p."
+                                                                                           },
+                                                                                           {
+                                                                                               "offset":  "0x2100F",
+                                                                                               "preceding_byte":  "0x86",
+                                                                                               "hex":  "50 0A C0 5B 22 0A 0A 86 4E 50 43 46 0A C0 5B 22 0A 0A 70 0B A1 02 57 4D 45 4E 86 57 4D 49 31 0A A0 14 15 5F 51 32 35 00 70 0B A6 02 57 4D 45 4E 86",
+                                                                                               "ascii":  "P..[\"...NPCF..[\"..p...WMEN.WMI1...._Q25.p...WMEN."
+                                                                                           }
+                                                                                       ]
+                                                                          }
+                              },
+                 "note":  "Raw bytes only. Any reading of AML opcodes in REPORT.md is a manual decode and must be confirmed with a disassembler (iasl) offline."
+             }
+}

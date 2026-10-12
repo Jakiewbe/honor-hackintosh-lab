@@ -1,0 +1,146 @@
+{
+    "probe_id":  "P04_memory",
+    "title":  "Physical memory modules",
+    "source_interface":  "CIM Win32_PhysicalMemory / Win32_PhysicalMemoryArray (SerialNumber not selected)",
+    "command":  "$m = Get-CimInstance Win32_PhysicalMemory | Select-Object BankLabel, DeviceLocator, Capacity, Speed, ConfiguredClockSpeed, ConfiguredVoltage, Manufacturer, PartNumber, SMBIOSMemoryType, MemoryType, FormFactor, DataWidth, TotalWidth\r\n    $a = Get-CimInstance Win32_PhysicalMemoryArray | Select-Object MaxCapacity, MaxCapacityEx, MemoryDevices, MemoryErrorCorrection\r\n    [ordered]@{ modules = @($m); arrays = @($a); total_bytes = ($m | Measure-Object Capacity -Sum).Sum }",
+    "started_local":  "2026-10-12T22:47:26.978+08:00",
+    "duration_ms":  23,
+    "status":  "ok",
+    "native_exit_code":  null,
+    "errors":  [
+
+               ],
+    "data":  {
+                 "modules":  [
+                                 {
+                                     "BankLabel":  "BANK 0",
+                                     "DeviceLocator":  "Controller0-ChannelA",
+                                     "Capacity":  2147483648,
+                                     "Speed":  6400,
+                                     "ConfiguredClockSpeed":  4800,
+                                     "ConfiguredVoltage":  500,
+                                     "Manufacturer":  "Samsung",
+                                     "PartNumber":  "K3LKBKB@BM-MGCP     ",
+                                     "SMBIOSMemoryType":  35,
+                                     "MemoryType":  0,
+                                     "FormFactor":  0,
+                                     "DataWidth":  16,
+                                     "TotalWidth":  16
+                                 },
+                                 {
+                                     "BankLabel":  "BANK 1",
+                                     "DeviceLocator":  "Controller0-ChannelB",
+                                     "Capacity":  2147483648,
+                                     "Speed":  6400,
+                                     "ConfiguredClockSpeed":  4800,
+                                     "ConfiguredVoltage":  500,
+                                     "Manufacturer":  "Samsung",
+                                     "PartNumber":  "K3LKBKB@BM-MGCP     ",
+                                     "SMBIOSMemoryType":  35,
+                                     "MemoryType":  0,
+                                     "FormFactor":  0,
+                                     "DataWidth":  16,
+                                     "TotalWidth":  16
+                                 },
+                                 {
+                                     "BankLabel":  "BANK 2",
+                                     "DeviceLocator":  "Controller0-ChannelC",
+                                     "Capacity":  2147483648,
+                                     "Speed":  6400,
+                                     "ConfiguredClockSpeed":  4800,
+                                     "ConfiguredVoltage":  500,
+                                     "Manufacturer":  "Samsung",
+                                     "PartNumber":  "K3LKBKB@BM-MGCP     ",
+                                     "SMBIOSMemoryType":  35,
+                                     "MemoryType":  0,
+                                     "FormFactor":  0,
+                                     "DataWidth":  16,
+                                     "TotalWidth":  16
+                                 },
+                                 {
+                                     "BankLabel":  "BANK 3",
+                                     "DeviceLocator":  "Controller0-ChannelD",
+                                     "Capacity":  2147483648,
+                                     "Speed":  6400,
+                                     "ConfiguredClockSpeed":  4800,
+                                     "ConfiguredVoltage":  500,
+                                     "Manufacturer":  "Samsung",
+                                     "PartNumber":  "K3LKBKB@BM-MGCP     ",
+                                     "SMBIOSMemoryType":  35,
+                                     "MemoryType":  0,
+                                     "FormFactor":  0,
+                                     "DataWidth":  16,
+                                     "TotalWidth":  16
+                                 },
+                                 {
+                                     "BankLabel":  "BANK 0",
+                                     "DeviceLocator":  "Controller1-ChannelA",
+                                     "Capacity":  2147483648,
+                                     "Speed":  6400,
+                                     "ConfiguredClockSpeed":  4800,
+                                     "ConfiguredVoltage":  500,
+                                     "Manufacturer":  "Samsung",
+                                     "PartNumber":  "K3LKBKB@BM-MGCP     ",
+                                     "SMBIOSMemoryType":  35,
+                                     "MemoryType":  0,
+                                     "FormFactor":  0,
+                                     "DataWidth":  16,
+                                     "TotalWidth":  16
+                                 },
+                                 {
+                                     "BankLabel":  "BANK 1",
+                                     "DeviceLocator":  "Controller1-ChannelB",
+                                     "Capacity":  2147483648,
+                                     "Speed":  6400,
+                                     "ConfiguredClockSpeed":  4800,
+                                     "ConfiguredVoltage":  500,
+                                     "Manufacturer":  "Samsung",
+                                     "PartNumber":  "K3LKBKB@BM-MGCP     ",
+                                     "SMBIOSMemoryType":  35,
+                                     "MemoryType":  0,
+                                     "FormFactor":  0,
+                                     "DataWidth":  16,
+                                     "TotalWidth":  16
+                                 },
+                                 {
+                                     "BankLabel":  "BANK 2",
+                                     "DeviceLocator":  "Controller1-ChannelC",
+                                     "Capacity":  2147483648,
+                                     "Speed":  6400,
+                                     "ConfiguredClockSpeed":  4800,
+                                     "ConfiguredVoltage":  500,
+                                     "Manufacturer":  "Samsung",
+                                     "PartNumber":  "K3LKBKB@BM-MGCP     ",
+                                     "SMBIOSMemoryType":  35,
+                                     "MemoryType":  0,
+                                     "FormFactor":  0,
+                                     "DataWidth":  16,
+                                     "TotalWidth":  16
+                                 },
+                                 {
+                                     "BankLabel":  "BANK 3",
+                                     "DeviceLocator":  "Controller1-ChannelD",
+                                     "Capacity":  2147483648,
+                                     "Speed":  6400,
+                                     "ConfiguredClockSpeed":  4800,
+                                     "ConfiguredVoltage":  500,
+                                     "Manufacturer":  "Samsung",
+                                     "PartNumber":  "K3LKBKB@BM-MGCP     ",
+                                     "SMBIOSMemoryType":  35,
+                                     "MemoryType":  0,
+                                     "FormFactor":  0,
+                                     "DataWidth":  16,
+                                     "TotalWidth":  16
+                                 }
+                             ],
+                 "arrays":  [
+                                {
+                                    "MaxCapacity":  16777216,
+                                    "MaxCapacityEx":  16777216,
+                                    "MemoryDevices":  8,
+                                    "MemoryErrorCorrection":  3
+                                }
+                            ],
+                 "total_bytes":  17179869184
+             }
+}

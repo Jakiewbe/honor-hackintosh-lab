@@ -1,0 +1,63 @@
+{
+    "probe_id":  "P30_disks",
+    "title":  "Disks (model, firmware, bus, partition style)",
+    "source_interface":  "Storage module Get-Disk / Get-PhysicalDisk + CIM Win32_DiskDrive (serial/UniqueId/Guid not selected)",
+    "command":  "$res = [ordered]@{}\r\n    $res.get_disk = @(Get-Disk -ErrorAction Stop | Select-Object Number, FriendlyName, Model, Manufacturer, FirmwareVersion, BusType, PartitionStyle, Size, AllocatedSize, NumberOfPartitions, IsBoot, IsSystem, IsOffline, IsReadOnly, OperationalStatus, HealthStatus, LogicalSectorSize, PhysicalSectorSize, Location)\r\n    try { $res.get_physicaldisk = @(Get-PhysicalDisk -ErrorAction Stop | Select-Object DeviceId, FriendlyName, Model, FirmwareVersion, MediaType, BusType, Size, HealthStatus, SpindleSpeed) } catch { Add-ProbeError ('Get-PhysicalDisk: ' + $_.Exception.Message) }\r\n    try { $res.win32_diskdrive = @(Get-CimInstance Win32_DiskDrive -ErrorAction Stop | Select-Object Index, Model, FirmwareRevision, InterfaceType, MediaType, Size, Partitions, PNPDeviceID) } catch { Add-ProbeError ('Win32_DiskDrive: ' + $_.Exception.Message) }\r\n    $res",
+    "started_local":  "2026-10-12T22:48:13.917+08:00",
+    "duration_ms":  1060,
+    "status":  "ok",
+    "native_exit_code":  null,
+    "errors":  [
+
+               ],
+    "data":  {
+                 "get_disk":  [
+                                  {
+                                      "Number":  0,
+                                      "FriendlyName":  "SAMSUNG MZVL2512HCJQ-00B00",
+                                      "Model":  "SAMSUNG MZVL2512HCJQ-00B00",
+                                      "Manufacturer":  null,
+                                      "FirmwareVersion":  "GXA7601Q",
+                                      "BusType":  "NVMe",
+                                      "PartitionStyle":  "GPT",
+                                      "Size":  512110190592,
+                                      "AllocatedSize":  512110190592,
+                                      "NumberOfPartitions":  7,
+                                      "IsBoot":  true,
+                                      "IsSystem":  true,
+                                      "IsOffline":  false,
+                                      "IsReadOnly":  false,
+                                      "OperationalStatus":  "Online",
+                                      "HealthStatus":  "Healthy",
+                                      "LogicalSectorSize":  512,
+                                      "PhysicalSectorSize":  4096,
+                                      "Location":  "PCI Slot 2 : Bus 2 : Device 0 : Function 0 : Adapter 0"
+                                  }
+                              ],
+                 "get_physicaldisk":  [
+                                          {
+                                              "DeviceId":  "0",
+                                              "FriendlyName":  "SAMSUNG MZVL2512HCJQ-00B00",
+                                              "Model":  "SAMSUNG MZVL2512HCJQ-00B00",
+                                              "FirmwareVersion":  "GXA7601Q",
+                                              "MediaType":  "SSD",
+                                              "BusType":  "NVMe",
+                                              "Size":  512110190592,
+                                              "HealthStatus":  "Healthy",
+                                              "SpindleSpeed":  0
+                                          }
+                                      ],
+                 "win32_diskdrive":  [
+                                         {
+                                             "Index":  0,
+                                             "Model":  "SAMSUNG MZVL2512HCJQ-00B00",
+                                             "FirmwareRevision":  "GXA7601Q",
+                                             "InterfaceType":  "SCSI",
+                                             "MediaType":  "Fixed hard disk media",
+                                             "Size":  512105932800,
+                                             "Partitions":  6,
+                                             "PNPDeviceID":  "SCSI\\DISK&VEN_NVME&PROD_SAMSUNG_MZVL2512\\5&22DF68DF&0&000000"
+                                         }
+                                     ]
+             }
+}

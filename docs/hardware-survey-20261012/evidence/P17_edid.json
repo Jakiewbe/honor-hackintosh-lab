@@ -1,0 +1,137 @@
+{
+    "probe_id":  "P17_edid",
+    "title":  "Monitor EDID (registry copy), decoded and serial-scrubbed",
+    "source_interface":  "registry HKLM\\SYSTEM\\CurrentControlSet\\Enum\\DISPLAY\\<model>\\<instance>\\Device Parameters\\EDID (read-only) + Get-PnpDevice -Class Monitor",
+    "command":  "$mons = @(Get-PnpDevice -Class Monitor -ErrorAction Stop)\r\n    $out = @()\r\n    foreach ($m in $mons) {\r\n        $rec = [ordered]@{ instance_id = $m.InstanceId; friendly_name = $m.FriendlyName; present = $m.Present; status = [string]$m.Status }\r\n        try {\r\n            $pp = Get-PnpDeviceProperty -InstanceId $m.InstanceId -KeyName 'DEVPKEY_Device_Parent', 'DEVPKEY_Device_BiosDeviceName', 'DEVPKEY_Device_BusReportedDeviceDesc' -ErrorAction Stop\r\n            foreach ($x in $pp) { $rec[$x.KeyName -replace '^DEVPKEY_', ''] = $x.Data }\r\n        } catch { Add-ProbeError (\"$($m.InstanceId) properties: \" + $_.Exception.Message) }\r\n        try {\r\n            $raw = (Get-ItemProperty -LiteralPath (\"HKLM:\\SYSTEM\\CurrentControlSet\\Enum\\\" + $m.InstanceId + \"\\Device Parameters\") -ErrorAction Stop).EDID\r\n            if ($raw -isnot [byte[]]) { throw 'EDID value missing' }\r\n            $r = Read-Edid $raw\r\n            $rec.edid = $r.info; $rec.sanitization_actions = $r.actions\r\n            if ($r.sanitized) {\r\n                $safeName = ($m.InstanceId -split '\\\\')[1] + '_' + $(if ($m.Present) { 'present' } else { 'not_present' })\r\n                $binPath = Join-Path $EdidDir ($safeName + '.sanitized.bin')\r\n                [IO.File]::WriteAllBytes($binPath, $r.sanitized)\r\n                $hex = (($r.sanitized | ForEach-Object { $_.ToString('X2') }) -join ' ')\r\n                $lines = for ($i = 0; $i -lt $r.sanitized.Length; $i += 16) { ('{0:X4}: ' -f $i) + (($r.sanitized[$i..([Math]::Min($i + 15, $r.sanitized.Length - 1))] | ForEach-Object { $_.ToString('X2') }) -join ' ') }\r\n                [IO.File]::WriteAllText((Join-Path $EdidDir ($safeName + '.sanitized.hex.txt')), (\"SANITIZED EDID COPY - not the unmodified original. Actions: \" + ($r.actions -join '; ') + \"; block checksums recomputed.`r`n\" + ($lines -join \"`r`n\")), $Utf8)\r\n                $rec.sanitized_files = @(\"evidence/edid/$safeName.sanitized.bin\", \"evidence/edid/$safeName.sanitized.hex.txt\")\r\n                $rec.sanitized_sha256 = (Get-FileHash -LiteralPath $binPath -Algorithm SHA256).Hash\r\n            }\r\n        } catch { $rec.edid_error = $_.Exception.Message; Add-ProbeError (\"$($m.InstanceId): \" + $_.Exception.Message) }\r\n        $out += $rec\r\n    }\r\n    $out",
+    "started_local":  "2026-10-12T22:47:27.571+08:00",
+    "duration_ms":  1363,
+    "status":  "ok",
+    "native_exit_code":  null,
+    "errors":  [
+
+               ],
+    "data":  [
+                 {
+                     "instance_id":  "DISPLAY\\DELD0E6\\1&33320F0&0&UID256",
+                     "friendly_name":  "Generic Monitor (S2719DGF)",
+                     "present":  false,
+                     "status":  "Unknown",
+                     "Device_Parent":  "HTREE\\ROOT\\0",
+                     "Device_BiosDeviceName":  null,
+                     "Device_BusReportedDeviceDesc":  "Generic Monitor (S2719DGF)",
+                     "edid":  {
+                                  "length":  128,
+                                  "valid_header":  true,
+                                  "manufacturer_pnp_id":  "DEL",
+                                  "product_code":  "0xD0E6",
+                                  "serial_number_field_present":  true,
+                                  "manufacture_week":  36,
+                                  "manufacture_year":  2019,
+                                  "edid_version":  "1.4",
+                                  "digital_input":  true,
+                                  "bits_per_color":  "8",
+                                  "video_interface":  "DisplayPort",
+                                  "screen_size_cm":  "60x34",
+                                  "extension_count":  0,
+                                  "detailed_timings":  [
+                                                           {
+                                                               "pixel_clock_khz":  582000,
+                                                               "h_active":  2560,
+                                                               "h_blank":  160,
+                                                               "h_sync_offset":  48,
+                                                               "h_sync_width":  32,
+                                                               "v_active":  1440,
+                                                               "v_blank":  41,
+                                                               "v_sync_offset":  3,
+                                                               "v_sync_width":  5,
+                                                               "image_mm":  "597x336",
+                                                               "interlaced":  false,
+                                                               "flags_raw":  "0x1A",
+                                                               "refresh_hz":  144.477
+                                                           }
+                                                       ],
+                                  "text_descriptors":  {
+                                                           "monitor_name":  "S2719DGF"
+                                                       },
+                                  "range_limits":  {
+                                                       "v_min_hz":  40,
+                                                       "v_max_hz":  155,
+                                                       "h_min_khz":  250,
+                                                       "h_max_khz":  250,
+                                                       "max_pixel_clock_mhz":  640
+                                                   },
+                                  "extensions":  [
+
+                                                 ]
+                              },
+                     "sanitization_actions":  [
+                                                  "base block descriptor at offset 72 (tag 0xFF serial string) blanked",
+                                                  "base block bytes 12-15 (ID serial number) zeroed"
+                                              ],
+                     "sanitized_files":  [
+                                             "evidence/edid/DELD0E6_not_present.sanitized.bin",
+                                             "evidence/edid/DELD0E6_not_present.sanitized.hex.txt"
+                                         ],
+                     "sanitized_sha256":  "408775A50ED3BCD70C70C70F6EBACE33914A9DA2AA3240880851EBA25CDDBA2C"
+                 },
+                 {
+                     "instance_id":  "DISPLAY\\BOE0893\\4&FD33AF8&0&UID8388688",
+                     "friendly_name":  "BOE PnP Monitor",
+                     "present":  true,
+                     "status":  "OK",
+                     "Device_Parent":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C\\3&11583659&2&10",
+                     "Device_BiosDeviceName":  "\\_SB.PC00.GFX0.DD1F",
+                     "Device_BusReportedDeviceDesc":  "Integrated Monitor",
+                     "edid":  {
+                                  "length":  256,
+                                  "valid_header":  true,
+                                  "manufacturer_pnp_id":  "BOE",
+                                  "product_code":  "0x0893",
+                                  "serial_number_field_present":  false,
+                                  "manufacture_week":  20,
+                                  "manufacture_year":  2019,
+                                  "edid_version":  "1.4",
+                                  "digital_input":  true,
+                                  "bits_per_color":  "8",
+                                  "video_interface":  "DisplayPort",
+                                  "screen_size_cm":  "30x20",
+                                  "extension_count":  0,
+                                  "detailed_timings":  [
+                                                           {
+                                                               "pixel_clock_khz":  206020,
+                                                               "h_active":  2160,
+                                                               "h_blank":  160,
+                                                               "h_sync_offset":  48,
+                                                               "h_sync_width":  32,
+                                                               "v_active":  1440,
+                                                               "v_blank":  40,
+                                                               "v_sync_offset":  3,
+                                                               "v_sync_width":  10,
+                                                               "image_mm":  "296x197",
+                                                               "interlaced":  false,
+                                                               "flags_raw":  "0x1A",
+                                                               "refresh_hz":  60.001
+                                                           }
+                                                       ],
+                                  "text_descriptors":  {
+                                                           "unspecified_text":  [
+                                                                                    "BOE XS",
+                                                                                    "TV140WTM-NH0"
+                                                                                ]
+                                                       },
+                                  "range_limits":  null,
+                                  "extensions":  [
+
+                                                 ]
+                              },
+                     "sanitization_actions":  [
+
+                                              ],
+                     "sanitized_files":  [
+                                             "evidence/edid/BOE0893_present.sanitized.bin",
+                                             "evidence/edid/BOE0893_present.sanitized.hex.txt"
+                                         ],
+                     "sanitized_sha256":  "72597355933D4A48898EE37038F46F005A94FCD1925FC1BE78480AFFA129862F"
+                 }
+             ]
+}

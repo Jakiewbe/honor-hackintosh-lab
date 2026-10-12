@@ -1,0 +1,75 @@
+{
+    "probe_id":  "P13_displayconfig_active",
+    "title":  "Active display paths (QueryDisplayConfig QDC_ONLY_ACTIVE_PATHS)",
+    "source_interface":  "user32 QueryDisplayConfig + DisplayConfigGetDeviceInfo (SOURCE_NAME, TARGET_NAME, TARGET_PREFERRED_MODE, ADAPTER_NAME, TARGET_BASE_TYPE, ADVANCED_COLOR_INFO)",
+    "command":  "$q = [HonorSurvey.DisplayCfg]::Query(2)\r\n    if ($q.Status -ne 0) { throw \"QueryDisplayConfig returned $($q.Status)\" }\r\n    [ordered]@{ path_count = $q.Paths.Count; mode_count = $q.Modes.Count; paths = @(foreach ($p in $q.Paths) { Get-DisplayPathRecord $p $q.Modes -Full }) }",
+    "started_local":  "2026-10-12T22:47:27.351+08:00",
+    "duration_ms":  88,
+    "status":  "ok",
+    "native_exit_code":  null,
+    "errors":  [
+
+               ],
+    "data":  {
+                 "path_count":  1,
+                 "mode_count":  2,
+                 "paths":  [
+                               {
+                                   "source_adapter_luid":  "00000000:00010EF5",
+                                   "source_id":  0,
+                                   "target_adapter_luid":  "00000000:00010EF5",
+                                   "target_id":  8388688,
+                                   "target_adapter_device_path":  "\\\\?\\PCI#VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C#3&11583659&2&10#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                   "target_adapter_instance_id":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C\\3&11583659&2&10",
+                                   "output_technology_raw":  2147483648,
+                                   "output_technology":  "INTERNAL",
+                                   "target_available":  true,
+                                   "path_flags":  1,
+                                   "target_status_flags":  1,
+                                   "target_name":  {
+                                                       "friendly_name":  "",
+                                                       "monitor_device_path":  "\\\\?\\DISPLAY#BOE0893#4&fd33af8&0&UID8388688#{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}",
+                                                       "connector_instance":  0,
+                                                       "edid_ids_valid":  true,
+                                                       "friendly_name_from_edid":  false,
+                                                       "edid_manufacture_id_raw":  58633,
+                                                       "edid_product_code_id":  "0x0893",
+                                                       "output_technology":  "INTERNAL"
+                                                   },
+                                   "source_gdi_name":  "\\\\.\\DISPLAY1",
+                                   "refresh_rate_hz":  60.001,
+                                   "refresh_rate_rational":  "206020000/3433600",
+                                   "base_output_technology":  "INTERNAL",
+                                   "source_mode":  {
+                                                       "width":  2160,
+                                                       "height":  1440,
+                                                       "pixel_format":  4,
+                                                       "position":  "0,0"
+                                                   },
+                                   "target_mode":  {
+                                                       "active":  "2160x1440",
+                                                       "total":  "2320x1480",
+                                                       "pixel_rate_hz":  206020000,
+                                                       "vsync_hz":  60.001,
+                                                       "hsync_hz":  88801.7,
+                                                       "video_standard":  1,
+                                                       "scanline_ordering":  1
+                                                   },
+                                   "preferred_mode":  {
+                                                          "width":  2160,
+                                                          "height":  1440,
+                                                          "active":  "2160x1440",
+                                                          "total":  "2320x1480",
+                                                          "pixel_rate_hz":  206020000,
+                                                          "vsync_hz":  60.001
+                                                      },
+                                   "advanced_color":  {
+                                                          "supported":  true,
+                                                          "enabled":  false,
+                                                          "bits_per_color_channel":  8,
+                                                          "color_encoding":  0
+                                                      }
+                               }
+                           ]
+             }
+}

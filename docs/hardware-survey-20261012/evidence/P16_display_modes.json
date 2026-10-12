@@ -1,0 +1,53 @@
+{
+    "probe_id":  "P16_display_modes",
+    "title":  "Current and enumerable display modes per active GDI source",
+    "source_interface":  "user32 EnumDisplaySettingsEx (ENUM_CURRENT_SETTINGS and mode index enumeration)",
+    "command":  "$out = @()\r\n    for ($i = 0; $i -lt 64; $i++) {\r\n        $dd = [HonorSurvey.Gdi]::NewDD()\r\n        if (-not [HonorSurvey.Gdi]::EnumDisplayDevices([NullString]::Value, [uint32]$i, [ref]$dd, 0)) { break }\r\n        if (-not ($dd.StateFlags -band 1)) { continue }\r\n        $cur = [HonorSurvey.Gdi]::NewDM()\r\n        $ok = [HonorSurvey.Gdi]::EnumDisplaySettingsEx($dd.DeviceName, -1, [ref]$cur, 0)\r\n        $modes = New-Object System.Collections.Generic.HashSet[string]\r\n        for ($m = 0; $m -lt 5000; $m++) {\r\n            $dm = [HonorSurvey.Gdi]::NewDM()\r\n            if (-not [HonorSurvey.Gdi]::EnumDisplaySettingsEx($dd.DeviceName, $m, [ref]$dm, 0)) { break }\r\n            [void]$modes.Add(('{0}x{1}@{2}Hz/{3}bpp' -f $dm.dmPelsWidth, $dm.dmPelsHeight, $dm.dmDisplayFrequency, $dm.dmBitsPerPel))\r\n        }\r\n        $sorted = @($modes) | Sort-Object { [int](($_ -split 'x')[0]) }, { [int](($_ -split '[x@]')[1]) }, { [int](($_ -split '[@H]')[1]) } -Descending\r\n        $rates = @($modes | ForEach-Object { [int](($_ -split '[@H]')[1]) } | Sort-Object -Unique)\r\n        $out += [ordered]@{ gdi_name = $dd.DeviceName; adapter = $dd.DeviceString; current = $(if ($ok) { [ordered]@{ width = $cur.dmPelsWidth; height = $cur.dmPelsHeight; frequency_hz = $cur.dmDisplayFrequency; bpp = $cur.dmBitsPerPel } } else { $null }); enumerated_mode_count = $modes.Count; refresh_rates_seen_hz = $rates; modes = $sorted }\r\n    }\r\n    $out",
+    "started_local":  "2026-10-12T22:47:27.530+08:00",
+    "duration_ms":  38,
+    "status":  "ok",
+    "native_exit_code":  null,
+    "errors":  [
+
+               ],
+    "data":  {
+                 "gdi_name":  "\\\\.\\DISPLAY1",
+                 "adapter":  "Intel(R) Iris(R) Xe Graphics",
+                 "current":  {
+                                 "width":  2160,
+                                 "height":  1440,
+                                 "frequency_hz":  60,
+                                 "bpp":  32
+                             },
+                 "enumerated_mode_count":  24,
+                 "refresh_rates_seen_hz":  [
+                                               60
+                                           ],
+                 "modes":  [
+                               "2160x1440@60Hz/32bpp",
+                               "2048x1152@60Hz/32bpp",
+                               "1920x1440@60Hz/32bpp",
+                               "1920x1200@60Hz/32bpp",
+                               "1920x1080@60Hz/32bpp",
+                               "1856x1392@60Hz/32bpp",
+                               "1792x1344@60Hz/32bpp",
+                               "1680x1050@60Hz/32bpp",
+                               "1600x1200@60Hz/32bpp",
+                               "1600x900@60Hz/32bpp",
+                               "1440x900@60Hz/32bpp",
+                               "1400x1050@60Hz/32bpp",
+                               "1366x768@60Hz/32bpp",
+                               "1360x768@60Hz/32bpp",
+                               "1280x1024@60Hz/32bpp",
+                               "1280x960@60Hz/32bpp",
+                               "1280x800@60Hz/32bpp",
+                               "1280x768@60Hz/32bpp",
+                               "1280x720@60Hz/32bpp",
+                               "1280x600@60Hz/32bpp",
+                               "1152x864@60Hz/32bpp",
+                               "1024x768@60Hz/32bpp",
+                               "800x600@60Hz/32bpp",
+                               "640x480@60Hz/32bpp"
+                           ]
+             }
+}

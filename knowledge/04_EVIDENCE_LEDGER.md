@@ -23,6 +23,12 @@
 - [R1.2-D/E/G](../docs/R1.2-G_VBL门锁外派发与生命周期审查.md)：锁序/状态机是参考模型，不能模拟真实的 Apple 内核锁、对象析构或 GPU 中断。
 - [R1.4-B](../docs/R1.4-B_方案批判性审查与独立源码基准.md)：Linux/FreeBSD 候选源码已核实接口位置，**没有**自己的 Intel-only native object、完整 kext 或实物测试。
 
+## 本机 Windows 只读实测（非 CI）
+
+| 记录 | 实际完成内容与观测 | **不能推出** |
+|---|---|---|
+| [2026-10-12 硬件调查](../docs/hardware-survey-20261012/REPORT.md) | 普通权限 PowerShell 5.1 在 GLO-FX6P 主力机上执行 `collect.ps1`：26 项采集，成功 22 / 部分成功 1 / 失败 3（Secure Boot cmdlet、manage-bde、reagentc 需管理员）；`selfcheck.ps1` 41/41 通过；`FILES_SHA256.txt` 覆盖 74 个文件。当前模式 NVIDIA 无显示源/目标，内屏由 Intel 扫描输出；ACPI DSDT/SSDT 原表已保存 | MUX 有无、外接口归属、VBT/eDP 参数、BitLocker/恢复条件；任何 macOS 层级（不属于 `SOURCE-STATIC` 以上任何分级） |
+
 ## 所有实验的终点分级
 
 `SOURCE-STATIC` → `MODEL` → `OBJECT-COMPILE` → `KEXT-LINK-FORMAT` → `KERNEL-LOAD` → `PANEL-SCANOUT` → `METAL-RENDER` → `RECOVERY-VERIFIED`

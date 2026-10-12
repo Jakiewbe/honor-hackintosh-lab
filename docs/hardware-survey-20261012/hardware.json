@@ -1,0 +1,2457 @@
+{
+    "schema":  "honor-hackintosh-lab/readonly-hardware-survey/v1",
+    "generated_local":  "2026-10-12T22:50:49+08:00",
+    "collection":  {
+                       "script":  "collect.ps1",
+                       "collected_local":  "2026-10-12T22:48:21+08:00",
+                       "elevated":  false,
+                       "powershell":  "5.1.26100.9444",
+                       "probe_count":  26,
+                       "ok":  22,
+                       "partial":  1,
+                       "error":  3,
+                       "probes":  [
+                                      {
+                                          "id":  "P01_os",
+                                          "status":  "ok",
+                                          "source":  "CIM Win32_OperatingSystem + registry HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion",
+                                          "first_error":  null,
+                                          "file":  "evidence/P01_os.json"
+                                      },
+                                      {
+                                          "id":  "P02_system",
+                                          "status":  "ok",
+                                          "source":  "CIM Win32_ComputerSystem / Win32_ComputerSystemProduct / Win32_BaseBoard / Win32_BIOS (serial/UUID fields not selected)",
+                                          "first_error":  null,
+                                          "file":  "evidence/P02_system.json"
+                                      },
+                                      {
+                                          "id":  "P03_cpu",
+                                          "status":  "ok",
+                                          "source":  "CIM Win32_Processor + kernel32 GetLogicalProcessorInformationEx(RelationProcessorCore) + registry CentralProcessor\\0",
+                                          "first_error":  null,
+                                          "file":  "evidence/P03_cpu.json"
+                                      },
+                                      {
+                                          "id":  "P04_memory",
+                                          "status":  "ok",
+                                          "source":  "CIM Win32_PhysicalMemory / Win32_PhysicalMemoryArray (SerialNumber not selected)",
+                                          "first_error":  null,
+                                          "file":  "evidence/P04_memory.json"
+                                      },
+                                      {
+                                          "id":  "P05_firmware_mode",
+                                          "status":  "ok",
+                                          "source":  "kernel32 GetFirmwareType + registry Control\\PEFirmwareType + Control\\SecureBoot\\State",
+                                          "first_error":  null,
+                                          "file":  "evidence/P05_firmware_mode.json"
+                                      },
+                                      {
+                                          "id":  "P06_secureboot_cmdlet",
+                                          "status":  "error",
+                                          "source":  "PowerShell SecureBoot module Confirm-SecureBootUEFI (read-only; requires elevation)",
+                                          "first_error":  "System.UnauthorizedAccessException: 无法设置正确的权限。访问被拒绝。",
+                                          "file":  "evidence/P06_secureboot_cmdlet.json"
+                                      },
+                                      {
+                                          "id":  "P10_video_controller",
+                                          "status":  "ok",
+                                          "source":  "CIM Win32_VideoController",
+                                          "first_error":  null,
+                                          "file":  "evidence/P10_video_controller.json"
+                                      },
+                                      {
+                                          "id":  "P11_gpu_class_registry",
+                                          "status":  "ok",
+                                          "source":  "registry HKLM\\SYSTEM\\CurrentControlSet\\Control\\Class\\{4d36e968-e325-11ce-bfc1-08002be10318}\\NNNN (read-only)",
+                                          "first_error":  null,
+                                          "file":  "evidence/P11_gpu_class_registry.json"
+                                      },
+                                      {
+                                          "id":  "P12_d3dkmt_adapters",
+                                          "status":  "partial",
+                                          "source":  "gdi32 D3DKMTEnumAdapters2 + D3DKMTQueryAdapterInfo(ADAPTERADDRESS, ADAPTERTYPE, DRIVERVERSION, GETSEGMENTSIZE, ADAPTERREGISTRYINFO)",
+                                          "first_error":  "LUID 00000000:000CF660 RegStatus NTSTATUS 0xC0000034",
+                                          "file":  "evidence/P12_d3dkmt_adapters.json"
+                                      },
+                                      {
+                                          "id":  "P13_displayconfig_active",
+                                          "status":  "ok",
+                                          "source":  "user32 QueryDisplayConfig + DisplayConfigGetDeviceInfo (SOURCE_NAME, TARGET_NAME, TARGET_PREFERRED_MODE, ADAPTER_NAME, TARGET_BASE_TYPE, ADVANCED_COLOR_INFO)",
+                                          "first_error":  null,
+                                          "file":  "evidence/P13_displayconfig_active.json"
+                                      },
+                                      {
+                                          "id":  "P14_displayconfig_all_targets",
+                                          "status":  "ok",
+                                          "source":  "user32 QueryDisplayConfig(QDC_ALL_PATHS) + DisplayConfigGetDeviceInfo (TARGET_NAME, ADAPTER_NAME)",
+                                          "first_error":  null,
+                                          "file":  "evidence/P14_displayconfig_all_targets.json"
+                                      },
+                                      {
+                                          "id":  "P15_enum_display_devices",
+                                          "status":  "ok",
+                                          "source":  "user32 EnumDisplayDevices (adapters and monitors)",
+                                          "first_error":  null,
+                                          "file":  "evidence/P15_enum_display_devices.json"
+                                      },
+                                      {
+                                          "id":  "P16_display_modes",
+                                          "status":  "ok",
+                                          "source":  "user32 EnumDisplaySettingsEx (ENUM_CURRENT_SETTINGS and mode index enumeration)",
+                                          "first_error":  null,
+                                          "file":  "evidence/P16_display_modes.json"
+                                      },
+                                      {
+                                          "id":  "P17_edid",
+                                          "status":  "ok",
+                                          "source":  "registry HKLM\\SYSTEM\\CurrentControlSet\\Enum\\DISPLAY\\<model>\\<instance>\\Device Parameters\\EDID (read-only) + Get-PnpDevice -Class Monitor",
+                                          "first_error":  null,
+                                          "file":  "evidence/P17_edid.json"
+                                      },
+                                      {
+                                          "id":  "P18_wmi_monitor",
+                                          "status":  "ok",
+                                          "source":  "CIM root\\wmi WmiMonitorConnectionParams / WmiMonitorBasicDisplayParams / WmiMonitorID (SerialNumberID not selected)",
+                                          "first_error":  null,
+                                          "file":  "evidence/P18_wmi_monitor.json"
+                                      },
+                                      {
+                                          "id":  "P19_nvidia_smi",
+                                          "status":  "ok",
+                                          "source":  "nvidia-smi --query-gpu (installed with NVIDIA driver; not downloaded)",
+                                          "first_error":  null,
+                                          "file":  "evidence/P19_nvidia_smi.json"
+                                      },
+                                      {
+                                          "id":  "P20_pnp_inventory",
+                                          "status":  "ok",
+                                          "source":  "CIM Win32_PnPEntity + Win32_PnPSignedDriver (software/remote-Bluetooth/volume/printer/WPD nodes excluded, counts kept)",
+                                          "first_error":  null,
+                                          "file":  "evidence/P20_pnp_inventory.json"
+                                      },
+                                      {
+                                          "id":  "P21_pnp_properties",
+                                          "status":  "ok",
+                                          "source":  "Get-PnpDeviceProperty (whitelisted DEVPKEYs only)",
+                                          "first_error":  null,
+                                          "file":  "evidence/P21_pnp_properties.json"
+                                      },
+                                      {
+                                          "id":  "P30_disks",
+                                          "status":  "ok",
+                                          "source":  "Storage module Get-Disk / Get-PhysicalDisk + CIM Win32_DiskDrive (serial/UniqueId/Guid not selected)",
+                                          "first_error":  null,
+                                          "file":  "evidence/P30_disks.json"
+                                      },
+                                      {
+                                          "id":  "P31_partitions",
+                                          "status":  "ok",
+                                          "source":  "Storage module Get-Partition / Get-Volume -Partition (no mount, Guid/AccessPaths/labels not selected)",
+                                          "first_error":  null,
+                                          "file":  "evidence/P31_partitions.json"
+                                      },
+                                      {
+                                          "id":  "P32_bitlocker_shell",
+                                          "status":  "ok",
+                                          "source":  "Shell.Application ExtendedProperty System.Volume.BitLockerProtection (non-elevated; status code only)",
+                                          "first_error":  null,
+                                          "file":  "evidence/P32_bitlocker_shell.json"
+                                      },
+                                      {
+                                          "id":  "P33_manage_bde_status",
+                                          "status":  "error",
+                                          "source":  "manage-bde.exe -status (read-only; requires elevation)",
+                                          "first_error":  null,
+                                          "file":  "evidence/P33_manage_bde_status.json"
+                                      },
+                                      {
+                                          "id":  "P34_reagentc_info",
+                                          "status":  "error",
+                                          "source":  "reagentc.exe /info (read-only; requires elevation)",
+                                          "first_error":  null,
+                                          "file":  "evidence/P34_reagentc_info.json"
+                                      },
+                                      {
+                                          "id":  "P40_acpi_tables",
+                                          "status":  "ok",
+                                          "source":  "kernel32 EnumSystemFirmwareTables/GetSystemFirmwareTable(provider ACPI); registry HKLM\\HARDWARE\\ACPI\\<sig>\\<oem>\\<table>\\<rev> value 00000000 (read-only)",
+                                          "first_error":  null,
+                                          "file":  "evidence/P40_acpi_tables.json"
+                                      },
+                                      {
+                                          "id":  "P42_acpi_context",
+                                          "status":  "ok",
+                                          "source":  "Reads evidence/acpi/reg_*.bin written by P40; no system access",
+                                          "first_error":  null,
+                                          "file":  "evidence/P42_acpi_context.json"
+                                      },
+                                      {
+                                          "id":  "P41_intel_display_firmware",
+                                          "status":  "ok",
+                                          "source":  "Summary of: display class registry value names (P11), D3DKMT ADAPTERREGISTRYINFO (P12), ACPI DSDT/SSDT scan (P40), Intel driver service registry key names",
+                                          "first_error":  null,
+                                          "file":  "evidence/P41_intel_display_firmware.json"
+                                      }
+                                  ]
+                   },
+    "provenance":  "All values outside background_claims are measured in this run (see evidence/). null = unknown / not measured.",
+    "platform":  {
+                     "system_manufacturer":  "HONOR",
+                     "system_model":  "GLO-FX6P",
+                     "system_family":  "HONOR MagicBook",
+                     "system_sku":  "C233",
+                     "system_version":  "M2080",
+                     "baseboard_product":  "GLO-FX6P-PCB",
+                     "baseboard_version":  "M2080",
+                     "bios_vendor":  "HONOR",
+                     "bios_version":  "3.09",
+                     "bios_release_date":  "2023-07-10",
+                     "bios_version_strings":  [
+                                                  "HONOR - 2",
+                                                  "3.09",
+                                                  "QUANTA - 30009"
+                                              ],
+                     "ec_firmware_version":  "3.9",
+                     "smbios_version":  "3.3",
+                     "acpi_oem_id":  "HONOR",
+                     "acpi_oem_table_id":  "ADL-P-M"
+                 },
+    "os":  {
+               "caption":  "Microsoft Windows 11 家庭版 中文版",
+               "version":  "10.0.26200",
+               "build":  "26200",
+               "ubr":  9457,
+               "display_version":  "25H2",
+               "edition_id":  "CoreCountrySpecific",
+               "architecture":  "64 位",
+               "hypervisor_present":  true
+           },
+    "firmware":  {
+                     "boot_mode":  "UEFI",
+                     "secure_boot_enabled":  true,
+                     "secure_boot_source":  "registry SecureBoot\\State\\UEFISecureBootEnabled; Confirm-SecureBootUEFI cross-check failed (needs elevation)"
+                 },
+    "cpu":  {
+                "name":  "12th Gen Intel(R) Core(TM) i5-12500H",
+                "cpuid_signature":  "Intel64 Family 6 Model 154 Stepping 3",
+                "cores":  12,
+                "threads":  16,
+                "p_cores":  4,
+                "e_cores":  8,
+                "base_clock_mhz":  2500,
+                "l2_kb":  9216,
+                "l3_kb":  18432,
+                "microcode_revision":  "0x41C"
+            },
+    "memory":  {
+                   "total_bytes":  17179869184,
+                   "os_visible_bytes":  16890978304,
+                   "module_count":  8,
+                   "per_module_bytes":  2147483648,
+                   "type":  "LPDDR5",
+                   "smbios_memory_type":  35,
+                   "rated_speed_mts":  6400,
+                   "configured_speed_mts":  4800,
+                   "manufacturer":  "Samsung",
+                   "part_number":  "K3LKBKB@BM-MGCP",
+                   "soldered":  null,
+                   "soldered_note":  "not reported directly (FormFactor=0); LPDDR5 is normally soldered - inference only"
+               },
+    "gpus":  [
+                 {
+                     "name":  "NVIDIA GeForce RTX 2050",
+                     "class":  "Display",
+                     "manufacturer":  "NVIDIA",
+                     "bus_reported_name":  "3D 视频控制器",
+                     "ids":  {
+                                 "vendor_id":  "10DE",
+                                 "device_id":  "25A9",
+                                 "subsystem_id":  "20271EE7",
+                                 "revision":  "A1"
+                             },
+                     "hardware_ids":  [
+                                          "PCI\\VEN_10DE&DEV_25A9&SUBSYS_20271EE7&REV_A1",
+                                          "PCI\\VEN_10DE&DEV_25A9&SUBSYS_20271EE7",
+                                          "PCI\\VEN_10DE&DEV_25A9&CC_030200",
+                                          "PCI\\VEN_10DE&DEV_25A9&CC_0302"
+                                      ],
+                     "compatible_ids":  [
+                                            "PCI\\VEN_10DE&DEV_25A9&REV_A1",
+                                            "PCI\\VEN_10DE&DEV_25A9",
+                                            "PCI\\VEN_10DE&CC_030200",
+                                            "PCI\\VEN_10DE&CC_0302"
+                                        ],
+                     "instance_id":  "PCI\\VEN_10DE&DEV_25A9&SUBSYS_20271EE7&REV_A1\\4&37D28C8B&0&0030",
+                     "status":  "OK",
+                     "config_manager_error_code":  0,
+                     "acpi_path":  "\\_SB.PC00.PEG0.PEGP",
+                     "location_paths":  [
+                                            "PCIROOT(0)#PCI(0600)#PCI(0000)",
+                                            "ACPI(_SB_)#ACPI(PC00)#ACPI(PEG0)#ACPI(PEGP)"
+                                        ],
+                     "location_info":  "PCI 总线 1、设备 0、功能 0",
+                     "parent":  "PCI\\VEN_8086&DEV_464D&SUBSYS_20271EE7&REV_02\\3&11583659&2&30",
+                     "service":  "nvlddmkm",
+                     "driver":  {
+                                    "version":  "32.0.15.7283",
+                                    "date":  "2025-03-14",
+                                    "provider":  "NVIDIA",
+                                    "inf":  "oem7.inf"
+                                },
+                     "pcie_link":  {
+                                       "current_speed_gen":  4,
+                                       "current_width":  4,
+                                       "max_speed_gen":  4,
+                                       "max_width":  16,
+                                       "note":  "speed value is PCIe generation code (1=2.5GT/s,2=5,3=8,4=16); snapshot only, may change with power state"
+                                   },
+                     "role":  "discrete",
+                     "pci_bdf":  "01:00.0",
+                     "wddm":  {
+                                  "luid":  "00000000:000111C0",
+                                  "num_of_sources":  0,
+                                  "adapter_type_raw":  "0x2311",
+                                  "render_supported":  true,
+                                  "display_supported":  false,
+                                  "hybrid_discrete":  true,
+                                  "hybrid_integrated":  false,
+                                  "post_device":  false,
+                                  "wddm_version_enum":  3200
+                              },
+                     "firmware_string":  {
+                                             "d3dkmt_bios_string":  "Version94.7.69.0.22",
+                                             "nvidia_smi_vbios_version":  "94.07.69.00.22"
+                                         },
+                     "memory":  {
+                                    "d3dkmt_dedicated_video_bytes":  4157603840,
+                                    "d3dkmt_shared_system_bytes":  8445489152,
+                                    "registry_qwMemorySize_bytes":  4294967296,
+                                    "registry_MemorySize_bytes":  4293918720,
+                                    "win32_videocontroller_AdapterRAM":  4293918720,
+                                    "nvidia_smi_memory_total":  "4096 MiB",
+                                    "physical_vram_bytes":  4294967296,
+                                    "physical_vram_basis":  "set only when registry HardwareInformation.qwMemorySize equals nvidia-smi memory.total; D3DKMT dedicated segment is the OS-usable portion"
+                                },
+                     "nvidia_smi":  {
+                                        "name":  "NVIDIA GeForce RTX 2050",
+                                        "pci.bus_id":  "00000000:01:00.0",
+                                        "pci.device_id":  "0x25A910DE",
+                                        "pci.sub_device_id":  "0x20271EE7",
+                                        "driver_version":  "572.83",
+                                        "vbios_version":  "94.07.69.00.22",
+                                        "memory.total [MiB]":  "4096 MiB",
+                                        "display_mode":  "Disabled",
+                                        "display_active":  "Disabled",
+                                        "pstate":  "P5",
+                                        "driver_model.current":  "WDDM",
+                                        "pcie.link.gen.max":  "4",
+                                        "pcie.link.width.max":  "16"
+                                    }
+                 },
+                 {
+                     "name":  "Intel(R) Iris(R) Xe Graphics",
+                     "class":  "Display",
+                     "manufacturer":  "Intel Corporation",
+                     "bus_reported_name":  "视频控制器(VGA 兼容)",
+                     "ids":  {
+                                 "vendor_id":  "8086",
+                                 "device_id":  "46A6",
+                                 "subsystem_id":  "20271EE7",
+                                 "revision":  "0C"
+                             },
+                     "hardware_ids":  [
+                                          "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C",
+                                          "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7",
+                                          "PCI\\VEN_8086&DEV_46A6&CC_030000",
+                                          "PCI\\VEN_8086&DEV_46A6&CC_0300"
+                                      ],
+                     "compatible_ids":  [
+                                            "PCI\\VEN_8086&DEV_46A6&REV_0C",
+                                            "PCI\\VEN_8086&DEV_46A6",
+                                            "PCI\\VEN_8086&CC_030000",
+                                            "PCI\\VEN_8086&CC_0300"
+                                        ],
+                     "instance_id":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C\\3&11583659&2&10",
+                     "status":  "OK",
+                     "config_manager_error_code":  0,
+                     "acpi_path":  "\\_SB.PC00.GFX0",
+                     "location_paths":  [
+                                            "PCIROOT(0)#PCI(0200)",
+                                            "ACPI(_SB_)#ACPI(PC00)#ACPI(GFX0)"
+                                        ],
+                     "location_info":  "PCI 总线 0、设备 2、功能 0",
+                     "parent":  "ACPI\\PNP0A08\\0",
+                     "service":  "igfxn",
+                     "driver":  {
+                                    "version":  "31.0.101.3358",
+                                    "date":  "2022-08-04",
+                                    "provider":  "Intel Corporation",
+                                    "inf":  "oem44.inf"
+                                },
+                     "pcie_link":  null,
+                     "role":  "integrated",
+                     "pci_bdf":  "00:02.0",
+                     "wddm":  {
+                                  "luid":  "00000000:00010EF5",
+                                  "num_of_sources":  4,
+                                  "adapter_type_raw":  "0x232B",
+                                  "render_supported":  true,
+                                  "display_supported":  true,
+                                  "hybrid_discrete":  false,
+                                  "hybrid_integrated":  true,
+                                  "post_device":  true,
+                                  "wddm_version_enum":  3100
+                              },
+                     "firmware_string":  {
+                                             "d3dkmt_bios_string":  "Intel Video BIOS",
+                                             "nvidia_smi_vbios_version":  null
+                                         },
+                     "memory":  {
+                                    "d3dkmt_dedicated_video_bytes":  134217728,
+                                    "d3dkmt_shared_system_bytes":  8445489152,
+                                    "registry_qwMemorySize_bytes":  null,
+                                    "registry_MemorySize_bytes":  1073741824,
+                                    "win32_videocontroller_AdapterRAM":  1073741824,
+                                    "nvidia_smi_memory_total":  null,
+                                    "physical_vram_bytes":  null,
+                                    "physical_vram_basis":  "UMA iGPU: no dedicated VRAM. D3DKMT \"dedicated\" 128 MiB and registry 1 GiB are driver-reported budgets, not DVMT pre-allocated size; DVMT/stolen size is unknown"
+                                },
+                     "nvidia_smi":  null
+                 }
+             ],
+    "displays":  {
+                     "active_paths":  [
+                                          {
+                                              "gdi_source":  "\\\\.\\DISPLAY1",
+                                              "display_adapter_instance":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C\\3&11583659&2&10",
+                                              "display_adapter_is":  "Intel 8086:46A6",
+                                              "render_source_adapter_luid":  "00000000:00010EF5",
+                                              "output_technology":  "INTERNAL",
+                                              "base_output_technology":  "INTERNAL",
+                                              "physical_connector":  "internal panel (Intel driver reports INTERNAL, not DISPLAYPORT_EMBEDDED; eDP is implied by EDID interface=DisplayPort and ACPI DD1F, not reported directly)",
+                                              "resolution":  "2160x1440",
+                                              "refresh_hz":  60.001,
+                                              "refresh_rational":  "206020000/3433600",
+                                              "timing_total":  "2320x1480",
+                                              "pixel_rate_hz":  206020000,
+                                              "preferred_mode":  {
+                                                                     "width":  2160,
+                                                                     "height":  1440,
+                                                                     "active":  "2160x1440",
+                                                                     "total":  "2320x1480",
+                                                                     "pixel_rate_hz":  206020000,
+                                                                     "vsync_hz":  60.001
+                                                                 },
+                                              "advanced_color":  {
+                                                                     "supported":  true,
+                                                                     "enabled":  false,
+                                                                     "bits_per_color_channel":  8,
+                                                                     "color_encoding":  0
+                                                                 },
+                                              "monitor_instance":  "DISPLAY\\BOE0893\\4&FD33AF8&0&UID8388688",
+                                              "monitor_acpi_path":  "\\_SB.PC00.GFX0.DD1F",
+                                              "edid_pnp_id":  "BOE",
+                                              "edid_product_code":  "0x0893"
+                                          }
+                                      ],
+                     "active_path_count":  1,
+                     "external_displays_connected_now":  0,
+                     "internal_panel":  {
+                                            "panel_model_from_edid_text":  [
+                                                                               "BOE XS",
+                                                                               "TV140WTM-NH0"
+                                                                           ],
+                                            "edid_pnp_id":  "BOE",
+                                            "edid_product_code":  "0x0893",
+                                            "edid_version":  "1.4",
+                                            "edid_interface":  "DisplayPort",
+                                            "edid_bits_per_color":  "8",
+                                            "edid_length_bytes":  256,
+                                            "edid_extension_count":  0,
+                                            "edid_detailed_timings":  [
+                                                                          {
+                                                                              "pixel_clock_khz":  206020,
+                                                                              "h_active":  2160,
+                                                                              "h_blank":  160,
+                                                                              "h_sync_offset":  48,
+                                                                              "h_sync_width":  32,
+                                                                              "v_active":  1440,
+                                                                              "v_blank":  40,
+                                                                              "v_sync_offset":  3,
+                                                                              "v_sync_width":  10,
+                                                                              "image_mm":  "296x197",
+                                                                              "interlaced":  false,
+                                                                              "flags_raw":  "0x1A",
+                                                                              "refresh_hz":  60.001
+                                                                          }
+                                                                      ],
+                                            "edid_block1_note":  "registry EDID value is 256 bytes but extension_count=0; bytes 128-255 are all zero (padding)",
+                                            "image_size_mm":  "296x197",
+                                            "screen_size_cm":  "30x20",
+                                            "native_mode":  "2160x1440@60.001Hz",
+                                            "native_mode_basis":  "EDID first detailed timing descriptor and DisplayConfig TARGET_PREFERRED_MODE agree",
+                                            "refresh_rates_enumerated_hz":  [
+                                                                                60
+                                                                            ],
+                                            "acpi_path":  "\\_SB.PC00.GFX0.DD1F",
+                                            "edid_share_copy":  [
+                                                                    "evidence/edid/BOE0893_present.sanitized.bin",
+                                                                    "evidence/edid/BOE0893_present.sanitized.hex.txt"
+                                                                ],
+                                            "edid_share_copy_sha256":  "72597355933D4A48898EE37038F46F005A94FCD1925FC1BE78480AFFA129862F",
+                                            "edid_sanitization":  "no serial number present in ID field or 0xFF descriptor; the scrub pass changed no bytes (byte comparison against the registry value is recorded in evidence/selfcheck.json), but it is still labelled a processed share copy"
+                                        },
+                     "connector_targets_exposed_by_driver":  {
+                                                                 "intel_46A6":  {
+                                                                                    "INTERNAL":  1,
+                                                                                    "HDMI":  2,
+                                                                                    "DISPLAYPORT_EXTERNAL":  14
+                                                                                },
+                                                                 "nvidia_25A9":  {
+                                                                                     "total":  0
+                                                                                 },
+                                                                 "software_indirect_adapters":  [
+                                                                                                    "ROOT\\USB\\0000",
+                                                                                                    "ROOT\\DISPLAY\\0000",
+                                                                                                    "ROOT\\DISPLAY\\0001"
+                                                                                                ],
+                                                                 "note":  "QDC_ALL_PATHS targets = connectors the driver exposes; includes possible MST/virtual targets; not a physical routing map"
+                                                             },
+                     "virtual_display_adapters":  [
+                                                      {
+                                                          "name":  "GameViewer Virtual Display Adapter",
+                                                          "instance":  "ROOT\\DISPLAY\\0000",
+                                                          "driver_version":  "15.6.5.199",
+                                                          "status":  "OK",
+                                                          "config_manager_error_code":  0
+                                                      },
+                                                      {
+                                                          "name":  "IddDesk Device",
+                                                          "instance":  "ROOT\\DISPLAY\\0001",
+                                                          "driver_version":  "25.0.0.4",
+                                                          "status":  "OK",
+                                                          "config_manager_error_code":  0
+                                                      },
+                                                      {
+                                                          "name":  "Honor Virtual Display Device",
+                                                          "instance":  "INDIRECTDSP\\VIRTUALDISPLAYDRIVER\\1&79F5D87&3&01",
+                                                          "driver_version":  "1.0.23.3",
+                                                          "status":  "Error",
+                                                          "config_manager_error_code":  22
+                                                      }
+                                                  ],
+                     "historical_monitor_records":  [
+                                                        {
+                                                            "instance_id":  "DISPLAY\\DELD0E6\\1&33320F0&0&UID256",
+                                                            "name":  "Generic Monitor (S2719DGF)",
+                                                            "pnp_id":  "DEL",
+                                                            "product_code":  "0xD0E6",
+                                                            "first_dtd":  {
+                                                                              "pixel_clock_khz":  582000,
+                                                                              "h_active":  2560,
+                                                                              "h_blank":  160,
+                                                                              "h_sync_offset":  48,
+                                                                              "h_sync_width":  32,
+                                                                              "v_active":  1440,
+                                                                              "v_blank":  41,
+                                                                              "v_sync_offset":  3,
+                                                                              "v_sync_width":  5,
+                                                                              "image_mm":  "597x336",
+                                                                              "interlaced":  false,
+                                                                              "flags_raw":  "0x1A",
+                                                                              "refresh_hz":  144.477
+                                                                          },
+                                                            "parent_now":  "HTREE\\ROOT\\0",
+                                                            "interpretation":  "not present; parent no longer resolvable; instance prefix 1& and UID256 match the software indirect-display target pattern, so it cannot be attributed to a physical port or GPU"
+                                                        }
+                                                    ],
+                     "external_display_usb_c_dp_1080p_200hz":  {
+                                                                   "observed_now":  false,
+                                                                   "gpu_owner":  null,
+                                                                   "connector_type":  null,
+                                                                   "note":  "no external display connected during collection; no matching monitor record found in the device registry"
+                                                               }
+                 },
+    "hybrid_graphics":  {
+                            "windows_mode_observed":  "Hybrid (Optimus-style): Intel = HybridIntegrated + DisplaySupported; NVIDIA = HybridDiscrete, RenderSupported, DisplaySupported=false, 0 display sources",
+                            "nvidia_display_supported":  false,
+                            "nvidia_num_display_sources":  0,
+                            "nvidia_display_targets_exposed":  0,
+                            "nvidia_smi_display_mode":  "Disabled",
+                            "nvidia_smi_display_active":  "Disabled",
+                            "acpi_nvidia_dsm_guids_in_NvdTable":  [
+                                                                      "NVIDIA_Optimus_NVOP_a486d8f8-0bda-471b-a72b-6042a6b5bee0",
+                                                                      "NVIDIA_JT_GC6_cbeca351-067b-4924-9cbd-b46b00b86f34",
+                                                                      "NVIDIA_NBCI_d4a50b75-65c7-46f7-bfb7-41514cea0244",
+                                                                      "NVIDIA_GPS_a3132d01-8cda-49ba-a52e-bc9d46df6b81",
+                                                                      "NVIDIA_MXM_4004a400-917d-4cf2-b89c-79b62fd55665"
+                                                                  ],
+                            "acpi_mux_related_names_in_NvdTable":  {
+                                                                       "MXDS":  1,
+                                                                       "MXMX":  1,
+                                                                       "MXM_":  2
+                                                                   },
+                            "mux_present":  null,
+                            "advanced_optimus_present":  null,
+                            "external_port_wiring":  null,
+                            "limits":  "Current output path proves current state only. Absence of NVIDIA display sources in this boot does not prove the board lacks a MUX or that no port can be routed to NVIDIA in another mode."
+                        },
+    "devices":  {
+                    "nvme_controller":  [
+                                            {
+                                                "name":  "标准 NVM Express 控制器",
+                                                "class":  "SCSIAdapter",
+                                                "manufacturer":  "标准 NVM Express 控制器",
+                                                "bus_reported_name":  "PCI 设备",
+                                                "ids":  {
+                                                            "vendor_id":  "144D",
+                                                            "device_id":  "A80A",
+                                                            "subsystem_id":  "A801144D",
+                                                            "revision":  "00"
+                                                        },
+                                                "hardware_ids":  [
+                                                                     "PCI\\VEN_144D&DEV_A80A&SUBSYS_A801144D&REV_00",
+                                                                     "PCI\\VEN_144D&DEV_A80A&SUBSYS_A801144D",
+                                                                     "PCI\\VEN_144D&DEV_A80A&CC_010802",
+                                                                     "PCI\\VEN_144D&DEV_A80A&CC_0108"
+                                                                 ],
+                                                "compatible_ids":  [
+                                                                       "PCI\\VEN_144D&DEV_A80A&REV_00",
+                                                                       "PCI\\VEN_144D&DEV_A80A",
+                                                                       "PCI\\VEN_144D&CC_010802",
+                                                                       "PCI\\VEN_144D&CC_0108"
+                                                                   ],
+                                                "instance_id":  "PCI\\VEN_144D&DEV_A80A&SUBSYS_A801144D&REV_00\\4&376EDEB0&0&0032",
+                                                "status":  "OK",
+                                                "config_manager_error_code":  0,
+                                                "acpi_path":  "\\_SB.PC00.PEG2.PEGP",
+                                                "location_paths":  [
+                                                                       "PCIROOT(0)#PCI(0602)#PCI(0000)",
+                                                                       "ACPI(_SB_)#ACPI(PC00)#ACPI(PEG2)#ACPI(PEGP)"
+                                                                   ],
+                                                "location_info":  "PCI 总线 2、设备 0、功能 0",
+                                                "parent":  "PCI\\VEN_8086&DEV_463D&SUBSYS_20271EE7&REV_02\\3&11583659&2&32",
+                                                "service":  "stornvme",
+                                                "driver":  {
+                                                               "version":  "10.0.26100.9278",
+                                                               "date":  "2006-06-21",
+                                                               "provider":  "Microsoft",
+                                                               "inf":  "stornvme.inf"
+                                                           },
+                                                "pcie_link":  {
+                                                                  "current_speed_gen":  4,
+                                                                  "current_width":  4,
+                                                                  "max_speed_gen":  4,
+                                                                  "max_width":  4,
+                                                                  "note":  "speed value is PCIe generation code (1=2.5GT/s,2=5,3=8,4=16); snapshot only, may change with power state"
+                                                              }
+                                            }
+                                        ],
+                    "wifi":  [
+                                 {
+                                     "name":  "Intel(R) Wi-Fi 6 AX201 160MHz",
+                                     "class":  "Net",
+                                     "manufacturer":  "Intel Corporation",
+                                     "bus_reported_name":  "网络控制器",
+                                     "ids":  {
+                                                 "vendor_id":  "8086",
+                                                 "device_id":  "51F0",
+                                                 "subsystem_id":  "00748086",
+                                                 "revision":  "01"
+                                             },
+                                     "hardware_ids":  [
+                                                          "PCI\\VEN_8086&DEV_51F0&SUBSYS_00748086&REV_01",
+                                                          "PCI\\VEN_8086&DEV_51F0&SUBSYS_00748086",
+                                                          "PCI\\VEN_8086&DEV_51F0&CC_028000",
+                                                          "PCI\\VEN_8086&DEV_51F0&CC_0280"
+                                                      ],
+                                     "compatible_ids":  [
+                                                            "PCI\\VEN_8086&DEV_51F0&REV_01",
+                                                            "PCI\\VEN_8086&DEV_51F0",
+                                                            "PCI\\VEN_8086&CC_028000",
+                                                            "PCI\\VEN_8086&CC_0280"
+                                                        ],
+                                     "instance_id":  "PCI\\VEN_8086&DEV_51F0&SUBSYS_00748086&REV_01\\3&11583659&2&A3",
+                                     "status":  "OK",
+                                     "config_manager_error_code":  0,
+                                     "acpi_path":  "\\_SB.PC00.CNVW",
+                                     "location_paths":  [
+                                                            "PCIROOT(0)#PCI(1403)",
+                                                            "ACPI(_SB_)#ACPI(PC00)#ACPI(CNVW)"
+                                                        ],
+                                     "location_info":  "PCI 总线 0、设备 20、功能 3",
+                                     "parent":  "ACPI\\PNP0A08\\0",
+                                     "service":  "Netwtw14",
+                                     "driver":  {
+                                                    "version":  "23.70.0.6",
+                                                    "date":  "2024-07-17",
+                                                    "provider":  "Intel",
+                                                    "inf":  "oem37.inf"
+                                                },
+                                     "pcie_link":  null
+                                 }
+                             ],
+                    "bluetooth":  [
+                                      {
+                                          "name":  "英特尔(R) 无线 Bluetooth(R)",
+                                          "class":  "Bluetooth",
+                                          "manufacturer":  "Intel Corporation",
+                                          "bus_reported_name":  null,
+                                          "ids":  {
+                                                      "usb_vid":  "8087",
+                                                      "usb_pid":  "0026"
+                                                  },
+                                          "hardware_ids":  [
+                                                               "USB\\VID_8087&PID_0026&REV_0002",
+                                                               "USB\\VID_8087&PID_0026"
+                                                           ],
+                                          "compatible_ids":  [
+                                                                 "USB\\COMPAT_VID_8087&Class_E0&SubClass_01&Prot_01",
+                                                                 "USB\\COMPAT_VID_8087&Class_E0&SubClass_01",
+                                                                 "USB\\COMPAT_VID_8087&Class_E0",
+                                                                 "USB\\Class_E0&SubClass_01&Prot_01"
+                                                             ],
+                                          "instance_id":  "USB\\VID_8087&PID_0026\\5&1EB5E6D0&0&10",
+                                          "status":  "OK",
+                                          "config_manager_error_code":  0,
+                                          "acpi_path":  "\\_SB.PC00.XHCI.RHUB.HS10",
+                                          "location_paths":  [
+                                                                 "PCIROOT(0)#PCI(1400)#USBROOT(0)#USB(10)",
+                                                                 "ACPI(_SB_)#ACPI(PC00)#ACPI(XHCI)#ACPI(RHUB)#ACPI(HS10)"
+                                                             ],
+                                          "location_info":  "Port_#0010.Hub_#0002",
+                                          "parent":  "USB\\ROOT_HUB30\\4&1c5ad2f2&0&0",
+                                          "service":  "BTHUSB",
+                                          "driver":  {
+                                                         "version":  "23.70.0.2",
+                                                         "date":  "2024-07-01",
+                                                         "provider":  "Intel Corporation",
+                                                         "inf":  "oem24.inf"
+                                                     },
+                                          "pcie_link":  null
+                                      }
+                                  ],
+                    "audio_controller":  [
+                                             {
+                                                 "name":  "英特尔® 智音技术总线",
+                                                 "class":  "System",
+                                                 "manufacturer":  "Intel(R) Corporation",
+                                                 "bus_reported_name":  "PCI 设备",
+                                                 "ids":  {
+                                                             "vendor_id":  "8086",
+                                                             "device_id":  "51C8",
+                                                             "subsystem_id":  "20271EE7",
+                                                             "revision":  "01"
+                                                         },
+                                                 "hardware_ids":  [
+                                                                      "PCI\\VEN_8086&DEV_51C8&SUBSYS_20271EE7&REV_01",
+                                                                      "PCI\\VEN_8086&DEV_51C8&SUBSYS_20271EE7",
+                                                                      "PCI\\VEN_8086&DEV_51C8&CC_040380",
+                                                                      "PCI\\VEN_8086&DEV_51C8&CC_0403"
+                                                                  ],
+                                                 "compatible_ids":  [
+                                                                        "PCI\\VEN_8086&DEV_51C8&REV_01",
+                                                                        "PCI\\VEN_8086&DEV_51C8",
+                                                                        "PCI\\VEN_8086&CC_040380",
+                                                                        "PCI\\VEN_8086&CC_0403"
+                                                                    ],
+                                                 "instance_id":  "PCI\\VEN_8086&DEV_51C8&SUBSYS_20271EE7&REV_01\\3&11583659&2&FB",
+                                                 "status":  "OK",
+                                                 "config_manager_error_code":  0,
+                                                 "acpi_path":  "\\_SB.PC00.HDAS",
+                                                 "location_paths":  [
+                                                                        "PCIROOT(0)#PCI(1F03)",
+                                                                        "ACPI(_SB_)#ACPI(PC00)#ACPI(HDAS)"
+                                                                    ],
+                                                 "location_info":  "PCI 总线 0、设备 31、功能 3",
+                                                 "parent":  "ACPI\\PNP0A08\\0",
+                                                 "service":  "IntcAudioBus",
+                                                 "driver":  {
+                                                                "version":  "10.29.0.7082",
+                                                                "date":  "2022-01-20",
+                                                                "provider":  "Intel(R) Corporation",
+                                                                "inf":  "oem6.inf"
+                                                            },
+                                                 "pcie_link":  null
+                                             }
+                                         ],
+                    "audio_dsp_function":  [
+                                               {
+                                                   "name":  "英特尔® 智音技术 OED",
+                                                   "class":  "System",
+                                                   "manufacturer":  "Intel(R) Corporation",
+                                                   "bus_reported_name":  "Intel High Definition DSP",
+                                                   "ids":  {
+                                                               "vendor_id":  "8086",
+                                                               "device_id":  "0222",
+                                                               "subsystem_id":  "20271EE7",
+                                                               "revision":  "00"
+                                                           },
+                                                   "hardware_ids":  [
+                                                                        "INTELAUDIO\\DSP_CTLR_DEV_51C8&VEN_8086&DEV_0222&SUBSYS_20271EE7&REV_0001",
+                                                                        "INTELAUDIO\\DSP_CTLR_DEV_51C8&VEN_8086&DEV_0222&SUBSYS_20271EE7"
+                                                                    ],
+                                                   "compatible_ids":  [
+                                                                          "INTELAUDIO\\DSP_CTLR_DEV_51C8&VEN_8086&DEV_0222&REV_0001",
+                                                                          "INTELAUDIO\\DSP_CTLR_DEV_51C8&VEN_8086&DEV_0222",
+                                                                          "INTELAUDIO\\DSP_CTLR_DEV_51C8&VEN_8086",
+                                                                          "INTELAUDIO\\DSP_CTLR_DEV_51C8"
+                                                                      ],
+                                                   "instance_id":  "INTELAUDIO\\DSP_CTLR_DEV_51C8&VEN_8086&DEV_0222&SUBSYS_20271EE7&REV_0001\\4&F6CF9BF&0&0800",
+                                                   "status":  "OK",
+                                                   "config_manager_error_code":  0,
+                                                   "acpi_path":  "\\_SB.PC00.HDAS.IDA",
+                                                   "location_paths":  [
+                                                                          "ACPI(_SB_)#ACPI(PC00)#ACPI(HDAS)#ACPI(IDA_)"
+                                                                      ],
+                                                   "location_info":  "HD Audio Bus Driver",
+                                                   "parent":  "PCI\\VEN_8086&DEV_51C8&SUBSYS_20271EE7&REV_01\\3&11583659&2&FB",
+                                                   "service":  "IntcOED",
+                                                   "driver":  {
+                                                                  "version":  "10.29.0.7082",
+                                                                  "date":  "2022-01-20",
+                                                                  "provider":  "Intel(R) Corporation",
+                                                                  "inf":  "oem15.inf"
+                                                              },
+                                                   "pcie_link":  null
+                                               }
+                                           ],
+                    "audio_codecs":  [
+                                         {
+                                             "name":  "Realtek(R) Audio",
+                                             "class":  "MEDIA",
+                                             "manufacturer":  "Realtek",
+                                             "bus_reported_name":  "Intel High Definition Audio",
+                                             "ids":  {
+                                                         "vendor_id":  "10EC",
+                                                         "device_id":  "0256",
+                                                         "subsystem_id":  "1EE72029",
+                                                         "revision":  "10"
+                                                     },
+                                             "hardware_ids":  [
+                                                                  "INTELAUDIO\\FUNC_01&VEN_10EC&DEV_0256&SUBSYS_1EE72029&REV_1000",
+                                                                  "INTELAUDIO\\FUNC_01&VEN_10EC&DEV_0256&SUBSYS_1EE72029"
+                                                              ],
+                                             "compatible_ids":  [
+                                                                    "INTELAUDIO\\FUNC_01&VEN_10EC&DEV_0256&REV_1000",
+                                                                    "INTELAUDIO\\FUNC_01&VEN_10EC&DEV_0256",
+                                                                    "INTELAUDIO\\FUNC_01&VEN_10EC",
+                                                                    "INTELAUDIO\\FUNC_01"
+                                                                ],
+                                             "instance_id":  "INTELAUDIO\\FUNC_01&VEN_10EC&DEV_0256&SUBSYS_1EE72029&REV_1000\\5&8EDA330&0&0001",
+                                             "status":  "OK",
+                                             "config_manager_error_code":  0,
+                                             "acpi_path":  null,
+                                             "location_paths":  null,
+                                             "location_info":  "HD Audio Bus Driver",
+                                             "parent":  "INTELAUDIO\\DSP_CTLR_DEV_51C8&VEN_8086&DEV_0222&SUBSYS_20271EE7&REV_0001\\4&f6cf9bf&0&0800",
+                                             "service":  "IntcAzAudAddService",
+                                             "driver":  {
+                                                            "version":  "6.0.9334.1",
+                                                            "date":  "2022-03-31",
+                                                            "provider":  "Realtek Semiconductor Corp.",
+                                                            "inf":  "oem59.inf"
+                                                        },
+                                             "pcie_link":  null,
+                                             "codec_vendor_id":  "10EC",
+                                             "codec_device_id":  "0256",
+                                             "codec_model_inferred":  "ALC256 (inferred from Realtek codec ID convention, not reported by name)"
+                                         }
+                                     ],
+                    "nvidia_hd_audio_function":  [
+
+                                                 ],
+                    "ethernet_builtin":  [
+
+                                         ],
+                    "ethernet_external_usb":  [
+                                                  {
+                                                      "name":  "Realtek USB GbE Family Controller",
+                                                      "class":  "Net",
+                                                      "manufacturer":  "Realtek",
+                                                      "bus_reported_name":  "USB 10/100/1000 LAN",
+                                                      "ids":  {
+                                                                  "usb_vid":  "0BDA",
+                                                                  "usb_pid":  "8153"
+                                                              },
+                                                      "hardware_ids":  [
+                                                                           "USB\\VID_0BDA&PID_8153&REV_3100",
+                                                                           "USB\\VID_0BDA&PID_8153"
+                                                                       ],
+                                                      "compatible_ids":  [
+                                                                             "USB\\COMPAT_VID_0BDA&Class_FF&SubClass_FF&Prot_00",
+                                                                             "USB\\COMPAT_VID_0BDA&Class_FF&SubClass_FF",
+                                                                             "USB\\COMPAT_VID_0BDA&Class_FF",
+                                                                             "USB\\Class_FF&SubClass_FF&Prot_00"
+                                                                         ],
+                                                      "instance_id":  "USB\\VID_0BDA&PID_8153\\<REDACTED_UNIQUE_ID>",
+                                                      "status":  "OK",
+                                                      "config_manager_error_code":  0,
+                                                      "acpi_path":  null,
+                                                      "location_paths":  [
+                                                                             "PCIROOT(0)#PCI(1400)#USBROOT(0)#USB(15)#USB(1)",
+                                                                             "ACPI(_SB_)#ACPI(PC00)#ACPI(XHCI)#ACPI(RHUB)#ACPI(SS03)#USB(1)"
+                                                                         ],
+                                                      "location_info":  "Port_#0001.Hub_#0004",
+                                                      "parent":  "USB\\VID_05E3&PID_0626\\5&1eb5e6d0&0&15",
+                                                      "service":  "rtucx22x64",
+                                                      "driver":  {
+                                                                     "version":  "11.19.602.2025",
+                                                                     "date":  "2016-03-30",
+                                                                     "provider":  "Realtek",
+                                                                     "inf":  "oem10.inf"
+                                                                 },
+                                                      "pcie_link":  null
+                                                  }
+                                              ],
+                    "usb_host_controllers":  [
+                                                 {
+                                                     "name":  "Intel(R) USB 3.10 可扩展主机控制器 - 1.20 (Microsoft)",
+                                                     "class":  "USB",
+                                                     "manufacturer":  "通用 USB xHCI 主机控制器",
+                                                     "bus_reported_name":  "通用串行总线(USB)控制器",
+                                                     "ids":  {
+                                                                 "vendor_id":  "8086",
+                                                                 "device_id":  "51ED",
+                                                                 "subsystem_id":  "20271EE7",
+                                                                 "revision":  "01"
+                                                             },
+                                                     "hardware_ids":  [
+                                                                          "PCI\\VEN_8086&DEV_51ED&SUBSYS_20271EE7&REV_01",
+                                                                          "PCI\\VEN_8086&DEV_51ED&SUBSYS_20271EE7",
+                                                                          "PCI\\VEN_8086&DEV_51ED&CC_0C0330",
+                                                                          "PCI\\VEN_8086&DEV_51ED&CC_0C03"
+                                                                      ],
+                                                     "compatible_ids":  [
+                                                                            "PCI\\VEN_8086&DEV_51ED&REV_01",
+                                                                            "PCI\\VEN_8086&DEV_51ED",
+                                                                            "PCI\\VEN_8086&CC_0C0330",
+                                                                            "PCI\\VEN_8086&CC_0C03"
+                                                                        ],
+                                                     "instance_id":  "PCI\\VEN_8086&DEV_51ED&SUBSYS_20271EE7&REV_01\\3&11583659&2&A0",
+                                                     "status":  "OK",
+                                                     "config_manager_error_code":  0,
+                                                     "acpi_path":  "\\_SB.PC00.XHCI",
+                                                     "location_paths":  [
+                                                                            "PCIROOT(0)#PCI(1400)",
+                                                                            "ACPI(_SB_)#ACPI(PC00)#ACPI(XHCI)"
+                                                                        ],
+                                                     "location_info":  "PCI 总线 0、设备 20、功能 0",
+                                                     "parent":  "ACPI\\PNP0A08\\0",
+                                                     "service":  "USBXHCI",
+                                                     "driver":  {
+                                                                    "version":  "10.0.26100.9444",
+                                                                    "date":  "2026-09-03",
+                                                                    "provider":  "Microsoft",
+                                                                    "inf":  "usbxhci.inf"
+                                                                },
+                                                     "pcie_link":  null
+                                                 },
+                                                 {
+                                                     "name":  "Intel(R) USB 3.20 可扩展主机控制器 - 1.20 (Microsoft)",
+                                                     "class":  "USB",
+                                                     "manufacturer":  "通用 USB xHCI 主机控制器",
+                                                     "bus_reported_name":  "通用串行总线(USB)控制器",
+                                                     "ids":  {
+                                                                 "vendor_id":  "8086",
+                                                                 "device_id":  "461E",
+                                                                 "subsystem_id":  "20271EE7",
+                                                                 "revision":  "02"
+                                                             },
+                                                     "hardware_ids":  [
+                                                                          "PCI\\VEN_8086&DEV_461E&SUBSYS_20271EE7&REV_02",
+                                                                          "PCI\\VEN_8086&DEV_461E&SUBSYS_20271EE7",
+                                                                          "PCI\\VEN_8086&DEV_461E&CC_0C0330",
+                                                                          "PCI\\VEN_8086&DEV_461E&CC_0C03"
+                                                                      ],
+                                                     "compatible_ids":  [
+                                                                            "PCI\\VEN_8086&DEV_461E&REV_02",
+                                                                            "PCI\\VEN_8086&DEV_461E",
+                                                                            "PCI\\VEN_8086&CC_0C0330",
+                                                                            "PCI\\VEN_8086&CC_0C03"
+                                                                        ],
+                                                     "instance_id":  "PCI\\VEN_8086&DEV_461E&SUBSYS_20271EE7&REV_02\\3&11583659&2&68",
+                                                     "status":  "OK",
+                                                     "config_manager_error_code":  0,
+                                                     "acpi_path":  "\\_SB.PC00.TXHC",
+                                                     "location_paths":  [
+                                                                            "PCIROOT(0)#PCI(0D00)",
+                                                                            "ACPI(_SB_)#ACPI(PC00)#ACPI(TXHC)"
+                                                                        ],
+                                                     "location_info":  "PCI 总线 0、设备 13、功能 0",
+                                                     "parent":  "ACPI\\PNP0A08\\0",
+                                                     "service":  "USBXHCI",
+                                                     "driver":  {
+                                                                    "version":  "10.0.26100.9444",
+                                                                    "date":  "2026-09-03",
+                                                                    "provider":  "Microsoft",
+                                                                    "inf":  "usbxhci.inf"
+                                                                },
+                                                     "pcie_link":  null
+                                                 }
+                                             ],
+                    "thunderbolt_usb4":  [
+
+                                         ],
+                    "touchpad":  [
+                                     {
+                                         "name":  "I2C HID 设备",
+                                         "class":  "HIDClass",
+                                         "manufacturer":  "Microsoft",
+                                         "bus_reported_name":  null,
+                                         "ids":  null,
+                                         "hardware_ids":  [
+                                                              "ACPI\\VEN_ELAN&DEV_2616",
+                                                              "ACPI\\ELAN2616",
+                                                              "*ELAN2616"
+                                                          ],
+                                         "compatible_ids":  [
+                                                                "ACPI\\PNP0C50",
+                                                                "PNP0C50"
+                                                            ],
+                                         "instance_id":  "ACPI\\ELAN2616\\4&2974EE64&0",
+                                         "status":  "OK",
+                                         "config_manager_error_code":  0,
+                                         "acpi_path":  "\\_SB.PC00.I2C0.TPD0",
+                                         "location_paths":  [
+                                                                "ACPI(_SB_)#ACPI(PC00)#ACPI(I2C0)#ACPI(TPD0)"
+                                                            ],
+                                         "location_info":  null,
+                                         "parent":  "PCI\\VEN_8086&DEV_51E8&SUBSYS_20271EE7&REV_01\\3&11583659&2&A8",
+                                         "service":  "hidi2c",
+                                         "driver":  {
+                                                        "version":  "10.0.26100.8972",
+                                                        "date":  "2006-06-21",
+                                                        "provider":  "Microsoft",
+                                                        "inf":  "hidi2c.inf"
+                                                    },
+                                         "pcie_link":  null
+                                     }
+                                 ],
+                    "touchpad_hid_collections":  [
+                                                     {
+                                                         "name":  "HID-compliant mouse",
+                                                         "class":  "Mouse",
+                                                         "manufacturer":  "Microsoft",
+                                                         "bus_reported_name":  null,
+                                                         "ids":  null,
+                                                         "hardware_ids":  [
+                                                                              "HID\\VEN_ELAN&DEV_2616&Col01",
+                                                                              "HID\\ELAN2616&Col01",
+                                                                              "HID\\*ELAN2616&Col01",
+                                                                              "HID\\VID_04F3&UP:0001_U:0002",
+                                                                              "HID_DEVICE_SYSTEM_MOUSE",
+                                                                              "HID_DEVICE_UP:0001_U:0002",
+                                                                              "HID_DEVICE"
+                                                                          ],
+                                                         "compatible_ids":  [
+
+                                                                            ],
+                                                         "instance_id":  "HID\\ELAN2616&COL01\\5&2B3EEF23&0&0000",
+                                                         "status":  "OK",
+                                                         "config_manager_error_code":  0,
+                                                         "acpi_path":  null,
+                                                         "location_paths":  null,
+                                                         "location_info":  null,
+                                                         "parent":  "ACPI\\ELAN2616\\4&2974ee64&0",
+                                                         "service":  "mouhid",
+                                                         "driver":  {
+                                                                        "version":  "10.0.26100.1150",
+                                                                        "date":  "2006-06-21",
+                                                                        "provider":  "Microsoft",
+                                                                        "inf":  "msmouse.inf"
+                                                                    },
+                                                         "pcie_link":  null
+                                                     },
+                                                     {
+                                                         "name":  "符合 HID 标准的供应商定义设备",
+                                                         "class":  "HIDClass",
+                                                         "manufacturer":  "(标准系统设备)",
+                                                         "bus_reported_name":  null,
+                                                         "ids":  null,
+                                                         "hardware_ids":  [
+                                                                              "HID\\VEN_ELAN&DEV_2616&Col02",
+                                                                              "HID\\ELAN2616&Col02",
+                                                                              "HID\\*ELAN2616&Col02",
+                                                                              "HID\\VID_04F3&UP:FF00_U:0001",
+                                                                              "HID_DEVICE_UP:FF00_U:0001",
+                                                                              "HID_DEVICE_UPR:FF00-FFFF",
+                                                                              "HID_DEVICE"
+                                                                          ],
+                                                         "compatible_ids":  [
+
+                                                                            ],
+                                                         "instance_id":  "HID\\ELAN2616&COL02\\5&2B3EEF23&0&0001",
+                                                         "status":  "OK",
+                                                         "config_manager_error_code":  0,
+                                                         "acpi_path":  null,
+                                                         "location_paths":  null,
+                                                         "location_info":  null,
+                                                         "parent":  "ACPI\\ELAN2616\\4&2974ee64&0",
+                                                         "service":  null,
+                                                         "driver":  {
+                                                                        "version":  "10.0.26100.9444",
+                                                                        "date":  "2006-06-21",
+                                                                        "provider":  "Microsoft",
+                                                                        "inf":  "input.inf"
+                                                                    },
+                                                         "pcie_link":  null
+                                                     },
+                                                     {
+                                                         "name":  "符合 HID 标准的触摸板",
+                                                         "class":  "HIDClass",
+                                                         "manufacturer":  "(标准系统设备)",
+                                                         "bus_reported_name":  null,
+                                                         "ids":  null,
+                                                         "hardware_ids":  [
+                                                                              "HID\\VEN_ELAN&DEV_2616&Col03",
+                                                                              "HID\\ELAN2616&Col03",
+                                                                              "HID\\*ELAN2616&Col03",
+                                                                              "HID\\VID_04F3&UP:000D_U:0005",
+                                                                              "HID_DEVICE_UP:000D_U:0005",
+                                                                              "HID_DEVICE"
+                                                                          ],
+                                                         "compatible_ids":  [
+
+                                                                            ],
+                                                         "instance_id":  "HID\\ELAN2616&COL03\\5&2B3EEF23&0&0002",
+                                                         "status":  "OK",
+                                                         "config_manager_error_code":  0,
+                                                         "acpi_path":  null,
+                                                         "location_paths":  null,
+                                                         "location_info":  null,
+                                                         "parent":  "ACPI\\ELAN2616\\4&2974ee64&0",
+                                                         "service":  null,
+                                                         "driver":  {
+                                                                        "version":  "10.0.26100.9444",
+                                                                        "date":  "2006-06-21",
+                                                                        "provider":  "Microsoft",
+                                                                        "inf":  "input.inf"
+                                                                    },
+                                                         "pcie_link":  null
+                                                     },
+                                                     {
+                                                         "name":  "Microsoft Input Configuration Device",
+                                                         "class":  "HIDClass",
+                                                         "manufacturer":  "Microsoft",
+                                                         "bus_reported_name":  null,
+                                                         "ids":  null,
+                                                         "hardware_ids":  [
+                                                                              "HID\\VEN_ELAN&DEV_2616&Col04",
+                                                                              "HID\\ELAN2616&Col04",
+                                                                              "HID\\*ELAN2616&Col04",
+                                                                              "HID\\VID_04F3&UP:000D_U:000E",
+                                                                              "HID_DEVICE_UP:000D_U:000E",
+                                                                              "HID_DEVICE"
+                                                                          ],
+                                                         "compatible_ids":  [
+
+                                                                            ],
+                                                         "instance_id":  "HID\\ELAN2616&COL04\\5&2B3EEF23&0&0003",
+                                                         "status":  "OK",
+                                                         "config_manager_error_code":  0,
+                                                         "acpi_path":  null,
+                                                         "location_paths":  null,
+                                                         "location_info":  null,
+                                                         "parent":  "ACPI\\ELAN2616\\4&2974ee64&0",
+                                                         "service":  "MTConfig",
+                                                         "driver":  {
+                                                                        "version":  "10.0.26100.1150",
+                                                                        "date":  "2006-06-21",
+                                                                        "provider":  "Microsoft",
+                                                                        "inf":  "mtconfig.inf"
+                                                                    },
+                                                         "pcie_link":  null
+                                                     }
+                                                 ],
+                    "keyboard_internal":  [
+                                              {
+                                                  "name":  "PS/2 标准键盘",
+                                                  "class":  "Keyboard",
+                                                  "manufacturer":  "(标准键盘)",
+                                                  "bus_reported_name":  null,
+                                                  "ids":  null,
+                                                  "hardware_ids":  [
+                                                                       "ACPI\\VEN_MSFT&DEV_0001",
+                                                                       "ACPI\\MSFT0001",
+                                                                       "*MSFT0001"
+                                                                   ],
+                                                  "compatible_ids":  [
+                                                                         "*PNP0303"
+                                                                     ],
+                                                  "instance_id":  "ACPI\\MSFT0001\\4&1376E135&0",
+                                                  "status":  "OK",
+                                                  "config_manager_error_code":  0,
+                                                  "acpi_path":  "\\_SB.PC00.LPCB.PS2K",
+                                                  "location_paths":  [
+                                                                         "ACPI(_SB_)#ACPI(PC00)#ACPI(LPCB)#ACPI(PS2K)"
+                                                                     ],
+                                                  "location_info":  null,
+                                                  "parent":  "PCI\\VEN_8086&DEV_5182&SUBSYS_20271EE7&REV_01\\3&11583659&2&F8",
+                                                  "service":  "i8042prt",
+                                                  "driver":  {
+                                                                 "version":  "10.0.26100.8972",
+                                                                 "date":  "2006-06-21",
+                                                                 "provider":  "Microsoft",
+                                                                 "inf":  "keyboard.inf"
+                                                             },
+                                                  "pcie_link":  null
+                                              }
+                                          ],
+                    "i2c_serialio_controllers":  [
+                                                     {
+                                                         "name":  "Intel(R) SPI (flash) Controller - 51A4",
+                                                         "class":  "System",
+                                                         "manufacturer":  "INTEL",
+                                                         "bus_reported_name":  "PCI 设备",
+                                                         "ids":  {
+                                                                     "vendor_id":  "8086",
+                                                                     "device_id":  "51A4",
+                                                                     "subsystem_id":  "20271EE7",
+                                                                     "revision":  "01"
+                                                                 },
+                                                         "hardware_ids":  [
+                                                                              "PCI\\VEN_8086&DEV_51A4&SUBSYS_20271EE7&REV_01",
+                                                                              "PCI\\VEN_8086&DEV_51A4&SUBSYS_20271EE7",
+                                                                              "PCI\\VEN_8086&DEV_51A4&CC_0C8000",
+                                                                              "PCI\\VEN_8086&DEV_51A4&CC_0C80"
+                                                                          ],
+                                                         "compatible_ids":  [
+                                                                                "PCI\\VEN_8086&DEV_51A4&REV_01",
+                                                                                "PCI\\VEN_8086&DEV_51A4",
+                                                                                "PCI\\VEN_8086&CC_0C8000",
+                                                                                "PCI\\VEN_8086&CC_0C80"
+                                                                            ],
+                                                         "instance_id":  "PCI\\VEN_8086&DEV_51A4&SUBSYS_20271EE7&REV_01\\3&11583659&2&FD",
+                                                         "status":  "OK",
+                                                         "config_manager_error_code":  0,
+                                                         "acpi_path":  null,
+                                                         "location_paths":  [
+                                                                                "PCIROOT(0)#PCI(1F05)",
+                                                                                "ACPI(_SB_)#ACPI(PC00)#PCI(1F05)"
+                                                                            ],
+                                                         "location_info":  "PCI 总线 0、设备 31、功能 5",
+                                                         "parent":  "ACPI\\PNP0A08\\0",
+                                                         "service":  null,
+                                                         "driver":  {
+                                                                        "version":  "10.1.36.6",
+                                                                        "date":  "1968-07-18",
+                                                                        "provider":  "INTEL",
+                                                                        "inf":  "oem64.inf"
+                                                                    },
+                                                         "pcie_link":  null
+                                                     },
+                                                     {
+                                                         "name":  "Intel(R) Serial IO I2C Host Controller - 51E8",
+                                                         "class":  "System",
+                                                         "manufacturer":  "Intel Corporation",
+                                                         "bus_reported_name":  "PCI 设备",
+                                                         "ids":  {
+                                                                     "vendor_id":  "8086",
+                                                                     "device_id":  "51E8",
+                                                                     "subsystem_id":  "20271EE7",
+                                                                     "revision":  "01"
+                                                                 },
+                                                         "hardware_ids":  [
+                                                                              "PCI\\VEN_8086&DEV_51E8&SUBSYS_20271EE7&REV_01",
+                                                                              "PCI\\VEN_8086&DEV_51E8&SUBSYS_20271EE7",
+                                                                              "PCI\\VEN_8086&DEV_51E8&CC_0C8000",
+                                                                              "PCI\\VEN_8086&DEV_51E8&CC_0C80"
+                                                                          ],
+                                                         "compatible_ids":  [
+                                                                                "PCI\\VEN_8086&DEV_51E8&REV_01",
+                                                                                "PCI\\VEN_8086&DEV_51E8",
+                                                                                "PCI\\VEN_8086&CC_0C8000",
+                                                                                "PCI\\VEN_8086&CC_0C80"
+                                                                            ],
+                                                         "instance_id":  "PCI\\VEN_8086&DEV_51E8&SUBSYS_20271EE7&REV_01\\3&11583659&2&A8",
+                                                         "status":  "OK",
+                                                         "config_manager_error_code":  0,
+                                                         "acpi_path":  "\\_SB.PC00.I2C0",
+                                                         "location_paths":  [
+                                                                                "PCIROOT(0)#PCI(1500)",
+                                                                                "ACPI(_SB_)#ACPI(PC00)#ACPI(I2C0)"
+                                                                            ],
+                                                         "location_info":  "PCI 总线 0、设备 21、功能 0",
+                                                         "parent":  "ACPI\\PNP0A08\\0",
+                                                         "service":  "iaLPSS2_I2C_ADL",
+                                                         "driver":  {
+                                                                        "version":  "30.100.2148.1",
+                                                                        "date":  "2021-11-22",
+                                                                        "provider":  "Intel Corporation",
+                                                                        "inf":  "oem22.inf"
+                                                                    },
+                                                         "pcie_link":  null
+                                                     }
+                                                 ],
+                    "serialio_gpio":  [
+                                          {
+                                              "name":  "Intel(R) Serial IO GPIO Host Controller - INTC1055",
+                                              "class":  "System",
+                                              "manufacturer":  "Intel Corporation",
+                                              "bus_reported_name":  null,
+                                              "ids":  null,
+                                              "hardware_ids":  [
+                                                                   "ACPI\\VEN_INTC&DEV_1055",
+                                                                   "ACPI\\INTC1055",
+                                                                   "*INTC1055"
+                                                               ],
+                                              "compatible_ids":  [
+
+                                                                 ],
+                                              "instance_id":  "ACPI\\INTC1055\\2&DABA3FF&2",
+                                              "status":  "OK",
+                                              "config_manager_error_code":  0,
+                                              "acpi_path":  "\\_SB.GPI0",
+                                              "location_paths":  [
+                                                                     "ACPI(_SB_)#ACPI(GPI0)"
+                                                                 ],
+                                              "location_info":  null,
+                                              "parent":  "ACPI_HAL\\PNP0C08\\0",
+                                              "service":  "iaLPSS2_GPIO2_ADL",
+                                              "driver":  {
+                                                             "version":  "30.100.2148.1",
+                                                             "date":  "2021-11-22",
+                                                             "provider":  "Intel Corporation",
+                                                             "inf":  "oem20.inf"
+                                                         },
+                                              "pcie_link":  null
+                                          }
+                                      ],
+                    "card_reader":  [
+
+                                    ],
+                    "camera":  [
+                                   {
+                                       "name":  "HD Camera",
+                                       "class":  "Camera",
+                                       "manufacturer":  "Microsoft",
+                                       "bus_reported_name":  "HD Camera",
+                                       "ids":  {
+                                                   "usb_vid":  "3277",
+                                                   "usb_pid":  "0003"
+                                               },
+                                       "hardware_ids":  [
+                                                            "USB\\VID_3277&PID_0003&REV_0012&MI_00",
+                                                            "USB\\VID_3277&PID_0003&MI_00"
+                                                        ],
+                                       "compatible_ids":  [
+                                                              "USB\\COMPAT_VID_3277&Class_0e&SubClass_03&Prot_00",
+                                                              "USB\\COMPAT_VID_3277&Class_0e&SubClass_03",
+                                                              "USB\\COMPAT_VID_3277&Class_0e",
+                                                              "USB\\Class_0e&SubClass_03&Prot_00"
+                                                          ],
+                                       "instance_id":  "USB\\VID_3277&PID_0003&MI_00\\6&242941BF&2&0000",
+                                       "status":  "OK",
+                                       "config_manager_error_code":  0,
+                                       "acpi_path":  "\\_SB.PC00.XHCI.RHUB.HS06.CAM0",
+                                       "location_paths":  [
+                                                              "PCIROOT(0)#PCI(1400)#USBROOT(0)#USB(6)#USBMI(0)",
+                                                              "PCIROOT(0)#PCI(1400)#USBROOT(0)#USB(6)#USB(6)",
+                                                              "ACPI(_SB_)#ACPI(PC00)#ACPI(XHCI)#ACPI(RHUB)#ACPI(HS06)#ACPI(CAM0)"
+                                                          ],
+                                       "location_info":  "0000.0014.0000.006.000.000.000.000.000",
+                                       "parent":  "USB\\VID_3277&PID_0003\\0001",
+                                       "service":  "usbvideo",
+                                       "driver":  {
+                                                      "version":  "10.0.26100.9444",
+                                                      "date":  "2006-06-21",
+                                                      "provider":  "Microsoft",
+                                                      "inf":  "usbvideo.inf"
+                                                  },
+                                       "pcie_link":  null
+                                   }
+                               ],
+                    "fingerprint":  [
+                                        {
+                                            "name":  "FPC Fingerprint Reader (Disum)",
+                                            "class":  "Biometric",
+                                            "manufacturer":  "Fingerprint Cards AB",
+                                            "bus_reported_name":  "FPC Sensor Controller",
+                                            "ids":  {
+                                                        "usb_vid":  "10A5",
+                                                        "usb_pid":  "A921"
+                                                    },
+                                            "hardware_ids":  [
+                                                                 "USB\\VID_10A5&PID_A921&REV_0026",
+                                                                 "USB\\VID_10A5&PID_A921"
+                                                             ],
+                                            "compatible_ids":  [
+                                                                   "USB\\COMPAT_VID_10A5&Class_FF&SubClass_FF&Prot_FF",
+                                                                   "USB\\COMPAT_VID_10A5&Class_FF&SubClass_FF",
+                                                                   "USB\\COMPAT_VID_10A5&Class_FF",
+                                                                   "USB\\Class_FF&SubClass_FF&Prot_FF"
+                                                               ],
+                                            "instance_id":  "USB\\VID_10A5&PID_A921\\5&1EB5E6D0&0&8",
+                                            "status":  "OK",
+                                            "config_manager_error_code":  0,
+                                            "acpi_path":  "\\_SB.PC00.XHCI.RHUB.HS08",
+                                            "location_paths":  [
+                                                                   "PCIROOT(0)#PCI(1400)#USBROOT(0)#USB(8)",
+                                                                   "ACPI(_SB_)#ACPI(PC00)#ACPI(XHCI)#ACPI(RHUB)#ACPI(HS08)"
+                                                               ],
+                                            "location_info":  "Port_#0008.Hub_#0002",
+                                            "parent":  "USB\\ROOT_HUB30\\4&1c5ad2f2&0&0",
+                                            "service":  "WUDFRd",
+                                            "driver":  {
+                                                           "version":  "24.26.0.26",
+                                                           "date":  "2023-03-08",
+                                                           "provider":  "Fingerprint Cards AB",
+                                                           "inf":  "oem16.inf"
+                                                       },
+                                            "pcie_link":  null
+                                        }
+                                    ],
+                    "nvidia_platform_framework":  [
+                                                      {
+                                                          "name":  "NVIDIA Platform Controllers and Framework",
+                                                          "class":  "SoftwareDevice",
+                                                          "manufacturer":  "NVIDIA",
+                                                          "bus_reported_name":  null,
+                                                          "ids":  null,
+                                                          "hardware_ids":  [
+                                                                               "ACPI\\VEN_NVDA&DEV_0820",
+                                                                               "ACPI\\NVDA0820",
+                                                                               "*NVDA0820"
+                                                                           ],
+                                                          "compatible_ids":  [
+
+                                                                             ],
+                                                          "instance_id":  "ACPI\\NVDA0820\\NPCF",
+                                                          "status":  "OK",
+                                                          "config_manager_error_code":  0,
+                                                          "acpi_path":  "\\_SB.NPCF",
+                                                          "location_paths":  [
+                                                                                 "ACPI(_SB_)#ACPI(NPCF)"
+                                                                             ],
+                                                          "location_info":  null,
+                                                          "parent":  "ACPI_HAL\\PNP0C08\\0",
+                                                          "service":  "nvpcf",
+                                                          "driver":  {
+                                                                         "version":  "32.0.15.7081",
+                                                                         "date":  "2024-11-06",
+                                                                         "provider":  "NVIDIA",
+                                                                         "inf":  "oem18.inf"
+                                                                     },
+                                                          "pcie_link":  null
+                                                      }
+                                                  ],
+                    "other_pci":  [
+                                      {
+                                          "name":  "Intel(R) SMBus - 51A3",
+                                          "class":  "System",
+                                          "manufacturer":  "INTEL",
+                                          "bus_reported_name":  "SM 总线控制器",
+                                          "ids":  {
+                                                      "vendor_id":  "8086",
+                                                      "device_id":  "51A3",
+                                                      "subsystem_id":  "20271EE7",
+                                                      "revision":  "01"
+                                                  },
+                                          "hardware_ids":  [
+                                                               "PCI\\VEN_8086&DEV_51A3&SUBSYS_20271EE7&REV_01",
+                                                               "PCI\\VEN_8086&DEV_51A3&SUBSYS_20271EE7",
+                                                               "PCI\\VEN_8086&DEV_51A3&CC_0C0500",
+                                                               "PCI\\VEN_8086&DEV_51A3&CC_0C05"
+                                                           ],
+                                          "compatible_ids":  [
+                                                                 "PCI\\VEN_8086&DEV_51A3&REV_01",
+                                                                 "PCI\\VEN_8086&DEV_51A3",
+                                                                 "PCI\\VEN_8086&CC_0C0500",
+                                                                 "PCI\\VEN_8086&CC_0C05"
+                                                             ],
+                                          "instance_id":  "PCI\\VEN_8086&DEV_51A3&SUBSYS_20271EE7&REV_01\\3&11583659&2&FC",
+                                          "status":  "OK",
+                                          "config_manager_error_code":  0,
+                                          "acpi_path":  "\\_SB.PC00.SBUS",
+                                          "location_paths":  [
+                                                                 "PCIROOT(0)#PCI(1F04)",
+                                                                 "ACPI(_SB_)#ACPI(PC00)#ACPI(SBUS)"
+                                                             ],
+                                          "location_info":  "PCI 总线 0、设备 31、功能 4",
+                                          "parent":  "ACPI\\PNP0A08\\0",
+                                          "service":  null,
+                                          "driver":  {
+                                                         "version":  "10.1.36.6",
+                                                         "date":  "1968-07-18",
+                                                         "provider":  "INTEL",
+                                                         "inf":  "oem64.inf"
+                                                     },
+                                          "pcie_link":  null
+                                      },
+                                      {
+                                          "name":  "Intel(R) PEG62 - 463D",
+                                          "class":  "System",
+                                          "manufacturer":  "INTEL",
+                                          "bus_reported_name":  "PCI 到 PCI 桥",
+                                          "ids":  {
+                                                      "vendor_id":  "8086",
+                                                      "device_id":  "463D",
+                                                      "subsystem_id":  "20271EE7",
+                                                      "revision":  "02"
+                                                  },
+                                          "hardware_ids":  [
+                                                               "PCI\\VEN_8086&DEV_463D&SUBSYS_20271EE7&REV_02",
+                                                               "PCI\\VEN_8086&DEV_463D&SUBSYS_20271EE7",
+                                                               "PCI\\VEN_8086&DEV_463D&CC_060400",
+                                                               "PCI\\VEN_8086&DEV_463D&CC_0604"
+                                                           ],
+                                          "compatible_ids":  [
+                                                                 "PCI\\VEN_8086&DEV_463D&REV_02",
+                                                                 "PCI\\VEN_8086&DEV_463D",
+                                                                 "PCI\\VEN_8086&CC_060400",
+                                                                 "PCI\\VEN_8086&CC_0604"
+                                                             ],
+                                          "instance_id":  "PCI\\VEN_8086&DEV_463D&SUBSYS_20271EE7&REV_02\\3&11583659&2&32",
+                                          "status":  "OK",
+                                          "config_manager_error_code":  0,
+                                          "acpi_path":  "\\_SB.PC00.PEG2",
+                                          "location_paths":  [
+                                                                 "PCIROOT(0)#PCI(0602)",
+                                                                 "ACPI(_SB_)#ACPI(PC00)#ACPI(PEG2)"
+                                                             ],
+                                          "location_info":  "PCI 总线 0、设备 6、功能 2",
+                                          "parent":  "ACPI\\PNP0A08\\0",
+                                          "service":  "pci",
+                                          "driver":  {
+                                                         "version":  "10.1.45.4",
+                                                         "date":  "1968-07-18",
+                                                         "provider":  "INTEL",
+                                                         "inf":  "oem11.inf"
+                                                     },
+                                          "pcie_link":  null
+                                      },
+                                      {
+                                          "name":  "Intel(R) Innovation Platform Framework Processor Participant",
+                                          "class":  "System",
+                                          "manufacturer":  "Intel",
+                                          "bus_reported_name":  "PCI 数据捕获和信号处理控制器",
+                                          "ids":  {
+                                                      "vendor_id":  "8086",
+                                                      "device_id":  "461D",
+                                                      "subsystem_id":  "20271EE7",
+                                                      "revision":  "02"
+                                                  },
+                                          "hardware_ids":  [
+                                                               "PCI\\VEN_8086&DEV_461D&SUBSYS_20271EE7&REV_02",
+                                                               "PCI\\VEN_8086&DEV_461D&SUBSYS_20271EE7",
+                                                               "PCI\\VEN_8086&DEV_461D&CC_118000",
+                                                               "PCI\\VEN_8086&DEV_461D&CC_1180"
+                                                           ],
+                                          "compatible_ids":  [
+                                                                 "PCI\\VEN_8086&DEV_461D&REV_02",
+                                                                 "PCI\\VEN_8086&DEV_461D",
+                                                                 "PCI\\VEN_8086&CC_118000",
+                                                                 "PCI\\VEN_8086&CC_1180"
+                                                             ],
+                                          "instance_id":  "PCI\\VEN_8086&DEV_461D&SUBSYS_20271EE7&REV_02\\3&11583659&2&20",
+                                          "status":  "OK",
+                                          "config_manager_error_code":  0,
+                                          "acpi_path":  "\\_SB.PC00.TCPU",
+                                          "location_paths":  [
+                                                                 "PCIROOT(0)#PCI(0400)",
+                                                                 "ACPI(_SB_)#ACPI(PC00)#ACPI(TCPU)"
+                                                             ],
+                                          "location_info":  "PCI 总线 0、设备 4、功能 0",
+                                          "parent":  "ACPI\\PNP0A08\\0",
+                                          "service":  "ipf_cpu",
+                                          "driver":  {
+                                                         "version":  "1.0.10705.25772",
+                                                         "date":  "2022-01-28",
+                                                         "provider":  "Intel",
+                                                         "inf":  "oem13.inf"
+                                                     },
+                                          "pcie_link":  null
+                                      },
+                                      {
+                                          "name":  "Intel(R) 平台监控技术驱动程序",
+                                          "class":  "System",
+                                          "manufacturer":  "Intel(R) 平台监控技术设备",
+                                          "bus_reported_name":  "PCI 数据捕获和信号处理控制器",
+                                          "ids":  {
+                                                      "vendor_id":  "8086",
+                                                      "device_id":  "467D",
+                                                      "subsystem_id":  "20271EE7",
+                                                      "revision":  "01"
+                                                  },
+                                          "hardware_ids":  [
+                                                               "PCI\\VEN_8086&DEV_467D&SUBSYS_20271EE7&REV_01",
+                                                               "PCI\\VEN_8086&DEV_467D&SUBSYS_20271EE7",
+                                                               "PCI\\VEN_8086&DEV_467D&CC_118000",
+                                                               "PCI\\VEN_8086&DEV_467D&CC_1180"
+                                                           ],
+                                          "compatible_ids":  [
+                                                                 "PCI\\VEN_8086&DEV_467D&REV_01",
+                                                                 "PCI\\VEN_8086&DEV_467D",
+                                                                 "PCI\\VEN_8086&CC_118000",
+                                                                 "PCI\\VEN_8086&CC_1180"
+                                                             ],
+                                          "instance_id":  "PCI\\VEN_8086&DEV_467D&SUBSYS_20271EE7&REV_01\\3&11583659&2&50",
+                                          "status":  "OK",
+                                          "config_manager_error_code":  0,
+                                          "acpi_path":  null,
+                                          "location_paths":  [
+                                                                 "PCIROOT(0)#PCI(0A00)",
+                                                                 "ACPI(_SB_)#ACPI(PC00)#PCI(0A00)"
+                                                             ],
+                                          "location_info":  "PCI 总线 0、设备 10、功能 0",
+                                          "parent":  "ACPI\\PNP0A08\\0",
+                                          "service":  "IntelPMT",
+                                          "driver":  {
+                                                         "version":  "10.0.26100.8972",
+                                                         "date":  "2006-06-21",
+                                                         "provider":  "Intel(R) Platform Monitoring Technology Device",
+                                                         "inf":  "intelpmt.inf"
+                                                     },
+                                          "pcie_link":  null
+                                      },
+                                      {
+                                          "name":  "Intel(R) PEG60 - 464D",
+                                          "class":  "System",
+                                          "manufacturer":  "INTEL",
+                                          "bus_reported_name":  "PCI 到 PCI 桥",
+                                          "ids":  {
+                                                      "vendor_id":  "8086",
+                                                      "device_id":  "464D",
+                                                      "subsystem_id":  "20271EE7",
+                                                      "revision":  "02"
+                                                  },
+                                          "hardware_ids":  [
+                                                               "PCI\\VEN_8086&DEV_464D&SUBSYS_20271EE7&REV_02",
+                                                               "PCI\\VEN_8086&DEV_464D&SUBSYS_20271EE7",
+                                                               "PCI\\VEN_8086&DEV_464D&CC_060400",
+                                                               "PCI\\VEN_8086&DEV_464D&CC_0604"
+                                                           ],
+                                          "compatible_ids":  [
+                                                                 "PCI\\VEN_8086&DEV_464D&REV_02",
+                                                                 "PCI\\VEN_8086&DEV_464D",
+                                                                 "PCI\\VEN_8086&CC_060400",
+                                                                 "PCI\\VEN_8086&CC_0604"
+                                                             ],
+                                          "instance_id":  "PCI\\VEN_8086&DEV_464D&SUBSYS_20271EE7&REV_02\\3&11583659&2&30",
+                                          "status":  "OK",
+                                          "config_manager_error_code":  0,
+                                          "acpi_path":  "\\_SB.PC00.PEG0",
+                                          "location_paths":  [
+                                                                 "PCIROOT(0)#PCI(0600)",
+                                                                 "ACPI(_SB_)#ACPI(PC00)#ACPI(PEG0)"
+                                                             ],
+                                          "location_info":  "PCI 总线 0、设备 6、功能 0",
+                                          "parent":  "ACPI\\PNP0A08\\0",
+                                          "service":  "pci",
+                                          "driver":  {
+                                                         "version":  "10.1.45.4",
+                                                         "date":  "1968-07-18",
+                                                         "provider":  "INTEL",
+                                                         "inf":  "oem11.inf"
+                                                     },
+                                          "pcie_link":  null
+                                      },
+                                      {
+                                          "name":  "Intel(R) Shared SRAM - 51EF",
+                                          "class":  "System",
+                                          "manufacturer":  "INTEL",
+                                          "bus_reported_name":  "PCI 内存",
+                                          "ids":  {
+                                                      "vendor_id":  "8086",
+                                                      "device_id":  "51EF",
+                                                      "subsystem_id":  "20271EE7",
+                                                      "revision":  "01"
+                                                  },
+                                          "hardware_ids":  [
+                                                               "PCI\\VEN_8086&DEV_51EF&SUBSYS_20271EE7&REV_01",
+                                                               "PCI\\VEN_8086&DEV_51EF&SUBSYS_20271EE7",
+                                                               "PCI\\VEN_8086&DEV_51EF&CC_050000",
+                                                               "PCI\\VEN_8086&DEV_51EF&CC_0500"
+                                                           ],
+                                          "compatible_ids":  [
+                                                                 "PCI\\VEN_8086&DEV_51EF&REV_01",
+                                                                 "PCI\\VEN_8086&DEV_51EF",
+                                                                 "PCI\\VEN_8086&CC_050000",
+                                                                 "PCI\\VEN_8086&CC_0500"
+                                                             ],
+                                          "instance_id":  "PCI\\VEN_8086&DEV_51EF&SUBSYS_20271EE7&REV_01\\3&11583659&2&A2",
+                                          "status":  "OK",
+                                          "config_manager_error_code":  0,
+                                          "acpi_path":  null,
+                                          "location_paths":  [
+                                                                 "PCIROOT(0)#PCI(1402)",
+                                                                 "ACPI(_SB_)#ACPI(PC00)#PCI(1402)"
+                                                             ],
+                                          "location_info":  "PCI 总线 0、设备 20、功能 2",
+                                          "parent":  "ACPI\\PNP0A08\\0",
+                                          "service":  null,
+                                          "driver":  {
+                                                         "version":  "10.1.36.6",
+                                                         "date":  "1968-07-18",
+                                                         "provider":  "INTEL",
+                                                         "inf":  "oem64.inf"
+                                                     },
+                                          "pcie_link":  null
+                                      },
+                                      {
+                                          "name":  "Intel(R) SPI (flash) Controller - 51A4",
+                                          "class":  "System",
+                                          "manufacturer":  "INTEL",
+                                          "bus_reported_name":  "PCI 设备",
+                                          "ids":  {
+                                                      "vendor_id":  "8086",
+                                                      "device_id":  "51A4",
+                                                      "subsystem_id":  "20271EE7",
+                                                      "revision":  "01"
+                                                  },
+                                          "hardware_ids":  [
+                                                               "PCI\\VEN_8086&DEV_51A4&SUBSYS_20271EE7&REV_01",
+                                                               "PCI\\VEN_8086&DEV_51A4&SUBSYS_20271EE7",
+                                                               "PCI\\VEN_8086&DEV_51A4&CC_0C8000",
+                                                               "PCI\\VEN_8086&DEV_51A4&CC_0C80"
+                                                           ],
+                                          "compatible_ids":  [
+                                                                 "PCI\\VEN_8086&DEV_51A4&REV_01",
+                                                                 "PCI\\VEN_8086&DEV_51A4",
+                                                                 "PCI\\VEN_8086&CC_0C8000",
+                                                                 "PCI\\VEN_8086&CC_0C80"
+                                                             ],
+                                          "instance_id":  "PCI\\VEN_8086&DEV_51A4&SUBSYS_20271EE7&REV_01\\3&11583659&2&FD",
+                                          "status":  "OK",
+                                          "config_manager_error_code":  0,
+                                          "acpi_path":  null,
+                                          "location_paths":  [
+                                                                 "PCIROOT(0)#PCI(1F05)",
+                                                                 "ACPI(_SB_)#ACPI(PC00)#PCI(1F05)"
+                                                             ],
+                                          "location_info":  "PCI 总线 0、设备 31、功能 5",
+                                          "parent":  "ACPI\\PNP0A08\\0",
+                                          "service":  null,
+                                          "driver":  {
+                                                         "version":  "10.1.36.6",
+                                                         "date":  "1968-07-18",
+                                                         "provider":  "INTEL",
+                                                         "inf":  "oem64.inf"
+                                                     },
+                                          "pcie_link":  null
+                                      },
+                                      {
+                                          "name":  "Intel(R) LPC Controller - 5182",
+                                          "class":  "System",
+                                          "manufacturer":  "INTEL",
+                                          "bus_reported_name":  "PCI 到 ISA 桥",
+                                          "ids":  {
+                                                      "vendor_id":  "8086",
+                                                      "device_id":  "5182",
+                                                      "subsystem_id":  "20271EE7",
+                                                      "revision":  "01"
+                                                  },
+                                          "hardware_ids":  [
+                                                               "PCI\\VEN_8086&DEV_5182&SUBSYS_20271EE7&REV_01",
+                                                               "PCI\\VEN_8086&DEV_5182&SUBSYS_20271EE7",
+                                                               "PCI\\VEN_8086&DEV_5182&CC_060100",
+                                                               "PCI\\VEN_8086&DEV_5182&CC_0601"
+                                                           ],
+                                          "compatible_ids":  [
+                                                                 "PCI\\VEN_8086&DEV_5182&REV_01",
+                                                                 "PCI\\VEN_8086&DEV_5182",
+                                                                 "PCI\\VEN_8086&CC_060100",
+                                                                 "PCI\\VEN_8086&CC_0601"
+                                                             ],
+                                          "instance_id":  "PCI\\VEN_8086&DEV_5182&SUBSYS_20271EE7&REV_01\\3&11583659&2&F8",
+                                          "status":  "OK",
+                                          "config_manager_error_code":  0,
+                                          "acpi_path":  "\\_SB.PC00.LPCB",
+                                          "location_paths":  [
+                                                                 "PCIROOT(0)#PCI(1F00)",
+                                                                 "ACPI(_SB_)#ACPI(PC00)#ACPI(LPCB)"
+                                                             ],
+                                          "location_info":  "PCI 总线 0、设备 31、功能 0",
+                                          "parent":  "ACPI\\PNP0A08\\0",
+                                          "service":  "msisadrv",
+                                          "driver":  {
+                                                         "version":  "10.1.36.6",
+                                                         "date":  "1968-07-18",
+                                                         "provider":  "INTEL",
+                                                         "inf":  "oem64.inf"
+                                                     },
+                                          "pcie_link":  null
+                                      },
+                                      {
+                                          "name":  "Intel(R) Host Bridge/DRAM Registers - 4621",
+                                          "class":  "System",
+                                          "manufacturer":  "INTEL",
+                                          "bus_reported_name":  "PCI 主桥",
+                                          "ids":  {
+                                                      "vendor_id":  "8086",
+                                                      "device_id":  "4621",
+                                                      "subsystem_id":  "20271EE7",
+                                                      "revision":  "02"
+                                                  },
+                                          "hardware_ids":  [
+                                                               "PCI\\VEN_8086&DEV_4621&SUBSYS_20271EE7&REV_02",
+                                                               "PCI\\VEN_8086&DEV_4621&SUBSYS_20271EE7",
+                                                               "PCI\\VEN_8086&DEV_4621&CC_060000",
+                                                               "PCI\\VEN_8086&DEV_4621&CC_0600"
+                                                           ],
+                                          "compatible_ids":  [
+                                                                 "PCI\\VEN_8086&DEV_4621&REV_02",
+                                                                 "PCI\\VEN_8086&DEV_4621",
+                                                                 "PCI\\VEN_8086&CC_060000",
+                                                                 "PCI\\VEN_8086&CC_0600"
+                                                             ],
+                                          "instance_id":  "PCI\\VEN_8086&DEV_4621&SUBSYS_20271EE7&REV_02\\3&11583659&2&00",
+                                          "status":  "OK",
+                                          "config_manager_error_code":  0,
+                                          "acpi_path":  "\\_SB.PC00.MC",
+                                          "location_paths":  [
+                                                                 "PCIROOT(0)#PCI(0000)",
+                                                                 "ACPI(_SB_)#ACPI(PC00)#ACPI(MC__)"
+                                                             ],
+                                          "location_info":  "PCI 总线 0、设备 0、功能 0",
+                                          "parent":  "ACPI\\PNP0A08\\0",
+                                          "service":  null,
+                                          "driver":  {
+                                                         "version":  "10.1.45.4",
+                                                         "date":  "1968-07-18",
+                                                         "provider":  "INTEL",
+                                                         "inf":  "oem11.inf"
+                                                     },
+                                          "pcie_link":  null
+                                      },
+                                      {
+                                          "name":  "Intel(R) Management Engine Interface #1",
+                                          "class":  "System",
+                                          "manufacturer":  "Intel",
+                                          "bus_reported_name":  "PCI 简单通讯控制器",
+                                          "ids":  {
+                                                      "vendor_id":  "8086",
+                                                      "device_id":  "51E0",
+                                                      "subsystem_id":  "20271EE7",
+                                                      "revision":  "01"
+                                                  },
+                                          "hardware_ids":  [
+                                                               "PCI\\VEN_8086&DEV_51E0&SUBSYS_20271EE7&REV_01",
+                                                               "PCI\\VEN_8086&DEV_51E0&SUBSYS_20271EE7",
+                                                               "PCI\\VEN_8086&DEV_51E0&CC_078000",
+                                                               "PCI\\VEN_8086&DEV_51E0&CC_0780"
+                                                           ],
+                                          "compatible_ids":  [
+                                                                 "PCI\\VEN_8086&DEV_51E0&REV_01",
+                                                                 "PCI\\VEN_8086&DEV_51E0",
+                                                                 "PCI\\VEN_8086&CC_078000",
+                                                                 "PCI\\VEN_8086&CC_0780"
+                                                             ],
+                                          "instance_id":  "PCI\\VEN_8086&DEV_51E0&SUBSYS_20271EE7&REV_01\\3&11583659&2&B0",
+                                          "status":  "OK",
+                                          "config_manager_error_code":  0,
+                                          "acpi_path":  "\\_SB.PC00.HECI",
+                                          "location_paths":  [
+                                                                 "PCIROOT(0)#PCI(1600)",
+                                                                 "ACPI(_SB_)#ACPI(PC00)#ACPI(HECI)"
+                                                             ],
+                                          "location_info":  "PCI 总线 0、设备 22、功能 0",
+                                          "parent":  "ACPI\\PNP0A08\\0",
+                                          "service":  "MEIx64",
+                                          "driver":  {
+                                                         "version":  "2204.2.62.0",
+                                                         "date":  "2022-01-20",
+                                                         "provider":  "Intel",
+                                                         "inf":  "oem3.inf"
+                                                     },
+                                          "pcie_link":  null
+                                      },
+                                      {
+                                          "name":  "Intel(R) Serial IO I2C Host Controller - 51E8",
+                                          "class":  "System",
+                                          "manufacturer":  "Intel Corporation",
+                                          "bus_reported_name":  "PCI 设备",
+                                          "ids":  {
+                                                      "vendor_id":  "8086",
+                                                      "device_id":  "51E8",
+                                                      "subsystem_id":  "20271EE7",
+                                                      "revision":  "01"
+                                                  },
+                                          "hardware_ids":  [
+                                                               "PCI\\VEN_8086&DEV_51E8&SUBSYS_20271EE7&REV_01",
+                                                               "PCI\\VEN_8086&DEV_51E8&SUBSYS_20271EE7",
+                                                               "PCI\\VEN_8086&DEV_51E8&CC_0C8000",
+                                                               "PCI\\VEN_8086&DEV_51E8&CC_0C80"
+                                                           ],
+                                          "compatible_ids":  [
+                                                                 "PCI\\VEN_8086&DEV_51E8&REV_01",
+                                                                 "PCI\\VEN_8086&DEV_51E8",
+                                                                 "PCI\\VEN_8086&CC_0C8000",
+                                                                 "PCI\\VEN_8086&CC_0C80"
+                                                             ],
+                                          "instance_id":  "PCI\\VEN_8086&DEV_51E8&SUBSYS_20271EE7&REV_01\\3&11583659&2&A8",
+                                          "status":  "OK",
+                                          "config_manager_error_code":  0,
+                                          "acpi_path":  "\\_SB.PC00.I2C0",
+                                          "location_paths":  [
+                                                                 "PCIROOT(0)#PCI(1500)",
+                                                                 "ACPI(_SB_)#ACPI(PC00)#ACPI(I2C0)"
+                                                             ],
+                                          "location_info":  "PCI 总线 0、设备 21、功能 0",
+                                          "parent":  "ACPI\\PNP0A08\\0",
+                                          "service":  "iaLPSS2_I2C_ADL",
+                                          "driver":  {
+                                                         "version":  "30.100.2148.1",
+                                                         "date":  "2021-11-22",
+                                                         "provider":  "Intel Corporation",
+                                                         "inf":  "oem22.inf"
+                                                     },
+                                          "pcie_link":  null
+                                      }
+                                  ],
+                    "external_usb_peripherals_present":  [
+                                                             {
+                                                                 "name":  "USB Composite Device",
+                                                                 "ids":  {
+                                                                             "usb_vid":  "320F",
+                                                                             "usb_pid":  "505D"
+                                                                         },
+                                                                 "bus_reported_name":  "Wired Gaming keyboard",
+                                                                 "location_paths":  [
+                                                                                        "PCIROOT(0)#PCI(1400)#USBROOT(0)#USB(3)#USB(2)",
+                                                                                        "ACPI(_SB_)#ACPI(PC00)#ACPI(XHCI)#ACPI(RHUB)#ACPI(HS03)#USB(2)"
+                                                                                    ]
+                                                             },
+                                                             {
+                                                                 "name":  "USB Composite Device",
+                                                                 "ids":  {
+                                                                             "usb_vid":  "0C45",
+                                                                             "usb_pid":  "0500"
+                                                                         },
+                                                                 "bus_reported_name":  "IROK HE3 SE",
+                                                                 "location_paths":  [
+                                                                                        "PCIROOT(0)#PCI(1400)#USBROOT(0)#USB(3)#USB(3)",
+                                                                                        "ACPI(_SB_)#ACPI(PC00)#ACPI(XHCI)#ACPI(RHUB)#ACPI(HS03)#USB(3)"
+                                                                                    ]
+                                                             },
+                                                             {
+                                                                 "name":  "通用 USB 集线器",
+                                                                 "ids":  {
+                                                                             "usb_vid":  "05E3",
+                                                                             "usb_pid":  "0610"
+                                                                         },
+                                                                 "bus_reported_name":  "USB2.1 Hub",
+                                                                 "location_paths":  [
+                                                                                        "PCIROOT(0)#PCI(1400)#USBROOT(0)#USB(3)",
+                                                                                        "ACPI(_SB_)#ACPI(PC00)#ACPI(XHCI)#ACPI(RHUB)#ACPI(HS03)"
+                                                                                    ]
+                                                             },
+                                                             {
+                                                                 "name":  "Realtek USB GbE Family Controller",
+                                                                 "ids":  {
+                                                                             "usb_vid":  "0BDA",
+                                                                             "usb_pid":  "8153"
+                                                                         },
+                                                                 "bus_reported_name":  "USB 10/100/1000 LAN",
+                                                                 "location_paths":  [
+                                                                                        "PCIROOT(0)#PCI(1400)#USBROOT(0)#USB(15)#USB(1)",
+                                                                                        "ACPI(_SB_)#ACPI(PC00)#ACPI(XHCI)#ACPI(RHUB)#ACPI(SS03)#USB(1)"
+                                                                                    ]
+                                                             },
+                                                             {
+                                                                 "name":  "通用 SuperSpeed USB 集线器",
+                                                                 "ids":  {
+                                                                             "usb_vid":  "05E3",
+                                                                             "usb_pid":  "0626"
+                                                                         },
+                                                                 "bus_reported_name":  "USB3.1 Hub",
+                                                                 "location_paths":  [
+                                                                                        "PCIROOT(0)#PCI(1400)#USBROOT(0)#USB(15)",
+                                                                                        "ACPI(_SB_)#ACPI(PC00)#ACPI(XHCI)#ACPI(RHUB)#ACPI(SS03)"
+                                                                                    ]
+                                                             }
+                                                         ],
+                    "problem_devices":  [
+                                            {
+                                                "name":  "Honor Virtual Display Device",
+                                                "instance_id":  "INDIRECTDSP\\VIRTUALDISPLAYDRIVER\\1&79F5D87&3&01",
+                                                "config_manager_error_code":  22
+                                            }
+                                        ]
+                },
+    "storage":  {
+                    "disks":  [
+                                  {
+                                      "number":  0,
+                                      "model":  "SAMSUNG MZVL2512HCJQ-00B00",
+                                      "firmware":  "GXA7601Q",
+                                      "bus":  "NVMe",
+                                      "partition_style":  "GPT",
+                                      "size_bytes":  512110190592,
+                                      "logical_sector":  512,
+                                      "physical_sector":  4096,
+                                      "is_boot":  true,
+                                      "is_system":  true,
+                                      "health":  "Healthy",
+                                      "location":  "PCI Slot 2 : Bus 2 : Device 0 : Function 0 : Adapter 0"
+                                  }
+                              ],
+                    "partitions":  [
+                                       {
+                                           "disk":  0,
+                                           "number":  1,
+                                           "type":  "System",
+                                           "gpt_type_name":  "EFI System Partition",
+                                           "size_bytes":  209715200,
+                                           "offset_bytes":  1048576,
+                                           "file_system":  null,
+                                           "drive_letter":  null,
+                                           "is_system":  true,
+                                           "is_boot":  false,
+                                           "free_bytes":  null
+                                       },
+                                       {
+                                           "disk":  0,
+                                           "number":  2,
+                                           "type":  "Reserved",
+                                           "gpt_type_name":  "Microsoft Reserved",
+                                           "size_bytes":  16777216,
+                                           "offset_bytes":  210763776,
+                                           "file_system":  null,
+                                           "drive_letter":  null,
+                                           "is_system":  false,
+                                           "is_boot":  false,
+                                           "free_bytes":  null
+                                       },
+                                       {
+                                           "disk":  0,
+                                           "number":  3,
+                                           "type":  "Basic",
+                                           "gpt_type_name":  "Basic Data",
+                                           "size_bytes":  128849018880,
+                                           "offset_bytes":  227540992,
+                                           "file_system":  "NTFS",
+                                           "drive_letter":  "C",
+                                           "is_system":  false,
+                                           "is_boot":  true,
+                                           "free_bytes":  7063322624
+                                       },
+                                       {
+                                           "disk":  0,
+                                           "number":  4,
+                                           "type":  "Basic",
+                                           "gpt_type_name":  "Basic Data",
+                                           "size_bytes":  368539164672,
+                                           "offset_bytes":  129076559872,
+                                           "file_system":  "NTFS",
+                                           "drive_letter":  "D",
+                                           "is_system":  false,
+                                           "is_boot":  false,
+                                           "free_bytes":  25257758720
+                                       },
+                                       {
+                                           "disk":  0,
+                                           "number":  5,
+                                           "type":  "Recovery",
+                                           "gpt_type_name":  "Windows Recovery",
+                                           "size_bytes":  536870912,
+                                           "offset_bytes":  497616420864,
+                                           "file_system":  "FAT32",
+                                           "drive_letter":  null,
+                                           "is_system":  false,
+                                           "is_boot":  false,
+                                           "free_bytes":  101052416
+                                       },
+                                       {
+                                           "disk":  0,
+                                           "number":  6,
+                                           "type":  "Recovery",
+                                           "gpt_type_name":  "Windows Recovery",
+                                           "size_bytes":  12884901888,
+                                           "offset_bytes":  498153291776,
+                                           "file_system":  "NTFS",
+                                           "drive_letter":  null,
+                                           "is_system":  false,
+                                           "is_boot":  false,
+                                           "free_bytes":  518832128
+                                       },
+                                       {
+                                           "disk":  0,
+                                           "number":  7,
+                                           "type":  "Recovery",
+                                           "gpt_type_name":  "Windows Recovery",
+                                           "size_bytes":  1071980032,
+                                           "offset_bytes":  511038193664,
+                                           "file_system":  "NTFS",
+                                           "drive_letter":  null,
+                                           "is_system":  false,
+                                           "is_boot":  false,
+                                           "free_bytes":  58310656
+                                       }
+                                   ],
+                    "esp":  {
+                                "present":  true,
+                                "disk":  0,
+                                "partition":  1,
+                                "size_bytes":  209715200,
+                                "file_system":  null,
+                                "file_system_note":  "null = not readable without elevation; the ESP was not mounted"
+                            },
+                    "windows_system_disk":  0,
+                    "windows_partition":  3,
+                    "bitlocker":  {
+                                      "encryption_status":  null,
+                                      "protection_status":  null,
+                                      "shell_property_raw":  [
+                                                                 {
+                                                                     "drive":  "C:",
+                                                                     "raw":  0
+                                                                 },
+                                                                 {
+                                                                     "drive":  "D:",
+                                                                     "raw":  0
+                                                                 }
+                                                             ],
+                                      "registry_BootStatus":  0,
+                                      "manage_bde":  {
+                                                         "status":  "error",
+                                                         "exit_code":  -2147217405,
+                                                         "reason":  "requires elevation (access denied)"
+                                                     },
+                                      "note":  "Non-elevated shell property returned 0 for all volumes; this value is ambiguous and is NOT taken as proof that the disk is unencrypted. Encryption and protection status remain unconfirmed."
+                                  },
+                    "windows_re":  {
+                                       "status":  null,
+                                       "reagentc":  {
+                                                        "status":  "error",
+                                                        "exit_code":  5,
+                                                        "reason":  "requires elevation"
+                                                    }
+                                   },
+                    "recovery_readiness":  {
+                                               "bitlocker_recovery_key_saved_externally":  null,
+                                               "esp_independent_backup_exists":  null,
+                                               "recovery_drill_performed":  null,
+                                               "independent_recovery_environment":  null,
+                                               "status":  "needs_user_confirmation (not verifiable by read-only queries; do not assume recovery capability)"
+                                           }
+                },
+    "firmware_evidence":  {
+                              "acpi_tables_obtained":  [
+                                                           {
+                                                               "signature":  "DSDT",
+                                                               "oem_table_id":  "ADL-P-M",
+                                                               "length":  307077,
+                                                               "checksum_ok":  true,
+                                                               "file":  "evidence/acpi/reg_DSDT_HONOR_ADL-P-M_00000002.bin",
+                                                               "sha256":  "56F65CC89927C82AFE22F43141F67D16E56FCEEF1DBF2441CBA6D1ABAA2A612A",
+                                                               "dsm_guids":  [
+                                                                                 null
+                                                                             ]
+                                                           },
+                                                           {
+                                                               "signature":  "FACP",
+                                                               "oem_table_id":  "ADL-P-M",
+                                                               "length":  276,
+                                                               "checksum_ok":  true,
+                                                               "file":  "evidence/acpi/reg_FADT_HONOR_ADL-P-M_00000002.bin",
+                                                               "sha256":  "D32F09BD9E9D559F7BCAB5380485AF3D99D4B75AFC92630B483B85E946C9EEC7",
+                                                               "dsm_guids":  [
+                                                                                 null
+                                                                             ]
+                                                           },
+                                                           {
+                                                               "signature":  "XSDT",
+                                                               "oem_table_id":  "ADL-P-M",
+                                                               "length":  292,
+                                                               "checksum_ok":  true,
+                                                               "file":  "evidence/acpi/reg_RSDT_HONOR_ADL-P-M_00000002.bin",
+                                                               "sha256":  "72D0CCB8983E087EC4FC41AD4A65310F4E327D562F4312BA17C14E6D1D9BD87A",
+                                                               "dsm_guids":  [
+                                                                                 null
+                                                                             ]
+                                                           },
+                                                           {
+                                                               "signature":  "SSDT",
+                                                               "oem_table_id":  "Pmax_Dev",
+                                                               "length":  908,
+                                                               "checksum_ok":  true,
+                                                               "file":  "evidence/acpi/reg_SSD1_HONOR_Pmax_Dev_00000001.bin",
+                                                               "sha256":  "B4DDFD02D05722CDE5098143CDD9E80DAC582BDF1C6FA587B8CD4C957141E23C",
+                                                               "dsm_guids":  [
+                                                                                 null
+                                                                             ]
+                                                           },
+                                                           {
+                                                               "signature":  "SSDT",
+                                                               "oem_table_id":  "CpuSsdt",
+                                                               "length":  23852,
+                                                               "checksum_ok":  true,
+                                                               "file":  "evidence/acpi/reg_SSD2_HONOR_CpuSsdt_00003000.bin",
+                                                               "sha256":  "B4AC9C30C11CC2A68A6D8A47B686081BE9173B0986052A7B6EEED0665B258C79",
+                                                               "dsm_guids":  [
+                                                                                 null
+                                                                             ]
+                                                           },
+                                                           {
+                                                               "signature":  "SSDT",
+                                                               "oem_table_id":  "SaSsdt",
+                                                               "length":  11042,
+                                                               "checksum_ok":  true,
+                                                               "file":  "evidence/acpi/reg_SSD3_HONOR_SaSsdt__00003000.bin",
+                                                               "sha256":  "06E11F9D282AFF2B4833FF94CA78A5C495FB3CD5419A4DCB14873A06E79731F2",
+                                                               "dsm_guids":  [
+                                                                                 null
+                                                                             ]
+                                                           },
+                                                           {
+                                                               "signature":  "SSDT",
+                                                               "oem_table_id":  "IgfxSsdt",
+                                                               "length":  13267,
+                                                               "checksum_ok":  true,
+                                                               "file":  "evidence/acpi/reg_SSD4_HONOR_IgfxSsdt_00003000.bin",
+                                                               "sha256":  "C0944327E1E9567964F9D5393001A33CA61E7564F02B029B68E65FDB36C93859",
+                                                               "dsm_guids":  [
+                                                                                 "Intel_IGD_DSM_3e5b41c6-eb1d-4260-9d15-c71fbadae414"
+                                                                             ]
+                                                           },
+                                                           {
+                                                               "signature":  "SSDT",
+                                                               "oem_table_id":  "TcssSsdt",
+                                                               "length":  54175,
+                                                               "checksum_ok":  true,
+                                                               "file":  "evidence/acpi/reg_SSD5_HONOR_TcssSsdt_00001000.bin",
+                                                               "sha256":  "357C5F30CD0F89A35B534D39E0D22FEE255402E6A59F22F1858F4AD23E3BCCB1",
+                                                               "dsm_guids":  [
+                                                                                 null
+                                                                             ]
+                                                           },
+                                                           {
+                                                               "signature":  "SSDT",
+                                                               "oem_table_id":  "Tpm2Tabl",
+                                                               "length":  1915,
+                                                               "checksum_ok":  true,
+                                                               "file":  "evidence/acpi/reg_SSD6_HONOR_Tpm2Tabl_00001000.bin",
+                                                               "sha256":  "2596A05FF02AAFECA1E4CCCB3D827D4F4600208A61DC78CA22D718E57730AA9E",
+                                                               "dsm_guids":  [
+                                                                                 null
+                                                                             ]
+                                                           },
+                                                           {
+                                                               "signature":  "SSDT",
+                                                               "oem_table_id":  "WmiTable",
+                                                               "length":  3700,
+                                                               "checksum_ok":  true,
+                                                               "file":  "evidence/acpi/reg_SSD7_HONOR_WmiTable_00001000.bin",
+                                                               "sha256":  "970F5BA86A8765F376E242F5E398E0873D06CDD36E44965FFAE0301F33F53F35",
+                                                               "dsm_guids":  [
+                                                                                 null
+                                                                             ]
+                                                           },
+                                                           {
+                                                               "signature":  "SSDT",
+                                                               "oem_table_id":  "PtidDevc",
+                                                               "length":  2777,
+                                                               "checksum_ok":  true,
+                                                               "file":  "evidence/acpi/reg_SSD8_HONOR_PtidDevc_00001000.bin",
+                                                               "sha256":  "FD5194710B7F7B3C5B6896134B5082CF7E2CADE3679E03EB4C16286AD2EA09CA",
+                                                               "dsm_guids":  [
+                                                                                 null
+                                                                             ]
+                                                           },
+                                                           {
+                                                               "signature":  "SSDT",
+                                                               "oem_table_id":  "ADL-P-M",
+                                                               "length":  41954,
+                                                               "checksum_ok":  true,
+                                                               "file":  "evidence/acpi/reg_SSD9_HONOR_ADL-P-M_00000002.bin",
+                                                               "sha256":  "258D8A0BE0486537BF565C584D57FF4EAF0958419EB81278855F871A59808555",
+                                                               "dsm_guids":  [
+                                                                                 null
+                                                                             ]
+                                                           },
+                                                           {
+                                                               "signature":  "SSDT",
+                                                               "oem_table_id":  "NvdTable",
+                                                               "length":  8357,
+                                                               "checksum_ok":  true,
+                                                               "file":  "evidence/acpi/reg_SSDA_HONOR_NvdTable_00001000.bin",
+                                                               "sha256":  "1E3DB35E0E082926598F812C7FE4CCE8183638294748C4E3F93F1E841E609FE0",
+                                                               "dsm_guids":  [
+                                                                                 "NVIDIA_Optimus_NVOP_a486d8f8-0bda-471b-a72b-6042a6b5bee0",
+                                                                                 "NVIDIA_JT_GC6_cbeca351-067b-4924-9cbd-b46b00b86f34",
+                                                                                 "NVIDIA_NBCI_d4a50b75-65c7-46f7-bfb7-41514cea0244",
+                                                                                 "NVIDIA_GPS_a3132d01-8cda-49ba-a52e-bc9d46df6b81",
+                                                                                 "NVIDIA_MXM_4004a400-917d-4cf2-b89c-79b62fd55665"
+                                                                             ]
+                                                           },
+                                                           {
+                                                               "signature":  "SSDT",
+                                                               "oem_table_id":  "xh_adlLP",
+                                                               "length":  2945,
+                                                               "checksum_ok":  true,
+                                                               "file":  "evidence/acpi/reg_SSDB_HONOR_xh_adlLP_00000000.bin",
+                                                               "sha256":  "51582972FA82C42E54C8442A19A0A988069E5CFC5252EC28FCA98E9BFD7AF38D",
+                                                               "dsm_guids":  [
+                                                                                 null
+                                                                             ]
+                                                           },
+                                                           {
+                                                               "signature":  "SSDT",
+                                                               "oem_table_id":  "SocGpe",
+                                                               "length":  15082,
+                                                               "checksum_ok":  true,
+                                                               "file":  "evidence/acpi/reg_SSDC_HONOR_SocGpe__00003000.bin",
+                                                               "sha256":  "421045105A132E5E4D97E43C184D6CC41782F3830AEFB3157046AA98088A8DD1",
+                                                               "dsm_guids":  [
+                                                                                 null
+                                                                             ]
+                                                           },
+                                                           {
+                                                               "signature":  "SSDT",
+                                                               "oem_table_id":  "SocCmn",
+                                                               "length":  14810,
+                                                               "checksum_ok":  true,
+                                                               "file":  "evidence/acpi/reg_SSDD_HONOR_SocCmn__00003000.bin",
+                                                               "sha256":  "F35F378E30CEA93E0C01E17287B07CF9438E32BCC3757109B345EAF39A267991",
+                                                               "dsm_guids":  [
+                                                                                 null
+                                                                             ]
+                                                           },
+                                                           {
+                                                               "signature":  "SSDT",
+                                                               "oem_table_id":  "PcdTabl",
+                                                               "length":  248,
+                                                               "checksum_ok":  true,
+                                                               "file":  "evidence/acpi/reg_SSDE_HONOR_PcdTabl_00001000.bin",
+                                                               "sha256":  "ED0009387BEE2FE6C9A89626E8BE11C398A770F612EB3B653CEE21943CCD4A81",
+                                                               "dsm_guids":  [
+                                                                                 null
+                                                                             ]
+                                                           },
+                                                           {
+                                                               "signature":  "SSDT",
+                                                               "oem_table_id":  "DptfTabl",
+                                                               "length":  19335,
+                                                               "checksum_ok":  true,
+                                                               "file":  "evidence/acpi/reg_SSDT_HONOR_DptfTabl_00001000.bin",
+                                                               "sha256":  "FF4AD140B6560AED08B5AA2AA15A8C5AE7CC4D7D41A4A4E4029968CA4D93FAD8",
+                                                               "dsm_guids":  [
+                                                                                 null
+                                                                             ]
+                                                           }
+                                                       ],
+                              "acpi_tables_not_read":  [
+                                                           {
+                                                               "table":  "HKLM\\HARDWARE\\ACPI\\FACS",
+                                                               "reason":  "not read: FACS holds a hardware signature/waking vector, not needed"
+                                                           },
+                                                           {
+                                                               "table":  "MSDM",
+                                                               "reason":  "not read: may contain an OEM product key"
+                                                           }
+                                                       ],
+                              "intel_opregion_declaration":  "IgfxSsdt declares OperationRegion IGDM in SystemMemory at runtime base ASLB, length 0x2000 (see P42 byte context); contents not read",
+                              "vbt":  {
+                                          "obtained":  false,
+                                          "tried":  [
+                                                        "display class registry value-name scan (P11)",
+                                                        "Intel service registry value-name scan",
+                                                        "D3DKMT ADAPTERREGISTRYINFO BiosString (P12, gives a version string only)"
+                                                    ],
+                                          "reason":  "Windows exposes no supported user-mode API that returns the VBT. The VBT lives in the IGD OpRegion (system memory at the address in PCI config register ASLS) or inside the GOP/firmware image; reading either needs physical-memory or PCI-config access, which is out of scope."
+                                      },
+                              "opregion":  {
+                                               "obtained":  false,
+                                               "tried":  [
+                                                             "ACPI DSDT/SSDT byte scan for IGDO/ASLS/ASLB/OPRG (P40)"
+                                                         ],
+                                               "reason":  "ACPI tables only declare the OperationRegion; its base address is a runtime value and its contents are in physical memory. Not read."
+                                           },
+                              "edp_link_parameters":  {
+                                                          "obtained":  false,
+                                                          "tried":  [
+                                                                        "DisplayConfig target info (P13)",
+                                                                        "EDID decode (P17)"
+                                                                    ],
+                                                          "reason":  "Lane count, link rate, PSR, backlight control and DPCD are not exposed by any supported read-only Windows API; EDID gives timings only."
+                                                      },
+                              "ddi_port_mapping":  {
+                                                       "obtained":  false,
+                                                       "tried":  [
+                                                                     "DisplayConfig QDC_ALL_PATHS connector enumeration (P14)"
+                                                                 ],
+                                                       "reason":  "Connector enumeration lists driver-exposed targets and output technology, not DDI port numbers / AUX channels / physical routing (that data is in the VBT child-device table)."
+                                                   },
+                              "intel_driver_display_policy_values":  {
+                                                                         "eDPFecDisable":  1,
+                                                                         "EdpHDRTotalOUICount":  10,
+                                                                         "ForceDefaultHDRMetadataEdp":  1,
+                                                                         "LinkRateSupport":  3,
+                                                                         "NoFastLinkTrainingForeDP":  1,
+                                                                         "OUI_EDP_HDR_1":  8889,
+                                                                         "OUI_EDP_HDR_10":  3201345,
+                                                                         "OUI_EDP_HDR_2":  24749,
+                                                                         "OUI_EDP_HDR_3":  3730449,
+                                                                         "OUI_EDP_HDR_4":  12206425,
+                                                                         "OUI_EDP_HDR_5":  3303,
+                                                                         "OUI_EDP_HDR_6":  7416,
+                                                                         "OUI_EDP_HDR_7":  3303,
+                                                                         "OUI_EDP_HDR_8":  5466455,
+                                                                         "OUI_EDP_HDR_9":  1608159,
+                                                                         "ParadeMuxEdpLinkRateDataReloadTrigger":  0,
+                                                                         "PSR2Disable":  0,
+                                                                         "Psr2DrrsEnable":  1
+                                                                     },
+                              "intel_driver_display_policy_note":  "These are driver/INF configuration values, not measured panel capabilities."
+                          },
+    "background_claims":  [
+                              {
+                                  "claim":  "Model HONOR GLO-FX6P, board GLO-FX6P-PCB / M2080",
+                                  "measured":  "GLO-FX6P / GLO-FX6P-PCB / M2080",
+                                  "result":  "consistent"
+                              },
+                              {
+                                  "claim":  "CPU Intel Core i5-12500H",
+                                  "measured":  "12th Gen Intel(R) Core(TM) i5-12500H",
+                                  "result":  "consistent"
+                              },
+                              {
+                                  "claim":  "iGPU Intel Iris Xe 8086:46A6",
+                                  "measured":  "PCI VEN_8086 DEV_46A6",
+                                  "result":  "consistent"
+                              },
+                              {
+                                  "claim":  "dGPU NVIDIA RTX 2050 Laptop 10DE:25A9 (not RTX 3050)",
+                                  "measured":  "PCI VEN_10DE DEV_25A9, name NVIDIA GeForce RTX 2050",
+                                  "result":  "consistent"
+                              },
+                              {
+                                  "claim":  "Internal panel on Intel iGPU in current Windows",
+                                  "measured":  "active path display adapter = Intel 46A6 (not re-asked; recorded as part of path enumeration)",
+                                  "result":  "consistent"
+                              },
+                              {
+                                  "claim":  "External 1080p/200Hz via USB-C to DP; GPU owner unknown",
+                                  "measured":  "no external display connected; no record found",
+                                  "result":  "not_measured"
+                              },
+                              {
+                                  "claim":  "~16 GB RAM",
+                                  "measured":  "17179869184 bytes",
+                                  "result":  "consistent"
+                              },
+                              {
+                                  "claim":  "Samsung MZVL2512HCJQ-00B00 512 GB",
+                                  "measured":  "SAMSUNG MZVL2512HCJQ-00B00",
+                                  "result":  "consistent"
+                              },
+                              {
+                                  "claim":  "Intel AX201",
+                                  "measured":  "Intel(R) Wi-Fi 6 AX201 160MHz",
+                                  "result":  "consistent"
+                              },
+                              {
+                                  "claim":  "Realtek audio",
+                                  "measured":  "Realtek codec 10EC:0256 on Intel SST",
+                                  "result":  "consistent"
+                              },
+                              {
+                                  "claim":  "BIOS 3.09, 2023-07-10",
+                                  "measured":  "3.09, 2023-07-10",
+                                  "result":  "consistent (still current)"
+                              }
+                          ]
+}

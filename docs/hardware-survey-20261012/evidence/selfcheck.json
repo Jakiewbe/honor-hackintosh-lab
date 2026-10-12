@@ -1,0 +1,233 @@
+{
+    "generated_local":  "2026-10-12T22:57:24+08:00",
+    "checks_total":  41,
+    "checks_passed":  41,
+    "checks_failed":  0,
+    "checks":  [
+                   {
+                       "check":  "hardware_json_parses",
+                       "pass":  true,
+                       "detail":  "ok"
+                   },
+                   {
+                       "check":  "report_exists",
+                       "pass":  true,
+                       "detail":  "ok"
+                   },
+                   {
+                       "check":  "json_vs_evidence:model",
+                       "pass":  true,
+                       "detail":  "json='GLO-FX6P' evidence='GLO-FX6P'"
+                   },
+                   {
+                       "check":  "json_vs_evidence:baseboard",
+                       "pass":  true,
+                       "detail":  "json='GLO-FX6P-PCB' evidence='GLO-FX6P-PCB'"
+                   },
+                   {
+                       "check":  "json_vs_evidence:bios_version",
+                       "pass":  true,
+                       "detail":  "json='3.09' evidence='3.09'"
+                   },
+                   {
+                       "check":  "json_vs_evidence:bios_date",
+                       "pass":  true,
+                       "detail":  "json='2023-07-10' evidence='2023-07-10'"
+                   },
+                   {
+                       "check":  "json_vs_evidence:cpu",
+                       "pass":  true,
+                       "detail":  "json='12th Gen Intel(R) Core(TM) i5-12500H' evidence='12th Gen Intel(R) Core(TM) i5-12500H'"
+                   },
+                   {
+                       "check":  "json_vs_evidence:threads",
+                       "pass":  true,
+                       "detail":  "json='16' evidence='16'"
+                   },
+                   {
+                       "check":  "json_vs_evidence:active_path_adapter",
+                       "pass":  true,
+                       "detail":  "json='PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C\\3&11583659&2&10' evidence='PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C\\3&11583659&2&10'"
+                   },
+                   {
+                       "check":  "json_vs_evidence:active_resolution",
+                       "pass":  true,
+                       "detail":  "json='2160x1440' evidence='2160x1440'"
+                   },
+                   {
+                       "check":  "json_vs_evidence:active_refresh",
+                       "pass":  true,
+                       "detail":  "json='60.001' evidence='60.001'"
+                   },
+                   {
+                       "check":  "json_vs_evidence:nvidia_sources",
+                       "pass":  true,
+                       "detail":  "json='0' evidence='0'"
+                   },
+                   {
+                       "check":  "json_vs_evidence:disk_model",
+                       "pass":  true,
+                       "detail":  "json='SAMSUNG MZVL2512HCJQ-00B00' evidence='SAMSUNG MZVL2512HCJQ-00B00'"
+                   },
+                   {
+                       "check":  "json_vs_evidence:disk_fw",
+                       "pass":  true,
+                       "detail":  "json='GXA7601Q' evidence='GXA7601Q'"
+                   },
+                   {
+                       "check":  "json_vs_evidence:esp_size",
+                       "pass":  true,
+                       "detail":  "json='209715200' evidence='209715200'"
+                   },
+                   {
+                       "check":  "json_vs_evidence:probe_ok",
+                       "pass":  true,
+                       "detail":  "json='22' evidence='22'"
+                   },
+                   {
+                       "check":  "json_vs_evidence:probe_error",
+                       "pass":  true,
+                       "detail":  "json='3' evidence='3'"
+                   },
+                   {
+                       "check":  "report_contains_key_values",
+                       "pass":  true,
+                       "detail":  "all 40 tokens present"
+                   },
+                   {
+                       "check":  "report_probe_counts",
+                       "pass":  true,
+                       "detail":  "expected phrase: 共 26 项：成功 22、部分成功 1、失败 3"
+                   },
+                   {
+                       "check":  "report_lists_every_failed_or_partial_probe",
+                       "pass":  true,
+                       "detail":  "P06_secureboot_cmdlet, P12_d3dkmt_adapters, P33_manage_bde_status, P34_reagentc_info"
+                   },
+                   {
+                       "check":  "unknown_is_null:hybrid_graphics.mux_present",
+                       "pass":  true,
+                       "detail":  "value=''"
+                   },
+                   {
+                       "check":  "unknown_is_null:hybrid_graphics.advanced_optimus_present",
+                       "pass":  true,
+                       "detail":  "value=''"
+                   },
+                   {
+                       "check":  "unknown_is_null:hybrid_graphics.external_port_wiring",
+                       "pass":  true,
+                       "detail":  "value=''"
+                   },
+                   {
+                       "check":  "unknown_is_null:displays.external_display_usb_c_dp_1080p_200hz.gpu_owner",
+                       "pass":  true,
+                       "detail":  "value=''"
+                   },
+                   {
+                       "check":  "unknown_is_null:storage.bitlocker.encryption_status",
+                       "pass":  true,
+                       "detail":  "value=''"
+                   },
+                   {
+                       "check":  "unknown_is_null:storage.bitlocker.protection_status",
+                       "pass":  true,
+                       "detail":  "value=''"
+                   },
+                   {
+                       "check":  "unknown_is_null:storage.recovery_readiness.bitlocker_recovery_key_saved_externally",
+                       "pass":  true,
+                       "detail":  "value=''"
+                   },
+                   {
+                       "check":  "unknown_is_null:storage.recovery_readiness.esp_independent_backup_exists",
+                       "pass":  true,
+                       "detail":  "value=''"
+                   },
+                   {
+                       "check":  "unknown_is_null:storage.recovery_readiness.recovery_drill_performed",
+                       "pass":  true,
+                       "detail":  "value=''"
+                   },
+                   {
+                       "check":  "unknown_is_null:memory.soldered",
+                       "pass":  true,
+                       "detail":  "value=''"
+                   },
+                   {
+                       "check":  "unknown_is_null:intel physical_vram_bytes",
+                       "pass":  true,
+                       "detail":  "value=''"
+                   },
+                   {
+                       "check":  "vbt_not_claimed",
+                       "pass":  true,
+                       "detail":  "vbt/opregion obtained=false"
+                   },
+                   {
+                       "check":  "report_uses_marker:需要用户确认",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "report_uses_marker:未取得",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "report_uses_marker:未测",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "report_uses_marker:未知",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "report_no_overclaim_phrases",
+                       "pass":  true,
+                       "detail":  "none of: MUX 已确认 / 确认存在 MUX / 确认没有 MUX / 已具备恢复能力 / macOS 已可用 / RTX 2050 在 macOS 下可用"
+                   },
+                   {
+                       "check":  "edid_share_copy:DELD0E6",
+                       "pass":  true,
+                       "detail":  "changed offsets: 12,13,14,15,77,78,79,80,81,82,83,84,127"
+                   },
+                   {
+                       "check":  "edid_share_copy:BOE0893",
+                       "pass":  true,
+                       "detail":  "changed offsets: none (byte-identical)"
+                   },
+                   {
+                       "check":  "leak_scan",
+                       "pass":  true,
+                       "detail":  "files scanned: 73; identifier categories checked: baseboard_serial, bios_serial, computer_name, disk_serial, ip, mac, registered_owner, system_identifying_number, system_uuid, user_name, user_profile_leaf, user_profile_path, windows_product_id; MAC addresses checked: 4; IP addresses checked: 6; hits: 0"
+                   },
+                   {
+                       "check":  "readonly_boundary_static_scan",
+                       "pass":  true,
+                       "detail":  "no state-changing commands found; all file writes target the output folder"
+                   }
+               ],
+    "edid_comparison":  [
+                            {
+                                "monitor":  "DISPLAY\\DELD0E6\\1&33320F0&0&UID256",
+                                "identical_to_registry":  false,
+                                "changed_offsets":  "12,13,14,15,77,78,79,80,81,82,83,84,127",
+                                "id_serial_zero":  true,
+                                "ff_descriptor_blank":  true
+                            },
+                            {
+                                "monitor":  "DISPLAY\\BOE0893\\4&FD33AF8&0&UID8388688",
+                                "identical_to_registry":  true,
+                                "changed_offsets":  "",
+                                "id_serial_zero":  true,
+                                "ff_descriptor_blank":  true
+                            }
+                        ],
+    "leak_hits":  [
+
+                  ],
+    "note":  "Sensitive identifiers were read in memory only for matching and are not written here."
+}

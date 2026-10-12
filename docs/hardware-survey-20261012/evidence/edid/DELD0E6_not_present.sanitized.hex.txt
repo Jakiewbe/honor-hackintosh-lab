@@ -1,0 +1,9 @@
+SANITIZED EDID COPY - not the unmodified original. Actions: base block descriptor at offset 72 (tag 0xFF serial string) blanked; base block bytes 12-15 (ID serial number) zeroed; block checksums recomputed.
+0000: 00 FF FF FF FF FF FF 00 10 AC E6 D0 00 00 00 00
+0010: 24 1D 01 04 A5 3C 22 78 FB 6C E5 A5 55 50 A0 23
+0020: 0B 50 54 00 02 00 D1 C0 01 01 01 01 01 01 01 01
+0030: 01 01 01 01 01 01 58 E3 00 A0 A0 A0 29 50 30 20
+0040: 35 00 55 50 21 00 00 1A 00 00 00 FF 00 0A 20 20
+0050: 20 20 20 20 20 20 20 20 20 20 00 00 00 FC 00 53
+0060: 32 37 31 39 44 47 46 0A 20 20 20 20 00 00 00 FD
+0070: 00 28 9B FA FA 40 01 0A 20 20 20 20 20 20 00 6C

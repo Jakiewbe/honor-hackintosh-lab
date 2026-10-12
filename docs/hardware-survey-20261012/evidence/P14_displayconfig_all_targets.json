@@ -1,0 +1,780 @@
+{
+    "probe_id":  "P14_displayconfig_all_targets",
+    "title":  "All possible display targets per adapter (QueryDisplayConfig QDC_ALL_PATHS, deduplicated by adapter+target)",
+    "source_interface":  "user32 QueryDisplayConfig(QDC_ALL_PATHS) + DisplayConfigGetDeviceInfo (TARGET_NAME, ADAPTER_NAME)",
+    "command":  "$q = [HonorSurvey.DisplayCfg]::Query(1)\r\n    if ($q.Status -ne 0) { throw \"QueryDisplayConfig returned $($q.Status)\" }\r\n    $seen = @{}; $targets = @()\r\n    foreach ($p in $q.Paths) {\r\n        $key = (Format-Luid $p.targetInfo.adapterId.LowPart $p.targetInfo.adapterId.HighPart) + '/' + $p.targetInfo.id\r\n        if ($seen.ContainsKey($key)) { if ($p.targetInfo.targetAvailable) { $seen[$key].target_available = $true }; continue }\r\n        $r = Get-DisplayPathRecord $p $q.Modes\r\n        $r.Remove('source_adapter_luid'); $r.Remove('source_id'); $r.Remove('path_flags')\r\n        $seen[$key] = $r; $targets += $r\r\n    }\r\n    [ordered]@{ raw_path_count = $q.Paths.Count; unique_target_count = $targets.Count; targets = $targets; note = 'Targets are connectors the driver exposes to the OS. Exposure is not proof of physical wiring; target_available=true means the OS currently considers something attached.' }",
+    "started_local":  "2026-10-12T22:47:27.443+08:00",
+    "duration_ms":  49,
+    "status":  "ok",
+    "native_exit_code":  null,
+    "errors":  [
+
+               ],
+    "data":  {
+                 "raw_path_count":  269,
+                 "unique_target_count":  38,
+                 "targets":  [
+                                 {
+                                     "target_adapter_luid":  "00000000:00010EF5",
+                                     "target_id":  8388688,
+                                     "target_adapter_device_path":  "\\\\?\\PCI#VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C#3&11583659&2&10#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C\\3&11583659&2&10",
+                                     "output_technology_raw":  2147483648,
+                                     "output_technology":  "INTERNAL",
+                                     "target_available":  true,
+                                     "target_status_flags":  1,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "\\\\?\\DISPLAY#BOE0893#4&fd33af8&0&UID8388688#{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}",
+                                                         "connector_instance":  0,
+                                                         "edid_ids_valid":  true,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  58633,
+                                                         "edid_product_code_id":  "0x0893",
+                                                         "output_technology":  "INTERNAL"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:000CF660",
+                                     "target_id":  256,
+                                     "target_adapter_device_path":  "\\\\?\\ROOT#USB#0000#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "ROOT\\USB\\0000",
+                                     "output_technology_raw":  16,
+                                     "output_technology":  "INDIRECT_WIRED",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  0,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "INDIRECT_WIRED"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00029CAF",
+                                     "target_id":  256,
+                                     "target_adapter_device_path":  "\\\\?\\ROOT#DISPLAY#0000#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "ROOT\\DISPLAY\\0000",
+                                     "output_technology_raw":  16,
+                                     "output_technology":  "INDIRECT_WIRED",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  0,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "INDIRECT_WIRED"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:0002B6B3",
+                                     "target_id":  256,
+                                     "target_adapter_device_path":  "\\\\?\\ROOT#DISPLAY#0001#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "ROOT\\DISPLAY\\0001",
+                                     "output_technology_raw":  16,
+                                     "output_technology":  "INDIRECT_WIRED",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  0,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "INDIRECT_WIRED"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00029CAF",
+                                     "target_id":  257,
+                                     "target_adapter_device_path":  "\\\\?\\ROOT#DISPLAY#0000#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "ROOT\\DISPLAY\\0000",
+                                     "output_technology_raw":  16,
+                                     "output_technology":  "INDIRECT_WIRED",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  1,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "INDIRECT_WIRED"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:0002B6B3",
+                                     "target_id":  257,
+                                     "target_adapter_device_path":  "\\\\?\\ROOT#DISPLAY#0001#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "ROOT\\DISPLAY\\0001",
+                                     "output_technology_raw":  16,
+                                     "output_technology":  "INDIRECT_WIRED",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  1,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "INDIRECT_WIRED"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00029CAF",
+                                     "target_id":  258,
+                                     "target_adapter_device_path":  "\\\\?\\ROOT#DISPLAY#0000#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "ROOT\\DISPLAY\\0000",
+                                     "output_technology_raw":  16,
+                                     "output_technology":  "INDIRECT_WIRED",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  2,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "INDIRECT_WIRED"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:0002B6B3",
+                                     "target_id":  258,
+                                     "target_adapter_device_path":  "\\\\?\\ROOT#DISPLAY#0001#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "ROOT\\DISPLAY\\0001",
+                                     "output_technology_raw":  16,
+                                     "output_technology":  "INDIRECT_WIRED",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  2,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "INDIRECT_WIRED"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00029CAF",
+                                     "target_id":  259,
+                                     "target_adapter_device_path":  "\\\\?\\ROOT#DISPLAY#0000#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "ROOT\\DISPLAY\\0000",
+                                     "output_technology_raw":  16,
+                                     "output_technology":  "INDIRECT_WIRED",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  3,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "INDIRECT_WIRED"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:0002B6B3",
+                                     "target_id":  259,
+                                     "target_adapter_device_path":  "\\\\?\\ROOT#DISPLAY#0001#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "ROOT\\DISPLAY\\0001",
+                                     "output_technology_raw":  16,
+                                     "output_technology":  "INDIRECT_WIRED",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  3,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "INDIRECT_WIRED"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00029CAF",
+                                     "target_id":  260,
+                                     "target_adapter_device_path":  "\\\\?\\ROOT#DISPLAY#0000#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "ROOT\\DISPLAY\\0000",
+                                     "output_technology_raw":  16,
+                                     "output_technology":  "INDIRECT_WIRED",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  4,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "INDIRECT_WIRED"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:0002B6B3",
+                                     "target_id":  260,
+                                     "target_adapter_device_path":  "\\\\?\\ROOT#DISPLAY#0001#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "ROOT\\DISPLAY\\0001",
+                                     "output_technology_raw":  16,
+                                     "output_technology":  "INDIRECT_WIRED",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  4,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "INDIRECT_WIRED"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00029CAF",
+                                     "target_id":  261,
+                                     "target_adapter_device_path":  "\\\\?\\ROOT#DISPLAY#0000#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "ROOT\\DISPLAY\\0000",
+                                     "output_technology_raw":  16,
+                                     "output_technology":  "INDIRECT_WIRED",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  5,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "INDIRECT_WIRED"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:0002B6B3",
+                                     "target_id":  261,
+                                     "target_adapter_device_path":  "\\\\?\\ROOT#DISPLAY#0001#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "ROOT\\DISPLAY\\0001",
+                                     "output_technology_raw":  16,
+                                     "output_technology":  "INDIRECT_WIRED",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  5,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "INDIRECT_WIRED"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00029CAF",
+                                     "target_id":  262,
+                                     "target_adapter_device_path":  "\\\\?\\ROOT#DISPLAY#0000#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "ROOT\\DISPLAY\\0000",
+                                     "output_technology_raw":  16,
+                                     "output_technology":  "INDIRECT_WIRED",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  6,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "INDIRECT_WIRED"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:0002B6B3",
+                                     "target_id":  262,
+                                     "target_adapter_device_path":  "\\\\?\\ROOT#DISPLAY#0001#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "ROOT\\DISPLAY\\0001",
+                                     "output_technology_raw":  16,
+                                     "output_technology":  "INDIRECT_WIRED",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  6,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "INDIRECT_WIRED"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00029CAF",
+                                     "target_id":  263,
+                                     "target_adapter_device_path":  "\\\\?\\ROOT#DISPLAY#0000#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "ROOT\\DISPLAY\\0000",
+                                     "output_technology_raw":  16,
+                                     "output_technology":  "INDIRECT_WIRED",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  7,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "INDIRECT_WIRED"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:0002B6B3",
+                                     "target_id":  263,
+                                     "target_adapter_device_path":  "\\\\?\\ROOT#DISPLAY#0001#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "ROOT\\DISPLAY\\0001",
+                                     "output_technology_raw":  16,
+                                     "output_technology":  "INDIRECT_WIRED",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  7,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "INDIRECT_WIRED"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00029CAF",
+                                     "target_id":  264,
+                                     "target_adapter_device_path":  "\\\\?\\ROOT#DISPLAY#0000#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "ROOT\\DISPLAY\\0000",
+                                     "output_technology_raw":  16,
+                                     "output_technology":  "INDIRECT_WIRED",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  8,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "INDIRECT_WIRED"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:0002B6B3",
+                                     "target_id":  264,
+                                     "target_adapter_device_path":  "\\\\?\\ROOT#DISPLAY#0001#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "ROOT\\DISPLAY\\0001",
+                                     "output_technology_raw":  16,
+                                     "output_technology":  "INDIRECT_WIRED",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  8,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "INDIRECT_WIRED"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00029CAF",
+                                     "target_id":  265,
+                                     "target_adapter_device_path":  "\\\\?\\ROOT#DISPLAY#0000#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "ROOT\\DISPLAY\\0000",
+                                     "output_technology_raw":  16,
+                                     "output_technology":  "INDIRECT_WIRED",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  9,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "INDIRECT_WIRED"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:0002B6B3",
+                                     "target_id":  265,
+                                     "target_adapter_device_path":  "\\\\?\\ROOT#DISPLAY#0001#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "ROOT\\DISPLAY\\0001",
+                                     "output_technology_raw":  16,
+                                     "output_technology":  "INDIRECT_WIRED",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  9,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "INDIRECT_WIRED"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00010EF5",
+                                     "target_id":  4145,
+                                     "target_adapter_device_path":  "\\\\?\\PCI#VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C#3&11583659&2&10#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C\\3&11583659&2&10",
+                                     "output_technology_raw":  5,
+                                     "output_technology":  "HDMI",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  0,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "HDMI"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00010EF5",
+                                     "target_id":  8261,
+                                     "target_adapter_device_path":  "\\\\?\\PCI#VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C#3&11583659&2&10#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C\\3&11583659&2&10",
+                                     "output_technology_raw":  10,
+                                     "output_technology":  "DISPLAYPORT_EXTERNAL",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  0,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "DISPLAYPORT_EXTERNAL"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00010EF5",
+                                     "target_id":  12613,
+                                     "target_adapter_device_path":  "\\\\?\\PCI#VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C#3&11583659&2&10#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C\\3&11583659&2&10",
+                                     "output_technology_raw":  10,
+                                     "output_technology":  "DISPLAYPORT_EXTERNAL",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  1,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "DISPLAYPORT_EXTERNAL"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00010EF5",
+                                     "target_id":  16965,
+                                     "target_adapter_device_path":  "\\\\?\\PCI#VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C#3&11583659&2&10#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C\\3&11583659&2&10",
+                                     "output_technology_raw":  10,
+                                     "output_technology":  "DISPLAYPORT_EXTERNAL",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  2,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "DISPLAYPORT_EXTERNAL"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00010EF5",
+                                     "target_id":  21317,
+                                     "target_adapter_device_path":  "\\\\?\\PCI#VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C#3&11583659&2&10#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C\\3&11583659&2&10",
+                                     "output_technology_raw":  10,
+                                     "output_technology":  "DISPLAYPORT_EXTERNAL",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  3,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "DISPLAYPORT_EXTERNAL"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00010EF5",
+                                     "target_id":  24646,
+                                     "target_adapter_device_path":  "\\\\?\\PCI#VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C#3&11583659&2&10#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C\\3&11583659&2&10",
+                                     "output_technology_raw":  10,
+                                     "output_technology":  "DISPLAYPORT_EXTERNAL",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  4,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "DISPLAYPORT_EXTERNAL"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00010EF5",
+                                     "target_id":  28998,
+                                     "target_adapter_device_path":  "\\\\?\\PCI#VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C#3&11583659&2&10#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C\\3&11583659&2&10",
+                                     "output_technology_raw":  10,
+                                     "output_technology":  "DISPLAYPORT_EXTERNAL",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  5,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "DISPLAYPORT_EXTERNAL"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00010EF5",
+                                     "target_id":  33350,
+                                     "target_adapter_device_path":  "\\\\?\\PCI#VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C#3&11583659&2&10#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C\\3&11583659&2&10",
+                                     "output_technology_raw":  10,
+                                     "output_technology":  "DISPLAYPORT_EXTERNAL",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  6,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "DISPLAYPORT_EXTERNAL"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00010EF5",
+                                     "target_id":  37702,
+                                     "target_adapter_device_path":  "\\\\?\\PCI#VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C#3&11583659&2&10#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C\\3&11583659&2&10",
+                                     "output_technology_raw":  10,
+                                     "output_technology":  "DISPLAYPORT_EXTERNAL",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  7,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "DISPLAYPORT_EXTERNAL"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00010EF5",
+                                     "target_id":  1110094,
+                                     "target_adapter_device_path":  "\\\\?\\PCI#VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C#3&11583659&2&10#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C\\3&11583659&2&10",
+                                     "output_technology_raw":  10,
+                                     "output_technology":  "DISPLAYPORT_EXTERNAL",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  12,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "DISPLAYPORT_EXTERNAL"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00010EF5",
+                                     "target_id":  1114191,
+                                     "target_adapter_device_path":  "\\\\?\\PCI#VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C#3&11583659&2&10#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C\\3&11583659&2&10",
+                                     "output_technology_raw":  10,
+                                     "output_technology":  "DISPLAYPORT_EXTERNAL",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  13,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "DISPLAYPORT_EXTERNAL"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00010EF5",
+                                     "target_id":  2138236,
+                                     "target_adapter_device_path":  "\\\\?\\PCI#VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C#3&11583659&2&10#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C\\3&11583659&2&10",
+                                     "output_technology_raw":  5,
+                                     "output_technology":  "HDMI",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  1,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "HDMI"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00010EF5",
+                                     "target_id":  4239685,
+                                     "target_adapter_device_path":  "\\\\?\\PCI#VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C#3&11583659&2&10#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C\\3&11583659&2&10",
+                                     "output_technology_raw":  10,
+                                     "output_technology":  "DISPLAYPORT_EXTERNAL",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  8,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "DISPLAYPORT_EXTERNAL"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00010EF5",
+                                     "target_id":  4243781,
+                                     "target_adapter_device_path":  "\\\\?\\PCI#VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C#3&11583659&2&10#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C\\3&11583659&2&10",
+                                     "output_technology_raw":  10,
+                                     "output_technology":  "DISPLAYPORT_EXTERNAL",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  9,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "DISPLAYPORT_EXTERNAL"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00010EF5",
+                                     "target_id":  4247878,
+                                     "target_adapter_device_path":  "\\\\?\\PCI#VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C#3&11583659&2&10#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C\\3&11583659&2&10",
+                                     "output_technology_raw":  10,
+                                     "output_technology":  "DISPLAYPORT_EXTERNAL",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  10,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "DISPLAYPORT_EXTERNAL"
+                                                     }
+                                 },
+                                 {
+                                     "target_adapter_luid":  "00000000:00010EF5",
+                                     "target_id":  4251974,
+                                     "target_adapter_device_path":  "\\\\?\\PCI#VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C#3&11583659&2&10#{5b45201d-f2f2-4f3b-85bb-30ff1f953599}",
+                                     "target_adapter_instance_id":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C\\3&11583659&2&10",
+                                     "output_technology_raw":  10,
+                                     "output_technology":  "DISPLAYPORT_EXTERNAL",
+                                     "target_available":  false,
+                                     "target_status_flags":  0,
+                                     "target_name":  {
+                                                         "friendly_name":  "",
+                                                         "monitor_device_path":  "",
+                                                         "connector_instance":  11,
+                                                         "edid_ids_valid":  false,
+                                                         "friendly_name_from_edid":  false,
+                                                         "edid_manufacture_id_raw":  0,
+                                                         "edid_product_code_id":  "0x0000",
+                                                         "output_technology":  "DISPLAYPORT_EXTERNAL"
+                                                     }
+                                 }
+                             ],
+                 "note":  "Targets are connectors the driver exposes to the OS. Exposure is not proof of physical wiring; target_available=true means the OS currently considers something attached."
+             }
+}

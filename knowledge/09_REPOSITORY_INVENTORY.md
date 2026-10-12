@@ -75,6 +75,12 @@
 
 上述三补丁的历史依赖顺序 `R1.1 → R1.2-B → R1.2-C`；R1.2-D/E/F/G 发现了尚未关闭的 stop/callback 安全问题，**不得将其视为可投产或已加载的驱动**。
 
+## 本机硬件调查材料包
+
+| 路径 | 内容 |
+|---|---|
+| [`docs/hardware-survey-20261012/`](../docs/hardware-survey-20261012/REPORT.md) | 2026-10-12 Windows 只读硬件调查：`REPORT.md`（中文报告）、`hardware.json`、`evidence/`（每项采集的命令/时间/接口/状态/错误、去敏 EDID、ACPI DSDT/SSDT 原表）、`collect.ps1` / `build_hardware_json.ps1` / `selfcheck.ps1`、`FILES_SHA256.txt`。目录内 `.gitattributes` 关闭换行转换以保持哈希可核验。**不是 MUX/走线证明，也不是 macOS 验证** |
+
 ## 仓库新增交接资产
 
 根目录 [`AGENTS.md`](../AGENTS.md)，`knowledge/00–11` 汇总和决策文件。新的研发工作在 `research/independent-i915/` 下以可核对的 manifest 和调用图为起点；另有 [11 早期 1401/OpenCore 调查及引文纠错](11_EARLY_RESEARCH_AND_1401.md)。首次实现需按 [10](10_CODEX_HANDOFF.md) 的验收工作，不是再复制一批旧模型。

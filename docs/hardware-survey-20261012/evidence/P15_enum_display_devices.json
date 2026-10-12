@@ -1,0 +1,297 @@
+{
+    "probe_id":  "P15_enum_display_devices",
+    "title":  "GDI display devices and attached monitors",
+    "source_interface":  "user32 EnumDisplayDevices (adapters and monitors)",
+    "command":  "$out = @()\r\n    for ($i = 0; $i -lt 64; $i++) {\r\n        $dd = [HonorSurvey.Gdi]::NewDD()\r\n        if (-not [HonorSurvey.Gdi]::EnumDisplayDevices([NullString]::Value, [uint32]$i, [ref]$dd, 0)) { break }\r\n        $mons = @()\r\n        for ($j = 0; $j -lt 16; $j++) {\r\n            $md = [HonorSurvey.Gdi]::NewDD()\r\n            if (-not [HonorSurvey.Gdi]::EnumDisplayDevices($dd.DeviceName, [uint32]$j, [ref]$md, 0)) { break }\r\n            $mons += [ordered]@{ device_name = $md.DeviceName; device_string = $md.DeviceString; state_flags = ('0x{0:X}' -f $md.StateFlags); active = [bool]($md.StateFlags -band 1); attached = [bool]($md.StateFlags -band 2); device_id = $md.DeviceID }\r\n        }\r\n        $out += [ordered]@{ device_name = $dd.DeviceName; device_string = $dd.DeviceString; state_flags = ('0x{0:X}' -f $dd.StateFlags); attached_to_desktop = [bool]($dd.StateFlags -band 1); primary = [bool]($dd.StateFlags -band 4); device_id = $dd.DeviceID; monitors = $mons }\r\n    }\r\n    $out",
+    "started_local":  "2026-10-12T22:47:27.504+08:00",
+    "duration_ms":  19,
+    "status":  "ok",
+    "native_exit_code":  null,
+    "errors":  [
+
+               ],
+    "data":  [
+                 {
+                     "device_name":  "\\\\.\\DISPLAY1",
+                     "device_string":  "Intel(R) Iris(R) Xe Graphics",
+                     "state_flags":  "0x5",
+                     "attached_to_desktop":  true,
+                     "primary":  true,
+                     "device_id":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C",
+                     "monitors":  [
+                                      {
+                                          "device_name":  "\\\\.\\DISPLAY1\\Monitor0",
+                                          "device_string":  "BOE PnP Monitor",
+                                          "state_flags":  "0x3",
+                                          "active":  true,
+                                          "attached":  true,
+                                          "device_id":  "MONITOR\\BOE0893\\{4d36e96e-e325-11ce-bfc1-08002be10318}\\0000"
+                                      }
+                                  ]
+                 },
+                 {
+                     "device_name":  "\\\\.\\DISPLAY2",
+                     "device_string":  "Intel(R) Iris(R) Xe Graphics",
+                     "state_flags":  "0x0",
+                     "attached_to_desktop":  false,
+                     "primary":  false,
+                     "device_id":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C",
+                     "monitors":  [
+
+                                  ]
+                 },
+                 {
+                     "device_name":  "\\\\.\\DISPLAY3",
+                     "device_string":  "Intel(R) Iris(R) Xe Graphics",
+                     "state_flags":  "0x0",
+                     "attached_to_desktop":  false,
+                     "primary":  false,
+                     "device_id":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C",
+                     "monitors":  [
+
+                                  ]
+                 },
+                 {
+                     "device_name":  "\\\\.\\DISPLAY4",
+                     "device_string":  "Intel(R) Iris(R) Xe Graphics",
+                     "state_flags":  "0x0",
+                     "attached_to_desktop":  false,
+                     "primary":  false,
+                     "device_id":  "PCI\\VEN_8086&DEV_46A6&SUBSYS_20271EE7&REV_0C",
+                     "monitors":  [
+
+                                  ]
+                 },
+                 {
+                     "device_name":  "\\\\.\\DISPLAY5",
+                     "device_string":  "GameViewer Virtual Display Adapter",
+                     "state_flags":  "0x0",
+                     "attached_to_desktop":  false,
+                     "primary":  false,
+                     "device_id":  "Root\\GameViewerIddDriver",
+                     "monitors":  [
+
+                                  ]
+                 },
+                 {
+                     "device_name":  "\\\\.\\DISPLAY6",
+                     "device_string":  "GameViewer Virtual Display Adapter",
+                     "state_flags":  "0x0",
+                     "attached_to_desktop":  false,
+                     "primary":  false,
+                     "device_id":  "Root\\GameViewerIddDriver",
+                     "monitors":  [
+
+                                  ]
+                 },
+                 {
+                     "device_name":  "\\\\.\\DISPLAY7",
+                     "device_string":  "GameViewer Virtual Display Adapter",
+                     "state_flags":  "0x0",
+                     "attached_to_desktop":  false,
+                     "primary":  false,
+                     "device_id":  "Root\\GameViewerIddDriver",
+                     "monitors":  [
+
+                                  ]
+                 },
+                 {
+                     "device_name":  "\\\\.\\DISPLAY8",
+                     "device_string":  "GameViewer Virtual Display Adapter",
+                     "state_flags":  "0x0",
+                     "attached_to_desktop":  false,
+                     "primary":  false,
+                     "device_id":  "Root\\GameViewerIddDriver",
+                     "monitors":  [
+
+                                  ]
+                 },
+                 {
+                     "device_name":  "\\\\.\\DISPLAY9",
+                     "device_string":  "GameViewer Virtual Display Adapter",
+                     "state_flags":  "0x0",
+                     "attached_to_desktop":  false,
+                     "primary":  false,
+                     "device_id":  "Root\\GameViewerIddDriver",
+                     "monitors":  [
+
+                                  ]
+                 },
+                 {
+                     "device_name":  "\\\\.\\DISPLAY10",
+                     "device_string":  "GameViewer Virtual Display Adapter",
+                     "state_flags":  "0x0",
+                     "attached_to_desktop":  false,
+                     "primary":  false,
+                     "device_id":  "Root\\GameViewerIddDriver",
+                     "monitors":  [
+
+                                  ]
+                 },
+                 {
+                     "device_name":  "\\\\.\\DISPLAY11",
+                     "device_string":  "GameViewer Virtual Display Adapter",
+                     "state_flags":  "0x0",
+                     "attached_to_desktop":  false,
+                     "primary":  false,
+                     "device_id":  "Root\\GameViewerIddDriver",
+                     "monitors":  [
+
+                                  ]
+                 },
+                 {
+                     "device_name":  "\\\\.\\DISPLAY12",
+                     "device_string":  "GameViewer Virtual Display Adapter",
+                     "state_flags":  "0x0",
+                     "attached_to_desktop":  false,
+                     "primary":  false,
+                     "device_id":  "Root\\GameViewerIddDriver",
+                     "monitors":  [
+
+                                  ]
+                 },
+                 {
+                     "device_name":  "\\\\.\\DISPLAY13",
+                     "device_string":  "GameViewer Virtual Display Adapter",
+                     "state_flags":  "0x0",
+                     "attached_to_desktop":  false,
+                     "primary":  false,
+                     "device_id":  "Root\\GameViewerIddDriver",
+                     "monitors":  [
+
+                                  ]
+                 },
+                 {
+                     "device_name":  "\\\\.\\DISPLAY14",
+                     "device_string":  "GameViewer Virtual Display Adapter",
+                     "state_flags":  "0x0",
+                     "attached_to_desktop":  false,
+                     "primary":  false,
+                     "device_id":  "Root\\GameViewerIddDriver",
+                     "monitors":  [
+
+                                  ]
+                 },
+                 {
+                     "device_name":  "\\\\.\\DISPLAY15",
+                     "device_string":  "IddDesk Device",
+                     "state_flags":  "0x0",
+                     "attached_to_desktop":  false,
+                     "primary":  false,
+                     "device_id":  "Root\\IddDesk",
+                     "monitors":  [
+
+                                  ]
+                 },
+                 {
+                     "device_name":  "\\\\.\\DISPLAY16",
+                     "device_string":  "IddDesk Device",
+                     "state_flags":  "0x0",
+                     "attached_to_desktop":  false,
+                     "primary":  false,
+                     "device_id":  "Root\\IddDesk",
+                     "monitors":  [
+
+                                  ]
+                 },
+                 {
+                     "device_name":  "\\\\.\\DISPLAY17",
+                     "device_string":  "IddDesk Device",
+                     "state_flags":  "0x0",
+                     "attached_to_desktop":  false,
+                     "primary":  false,
+                     "device_id":  "Root\\IddDesk",
+                     "monitors":  [
+
+                                  ]
+                 },
+                 {
+                     "device_name":  "\\\\.\\DISPLAY18",
+                     "device_string":  "IddDesk Device",
+                     "state_flags":  "0x0",
+                     "attached_to_desktop":  false,
+                     "primary":  false,
+                     "device_id":  "Root\\IddDesk",
+                     "monitors":  [
+
+                                  ]
+                 },
+                 {
+                     "device_name":  "\\\\.\\DISPLAY19",
+                     "device_string":  "IddDesk Device",
+                     "state_flags":  "0x0",
+                     "attached_to_desktop":  false,
+                     "primary":  false,
+                     "device_id":  "Root\\IddDesk",
+                     "monitors":  [
+
+                                  ]
+                 },
+                 {
+                     "device_name":  "\\\\.\\DISPLAY20",
+                     "device_string":  "IddDesk Device",
+                     "state_flags":  "0x0",
+                     "attached_to_desktop":  false,
+                     "primary":  false,
+                     "device_id":  "Root\\IddDesk",
+                     "monitors":  [
+
+                                  ]
+                 },
+                 {
+                     "device_name":  "\\\\.\\DISPLAY21",
+                     "device_string":  "IddDesk Device",
+                     "state_flags":  "0x0",
+                     "attached_to_desktop":  false,
+                     "primary":  false,
+                     "device_id":  "Root\\IddDesk",
+                     "monitors":  [
+
+                                  ]
+                 },
+                 {
+                     "device_name":  "\\\\.\\DISPLAY22",
+                     "device_string":  "IddDesk Device",
+                     "state_flags":  "0x0",
+                     "attached_to_desktop":  false,
+                     "primary":  false,
+                     "device_id":  "Root\\IddDesk",
+                     "monitors":  [
+
+                                  ]
+                 },
+                 {
+                     "device_name":  "\\\\.\\DISPLAY23",
+                     "device_string":  "IddDesk Device",
+                     "state_flags":  "0x0",
+                     "attached_to_desktop":  false,
+                     "primary":  false,
+                     "device_id":  "Root\\IddDesk",
+                     "monitors":  [
+
+                                  ]
+                 },
+                 {
+                     "device_name":  "\\\\.\\DISPLAY24",
+                     "device_string":  "IddDesk Device",
+                     "state_flags":  "0x0",
+                     "attached_to_desktop":  false,
+                     "primary":  false,
+                     "device_id":  "Root\\IddDesk",
+                     "monitors":  [
+
+                                  ]
+                 },
+                 {
+                     "device_name":  "\\\\.\\DISPLAY25",
+                     "device_string":  "Lebo Virtual USB Monitor",
+                     "state_flags":  "0x0",
+                     "attached_to_desktop":  false,
+                     "primary":  false,
+                     "device_id":  "hid\\vid_fefe&pid_6666",
+                     "monitors":  [
+
+                                  ]
+                 }
+             ]
+}

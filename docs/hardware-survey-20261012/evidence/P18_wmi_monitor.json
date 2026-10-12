@@ -1,0 +1,43 @@
+{
+    "probe_id":  "P18_wmi_monitor",
+    "title":  "WMI monitor classes (supplementary only, not used for GPU ownership)",
+    "source_interface":  "CIM root\\wmi WmiMonitorConnectionParams / WmiMonitorBasicDisplayParams / WmiMonitorID (SerialNumberID not selected)",
+    "command":  "$res = [ordered]@{}\r\n    try { $res.connection_params = @(Get-CimInstance -Namespace root\\wmi -ClassName WmiMonitorConnectionParams -ErrorAction Stop | Select-Object InstanceName, Active, VideoOutputTechnology) } catch { Add-ProbeError ('WmiMonitorConnectionParams: ' + $_.Exception.Message) }\r\n    try { $res.basic_display_params = @(Get-CimInstance -Namespace root\\wmi -ClassName WmiMonitorBasicDisplayParams -ErrorAction Stop | Select-Object InstanceName, Active, MaxHorizontalImageSize, MaxVerticalImageSize, VideoInputType, DisplayTransferCharacteristic) } catch { Add-ProbeError ('WmiMonitorBasicDisplayParams: ' + $_.Exception.Message) }\r\n    try { $res.monitor_id = @(Get-CimInstance -Namespace root\\wmi -ClassName WmiMonitorID -ErrorAction Stop | ForEach-Object { [ordered]@{ InstanceName = $_.InstanceName; Active = $_.Active; ManufacturerName = (-join ($_.ManufacturerName | Where-Object { $_ } | ForEach-Object { [char]$_ })); ProductCodeID = (-join ($_.ProductCodeID | Where-Object { $_ } | ForEach-Object { [char]$_ })); UserFriendlyName = (-join ($_.UserFriendlyName | Where-Object { $_ } | ForEach-Object { [char]$_ })); YearOfManufacture = $_.YearOfManufacture; WeekOfManufacture = $_.WeekOfManufacture } }) } catch { Add-ProbeError ('WmiMonitorID: ' + $_.Exception.Message) }\r\n    $res",
+    "started_local":  "2026-10-12T22:47:28.940+08:00",
+    "duration_ms":  56,
+    "status":  "ok",
+    "native_exit_code":  null,
+    "errors":  [
+
+               ],
+    "data":  {
+                 "connection_params":  [
+                                           {
+                                               "InstanceName":  "DISPLAY\\BOE0893\\4&fd33af8&0&UID8388688_0",
+                                               "Active":  true,
+                                               "VideoOutputTechnology":  2147483648
+                                           }
+                                       ],
+                 "basic_display_params":  [
+                                              {
+                                                  "InstanceName":  "DISPLAY\\BOE0893\\4&fd33af8&0&UID8388688_0",
+                                                  "Active":  true,
+                                                  "MaxHorizontalImageSize":  30,
+                                                  "MaxVerticalImageSize":  20,
+                                                  "VideoInputType":  1,
+                                                  "DisplayTransferCharacteristic":  120
+                                              }
+                                          ],
+                 "monitor_id":  [
+                                    {
+                                        "InstanceName":  "DISPLAY\\BOE0893\\4&fd33af8&0&UID8388688_0",
+                                        "Active":  true,
+                                        "ManufacturerName":  "BOE",
+                                        "ProductCodeID":  "0893",
+                                        "UserFriendlyName":  "",
+                                        "YearOfManufacture":  2019,
+                                        "WeekOfManufacture":  20
+                                    }
+                                ]
+             }
+}

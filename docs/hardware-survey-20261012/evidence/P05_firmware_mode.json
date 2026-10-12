@@ -1,0 +1,19 @@
+{
+    "probe_id":  "P05_firmware_mode",
+    "title":  "Boot firmware type and Secure Boot state (registry)",
+    "source_interface":  "kernel32 GetFirmwareType + registry Control\\PEFirmwareType + Control\\SecureBoot\\State",
+    "command":  "$t = 0; $ok = [HonorSurvey.Fw]::GetFirmwareType([ref]$t)\r\n    if (-not $ok) { Add-ProbeError ('GetFirmwareType failed, Win32 error ' + [Runtime.InteropServices.Marshal]::GetLastWin32Error()) }\r\n    $names = @{ 1 = 'BIOS (Legacy)'; 2 = 'UEFI' }\r\n    $pe = $null; try { $pe = (Get-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Control').PEFirmwareType } catch { Add-ProbeError ('PEFirmwareType: ' + $_.Exception.Message) }\r\n    $sb = $null; try { $sb = (Get-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\SecureBoot\\State' -ErrorAction Stop).UEFISecureBootEnabled } catch { Add-ProbeError ('SecureBoot\\State: ' + $_.Exception.Message) }\r\n    [ordered]@{ GetFirmwareType_raw = $t; GetFirmwareType = $(if ($names.ContainsKey($t)) { $names[$t] } else { 'Unknown' }); registry_PEFirmwareType = $pe; registry_UEFISecureBootEnabled = $sb }",
+    "started_local":  "2026-10-12T22:47:27.006+08:00",
+    "duration_ms":  15,
+    "status":  "ok",
+    "native_exit_code":  null,
+    "errors":  [
+
+               ],
+    "data":  {
+                 "GetFirmwareType_raw":  2,
+                 "GetFirmwareType":  "UEFI",
+                 "registry_PEFirmwareType":  null,
+                 "registry_UEFISecureBootEnabled":  1
+             }
+}

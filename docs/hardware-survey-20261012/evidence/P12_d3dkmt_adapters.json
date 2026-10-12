@@ -1,0 +1,226 @@
+{
+    "probe_id":  "P12_d3dkmt_adapters",
+    "title":  "WDDM adapters: LUID, PCI address, sources, hybrid flags, memory segments, BIOS string",
+    "source_interface":  "gdi32 D3DKMTEnumAdapters2 + D3DKMTQueryAdapterInfo(ADAPTERADDRESS, ADAPTERTYPE, DRIVERVERSION, GETSEGMENTSIZE, ADAPTERREGISTRYINFO)",
+    "command":  "$list = [HonorSurvey.Kmt]::Enumerate()\r\n    if ([HonorSurvey.Kmt]::LastEnumStatus -ne 0) { Add-ProbeError ('D3DKMTEnumAdapters2 NTSTATUS 0x' + ('{0:X8}' -f [HonorSurvey.Kmt]::LastEnumStatus)) }\r\n    $bits = @('RenderSupported', 'DisplaySupported', 'SoftwareDevice', 'PostDevice', 'HybridDiscrete', 'HybridIntegrated', 'IndirectDisplayDevice', 'Paravirtualized', 'ACGSupported', 'SupportSetTimingsFromVidPn', 'Detachable', 'ComputeOnly', 'Prototype', 'RuntimePowerManagement')\r\n    foreach ($a in $list) {\r\n        $flags = [ordered]@{}\r\n        for ($i = 0; $i -lt $bits.Count; $i++) { $flags[$bits[$i]] = [bool]($a.TypeFlags -band (1 -shl $i)) }\r\n        foreach ($s in 'AddrStatus', 'TypeStatus', 'VersionStatus', 'SegStatus', 'RegStatus') { if ($a.$s -ne 0) { Add-ProbeError (\"LUID $(Format-Luid $a.LuidLow $a.LuidHigh) $s NTSTATUS 0x\" + ('{0:X8}' -f $a.$s)) } }\r\n        [ordered]@{\r\n            luid = (Format-Luid $a.LuidLow $a.LuidHigh); num_of_sources = $a.NumOfSources\r\n            pci_address = $(if ($a.AddrStatus -eq 0) { [ordered]@{ bus = $a.BusNumber; device = $a.DeviceNumber; function = $a.FunctionNumber } } else { $null })\r\n            adapter_type_raw = $(if ($a.TypeStatus -eq 0) { '0x' + $a.TypeFlags.ToString('X') } else { $null }); adapter_type = $(if ($a.TypeStatus -eq 0) { $flags } else { $null })\r\n            wddm_driver_version_enum = $(if ($a.VersionStatus -eq 0) { $a.DriverVersion } else { $null })\r\n            segment_sizes_bytes = $(if ($a.SegStatus -eq 0) { [ordered]@{ dedicated_video = $a.DedicatedVideoMemory; dedicated_system = $a.DedicatedSystemMemory; shared_system = $a.SharedSystemMemory } } else { $null })\r\n            registry_info = $(if ($a.RegStatus -eq 0) { [ordered]@{ adapter_string = $a.AdapterString; bios_string = $a.BiosString; dac_type = $a.DacType; chip_type = $a.ChipType } } else { $null })\r\n        }\r\n    }",
+    "started_local":  "2026-10-12T22:47:27.307+08:00",
+    "duration_ms":  38,
+    "status":  "partial",
+    "native_exit_code":  null,
+    "errors":  [
+                   "LUID 00000000:000CF660 RegStatus NTSTATUS 0xC0000034",
+                   "LUID 00000000:0002B6B3 RegStatus NTSTATUS 0xC0000034",
+                   "LUID 00000000:00029CAF RegStatus NTSTATUS 0xC0000034",
+                   "LUID 00000000:00011189 RegStatus NTSTATUS 0xC0000034"
+               ],
+    "data":  [
+                 {
+                     "luid":  "00000000:000CF660",
+                     "num_of_sources":  1,
+                     "pci_address":  {
+                                         "bus":  4294967295,
+                                         "device":  65535,
+                                         "function":  65535
+                                     },
+                     "adapter_type_raw":  "0x342",
+                     "adapter_type":  {
+                                          "RenderSupported":  false,
+                                          "DisplaySupported":  true,
+                                          "SoftwareDevice":  false,
+                                          "PostDevice":  false,
+                                          "HybridDiscrete":  false,
+                                          "HybridIntegrated":  false,
+                                          "IndirectDisplayDevice":  true,
+                                          "Paravirtualized":  false,
+                                          "ACGSupported":  true,
+                                          "SupportSetTimingsFromVidPn":  true,
+                                          "Detachable":  false,
+                                          "ComputeOnly":  false,
+                                          "Prototype":  false,
+                                          "RuntimePowerManagement":  false
+                                      },
+                     "wddm_driver_version_enum":  3200,
+                     "segment_sizes_bytes":  {
+                                                 "dedicated_video":  134217728,
+                                                 "dedicated_system":  0,
+                                                 "shared_system":  8445489152
+                                             },
+                     "registry_info":  null
+                 },
+                 {
+                     "luid":  "00000000:0002B6B3",
+                     "num_of_sources":  10,
+                     "pci_address":  {
+                                         "bus":  4294967295,
+                                         "device":  65535,
+                                         "function":  65535
+                                     },
+                     "adapter_type_raw":  "0x342",
+                     "adapter_type":  {
+                                          "RenderSupported":  false,
+                                          "DisplaySupported":  true,
+                                          "SoftwareDevice":  false,
+                                          "PostDevice":  false,
+                                          "HybridDiscrete":  false,
+                                          "HybridIntegrated":  false,
+                                          "IndirectDisplayDevice":  true,
+                                          "Paravirtualized":  false,
+                                          "ACGSupported":  true,
+                                          "SupportSetTimingsFromVidPn":  true,
+                                          "Detachable":  false,
+                                          "ComputeOnly":  false,
+                                          "Prototype":  false,
+                                          "RuntimePowerManagement":  false
+                                      },
+                     "wddm_driver_version_enum":  3200,
+                     "segment_sizes_bytes":  {
+                                                 "dedicated_video":  134217728,
+                                                 "dedicated_system":  0,
+                                                 "shared_system":  8445489152
+                                             },
+                     "registry_info":  null
+                 },
+                 {
+                     "luid":  "00000000:00029CAF",
+                     "num_of_sources":  10,
+                     "pci_address":  {
+                                         "bus":  4294967295,
+                                         "device":  65535,
+                                         "function":  65535
+                                     },
+                     "adapter_type_raw":  "0x342",
+                     "adapter_type":  {
+                                          "RenderSupported":  false,
+                                          "DisplaySupported":  true,
+                                          "SoftwareDevice":  false,
+                                          "PostDevice":  false,
+                                          "HybridDiscrete":  false,
+                                          "HybridIntegrated":  false,
+                                          "IndirectDisplayDevice":  true,
+                                          "Paravirtualized":  false,
+                                          "ACGSupported":  true,
+                                          "SupportSetTimingsFromVidPn":  true,
+                                          "Detachable":  false,
+                                          "ComputeOnly":  false,
+                                          "Prototype":  false,
+                                          "RuntimePowerManagement":  false
+                                      },
+                     "wddm_driver_version_enum":  3200,
+                     "segment_sizes_bytes":  {
+                                                 "dedicated_video":  134217728,
+                                                 "dedicated_system":  0,
+                                                 "shared_system":  8445489152
+                                             },
+                     "registry_info":  null
+                 },
+                 {
+                     "luid":  "00000000:00010EF5",
+                     "num_of_sources":  4,
+                     "pci_address":  {
+                                         "bus":  0,
+                                         "device":  2,
+                                         "function":  0
+                                     },
+                     "adapter_type_raw":  "0x232B",
+                     "adapter_type":  {
+                                          "RenderSupported":  true,
+                                          "DisplaySupported":  true,
+                                          "SoftwareDevice":  false,
+                                          "PostDevice":  true,
+                                          "HybridDiscrete":  false,
+                                          "HybridIntegrated":  true,
+                                          "IndirectDisplayDevice":  false,
+                                          "Paravirtualized":  false,
+                                          "ACGSupported":  true,
+                                          "SupportSetTimingsFromVidPn":  true,
+                                          "Detachable":  false,
+                                          "ComputeOnly":  false,
+                                          "Prototype":  false,
+                                          "RuntimePowerManagement":  true
+                                      },
+                     "wddm_driver_version_enum":  3100,
+                     "segment_sizes_bytes":  {
+                                                 "dedicated_video":  134217728,
+                                                 "dedicated_system":  0,
+                                                 "shared_system":  8445489152
+                                             },
+                     "registry_info":  {
+                                           "adapter_string":  "Intel(R) Iris(R) Xe Graphics",
+                                           "bios_string":  "Intel Video BIOS",
+                                           "dac_type":  "Internal",
+                                           "chip_type":  "Intel(R) Iris(R) Xe Graphics Family"
+                                       }
+                 },
+                 {
+                     "luid":  "00000000:000111C0",
+                     "num_of_sources":  0,
+                     "pci_address":  {
+                                         "bus":  1,
+                                         "device":  0,
+                                         "function":  0
+                                     },
+                     "adapter_type_raw":  "0x2311",
+                     "adapter_type":  {
+                                          "RenderSupported":  true,
+                                          "DisplaySupported":  false,
+                                          "SoftwareDevice":  false,
+                                          "PostDevice":  false,
+                                          "HybridDiscrete":  true,
+                                          "HybridIntegrated":  false,
+                                          "IndirectDisplayDevice":  false,
+                                          "Paravirtualized":  false,
+                                          "ACGSupported":  true,
+                                          "SupportSetTimingsFromVidPn":  true,
+                                          "Detachable":  false,
+                                          "ComputeOnly":  false,
+                                          "Prototype":  false,
+                                          "RuntimePowerManagement":  true
+                                      },
+                     "wddm_driver_version_enum":  3200,
+                     "segment_sizes_bytes":  {
+                                                 "dedicated_video":  4157603840,
+                                                 "dedicated_system":  0,
+                                                 "shared_system":  8445489152
+                                             },
+                     "registry_info":  {
+                                           "adapter_string":  "NVIDIA GeForce RTX 2050",
+                                           "bios_string":  "Version94.7.69.0.22",
+                                           "dac_type":  "Integrated RAMDAC",
+                                           "chip_type":  "NVIDIA GeForce RTX 2050"
+                                       }
+                 },
+                 {
+                     "luid":  "00000000:00011189",
+                     "num_of_sources":  0,
+                     "pci_address":  {
+                                         "bus":  4294967295,
+                                         "device":  65535,
+                                         "function":  65535
+                                     },
+                     "adapter_type_raw":  "0x105",
+                     "adapter_type":  {
+                                          "RenderSupported":  true,
+                                          "DisplaySupported":  false,
+                                          "SoftwareDevice":  true,
+                                          "PostDevice":  false,
+                                          "HybridDiscrete":  false,
+                                          "HybridIntegrated":  false,
+                                          "IndirectDisplayDevice":  false,
+                                          "Paravirtualized":  false,
+                                          "ACGSupported":  true,
+                                          "SupportSetTimingsFromVidPn":  false,
+                                          "Detachable":  false,
+                                          "ComputeOnly":  false,
+                                          "Prototype":  false,
+                                          "RuntimePowerManagement":  false
+                                      },
+                     "wddm_driver_version_enum":  3200,
+                     "segment_sizes_bytes":  {
+                                                 "dedicated_video":  0,
+                                                 "dedicated_system":  0,
+                                                 "shared_system":  8445489152
+                                             },
+                     "registry_info":  null
+                 }
+             ]
+}

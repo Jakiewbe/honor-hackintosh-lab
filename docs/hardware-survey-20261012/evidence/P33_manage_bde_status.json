@@ -1,0 +1,21 @@
+{
+    "probe_id":  "P33_manage_bde_status",
+    "title":  "manage-bde -status C: (status only; never -protectors)",
+    "source_interface":  "manage-bde.exe -status (read-only; requires elevation)",
+    "command":  "$ErrorActionPreference = 'Continue'\r\n    $o = & \"$env:SystemRoot\\System32\\<REDACTED_UNIQUE_ID>\" -status $env:SystemDrive 2>&1\r\n    @($o | ForEach-Object { [string]$_ } | Where-Object { $_ -notmatch '(?i)password|recovery key|\\d{6}-\\d{6}-\\d{6}' })",
+    "started_local":  "2026-10-12T22:48:15.905+08:00",
+    "duration_ms":  5042,
+    "status":  "error",
+    "native_exit_code":  -2147217405,
+    "errors":  [
+
+               ],
+    "data":  [
+                 "BitLocker 驱动器加密: 配置工具版本 10.0.26100",
+                 "版权所有 (C) 2013 Microsoft Corporation。保留所有权利。",
+                 "",
+                 "错误: 访问所需资源的尝试被拒绝。",
+                 "",
+                 "检查你是否具有此计算机上的管理员权限。"
+             ]
+}

@@ -1,0 +1,55 @@
+{
+    "probe_id":  "P03_cpu",
+    "title":  "CPU model, cores, threads, P/E topology",
+    "source_interface":  "CIM Win32_Processor + kernel32 GetLogicalProcessorInformationEx(RelationProcessorCore) + registry CentralProcessor\\0",
+    "command":  "$p = Get-CimInstance Win32_Processor | Select-Object Name, Manufacturer, Caption, NumberOfCores, NumberOfEnabledCore, NumberOfLogicalProcessors, MaxClockSpeed, L2CacheSize, L3CacheSize, SocketDesignation, VirtualizationFirmwareEnabled, VMMonitorModeExtensions, SecondLevelAddressTranslationExtensions\r\n    $cores = [HonorSurvey.Fw]::Cores()\r\n    if ($cores.Count -eq 0) { Add-ProbeError ('GetLogicalProcessorInformationEx failed, Win32 error ' + [HonorSurvey.Fw]::LastError) }\r\n    $groups = $cores | Group-Object EfficiencyClass | ForEach-Object { [ordered]@{ efficiency_class = [int]$_.Name; core_count = $_.Count; logical_processors = ($_.Group | Measure-Object LogicalCount -Sum).Sum; smt_cores = @($_.Group | Where-Object { $_.Flags -band 1 }).Count } }\r\n    $reg = $null\r\n    try {\r\n        $r = Get-ItemProperty -LiteralPath 'HKLM:\\HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0'\r\n        $ucode = $null\r\n        $ur = $r.'Update Revision'\r\n        if ($ur -is [byte[]]) { $ucode = '0x' + [BitConverter]::ToUInt32($ur, $(if ($ur.Length -ge 8) { 4 } else { 0 })).ToString('X'); $ucodeRaw = ($ur | ForEach-Object { $_.ToString('X2') }) -join ' ' }\r\n        $reg = [ordered]@{ ProcessorNameString = $r.ProcessorNameString; Identifier = $r.Identifier; VendorIdentifier = $r.VendorIdentifier; MHz = $r.'~MHz'; MicrocodeUpdateRevision = $ucode; UpdateRevisionRawBytes = $ucodeRaw }\r\n    } catch { Add-ProbeError ('registry CentralProcessor\\0: ' + $_.Exception.Message) }\r\n    [ordered]@{ win32_processor = $p; core_topology_by_efficiency_class = @($groups); total_cores = $cores.Count; total_logical = ($cores | Measure-Object LogicalCount -Sum).Sum; registry = $reg; note = 'On Intel hybrid CPUs Windows reports P-cores with the higher EfficiencyClass value.' }",
+    "started_local":  "2026-10-12T22:47:25.891+08:00",
+    "duration_ms":  1083,
+    "status":  "ok",
+    "native_exit_code":  null,
+    "errors":  [
+
+               ],
+    "data":  {
+                 "win32_processor":  {
+                                         "Name":  "12th Gen Intel(R) Core(TM) i5-12500H",
+                                         "Manufacturer":  "GenuineIntel",
+                                         "Caption":  "Intel64 Family 6 Model 154 Stepping 3",
+                                         "NumberOfCores":  12,
+                                         "NumberOfEnabledCore":  12,
+                                         "NumberOfLogicalProcessors":  16,
+                                         "MaxClockSpeed":  2500,
+                                         "L2CacheSize":  9216,
+                                         "L3CacheSize":  18432,
+                                         "SocketDesignation":  "U3E1",
+                                         "VirtualizationFirmwareEnabled":  false,
+                                         "VMMonitorModeExtensions":  false,
+                                         "SecondLevelAddressTranslationExtensions":  false
+                                     },
+                 "core_topology_by_efficiency_class":  [
+                                                           {
+                                                               "efficiency_class":  1,
+                                                               "core_count":  4,
+                                                               "logical_processors":  8,
+                                                               "smt_cores":  4
+                                                           },
+                                                           {
+                                                               "efficiency_class":  0,
+                                                               "core_count":  8,
+                                                               "logical_processors":  8,
+                                                               "smt_cores":  0
+                                                           }
+                                                       ],
+                 "total_cores":  12,
+                 "total_logical":  16,
+                 "registry":  {
+                                  "ProcessorNameString":  "12th Gen Intel(R) Core(TM) i5-12500H",
+                                  "Identifier":  "Intel64 Family 6 Model 154 Stepping 3",
+                                  "VendorIdentifier":  "GenuineIntel",
+                                  "MHz":  3110,
+                                  "MicrocodeUpdateRevision":  "0x41C",
+                                  "UpdateRevisionRawBytes":  "1C 04 00 00"
+                              },
+                 "note":  "On Intel hybrid CPUs Windows reports P-cores with the higher EfficiencyClass value."
+             }
+}
