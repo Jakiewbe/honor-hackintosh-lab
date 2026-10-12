@@ -135,7 +135,7 @@ jobs:
             set -e
             if [[ "$compile_rc" -ne 0 ]]; then
               cat "$log/compile-$variant.txt"
-              echo "R12C_${variant^^}_COMPILE_FAILED exit=$compile_rc"
+              echo "R12C_$variant_COMPILE_FAILED exit=$compile_rc"
               exit 2
             fi
             set +e
@@ -146,13 +146,13 @@ jobs:
             set -e
             if [[ "$link_rc" -ne 0 ]]; then
               cat "$log/link-$variant.txt"
-              echo "R12C_${variant^^}_LINK_FAILED exit=$link_rc"
+              echo "R12C_$variant_LINK_FAILED exit=$link_rc"
               exit 2
             fi
             file "$out/$variant" | tee "$log/file-$variant.txt"
             grep -q 'Mach-O 64-bit kext bundle x86_64' "$log/file-$variant.txt"
             xcrun nm -u "$out/$variant" > "$log/undefined-$variant.txt" || true
-            echo "R12C_${variant^^}_OBJECT_AND_KEXT_LINK_PASS (not loaded)"
+            echo "R12C_$variant_OBJECT_AND_KEXT_LINK_PASS (not loaded)"
           done
 
       - name: Note remaining runtime blockers
