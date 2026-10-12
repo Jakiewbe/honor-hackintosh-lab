@@ -163,6 +163,18 @@ After reviewing the [research ledger](docs/研究状态账本_防重复工作规
 
 **Status: INDEPENDENT_PORT_DESIGN_ONLY / NO_NEW_DRIVER_BUILT / NO_RUNTIME_PROOF / RUNTIME_NO_GO.** No kernel extensions installed/loaded, no new Actions started, no main-Windows/BIOS/EFI/disk changes.
 
+## R1.4-B: review of Intel 46A6 minimum-display assumptions
+
+[First-principles technical review](docs/R1.4-B_方案批判性审查与独立源码基准.md) checks the proposed BIOS framebuffer reuse, stolen memory, i915 dependency trimming, IOGraphics interface and build acceptance criteria.
+
+**Accepted:** investigate basic Intel scanout before acceleration. **Not established:** a macOS 15 WindowServer desktop automatically appears with any IOFramebuffer; GOP output guarantees firmware scanout survives takeover; stolen DRAM begins at GGTT offset zero; source linkage implies a loadable driver.
+
+The 12th-gen Intel **BDSM 0xB0 belongs to the host bridge 00:00.0** and yields a stolen DRAM base, not a writable display plane. Linux 6.1 skips or reserves parts of stolen memory. An essential firmware, power, memory, or synchronization operation must not be replaced by a success-returning stub.
+
+New independently pinned **candidate version pairing**: [FreeBSD drm-kmod 6.1-lts `dba60e1...`](https://github.com/freebsd/drm-kmod/tree/dba60e1e9465d4d6b2d4e7916174f7b915c35fb4) and [Linux v6.1 `830b3c6...`](https://github.com/torvalds/linux/tree/830b3c68c1fb1e9176028d02ef86f3cf76aa2476), plus our previously pinned Apple IOGraphics 599. The FreeBSD base/LinuxKPI commit and true ABI/object closure are **not yet established**; a matched version label alone does not imply compatibility.
+
+**Next:** identify the actual minimal i915/KMS/DRM/LinuxKPI/XNU source/symbol/ownership/licensing dependencies and verify them against a clean, reproducible build. No new driver build or hardware run has occurred. **RUNTIME_NO_GO** remains.
+
 ## Safety and evidence
 
 The original NullMoth source carries a PolyForm Noncommercial license. No upstream source code or vendor firmware is copied into this repository. All upstream code is fetched from its public GitHub repository into an ephemeral runner only when source mode is explicitly requested.
