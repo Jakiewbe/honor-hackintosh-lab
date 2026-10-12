@@ -229,3 +229,10 @@ Cursor 规则格式：`.mdc` + YAML 头（`description`、`globs`、`alwaysApply
 | 产物静态审阅 | 配置审阅 | 核显无属性、SIP 0x0A43、`SecureBootModel=Disabled`；无 SSDT-PNLF；未启用 `ForceExitBootServices`；加载仅有二进制的 `NullMothLogo.efi`；VoodooI2C 2.9.1 不匹配 `0x51E8` |
 
 实测确认了此前的代码层推断：OCS 原生检查器判定本机“没有受支持的 GPU”；1401 输出同时包含“内屏在 macOS 中黑屏”和“内屏可通过固件显示工作”两条矛盾提示。**结论不变。**
+
+## 附录 C｜上游 v1.14.3 与发布包追溯（2026-10-13）
+
+- 1401 与驱动已发布 v1.14.3。逐文件核对：本机相关的决策模块（`engine`/`panel_guard`/`policy`/GSP 表）与驱动 `NVRMFBClaim` 均未改；PR #131/#133 仍未合并。**本报告所有本机结论适用于 v1.14.3。** 新增风险：启动时自动检查并提示自更新（R-21）。
+- 1.0.21 基线 ZIP 已从 GitHub 删除（R-22）。改用 HTTP Range 只读 v1.14.3 发布包的目录与清单：自带 iasl = ACPICA R2024_12_12（哈希一致），`NullMothLogo.efi` 与源码树一致。
+- 用 R2024_12_12 iasl 重跑离线 plan：结果与 20260408 完全相同，ACPI 合并反编译失败源于本机表间重名对象（与主线 `research/acpi-static-20261012` 一致），与 iasl 版本无关。
+- 本地 `main` 已合并 `origin/main`（PR #2 等 9 个提交），冲突仅三处追加段落，双方原文全部保留。

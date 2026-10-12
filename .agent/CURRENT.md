@@ -6,6 +6,7 @@ R1.4-C0-pre SOURCE-STATIC选表-e解析验收；RUNTIME_NO_GO。
 ## 当前任务
 R14C0PRE静态交付done；16张原目标按冲突组选择外部代表，16通过0失败。
 R14C0完整源/许可/配置/接口闭包仍blocked，不进入native/kext。
+A1401支线done（D-16，用户10-13授权）：1401审计+沙箱build，ocvalidate仅结构校验；不改GOAL，见logs/RESEARCH_LOG.md。
 
 ## 已完成工作
 PEG1._S0W、HS10.SADX与触摸板_PS0/_PS3重复已定位，不改原AML。
@@ -29,3 +30,4 @@ R1.4-C0 T0→T4；T2复用声明并补真实ACPI evaluator、ASLS映射/内容�
 ## Git 检查
 从ffbc8fd在原分支research/acpi-static-external-review继续，保留main历史。
 原调查目录/旧实验/workflows不改；本轮解析容器已删除。
+10-13 A1401：本地main合并origin/main为e379252，未推送；EFI仅在%TEMP%沙箱。

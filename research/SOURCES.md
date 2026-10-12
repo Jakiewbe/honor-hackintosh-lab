@@ -74,6 +74,16 @@ OpCore-Simplify `Scripts/{dsdt,config_prodigy,kext_maestro,smbios,compatibility_
 - 驱动仓库 `app/Resources/nullmoth-{setup,install,uninstall}.sh`、`app/Sources/*.swift`、`kexts/NVRMFB/fb/Info.plist`、`kexts/NVRM/Info.plist`、`kexts/NVRM/accel/nvrm-accel.cpp`、`docs/RELEASE-1.11.0～1.14.2.md`、`docs/TROUBLESHOOTING.md`、`gpu-port/README.md`。
 - 外部：[VoodooI2C v2.9.1 `e3ac3ed`](https://github.com/VoodooI2C/VoodooI2C/tree/e3ac3ed207170c39db88d6a67a76cc9fd3a1895a) 与 master `5c0c99c` 的 `Info.plist`（只读获取）。
 
+**上游新版本与发布包追溯（2026-10-13 晚些时候）**
+- 1401 与驱动均已发布 **v1.14.3**（1401 `a78537c`、驱动 `9a93e7c`，2026-10-12 16:3x UTC）。本审计仍固定 v1.14.2。逐文件核对 v1.14.2→v1.14.3：1401 只改 `apple.py`、`nullmoth.py`（驱动包版本 + 启动时检查新版）、`usbwriter.py`、`validate.py`、`MainForm.cs` 等；**`engine.py`、`panel_guard.py`、`policy.py`、`nvidia_gsp_ids.json` 未变**。驱动只改 `nvrm-accel.cpp`、`nullmoth-setup.sh`（Zen 4/5）与 App；**`kexts/NVRMFB/fb/Info.plist` 未变**。因此本机相关结论全部延续。
+- **1.0.21 基线 ZIP 已从 GitHub 删除**（`v1.0.21` release 0 个资产，下载 URL 404）；`windows_release.py prepare` 已无法用公开资源复现。
+- 用 HTTP Range 只读取 `1401-Windows-1.14.3.zip`（391482022 字节，GitHub digest `e287bf4b…`）的中央目录与两个小文件（共下载约 0.9 MB）：788 个条目；`BUILD-MANIFEST.json` 给出每个文件的 SHA256。可追溯性：
+  - `iasl.exe`（1016832 字节，`4d76f612…`）= ACPICA 官方 **R2024_12_12** `iasl.exe`（本项目下载比对一致）。
+  - `acpidump.exe` = 1401 固定值 `9f54227f…`（R2024_12_12）。
+  - `NullMothLogo.efi` = 源码树中同名文件（`050d7574…`）；与驱动仓库 `app/efi-logo` 源码的对应关系仍未验证。
+  - `macserial.exe`（`984c0ce0…`）、`nm_cpuinfo.exe`（`835ce86c…`）、内嵌 Python 运行时：来源未逐一追溯。
+  - `1401/NullMoth/` 内含 `nullmoth-nvidia-1.14.3.tar.gz`（约 372 MB）与 `1401-Mac-1.14.3.zip`。
+
 关键更正：`plan` 路径**不生成 config.plist、不运行 ocvalidate/macserial**；生成 EFI 只能走联网的 `build`。ocvalidate 的哈希来自运行时 Dortania `latest.json`（经 OCK 缓存的 `history.json`），**不是静态固定**；`release-inputs.json` 中 OpenCore 1.0.8 的哈希仅用于发布流程。
 
 ## 6. 社区证据来源（只读获取）

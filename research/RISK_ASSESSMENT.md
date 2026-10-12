@@ -26,6 +26,8 @@
 | R-17 | 驱动 Mac App 的“更新”走 GitHub `releases/latest`，版本不固定（有 SHA256SUMS 校验） | 驱动 `app/Sources/main.swift:528-549` | — | 自动获取未审阅的新版本 | 中 | 记录 |
 | R-19 | 生成的 EFI 在引导期加载 1401 仓库中**只有二进制**的 `NullMothLogo.efi`（默认开启） | `p1401/policy.py:359-372`，提交 `d94f056` | 是（引导期） | 未审源码的 UEFI 代码在固件环境执行 | 中 | 记录（Q-19）；如进入引导实验，可用 `-nmlogooff` 或从 Drivers 移除 |
 | R-20 | build 实际下载的 OpenCore 版本（1.0.9）与发布固定值（1.0.8）不同 | 2026-10-13 C3 实测 | 否 | 同一 1401 版本在不同日期产出不同 EFI，复现性差 | 中 | 记录；如需复现必须保存整份 EFI 与 kext 版本清单 |
+| R-21 | v1.14.3 起 1401 **启动即查询 GitHub 新版本并提示一键自更新**（在构建/写盘之前） | 1401 v1.14.3 `nullmoth.py:_cli_appcheck`、`MainForm.cs` | 是 | 运行时版本可能偏离本项目审计的固定版本 | 中 | 记录；若将来运行 GUI，应断网或拒绝更新，并重新审计新版本 |
+| R-22 | Windows 发布包的二进制基线（1.0.21 ZIP）已从 GitHub 删除 | 2026-10-13 API 与下载 404 | 否 | 发布包中继承自基线的文件无法再从公开源复现 | 中 | 记录；只能依赖发布包内 `BUILD-MANIFEST.json` 的哈希 |
 | R-18 | 实验性 NMXGPU（i915）若启用，会重置驱动内屏的 Intel 显示引擎 | 驱动 `gpu-port/README.md:61-62`、`nullmoth-setup.sh:726-858` | 是（macOS） | 内屏黑屏 | 高 | 记录 |
 
 ## 2. 主力机自身的风险条件（实测）

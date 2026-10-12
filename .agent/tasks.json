@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project_id": "f6a08808-ada4-48fe-b2ad-82c0c827154b",
-  "revision": 12,
+  "revision": 14,
   "tasks": [
     {
       "task_id": "R14C0",
@@ -69,6 +69,40 @@
       "blocker": "",
       "updated_at": "2026-10-12T16:33:03.848799+00:00",
       "completed_at": "2026-10-12T16:33:03.848799+00:00"
+    },
+    {
+      "task_id": "A1401",
+      "title": "NullMoth 1401 只读审计支线（D-16）",
+      "description": "用户2026-10-13授权的支线，不属于L1 GOAL范围，仅登记已完成工作；RUNTIME_NO_GO不变",
+      "milestone": "D-16",
+      "plan": "approved",
+      "dependencies": [],
+      "acceptance_criteria": [
+        "1401/驱动固定SHA源码审计与A-E兼容性分级，报告reports/INITIAL_AUDIT.md",
+        "只读环境检测（含用户批准的一次管理员只读查询），不改宿主系统",
+        "沙箱scan/plan/build与ocvalidate，EFI不写入任何磁盘；结论不冒充启动证据"
+      ],
+      "status": "done",
+      "evidence": [
+        {
+          "type": "file",
+          "criterion": 1,
+          "detail": "reports/INITIAL_AUDIT.md附录A-C、research/{SOURCES,COMPATIBILITY,RISK_ASSESSMENT,OPEN_QUESTIONS}.md"
+        },
+        {
+          "type": "test",
+          "criterion": 2,
+          "detail": "tests/test_1401_static_audit.py 13通过0失败；research/HARDWARE.md管理员只读结果"
+        },
+        {
+          "type": "command",
+          "criterion": 3,
+          "detail": "docs/1401-plan-run-20261013：scan/plan/build退出0，OpenCore1.0.9 ocvalidate 0问题；MSDM已删除；沙箱外无写入"
+        }
+      ],
+      "blocker": "",
+      "updated_at": "2026-10-12T16:59:08.230975+00:00",
+      "completed_at": "2026-10-12T16:59:08.230975+00:00"
     }
   ],
   "history": [
@@ -306,6 +340,53 @@
         ]
       },
       "reason": "按用户修订标准验收16原目标选表反汇编和SOURCE-STATIC交付，不代表运行成功"
+    },
+    {
+      "revision": 13,
+      "timestamp": "2026-10-12T16:59:08.230975+00:00",
+      "action": "add",
+      "payload": {
+        "task_id": "A1401",
+        "title": "NullMoth 1401 只读审计支线（D-16）",
+        "description": "用户2026-10-13授权的支线，不属于L1 GOAL范围，仅登记已完成工作；RUNTIME_NO_GO不变",
+        "milestone": "D-16",
+        "plan": "approved",
+        "dependencies": [],
+        "acceptance_criteria": [
+          "1401/驱动固定SHA源码审计与A-E兼容性分级，报告reports/INITIAL_AUDIT.md",
+          "只读环境检测（含用户批准的一次管理员只读查询），不改宿主系统",
+          "沙箱scan/plan/build与ocvalidate，EFI不写入任何磁盘；结论不冒充启动证据"
+        ]
+      },
+      "reason": "登记用户授权的1401只读审计支线"
+    },
+    {
+      "revision": 14,
+      "timestamp": "2026-10-12T16:59:08.230975+00:00",
+      "action": "update",
+      "payload": {
+        "task_id": "A1401",
+        "status": "done",
+        "blocker": "",
+        "evidence": [
+          {
+            "type": "file",
+            "criterion": 1,
+            "detail": "reports/INITIAL_AUDIT.md附录A-C、research/{SOURCES,COMPATIBILITY,RISK_ASSESSMENT,OPEN_QUESTIONS}.md"
+          },
+          {
+            "type": "test",
+            "criterion": 2,
+            "detail": "tests/test_1401_static_audit.py 13通过0失败；research/HARDWARE.md管理员只读结果"
+          },
+          {
+            "type": "command",
+            "criterion": 3,
+            "detail": "docs/1401-plan-run-20261013：scan/plan/build退出0，OpenCore1.0.9 ocvalidate 0问题；MSDM已删除；沙箱外无写入"
+          }
+        ]
+      },
+      "reason": "支线已按用户逐步批准完成；仅SOURCE/配置层证据，RUNTIME_NO_GO"
     }
   ]
 }

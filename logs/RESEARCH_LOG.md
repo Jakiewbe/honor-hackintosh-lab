@@ -6,7 +6,9 @@
 - **模式**：`READ_ONLY_RESEARCH`（未获得任何写盘、管理员、上传、运行 1401 的授权）
 - **已完成**：Phase 1–6 中全部非破坏性工作；会话 2 补审全部剩余模块（Q-12 DONE）、VoodooI2C 核实（Q-14 DONE）、下一步方案。报告 [`reports/INITIAL_AUDIT.md`](../reports/INITIAL_AUDIT.md)（含附录 A）
 - **上游固定点**：`upstream/1401` = v1.14.2 `46d9fee3`；`upstream/nvidia-macos-driver` = v1.14.2 `1083a98d`
-- **Git**：`main` 本地提交 `8869796`（会话 1）+ 会话 2 提交；**未 push**、未触发 Actions（用户选择“只本地提交”）。**2026-10-13 00:45 后 `origin/main` 新增 9 个提交**（含 PR #2 “i915 dependency baseline and ACPI static evidence”），本地与远端已分叉；`git merge-tree` 试算显示 `.gitignore`、`AGENTS.md`、`knowledge/02_CURRENT_STATE.md` 三处冲突。未合并、未 rebase，等待用户决定
+- **Git**：`main` 本地提交（会话 1 `8869796` 起）；**未 push**、未触发 Actions。用户说“继续”后已在本地 `main` 合并 `origin/main`（`e379252`，PR #2 等 9 个提交；三处冲突均为双方追加段落，全部保留），之后 `main` 只领先、不落后 `origin/main`
+- **项目状态协议**：合并带来 `.agent/`（GOAL/CURRENT/tasks/state）。其 GOAL 属于 L1 主线；本支线只作为已完成的登记任务写入，不修改 GOAL
+- **上游**：已发布 v1.14.3（1401 `a78537c`、驱动 `9a93e7c`），本机相关代码未变；审计仍固定 v1.14.2，克隆 HEAD 未移动
 - **用户已同意的方向**：四项都做，但每条具体命令仍需单独批准。当前状态：
   1. 只读源码工作：**已完成**；剩余仅定期跟踪 PR #131/#133、1401#26（Q-08/Q-10）与选定 iasl 版本（Q-16）。
   2. 用户目视：BIOS 显示模式/MUX（Q-01）、外接口归属（Q-02）——清单见 [`research/NEXT_STEPS_PLAN.md`](../research/NEXT_STEPS_PLAN.md) A。**等待用户**。
@@ -148,3 +150,16 @@ GitHub API 只读 GET `acpica/acpica/releases`：20260930 只有 Unix 资产，2
 ### 13. 明确没有做的事
 
 生成的 EFI 未复制到任何 U 盘或 ESP；未引导；未下载 1.0.21 基线 ZIP；未 push；未修改 BIOS/EFI/NVRAM/分区/BitLocker；管理员操作仅限第 7 节一次只读脚本。
+
+---
+
+## 2026-10-13　会话 2（续）：合并远端、上游 v1.14.3、发布包追溯
+
+用户：“继续”。
+
+1. **合并 `origin/main`**：先 `git diff 195e465 origin/main` 阅读远端对冲突文件的改动（新增 codex-rules 项目状态协议、R1.4-C0.1、ACPI 静态证据），再 `git merge --no-ff origin/main`；`.gitignore` 取并集，`AGENTS.md` 与 `knowledge/02` 双方追加段落原样保留（在 `knowledge/02` 本支线段末追加一句“后续已运行沙箱 1401”说明，不改原句）。合并提交 `e379252`。随后读取 `.agent/GOAL.md`、`CURRENT.md`、`tasks.json`、`state.json`。
+2. **上游跟踪**（GitHub API 只读）：PR #131/#133 仍 open；1401#26、driver#119 无新评论；1401 与驱动发布 v1.14.3。`git fetch --tags`（只更新克隆的标签，HEAD 不动），`git diff v1.14.2 v1.14.3` 逐文件核对：本机相关模块未变。
+3. **基线 ZIP**：`v1.0.21` release 0 资产，下载 404。
+4. **发布包追溯**：Python `zipfile` + HTTP Range 读取 v1.14.3 ZIP 中央目录与 `BUILD-MANIFEST.json`、`iasl.exe`、`NullMothLogo.efi`（共约 0.9 MB，未下载整包、未执行）。下载 ACPICA R2024_12_12 `iasl.exe` 比对：哈希一致。另两个候选标签下载被连接重置，未再试。期间一次 API 分页请求触发 GitHub 匿名限流（不影响结论）。
+5. **用 R2024_12_12 iasl 重跑离线 plan**：结果与 20260408 完全相同。沙箱副本中 iasl 现为 R2024_12_12。
+6. 更新：SOURCES（v1.14.3 与发布包追溯）、RISK（R-21、R-22）、OPEN_QUESTIONS（Q-08、Q-13、Q-17、Q-19）、SUMMARY 第 5 节、INITIAL_AUDIT 附录 C、本日志、`.agent` 登记。
