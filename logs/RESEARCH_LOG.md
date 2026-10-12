@@ -6,7 +6,7 @@
 - **模式**：`READ_ONLY_RESEARCH`（未获得任何写盘、管理员、上传、运行 1401 的授权）
 - **已完成**：Phase 1–6 中全部非破坏性工作；会话 2 补审全部剩余模块（Q-12 DONE）、VoodooI2C 核实（Q-14 DONE）、下一步方案。报告 [`reports/INITIAL_AUDIT.md`](../reports/INITIAL_AUDIT.md)（含附录 A）
 - **上游固定点**：`upstream/1401` = v1.14.2 `46d9fee3`；`upstream/nvidia-macos-driver` = v1.14.2 `1083a98d`
-- **Git**：`main` 本地提交（会话 1 `8869796` 起）；**未 push**、未触发 Actions。用户说“继续”后已在本地 `main` 合并 `origin/main`（`e379252`，PR #2 等 9 个提交；三处冲突均为双方追加段落，全部保留），之后 `main` 只领先、不落后 `origin/main`
+- **Git**：`main` 本地提交（会话 1 `8869796` 起）；用户说“继续”后已在本地 `main` 合并 `origin/main`（`e379252`，PR #2 等 9 个提交；三处冲突均为双方追加段落，全部保留）。2026-10-13 用户批准后普通 push 到 `origin/main`（快进，未强推、未触发 Actions）
 - **项目状态协议**：合并带来 `.agent/`（GOAL/CURRENT/tasks/state）。其 GOAL 属于 L1 主线；本支线只作为已完成的登记任务写入，不修改 GOAL
 - **上游**：已发布 v1.14.3（1401 `a78537c`、驱动 `9a93e7c`），本机相关代码未变；审计仍固定 v1.14.2，克隆 HEAD 未移动
 - **用户已同意的方向**：四项都做，但每条具体命令仍需单独批准。当前状态：
@@ -14,7 +14,7 @@
   2. 用户目视：BIOS 显示模式/MUX（Q-01）、外接口归属（Q-02）——清单见 [`research/NEXT_STEPS_PLAN.md`](../research/NEXT_STEPS_PLAN.md) A。**等待用户**。
   3. 管理员只读：**已完成**（用户批准，UAC 运行一次；Q-04/Q-05 DONE）。
   4. 沙箱候选 EFI：C1 扫描、C2 plan、C3 build + ocvalidate **全部完成**（[docs/1401-plan-run-20261013](../docs/1401-plan-run-20261013/SUMMARY.md)）；ocvalidate 0 问题。沙箱保留在 `%TEMP%\hk-1401-scan-20261013-004439`（含生成的 EFI，**不得复制到任何 U 盘或 ESP**，除非另行批准引导实验）。
-- **剩余待办**：用户目视 BIOS/外接口（Q-01/Q-02）；Q-18 `ForceExitBootServices`、Q-19 `NullMothLogo.efi` 溯源；定期跟踪 PR #131/#133。下一层（U 盘引导）超出 READ_ONLY_RESEARCH，需要用户明确开启新阶段。
+- **剩余待办**：用户目视 BIOS/外接口（Q-01/Q-02）——**用户已决定：保持只读，等目视完成再定下一阶段**；Q-18 静态比对已做，仍 OPEN（只能靠引导日志）；Q-19 PARTIAL，用户决定**不做**逐字节复现；定期跟踪 PR #131/#133。下一层（U 盘引导）超出 READ_ONLY_RESEARCH，需要用户明确开启新阶段；届时应先从 `UEFI.Drivers` 移除 `NullMothLogo.efi`（它每次启动写 NVRAM，R-19）。
 - **续做前先跑**：`python tests/test_1401_static_audit.py`（13 项；SHA 断言失败 = 上游已变，先更新 `research/SOURCES.md`）
 
 ---
