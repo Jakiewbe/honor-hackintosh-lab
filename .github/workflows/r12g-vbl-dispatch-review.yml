@@ -1,0 +1,86 @@
+name: HONOR R1.2-G VBL dispatch contract review
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: honor-r12g-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  contract-review:
+    runs-on: macos-15-intel
+    timeout-minutes: 12
+    steps:
+      - name: Checkout research models without credentials
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Verify pinned Apple IOGraphics-599 VBL consumer
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$(uname -m)" == x86_64 ]] || { echo "BLOCKED: require Intel macOS"; exit 2; }
+          mkdir -p "$RUNNER_TEMP/r12g-logs"
+          source_path="$RUNNER_TEMP/apple-IOFramebuffer-599.cpp"
+          curl --fail --location --silent --show-error --retry 2 \
+            --connect-timeout 12 --max-time 70 \
+            "https://raw.githubusercontent.com/apple-oss-distributions/IOGraphics/4d3fd008c80d1414c9da8f02ea67d534b47158c2/IOGraphicsFamily/IOFramebuffer.cpp" \
+            --output "$source_path"
+          [[ -s "$source_path" ]] || { echo "BLOCKED: missing Apple file"; exit 2; }
+          python3 scripts/r12g_verify_iofb_vbl_consumer.py \
+            --ioframebuffer "$source_path" \
+            | tee "$RUNNER_TEMP/r12g-logs/iofb-consumer-contract.json"
+          echo "R12G_PINNED_IOFB_CONSUMER_SOURCE_PASS (RUNTIME_NO_GO)"
+
+      - name: Model out-of-gate dispatch and regression stop hazards
+        shell: bash
+        run: |
+          set -euo pipefail
+          for model in test_r12d_lock_order_model.py test_r12e_quiesce_finalize_model.py test_r12g_vbl_ticket_model.py; do
+            python3 "tests/$model" > "$RUNNER_TEMP/r12g-logs/$model.txt" 2>&1 || {
+              cat "$RUNNER_TEMP/r12g-logs/$model.txt"
+              echo "BLOCKED: failed reference model $model"
+              exit 2
+            }
+            cat "$RUNNER_TEMP/r12g-logs/$model.txt"
+          done
+          echo "R12G_REFERENCE_MODELS_PASS (conditional model, not kernel proof)"
+
+      - name: Record unsolved self-join and shared-state gates
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/r12g-logs"
+          {
+            echo "R1.2-G conclusion: RUNTIME_NO_GO."
+            echo "Moving callbacks outside FB gate would avoid one ABBA route but does not prove IOFramebuffer::handleVBL safe during concurrent stop."
+            echo "Synchronous stop from the callback's own worker can introduce a self-join deadlock if stop waits for in-flight callback drain."
+            echo "Unregister must invalidate queued callback generations and coordinate in-flight references."
+            echo "VBL shared timestamps, counters, semaphore, timer event source and lifecycle remain unproven."
+            echo "No new R1.2-G kernel patch was built, loaded, installed, signed, or uploaded."
+          } > "$RUNNER_TEMP/r12g-logs/remaining-blockers.txt"
+
+      - name: Upload text diagnostics only
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: honor-r12g-vbl-dispatch-review
+          path: ${{ runner.temp }}/r12g-logs/
+          retention-days: 7
+          if-no-files-found: warn
+
+      - name: Preserve research-only conclusion
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          {
+            echo "## R1.2-G VBL callback dispatch architecture review"
+            echo "- Verified pinned Apple IOGraphics-599 source and model invariants."
+            echo "- No out-of-gate driver implementation or kernel runtime tests."
+            echo "- PASS indicates model conformance only. Deployment remains RUNTIME_NO_GO."
+          } >> "$GITHUB_STEP_SUMMARY"
