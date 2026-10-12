@@ -2,6 +2,18 @@
 
 **交接时点：2026-10-12。仓库主分支 main；依据 R1.4-B 审核后的方案。此文档是执行任务说明而不是“驱动已实现”。**
 
+**最新断点：** R1.4-C0 首轮台账和负向静态检查已交付，base 候选 `release/14.3.0 / 8c9ce319fef765890ce518cab85d3a470b669849` 已固定；完整 B0/B1 闭包仍 BLOCKED。下方保留原任务定义，当时“base 待查”不代表现在未取得 SHA。见 [结果](../docs/R1.4-C0_独立i915源码与接口依赖基线.md)。
+
+**最新增量 R1.4-C0.1：** [正式报告](../docs/R1.4-C0.1_PCI与电源井接口合同.md)：实际固定生成规则/输入，真实提供者与电源失败传播；21通过0失败。没有完成实际配置展开/预处理闭包。Power Well 超时缓存仍置真，XNU setPowerState 负值仍确认；四项合同未实现。
+
+**Next Task R1.4-C0.2：** 固定 macOS15.5 IOPCIFamily 原始来源/commit，查 PCI BAR、PM、IRQ 与释放生命周期，对照 PCI_MMIO_OWNER/PM_ACK_SEMANTICS；补 XNU 四源树核验。必要语义缺证据即停止，不进入 B2/B3 或 kext。
+
+## R1.4-C0-pre最新平台输入与下一步
+
+[本机ACPI静态结果](../research/acpi-static-20261012/README.md)已给_DSM位图、PEGP_DOD、DD节点条件和IGDM布局；同一iasl20250404按两组冲突选外部代表，逐表16通过0失败；PEG1._S0W/HS10.SADX及触摸板电源重复已有精确记录，与MUX/内屏/OpRegion结论无关；DSDT仍有外部方法警告，EDMX仍UnknownObj，不冒充完整External闭包或运行成功。OpRegion/VBT内容仍未取得，MUX三选一为无法判断。固定BSD的intel_acpi两个桥接函数为空，不能当XNU成功实现。
+
+**下一步仍为R1.4-C0 T0→T4**：T0复用选表-e成功与原冲突诊断/不重复硬件归属调查；T1复用原表、工具与上游锁；T2将ASLB/SANV、IGDM/ASLS、_DSM/_DOD/_ADR和ASLE背光声明输入VBT/OpRegion节点，保留真实内容/ACPI evaluator/PCI映射/消费者/失败清理缺口；T3失败停止；T4证据交付。IOPCIFamily和C0.1配置闭包仍须完成，但本次不进入native/kext或硬件读取。
+
 ## 先读清楚底线
 
 1. 执行 [`AGENTS.md`](../AGENTS.md)，再读 [当前状态](02_CURRENT_STATE.md)、[目标](00_PROJECT_CHARTER.md)、[版本锁](05_SOURCE_LOCKS.md)、[技术风险](06_ARCHITECTURE_AND_RISKS.md)、[决策](07_DECISIONS.md)。

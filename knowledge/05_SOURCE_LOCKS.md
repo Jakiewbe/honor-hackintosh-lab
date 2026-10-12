@@ -38,7 +38,11 @@
 | Linux i915/DRM 参考 | [Linux v6.1 commit `830b3c68c1fb1e9176028d02ef86f3cf76aa2476`](https://github.com/torvalds/linux/tree/830b3c68c1fb1e9176028d02ef86f3cf76aa2476) | 已定位 `i915_gem_stolen.c`、`gt/intel_ggtt.c`、`display/intel_dp.c`、`intel_dmc.c`、`intel_display_power.c`，但不是一套直接可编译的 XNU port |
 | FreeBSD DRM 6.1 | [`freebsd/drm-kmod` 6.1-lts commit `dba60e1e9465d4d6b2d4e7916174f7b915c35fb4`](https://github.com/freebsd/drm-kmod/tree/dba60e1e9465d4d6b2d4e7916174f7b915c35fb4) | [`include/drm/i915_pciids.h`](https://github.com/freebsd/drm-kmod/blob/dba60e1e9465d4d6b2d4e7916174f7b915c35fb4/include/drm/i915_pciids.h) `INTEL_ADLP_IDS` 含 `46A6`；与 Linux v6.1 ABI 兼容性待查 |
 | FreeBSD DRM **不同候选** | [master snapshot `c16de0f9fa84f70b9551f69fde837a7f3a73c0e9`](https://github.com/freebsd/drm-kmod/tree/c16de0f9fa84f70b9551f69fde837a7f3a73c0e9)，近 Linux 6.14 | 用于 R1.3-B 证明 ADL-P 表和 eDP/GGTT **存在**，**不是上面 6.1 源码的替代品** |
-| FreeBSD base / LinuxKPI | **PENDING** | 必须选择能对应 `drm-kmod 6.1-lts` 的具体 FreeBSD release/commit，并核对所依赖的 `sys/compat/linuxkpi` 等代码；不能凭目录名猜版本 |
+| FreeBSD base / LinuxKPI | **release/14.3.0 候选 `8c9ce319fef765890ce518cab85d3a470b669849`** | R1.4-C0 按固定测试矩阵选择并解析 tag；组合构建/ABI 未验收，PM 空实现不能当 XNU 电源成功 |
 | Apple XNU/IOGraphics | 采用本页 A 的 macOS 15.5 提交 | 已做过源哈希调查；新的 KMS 使用 ABI 仍要独立证明 |
 
 **后续锁定规则**：生成 `source_manifest.json`（repo、commit、relative_path、Git blob、license、patch）、`object_manifest.json`（源码→编译命令→对象 SHA→符号）、`compat_matrix.md` 和 delta 摘要；不因某个仓库有“6.1”标签就宣称全栈互通。
+
+R1.4-C0 实际基线：[source-lock.json](../research/independent-i915/source-lock.json)、[license-manifest.csv](../research/independent-i915/license-manifest.csv)、[compat-notes.md](../research/independent-i915/compat-notes.md)。仅 source slice 和对象候选，无已编译 object/compiler/link manifest。
+
+R1.4-C0.1独立[源锁](../research/independent-i915/c01/source-lock.json)：版本不变，55记录/相对C0新增26文件。27条BSD构建与接口输入有树/blob核验；XNU四源固定raw bytes/blob，tree_verified=false（API403）。没有暗换base或声称ABI兼容。

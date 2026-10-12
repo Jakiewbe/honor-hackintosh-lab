@@ -1,0 +1,277 @@
+{
+  "schema": 1,
+  "kit_version": "1.2.0",
+  "project_id": "f6a08808-ada4-48fe-b2ad-82c0c827154b",
+  "name": "HONOR Hackintosh Lab",
+  "revision": 25,
+  "task_revision": 12,
+  "current_task_revision": 12,
+  "goal_version": 2,
+  "goal_approved": true,
+  "updated_at": "2026-10-12T16:33:05.012669+00:00",
+  "snapshot_keep": 20,
+  "log_max_bytes": 65536,
+  "hashes": {
+    "GOAL.md": "75e971a616ff73ca8bb457c3089308f5f1a5fefdf8a95e36ebcd29828fa7af7e",
+    "CURRENT.md": "9d94ce607f7adf158eb07c08f5faa69486116e565e60872ffbf66624cb489c26",
+    "DECISIONS.md": "55d171bc2b36607c55841579e507a9eb13eedc833b2821c6d0a645d88dbb229e",
+    "LESSONS.md": "bc132e21024d06589d7643874c14814b2b026eccc1478f1bba288c3b421cfc4a",
+    "tasks.json": "8335628601ed270d867237212f60e6ab786c7fbcfa6dd61ce8ed5b185f40f7e3"
+  },
+  "history": [
+    {
+      "action": "document-version",
+      "file": "GOAL.md",
+      "previous_sha256": "5d0fd9b760def65c659c410ac4ec1692508c9d9772701b35d35d09fba4329f3e",
+      "content": "# 项目目标\n\n## 核心目标\n让 Intel 8086:46A6 内屏在 macOS 中稳定持续刷新基础桌面，允许无 Metal 加速。\n\n## 项目背景\nHONOR GLO-FX6P/i5-12500H，RTX2050 10DE:25A9；内屏连接 Intel 已确认。用户于 2026-10-12 授权正式接管。\n\n## 关键约束\n根目录 AGENTS.md；仅公开源码、文本与离线 Python。禁止宿主硬件变更、kext 部署、自行触发 Actions、上游 Issue/PR、二进制发布、强推、私建分支/工作树。\n\n## 非目标\nL2 Metal、L3 NVIDIA 混合显示；当前不写完整 AlderFB.kext。\n\n## 验收标准\n最终 L1 必须隔离实机持续画面、输入、停止与恢复证据；本轮仅 R1.4-C0 的版本、许可、真实调用图和失败即停止检查，维持 RUNTIME_NO_GO。\n\n## 目标版本\n以 state.json 为准；依据用户本轮明确目标。\n",
+      "user_approved": true,
+      "timestamp": "2026-10-12T12:20:33.065111+00:00"
+    },
+    {
+      "revision": 1,
+      "action": "state:update",
+      "reason": "用户已明确授权 L1 和 R1.4-C0 执行",
+      "timestamp": "2026-10-12T12:20:33.075143+00:00"
+    },
+    {
+      "revision": 2,
+      "action": "task:add",
+      "reason": "用户明确要求立即实施",
+      "timestamp": "2026-10-12T12:20:34.065060+00:00"
+    },
+    {
+      "revision": 3,
+      "action": "task:update",
+      "reason": "开始已批准任务",
+      "timestamp": "2026-10-12T12:20:35.060884+00:00"
+    },
+    {
+      "revision": 4,
+      "action": "task:update",
+      "reason": "真实依赖未闭合，停止在源码调查阶段",
+      "timestamp": "2026-10-12T12:52:00.149222+00:00"
+    },
+    {
+      "action": "document-version",
+      "file": "CURRENT.md",
+      "previous_sha256": "86ffdad1e1d5c4dbd5f6909a291160081bb569a5b090f4773404bca30a39e103",
+      "content": "# 当前断点\n\n## 当前阶段\nR1.4-C0 首轮 SOURCE-STATIC 交付；完整 B0/B1 闭包仍 BLOCKED，RUNTIME_NO_GO。\n\n## 当前任务\nR14C0（blocked）；先完成生成配置/传递依赖/XNU电源合同，不进入 native/kext。\n\n## 已完成工作\n真实仓库及历史报告接管；FreeBSD base14.3.0候选8c9ce319fef765890ce518cab85d3a470b669849。\n156条源锁、92定义/79关系、14类接口、许可/include/delta；25通过0失败。\n报告docs/R1.4-C0_独立i915源码与接口依赖基线.md；实际输出research/independent-i915/verification.json。\n\n## 当前阻塞\n完整闭包门禁退出2；12条本文件许可证明缺失、传递includes/生成配置未闭合、XNU接口未实现。\n无自主对象、加载、scanout、WindowServer、平台/恢复硬件证明。\n\n## 下一步动作\nR1.4-C0.1：PCI→probe→Power Well最小slice的配置、传递提供者/许可及电源状态/清理合同。\n\n## 状态修订\n以state.json/tasks.json为准，写入前status。\n\n## Git 检查\n初始6105f08842de41732a61036507d725fa1a5a9941干净；同main本地提交，不建分支/工作树/推送。\n旧报告、patch/tests/workflows未改；没有触发Actions/硬件部署。\n",
+      "user_approved": false,
+      "timestamp": "2026-10-12T12:52:01.433081+00:00"
+    },
+    {
+      "revision": 5,
+      "action": "state:update",
+      "reason": "R1.4-C0 首轮真实证据与阻塞交接",
+      "timestamp": "2026-10-12T12:52:01.444634+00:00"
+    },
+    {
+      "action": "document-version",
+      "file": "DECISIONS.md",
+      "previous_sha256": "0369401d2d587a947fa6125e145e2f0a843896134b554d413f191514b3b52ee6",
+      "content": "# 重要决策\n\n仅记录已经确认的决策。每条包含时间、背景、备选方案、选择、原因、适用范围及变更情况。\n\n## 2026-10-12 接管与源码阶段边界\n用户明确授权L1及R1.4-C0；采用四个旧固定commit和测试矩阵支持的FreeBSD14.3.0精确候选。拒绝以版本名、上游PM空成功或source slice冒充XNU实现。首轮证据见正式报告和verification；完整B0/B1未验收，任务blocked，不进入B2/B3。其他候选base与裁剪路线未采用；改变需新的真实源码/接口证据。\n",
+      "user_approved": false,
+      "timestamp": "2026-10-12T12:52:02.537470+00:00"
+    },
+    {
+      "revision": 6,
+      "action": "state:update",
+      "reason": "R1.4-C0 首轮真实证据与阻塞交接",
+      "timestamp": "2026-10-12T12:52:02.548847+00:00"
+    },
+    {
+      "action": "document-version",
+      "file": "LESSONS.md",
+      "previous_sha256": "26b8cf42c33cfb2fc57993b2f40b3b832ff8336a12b9c4577202cd2f171fd6ac",
+      "content": "# 项目教训\n\n仅记录验证过的失败模式、根因、解决办法、适用条件、证据及局限；猜测明确标为未验证。\n\n## 2026-10-12 宿主兼容层的成功返回不能跨系统继承\nFreeBSD14.3.0 pm_runtime.h的pm_runtime_get_sync仅return0，而i915通过它取wakeref；不能据此声明XNU设备已供电。验证：固定blob/函数体检查和25项负向测试中拒绝将其标为XNU implemented。限制：不证明BSD驱动有错误，必须研究host实际PM策略。见research/independent-i915/compat-notes.md与verification.json。\n",
+      "user_approved": false,
+      "timestamp": "2026-10-12T12:52:03.490775+00:00"
+    },
+    {
+      "revision": 7,
+      "action": "state:update",
+      "reason": "R1.4-C0 首轮真实证据与阻塞交接",
+      "timestamp": "2026-10-12T12:52:03.500586+00:00"
+    },
+    {
+      "revision": 8,
+      "action": "task:update",
+      "reason": "用户要求继续，实施已交接的R1.4-C0.1范围",
+      "timestamp": "2026-10-12T12:58:28.358174+00:00"
+    },
+    {
+      "revision": 9,
+      "action": "task:update",
+      "reason": "完成用户要求继续的C0.1源码调查，保留真实阻塞",
+      "timestamp": "2026-10-12T13:17:34.110569+00:00"
+    },
+    {
+      "action": "document-version",
+      "file": "CURRENT.md",
+      "previous_sha256": "7d1c71749afae5d0950563e8a5d60d6bda94b68fc41af1fc4d264252b7af6e10",
+      "content": "# 当前断点\n\n## 当前阶段\nR1.4-C0.1 SOURCE-STATIC交付；完整B0/B1闭包BLOCKED，RUNTIME_NO_GO。\n\n## 当前任务\nR14C0 blocked；不进入native/kext。C0.1实际生成规则已锁，配置和预处理未执行。\n\n## 已完成工作\n复用C0固定候选/旧证据，新增26个不同源文件；C0.1共55源锁、32定义/14直接调用。\n七组生成输入、89 include（76在slice无候选）、四项未实现合同。\n确认ADLP选xelpd；power timeout仍设缓存真；XNU PM负值是完成确认。\n21通过0失败，结构退出0/闭包退出2；报告docs/R1.4-C0.1_PCI与电源井接口合同.md。\n\n## 当前阻塞\n实际make/配置/预处理闭包、16条文件内许可、IOPCIFamily来源/ABI尚缺。\nXNU四个raw源独立树核验受API403阻塞；电源失败退出策略未实现。\n无自主对象/加载/scanout/WindowServer/恢复硬件证明。\n\n## 下一步动作\nR1.4-C0.2固定macOS15.5 IOPCIFamily原始来源/commit，PCI BAR/PM/IRQ/释放合同，补XNU树核验。\n\n## 状态修订\n以state.json/tasks.json为准，写入前status。\n\n## Git 检查\n起点027bd7c，同main本地提交；不建分支/工作树/推送。\nC0历史manifest和旧报告/patch/tests/workflows未改；没有Actions/硬件部署。\n",
+      "user_approved": false,
+      "timestamp": "2026-10-12T13:17:35.019784+00:00"
+    },
+    {
+      "revision": 10,
+      "action": "state:update",
+      "reason": "C0.1实际检查和C0.2交接",
+      "timestamp": "2026-10-12T13:17:35.030375+00:00"
+    },
+    {
+      "action": "document-version",
+      "file": "DECISIONS.md",
+      "previous_sha256": "cf8b6551b721f269888704e72db9e6a0881d455045f601511d755a451195dcbc",
+      "content": "# 重要决策\n\n仅记录已经确认的决策。每条包含时间、背景、备选方案、选择、原因、适用范围及变更情况。\n\n## 2026-10-12 接管与源码阶段边界\n用户明确授权L1及R1.4-C0；采用四个旧固定commit和测试矩阵支持的FreeBSD14.3.0精确候选。拒绝以版本名、上游PM空成功或source slice冒充XNU实现。首轮证据见正式报告和verification；完整B0/B1未验收，任务blocked，不进入B2/B3。其他候选base与裁剪路线未采用；改变需新的真实源码/接口证据。\n\n## 2026-10-12 C0.1源码证据限定电源适配接口\n按用户既定失败停止要求，真实power void超时链与XNU PM确认语义不可继承为硬件成功。采用独立实际状态/所有权/故障与有限时退出合同；未实现全部BLOCKED。版本候选不变，不进入kext。证据c01/build-and-providers.md及verification.json；不是平台运行结论。\n",
+      "user_approved": false,
+      "timestamp": "2026-10-12T13:17:35.930900+00:00"
+    },
+    {
+      "revision": 11,
+      "action": "state:update",
+      "reason": "保存有原始源码与实际检查支持的C0.1结论",
+      "timestamp": "2026-10-12T13:17:35.941568+00:00"
+    },
+    {
+      "action": "document-version",
+      "file": "LESSONS.md",
+      "previous_sha256": "0266e66cd1f68e8108d13c0032da5e28111f1f9129cde8d6a069e9482e68e5ae",
+      "content": "# 项目教训\n\n仅记录验证过的失败模式、根因、解决办法、适用条件、证据及局限；猜测明确标为未验证。\n\n## 2026-10-12 宿主兼容层的成功返回不能跨系统继承\nFreeBSD14.3.0 pm_runtime.h的pm_runtime_get_sync仅return0，而i915通过它取wakeref；不能据此声明XNU设备已供电。验证：固定blob/函数体检查和25项负向测试中拒绝将其标为XNU implemented。限制：不证明BSD驱动有错误，必须研究host实际PM策略。见research/independent-i915/compat-notes.md与verification.json。\n\n## 2026-10-12 PM返回类型名不等于故障传播\nIOServicePM.cpp notifyControllingDriverDone将result<0作为已完成确认。Linux errno不能直接代表XNU拒绝上电；必须分离PM协议与驱动故障状态。固定raw源/body和21负向检查有据，API独立树仍未闭合。\n\n## 2026-10-12 Git树查询范围要写入证据\nGitHub JSON的url不保留recursive查询串；用响应url推导缓存名会错读非递归树。新增门禁实际失败后定位并保存request_url和完整未截断树snapshot，21检查最终通过。只修证据索引，没有重写旧实验。\n",
+      "user_approved": false,
+      "timestamp": "2026-10-12T13:17:36.830616+00:00"
+    },
+    {
+      "revision": 12,
+      "action": "state:update",
+      "reason": "保存有原始源码与实际检查支持的C0.1结论",
+      "timestamp": "2026-10-12T13:17:36.840617+00:00"
+    },
+    {
+      "revision": 13,
+      "action": "task:add",
+      "reason": "用户明确授权R1.4-C0-pre本机原表静态解析",
+      "timestamp": "2026-10-12T15:15:38.390760+00:00"
+    },
+    {
+      "revision": 14,
+      "action": "task:update",
+      "reason": "用户明确授权R1.4-C0-pre本机原表静态解析",
+      "timestamp": "2026-10-12T15:15:39.345452+00:00"
+    },
+    {
+      "revision": 15,
+      "action": "task:update",
+      "reason": "交付ACPI静态部分结果，完整联合解析验收失败即停止",
+      "timestamp": "2026-10-12T15:35:49.088888+00:00"
+    },
+    {
+      "action": "document-version",
+      "file": "CURRENT.md",
+      "previous_sha256": "5bf08e77d027a945ba4aa8c8e1f6cbb7df00f8309f1b1893812c974e44f1fd28",
+      "content": "# 当前断点\n\n## 当前阶段\nR1.4-C0-pre SOURCE-STATIC部分结果；完整联合namespace仍BLOCKED，RUNTIME_NO_GO。\n\n## 当前任务\nR14C0PRE blocked；两个iasl版本联合16表均AE_ALREADY_EXISTS退出255。\nR14C0既有接口/许可/配置闭包保持blocked，不进入native/kext。\n\n## 已完成工作\n同步PR1硬件调查195e465；原证据不改。36表SHA/长度/checksum一致。\n固定iasl20250404-1容器解析；单表16通过0失败，离线6通过0失败。\n34项findings、17个DD_ADR方法体、98项IGDM字段、T2平台映射。\nMXDS空分支、MXMX调试、MXM读NVS；IGD另有经EDMX的位操作；MUX无法判断。\nBSD两个ACPI桥接函数为空，不能继承为XNU实现。OpRegion/VBT内容未取得。\n\n## 当前阻塞\n联合namespace冲突/外部方法与运行条件UNKNOWN；ASLB初始化者、DME值、GPIO含义未知。\n完整源码/许可/实际配置/ACPI-PCI映射与通知消费者/电源退出合同未闭合。\n无驱动对象/加载/实际scanout/WindowServer/恢复证据。\n\n## 下一步动作\n仍为R1.4-C0 T0→T4：T0复核namespace冲突；T2引入本机声明，补真实evaluator/ASLS映射/内容/消费者合同。\n不读主力硬件、不触发Actions、不写假成功stub。\n\n## 状态修订\n以state.json/tasks.json为准，写入前status。\n\n## Git 检查\n起点8d133330（保留本地C0历史并同步已合并硬件原表），同main本地提交，不改写历史。\n原调查目录/旧实验/workflows不改；临时解析容器已删除；没有推送或合并PR。\n",
+      "user_approved": false,
+      "timestamp": "2026-10-12T15:35:50.034427+00:00"
+    },
+    {
+      "revision": 16,
+      "action": "state:update",
+      "reason": "保存静态证据、联合失败边界和T2交接",
+      "timestamp": "2026-10-12T15:35:50.045252+00:00"
+    },
+    {
+      "revision": 17,
+      "action": "task:update",
+      "reason": "用户授权固定iasl外部逐表解析复核、去本地路径并推送PR",
+      "timestamp": "2026-10-12T15:54:27.935289+00:00"
+    },
+    {
+      "revision": 18,
+      "action": "task:update",
+      "reason": "记录-e全表16次失败及精确重复定义，不冒充成功",
+      "timestamp": "2026-10-12T16:02:29.839550+00:00"
+    },
+    {
+      "action": "document-version",
+      "file": "CURRENT.md",
+      "previous_sha256": "f9d3ef01acfe3ec40bc42f905426d28b13e5fbb5a0fe89c6fa9ae17a597b9e5c",
+      "content": "# 当前断点\n\n## 当前阶段\nR1.4-C0-pre SOURCE-STATIC修订；-e全外部表逐表解析失败，RUNTIME_NO_GO。\n\n## 当前任务\nR14C0PRE保留blocked；同一iasl20250404 -e其余15表-d目标，0通过16失败。\nR14C0既有接口/许可/配置闭包仍blocked，不进入native/kext。\n\n## 已完成工作\nSaSsdt与SSDT9在PEG1.PEGP重复_S0W已定位；PEG0/GFX0方法体结论不变。\n35项findings；12个跨表条目明确复核边界；方法参数仅文本对照。\n36表哈希/长度/checksum一致；原调查目录不改；日志环境路径规范化。\nOpRegion/VBT内容仍未取得，MUX无法判断；没有AML执行或硬件操作。\n\n## 当前阻塞\n全外部引用解析失败；NVS运行值、EDMX绑定、ASLB初始化者未知。\n完整源/许可/实际配置与XNU合同仍未闭合；没有驱动/实机/恢复证据。\n\n## 下一步动作\n仍为R1.4-C0 T0→T4；T2复用平台声明，补真实ACPI evaluator和ASLS映射/内容合同。\n用户已授权本研究分支推送和草稿PR；不合并、不触发Actions、不强推。\n\n## 状态修订\n以state.json/tasks.json为准，写入前status；验证细节见verification.json。\n\n## Git 检查\n从563e69e在用户授权分支research/acpi-static-external-review继续，保留main历史。\n原调查目录/旧实验/workflows不改；本次解析容器已删除。\n",
+      "user_approved": false,
+      "timestamp": "2026-10-12T16:02:30.265555+00:00"
+    },
+    {
+      "revision": 19,
+      "action": "state:update",
+      "reason": "用户授权本轮修订、推送与PR，保留解析及运行阻塞",
+      "timestamp": "2026-10-12T16:02:30.278553+00:00"
+    },
+    {
+      "action": "document-version",
+      "file": "CURRENT.md",
+      "previous_sha256": "a5d0db282d0008be4cef5b72cd57efab33b68c935fcd31b58605772b74c252b0",
+      "content": "# 当前断点\n\n## 当前阶段\nR1.4-C0-pre SOURCE-STATIC修订；-e全外部表逐表解析失败，RUNTIME_NO_GO。\n\n## 当前任务\nR14C0PRE保留blocked；同一iasl20250404 -e其余15表-d目标，0通过16失败。\nR14C0既有接口/许可/配置闭包仍blocked，不进入native/kext。\n\n## 已完成工作\nSaSsdt与SSDT9在PEG1.PEGP重复_S0W已定位；PEG0/GFX0方法体结论不变。\n35项findings；12个跨表条目明确复核边界；方法参数仅文本对照。\n36表哈希/长度/checksum一致；离线52通过0失败；原调查目录不改，环境路径扫描0命中。\nOpRegion/VBT内容仍未取得，MUX无法判断；没有AML执行或硬件操作。\n\n## 当前阻塞\n全外部引用解析失败；NVS运行值、EDMX绑定、ASLB初始化者未知。\n完整源/许可/实际配置与XNU合同仍未闭合；没有驱动/实机/恢复证据。\n\n## 下一步动作\n仍为R1.4-C0 T0→T4；T2复用平台声明，补真实ACPI evaluator和ASLS映射/内容合同。\n研究分支已推送；草稿PR #2已开到main：https://github.com/Jakiewbe/honor-hackintosh-lab/pull/2。未合并、未触发Actions、未强推。\n\n## 状态修订\n以state.json/tasks.json为准，写入前status；验证细节见verification.json。\n\n## Git 检查\n从563e69e在用户授权分支research/acpi-static-external-review继续，保留main历史。\n原调查目录/旧实验/workflows不改；本次解析容器已删除。\n",
+      "user_approved": false,
+      "timestamp": "2026-10-12T16:08:52.288159+00:00"
+    },
+    {
+      "revision": 20,
+      "action": "state:update",
+      "reason": "记录修订a3e7f7b已推送及草稿PR2创建，52离线检查通过，解析仍失败",
+      "timestamp": "2026-10-12T16:08:52.298582+00:00"
+    },
+    {
+      "revision": 21,
+      "action": "task:update",
+      "reason": "用户明确修订验收为冲突组外部代表逐表解析并更新同一PR，开始修订",
+      "timestamp": "2026-10-12T16:30:52.322512+00:00"
+    },
+    {
+      "revision": 22,
+      "action": "task:update",
+      "reason": "按用户修订标准验收16原目标选表反汇编和SOURCE-STATIC交付，不代表运行成功",
+      "timestamp": "2026-10-12T16:33:03.860001+00:00"
+    },
+    {
+      "action": "document-version",
+      "file": "CURRENT.md",
+      "previous_sha256": "fa8e3908c4e7ff458c5b110ebaa3f31a0b9ed06c2ff4d27e606d912fe3bb58df",
+      "content": "# 当前断点\n\n## 当前阶段\nR1.4-C0-pre SOURCE-STATIC选表-e解析验收；RUNTIME_NO_GO。\n\n## 当前任务\nR14C0PRE静态交付done；16张原目标按冲突组选择外部代表，16通过0失败。\nR14C0完整源/许可/配置/接口闭包仍blocked，不进入native/kext。\n\n## 已完成工作\nPEG1._S0W、HS10.SADX与触摸板_PS0/_PS3重复已定位，不改原AML。\n每个目标13外部表，两组各排除一个成员；第一次2/14、改组内代表后16/0。\n38项findings与跨表复核；NV/Igfx文本不变；TCSS新增PCIC(1)/PCID(4)。\n135离线测试通过0失败；36表输入匹配，环境路径/身份信息0命中。\nAGENTS状态约定支持无仓库工具时直接维护revision，原有安全条款不变。\n\n## 当前阻塞\nDSDT仍有外部方法警告、EDMX仍UnknownObj；NVS值、ASLB初始化者未知。\nOpRegion/VBT内容未取得；完整依赖/XNU合同/驱动/实机/恢复证据仍缺。\n\n## 下一步动作\nR1.4-C0 T0→T4；T2复用声明并补真实ACPI evaluator、ASLS映射/内容合同。\n用户授权更新同分支PR #2：https://github.com/Jakiewbe/honor-hackintosh-lab/pull/2。\n不合并、不触发Actions、不强推；等待用户审查。\n\n## 状态修订\n以state.json/tasks.json为准，写入前status；证据见verification.json。\n\n## Git 检查\n从ffbc8fd在原分支research/acpi-static-external-review继续，保留main历史。\n原调查目录/旧实验/workflows不改；本轮解析容器已删除。\n",
+      "user_approved": false,
+      "timestamp": "2026-10-12T16:33:04.235788+00:00"
+    },
+    {
+      "revision": 23,
+      "action": "state:update",
+      "reason": "移除旧解析失败状态，保留精确External和硬件缺口",
+      "timestamp": "2026-10-12T16:33:04.246391+00:00"
+    },
+    {
+      "action": "document-version",
+      "file": "LESSONS.md",
+      "previous_sha256": "b92fda952e78bc49e72c5f314136ff04c841c180308154389135b3adefe18538",
+      "content": "# 项目教训\n\n仅记录验证过的失败模式、根因、解决办法、适用条件、证据及局限；猜测明确标为未验证。\n\n## 2026-10-12 宿主兼容层的成功返回不能跨系统继承\nFreeBSD14.3.0 pm_runtime.h的pm_runtime_get_sync仅return0，而i915通过它取wakeref；不能据此声明XNU设备已供电。验证：固定blob/函数体检查和25项负向测试中拒绝将其标为XNU implemented。限制：不证明BSD驱动有错误，必须研究host实际PM策略。见research/independent-i915/compat-notes.md与verification.json。\n\n## 2026-10-12 PM返回类型名不等于故障传播\nIOServicePM.cpp notifyControllingDriverDone将result<0作为已完成确认。Linux errno不能直接代表XNU拒绝上电；必须分离PM协议与驱动故障状态。固定raw源/body和21负向检查有据，API独立树仍未闭合。\n\n## 2026-10-12 Git树查询范围要写入证据\nGitHub JSON的url不保留recursive查询串；用响应url推导缓存名会错读非递归树。新增门禁实际失败后定位并保存request_url和完整未截断树snapshot，21检查最终通过。只修证据索引，没有重写旧实验。\n\n## 2026-10-13 外部表本身可互相重复\n全15外部表-e失败不能推断目标原表有错。SaSsdt/SSDT9的PEG1._S0W与DSDT/xh_adlLP的HS10.SADX互相重复，另有DSDT/SSDT9触摸板电源重复；按用户授权两组选择代表后16目标全部退出0。证据见selected-external-runs.json与首次失败记录。限制：不是全表同时装载成功，不关闭DSDT警告/UnknownObj或任何运行值。\n",
+      "user_approved": false,
+      "timestamp": "2026-10-12T16:33:04.618222+00:00"
+    },
+    {
+      "revision": 24,
+      "action": "state:update",
+      "reason": "保存经16次成功验证的外部表互相冲突经验及证据边界",
+      "timestamp": "2026-10-12T16:33:04.629277+00:00"
+    },
+    {
+      "action": "document-version",
+      "file": "DECISIONS.md",
+      "previous_sha256": "a8ef5b38c12681ce49c9741cfb2849f845306ae80a18f87dbc1a6b7e806bcab8",
+      "content": "# 重要决策\n\n仅记录已经确认的决策。每条包含时间、背景、备选方案、选择、原因、适用范围及变更情况。\n\n## 2026-10-12 接管与源码阶段边界\n用户明确授权L1及R1.4-C0；采用四个旧固定commit和测试矩阵支持的FreeBSD14.3.0精确候选。拒绝以版本名、上游PM空成功或source slice冒充XNU实现。首轮证据见正式报告和verification；完整B0/B1未验收，任务blocked，不进入B2/B3。其他候选base与裁剪路线未采用；改变需新的真实源码/接口证据。\n\n## 2026-10-12 C0.1源码证据限定电源适配接口\n按用户既定失败停止要求，真实power void超时链与XNU PM确认语义不可继承为硬件成功。采用独立实际状态/所有权/故障与有限时退出合同；未实现全部BLOCKED。版本候选不变，不进入kext。证据c01/build-and-providers.md及verification.json；不是平台运行结论。\n\n## 2026-10-13 用户批准的逐表外部代表和便携状态约定\n保留全部原表作为目标，仅按两组显式冲突选择13张外部代表，避免DSDT/SSDT9触摸板重复；已实测16/0，不修改AML或忽略错误。用户允许补入工具或改便携规则，选择后者，避免把仓库外安装变成克隆仓库的前提；AGENTS原安全段不变。当前本地状态工具可用，用其保持既有修订/哈希一致，未来无工具时按仓库规则直接维护。仅SOURCE-STATIC，保持RUNTIME_NO_GO。\n",
+      "user_approved": false,
+      "timestamp": "2026-10-12T16:33:05.002181+00:00"
+    },
+    {
+      "revision": 25,
+      "action": "state:update",
+      "reason": "用户明确批准代表表选择和便携治理规则的两选一，记录采用方案",
+      "timestamp": "2026-10-12T16:33:05.012669+00:00"
+    }
+  ]
+}

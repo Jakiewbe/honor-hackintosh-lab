@@ -1,0 +1,345 @@
+[
+  {
+    "path": "drivers/gpu/drm/display/drm_dp_helper.c",
+    "linux_blob": "16565a0a5da6d98d1001cfd3acb9cd547e73b105",
+    "freebsd_blob": "00ada0565e220b8e01cf1762a0f06fce60e7bf10",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/drm_atomic.c",
+    "linux_blob": "f197f59f6d99bf26dd6712997aec0593a45148e6",
+    "freebsd_blob": "7115898258afb112ca1ada0da4cbb4ebd851d4ad",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/drm_atomic_helper.c",
+    "linux_blob": "98cc3137c0625d53500cd57c819678b4ab094844",
+    "freebsd_blob": "b097bff1cd18ebbbbbab213ab6a959a9ba9fa67f",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/drm_client.c",
+    "linux_blob": "2b230b4d694237524ca52f8e110e415c4d9575d1",
+    "freebsd_blob": "dcbeeb68ca641146435626128b9fd0044932c8e0",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/drm_client_modeset.c",
+    "linux_blob": "bbc535cc50dd1f5b320bdffb634afe227efb7ff9",
+    "freebsd_blob": "718acff90e2d377334189840370e7951a9d927e7",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/drm_drv.c",
+    "linux_blob": "203bf8d6c34c4a5f9c015c602142868c8bf7052f",
+    "freebsd_blob": "c995932af62f993e84511c3ba1e09784c63de6e9",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/drm_gem.c",
+    "linux_blob": "8b68a3c1e6ab6ea53a712b891c1ba8adbc8d1bbc",
+    "freebsd_blob": "61f9534599fed1f87c94b60e38202a7209f7a422",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/drm_prime.c",
+    "linux_blob": "eb09e86044c6d4df1cade4dfe0d63099d9f9ab94",
+    "freebsd_blob": "8806ecc1246ebbac427dcb444b0b44f96d690df1",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/display/intel_atomic_plane.c",
+    "linux_blob": "aaa6708256d586a92350bc28186a145f37b0990b",
+    "freebsd_blob": "82826454b5e83043d536c1e56120870ce7e54ea8",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/display/intel_bios.c",
+    "linux_blob": "28bdb936cd1fc12aaeec8d8723d8fc8a84dec1de",
+    "freebsd_blob": "4f3c40c6df55271f17661bec5b64189545d15e4d",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/display/intel_cdclk.c",
+    "linux_blob": "ed05070b7307239c754675750850ffb70951b2af",
+    "freebsd_blob": "5147718f38d6a0033afe033d219bf6d2feb10ebe",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/display/intel_ddi.c",
+    "linux_blob": "69ecf2a3d6c653a95f35db27bed8eb9fc2d6dc98",
+    "freebsd_blob": "76277eb3eb252c7bf34d9c1a8ef656141ab0b1bb",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/display/intel_display.c",
+    "linux_blob": "de77054195c6812652e5cad596af6cd9f6e63f45",
+    "freebsd_blob": "ee9ee36a9c23e8872fa0b782de4cebc8af43a050",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/display/intel_display_power.c",
+    "linux_blob": "1a63da28f33002ad04baaca89c5a5510f552092c",
+    "freebsd_blob": "1a63da28f33002ad04baaca89c5a5510f552092c",
+    "content_equal": true,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/display/intel_display_power_map.c",
+    "linux_blob": "dc04afc6cc8ff98ed3aed36b449f84cadfa2b86a",
+    "freebsd_blob": "dc04afc6cc8ff98ed3aed36b449f84cadfa2b86a",
+    "content_equal": true,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/display/intel_display_power_well.c",
+    "linux_blob": "1d18eee562534581782e19c8d79100c52f3eecb9",
+    "freebsd_blob": "7c0118df89e44e4648d1e67dc9d7d603fcde1e35",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/display/intel_dmc.c",
+    "linux_blob": "e52ecc0738a60613871e3e59067947027bd9271f",
+    "freebsd_blob": "33866b0bb3e869386ead79fe0f8150463c150ea0",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/display/intel_dp.c",
+    "linux_blob": "2b5bc95a8b0df467461b6c5ea05b2e0c610b620c",
+    "freebsd_blob": "3f65d890b8a90482d0d880aa4e0e6c15c6ff51b9",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/display/intel_dp_aux.c",
+    "linux_blob": "48c375c65a418c30cfc6c16752efbef29783fec8",
+    "freebsd_blob": "6ef4cd6108d135306d72bf9a75fb8b2c484863d2",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/display/intel_dp_link_training.c",
+    "linux_blob": "3d3efcf02011e7d4b89ff2b82ee0cab6256a5c40",
+    "freebsd_blob": "1d9e4534287bb3ba6604b8781fb1bb5a085cf95d",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/display/intel_dpll_mgr.c",
+    "linux_blob": "64dd603dc69aaa30a78d869f1269309e8f7e5796",
+    "freebsd_blob": "ec0ef3ff9e6ab8983f882809ce457db6dbd883b4",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/display/intel_fb.c",
+    "linux_blob": "eefa33c555acad61a958f2b6ee3e0fc327690510",
+    "freebsd_blob": "32e43ea5a42291a342d6036e12c976810fa3bffa",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/display/intel_fb_pin.c",
+    "linux_blob": "1dddd6abd77b5c4dae80141e3b231dbd9647a495",
+    "freebsd_blob": "1dddd6abd77b5c4dae80141e3b231dbd9647a495",
+    "content_equal": true,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/display/intel_fbdev.c",
+    "linux_blob": "112aa0447a0dc1ea4ca10b40471bf7d1171e7204",
+    "freebsd_blob": "0ab77cb7837469f83b0775a72d1dd36759ef43c9",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/display/intel_opregion.c",
+    "linux_blob": "caa07ef34f21ef75fb53a0ea6b8d4649161f8038",
+    "freebsd_blob": "70a8c003f180f0efc22bd2874119a7b2cad9a55f",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/display/intel_panel.c",
+    "linux_blob": "41cec9dc422312e15ea9ec1915aa9d0a306f2ae1",
+    "freebsd_blob": "b50db0dd20fc56b35e26e9d73efa9c5e63cca291",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/display/intel_plane_initial.c",
+    "linux_blob": "76be796df255d94f67d9b8dd3070d08d095ff701",
+    "freebsd_blob": "76be796df255d94f67d9b8dd3070d08d095ff701",
+    "content_equal": true,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/display/intel_pps.c",
+    "linux_blob": "21944f5bf3a83ccd79e276694d6b4cc9aaba9058",
+    "freebsd_blob": "21944f5bf3a83ccd79e276694d6b4cc9aaba9058",
+    "content_equal": true,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/display/skl_universal_plane.c",
+    "linux_blob": "7cb7130434089839223054d9d61ad5db2f426454",
+    "freebsd_blob": "bc523a3d1d42f978ef66d95f77e30187ea69be44",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/gem/i915_gem_object.c",
+    "linux_blob": "369006c5317f27e78816aeb3514d8cbc9fd151c1",
+    "freebsd_blob": "a40bc17acead8cd5d5045c18253494fc538730f0",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/gem/i915_gem_pages.c",
+    "linux_blob": "4df50b049ceaf1c30c4ac958811e713c5ae7f4df",
+    "freebsd_blob": "85536ebf2793bc2c4763d166bc31ab638ee7ffe6",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/gem/i915_gem_shmem.c",
+    "linux_blob": "2f7804492cd5cb6df70c284d9ec0e033af4f9829",
+    "freebsd_blob": "0930f3a2009692329435ad392c628eb91421cc72",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/gem/i915_gem_stolen.c",
+    "linux_blob": "acc561c0f0aa2a2a72f98502cfe3ab2f708e4b74",
+    "freebsd_blob": "7bb1f3a7ca6278b5d7bc4a9b8beb996b6735119d",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/gt/intel_ggtt.c",
+    "linux_blob": "2049a00417afad506b0c92b55bcc8c5a8185b521",
+    "freebsd_blob": "ab087306f031ab435ebd60a7bfee2421329e1fc2",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/gt/intel_gt.c",
+    "linux_blob": "7caa3412a24468c42f2686e1d33908a50fac9dec",
+    "freebsd_blob": "91a005c46b107c5e3fe780ba4c28a31d73219d55",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/gt/intel_gt_irq.c",
+    "linux_blob": "f26882fdc24c9638832acb4b6155b8c7da468efd",
+    "freebsd_blob": "f26882fdc24c9638832acb4b6155b8c7da468efd",
+    "content_equal": true,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/gt/uc/intel_guc.c",
+    "linux_blob": "bac06e3d6f2cc9cd40360763d46eccbc2d5ef39e",
+    "freebsd_blob": "bac06e3d6f2cc9cd40360763d46eccbc2d5ef39e",
+    "content_equal": true,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/gt/uc/intel_uc.c",
+    "linux_blob": "dbd048b77e193be9772d83701c717ed554461356",
+    "freebsd_blob": "1b1ea63c56d1e946f9dcc96917f4b855c3b25ee5",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/i915_driver.c",
+    "linux_blob": "f2a15d8155f4a1be085d86b7eb86d4ddfc018121",
+    "freebsd_blob": "b1b7256a1b93e785a998e4924464f4008617c526",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/i915_gem.c",
+    "linux_blob": "2bdddb61ebd7ae6215eaa26706a2df3258d42171",
+    "freebsd_blob": "38c26668b96022fa5972e0b9ddef72f33da1ca96",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/i915_irq.c",
+    "linux_blob": "86a42d9e8041258d14002441bf4f0a0172449244",
+    "freebsd_blob": "6ce0dcce2093dbc77c34aeba71c5ddb88fad0d8b",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/i915_module.c",
+    "linux_blob": "65acd7bf75d0834dc20131d07b7d13ed2d83d7ad",
+    "freebsd_blob": "7121a38521b480244f650b039dd27275b2f16a58",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/i915_pci.c",
+    "linux_blob": "cd4487a1d3be0f5b5b4d9f476f1a89cd04b7f1fb",
+    "freebsd_blob": "0e24e0a0fa340ccba1dcac225ee47abe93668a23",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/i915_vma.c",
+    "linux_blob": "f17c09ead7d778752c332c267c9da41b07d8dc22",
+    "freebsd_blob": "f015d431320b07e760f55aa865833108163110c6",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/intel_device_info.c",
+    "linux_blob": "20575eb77ea74db2a19c9ceeeccc51bea97d9f99",
+    "freebsd_blob": "20575eb77ea74db2a19c9ceeeccc51bea97d9f99",
+    "content_equal": true,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/intel_runtime_pm.c",
+    "linux_blob": "744cca507946be24b93a566adeaa16182a95c6da",
+    "freebsd_blob": "e10be2a43e5182dc0c659644ed68954aa204c621",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/intel_uncore.c",
+    "linux_blob": "5cd423c7b64649f4e19f26d9e78780e70ce85a12",
+    "freebsd_blob": "5cd423c7b64649f4e19f26d9e78780e70ce85a12",
+    "content_equal": true,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/i915_gem_gtt.c",
+    "linux_blob": "7bd1861ddbdfbd60acf7342d07988cc604df2101",
+    "freebsd_blob": "7bd1861ddbdfbd60acf7342d07988cc604df2101",
+    "content_equal": true,
+    "abi_equivalence": "UNPROVEN"
+  },
+  {
+    "path": "drivers/gpu/drm/i915/display/intel_backlight.c",
+    "linux_blob": "beba39a38c87cd6e8da09258bc491e0ca7f935cc",
+    "freebsd_blob": "7b185f25714bab20e232257f70c33936d9b56c7a",
+    "content_equal": false,
+    "abi_equivalence": "UNPROVEN"
+  }
+]

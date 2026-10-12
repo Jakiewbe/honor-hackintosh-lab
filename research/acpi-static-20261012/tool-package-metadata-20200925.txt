@@ -1,0 +1,19 @@
+Package: acpica-tools
+Source: acpica-unix
+Version: 20200925-8
+Installed-Size: 2469
+Maintainer: Debian QA Group <packages@qa.debian.org>
+Architecture: amd64
+Replaces: acpidump (<< 20100513-4), iasl (<< 20130214-0.1)
+Provides: acpidump, iasl
+Depends: libc6 (>= 2.34)
+Breaks: acpidump (<< 20100513-4), iasl (<< 20130214-0.1)
+Description: ACPICA tools for the development and debug of ACPI tables
+Homepage: https://www.acpica.org
+Description-md5: 47130f63ef3687d8243fb5d20706b56e
+Section: devel
+Priority: optional
+Filename: pool/main/a/acpica-unix/acpica-tools_20200925-8_amd64.deb
+Size: 825040
+MD5sum: 47725f62e7cdd5244d23a21fab50e105
+SHA256: 1f80236e9af631b2a0ed50ae9bb74613d6970b844714aba33eb3710241494fb2

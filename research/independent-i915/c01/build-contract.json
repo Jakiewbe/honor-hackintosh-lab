@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "profile": "amd64_candidate_NOT_EVALUATED",
+  "make_executed": false,
+  "preprocessed": false,
+  "objects_built": false,
+  "closure": "BLOCKED",
+  "append_order": [
+    "drm-kmod/linuxkpi/gplv2/include",
+    "drm-kmod/linuxkpi/bsd/include",
+    "freebsd-src/sys/compat/linuxkpi/common/include",
+    "freebsd-src/sys/compat/linuxkpi/dummy/include",
+    "drm-kmod/include",
+    "drm-kmod/include/drm",
+    "drm-kmod/include/uapi"
+  ],
+  "effective_include_order": "BLOCKED; base CFLAGS and .OBJDIR/machine/x86/generated headers not evaluated",
+  "config_inputs": [
+    "MACHINE",
+    "MACHINE_ARCH",
+    "MACHINE_CPUARCH",
+    "SYSDIR",
+    "KERNBUILDDIR",
+    "NO_FBDEV",
+    "COMPILER_TYPE",
+    "COMPILER_VERSION",
+    "KERN_OPTS"
+  ],
+  "generated": [
+    {
+      "output": "bus_if.h",
+      "input": "sys/kern/bus_if.m",
+      "generator": "sys/tools/makeobjops.awk",
+      "status": "NOT_GENERATED"
+    },
+    {
+      "output": "device_if.h",
+      "input": "sys/kern/device_if.m",
+      "generator": "sys/tools/makeobjops.awk",
+      "status": "NOT_GENERATED"
+    },
+    {
+      "output": "pci_if.h",
+      "input": "sys/dev/pci/pci_if.m",
+      "generator": "sys/tools/makeobjops.awk",
+      "status": "NOT_GENERATED"
+    },
+    {
+      "output": "pci_iov_if.h",
+      "input": "sys/dev/pci/pci_iov_if.m",
+      "generator": "sys/tools/makeobjops.awk",
+      "status": "NOT_GENERATED"
+    },
+    {
+      "output": "acpi_if.h",
+      "input": "sys/dev/acpica/acpi_if.m",
+      "generator": "sys/tools/makeobjops.awk",
+      "status": "NOT_GENERATED"
+    },
+    {
+      "output": "fb_if.h",
+      "input": "sys/dev/fb/fb_if.m",
+      "generator": "sys/tools/makeobjops.awk",
+      "status": "NOT_GENERATED"
+    },
+    {
+      "output": "vnode_if.h+vnode_if_newproto.h+vnode_if_typedef.h",
+      "input": "sys/kern/vnode_if.src",
+      "generator": "sys/tools/vnode_if.awk",
+      "status": "NOT_GENERATED"
+    }
+  ],
+  "opt_headers": "With KERNBUILDDIR link matching opt headers; otherwise default empty targets unless overridden; not instantiated",
+  "compiler_types": "ABSENT_IN_FIXED_BASE; conditional exists() include omitted; not fabricated"
+}

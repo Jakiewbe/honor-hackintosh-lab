@@ -1,0 +1,483 @@
+[
+  {
+    "from": "drm:i915_pci_probe",
+    "to": "drm:i915_driver_probe",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:i915_driver_probe",
+    "to": "drm:i915_driver_early_probe",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:i915_driver_probe",
+    "to": "drm:i915_driver_mmio_probe",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:i915_driver_probe",
+    "to": "drm:i915_driver_hw_probe",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:i915_driver_probe",
+    "to": "drm:i915_driver_register",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:i915_driver_probe",
+    "to": "drm:intel_irq_install",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:i915_driver_probe",
+    "to": "drm:intel_modeset_init_noirq",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:i915_driver_probe",
+    "to": "drm:intel_modeset_init_nogem",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:i915_driver_probe",
+    "to": "drm:intel_modeset_init",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:i915_driver_probe",
+    "to": "drm:i915_gem_init",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:i915_driver_probe",
+    "to": "drm:intel_gt_probe_all",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:i915_driver_early_probe",
+    "to": "drm:intel_irq_init",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:i915_driver_hw_probe",
+    "to": "drm:intel_opregion_setup",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:i915_driver_hw_probe",
+    "to": "drm:i915_ggtt_probe_hw",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:i915_driver_hw_probe",
+    "to": "drm:i915_ggtt_init_hw",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:__intel_runtime_pm_get",
+    "to": "base:pm_runtime_get_sync",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_runtime_pm_get",
+    "to": "drm:__intel_runtime_pm_get",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_irq_install",
+    "to": "base:request_irq",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_modeset_init_noirq",
+    "to": "drm:intel_bios_init",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_modeset_init_noirq",
+    "to": "drm:intel_mode_config_init",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_modeset_init_noirq",
+    "to": "drm:intel_power_domains_init_hw",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_modeset_init_noirq",
+    "to": "drm:intel_cdclk_init",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_modeset_init_noirq",
+    "to": "drm:intel_dmc_ucode_init",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_modeset_init_nogem",
+    "to": "drm:intel_setup_outputs",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_modeset_init_nogem",
+    "to": "drm:intel_shared_dpll_init",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_setup_outputs",
+    "to": "drm:intel_ddi_init",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_atomic_commit",
+    "to": "drm:intel_runtime_pm_get",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_atomic_commit",
+    "to": "drm:intel_atomic_commit_tail",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_atomic_commit_tail",
+    "to": "drm:intel_display_power_get",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_power_domains_init_hw",
+    "to": "drm:icl_display_core_init",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_power_domains_init_hw",
+    "to": "drm:intel_display_power_get",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:icl_display_core_init",
+    "to": "drm:intel_cdclk_init_hw",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:icl_display_core_init",
+    "to": "drm:intel_dmc_load_program",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_display_power_get",
+    "to": "drm:intel_runtime_pm_get",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_ddi_init",
+    "to": "drm:intel_ddi_init_dp_connector",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_ddi_init_dp_connector",
+    "to": "drm:intel_dp_init_connector",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_ddi_pre_enable",
+    "to": "drm:intel_ddi_pre_enable_dp",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_ddi_pre_enable_dp",
+    "to": "drm:tgl_ddi_pre_enable_dp",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:tgl_ddi_pre_enable_dp",
+    "to": "drm:intel_display_power_get",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:tgl_ddi_pre_enable_dp",
+    "to": "drm:intel_dp_start_link_train",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:tgl_ddi_pre_enable_dp",
+    "to": "drm:intel_dp_stop_link_train",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:tgl_ddi_pre_enable_dp",
+    "to": "drm:intel_pps_on",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_dp_init_connector",
+    "to": "drm:intel_edp_init_connector",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_dp_init_connector",
+    "to": "drm:intel_dp_aux_init",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_edp_init_connector",
+    "to": "drm:intel_bios_init_panel_early",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_edp_init_connector",
+    "to": "drm:intel_bios_init_panel_late",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_edp_init_connector",
+    "to": "drm:intel_edp_init_dpcd",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_edp_init_connector",
+    "to": "drm:intel_pps_init",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_edp_init_connector",
+    "to": "drm:intel_backlight_setup",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_dp_aux_transfer",
+    "to": "drm:intel_dp_aux_xfer",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_dp_aux_xfer",
+    "to": "drm:intel_display_power_get",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_dp_start_link_train",
+    "to": "drm:intel_dp_link_train_all_phys",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_dmc_ucode_init",
+    "to": "drm:intel_dmc_runtime_pm_get",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:dmc_load_work_fn",
+    "to": "drm:intel_dmc_load_program",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_dmc_runtime_pm_get",
+    "to": "drm:intel_display_power_get",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_plane_pin_fb",
+    "to": "drm:intel_pin_and_fence_fb_obj",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_plane_pin_fb",
+    "to": "drm:intel_pin_fb_obj_dpt",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_pin_and_fence_fb_obj",
+    "to": "drm:intel_runtime_pm_get",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_pin_and_fence_fb_obj",
+    "to": "drm:i915_gem_object_pin_to_display_plane",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_pin_and_fence_fb_obj",
+    "to": "drm:i915_gem_object_pin_pages",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_pin_fb_obj_dpt",
+    "to": "drm:i915_vma_pin_ww",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_prepare_plane_fb",
+    "to": "drm:intel_plane_pin_fb",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:icl_plane_update_arm",
+    "to": "drm:skl_plane_surf",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:skl_plane_surf",
+    "to": "drm:intel_plane_ggtt_offset",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:i915_ggtt_probe_hw",
+    "to": "drm:ggtt_probe_hw",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:ggtt_probe_hw",
+    "to": "drm:gen8_gmch_probe",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:i915_vma_pin_ww",
+    "to": "drm:intel_runtime_pm_get",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:i915_vma_pin_ww",
+    "to": "drm:i915_vma_bind",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:i915_gem_init",
+    "to": "drm:intel_gt_init",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:i915_gem_object_ggtt_pin_ww",
+    "to": "drm:i915_vma_pin_ww",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:i915_gem_object_pin_to_display_plane",
+    "to": "drm:i915_gem_object_ggtt_pin_ww",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:drm_client_modeset_commit_atomic",
+    "to": "drm:drm_atomic_commit",
+    "kind": "DIRECT_CALL",
+    "scope": "LEXICAL_UNPREPROCESSED; caller/callee component may cross base boundary"
+  },
+  {
+    "from": "drm:intel_ddi_init",
+    "to": "drm:intel_ddi_pre_enable",
+    "kind": "CALLBACK_ASSIGNMENT",
+    "assignment_pattern": "encoder->pre_enable\\s*=\\s*intel_ddi_pre_enable\\s*;",
+    "scope": "CALLBACK_BINDING_ONLY; invocation and reachability independently reviewed"
+  },
+  {
+    "from": "drm:skl_universal_plane_create",
+    "to": "drm:icl_plane_update_arm",
+    "kind": "CALLBACK_ASSIGNMENT",
+    "assignment_pattern": "plane->update_arm\\s*=\\s*icl_plane_update_arm\\s*;",
+    "scope": "CALLBACK_BINDING_ONLY; invocation and reachability independently reviewed"
+  },
+  {
+    "from": "drm:skl_universal_plane_create",
+    "to": "drm:icl_plane_update_noarm",
+    "kind": "CALLBACK_ASSIGNMENT",
+    "assignment_pattern": "plane->update_noarm\\s*=\\s*icl_plane_update_noarm\\s*;",
+    "scope": "CALLBACK_BINDING_ONLY; invocation and reachability independently reviewed"
+  },
+  {
+    "from": "drm:intel_dp_aux_init",
+    "to": "drm:intel_dp_aux_transfer",
+    "kind": "CALLBACK_ASSIGNMENT",
+    "assignment_pattern": "intel_dp->aux.transfer\\s*=\\s*intel_dp_aux_transfer\\s*;",
+    "scope": "CALLBACK_BINDING_ONLY; invocation and reachability independently reviewed"
+  },
+  {
+    "from": "drm:gen8_gmch_probe",
+    "to": "drm:gen8_ggtt_insert_entries",
+    "kind": "CALLBACK_ASSIGNMENT",
+    "assignment_pattern": "ggtt->vm.insert_entries\\s*=\\s*gen8_ggtt_insert_entries\\s*;",
+    "scope": "BINDING_ONLY; preprocessor/platform reachability unproven"
+  },
+  {
+    "from": "drm:gen8_gmch_probe",
+    "to": "drm:intel_ggtt_bind_vma",
+    "kind": "CALLBACK_ASSIGNMENT",
+    "assignment_pattern": "ggtt->vm.vma_ops.bind_vma\\s*=\\s*intel_ggtt_bind_vma\\s*;",
+    "scope": "BINDING_ONLY; preprocessor/platform reachability unproven"
+  },
+  {
+    "from": "drm:intel_dmc_ucode_init",
+    "to": "drm:dmc_load_work_fn",
+    "kind": "CALLBACK_ASSIGNMENT",
+    "assignment_pattern": "INIT_WORK\\([^;]*\\bdmc_load_work_fn\\s*\\)",
+    "scope": "BINDING_ONLY; preprocessor/platform reachability unproven"
+  }
+]

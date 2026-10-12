@@ -1,0 +1,74 @@
+{
+  "base_tag": {
+    "ref": "refs/tags/release/14.3.0",
+    "node_id": "MDM6UmVmMjMyODE4MTpyZWZzL3RhZ3MvcmVsZWFzZS8xNC4zLjA=",
+    "url": "https://api.github.com/repos/freebsd/freebsd-src/git/refs/tags/release/14.3.0",
+    "object": {
+      "sha": "ab74684c4debaec81dd8a1e57116cbd47f593e04",
+      "type": "tag",
+      "url": "https://api.github.com/repos/freebsd/freebsd-src/git/tags/ab74684c4debaec81dd8a1e57116cbd47f593e04"
+    }
+  },
+  "base_tag_object": {
+    "node_id": "TA_kwDOACOGddoAKGFiNzQ2ODRjNGRlYmFlYzgxZGQ4YTFlNTcxMTZjYmQ0N2Y1OTNlMDQ",
+    "sha": "ab74684c4debaec81dd8a1e57116cbd47f593e04",
+    "url": "https://api.github.com/repos/freebsd/freebsd-src/git/tags/ab74684c4debaec81dd8a1e57116cbd47f593e04",
+    "tagger": {
+      "name": "Colin Percival",
+      "email": "cperciva@FreeBSD.org",
+      "date": "2025-06-06T00:00:00Z"
+    },
+    "object": {
+      "sha": "8c9ce319fef765890ce518cab85d3a470b669849",
+      "type": "commit",
+      "url": "https://api.github.com/repos/freebsd/freebsd-src/git/commits/8c9ce319fef765890ce518cab85d3a470b669849"
+    },
+    "tag": "release/14.3.0",
+    "message": "Tag 14.3-RELEASE from 8c9ce319fef7\n-----BEGIN PGP SIGNATURE-----\n\niQIzBAABCgAdFiEEglY7hNBiDtwN+4ZBOJfy4i5lrT8FAmhCHLIACgkQOJfy4i5l\nrT84jQ/8Cu/Ohv0SySlrYsT3hWukCL2cZwjUOkFc2PAuJAEimlLUch4qExgjj+Ex\nKxVhP6wym3fEnBNy2YMOowCi0KxT9LNFDMgv7CQ5YxwcyA2fMEV6buVzos9n8TR6\no/S0neDz8l2n00O/FEQqJt9CHLDos0bcNc9eV4VJkyARWebYno53r/wy1bFYQcZa\nQAGv7iqqaB8Pkw3MzwEQ6vs3JOAmgxU5+3DcohifTlJf78MAqTTxywT0pJ2AXhMP\nVG+oCehKxWOzrXLxKC7zq6D6dZaqLlzDfFqaehRxDEzmDcwyZnDjkJDquJMO0M88\n6tzr0NlR5SqxbC7aD8YUGAFBLS+jzTzDpkrviE400zm+5E314L3Pl1UDWl8J1jqq\nitKhn874AlZy/zZwaHf0+86bxUZQa/xFGrNPFK7w/06QUUFkdJBW7s8ZT24b3AsX\nUN2TP0g+1jh+GbZQGYcwhFvIlnVgF+Yq90DF3aikKPfsVSXZKl588bdQZ+xPnjfg\n8y1H6CcA9PoGUSrArnnxBL+odsauks7ejqwEadYJN76k/GQVSnU2TJshqxjX+wC9\no/Y90CcuxXH2Gir6nERIcxbwKAxV0v4E1mT+4Xvtzw5s072zMKTdeNpl+aUL7L6I\nIDUyCwIL1lCNelnjdxRvnUfTBBPE2PMpa6r1+IxyuPNlHKMUksk=\n=j4n+\n-----END PGP SIGNATURE-----\n",
+    "verification": {
+      "verified": false,
+      "reason": "unknown_key",
+      "signature": "-----BEGIN PGP SIGNATURE-----\n\niQIzBAABCgAdFiEEglY7hNBiDtwN+4ZBOJfy4i5lrT8FAmhCHLIACgkQOJfy4i5l\nrT84jQ/8Cu/Ohv0SySlrYsT3hWukCL2cZwjUOkFc2PAuJAEimlLUch4qExgjj+Ex\nKxVhP6wym3fEnBNy2YMOowCi0KxT9LNFDMgv7CQ5YxwcyA2fMEV6buVzos9n8TR6\no/S0neDz8l2n00O/FEQqJt9CHLDos0bcNc9eV4VJkyARWebYno53r/wy1bFYQcZa\nQAGv7iqqaB8Pkw3MzwEQ6vs3JOAmgxU5+3DcohifTlJf78MAqTTxywT0pJ2AXhMP\nVG+oCehKxWOzrXLxKC7zq6D6dZaqLlzDfFqaehRxDEzmDcwyZnDjkJDquJMO0M88\n6tzr0NlR5SqxbC7aD8YUGAFBLS+jzTzDpkrviE400zm+5E314L3Pl1UDWl8J1jqq\nitKhn874AlZy/zZwaHf0+86bxUZQa/xFGrNPFK7w/06QUUFkdJBW7s8ZT24b3AsX\nUN2TP0g+1jh+GbZQGYcwhFvIlnVgF+Yq90DF3aikKPfsVSXZKl588bdQZ+xPnjfg\n8y1H6CcA9PoGUSrArnnxBL+odsauks7ejqwEadYJN76k/GQVSnU2TJshqxjX+wC9\no/Y90CcuxXH2Gir6nERIcxbwKAxV0v4E1mT+4Xvtzw5s072zMKTdeNpl+aUL7L6I\nIDUyCwIL1lCNelnjdxRvnUfTBBPE2PMpa6r1+IxyuPNlHKMUksk=\n=j4n+\n-----END PGP SIGNATURE-----\n",
+      "payload": "object 8c9ce319fef765890ce518cab85d3a470b669849\ntype commit\ntag release/14.3.0\ntagger Colin Percival <cperciva@FreeBSD.org> 1749168000 +0000\n\nTag 14.3-RELEASE from 8c9ce319fef7\n",
+      "verified_at": null
+    }
+  },
+  "commits": {
+    "freebsd/drm-kmod": {
+      "sha": "dba60e1e9465d4d6b2d4e7916174f7b915c35fb4",
+      "tree": {
+        "sha": "c796ae0d164317215cc65aab519868985d4ffe3b",
+        "url": "https://api.github.com/repos/freebsd/drm-kmod/git/trees/c796ae0d164317215cc65aab519868985d4ffe3b"
+      },
+      "message": "drm: Define definitions of `pci_map_rom()` and `pci_unmap_rom()` conditionally [FreeBSD]\n\nThey are moved to linuxkpi. Using a condition allows the branch to work\nwith both old and new versions of linuxkpi.\n\n(cherry picked from commit 4001cc99a60a043b43d7bc68ba1f95fe15de669a)",
+      "committer_date": "2026-09-07T21:26:31Z",
+      "parents": [
+        "767d3ffa454861dfff1064c2d9b61ebfba5e797f"
+      ]
+    },
+    "torvalds/linux": {
+      "sha": "830b3c68c1fb1e9176028d02ef86f3cf76aa2476",
+      "tree": {
+        "sha": "c7c1b7db9ced3eba518cfc1f711e9d89f73f8667",
+        "url": "https://api.github.com/repos/torvalds/linux/git/trees/c7c1b7db9ced3eba518cfc1f711e9d89f73f8667"
+      },
+      "message": "Linux 6.1",
+      "committer_date": "2022-12-11T22:15:18Z",
+      "parents": [
+        "d92b86f672a42d9d74a24a63a1e59793c4116830"
+      ]
+    },
+    "freebsd/freebsd-src": {
+      "sha": "8c9ce319fef765890ce518cab85d3a470b669849",
+      "tree": {
+        "sha": "a73ea956510a65ad1757a33b494d1fd71f760190",
+        "url": "https://api.github.com/repos/freebsd/freebsd-src/git/trees/a73ea956510a65ad1757a33b494d1fd71f760190"
+      },
+      "message": "Update in preparation for 14.3-RELEASE\n\n- Bump BRANCH to RELEASE\n- Add the anticipated RELEASE announcement date\n- Set a static __FreeBSD_version\n\nApproved by:\tre (implicit)\nSponsored by:\tAmazon",
+      "committer_date": "2025-06-06T00:00:00Z",
+      "parents": [
+        "ffacf114e1313ab610b7ac4ee4714d35d5a035be"
+      ]
+    }
+  }
+}

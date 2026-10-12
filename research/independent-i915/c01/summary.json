@@ -1,0 +1,11 @@
+{
+  "files": 55,
+  "xnu_raw_files": 4,
+  "provider_definitions": 32,
+  "include_references": 89,
+  "unresolved_include_references": 76,
+  "file_license_missing": 16,
+  "note": "counts describe reviewed source slice, not full transitive closure",
+  "reviewed_base_inputs": 27,
+  "additional_distinct_files_vs_c0": 26
+}
