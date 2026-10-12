@@ -1,0 +1,103 @@
+name: HONOR R0.6 macOS Intel preflight
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "preflight checks host SDK only; source also fetches pinned upstream and compiles ABI smoke test"
+        required: true
+        type: choice
+        default: preflight
+        options:
+          - preflight
+          - source
+
+permissions:
+  contents: read
+
+concurrency:
+  group: honor-r06-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  macos-preflight:
+    name: x86_64 environment and source qualification
+    runs-on: macos-15-intel
+    timeout-minutes: 12
+    env:
+      NULLMOTH_COMMIT: 0960b2ef5dbc4a573056d4c8e042a5bd2e15d651
+    steps:
+      - name: Check out this lightweight test repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Select an installed Xcode 16, without modifying the system
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! xcodebuild -version | grep -q '^Xcode 16\.'; then
+            found=''
+            for app in /Applications/Xcode_16*.app; do
+              if [[ -d "$app/Contents/Developer" ]]; then
+                found="$app/Contents/Developer"
+                break
+              fi
+            done
+            if [[ -z "$found" ]]; then
+              echo 'Xcode 16 unavailable on this runner image' >&2
+              exit 2
+            fi
+            echo "DEVELOPER_DIR=$found" >> "$GITHUB_ENV"
+          fi
+
+      - name: Verify Intel architecture, SDK, kernel headers and compiler
+        shell: bash
+        run: |
+          set -euo pipefail
+          sw_vers
+          uname -m
+          [[ "$(uname -m)" == 'x86_64' ]]
+          xcodebuild -version
+          xcodebuild -version | grep -q '^Xcode 16\.'
+          xcrun --find clang++
+          sdk="$(xcrun --sdk macosx --show-sdk-path)"
+          printf 'macOS SDK: %s\n' "$sdk"
+          [[ -d "$sdk/System/Library/Frameworks/Kernel.framework/Headers" ]] || {
+            echo 'BLOCKED: Kernel.framework/Headers not present in current macOS SDK' >&2
+            exit 2
+          }
+          printf 'int main() { return 0; }\n' > "$RUNNER_TEMP/toolchain_smoke.cpp"
+          xcrun clang++ -arch x86_64 -std=c++17 "$RUNNER_TEMP/toolchain_smoke.cpp" -o "$RUNNER_TEMP/toolchain_smoke"
+          file "$RUNNER_TEMP/toolchain_smoke"
+          "$RUNNER_TEMP/toolchain_smoke"
+          echo 'PREBUILD_TOOLCHAIN_SMOKE_OK (not a kext build)'
+
+      - name: Fetch exact upstream source commit (source mode only)
+        if: ${{ inputs.mode == 'source' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_dir="$RUNNER_TEMP/nullmoth-pinned"
+          git init -q "$source_dir"
+          git -C "$source_dir" remote add origin https://github.com/nullmoth/nvidia-macos-driver.git
+          git -C "$source_dir" fetch --no-tags --depth 1 origin "$NULLMOTH_COMMIT"
+          git -C "$source_dir" checkout --detach --quiet FETCH_HEAD
+          [[ "$(git -C "$source_dir" rev-parse HEAD)" == "$NULLMOTH_COMMIT" ]]
+          python3 scripts/verify_pinned_source.py --repo "$source_dir"
+          xcrun clang++ -arch x86_64 -std=c++17 -Wall -Wextra -Werror \
+            -I "$source_dir/kexts/NVRM" tests/abi_smoke.cpp -o "$RUNNER_TEMP/abi_smoke"
+          "$RUNNER_TEMP/abi_smoke"
+          echo 'PINNED_SOURCE_ABI_OK (not an NVAccel kext build)'
+
+      - name: Summarize scope and stop
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          {
+            echo '## HONOR R0.6 preflight scope'
+            echo '- Fixed upstream commit: `0960b2ef5dbc4a573056d4c8e042a5bd2e15d651`.'
+            echo '- Does not execute an upstream installer or load, sign, or distribute a kext.'
+            echo '- Does not touch any physical HONOR device, disk, EFI or BIOS.'
+            echo '- A successful run is **not** proof that RTX 2050 Metal or Intel Iris Xe displays work.'
+          } >> "$GITHUB_STEP_SUMMARY"
