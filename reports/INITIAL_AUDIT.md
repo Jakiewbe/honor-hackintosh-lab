@@ -179,7 +179,7 @@ Cursor 规则格式：`.mdc` + YAML 头（`description`、`globs`、`alwaysApply
 | P2 十个问题 | DONE | 第 4 节；第 3 问的 SSDT 部分未逐行审 |
 | P3 只读环境检测 | DONE（会话 2） | 会话 1 为 PARTIAL；会话 2 经用户批准以 UAC 运行 `scripts/readonly_admin_status.ps1`：BitLocker 未加密、WinRE 启用、Secure Boot 开启（交叉验证）、ESP FAT32 剩 94 MiB。CFG Lock 仍无法在 Windows 只读获取 |
 | P4 静态检查与测试审查 | PARTIAL | 8 个上游模块 + 本项目测试已跑；其余未审查不运行 |
-| P4 隔离候选 EFI + ocvalidate | PARTIAL（会话 2） | 会话 1 为 BLOCKED。会话 2：C1 扫描与 C2 离线 plan 已在沙箱完成（附录 B）；生成 config 与 ocvalidate 需 C3 联网 build，待批准 |
+| P4 隔离候选 EFI + ocvalidate | DONE（会话 2） | 会话 1 为 BLOCKED。会话 2：沙箱 C1 扫描、C2 plan、C3 build 全部完成，OpenCore 1.0.9 ocvalidate 0 问题（附录 B） |
 | P4 缺失硬件报告的只读收集方案 | DONE | OPEN_QUESTIONS + 第 8、10 节 |
 | P5 模块兼容性分析与 A–E 分级 | DONE | 无任何一项经本机实测 |
 | P5 同代真实案例检索 | DONE | 1401/驱动 Issue 12 条 + PR 2 条；同机型检索无结果 |
@@ -224,6 +224,8 @@ Cursor 规则格式：`.mdc` + YAML 头（`description`、`globs`、`alwaysApply
 | `python -m p1401.scan` | 真实本机扫描（只读） | 通过；导出的 MSDM 已立即删除并复查 0 残留 |
 | `python -m p1401 plan --json` | 1401 决策层（无 config） | `ok=true`：macOS 15、MacBookPro16,2、保留核显、禁用指纹、要求关闭 Secure Boot、24 个 kext |
 | iasl 20260408 合并反编译 | 工具 | **失败**（ACPI 重名对象），1401 跳过预补丁反编译继续（Q-17） |
-| ocvalidate / config.plist | 配置验证 | 未运行（需 C3） |
+| `build`（C3，只走 GitHub，镜像回退被拦截且未触发） | 生成 EFI | 通过；OpenCore **1.0.9**（非发布固定的 1.0.8）、23 个 kext、9 个通用 SSDT |
+| ocvalidate | 配置验证 | **No issues found**（仅结构校验，不代表能启动） |
+| 产物静态审阅 | 配置审阅 | 核显无属性、SIP 0x0A43、`SecureBootModel=Disabled`；无 SSDT-PNLF；未启用 `ForceExitBootServices`；加载仅有二进制的 `NullMothLogo.efi`；VoodooI2C 2.9.1 不匹配 `0x51E8` |
 
 实测确认了此前的代码层推断：OCS 原生检查器判定本机“没有受支持的 GPU”；1401 输出同时包含“内屏在 macOS 中黑屏”和“内屏可通过固件显示工作”两条矛盾提示。**结论不变。**

@@ -11,7 +11,8 @@
   1. 只读源码工作：**已完成**；剩余仅定期跟踪 PR #131/#133、1401#26（Q-08/Q-10）与选定 iasl 版本（Q-16）。
   2. 用户目视：BIOS 显示模式/MUX（Q-01）、外接口归属（Q-02）——清单见 [`research/NEXT_STEPS_PLAN.md`](../research/NEXT_STEPS_PLAN.md) A。**等待用户**。
   3. 管理员只读：**已完成**（用户批准，UAC 运行一次；Q-04/Q-05 DONE）。
-  4. 沙箱候选 EFI：C1 扫描、C2 离线 plan **已完成**（[docs/1401-plan-run-20261013](../docs/1401-plan-run-20261013/SUMMARY.md)）；C3 联网 build + ocvalidate **等待批准**。沙箱仍保留在 `%TEMP%\hk-1401-scan-20261013-004439`（C3 可复用其 `Report.json`/ACPI）。
+  4. 沙箱候选 EFI：C1 扫描、C2 plan、C3 build + ocvalidate **全部完成**（[docs/1401-plan-run-20261013](../docs/1401-plan-run-20261013/SUMMARY.md)）；ocvalidate 0 问题。沙箱保留在 `%TEMP%\hk-1401-scan-20261013-004439`（含生成的 EFI，**不得复制到任何 U 盘或 ESP**，除非另行批准引导实验）。
+- **剩余待办**：用户目视 BIOS/外接口（Q-01/Q-02）；Q-18 `ForceExitBootServices`、Q-19 `NullMothLogo.efi` 溯源；定期跟踪 PR #131/#133。下一层（U 盘引导）超出 READ_ONLY_RESEARCH，需要用户明确开启新阶段。
 - **续做前先跑**：`python tests/test_1401_static_audit.py`（13 项；SHA 断言失败 = 上游已变，先更新 `research/SOURCES.md`）
 
 ---
@@ -132,6 +133,18 @@ GitHub API 只读 GET `acpica/acpica/releases`：20260930 只有 Unix 资产，2
 6. 入库：`docs/1401-plan-run-20261013/{SUMMARY.md,plan_excerpt.json}`（脱敏摘录，检索无 serial/uuid/用户路径）。原始报告、ACPI、完整输出不入库。
 7. 核对 build 网络目标：github.com、raw.githubusercontent.com，失败回退 nullmothsystems.com 镜像（GET，按哈希）；无上传代码。
 
-### 11. 明确没有做的事
+### 11. 本地提交
 
-未运行 `build`、ocvalidate、macserial；未生成 config.plist/EFI；未下载 1.0.21 基线 ZIP；未 push；未修改 BIOS/EFI/NVRAM/分区/BitLocker；管理员操作仅限第 7 节一次只读脚本。
+`e8443d3 docs(1401): sandbox scan + offline plan on GLO-FX6P (C1/C2)`。
+
+### 12. 沙箱 C3 build + ocvalidate（用户选择“只走 GitHub，镜像回退即中止”）
+
+- 核对镜像机制：源码副本含 `p1401/mirror.json`，GitHub 失败时会回退 `nullmothsystems.com/mirror/<sha256>`。写包装脚本 `$sb\run_build.py`，替换 `mirror.fetch/fetch_once/prefer/preferred` 为拒绝，再调用 `p1401.__main__.main(["build", …, "--json"])`。
+- 运行约 100 秒，退出码 0，stderr 空（无镜像回退）。`ok=true`；ocvalidate（OpenCore 1.0.9）“No issues found”。
+- 用 venv Python 的 `plistlib` 静态审阅 config 与 kext（序列号字段脱敏），写入 `docs/1401-plan-run-20261013/build_config_summary.txt`；检索无用户路径或序列号。
+- 新发现：OpenCore 版本 1.0.9 ≠ 发布固定 1.0.8（R-20）；`NullMothLogo.efi` 仅二进制（R-19、Q-19）；未启用 `ForceExitBootServices`（Q-18）；无 SSDT-PNLF；实际打包 VoodooI2C 2.9.1 掩码匹配不含 `0x51E8`。
+- 沙箱外核对同前（无写入）。
+
+### 13. 明确没有做的事
+
+生成的 EFI 未复制到任何 U 盘或 ESP；未引导；未下载 1.0.21 基线 ZIP；未 push；未修改 BIOS/EFI/NVRAM/分区/BitLocker；管理员操作仅限第 7 节一次只读脚本。

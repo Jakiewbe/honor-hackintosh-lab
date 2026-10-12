@@ -1,0 +1,62 @@
+# 1401 v1.14.2 build 产物摘要（沙箱，2026-10-13）
+# MLB/SystemSerialNumber/SystemUUID/ROM 已替换为 <redacted>；原始 EFI 不入库
+# ocvalidate (OpenCore 1.0.9): No issues found
+
+## config.plist
+ACPI.Add: [('SSDT-SBUS.aml', True), ('SSDT-EC.aml', True), ('SSDT-GPI0.aml', True), ('SSDT-MCHC.aml', True), ('SSDT-PLUG-ALT.aml', True), ('SSDT-RTCAWAC.aml', True), ('SSDT-USB-Reset.aml', True), ('SSDT-USBX.aml', True), ('SSDT-XOSI.aml', True)]
+ACPI.Patch: [('GPI0 _STA to XSTA Rename', True), ('_OSI to XOSI rename - requires SSDT-XOSI.aml', True)]
+ACPI.Delete: []
+Booter.Quirks: {'AllowRelocationBlock': True, 'AvoidRuntimeDefrag': True, 'DevirtualiseMmio': True, 'EnableSafeModeSlide': True, 'FixupAppleEfiImages': True, 'ProtectUefiServices': True, 'ProvideCustomSlide': True, 'RebuildAppleMemoryMap': True, 'SetupVirtualMap': True, 'SyncRuntimePermissions': True}
+Booter.Patch: ['macOS to hacOS']
+DP PciRoot(0x0)/Pci(0x1f,0x3) {'layout-id': 97}
+DP PciRoot(0x0)/Pci(0x6,0x0)/Pci(0x0,0x0) {'acpi-wake-type': 1}
+DP.Delete: {}
+Kernel.Emulate: {'Cpuid1Data': '55060a00000000000000000000000000', 'Cpuid1Mask': 'ffffffff000000000000000000000000', 'DummyPowerManagement': False, 'MaxKernel': '', 'MinKernel': ''}
+Kernel.Quirks: {'AppleXcpmCfgLock': True, 'CustomSMBIOSGuid': True, 'DisableIoMapper': True, 'DisableLinkeditJettison': True, 'PanicNoKextDump': True, 'PowerTimeoutKernelPanic': True, 'ProvideCurrentCpuInfo': True, 'SetApfsTrimTimeout': -1}
+Kernel.Patch: [('force HT enabled for Sequoia or later', True, '24.0.0', ''), ('force HT enabled for Mojave to Sonoma', True, '18.0.0', '23.99.99'), ('force HT enabled for High Sierra or earlier (untested)', True, '15.0.0', '17.99.99')]
+Kernel.Add: [('Lilu.kext', True), ('AMFIPass.kext', True), ('AppleALC.kext', True), ('BlueToolFixup.kext', True), ('BrightnessKeys.kext', True), ('CpuTopologyRebuild.kext', True), ('IntelBTPatcher.kext', True), ('IntelBluetoothFirmware.kext', True), ('NVMeFix.kext', True), ('RestrictEvents.kext', True), ('VirtualSMC.kext', True), ('SMCBatteryManager.kext', True), ('SMCLightSensor.kext', True), ('SMCProcessor.kext', True), ('SMCSuperIO.kext', True), ('USBToolBox.kext', True), ('UTBDefault.kext', True), ('VoodooI2C.kext/Contents/PlugIns/VoodooI2CServices.kext', True), ('VoodooI2C.kext/Contents/PlugIns/VoodooGPIO.kext', True), ('VoodooI2C.kext', True), ('VoodooI2C.kext/Contents/PlugIns/VoodooInput.kext', True), ('VoodooI2CHID.kext', True), ('VoodooPS2Controller.kext', True), ('VoodooPS2Controller.kext/Contents/PlugIns/VoodooInput.kext', False), ('VoodooPS2Controller.kext/Contents/PlugIns/VoodooPS2Keyboard.kext', True), ('VoodooPS2Controller.kext/Contents/PlugIns/VoodooPS2Mouse.kext', True), ('VoodooPS2Controller.kext/Contents/PlugIns/VoodooPS2Trackpad.kext', True), ('WhateverGreen.kext', True), ('XHCI-unsupported.kext', True), ('itlwm.kext', True)]
+Kernel.Block: []
+Misc.Security: {'AllowSetDefault': True, 'ApECID': 0, 'AuthRestart': False, 'BlacklistAppleUpdate': True, 'DmgLoading': 'Signed', 'EnablePassword': False, 'ExposeSensitiveData': 7, 'HaltLevel': 2147483648, 'PasswordHash': b'', 'PasswordSalt': b'', 'ScanPolicy': 0, 'SecureBootModel': 'Disabled', 'Vault': 'Optional'}
+Misc.Boot: {'PickerMode': 'Builtin', 'HideAuxiliary': False, 'Timeout': 5, 'PollAppleHotKeys': False, 'ShowPicker': True}
+Misc.Debug: {'Target': 67, 'AppleDebug': True, 'ApplePanic': True, 'DisableWatchDog': True}
+NVRAM 4D1EDE05-38C7-4A6A-9CC6-4BCCA8B38C14 {'DefaultBackgroundColor': '00000000'}
+NVRAM 4D1FDA02-38C7-4A6A-9CC6-4BCCA8B30102 {'revcpu': 1, 'revcpuname': '12th Gen Intel(R) Core(TM) i5-12500H', 'revpatch': 'sbvmm,cpuname', 'rtc-blacklist': ''}
+NVRAM 7C436110-AB2A-4BBB-A880-FE41995C9F82 {'ForceDisplayRotationInEFI': 0, 'SystemAudioVolume': '46', 'bluetoothExternalDongleFailed': '00', 'bluetoothInternalControllerInfo': '0000000000000000000000000000', 'boot-args': '-v debug=0x100 keepsyms=1 -vi2c-force-polling ctrsmt=full nvfb=1 nvaccel=1 nvfbheads=4 -nvkmsnosmooth amfi_get_out_of_my_way=0x1 amfi=0x80 ipc_control_port_options=0', 'csr-active-config': '430a0000', 'prev-lang:kbd': '', 'run-efi-updater': 'No'}
+NVRAM.Delete: {'4D1EDE05-38C7-4A6A-9CC6-4BCCA8B38C14': ['DefaultBackgroundColor'], '4D1FDA02-38C7-4A6A-9CC6-4BCCA8B30102': ['rtc-blacklist', 'revcpu', 'revcpuname', 'revpatch'], '7C436110-AB2A-4BBB-A880-FE41995C9F82': ['ForceDisplayRotationInEFI', 'csr-active-config', 'bluetoothExternalDongleFailed', 'bluetoothInternalControllerInfo']}
+PlatformInfo: {'AdviseFeatures': False, 'MLB': '<redacted>', 'MaxBIOSVersion': False, 'ProcessorType': 3841, 'ROM': '<redacted>', 'SpoofVendor': True, 'SystemMemoryStatus': 'Auto', 'SystemProductName': 'MacBookPro16,2', 'SystemSerialNumber': '<redacted>', 'SystemUUID': '<redacted>'} UpdateSMBIOSMode= Custom
+UEFI.Drivers: [('HfsPlus.efi', True), ('OpenRuntime.efi', True), ('ResetNvramEntry.efi', True), ('NullMothLogo.efi', True)]
+UEFI.Quirks: {'ReleaseUsbOwnership': True, 'RequestBootVarRouting': True}
+UEFI.Output: {'Resolution': 'Max', 'ProvideConsoleGop': True, 'DirectGopRendering': False, 'GopPassThrough': 'Disabled', 'ForceResolution': False, 'UIScale': 0}
+
+## Kexts / EFI binaries (sha256 前 16 位)
+AMFIPass.kext 1.4.1
+AppleALC.kext 1.9.9
+BlueToolFixup.kext 2.7.3
+BrightnessKeys.kext 1.0.4
+CpuTopologyRebuild.kext 2.0.2
+IntelBTPatcher.kext 2.5.0
+IntelBluetoothFirmware.kext 2.5.0
+Lilu.kext 1.7.3
+NVMeFix.kext 1.1.4
+RestrictEvents.kext 1.1.7
+SMCBatteryManager.kext 1.3.9
+SMCLightSensor.kext 1.3.9
+SMCProcessor.kext 1.3.9
+SMCSuperIO.kext 1.3.9
+USBToolBox.kext 1.2.0
+UTBDefault.kext 1.0
+VirtualSMC.kext 1.3.9
+VoodooI2C.kext 2.9.1
+VoodooI2CHID.kext 1.0
+VoodooPS2Controller.kext 2.3.8
+WhateverGreen.kext 1.7.2
+XHCI-unsupported.kext 0.9.2
+itlwm.kext 2.3.0
+VoodooI2C IOPCIMatch has 0x51e88086: False | total ids: 7 | sample: ['0x9d608086&0xfffcffff', '0x9de88086&0xfffcffff', '0xa1608086&0xfffcffff', '0xa3688086&0xfffcffff']
+efi HfsPlus.efi 37892 a55b5fff36578864
+efi NullMothLogo.efi 539648 050d7574577ce03d
+efi OpenRuntime.efi 36864 12b9c3048bf4cd21
+efi ResetNvramEntry.efi 57344 5217eff381595ecd
+efi OpenCore.efi 872448 1569cd1d183c5ee9
+ACPI dir: ['SSDT-EC.aml', 'SSDT-GPI0.aml', 'SSDT-MCHC.aml', 'SSDT-PLUG-ALT.aml', 'SSDT-RTCAWAC.aml', 'SSDT-SBUS.aml', 'SSDT-USB-Reset.aml', 'SSDT-USBX.aml', 'SSDT-XOSI.aml']
+Tools: []

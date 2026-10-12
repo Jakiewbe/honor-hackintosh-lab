@@ -98,4 +98,6 @@
 
 **2026-10-13 实测 plan（沙箱、离线）**：上表决策与源码推断一致（macOS 15、MacBookPro16,2、保留核显、禁用指纹、24 个 kext），另有三点新事实：OCS 兼容性检查器原文判定“没有受支持的 GPU，无法安装 macOS”后被 1401 规则绕过；两条矛盾内屏提示在输出中同时出现；iasl 因本机 ACPI 重名对象合并反编译失败，1401 跳过预补丁反编译。详见 [docs/1401-plan-run-20261013](../docs/1401-plan-run-20261013/SUMMARY.md)。
 
+**2026-10-13 实测 build（沙箱、只走 GitHub）**：生成完整 EFI，OpenCore 1.0.9 ocvalidate 0 问题。config 与上表预测一致（核显无属性、独显 `acpi-wake-type=1`、SIP `0x0A43`、NullMoth boot-args、`SecureBootModel=Disabled`、`AppleXcpmCfgLock`）；另见：无 SSDT-PNLF（背光推断不可用）、未启用 `ForceExitBootServices`、引导期加载仅有二进制的 `NullMothLogo.efi`；实际打包的 VoodooI2C 2.9.1 掩码匹配也不含 `0x51E8`。**以下“未生成”一句为会话 1 当时状态。**
+
 **未生成真实候选 EFI**：缺 Hardware-Sniffer `Report.json`，且 OCS 会在缺 iasl 时下载并执行未固定版本的 iasl（见 RISK_ASSESSMENT R-07）。会话 2 进一步确认：`plan` 只输出决策、不生成 `config.plist`；要得到 EFI 必须走联网的 `build`。方案见 [NEXT_STEPS_PLAN](NEXT_STEPS_PLAN.md) 第 C 节。

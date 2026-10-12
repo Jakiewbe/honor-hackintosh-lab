@@ -24,6 +24,8 @@
 | R-15 | Hardware-Sniffer 在进程内用 `VirtualAlloc` 分配 RWX 内存执行 CPUID 机器码 | `Hardware-Sniffer/.../cpuid.py:110-117` | 否 | 可能触发杀毒/漏洞防护拦截 | 低 | 记录 |
 | R-16 | Mac 端 setup 把 `SecureBootModel` 改为 `Disabled`、SIP OR `0x0A43`、写 `nvram boot-args`；卸载后 `com.nullmoth.wsreset`（每次开机在登录窗口杀一次 WindowServer）与 `com.nullmoth.displaytrace` 两个 LaunchDaemon **不会被删除** | 驱动 `app/Resources/nullmoth-setup.sh:987-991, 1359-1369, 1433-1445, 430-545` | 是（macOS） | 卸载不彻底 | 中 | 不适用（无 macOS） |
 | R-17 | 驱动 Mac App 的“更新”走 GitHub `releases/latest`，版本不固定（有 SHA256SUMS 校验） | 驱动 `app/Sources/main.swift:528-549` | — | 自动获取未审阅的新版本 | 中 | 记录 |
+| R-19 | 生成的 EFI 在引导期加载 1401 仓库中**只有二进制**的 `NullMothLogo.efi`（默认开启） | `p1401/policy.py:359-372`，提交 `d94f056` | 是（引导期） | 未审源码的 UEFI 代码在固件环境执行 | 中 | 记录（Q-19）；如进入引导实验，可用 `-nmlogooff` 或从 Drivers 移除 |
+| R-20 | build 实际下载的 OpenCore 版本（1.0.9）与发布固定值（1.0.8）不同 | 2026-10-13 C3 实测 | 否 | 同一 1401 版本在不同日期产出不同 EFI，复现性差 | 中 | 记录；如需复现必须保存整份 EFI 与 kext 版本清单 |
 | R-18 | 实验性 NMXGPU（i915）若启用，会重置驱动内屏的 Intel 显示引擎 | 驱动 `gpu-port/README.md:61-62`、`nullmoth-setup.sh:726-858` | 是（macOS） | 内屏黑屏 | 高 | 记录 |
 
 ## 2. 主力机自身的风险条件（实测）

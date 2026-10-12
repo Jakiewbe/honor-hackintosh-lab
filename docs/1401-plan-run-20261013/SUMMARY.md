@@ -50,3 +50,27 @@
 5. VoodooI2C 仍被选入，但原版不匹配本机 I2C 控制器 `0x51E8`（见 COMPATIBILITY）。
 
 **解读边界**：以上只是 1401 对本机的**决策**，不是可启动性的证据；没有 config.plist、没有 ocvalidate、没有引导。
+
+## 4. C3 联网 build + ocvalidate（用户选择“只走 GitHub，镜像回退即中止”）
+
+- 运行方式：沙箱包装脚本 `run_build.py` 把 `p1401.mirror.fetch/fetch_once/prefer/preferred` 替换为“报错并拒绝”，再调用 `p1401.__main__.main(["build", Report.json, ACPI, out, "--json"])`；用户目录同样重定向到沙箱，未设代理拦截（需要联网）。
+- 结果：约 100 秒，退出码 0，stderr 为空（**未触发任何镜像回退**），`ok=true`。
+- **ocvalidate：No issues found（0 issues）**。注意下载的是 **OpenCore 1.0.9**（ocvalidate 自述“only compatible with OpenCore version 1.0.9”），而非 `release-inputs.json` 固定的 1.0.8，证实 build 版本由运行时 Dortania 数据决定。
+- 产物：`EFI/BOOT/BOOTx64.efi`、`EFI/OC/{OpenCore.efi, config.plist, ACPI(9), Drivers(4), Kexts(23)}`，`Tools/` 为空；另有 `.machine-profile.json`。全部留在沙箱，不入库。脱敏摘要见 [`build_config_summary.txt`](build_config_summary.txt)。
+
+**config.plist 要点（静态审阅）**
+
+| 区域 | 内容 | 评注 |
+|---|---|---|
+| ACPI | SSDT-EC/GPI0/MCHC/PLUG-ALT/RTCAWAC/SBUS/USB-Reset/USBX/XOSI；补丁 GPI0 `_STA→XSTA`、`_OSI→XOSI` | 都是通用模板 SSDT；**没有 SSDT-PNLF**（内屏背光控制大概率不可用，推断） |
+| DeviceProperties | 仅 `PciRoot(0x0)/Pci(0x1f,0x3)` `layout-id=97`、`PciRoot(0x0)/Pci(0x6,0x0)/Pci(0x0,0x0)` `acpi-wake-type=1` | **核显无任何属性、未 disable**（与源码推断一致）；独显未禁用 |
+| Booter | `AllowRelocationBlock`、`DevirtualiseMmio`、`SetupVirtualMap`、`RebuildAppleMemoryMap`、`SyncRuntimePermissions`、`ProtectUefiServices`、`ProvideCustomSlide` 等；`ResizeAppleGpuBars=0` | **未启用 `ForceExitBootServices`**（1401#26 台式机用户靠它解决 EXITBS 卡住，对本机是否需要未知） |
+| Kernel | `Cpuid1Data 55060a00…`（Comet Lake 伪装）、`ProvideCurrentCpuInfo`、`AppleXcpmCfgLock`、`DisableIoMapper`；3 条“force HT” 补丁 | 与源码推断一致；CFG Lock 未知时按锁定处理 |
+| Misc | `SecureBootModel=Disabled`、`Vault=Optional`、`ScanPolicy=0`、`Target=67`、`AppleDebug/ApplePanic`、`HideAuxiliary=False` | 日志写到 U 盘，便于失败后在 Windows 读取 |
+| NVRAM | `csr-active-config=430a0000`；boot-args：`-v debug=0x100 keepsyms=1 -vi2c-force-polling ctrsmt=full nvfb=1 nvaccel=1 nvfbheads=4 -nvkmsnosmooth amfi_get_out_of_my_way=0x1 amfi=0x80 ipc_control_port_options=0`；Delete 不含 boot-args | 与源码推断一致 |
+| UEFI | Drivers：HfsPlus、OpenRuntime、ResetNvramEntry、**NullMothLogo.efi**；`ProvideConsoleGop`；`ReleaseUsbOwnership`、`RequestBootVarRouting` | `NullMothLogo.efi`（539648 字节）在 1401 仓库中**只有二进制**（提交 `d94f056`），源码在驱动仓库 `app/efi-logo`（Rust），二者对应关系未验证 |
+| PlatformInfo | `MacBookPro16,2`、`UpdateSMBIOSMode=Custom`、`SpoofVendor`；序列号由 macserial 生成 | 序列号已脱敏，不入库 |
+
+**实际打包的 VoodooI2C 是 2.9.1**，其 7 个 `IOPCIMatch`（带掩码 `0xfffcffff`）经掩码计算**均不匹配 `0x51e88086`**——在真实产物上确认触控板原版不可用（E）。
+
+**仍然不是启动证据**：ocvalidate 只校验配置结构与 OpenCore 版本一致性。

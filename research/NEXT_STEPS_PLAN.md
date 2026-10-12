@@ -58,7 +58,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File docs\hardware-survey-2026101
 - 生成 EFI 必须走 `build`（`download=True`），会联网下载 OpenCore、kext（哈希来自运行时的 Dortania `latest.json`，不是静态固定），并执行 `macserial.exe` 与 `ocvalidate.exe`。**`build` 本身不写 U 盘**，写盘是 1401 GUI 的另一步。
 - `plan` 和 `build` 都需要：Hardware-Sniffer 格式的 `Report.json` + ACPI 目录（恰好一个 DSDT）；`scan-evidence.json` 可选，但必须与 `Report.json` 同一次扫描、逐字节未改，**否则核显 46A6 很可能被设为 `disable-gpu`**（即 1401#26 的旧行为）。
 
-分三步，每步单独批准。**状态（2026-10-13）**：C1、C2 已在沙箱完成（非管理员、离线、MSDM 已删除），结果见 [docs/1401-plan-run-20261013](../docs/1401-plan-run-20261013/SUMMARY.md)；C3 **未执行，等待批准**。
+分三步，每步单独批准。**状态（2026-10-13）**：C1、C2、C3 均已在沙箱完成（C1/C2 非管理员、离线、MSDM 已删除；C3 只走 GitHub、镜像回退被拦截且未触发），ocvalidate 0 问题。结果见 [docs/1401-plan-run-20261013](../docs/1401-plan-run-20261013/SUMMARY.md)。**本节已无待办**；下一层（U 盘引导）超出 `READ_ONLY_RESEARCH`。
 
 ### C1. 产生扫描输入（副作用最大的一步）
 
