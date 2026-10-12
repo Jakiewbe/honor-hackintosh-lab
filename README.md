@@ -69,6 +69,12 @@ The [R1.2-B technical note](docs/R1.2-B_VBL候选补丁与准入.md) records a [
 
 [Manual-only cloud qualification](.github/workflows/r12b-vbl-review.yml) checks the pinned two-patch stack, runs offline capacity and lifecycle models, and attempts the patched Intel framebuffer native build. **No R1.2-B macOS build has run yet.** Callback-reentrant stop and runtime timer failure recovery remain unresolved; the candidate is not suitable for loading or installing.
 
+## R1.2-C: Callback owner/sender lifetime candidate (not runtime qualified)
+
+The [R1.2-C callback lifetime patch](patches/r12c_vbl_callback_lifetime.patch) is designed to be stacked **after** R1.1 and R1.2-B. It retains the `NMIntelFB` owner and `IOTimerEventSource` sender while an external VBL callback may synchronously unregister or stop the framebuffer, then releases both only after post-callback state checks. This addresses one potential dangling-access window; it **does not** establish safe reentrant `IOFramebuffer::stop`.
+
+The [manual R1.2-C CI](.github/workflows/r12c-reentrant-vbl-review.yml) adds a 14-case reference fault-injection model, static source checks, and separate real/virtual NMIntelFB compilation. [Evidence limits and no-go conditions](docs/R1.2-C_回调重入引用保护与残余风险.md). The new workflow has **not yet run**; nothing is installed, loaded, or uploaded as a kext artifact.
+
 ## Safety and evidence
 
 The original NullMoth source carries a PolyForm Noncommercial license. No upstream source code or vendor firmware is copied into this repository. All upstream code is fetched from its public GitHub repository into an ephemeral runner only when source mode is explicitly requested.
