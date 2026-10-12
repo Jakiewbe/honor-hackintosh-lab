@@ -5,8 +5,8 @@
 
 | ID | 问题 | 为什么重要 | 只读获取方式 | 状态 |
 |---|---|---|---|---|
-| Q-01 | BIOS 是否有“独显直连 / dGPU only / MUX”选项？ | 决定是否存在让 RTX 2050 驱动内屏的任何可能；类码 `0x0302` 强烈暗示没有 | 用户开机进入 BIOS **只看不改**并拍照；或查 HONOR 官方说明书 | NEEDS_USER |
-| Q-02 | HDMI 与 USB-C（DP Alt Mode）物理接在哪块 GPU？ | 若有接口接 NVIDIA，可在无 MUX 时使用外接屏 | 接外接显示器后重跑本项目 `docs/hardware-survey-20261012/collect.ps1` 中显示相关探针（只读），看活动路径属于哪块适配器；步骤见 [NEXT_STEPS_PLAN](NEXT_STEPS_PLAN.md) A2 | NEEDS_USER |
+| Q-01 | BIOS 是否有“独显直连 / dGPU only / MUX”选项？ | 决定是否存在让 RTX 2050 驱动内屏的任何可能；类码 `0x0302` 强烈暗示没有 | 用户开机进入 BIOS **只看不改**并拍照；或查 HONOR 官方说明书。2026-10-13 结论：用户陈述本机 BIOS 只能调最基础的项目；网络检索的荣耀同代 BIOS 教程只出现语言、Secure Boot、启动顺序、恢复出厂（[KOBIN](https://blog.kobin.cn/blog/network/n5/3226.html)、[荣耀支持页](https://www.honor.com/cn/support/content/zh-cn15813355/)），未见显卡模式项；荣耀客服在[荣耀俱乐部](https://club.honor.com/cn/thread-28895470-1-1.html)称同品牌独显机型“独立显卡渲染、交给集成显卡输出，不能单独设置成独立显卡输出”（针对 MagicBook 14 Pro / Pro 16，非本机，旁证）；本机类码 `0x0302`、显示源 0。**判定无 MUX**（未拍照，证据 = 用户陈述 + 本机实测 + 旁证） | DONE |
+| Q-02 | HDMI 与 USB-C（DP Alt Mode）物理接在哪块 GPU？ | 若有接口接 NVIDIA，可在无 MUX 时使用外接屏 | 接外接显示器后重跑本项目 `docs/hardware-survey-20261012/collect.ps1` 中显示相关探针（只读），看活动路径属于哪块适配器；步骤见 [NEXT_STEPS_PLAN](NEXT_STEPS_PLAN.md) A2。2026-10-13 现有证据：硬件调查实测 NVIDIA 显示目标 0、Intel 暴露 1 INTERNAL + 2 HDMI + 14 DISPLAYPORT_EXTERNAL（[REPORT 第 4.2 节](../docs/hardware-survey-20261012/REPORT.md)）；荣耀客服称外接显示器“仅支持混合模式（独显渲染 + 核显输出）”（同上帖，旁证）。**推断：外接口全部接在 Intel 上**；接外屏实测仍可把推断升级为实测，但不改变任何评级 | PARTIAL（推断强） |
 | Q-03 | CFG Lock 是否锁定？ | 决定是否需要 `AppleXcpmCfgLock` 等补丁 | Windows 下无受支持只读接口；可在将来 U 盘引导的 OpenCore `ControlMsrE2.efi` 中**只读查看**（属于引导操作，需审批） | BLOCKED |
 | Q-04 | BitLocker 加密/保护状态、WinRE 状态、ESP 文件系统 | 决定任何引导实验的回退能力 | 管理员只读：`manage-bde -status`、`reagentc /info`（**不执行 `-protectors -get`，不读取恢复密钥**）；脚本 [`scripts/readonly_admin_status.ps1`](../scripts/readonly_admin_status.ps1) 经用户批准以 UAC 运行（2026-10-13）：BitLocker C:/D: 未加密、WinRE 启用、ESP FAT32 约 196 MiB（剩 94 MiB），见 HARDWARE | DONE |
 | Q-05 | Secure Boot 交叉验证 | 当前只有注册表单一来源 | 管理员 `Confirm-SecureBootUEFI` = `True`，与注册表一致 | DONE |

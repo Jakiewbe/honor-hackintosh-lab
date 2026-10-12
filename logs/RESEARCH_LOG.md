@@ -11,10 +11,10 @@
 - **上游**：已发布 v1.14.3（1401 `a78537c`、驱动 `9a93e7c`），本机相关代码未变；审计仍固定 v1.14.2，克隆 HEAD 未移动
 - **用户已同意的方向**：四项都做，但每条具体命令仍需单独批准。当前状态：
   1. 只读源码工作：**已完成**；剩余仅定期跟踪 PR #131/#133、1401#26（Q-08/Q-10）与选定 iasl 版本（Q-16）。
-  2. 用户目视：BIOS 显示模式/MUX（Q-01）、外接口归属（Q-02）——清单见 [`research/NEXT_STEPS_PLAN.md`](../research/NEXT_STEPS_PLAN.md) A。**等待用户**。
+  2. 用户目视：Q-01 **DONE**（用户称 BIOS 只有基础项，网络旁证一致，判定无 MUX）；Q-02 PARTIAL（推断外接口全部在 Intel，接外屏实测为可选，不改评级）。
   3. 管理员只读：**已完成**（用户批准，UAC 运行一次；Q-04/Q-05 DONE）。
   4. 沙箱候选 EFI：C1 扫描、C2 plan、C3 build + ocvalidate **全部完成**（[docs/1401-plan-run-20261013](../docs/1401-plan-run-20261013/SUMMARY.md)）；ocvalidate 0 问题。沙箱保留在 `%TEMP%\hk-1401-scan-20261013-004439`（含生成的 EFI，**不得复制到任何 U 盘或 ESP**，除非另行批准引导实验）。
-- **剩余待办**：用户目视 BIOS/外接口（Q-01/Q-02）——**用户已决定：保持只读，等目视完成再定下一阶段**；Q-18 静态比对已做，仍 OPEN（只能靠引导日志）；Q-19 PARTIAL，用户决定**不做**逐字节复现；定期跟踪 PR #131/#133。下一层（U 盘引导）超出 READ_ONLY_RESEARCH，需要用户明确开启新阶段；届时应先从 `UEFI.Drivers` 移除 `NullMothLogo.efi`（它每次启动写 NVRAM，R-19）。
+- **剩余待办**：Q-01 已关闭；Q-02 外接屏实测可选。下一阶段（保持只读 / 规划 U 盘实验 / 回 L1 主线）**等用户决定**；Q-18 静态比对已做，仍 OPEN（只能靠引导日志）；Q-19 PARTIAL，用户决定**不做**逐字节复现；定期跟踪 PR #131/#133（01:04 复查无变化）。**提交信息不要写 `owner/repo#N`**（仓库公开，会在上游 Issue 生成反向链接，见日志第 12 条）。下一层（U 盘引导）超出 READ_ONLY_RESEARCH，需要用户明确开启新阶段；届时应先从 `UEFI.Drivers` 移除 `NullMothLogo.efi`（它每次启动写 NVRAM，R-19）。
 - **续做前先跑**：`python tests/test_1401_static_audit.py`（13 项；SHA 断言失败 = 上游已变，先更新 `research/SOURCES.md`）
 
 ---
@@ -176,3 +176,7 @@ GitHub API 只读 GET `acpica/acpica/releases`：20260930 只有 Unix 资产，2
 11. 驱动 PR #131（NVRMFBClaim 加 NVIDIA 厂商与类码匹配）、#133（Intel 内屏笔记本 BAR 改 `-1/0`、0302 类 GPU 的 Turing 等待）：均 open、未合并、最后更新 2026-10-11，作者声明**未上真机**。1401#26：open，最后评论仍是 10-11 的 Ryzen 台式机修复。Q-08/Q-10/Q-18 结论不变。
 12. **推送副作用**：1401#26 页面时间线出现 “Referenced in commit 8869796”。原因是会话 1 提交信息含完整引用 `nullmoth/1401#26`，本仓库为公开仓库，push 后 GitHub 自动生成反向链接。该链接只指向提交，不含个人数据；去除需改写已公开历史（AGENTS.md 禁止 force-push），未处理，交用户决定。今后提交信息只写 `1401 Issue 26` 之类的非链接写法。
 13. 已推送树敏感信息复查：无用户目录名、BitLocker 恢复密钥格式、MAC 地址；MLB/序列号/UUID/ROM 均为 `<redacted>`。
+
+### BIOS 选项（2026-10-13 01:16）
+
+14. （01:16）用户：“BIOS 很垃圾，只能调最基础的东西，去网上找找”。网页检索：荣耀同代 BIOS 教程只列语言、Secure Boot、启动顺序、恢复出厂；荣耀俱乐部客服答复（MagicBook 14 Pro / Pro 16）称独显机型由核显输出、外接屏仅混合模式。检索摘要有一处把 GLO-FX6P 说成“集显版”，与本机 PnP 实测（RTX 2050 `10DE:25A9`）矛盾，**不采用**。Q-01 → DONE（无 MUX）；Q-02 → PARTIAL（推断强）。更新 OPEN_QUESTIONS、COMPATIBILITY、NEXT_STEPS_PLAN。
