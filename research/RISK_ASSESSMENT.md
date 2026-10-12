@@ -20,7 +20,7 @@
 | R-11 | NVRAM 残留：1401 故意**不删除** `boot-args`（仅删 `csr-active-config`） | `nullmoth.apply` 注释 | — | 旧 boot-args 会覆盖新配置（1401#26 日志 `boot-args - ignored, exists`），导致排障结论失真 | 中 | 记录 |
 | R-12 | `tests/corpus/fetch.py` 下载公开报告语料；`scan --selftest` 下载 acpidump；`apple --selftest` 向 Apple 恢复服务器发 POST 并下载约 10 MB | 上游测试 | 否 | 网络下载并执行 | 中 | **未运行** |
 | R-13 | OCS 构造时 `utils.clean_temporary_dir()` **删除 `%TEMP%\ocs_*` 下所有目录**；多个 `ocs_*`、`1401-plan-*` 临时目录遗留 | OCS `Scripts/utils.py:17-29`、`OpCore-Simplify.py:24`；`p1401/__main__.py:43-44` | 否 | 沙箱外文件被删除/遗留 | 中 | 记录；运行时必须重定向 TEMP/TMP/TMPDIR |
-| R-14 | 扫描导出 ACPI 时**可能包含 MSDM（Windows OEM 产品密钥）**：1401 用 `GetSystemFirmwareTable` 补齐 acpidump 漏掉的表 | `p1401/scan.py:104-146` | 部分 | 产品密钥落盘，若随报告上传则泄露 | 高（隐私） | 本仓库已核对：现有证据**不含** MSDM（2026-10-12 调查主动跳过），所有分支历史也无 MSDM/SLIC 文件 |
+| R-14 | 扫描导出 ACPI 时**可能包含 MSDM（Windows OEM 产品密钥）**：1401 用 `GetSystemFirmwareTable` 补齐 acpidump 漏掉的表 | `p1401/scan.py:104-146` | 部分 | 产品密钥落盘，若随报告上传则泄露 | 高（隐私） | 本仓库已核对：现有证据**不含** MSDM（2026-10-12 调查主动跳过），所有分支历史也无 MSDM/SLIC 文件。**2026-10-13 沙箱扫描实测确实导出了 `msdm.aml`（85 字节）**，已立即删除并复查 0 残留；以后任何 1401 扫描都必须带这一步 |
 | R-15 | Hardware-Sniffer 在进程内用 `VirtualAlloc` 分配 RWX 内存执行 CPUID 机器码 | `Hardware-Sniffer/.../cpuid.py:110-117` | 否 | 可能触发杀毒/漏洞防护拦截 | 低 | 记录 |
 | R-16 | Mac 端 setup 把 `SecureBootModel` 改为 `Disabled`、SIP OR `0x0A43`、写 `nvram boot-args`；卸载后 `com.nullmoth.wsreset`（每次开机在登录窗口杀一次 WindowServer）与 `com.nullmoth.displaytrace` 两个 LaunchDaemon **不会被删除** | 驱动 `app/Resources/nullmoth-setup.sh:987-991, 1359-1369, 1433-1445, 430-545` | 是（macOS） | 卸载不彻底 | 中 | 不适用（无 macOS） |
 | R-17 | 驱动 Mac App 的“更新”走 GitHub `releases/latest`，版本不固定（有 SHA256SUMS 校验） | 驱动 `app/Sources/main.swift:528-549` | — | 自动获取未审阅的新版本 | 中 | 记录 |

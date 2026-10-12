@@ -96,4 +96,6 @@
 | CPU | Comet Lake CPUID 伪装、ProvideCurrentCpuInfo、CpuTopologyRebuild、`ctrsmt=full` | OCS |
 | 日志 | `Target |= 0x41` 写 U 盘日志 | `policy.py` |
 
+**2026-10-13 实测 plan（沙箱、离线）**：上表决策与源码推断一致（macOS 15、MacBookPro16,2、保留核显、禁用指纹、24 个 kext），另有三点新事实：OCS 兼容性检查器原文判定“没有受支持的 GPU，无法安装 macOS”后被 1401 规则绕过；两条矛盾内屏提示在输出中同时出现；iasl 因本机 ACPI 重名对象合并反编译失败，1401 跳过预补丁反编译。详见 [docs/1401-plan-run-20261013](../docs/1401-plan-run-20261013/SUMMARY.md)。
+
 **未生成真实候选 EFI**：缺 Hardware-Sniffer `Report.json`，且 OCS 会在缺 iasl 时下载并执行未固定版本的 iasl（见 RISK_ASSESSMENT R-07）。会话 2 进一步确认：`plan` 只输出决策、不生成 `config.plist`；要得到 EFI 必须走联网的 `build`。方案见 [NEXT_STEPS_PLAN](NEXT_STEPS_PLAN.md) 第 C 节。

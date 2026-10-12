@@ -58,7 +58,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File docs\hardware-survey-2026101
 - 生成 EFI 必须走 `build`（`download=True`），会联网下载 OpenCore、kext（哈希来自运行时的 Dortania `latest.json`，不是静态固定），并执行 `macserial.exe` 与 `ocvalidate.exe`。**`build` 本身不写 U 盘**，写盘是 1401 GUI 的另一步。
 - `plan` 和 `build` 都需要：Hardware-Sniffer 格式的 `Report.json` + ACPI 目录（恰好一个 DSDT）；`scan-evidence.json` 可选，但必须与 `Report.json` 同一次扫描、逐字节未改，**否则核显 46A6 很可能被设为 `disable-gpu`**（即 1401#26 的旧行为）。
 
-分三步，每步单独批准：
+分三步，每步单独批准。**状态（2026-10-13）**：C1、C2 已在沙箱完成（非管理员、离线、MSDM 已删除），结果见 [docs/1401-plan-run-20261013](../docs/1401-plan-run-20261013/SUMMARY.md)；C3 **未执行，等待批准**。
 
 ### C1. 产生扫描输入（副作用最大的一步）
 
@@ -92,6 +92,8 @@ Set-Location "$sb\src"
 ### C3. 沙箱 `build` + ocvalidate（需联网）
 
 会下载 OpenCore DEBUG 包与 kext（GitHub/Dortania），执行 `macserial.exe -g --model MacBookPro16,2`（生成随机序列号）与 `ocvalidate.exe`。输出完整 `EFI/` 到沙箱。**不写 U 盘、不碰 ESP**。产出只用于静态审阅与 ocvalidate，**不等于能启动**。
+
+补充核对（2026-10-13）：OCS 下载主机为 `github.com`、`raw.githubusercontent.com`（含 Dortania 数据）；GitHub 失败时 1401 `downloads.py`/`validate.py` 回退到 `nullmothsystems.com/mirror/<sha256>`（只发 GET，按哈希取文件，不携带硬件信息）。build 路径无上传代码。若要完全避免第三方镜像，可在运行时让 GitHub 可达，并在日志中检查有无 `mirror` 字样。执行的二进制：OpenCorePkg 包内的 `macserial.exe`、`ocvalidate.exe`（来自下载包，哈希由运行时 Dortania 数据校验）。
 
 ## D. 只读源码审查（已完成，会话 2）
 

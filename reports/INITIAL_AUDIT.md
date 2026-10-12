@@ -179,7 +179,7 @@ Cursor 规则格式：`.mdc` + YAML 头（`description`、`globs`、`alwaysApply
 | P2 十个问题 | DONE | 第 4 节；第 3 问的 SSDT 部分未逐行审 |
 | P3 只读环境检测 | DONE（会话 2） | 会话 1 为 PARTIAL；会话 2 经用户批准以 UAC 运行 `scripts/readonly_admin_status.ps1`：BitLocker 未加密、WinRE 启用、Secure Boot 开启（交叉验证）、ESP FAT32 剩 94 MiB。CFG Lock 仍无法在 Windows 只读获取 |
 | P4 静态检查与测试审查 | PARTIAL | 8 个上游模块 + 本项目测试已跑；其余未审查不运行 |
-| P4 隔离候选 EFI + ocvalidate | BLOCKED | 缺 `Report.json`；iasl 未固定（R-07）；会话 2 已拟分步方案（`research/NEXT_STEPS_PLAN.md` C1–C3），每步待批准 |
+| P4 隔离候选 EFI + ocvalidate | PARTIAL（会话 2） | 会话 1 为 BLOCKED。会话 2：C1 扫描与 C2 离线 plan 已在沙箱完成（附录 B）；生成 config 与 ocvalidate 需 C3 联网 build，待批准 |
 | P4 缺失硬件报告的只读收集方案 | DONE | OPEN_QUESTIONS + 第 8、10 节 |
 | P5 模块兼容性分析与 A–E 分级 | DONE | 无任何一项经本机实测 |
 | P5 同代真实案例检索 | DONE | 1401/驱动 Issue 12 条 + PR 2 条；同机型检索无结果 |
@@ -214,3 +214,16 @@ Cursor 规则格式：`.mdc` + YAML 头（`description`、`globs`、`alwaysApply
 5. OCS 启动时会删除 `%TEMP%\ocs_*`；扫描可能导出 MSDM（产品密钥）；Mac 端卸载会残留两个 LaunchDaemon。
 
 **结论不变**：本机没有 NVIDIA 显示路径（E），内屏只能寄望于 Iris Xe 固件帧缓冲（D，装驱动后 E），整体仍**不满足**进入 EFI 构建或引导实验的前置条件。下一步全部需要用户逐条批准，见 [NEXT_STEPS_PLAN](../research/NEXT_STEPS_PLAN.md)。
+
+## 附录 B｜沙箱 C1 扫描 + C2 离线 plan（2026-10-13）
+
+用户回复“你自己继续收”后执行；非管理员、子进程内全部用户目录重定向到沙箱、代理指向空端口，沙箱外无写入。详见 [docs/1401-plan-run-20261013/SUMMARY.md](../docs/1401-plan-run-20261013/SUMMARY.md)。
+
+| 测试 | 层级 | 结果 |
+|---|---|---|
+| `python -m p1401.scan` | 真实本机扫描（只读） | 通过；导出的 MSDM 已立即删除并复查 0 残留 |
+| `python -m p1401 plan --json` | 1401 决策层（无 config） | `ok=true`：macOS 15、MacBookPro16,2、保留核显、禁用指纹、要求关闭 Secure Boot、24 个 kext |
+| iasl 20260408 合并反编译 | 工具 | **失败**（ACPI 重名对象），1401 跳过预补丁反编译继续（Q-17） |
+| ocvalidate / config.plist | 配置验证 | 未运行（需 C3） |
+
+实测确认了此前的代码层推断：OCS 原生检查器判定本机“没有受支持的 GPU”；1401 输出同时包含“内屏在 macOS 中黑屏”和“内屏可通过固件显示工作”两条矛盾提示。**结论不变。**

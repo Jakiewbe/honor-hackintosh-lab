@@ -11,7 +11,7 @@
   1. 只读源码工作：**已完成**；剩余仅定期跟踪 PR #131/#133、1401#26（Q-08/Q-10）与选定 iasl 版本（Q-16）。
   2. 用户目视：BIOS 显示模式/MUX（Q-01）、外接口归属（Q-02）——清单见 [`research/NEXT_STEPS_PLAN.md`](../research/NEXT_STEPS_PLAN.md) A。**等待用户**。
   3. 管理员只读：**已完成**（用户批准，UAC 运行一次；Q-04/Q-05 DONE）。
-  4. 沙箱候选 EFI：C1 scan → C2 离线 plan → C3 联网 build + ocvalidate，每步副作用已列明。iasl 候选已选出（20260408 Windows 版，Q-16），**等待用户确认 iasl 与批准 C1**。
+  4. 沙箱候选 EFI：C1 扫描、C2 离线 plan **已完成**（[docs/1401-plan-run-20261013](../docs/1401-plan-run-20261013/SUMMARY.md)）；C3 联网 build + ocvalidate **等待批准**。沙箱仍保留在 `%TEMP%\hk-1401-scan-20261013-004439`（C3 可复用其 `Report.json`/ACPI）。
 - **续做前先跑**：`python tests/test_1401_static_audit.py`（13 项；SHA 断言失败 = 上游已变，先更新 `research/SOURCES.md`）
 
 ---
@@ -116,6 +116,22 @@ Start-Process powershell.exe -Verb RunAs -Wait -PassThru -ArgumentList "-NoProfi
 
 GitHub API 只读 GET `acpica/acpica/releases`：20260930 只有 Unix 资产，20260408 是最新的 Windows 版（`iasl.exe` SHA256 `739c597b…f9`）。OCS `dsdt.py:get_latest_iasl` 只看最新 release 的正文与资产里的 `iasl*.zip`，因此现在自动下载预计失败（据 API 推断；OCS 实际抓取 HTML，未直接验证）。未下载任何 iasl。
 
-### 9. 明确没有做的事
+### 9. 本地提交
 
-未运行 `p1401.scan`/`plan`/`build`、iasl、ocvalidate；未下载 iasl 或 1.0.21 基线 ZIP；未 push；未修改 BIOS/EFI/NVRAM/分区/BitLocker。管理员操作仅限上述一次只读脚本。
+`d97506a docs(1401): record approved read-only admin status and iasl pin candidate`。
+
+### 10. 沙箱 C1 扫描 + C2 离线 plan（用户回复“你自己继续收”）
+
+把该回复视为对固定 iasl、C1、C2 的批准；C3（联网 build、执行 macserial/ocvalidate）仍单独询问。
+
+1. 沙箱 `%TEMP%\hk-1401-scan-20261013-004439`：robocopy 源码副本；venv 按 `release-inputs.json` 固定 pywin32 312 / WMI 1.5.1 / certifi 2026.7.22（PyPI 哈希、`--require-hashes`）。
+2. 下载 iasl 20260408 `iasl.exe`（哈希、大小一致，未签名）与 acpidump R2024_12_12（哈希与 1401 固定值一致），全部只放在沙箱。
+3. 子进程运行 `python -m p1401.scan`（非管理员，代理指向 127.0.0.1:9）：退出码 0。**MSDM 被导出（85 字节），立即删除**，复查 0 残留。
+4. 子进程运行 `python -m p1401 plan Report.json ACPI --json`：退出码 0，`ok=true`，输出目录为空。iasl 合并反编译因重名对象失败。
+5. 核对沙箱外：真实 `%LOCALAPPDATA%\NullMoth`、`~\.cache\1401` 不存在，真实 `%TEMP%` 无新 `ocs_*`/`1401-plan-*`。
+6. 入库：`docs/1401-plan-run-20261013/{SUMMARY.md,plan_excerpt.json}`（脱敏摘录，检索无 serial/uuid/用户路径）。原始报告、ACPI、完整输出不入库。
+7. 核对 build 网络目标：github.com、raw.githubusercontent.com，失败回退 nullmothsystems.com 镜像（GET，按哈希）；无上传代码。
+
+### 11. 明确没有做的事
+
+未运行 `build`、ocvalidate、macserial；未生成 config.plist/EFI；未下载 1.0.21 基线 ZIP；未 push；未修改 BIOS/EFI/NVRAM/分区/BitLocker；管理员操作仅限第 7 节一次只读脚本。

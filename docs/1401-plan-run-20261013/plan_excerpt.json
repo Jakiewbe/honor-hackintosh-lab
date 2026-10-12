@@ -1,0 +1,124 @@
+{
+    "source":  "1401 v1.14.2 46d9fee3, python -m p1401 plan --json, offline sandbox, 2026-10-13",
+    "ok":  true,
+    "macos_version":  "24.99.99",
+    "smbios":  "MacBookPro16,2",
+    "needs_oclp":  false,
+    "disabled_devices":  {
+                             "Biometric: FPC Fingerprint Reader (Disum)":  "10A5-A921"
+                         },
+    "bios_requirements":  [
+                              "Disable Secure Boot"
+                          ],
+    "kexts":  [
+                  "Lilu",
+                  "VirtualSMC",
+                  "SMCBatteryManager",
+                  "SMCLightSensor",
+                  "SMCProcessor",
+                  "SMCSuperIO",
+                  "WhateverGreen",
+                  "AppleALC",
+                  "itlwm",
+                  "BlueToolFixup",
+                  "IntelBluetoothFirmware",
+                  "IntelBTPatcher",
+                  "USBToolBox",
+                  "UTBDefault",
+                  "XHCI-unsupported",
+                  "VoodooPS2Controller",
+                  "VoodooI2C",
+                  "VoodooI2CHID",
+                  "NVMeFix",
+                  "AMFIPass",
+                  "BrightnessKeys",
+                  "CpuTopologyRebuild",
+                  "ECEnabler",
+                  "RestrictEvents"
+              ],
+    "decisions":  [
+                      {
+                          "prompt":  "Please enter the macOS version you want to use (default: macOS Sequoia 15):",
+                          "answer":  ""
+                      },
+                      {
+                          "prompt":  "Select kext for your Intel WiFi device (default: itlwm):",
+                          "answer":  ""
+                      }
+                  ],
+    "notices_excerpt":  [
+                            "[truncated] ...an be dynamically loaded at\n runtime and may or may not be available via the host OS.\n To specify the tables needed to resolve external control method\n references, the -e option can be used to specify the filenames.\n Example iASL invocations:\n     iasl -e ssdt1.aml ssdt2.aml ssdt3.aml -d dsdt.aml\n     iasl -e dsdt.aml ssdt2.aml -d ssdt\nACPI: iasl crashed on this DSDT (exit 4294967295 = 0xffffffff); kept a copy for diagnosis and continuing without pre-patch disassembly\nDone.\n== Compatibility Checker\nChecking compatibility with macOS for the following devices:\n1. CPU:\n   - 12th Gen Intel(R) Core(TM) i5-12500H: Up to macOS Tahoe 26\n2. GPU:\n   - NVIDIA GeForce RTX 2050: Unsupported\n   - Intel(R) Iris(R) Xe Graphics: Unsupported\n      - Connected Monitor: BOE0893 (Internal)\nYou cannot install macOS without a supported GPU.\nPlease do NOT spam my inbox or issue tracker about this issue anymore!",
+                            "Laptop display note: the hardware report places the built-in screen on Intel(R) Iris(R) Xe Graphics. NVIDIA support does not add a driver for that integrated GPU or reroute the screen to NVIDIA GeForce RTX 2050. Firmware output may appear during boot, but it does not establish that the installer or accelerated desktop will work on this panel.\n\nA panel or external display needs a connection wired to the NVIDIA GPU for its display driver to use it. Check the exact model\u0027s connector wiring and whether a hardware MUX provides a Discrete GPU mode. Some laptops have no MUX; a config change cannot create one. If a supported Discrete GPU mode is available, enable it, restart Windows, then run Check this PC and Build again (a scan taken before the switch still shows the old wiring). Without a MUX, a monitor on a port wired to the NVIDIA GPU works; the built-in screen stays dark in macOS.",
+                            "NullMoth driver: NVIDIA GeForce RTX 2050 selected for macOS 15 Sequoia. This card is in NVIDIA\u0027s supported list but has not been tested with the driver yet.",
+                            "3. Sound:\n   - Realtek(R) Audio: Up to macOS Tahoe 26\n      - Audio Endpoints: 耳机, 麦克风阵列, 扬声器\n4. Biometric:\n   Note: Biometric authentication in macOS requires Apple T2 Chip,\n     which is not available for Hackintosh systems.\n   - FPC Fingerprint Reader (Disum): Unsupported\n5. Network:\n   - Intel(R) Wi-Fi 6 AX201 160MHz: Up to macOS Tahoe 26\n      - Continuity Support: Partial (Handoff and Universal Clipboard with AirportItlwm)\n      Note: AirDrop, Universal Clipboard, Instant Hotspot,... not available\n   - Realtek USB GbE Family Controller: Unchecked\n6. Storage Controllers:\n   - NVMe SSD Controller PM9A1/PM9A3/980PRO: Up to macOS Tahoe 26\n7. Bluetooth:\n   - 英特尔(R) 无线 Bluetooth(R): Up to macOS Tahoe 26",
+                            "The built-in screen runs on the Intel graphics (8086-46A6). 1401 keeps that GPU on, so the built-in screen works in macOS through the firmware display (no graphics acceleration on it yet); the NVIDIA card drives its own ports. Turning the GPU off left this screen dark.",
+                            "Wi-Fi: this Intel card uses itlwm. In macOS, Wi-Fi is joined with the HeliPort app (github.com/OpenIntelWireless/HeliPort/releases), not the menu bar; install it after setup."
+                        ],
+    "acpi_diagnostics":  [
+                             {
+                                 "tool":  "iasl",
+                                 "exit_code":  4294967295,
+                                 "iasl_crash_exit":  null,
+                                 "dsdt_kept":  null
+                             },
+                             {
+                                 "tool":  "acpi-dupnames",
+                                 "exit_code":  null,
+                                 "iasl_crash_exit":  4294967295,
+                                 "dsdt_kept":  "dsdt.aml.crash"
+                             },
+                             {
+                                 "tool":  "iasl",
+                                 "exit_code":  4294967295,
+                                 "iasl_crash_exit":  null,
+                                 "dsdt_kept":  null
+                             },
+                             {
+                                 "tool":  "acpi-dupnames",
+                                 "exit_code":  null,
+                                 "iasl_crash_exit":  4294967295,
+                                 "dsdt_kept":  "dsdt.aml.crash"
+                             }
+                         ],
+    "acpi_fingerprints":  [
+                              {
+                                  "signature":  "APIC",
+                                  "size":  476,
+                                  "sha256":  "9e01c648f16e4b518eb186c0f2fff7a8dff3d8224a1834eb2702870f520c794a"
+                              },
+                              {
+                                  "signature":  "DSDT",
+                                  "size":  307077,
+                                  "sha256":  "56f65cc89927c82afe22f43141f67d16e56fceef1dbf2441cba6d1abaa2a612a"
+                              }
+                          ],
+    "report_sha256":  "3e00d398a6c545b3a6de64b807b514820424947a1164b0862eaadb90f0b33728",
+    "validation":  {
+
+                   },
+    "policy_changes":  [
+
+                       ],
+    "failure_frames":  [
+
+                       ],
+    "gpus":  [
+                 {
+                     "name":  "NVIDIA GeForce RTX 2050",
+                     "device_id":  "10DE-25A9",
+                     "pci_path":  "PciRoot(0x0)/Pci(0x6,0x0)/Pci(0x0,0x0)",
+                     "acpi_path":  "\\_SB.PC00.PEG0.PEGP"
+                 },
+                 {
+                     "name":  "Intel(R) Iris(R) Xe Graphics",
+                     "device_id":  "8086-46A6",
+                     "pci_path":  "PciRoot(0x0)/Pci(0x2,0x0)",
+                     "acpi_path":  "\\_SB.PC00.GFX0"
+                 }
+             ],
+    "cpu_native":  {
+                       "status":  "unavailable",
+                       "source":  "nm_cpuinfo.exe documented read-only CPUID allow-list",
+                       "error":  "CPUID helper unavailable (ValueError)"
+                   }
+}
