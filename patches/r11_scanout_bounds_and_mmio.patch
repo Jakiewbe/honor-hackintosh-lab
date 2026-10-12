@@ -1,0 +1,100 @@
+# Review-only candidate for NullMoth NVIDIA macOS driver at pinned commit
+# R1.1 fail-closed scanout copy bounds + BAR0 mapping guard + deferred flip gate.
+# Licensed as modifications under the original PolyForm Noncommercial 1.0.0 terms.
+diff --git a/kexts/NMIntelFB/intelfb.cpp b/kexts/NMIntelFB/intelfb.cpp
+--- a/kexts/NMIntelFB/intelfb.cpp
++++ b/kexts/NMIntelFB/intelfb.cpp
+@@ -327,8 +327,16 @@
+     fPCI->setMemoryEnable(true);
+     fMMIO = fPCI->mapDeviceMemoryWithRegister(kIOPCIConfigBaseAddress0);
+     IODeviceMemory *ap = fPCI->getDeviceMemoryWithRegister(kIOPCIConfigBaseAddress2);
+-    if (!fMMIO || !ap) { IFBLOG("BAR0 or BAR2 is not mapped - leaving the firmware screen"); OSSafeReleaseNULL(fMMIO); return false; }
+-    fRegs = (volatile uint8_t *)fMMIO->getVirtualAddress();
++    if (!fMMIO || !ap) { IFBLOG("BAR0 or BAR2 is not mapped - leaving the firmware screen"); OSSafeReleaseNULL(fMMIO); return false; }
++    // R1.1: check the complete four-pipe register window before any MMIO read.
++    // PLANE_SURF(3) is the highest 32-bit offset used by adoptFirmwareMode().
++    if (!fMMIO->getVirtualAddress() ||
++        fMMIO->getLength() < (uint64_t)PLANE_SURF(3) + sizeof(uint32_t)) {
++        IFBLOG("BAR0 aperture too short or unmapped - refusing MMIO reads");
++        OSSafeReleaseNULL(fMMIO);
++        return false;
++    }
++    fRegs = (volatile uint8_t *)fMMIO->getVirtualAddress();
+     fApertureBase = ap->getPhysicalAddress(); fApertureLen = ap->getLength();
+     if (!adoptFirmwareMode()) { OSSafeReleaseNULL(fMMIO); fRegs = nullptr; return false; }
+     if (!IOFramebuffer::start(provider)) { OSSafeReleaseNULL(fMMIO); fRegs = nullptr; return false; }
+@@ -412,11 +420,20 @@
+     if (fn && fn->isEqualTo(NVRM_VRAM_FN_SCANOUT)) {
+         NVRMVramRequest *r = (NVRMVramRequest *)p1;
+         if (!r || r->version != NVRM_VRAM_ABI_VERSION) return kIOReturnBadArgument;
+-        if (!fSurfMap) return kIOReturnNotReady;
+-        r->kva = (void *)fSurfMap->getVirtualAddress();
+-        r->phys = 0; r->actualSize = 0;
+-        r->width = fWidth; r->height = fHeight; r->pitch = fRowBytes;
+-        return kIOReturnSuccess;
++        if (!fSurfMap) return kIOReturnNotReady;
++        // R1.1: supply a bounded writable scanout region, not a size-less kva.
++        // The final scanline only requires the active pixel bytes.
++        const uint64_t pixelBytes = (uint64_t)fWidth * sizeof(uint32_t);
++        const uint64_t bytesNeeded = (uint64_t)(fHeight ? fHeight - 1 : 0) * fRowBytes + pixelBytes;
++        const uint64_t mappedBytes = fSurfMap->getLength();
++        void *const base = (void *)fSurfMap->getVirtualAddress();
++        if (!base || !fWidth || !fHeight || (fRowBytes & 3u) ||
++            (uint64_t)fRowBytes < pixelBytes || mappedBytes < bytesNeeded)
++            return kIOReturnNotReady;
++        r->kva = base;
++        r->phys = 0; r->actualSize = mappedBytes;
++        r->width = fWidth; r->height = fHeight; r->pitch = fRowBytes;
++        return kIOReturnSuccess;
+     }
+     return IOFramebuffer::callPlatformFunction(fn, wait, p1, p2, p3, p4);
+ }
+diff --git a/kexts/NVRM/accel/nvrm-accel.cpp b/kexts/NVRM/accel/nvrm-accel.cpp
+--- a/kexts/NVRM/accel/nvrm-accel.cpp
++++ b/kexts/NVRM/accel/nvrm-accel.cpp
+@@ -881,17 +881,30 @@
+     } else {
+         NVIOP_FAIL(kIOReturnUnsupported, "plane resource %p is not an NVResource with a CPU mapping, and there is no IOSurface", ro);
+     }
+-    if (!w || !h || pitch < 4) NVIOP_FAIL(kIOReturnBadArgument, "source geometry %ux%u pitch %u", w, h, pitch);
++    if (!w || !h || w > 16384 || h > 16384 || (pitch & 3u) ||
++        (unsigned long long)pitch < 4ull * w)
++        NVIOP_FAIL(kIOReturnBadArgument, "unbounded source geometry %ux%u pitch %u", w, h, pitch);
+ 
+     struct NVRMVramRequest q;
+     for (unsigned i = 0; i < sizeof q; i++) ((volatile unsigned char *)&q)[i] = 0;
+     q.version = NVRM_VRAM_ABI_VERSION;
+     IOReturn ret = a->askFramebufferForScanout(&q, fb);
+     if (ret != kIOReturnSuccess || !q.kva || q.pitch < 4 || !q.height) NVIOP_FAIL(kIOReturnNotReady, "framebuffer would not describe its scanout (0x%x kva %p pitch %u)", (unsigned)ret, q.kva, q.pitch);
+-    if (w != q.width || h != q.height) NVIOP_FAIL(kIOReturnBadArgument, "source %ux%u is not the scanout's %ux%u", w, h, q.width, q.height);
+-
+-    nvAccelIopHome(fb, head);
+-    const unsigned words = (((pitch < q.pitch) ? pitch : q.pitch) & ~3u) / 4;
++    if (w != q.width || h != q.height) NVIOP_FAIL(kIOReturnBadArgument, "source %ux%u is not the scanout's %ux%u", w, h, q.width, q.height);
++    // R1.1: the scanout producer must report its real writable mapping size.
++    // Copy active pixels only, never unchecked row padding.
++    const unsigned long long pixelBytes = 4ull * w;
++    const unsigned long long srcNeeded = (unsigned long long)(h - 1) * pitch + pixelBytes;
++    const unsigned long long dstNeeded = (unsigned long long)(h - 1) * q.pitch + pixelBytes;
++    if ((q.pitch & 3u) || (unsigned long long)q.pitch < pixelBytes ||
++        !q.actualSize || q.actualSize < dstNeeded)
++        NVIOP_FAIL(kIOReturnOverrun, "scanout capacity %llu below required %llu bytes (pitch %u)",
++                   q.actualSize, dstNeeded, q.pitch);
++    if (fromRes && (!vm || vm->fBytes < srcNeeded))
++        NVIOP_FAIL(kIOReturnOverrun, "source resource capacity below required %llu bytes", srcNeeded);
++
++    nvAccelIopHome(fb, head);
++    const unsigned words = w;
+     const unsigned spr = pitch / 4, dpr = q.pitch / 4;
+     volatile unsigned int *d = (volatile unsigned int *)q.kva;
+     for (unsigned y = 0; y < h; y++) {
+@@ -1493,7 +1506,8 @@
+     if (!W || !H || P < 4 * W || H * P > bytes) return nvAccelIopFlipNo(6);
+     struct NVRMFlipRequest f; nvSVZero(&f, sizeof f);
+     f.version = NVRM_FLIP_ABI_VERSION; f.kapiMemory = kmem; f.allocationCookie = vm->fAllocationCookie; f.width = (unsigned)W; f.height = (unsigned)H; f.pitch = (unsigned)P;
+-    if (gIopAsync && pipe) return nvAccelIopAsyncStart(pipe, fb, head, s, &f);
++    // R1.1: deferred flip callbacks lack a proven teardown/drain protocol.
++    // Do not enqueue; the existing synchronous flip path below remains in use.
+     const OSSymbol *sym = OSSymbol::withCStringNoCopy("nvFlipToSurfacePure");
+     IOReturn rr = sym ? fb->callPlatformFunction(sym, false, &f, nullptr, nullptr, nullptr) : kIOReturnNoMemory;
+     if (sym) sym->release();
