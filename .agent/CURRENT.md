@@ -1,33 +1,27 @@
 # 当前断点
 
 ## 当前阶段
-R1.4-C0-pre SOURCE-STATIC选表-e解析验收；RUNTIME_NO_GO。
+H1 外接SSD引导与安装：方案编写（文档），尚未执行任何写盘/BIOS/引导；RUNTIME_NO_GO直到用户逐条批准。
 
 ## 当前任务
-R14C0PRE静态交付done；16张原目标按冲突组选择外部代表，16通过0失败。
-R14C0完整源/许可/配置/接口闭包仍blocked，不进入native/kext。
-A1401支线done（D-16，用户10-13授权）：1401审计+沙箱build，ocvalidate仅结构校验；不改GOAL，见logs/RESEARCH_LOG.md。
+H1 doing：写H1方案（前置检查、U盘与外接SSD准备、BIOS、引导、日志采集、回滚），交用户审阅。
+R14C0 blocked（L1源码闭包，现归入H3）；R14C0PRE、A1401 done。
 
 ## 已完成工作
-PEG1._S0W、HS10.SADX与触摸板_PS0/_PS3重复已定位，不改原AML。
-每个目标13外部表，两组各排除一个成员；第一次2/14、改组内代表后16/0。
-38项findings与跨表复核；NV/Igfx文本不变；TCSS新增PCIC(1)/PCID(4)。
-135离线测试通过0失败；36表输入匹配，环境路径/身份信息0命中。
-AGENTS状态约定支持无仓库工具时直接维护revision，原有安全条款不变。
+D-17：用户批准GOAL扩展为整机分阶段适配H1-H4；外接SSD实机，内置NVMe/Windows永不改。
+候选EFI：D:\Hactk\efi-candidates\GLO-FX6P-1401-20261013（A-main首选、B-fexitbs对照），ocvalidate通过、未引导。
+1401支线结论：RTX2050无输出、无MUX；内屏只能靠Iris Xe固件帧缓冲；触控板需改VoodooI2C匹配。
+用户器材：U盘、外接SSD、USB鼠标；无外接显示器。
 
 ## 当前阻塞
-DSDT仍有外部方法警告、EDMX仍UnknownObj；NVS值、ASLB初始化者未知。
-OpRegion/VBT内容未取得；完整依赖/XNU合同/驱动/实机/恢复证据仍缺。
+H1每一步（关Secure Boot、写U盘、格式化外接SSD、引导）都需要用户单独批准。
+同平台1401 Issue 26卡EXITBS:START，原因未定（Q-18）。
 
 ## 下一步动作
-R1.4-C0 T0→T4；T2复用声明并补真实ACPI evaluator、ASLS映射/内容合同。
-用户授权更新同分支PR #2：https://github.com/Jakiewbe/honor-hackintosh-lab/pull/2。
-不合并、不触发Actions、不强推；等待用户审查。
+提交H1方案；用户批准后按步骤执行并记录OpenCore日志。
 
 ## 状态修订
-以state.json/tasks.json为准，写入前status；证据见verification.json。
+以state.json/tasks.json为准，写入前status；1401支线日志见logs/RESEARCH_LOG.md。
 
 ## Git 检查
-从ffbc8fd在原分支research/acpi-static-external-review继续，保留main历史。
-原调查目录/旧实验/workflows不改；本轮解析容器已删除。
-10-13 A1401：本地main合并origin/main为e379252，未推送；EFI仅在%TEMP%沙箱。
+origin/main在985c28d；本地c5d5f69及之后提交未推送，推送需用户批准。不建分支/工作树。

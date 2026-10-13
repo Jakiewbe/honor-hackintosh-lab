@@ -3,20 +3,20 @@
   "kit_version": "1.2.0",
   "project_id": "f6a08808-ada4-48fe-b2ad-82c0c827154b",
   "name": "HONOR Hackintosh Lab",
-  "revision": 28,
-  "task_revision": 14,
-  "current_task_revision": 14,
-  "goal_version": 2,
+  "revision": 33,
+  "task_revision": 16,
+  "current_task_revision": 16,
+  "goal_version": 3,
   "goal_approved": true,
-  "updated_at": "2026-10-12T16:59:08.232981+00:00",
+  "updated_at": "2026-10-13T01:43:10.306031+00:00",
   "snapshot_keep": 20,
   "log_max_bytes": 65536,
   "hashes": {
-    "GOAL.md": "75e971a616ff73ca8bb457c3089308f5f1a5fefdf8a95e36ebcd29828fa7af7e",
-    "CURRENT.md": "cc8a6c0a864fe37f90239437d5a96b3222751e439def447a0c310d11b7825591",
-    "DECISIONS.md": "55d171bc2b36607c55841579e507a9eb13eedc833b2821c6d0a645d88dbb229e",
+    "GOAL.md": "4c6323099a407ffc95ef2c3c39d7944a7a2f01dd70974fb50ee37ce201e8baee",
+    "CURRENT.md": "c7313134febddb819208e9aa81338052ac812070727a19449e648d5f6e464f71",
+    "DECISIONS.md": "cecd177075f22265f3bc732dd285c31da89925d1631efb0eb044bc08f45f4eec",
     "LESSONS.md": "bc132e21024d06589d7643874c14814b2b026eccc1478f1bba288c3b421cfc4a",
-    "tasks.json": "c52234b4f91b70d28ed92ba0f1e810b423ad99f4cf546e49b4331868e4832bba"
+    "tasks.json": "773f062e5dc91e46983e5b848e30908f77518e4b52e87144604ff33f0bb74a10"
   },
   "history": [
     {
@@ -298,6 +298,60 @@
       "action": "state:update",
       "reason": "CURRENT登记A1401支线与合并状态",
       "timestamp": "2026-10-12T16:59:08.232981+00:00"
+    },
+    {
+      "action": "document-version",
+      "file": "GOAL.md",
+      "previous_sha256": "75e971a616ff73ca8bb457c3089308f5f1a5fefdf8a95e36ebcd29828fa7af7e",
+      "content": "# 项目目标\n\n## 核心目标\n在 HONOR GLO-FX6P 上分阶段适配 macOS 整机：H1 外接 SSD 引导与安装 → H2 外设逐项（Wi-Fi/蓝牙/键盘/触控板/音频/电池/USB/睡眠）→ H3 Intel 46A6 内屏基础显示（先固件帧缓冲，再自研最小驱动，即原 L1）→ H4 加速可行性（后置）。\n\n## 项目背景\nHONOR GLO-FX6P/i5-12500H，Iris Xe 8086:46A6 接内屏，RTX2050 10DE:25A9 为 0302 无显示输出、无 MUX；BitLocker 未加密、Secure Boot 开启。用户 2026-10-12 授权接管 L1，2026-10-13 批准扩展为整机分阶段适配。\n\n## 关键约束\n根目录 AGENTS.md。内置 NVMe、Windows、其 ESP/BCD/启动项始终不动；macOS 只装在外接 SSD。改 BIOS/Secure Boot、写 U 盘或外接 SSD、引导、kext 加载等每个有副作用的动作需用户逐条批准。禁止自行触发 Actions、上游 Issue/PR、二进制发布、强推、私建分支/工作树。\n\n## 非目标\n不在内置硬盘安装或双系统分区；不承诺 Intel Metal 加速；不改 Windows 引导。\n\n## 验收标准\n每阶段以实机证据验收（OpenCore 日志、macOS 日志/ioreg、可复现步骤与回滚记录）；ocvalidate、编译通过、模型不能冒充实机结果。H3 沿用 L1 标准：持续画面、输入、停止与恢复证据。\n\n## 目标版本\n以 state.json 为准；依据用户本轮明确目标。\n",
+      "user_approved": true,
+      "timestamp": "2026-10-13T01:43:10.306031+00:00"
+    },
+    {
+      "revision": 29,
+      "action": "state:update",
+      "reason": "用户批准D-17：GOAL扩展为整机分阶段适配H1-H4，外接SSD实机，内置盘不动",
+      "timestamp": "2026-10-13T01:43:10.306031+00:00"
+    },
+    {
+      "action": "document-version",
+      "file": "DECISIONS.md",
+      "previous_sha256": "55d171bc2b36607c55841579e507a9eb13eedc833b2821c6d0a645d88dbb229e",
+      "content": "# 重要决策\n\n仅记录已经确认的决策。每条包含时间、背景、备选方案、选择、原因、适用范围及变更情况。\n\n## 2026-10-12 接管与源码阶段边界\n用户明确授权L1及R1.4-C0；采用四个旧固定commit和测试矩阵支持的FreeBSD14.3.0精确候选。拒绝以版本名、上游PM空成功或source slice冒充XNU实现。首轮证据见正式报告和verification；完整B0/B1未验收，任务blocked，不进入B2/B3。其他候选base与裁剪路线未采用；改变需新的真实源码/接口证据。\n\n## 2026-10-12 C0.1源码证据限定电源适配接口\n按用户既定失败停止要求，真实power void超时链与XNU PM确认语义不可继承为硬件成功。采用独立实际状态/所有权/故障与有限时退出合同；未实现全部BLOCKED。版本候选不变，不进入kext。证据c01/build-and-providers.md及verification.json；不是平台运行结论。\n\n## 2026-10-13 用户批准的逐表外部代表和便携状态约定\n保留全部原表作为目标，仅按两组显式冲突选择13张外部代表，避免DSDT/SSDT9触摸板重复；已实测16/0，不修改AML或忽略错误。用户允许补入工具或改便携规则，选择后者，避免把仓库外安装变成克隆仓库的前提；AGENTS原安全段不变。当前本地状态工具可用，用其保持既有修订/哈希一致，未来无工具时按仓库规则直接维护。仅SOURCE-STATIC，保持RUNTIME_NO_GO。\n\n## 2026-10-13 D-17整机分阶段适配\n背景：1401支线显示RTX2050无输出、无MUX，任何显示/外设工作都需真实macOS环境。备选：维持纸面研究/虚拟机/外接SSD实机。用户选择批准扩展GOAL为H1-H4，只在外接SSD实机测试；内置NVMe与Windows永不改；BIOS、写盘、引导、kext逐条批准。用户已有U盘、外接SSD、USB鼠标。L1技术约束不变。\n",
+      "user_approved": true,
+      "timestamp": "2026-10-13T01:43:10.306031+00:00"
+    },
+    {
+      "revision": 30,
+      "action": "state:update",
+      "reason": "登记D-17决策",
+      "timestamp": "2026-10-13T01:43:10.306031+00:00"
+    },
+    {
+      "revision": 31,
+      "action": "task:add",
+      "reason": "登记H1外接SSD引导与安装",
+      "timestamp": "2026-10-13T01:43:10.306031+00:00"
+    },
+    {
+      "revision": 32,
+      "action": "task:update",
+      "reason": "H1开始：先写方案",
+      "timestamp": "2026-10-13T01:43:10.306031+00:00"
+    },
+    {
+      "action": "document-version",
+      "file": "CURRENT.md",
+      "previous_sha256": "cc8a6c0a864fe37f90239437d5a96b3222751e439def447a0c310d11b7825591",
+      "content": "# 当前断点\n\n## 当前阶段\nH1 外接SSD引导与安装：方案编写（文档），尚未执行任何写盘/BIOS/引导；RUNTIME_NO_GO直到用户逐条批准。\n\n## 当前任务\nH1 doing：写H1方案（前置检查、U盘与外接SSD准备、BIOS、引导、日志采集、回滚），交用户审阅。\nR14C0 blocked（L1源码闭包，现归入H3）；R14C0PRE、A1401 done。\n\n## 已完成工作\nD-17：用户批准GOAL扩展为整机分阶段适配H1-H4；外接SSD实机，内置NVMe/Windows永不改。\n候选EFI：D:\\Hactk\\efi-candidates\\GLO-FX6P-1401-20261013（A-main首选、B-fexitbs对照），ocvalidate通过、未引导。\n1401支线结论：RTX2050无输出、无MUX；内屏只能靠Iris Xe固件帧缓冲；触控板需改VoodooI2C匹配。\n用户器材：U盘、外接SSD、USB鼠标；无外接显示器。\n\n## 当前阻塞\nH1每一步（关Secure Boot、写U盘、格式化外接SSD、引导）都需要用户单独批准。\n同平台1401 Issue 26卡EXITBS:START，原因未定（Q-18）。\n\n## 下一步动作\n提交H1方案；用户批准后按步骤执行并记录OpenCore日志。\n\n## 状态修订\n以state.json/tasks.json为准，写入前status；1401支线日志见logs/RESEARCH_LOG.md。\n\n## Git 检查\norigin/main在985c28d；本地c5d5f69及之后提交未推送，推送需用户批准。不建分支/工作树。\n",
+      "user_approved": false,
+      "timestamp": "2026-10-13T01:43:10.306031+00:00"
+    },
+    {
+      "revision": 33,
+      "action": "state:update",
+      "reason": "CURRENT切换到H1方案阶段",
+      "timestamp": "2026-10-13T01:43:10.306031+00:00"
     }
   ]
 }

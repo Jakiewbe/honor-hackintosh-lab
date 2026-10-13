@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project_id": "f6a08808-ada4-48fe-b2ad-82c0c827154b",
-  "revision": 14,
+  "revision": 16,
   "tasks": [
     {
       "task_id": "R14C0",
@@ -103,6 +103,22 @@
       "blocker": "",
       "updated_at": "2026-10-12T16:59:08.230975+00:00",
       "completed_at": "2026-10-12T16:59:08.230975+00:00"
+    },
+    {
+      "task_id": "H1",
+      "title": "外接SSD引导与安装macOS",
+      "description": "D-17阶段H1：先写方案交用户审阅；每个副作用步骤逐条批准；内置NVMe/Windows不动",
+      "milestone": "H1",
+      "plan": "approved",
+      "dependencies": [],
+      "acceptance_criteria": [
+        "方案文档：前置检查、U盘与外接SSD准备、BIOS、引导、日志采集与回滚，用户审阅",
+        "U盘引导OpenCore并保存日志；记录A-main（必要时B-fexitbs）结果，不论成败",
+        "macOS安装到外接SSD并能从其独立启动，内置盘与Windows启动验证未受影响"
+      ],
+      "status": "doing",
+      "blocker": "",
+      "updated_at": "2026-10-13T01:43:10.306031+00:00"
     }
   ],
   "history": [
@@ -387,6 +403,34 @@
         ]
       },
       "reason": "支线已按用户逐步批准完成；仅SOURCE/配置层证据，RUNTIME_NO_GO"
+    },
+    {
+      "revision": 15,
+      "timestamp": "2026-10-13T01:43:10.306031+00:00",
+      "action": "add",
+      "payload": {
+        "task_id": "H1",
+        "title": "外接SSD引导与安装macOS",
+        "plan": "approved",
+        "milestone": "H1",
+        "description": "D-17阶段H1：先写方案交用户审阅；每个副作用步骤逐条批准；内置NVMe/Windows不动",
+        "acceptance_criteria": [
+          "方案文档：前置检查、U盘与外接SSD准备、BIOS、引导、日志采集与回滚，用户审阅",
+          "U盘引导OpenCore并保存日志；记录A-main（必要时B-fexitbs）结果，不论成败",
+          "macOS安装到外接SSD并能从其独立启动，内置盘与Windows启动验证未受影响"
+        ]
+      },
+      "reason": "用户批准D-17并要求开始整机适配"
+    },
+    {
+      "revision": 16,
+      "timestamp": "2026-10-13T01:43:10.306031+00:00",
+      "action": "update",
+      "payload": {
+        "task_id": "H1",
+        "status": "doing"
+      },
+      "reason": "开始编写H1方案"
     }
   ]
 }

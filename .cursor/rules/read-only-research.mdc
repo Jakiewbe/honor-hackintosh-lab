@@ -5,7 +5,11 @@ alwaysApply: true
 
 # READ_ONLY_RESEARCH（默认模式）
 
-This laptop is the user's only Windows machine (one NVMe disk, Secure Boot on, BitLocker/WinRE unknown).
+This laptop is the user's only Windows machine (one NVMe disk, Secure Boot on, BitLocker off, WinRE enabled).
+
+Since 2026-10-13 (decision D-17) the project goal is staged whole-machine adaptation on an
+external SSD. That does NOT relax this rule: every item below still needs the user's approval
+for that exact action. The internal NVMe, Windows, its ESP/BCD and boot entries are never touched.
 
 Never, without the user's separate explicit approval for that exact action:
 - Modify Windows EFI, BCD, boot config, NVRAM boot entries, BIOS, Secure Boot, TPM, BitLocker.

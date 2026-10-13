@@ -6,12 +6,12 @@
 
 针对 **HONOR GLO-FX6P / i5-12500H / Intel Iris Xe PCI 8086:46A6 / NVIDIA RTX 2050 Laptop PCI 10DE:25A9**，研究能否构建可靠的 macOS 图形与启动环境。已确认**内屏在当前 Windows 模式下连接 Intel 核显**，不要重新询问此事。
 
-**当前工程目标仅为 L1：Intel 46A6 内屏的基本、持续刷新的 macOS 显示（允许无 GPU 硬件加速）**。L2 Intel Metal 与 L3 RTX 2050 混合加速只作远期门禁研究，不得同时推动。研究方向以[知识库](knowledge/README.md)为权威入口；遇到旧文件与新决定冲突，阅读[决策登记](knowledge/07_DECISIONS.md)并查原始证据。
+**当前工程目标（2026-10-13 用户批准扩展，决策 D-17）：整机分阶段适配**——H1 外接 SSD 引导与安装 → H2 外设逐项 → H3 Intel 46A6 内屏基础显示（即 L1：基本、持续刷新，允许无 GPU 硬件加速）→ H4 加速可行性。L2 Intel Metal 与 L3 RTX 2050 混合加速只作远期门禁研究，不得同时推动。详见 [`.agent/GOAL.md`](.agent/GOAL.md)。研究方向以[知识库](knowledge/README.md)为权威入口；遇到旧文件与新决定冲突，阅读[决策登记](knowledge/07_DECISIONS.md)并查原始证据。
 
 ## 绝对禁区（没有新的明确授权，不得突破）
 
-- **不操作主力 HONOR 笔记本**：不得修改 Windows、磁盘/分区、EFI、BCD、UEFI/BIOS、BitLocker、Secure Boot、安全设置；不得自动下载/执行第三方 EFI、安装器或显卡驱动。
-- **不得安装、签名、加载、启动、注入 kext；不得关闭 SIP 或绕过 macOS 安全机制**。目前没有具备恢复保证的独立实机验证环境。
+- **内置 NVMe 与 Windows 永远不动**：不得修改 Windows、内置磁盘分区、内置 ESP、BCD、Windows 启动项、BitLocker、TPM。macOS 只装在外接 SSD；OpenCore 只放在 U 盘或外接 SSD 的 ESP。
+- **以下动作每一次都需要用户针对该动作单独批准**（D-17）：改 BIOS/Secure Boot；写入或格式化 U 盘/外接 SSD；从 U 盘/外接 SSD 引导；在外接 SSD 的 macOS 中安装/加载 kext、改 SIP；下载并执行第三方 EFI、安装器或驱动。批准前先说明风险与回滚；未批准时不得以“流程默认”代替授权。
 - **不得自行触发、重新运行 GitHub Actions**。所有 workflow_dispatch 仅由用户手动在 GitHub UI 启动；只能创建/修改静态工作流设计。不得使用自动 push/schedule 触发。
 - **不得自行公开发 Issue/PR、发布 Release 或上传驱动二进制**，除非用户针对该具体行动明确同意。历史 [NullMoth Issue #146](https://github.com/nullmoth/nvidia-macos-driver/issues/146) 已提交，禁止创建重复问题。
 - 禁止编造硬件寄存器/固件地址、GPU 成功日志、CI 结果、缺失源码或测试数据。禁止用假成功 Stub（尤其是 MMIO、供电、固件、锁、DMA、eDP）绕过真正阻塞。
