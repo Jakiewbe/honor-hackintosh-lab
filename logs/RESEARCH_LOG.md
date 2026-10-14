@@ -14,7 +14,7 @@
   2. 用户目视：Q-01 **DONE**（用户称 BIOS 只有基础项，网络旁证一致，判定无 MUX）；Q-02 PARTIAL（推断外接口全部在 Intel，接外屏实测为可选，不改评级）。
   3. 管理员只读：**已完成**（用户批准，UAC 运行一次；Q-04/Q-05 DONE）。
   4. 沙箱候选 EFI：C1 扫描、C2 plan、C3 build + ocvalidate **全部完成**（[docs/1401-plan-run-20261013](../docs/1401-plan-run-20261013/SUMMARY.md)）；ocvalidate 0 问题。沙箱保留在 `%TEMP%\hk-1401-scan-20261013-004439`（含生成的 EFI，**不得复制到任何 U 盘或 ESP**，除非另行批准引导实验）。
-- **目标已变更（D-17，用户批准）**：整机分阶段适配 H1–H4，只在外接 SSD 实机测试，内置 NVMe/Windows 永不改；BIOS、写盘、引导、kext 逐条批准。当前任务 H1，方案与执行记录见 [`docs/H1_外接SSD引导安装方案.md`](../docs/H1_外接SSD引导安装方案.md) 附录。**进度（10-14 13:48）**：U 盘原数据已备份到 `D:\USB-backup-KIOXIA-20261014` 并逐文件校验；U 盘已重做为 GPT + FAT32 `OCINSTALL` 并放入 H1-A EFI。macOS 15 恢复镜像已下载校验并放入 U 盘（S1 完成，14:00 前后）。**下一步**：S2 关 Secure Boot（用户手动）→ S3 F12 引导 → 回 Windows 后读 U 盘根目录 `opencore-*.txt`
+- **目标已变更（D-17，用户批准）**：整机分阶段适配 H1–H4，只在外接 SSD 实机测试，内置 NVMe/Windows 永不改；BIOS、写盘、引导、kext 逐条批准。当前任务 H1，方案与执行记录见 [`docs/H1_外接SSD引导安装方案.md`](../docs/H1_外接SSD引导安装方案.md) 附录。**进度（10-14 13:48）**：U 盘原数据已备份到 `D:\USB-backup-KIOXIA-20261014` 并逐文件校验；U 盘已重做为 GPT + FAT32 `OCINSTALL` 并放入 H1-A EFI。macOS 15 恢复镜像已下载校验并放入 U 盘（S1 完成，14:00 前后）。S2 已完成（Secure Boot 关）。S3 第一轮（17:03/17:05）菜单无恢复项：H1-A 的 `HideAuxiliary=true` 隐藏了 `com.apple.recovery.boot`（源码已核对，见 H1 文档附录“S3 第一轮”）。**下一步**：S3 重试——F12 → U 盘 → 方向键停倒计时 → 空格显示辅助项 → 选恢复项；回 Windows 后读 U 盘根目录最新 `opencore-*.txt`（含序列号，不入库）
 - **候选 EFI**：`D:\Hactk\efi-candidates\GLO-FX6P-1401-20261013\`（仓库外，含生成序列号）：H1 用 `H1-A`（首选）/`H1-B`（对照）；`A-main`、`B-fexitbs`、`original-1401` 留档，均过 ocvalidate、未引导。说明见该目录 `README.md` 与 SUMMARY 第 6 节
 - **剩余待办**：Q-01 已关闭；Q-02 外接屏实测可选。下一阶段（保持只读 / 规划 U 盘实验 / 回 L1 主线）**等用户决定**；Q-18 静态比对已做，仍 OPEN（只能靠引导日志）；Q-19 PARTIAL，用户决定**不做**逐字节复现；定期跟踪 PR #131/#133（01:04 复查无变化）。**提交信息不要写 `owner/repo#N`**（仓库公开，会在上游 Issue 生成反向链接，见日志第 12 条）。下一层（U 盘引导）超出 READ_ONLY_RESEARCH，需要用户明确开启新阶段；届时应先从 `UEFI.Drivers` 移除 `NullMothLogo.efi`（它每次启动写 NVRAM，R-19）。
 - **续做前先跑**：`python tests/test_1401_static_audit.py`（13 项；SHA 断言失败 = 上游已变，先更新 `research/SOURCES.md`）
@@ -193,3 +193,8 @@ GitHub API 只读 GET `acpica/acpica/releases`：20260930 只有 Unix 资产，2
 17. 检查 A-main 配置：`WriteFlash=true`、`ResetNvramEntry` 无参数且 `HideAuxiliary=false`（误选 Reset NVRAM 可能删除 Windows 启动项）、`LauncherOption=Disabled`、`RequestBootVarRouting=true`。OpenCore 1.0.9 的 `ResetNvramEntry.efi` 含 `--preserve-boot`。内置 NVMe 位于 `PciRoot(0x0)/Pci(0x6,0x2)/Pci(0x0,0x0)`（硬件调查 `hardware.json`）。生成 `H1-A`/`H1-B`：四项安全调整，逐键 diff 确认，ocvalidate 通过。
 18. 核对 OpenCore 1.0.9 的 `macrecovery.py`：只访问 `osrecovery.apple.com`，写入仅限输出目录；Sequoia 参数 `-b Mac-7BA5B2D9E42DDD94`。写 H1 方案文档（S0–S6、停止条件、不确定性）。未执行任何写盘/BIOS/引导。
 19. （11:14）用户担心内屏点不亮、驱动适配不了。复查已抓取的 PR #131 正文：driver#119 的 Tiger Lake 无 MUX 机型在 `-nvoff` 下桌面出现在 Intel 固件帧缓冲上（他机实测）。此前兼容性表漏记该点；“Iris Xe 固件帧缓冲内屏（未装 NVIDIA 驱动）”由 D 上调为 C。另：1401 Issue 26 的配置禁用了接内屏的核显，其黑屏不能直接外推到保留核显的 H1-A。
+
+### H1 实机：S0–S3 第一轮（2026-10-14）
+
+20. S0 磁盘识别、U 盘备份、S1 制作 U 盘与恢复镜像下载：经过与哈希见 [`docs/H1_外接SSD引导安装方案.md`](../docs/H1_外接SSD引导安装方案.md) 附录。
+21. （17:03/17:05）用户关 Secure Boot 后 F12 从 U 盘引导两次，“压根没看到 mac 的 recovery”。读 U 盘根目录两份 OpenCore 日志（复制到沙箱 `h1-logs\`，含生成序列号，不入库）：U 盘分区被扫描但 `(aux hidden)`，未加 recovery 条目，菜单只有两个 Windows 项。sparse 克隆 OpenCorePkg master `81ecf1a` 到沙箱（上游无 1.0.9 标签，1401 用的 1.0.9 应为开发构建）核对：`AddBootEntryFromSelfRecovery` 在 `HideAuxiliary` 为真时不添加 `com.apple.recovery.boot`，菜单内空格键可临时取消隐藏。**原因是 H1-A 自己加的 `HideAuxiliary=true`（第 17 条）**，当时只考虑了隐藏 Reset NVRAM，未意识到恢复项同属辅助项。处理：S3 改为菜单内按空格，不改 U 盘。

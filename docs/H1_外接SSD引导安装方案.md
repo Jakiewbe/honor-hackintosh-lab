@@ -48,7 +48,7 @@ H1 安全调整（相对 1401 输出，均通过 ocvalidate 1.0.9）：
 - 回滚：同一位置改回 Enabled。
 
 ### S3 🔒 首次从 U 盘引导（你手动操作）
-开机按 `F12`，在一次性启动菜单里选 U 盘（这**不改**固件启动顺序）。OpenCore 菜单出现后选 “macOS Base System / Recovery”。屏幕会滚动 verbose 文字。
+开机按 `F12`，在一次性启动菜单里选 U 盘（这**不改**固件启动顺序）。OpenCore 菜单出现后**先按一下方向键停住 5 秒倒计时，再按空格键**（H1-A 设了 `HideAuxiliary=true`，恢复项属于辅助项，按空格才显示），然后选恢复项（名称类似 “macOS Base System / Recovery”）。屏幕会滚动 verbose 文字。
 
 可能结果与处理：
 
@@ -110,3 +110,10 @@ H1 安全调整（相对 1401 输出，均通过 ocvalidate 1.0.9）：
 - **S1 执行（13:46，用户批准 + UAC）**：第一次运行七项断言全过，`Clear-Disk` 成功（U 盘 0 分区，仍为 MBR），随后 `Initialize-Disk` 报“已初始化”终止。日志中另有 13:46:43 的第二次运行记录（非本代理启动），断言同样全过，作用于已清空的 U 盘。修正脚本（清空后 MBR 用 `Set-Disk -PartitionStyle GPT`，已无分区则跳过清空）后再次 UAC 运行，退出 0：磁盘 1 为 GPT、1 个分区，E: `OCINSTALL` FAT32 15.99 GB。磁盘 0 仍为 GPT、7 个分区。
 - 复制 `H1-A\EFI` → `E:\EFI`（142 文件，SHA256 全一致），`H1-B` 的 config 另存为 `E:\EFI\OC\config-B.plist`（一致）。
 - 恢复镜像（13:51 用户批准）：OpenCore 1.0.9 `macrecovery.py -b Mac-7BA5B2D9E42DDD94 -m 00000000000000000 download`，在沙箱 `dl\recovery-sequoia` 下载并按 chunklist 校验通过（86 块）。`BaseSystem.dmg` 884317790 字节 SHA256 `7314EB40…`，`BaseSystem.chunklist` 3352 字节 `DBF262B8…`；复制到 `E:\com.apple.recovery.boot\`，哈希一致。U 盘剩余 15.13 GB。**S1 完成**；下一步 S2（用户手动关 Secure Boot）、S3（F12 引导）。
+
+## 附录：S3 第一轮（2026-10-14 17:03、17:05）
+
+- 用户已关 Secure Boot（日志 `OCSB: Secure boot is disabled`），F12 从 U 盘引导两次，OpenCore 菜单只有两个 Windows 项，没有恢复项。第一次超时启动内置盘 ESP 的 Windows，第二次用户选了内置盘分区 5 的 `\EFI\BOOT\BOOTX64.EFI`。两次都回到 Windows，无异常。
+- 日志（U 盘根目录 `opencore-2026-10-14-170304.txt`、`-170546.txt`，含 OC 生成的序列号/MLB/ROM，**不入库**）：`OCB: Adding fs … (aux hidden)`、`OCB: Not adding hidden auxiliary entry Reset NVRAM`；U 盘分区只查了 blessed/预定义路径，没有 recovery 条目。`class-code` 设备属性写入成功；GOP 2160x1440。
+- 原因（对照 OpenCorePkg master `81ecf1a` 源码）：`BootEntryManagement.c` 的 `AddBootEntryFromSelfRecovery` 在 `HideAuxiliary` 为真时直接返回，不加 `com.apple.recovery.boot` 条目；`BuiltinPicker.c` 中空格键（`OC_INPUT_MORE`）把 `HideAuxiliary` 置假并重建菜单。即 H1-A 自己加的 `HideAuxiliary=true` 导致恢复项被隐藏，U 盘文件与镜像无问题（`BaseSystem.dmg`/`.chunklist` 大小与校验时一致）。
+- 处理：S3 改为在菜单按空格显示辅助项，不改 U 盘。若想默认显示，可把 `HideAuxiliary` 改为 `false`（写 U 盘，需单独批准）。
