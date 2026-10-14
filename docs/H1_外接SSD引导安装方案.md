@@ -106,4 +106,7 @@ H1 安全调整（相对 1401 输出，均通过 ocvalidate 1.0.9）：
 - 卷空间：C: 剩 8.8 GB，D: 剩 104.3 GB。
 - **决定**：S1 暂停，待用户选择：换空 U 盘 / 先备份本 U 盘 / 改用外接 SSD 兼做安装盘。
 - **用户选择先备份**（13:34）：`robocopy E:\ D:\USB-backup-KIOXIA-20261014 /E /COPY:DAT`，排除 `System Volume Information` 文件夹与疑似蠕虫 `System Volume Information.exe`；1221 文件 / 25.42 GB，失败 0。逐文件 SHA256 比对：缺失 0、多余 0、不一致 0；1 个文件（`HEU_KMS_Activator_v63.1.0.exe`）在 U 盘侧被系统拒绝读取（errno 22，推测为 Defender 拦截），大小一致。WEPE 启动分区（0.29 GB）未备份。日志 `%TEMP%\hk-usb-backup-20261014.log`。
-- S1 脚本：[`scripts/h1_s1_prepare_usb.ps1`](../scripts/h1_s1_prepare_usb.ps1)，七项断言（非磁盘 0、USB、型号、精确容量 30979129344、非启动/系统盘、在线可写）全部通过才清空；GPT + 16 GB FAT32 `OCINSTALL`。等待用户批准。
+- S1 脚本：[`scripts/h1_s1_prepare_usb.ps1`](../scripts/h1_s1_prepare_usb.ps1)，七项断言（非磁盘 0、USB、型号、精确容量 30979129344、非启动/系统盘、在线可写）全部通过才清空；GPT + 16 GB FAT32 `OCINSTALL`。
+- **S1 执行（13:46，用户批准 + UAC）**：第一次运行七项断言全过，`Clear-Disk` 成功（U 盘 0 分区，仍为 MBR），随后 `Initialize-Disk` 报“已初始化”终止。日志中另有 13:46:43 的第二次运行记录（非本代理启动），断言同样全过，作用于已清空的 U 盘。修正脚本（清空后 MBR 用 `Set-Disk -PartitionStyle GPT`，已无分区则跳过清空）后再次 UAC 运行，退出 0：磁盘 1 为 GPT、1 个分区，E: `OCINSTALL` FAT32 15.99 GB。磁盘 0 仍为 GPT、7 个分区。
+- 复制 `H1-A\EFI` → `E:\EFI`（142 文件，SHA256 全一致），`H1-B` 的 config 另存为 `E:\EFI\OC\config-B.plist`（一致）。
+- **恢复镜像下载：用户暂未批准**，`com.apple.recovery.boot` 尚未放入。

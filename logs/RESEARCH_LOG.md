@@ -14,7 +14,7 @@
   2. 用户目视：Q-01 **DONE**（用户称 BIOS 只有基础项，网络旁证一致，判定无 MUX）；Q-02 PARTIAL（推断外接口全部在 Intel，接外屏实测为可选，不改评级）。
   3. 管理员只读：**已完成**（用户批准，UAC 运行一次；Q-04/Q-05 DONE）。
   4. 沙箱候选 EFI：C1 扫描、C2 plan、C3 build + ocvalidate **全部完成**（[docs/1401-plan-run-20261013](../docs/1401-plan-run-20261013/SUMMARY.md)）；ocvalidate 0 问题。沙箱保留在 `%TEMP%\hk-1401-scan-20261013-004439`（含生成的 EFI，**不得复制到任何 U 盘或 ESP**，除非另行批准引导实验）。
-- **目标已变更（D-17，用户批准）**：整机分阶段适配 H1–H4，只在外接 SSD 实机测试，内置 NVMe/Windows 永不改；BIOS、写盘、引导、kext 逐条批准。当前任务 H1，方案 [`docs/H1_外接SSD引导安装方案.md`](../docs/H1_外接SSD引导安装方案.md) 待用户审阅；下一步 S0（只读识别 U 盘与外接 SSD）
+- **目标已变更（D-17，用户批准）**：整机分阶段适配 H1–H4，只在外接 SSD 实机测试，内置 NVMe/Windows 永不改；BIOS、写盘、引导、kext 逐条批准。当前任务 H1，方案与执行记录见 [`docs/H1_外接SSD引导安装方案.md`](../docs/H1_外接SSD引导安装方案.md) 附录。**进度（10-14 13:48）**：U 盘原数据已备份到 `D:\USB-backup-KIOXIA-20261014` 并逐文件校验；U 盘已重做为 GPT + FAT32 `OCINSTALL` 并放入 H1-A EFI。**下一步**：用户批准下载恢复镜像 → S2 关 Secure Boot（用户手动）→ S3 F12 引导
 - **候选 EFI**：`D:\Hactk\efi-candidates\GLO-FX6P-1401-20261013\`（仓库外，含生成序列号）：H1 用 `H1-A`（首选）/`H1-B`（对照）；`A-main`、`B-fexitbs`、`original-1401` 留档，均过 ocvalidate、未引导。说明见该目录 `README.md` 与 SUMMARY 第 6 节
 - **剩余待办**：Q-01 已关闭；Q-02 外接屏实测可选。下一阶段（保持只读 / 规划 U 盘实验 / 回 L1 主线）**等用户决定**；Q-18 静态比对已做，仍 OPEN（只能靠引导日志）；Q-19 PARTIAL，用户决定**不做**逐字节复现；定期跟踪 PR #131/#133（01:04 复查无变化）。**提交信息不要写 `owner/repo#N`**（仓库公开，会在上游 Issue 生成反向链接，见日志第 12 条）。下一层（U 盘引导）超出 READ_ONLY_RESEARCH，需要用户明确开启新阶段；届时应先从 `UEFI.Drivers` 移除 `NullMothLogo.efi`（它每次启动写 NVRAM，R-19）。
 - **续做前先跑**：`python tests/test_1401_static_audit.py`（13 项；SHA 断言失败 = 上游已变，先更新 `research/SOURCES.md`）

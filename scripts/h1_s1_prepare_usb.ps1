@@ -25,8 +25,14 @@ if ($checks.Values -contains $false) { throw 'Safety check failed; nothing was c
 $boot = Get-Disk | Where-Object { $_.IsBoot -or $_.IsSystem }
 if ($boot.Number -contains $DiskNumber) { throw 'Target is a boot/system disk; nothing was changed.' }
 
-Clear-Disk -Number $DiskNumber -RemoveData -RemoveOEM -Confirm:$false
-Initialize-Disk -Number $DiskNumber -PartitionStyle GPT
+if ((Get-Partition -DiskNumber $DiskNumber -ErrorAction SilentlyContinue).Count -gt 0) {
+    Clear-Disk -Number $DiskNumber -RemoveData -RemoveOEM -Confirm:$false
+}
+switch ((Get-Disk -Number $DiskNumber).PartitionStyle) {
+    'RAW' { Initialize-Disk -Number $DiskNumber -PartitionStyle GPT }
+    'MBR' { Set-Disk -Number $DiskNumber -PartitionStyle GPT }
+    'GPT' { }
+}
 $p = New-Partition -DiskNumber $DiskNumber -Size 16GB -AssignDriveLetter
 Format-Volume -Partition $p -FileSystem FAT32 -NewFileSystemLabel $Label -Confirm:$false | Out-Null
 
