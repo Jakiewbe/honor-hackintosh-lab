@@ -117,3 +117,11 @@ H1 安全调整（相对 1401 输出，均通过 ocvalidate 1.0.9）：
 - 日志（U 盘根目录 `opencore-2026-10-14-170304.txt`、`-170546.txt`，含 OC 生成的序列号/MLB/ROM，**不入库**）：`OCB: Adding fs … (aux hidden)`、`OCB: Not adding hidden auxiliary entry Reset NVRAM`；U 盘分区只查了 blessed/预定义路径，没有 recovery 条目。`class-code` 设备属性写入成功；GOP 2160x1440。
 - 原因（对照 OpenCorePkg master `81ecf1a` 源码）：`BootEntryManagement.c` 的 `AddBootEntryFromSelfRecovery` 在 `HideAuxiliary` 为真时直接返回，不加 `com.apple.recovery.boot` 条目；`BuiltinPicker.c` 中空格键（`OC_INPUT_MORE`）把 `HideAuxiliary` 置假并重建菜单。即 H1-A 自己加的 `HideAuxiliary=true` 导致恢复项被隐藏，U 盘文件与镜像无问题（`BaseSystem.dmg`/`.chunklist` 大小与校验时一致）。
 - 处理：先建议菜单内按空格；用户（17:15）回复“你先改，我不会按的”，即批准改 U 盘。H1-A、H1-B 的 `config.plist` 只把 `HideAuxiliary` 改为 `false`（plist 逐键 diff 仅此一键，ocvalidate 均无问题），原文件备份在沙箱 `config-bak-before-hideaux\`，候选目录 `SHA256SUMS.txt` 同步更新。写入前核对 E: 属于磁盘 1（KIOXIA、USB），写入后 U 盘与候选哈希一致：`config.plist` `30A3AA4F…`、`config-B.plist` `99C1F42C…`。其余 U 盘文件未动。
+
+## 附录：S3 第二轮（2026-10-14 17:21）
+
+- 菜单出现恢复项（`OCINSTALL [AppleRecv:Apple]`），用户选中。OpenCore 加载 `BaseSystem.dmg`（chunklist 校验通过），`boot.efi` 读入内核 24.4.0（macOS 15.4 恢复），29 个 kext 全部注入成功，CPU 补丁全部成功，`OCABC: MAT support is 1`，MMIO devirt 3 段，可用 slide 0–217。日志止于 `EB|LOG:EXITBS:START`（17:22:46）。
+- 用户描述：屏幕停在一屏文字，最后一行为 `EXITBS:START`，完全卡死，手动关机。即内核零输出。
+- 同类案例：1401 Issue 26（i5-12500H，同样卡点）10-13 新增评论“禁用 VT-d 可以解决这个问题”；Issue 46（i5-12450H + RTX 4050，Alder Lake-H 笔记本）标题为 “freezes at EXITBS:START, zero kernel output”，已应报告者要求清空。Issue 26 的 Ryzen 台式机用户靠 `ForceExitBootServices`+`SetupVirtualMap` 解决（本机 `SetupVirtualMap` 已为 true）。
+- 本机日志 ACPI 有 `DMAR`（136 字节），即 VT-d 开启；BIOS 无此选项。OpenCore `Configuration.tex`：`DisableIoMapper`（已开）是删除 DMAR / 固件关 VT-d 的替代；对照 Dortania “Stuck on EXITBS:START” 一节，本机 Booter 组合符合 MAT 固件建议。
+- 用户选择组合试验（17:3x）：新变体 `H1-C` = `H1-A` + `ForceExitBootServices=true` + `ACPI.Delete`（`All=true`、`TableSignature=DMAR`）。plist 逐键 diff 仅这 7 个键，ocvalidate 无问题。U 盘：原 `config.plist` 另存为 `config-A.plist`（`30A3AA4F…`），`config.plist` 换为 H1-C（`84DD29CB…`），`config-B.plist` 不变。这两项只作用于经 OpenCore 引导的那一次开机。
