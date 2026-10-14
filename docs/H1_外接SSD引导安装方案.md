@@ -109,4 +109,4 @@ H1 安全调整（相对 1401 输出，均通过 ocvalidate 1.0.9）：
 - S1 脚本：[`scripts/h1_s1_prepare_usb.ps1`](../scripts/h1_s1_prepare_usb.ps1)，七项断言（非磁盘 0、USB、型号、精确容量 30979129344、非启动/系统盘、在线可写）全部通过才清空；GPT + 16 GB FAT32 `OCINSTALL`。
 - **S1 执行（13:46，用户批准 + UAC）**：第一次运行七项断言全过，`Clear-Disk` 成功（U 盘 0 分区，仍为 MBR），随后 `Initialize-Disk` 报“已初始化”终止。日志中另有 13:46:43 的第二次运行记录（非本代理启动），断言同样全过，作用于已清空的 U 盘。修正脚本（清空后 MBR 用 `Set-Disk -PartitionStyle GPT`，已无分区则跳过清空）后再次 UAC 运行，退出 0：磁盘 1 为 GPT、1 个分区，E: `OCINSTALL` FAT32 15.99 GB。磁盘 0 仍为 GPT、7 个分区。
 - 复制 `H1-A\EFI` → `E:\EFI`（142 文件，SHA256 全一致），`H1-B` 的 config 另存为 `E:\EFI\OC\config-B.plist`（一致）。
-- **恢复镜像下载：用户暂未批准**，`com.apple.recovery.boot` 尚未放入。
+- 恢复镜像（13:51 用户批准）：OpenCore 1.0.9 `macrecovery.py -b Mac-7BA5B2D9E42DDD94 -m 00000000000000000 download`，在沙箱 `dl\recovery-sequoia` 下载并按 chunklist 校验通过（86 块）。`BaseSystem.dmg` 884317790 字节 SHA256 `7314EB40…`，`BaseSystem.chunklist` 3352 字节 `DBF262B8…`；复制到 `E:\com.apple.recovery.boot\`，哈希一致。U 盘剩余 15.13 GB。**S1 完成**；下一步 S2（用户手动关 Secure Boot）、S3（F12 引导）。
