@@ -16,12 +16,12 @@ MADT 只读核对：性能核在前（APIC 0/1/8/9/16/17/24/25），能效核 32
 候选EFI：D:\Hactk\efi-candidates\GLO-FX6P-1401-20261013（H1-A…H1-E）；U盘当前 config.plist=H1-E，备份 config-A/B/C/D。
 
 ## 当前阻塞
-Dortania bugtracker 336：12500H 需 BIOS 关超线程或关能效核才能过 EXITBS；本机BIOS无此选项，无已知Sequoia纯软件解法（Q-18）。
+Dortania bugtracker 336：12500H 需 BIOS 关超线程或关能效核才能过 EXITBS。可见菜单没有这些项；3.09 固件里有（CpuSetup+0x05 超线程，默认开）。无已知 Sequoia 纯软件解法（Q-18）。
 
 ## 下一步动作（均需用户重新决定，未批准）
 1. 关掉1401额外的3条“force HT enabled”内核补丁（_cpu_thread_alloc），U盘单变量试验。
 2. 核心数/包 128→16 的用户内核补丁（需先能读取内核验证落点；本机无DMG工具）。
-3. 只读研究 Insyde 隐藏“超线程”设置（改BIOS变量风险高，须单独批准）。
+3. 隐藏超线程的只读研究已完成（见 H1 文档附录）。改 CpuSetup 仍未批准，写错可能无法开机。
 用户返回时先确认是否继续 H1；Windows 正常，引导文件只在U盘。
 
 ## 状态修订

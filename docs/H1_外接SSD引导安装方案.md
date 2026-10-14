@@ -151,5 +151,22 @@ H1 安全调整（相对 1401 输出，均通过 ocvalidate 1.0.9）：
 - MADT 只读读取（`GetSystemFirmwareTable`，表另存沙箱 `h1-logs\APIC.aml`）：OEM `HONOR`/`ADL-P-M`，启用的 16 个 LAPIC 依次为 APIC ID 0、1、8、9、16、17、24、25（性能核+超线程）与 32–46 偶数（能效核），其后 16 个禁用占位。CpuTopologyRebuild issue 24 的“能效核排在前被当主核”假设在本机不成立。
 - OpenCore 源码核对：`ProvideCurrentCpuInfo` 在混合架构上把 MSR 35h 设为 线程=线程（本机 `00100010`），核心/包补丁写 128，拓扑校验 `_x86_validate_topology` 置 `ret`；内核 quirk 先于用户 `Kernel.Patch` 应用。1401 另有 3 条用户补丁 “force HT enabled …”（`_cpu_thread_alloc`，Sequoia 版 `418b8694010000`→`b8ff0000009090`）。
 - 远景论坛帖（12500H/12700H/12900H 卡 EB）：把“核心/包”改为 16 可 8 核 16 线程启动，但 bugtracker 336 评论称仅对 macOS 13.3 之前有效。本机无 DMG/APFS 读取工具，未能在内核中核实补丁落点，故未试。
-- **结论（10-14 18:2x，用户决定暂停）**：5 轮引导中 OpenCore 阶段全部成功，失败点固定为内核交接后零输出卡死；已排除 `ForceExitBootServices`、删 DMAR、`SetupVirtualMap=false`、`cpus=8`。与 Dortania bugtracker 336 的 12500H 现象一致，公开有效解法只有 BIOS 关超线程/能效核，本机 BIOS 无此选项。H1 置为 blocked。未尝试的方向：关 1401 的 force-HT 补丁；核心/包 128→16；Insyde 隐藏设置（高风险）。
+- **结论（10-14 18:2x，用户决定暂停）**：5 轮引导中 OpenCore 阶段全部成功，失败点固定为内核交接后零输出卡死；已排除 `ForceExitBootServices`、删 DMAR、`SetupVirtualMap=false`、`cpus=8`。与 Dortania bugtracker 336 的 12500H 现象一致，公开有效解法只有 BIOS 关超线程/能效核。可见菜单里没有这些项。H1 置为 blocked。未尝试的方向：关 1401 的 force-HT 补丁；核心/包 128→16；改隐藏设置（高风险，见下一附录，尚未批准）。
 - 现状：Windows 正常；内置盘/ESP/BCD/固件启动项未改；Secure Boot 仍为关闭（用户可在 BIOS 改回）；U 盘保留 H1-E 与各备份配置。
+
+## 附录：BIOS 3.09 隐藏 CPU 项（2026-10-14，只读，未改任何变量）
+
+用户选择“只读研究 Insyde 隐藏超线程设置”。本机荣耀目录没有缓存 BIOS 包。从官网驱动页按机型「MagicBook 14 2022 独显 RTX 2050 i5 16GB+512GB (GLO-F56)」下载官方包 `BIOS_1.13&3.09_05017MAC&05017MJJ_Firmware`（标注 20230720，2023-11-13 上架）。外层 zip SHA256 `0D7FB6F87B003546A8E9CBE6CDB8EF7023846A133DB6399B3BC2CBBADB2CAAD8`，签名者为 Honor Device Co., Ltd.。包内选择脚本：机型名含 `GLO-FX6P` 走 3.09，否则走 1.13。3.09 的 `SystemFirmware.inf` 为 `DriverVer = 07/10/2023,0.3.0.9`，与本机 SMBIOS BIOS 3.09（2023/7/10）一致。固件镜像 `SystemFirmware.bin`（21600240 字节）SHA256 `f0b6da3a712564bdb7c8c3e19e21da6e9ca4f685a6a8932897081e61e16a0abf`。全程只在沙箱用纯 Python 解开 NSIS 并解析 HII 菜单，没有运行刷写程序，没有读、写 UEFI 变量。
+
+菜单在 Intel 的 Advanced 表单集（标题 “Advanced”，其下 “CPU Configuration”）里，不在荣耀普通设置页引用的 Main 表单集里。CPU Configuration 这一条在 Advanced 里没有被隐藏条件包住；荣耀的可见菜单根本不挂这个 Advanced 页，所以开机按键进的 BIOS 里看不到。
+
+| 菜单项 | 变量 | 偏移 | 取值 | 菜单里何时不显示 |
+| --- | --- | --- | --- | --- |
+| Hyper-Threading | `CpuSetup` | `0x05`（1 字节） | 0=Disabled，1=Enabled，出厂默认 1 | 仅当 `SetupCpuFeatures` 偏移 `0x04` 为 0（CPU 上报不支持超线程）。12500H 支持超线程，这项在 Advanced 页里应可见。TXT（`CpuSetup+0xC1`，默认关）打开时该项变灰 |
+| Active Performance-cores | `CpuSetup` | `0x06` | `0xFF`=All（默认），或具体核数 | 隐藏计数 `CpuSetup+0x2AC` 为 0 时隐藏；Per Core Disable 打开或 TXT 打开时变灰 |
+| Active Efficient-cores | `CpuSetup` | `0x22F` | `0xFF`=All（默认），或具体核数 | 隐藏计数 `CpuSetup+0x2AB` 为 0 时隐藏；变灰条件同上 |
+| Per Core Disable Configuration | `CpuSetup` | `0x34C` | 0=Disabled（默认），1=Enabled | 在 Processor 子页 |
+
+`CpuSetup` 的 GUID 是 `{B08F97FF-E6E8-4193-A997-5E9E9B0ADB32}`，长度 `0x379`，菜单声明的属性是非易失 + 启动服务 + 运行时（`0x07`），不是认证写变量。这只说明菜单如此声明；固件仍可能在进入系统前锁住它。没有读过本机当前值。机器现在以 16 线程运行，与默认“超线程开”一致。
+
+未做、且未批准：读取或改写该变量。写错偏移可能无法开机；关超线程后 Windows 也会变成 12 线程（4 个性能核不再带超线程，8 个能效核还在）。能进 BIOS 时，“恢复默认”会把这些项打回上表的默认值。进不了系统时没有已验证的恢复步骤。
