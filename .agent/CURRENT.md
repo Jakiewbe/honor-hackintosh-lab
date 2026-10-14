@@ -28,4 +28,4 @@ Dortania bugtracker 336：12500H 需 BIOS 关超线程或关能效核才能过 E
 以state.json/tasks.json为准，写入前status；H1细节见docs/H1_外接SSD引导安装方案.md附录与logs/RESEARCH_LOG.md。
 
 ## Git 检查
-origin/main在985c28d；本地c5d5f69及之后提交未推送，推送需用户批准。不建分支/工作树。
+2026-10-14 用户要求推送后，origin/main 与本地 main 同步（含 BIOS 3.09 只读结论）。不建分支/工作树。
