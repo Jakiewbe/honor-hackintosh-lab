@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project_id": "f6a08808-ada4-48fe-b2ad-82c0c827154b",
-  "revision": 16,
+  "revision": 17,
   "tasks": [
     {
       "task_id": "R14C0",
@@ -116,9 +116,9 @@
         "U盘引导OpenCore并保存日志；记录A-main（必要时B-fexitbs）结果，不论成败",
         "macOS安装到外接SSD并能从其独立启动，内置盘与Windows启动验证未受影响"
       ],
-      "status": "doing",
-      "blocker": "",
-      "updated_at": "2026-10-13T01:43:10.306031+00:00"
+      "status": "blocked",
+      "blocker": "i5-12500H卡EXITBS:START（Dortania bugtracker 336），BIOS无关超线程/能效核选项；5轮U盘试验均失败，用户决定暂停",
+      "updated_at": "2026-10-14T10:20:55.581935+00:00"
     }
   ],
   "history": [
@@ -431,6 +431,17 @@
         "status": "doing"
       },
       "reason": "开始编写H1方案"
+    },
+    {
+      "revision": 17,
+      "timestamp": "2026-10-14T10:20:55.581935+00:00",
+      "action": "update",
+      "payload": {
+        "task_id": "H1",
+        "status": "blocked",
+        "blocker": "i5-12500H卡EXITBS:START（Dortania bugtracker 336），BIOS无关超线程/能效核选项；5轮U盘试验均失败，用户决定暂停"
+      },
+      "reason": "用户选择先停，记录结论"
     }
   ]
 }

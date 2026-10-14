@@ -3,20 +3,20 @@
   "kit_version": "1.2.0",
   "project_id": "f6a08808-ada4-48fe-b2ad-82c0c827154b",
   "name": "HONOR Hackintosh Lab",
-  "revision": 33,
-  "task_revision": 16,
-  "current_task_revision": 16,
+  "revision": 35,
+  "task_revision": 17,
+  "current_task_revision": 17,
   "goal_version": 3,
   "goal_approved": true,
-  "updated_at": "2026-10-13T01:43:10.306031+00:00",
+  "updated_at": "2026-10-14T10:20:55.581935+00:00",
   "snapshot_keep": 20,
   "log_max_bytes": 65536,
   "hashes": {
     "GOAL.md": "4c6323099a407ffc95ef2c3c39d7944a7a2f01dd70974fb50ee37ce201e8baee",
-    "CURRENT.md": "c7313134febddb819208e9aa81338052ac812070727a19449e648d5f6e464f71",
+    "CURRENT.md": "08ded70067355784d948c3b1257c6edc173a6542405321053c4b03720bbd649b",
     "DECISIONS.md": "cecd177075f22265f3bc732dd285c31da89925d1631efb0eb044bc08f45f4eec",
     "LESSONS.md": "bc132e21024d06589d7643874c14814b2b026eccc1478f1bba288c3b421cfc4a",
-    "tasks.json": "773f062e5dc91e46983e5b848e30908f77518e4b52e87144604ff33f0bb74a10"
+    "tasks.json": "67b3091a263ba939bec3760d6a28733dd6fdc7440c5bb7409d0bee8651afa28e"
   },
   "history": [
     {
@@ -352,6 +352,26 @@
       "action": "state:update",
       "reason": "CURRENT切换到H1方案阶段",
       "timestamp": "2026-10-13T01:43:10.306031+00:00"
+    },
+    {
+      "revision": 34,
+      "action": "task:update",
+      "reason": "H1 blocked：12500H EXITBS 卡死，用户暂停",
+      "timestamp": "2026-10-14T10:20:55.581935+00:00"
+    },
+    {
+      "action": "document-version",
+      "file": "CURRENT.md",
+      "previous_sha256": "c7313134febddb819208e9aa81338052ac812070727a19449e648d5f6e464f71",
+      "content": "# 当前断点\n\n## 当前阶段\nH1 外接SSD引导与安装：U盘实机引导已做5轮，全部卡在 EXITBS:START；用户 10-14 18:2x 决定先停，记录结论。\n\n## 当前任务\nH1 blocked：i5-12500H 在 OpenCore 下过不了 boot.efi→内核交接（零内核输出、Caps Lock 无反应）。\nR14C0 blocked（L1源码闭包，现归入H3）；R14C0PRE、A1401 done。\n\n## 已完成工作\nD-17：用户批准GOAL扩展为整机分阶段适配H1-H4；外接SSD实机，内置NVMe/Windows永不改。\nU盘（KIOXIA，磁盘1）：原数据已备份校验；GPT+FAT32 OCINSTALL；macOS 15 恢复镜像（内核24.4.0）。\nSecure Boot 已由用户关闭。OpenCore 阶段全部成功：恢复项加载、29个kext注入、CPU补丁、内置NVMe隐藏属性。\n已排除（逐项日志确认生效仍卡死）：ForceExitBootServices、删DMAR、SetupVirtualMap=false、cpus=8；HideAuxiliary 已撤销、Timeout 改 0。\nMADT 只读核对：性能核在前（APIC 0/1/8/9/16/17/24/25），能效核 32–46 偶数；“能效核被当主核”假设不成立。\n候选EFI：D:\\Hactk\\efi-candidates\\GLO-FX6P-1401-20261013（H1-A…H1-E）；U盘当前 config.plist=H1-E，备份 config-A/B/C/D。\n\n## 当前阻塞\nDortania bugtracker 336：12500H 需 BIOS 关超线程或关能效核才能过 EXITBS；本机BIOS无此选项，无已知Sequoia纯软件解法（Q-18）。\n\n## 下一步动作（均需用户重新决定，未批准）\n1. 关掉1401额外的3条“force HT enabled”内核补丁（_cpu_thread_alloc），U盘单变量试验。\n2. 核心数/包 128→16 的用户内核补丁（需先能读取内核验证落点；本机无DMG工具）。\n3. 只读研究 Insyde 隐藏“超线程”设置（改BIOS变量风险高，须单独批准）。\n用户返回时先确认是否继续 H1；Windows 正常，引导文件只在U盘。\n\n## 状态修订\n以state.json/tasks.json为准，写入前status；H1细节见docs/H1_外接SSD引导安装方案.md附录与logs/RESEARCH_LOG.md。\n\n## Git 检查\norigin/main在985c28d；本地c5d5f69及之后提交未推送，推送需用户批准。不建分支/工作树。\n",
+      "user_approved": false,
+      "timestamp": "2026-10-14T10:20:55.581935+00:00"
+    },
+    {
+      "revision": 35,
+      "action": "state:update",
+      "reason": "CURRENT记录H1实机5轮结果与暂停断点",
+      "timestamp": "2026-10-14T10:20:55.581935+00:00"
     }
   ]
 }

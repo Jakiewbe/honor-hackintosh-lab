@@ -144,3 +144,12 @@ H1 安全调整（相对 1401 输出，均通过 ocvalidate 1.0.9）：
 - **检索到同 CPU 根因线索**：Dortania bugtracker 336《12500H Efficiency Core Issue》（open）：Erying i5-12500H 主板稳定卡 `EB|LOG:EXITBS:START`，`ProvideCurrentCpuInfo` 已开；套用 12700H/12900HK 的成品 EFI 也一样；BIOS 关 E 核（4C8T）或关超线程（12C12T）即可通过。评论中“跳过 EB 的内核补丁”仅对 macOS 13.3 之前有效。作者仓库 hykilpikonna/Erying-ITX-12500H-OpenCore（OpenCore 1.0.3、macOS 15.3）仍要求 BIOS 关超线程。本机 BIOS 无此两项。
 - 推断（未验证）：本机卡点与此同源（12500H 16 线程拓扑），前几轮内存类 Booter quirk 均无效与此一致。软件近似：XNU 启动参数 `cpus=N` 限制启用的逻辑 CPU 数；更彻底的替代是改写 MADT 去掉部分 Local APIC（未做）。
 - 用户批准 `H1-E` = `H1-A` + boot-args 末尾追加 `cpus=8` + `Timeout=0`（逐键 diff 仅这两键，ocvalidate 无问题）。U 盘：H1-D 另存 `config-D.plist`（`450F501C…`），`config.plist` = H1-E（`C46EE405…`）。
+
+## 附录：S3 第五轮（2026-10-14 18:00，H1-E）与暂停结论
+
+- 日志 `EB|MBA:OUT` 含 `cpus=8`（及 boot.efi 自加的 `slide=176`），Booter 组合回到 H1-A，仍止于 `EXITBS:START`（18:01:13），用户：依旧卡死。说明限制启动的逻辑 CPU 数不足以绕过，卡点更早（BSP 读取 CPU 拓扑阶段的推断，未证实）。
+- MADT 只读读取（`GetSystemFirmwareTable`，表另存沙箱 `h1-logs\APIC.aml`）：OEM `HONOR`/`ADL-P-M`，启用的 16 个 LAPIC 依次为 APIC ID 0、1、8、9、16、17、24、25（性能核+超线程）与 32–46 偶数（能效核），其后 16 个禁用占位。CpuTopologyRebuild issue 24 的“能效核排在前被当主核”假设在本机不成立。
+- OpenCore 源码核对：`ProvideCurrentCpuInfo` 在混合架构上把 MSR 35h 设为 线程=线程（本机 `00100010`），核心/包补丁写 128，拓扑校验 `_x86_validate_topology` 置 `ret`；内核 quirk 先于用户 `Kernel.Patch` 应用。1401 另有 3 条用户补丁 “force HT enabled …”（`_cpu_thread_alloc`，Sequoia 版 `418b8694010000`→`b8ff0000009090`）。
+- 远景论坛帖（12500H/12700H/12900H 卡 EB）：把“核心/包”改为 16 可 8 核 16 线程启动，但 bugtracker 336 评论称仅对 macOS 13.3 之前有效。本机无 DMG/APFS 读取工具，未能在内核中核实补丁落点，故未试。
+- **结论（10-14 18:2x，用户决定暂停）**：5 轮引导中 OpenCore 阶段全部成功，失败点固定为内核交接后零输出卡死；已排除 `ForceExitBootServices`、删 DMAR、`SetupVirtualMap=false`、`cpus=8`。与 Dortania bugtracker 336 的 12500H 现象一致，公开有效解法只有 BIOS 关超线程/能效核，本机 BIOS 无此选项。H1 置为 blocked。未尝试的方向：关 1401 的 force-HT 补丁；核心/包 128→16；Insyde 隐藏设置（高风险）。
+- 现状：Windows 正常；内置盘/ESP/BCD/固件启动项未改；Secure Boot 仍为关闭（用户可在 BIOS 改回）；U 盘保留 H1-E 与各备份配置。
