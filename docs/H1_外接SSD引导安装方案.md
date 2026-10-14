@@ -132,3 +132,8 @@ H1 安全调整（相对 1401 输出，均通过 ocvalidate 1.0.9）：
 - 检索：社区 Alder Lake 配置指南（alyxferrari/OpenCore-Install-Guide `alderlake` 分支 `config.plist/alder-lake.md`）的 Booter 推荐与本机配置逐项一致，唯独 `SetupVirtualMap` 为 NO（本机 YES）；Cpuid1Data 同为 `55060A00`。Dortania 排错页：2020 年后的许多固件开启 `SetupVirtualMap` 会在此处卡死。本机固件为 Insyde（ACPI 有 `$H2O` 表）。同指南另注 `RebuildAppleMemoryMap` 在部分笔记本 OEM 固件上会导致早期失败（下一候选：旧固件组合）。
 - 用户选择在 H1-C 上叠加（17:4x）：`H1-D` = `H1-C` + `SetupVirtualMap=false`（逐键 diff 仅此一键，ocvalidate 无问题）。U 盘：H1-C 另存 `config-C.plist`（`84DD29CB…`），`config.plist` = H1-D（`C8B4C0B4…`）。
 - 附加观察请求：卡住时按 Caps Lock 看指示灯是否切换，用来区分内核死锁与“在跑但不显示”。
+
+## 附录：H1-D 首次尝试未进入测试（2026-10-14 17:45–17:46）
+
+- 用户报告“OC 引导都失败了”。Windows 事件日志（只读）：17:44:59 关机后 17:45:08 直接启动 Windows（无对应 OpenCore 日志，未进 U 盘）；17:46:21 OpenCore 正常启动，菜单列出恢复项，5 秒内无按键，按默认项启动 Windows，17:46:40 Windows 正常开机，无 Kernel-Power 41 / 蓝屏记录。用户描述“没看到菜单，很快跳了代码后进入了 Windows”：屏幕调试输出（`Target=67`）与菜单混在一起，5 秒倒计时内难以辨认。H1-D 本身尚未被测试。
+- 用户批准把菜单倒计时去掉：H1-D `Misc.Boot.Timeout` 5 → 0（逐键 diff 仅此一键，ocvalidate 无问题），U 盘 `config.plist` 更新为 `450F501C…`。`config-A/B/C.plist` 备份未改，仍为 5 秒。
