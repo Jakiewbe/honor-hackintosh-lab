@@ -125,3 +125,10 @@ H1 安全调整（相对 1401 输出，均通过 ocvalidate 1.0.9）：
 - 同类案例：1401 Issue 26（i5-12500H，同样卡点）10-13 新增评论“禁用 VT-d 可以解决这个问题”；Issue 46（i5-12450H + RTX 4050，Alder Lake-H 笔记本）标题为 “freezes at EXITBS:START, zero kernel output”，已应报告者要求清空。Issue 26 的 Ryzen 台式机用户靠 `ForceExitBootServices`+`SetupVirtualMap` 解决（本机 `SetupVirtualMap` 已为 true）。
 - 本机日志 ACPI 有 `DMAR`（136 字节），即 VT-d 开启；BIOS 无此选项。OpenCore `Configuration.tex`：`DisableIoMapper`（已开）是删除 DMAR / 固件关 VT-d 的替代；对照 Dortania “Stuck on EXITBS:START” 一节，本机 Booter 组合符合 MAT 固件建议。
 - 用户选择组合试验（17:3x）：新变体 `H1-C` = `H1-A` + `ForceExitBootServices=true` + `ACPI.Delete`（`All=true`、`TableSignature=DMAR`）。plist 逐键 diff 仅这 7 个键，ocvalidate 无问题。U 盘：原 `config.plist` 另存为 `config-A.plist`（`30A3AA4F…`），`config.plist` 换为 H1-C（`84DD29CB…`），`config-B.plist` 不变。这两项只作用于经 OpenCore 引导的那一次开机。
+
+## 附录：S3 第三轮（2026-10-14 17:32，H1-C）
+
+- 日志确认 `OCABC: FEXITBS 1`、`OCA: Deleting table DMAR … at index 21`；仍止于 `EXITBS:START`（17:33:07）。用户照片（17:22、17:33 两张）均为 `boot.efi` 输出停在 `EB|LOG:EXITBS:START`，之后无内核输出。结论：单开 `ForceExitBootServices` 加删 DMAR 不足以通过。
+- 检索：社区 Alder Lake 配置指南（alyxferrari/OpenCore-Install-Guide `alderlake` 分支 `config.plist/alder-lake.md`）的 Booter 推荐与本机配置逐项一致，唯独 `SetupVirtualMap` 为 NO（本机 YES）；Cpuid1Data 同为 `55060A00`。Dortania 排错页：2020 年后的许多固件开启 `SetupVirtualMap` 会在此处卡死。本机固件为 Insyde（ACPI 有 `$H2O` 表）。同指南另注 `RebuildAppleMemoryMap` 在部分笔记本 OEM 固件上会导致早期失败（下一候选：旧固件组合）。
+- 用户选择在 H1-C 上叠加（17:4x）：`H1-D` = `H1-C` + `SetupVirtualMap=false`（逐键 diff 仅此一键，ocvalidate 无问题）。U 盘：H1-C 另存 `config-C.plist`（`84DD29CB…`），`config.plist` = H1-D（`C8B4C0B4…`）。
+- 附加观察请求：卡住时按 Caps Lock 看指示灯是否切换，用来区分内核死锁与“在跑但不显示”。
