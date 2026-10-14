@@ -137,3 +137,10 @@ H1 安全调整（相对 1401 输出，均通过 ocvalidate 1.0.9）：
 
 - 用户报告“OC 引导都失败了”。Windows 事件日志（只读）：17:44:59 关机后 17:45:08 直接启动 Windows（无对应 OpenCore 日志，未进 U 盘）；17:46:21 OpenCore 正常启动，菜单列出恢复项，5 秒内无按键，按默认项启动 Windows，17:46:40 Windows 正常开机，无 Kernel-Power 41 / 蓝屏记录。用户描述“没看到菜单，很快跳了代码后进入了 Windows”：屏幕调试输出（`Target=67`）与菜单混在一起，5 秒倒计时内难以辨认。H1-D 本身尚未被测试。
 - 用户批准把菜单倒计时去掉：H1-D `Misc.Boot.Timeout` 5 → 0（逐键 diff 仅此一键，ocvalidate 无问题），U 盘 `config.plist` 更新为 `450F501C…`。`config-A/B/C.plist` 备份未改，仍为 5 秒。
+
+## 附录：S3 第四轮（2026-10-14 17:51，H1-D）与 12500H 拓扑问题
+
+- 日志 `OCABC: … VMAP 0`、`FEXITBS 1`、DMAR 已删，仍止于 `EXITBS:START`（17:52:33）。用户：卡死，按 Caps Lock 指示灯无反应（内核未跑到键盘驱动，倾向真挂死而非仅无显示），无 `panic-*.txt`。
+- **检索到同 CPU 根因线索**：Dortania bugtracker 336《12500H Efficiency Core Issue》（open）：Erying i5-12500H 主板稳定卡 `EB|LOG:EXITBS:START`，`ProvideCurrentCpuInfo` 已开；套用 12700H/12900HK 的成品 EFI 也一样；BIOS 关 E 核（4C8T）或关超线程（12C12T）即可通过。评论中“跳过 EB 的内核补丁”仅对 macOS 13.3 之前有效。作者仓库 hykilpikonna/Erying-ITX-12500H-OpenCore（OpenCore 1.0.3、macOS 15.3）仍要求 BIOS 关超线程。本机 BIOS 无此两项。
+- 推断（未验证）：本机卡点与此同源（12500H 16 线程拓扑），前几轮内存类 Booter quirk 均无效与此一致。软件近似：XNU 启动参数 `cpus=N` 限制启用的逻辑 CPU 数；更彻底的替代是改写 MADT 去掉部分 Local APIC（未做）。
+- 用户批准 `H1-E` = `H1-A` + boot-args 末尾追加 `cpus=8` + `Timeout=0`（逐键 diff 仅这两键，ocvalidate 无问题）。U 盘：H1-D 另存 `config-D.plist`（`450F501C…`），`config.plist` = H1-E（`C46EE405…`）。
