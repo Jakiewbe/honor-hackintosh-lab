@@ -19,7 +19,7 @@ H1 安全调整（相对 1401 输出，均通过 ocvalidate 1.0.9）：
 | `DeviceProperties` 给内置 NVMe `PciRoot(0x0)/Pci(0x6,0x2)/Pci(0x0,0x0)` 加 `class-code=FFFFFFFF` | 无 → 有 | 让 macOS 不加载内置 NVMe 驱动，磁盘工具里看不到它，避免误抹 Windows。**未实机验证**，第一次进安装器必须确认 |
 | `NVRAM.WriteFlash` | `true` → `false` | OpenCore 注入的 boot-args 等变量只在本次开机有效，不持久写入固件 |
 | `ResetNvramEntry.efi` 参数 | 空 → `--preserve-boot` | 万一执行“Reset NVRAM”，保留固件启动项（含 Windows Boot Manager） |
-| `Misc.Boot.HideAuxiliary` | `false` → `true` | 开机菜单默认隐藏“Reset NVRAM”等辅助项（按空格才显示） |
+| ~~`Misc.Boot.HideAuxiliary`~~ | ~~`false` → `true`~~ | **已撤销（10-14）**：它也隐藏 macOS 恢复项，见附录“S3 第一轮”。现为 `false`，菜单直接显示恢复项和 Reset NVRAM（后者带 `--preserve-boot`，但仍不要选） |
 
 已有的有利设置：`LauncherOption=Disabled`（OpenCore 不把自己登记到固件启动列表）、`RequestBootVarRouting=true`（macOS 设置启动磁盘时写到 OpenCore 专用命名空间，不改 Windows 启动项）、`Misc.Debug.Target=67`（日志写到 U 盘根目录）。
 
@@ -48,7 +48,7 @@ H1 安全调整（相对 1401 输出，均通过 ocvalidate 1.0.9）：
 - 回滚：同一位置改回 Enabled。
 
 ### S3 🔒 首次从 U 盘引导（你手动操作）
-开机按 `F12`，在一次性启动菜单里选 U 盘（这**不改**固件启动顺序）。OpenCore 菜单出现后**先按一下方向键停住 5 秒倒计时，再按空格键**（H1-A 设了 `HideAuxiliary=true`，恢复项属于辅助项，按空格才显示），然后选恢复项（名称类似 “macOS Base System / Recovery”）。屏幕会滚动 verbose 文字。
+开机按 `F12`，在一次性启动菜单里选 U 盘（这**不改**固件启动顺序）。OpenCore 菜单出现后（5 秒倒计时，超时会进 Windows）用方向键选恢复项（名称类似 “macOS Base System / Recovery”）回车。屏幕会滚动 verbose 文字。
 
 可能结果与处理：
 
@@ -116,4 +116,4 @@ H1 安全调整（相对 1401 输出，均通过 ocvalidate 1.0.9）：
 - 用户已关 Secure Boot（日志 `OCSB: Secure boot is disabled`），F12 从 U 盘引导两次，OpenCore 菜单只有两个 Windows 项，没有恢复项。第一次超时启动内置盘 ESP 的 Windows，第二次用户选了内置盘分区 5 的 `\EFI\BOOT\BOOTX64.EFI`。两次都回到 Windows，无异常。
 - 日志（U 盘根目录 `opencore-2026-10-14-170304.txt`、`-170546.txt`，含 OC 生成的序列号/MLB/ROM，**不入库**）：`OCB: Adding fs … (aux hidden)`、`OCB: Not adding hidden auxiliary entry Reset NVRAM`；U 盘分区只查了 blessed/预定义路径，没有 recovery 条目。`class-code` 设备属性写入成功；GOP 2160x1440。
 - 原因（对照 OpenCorePkg master `81ecf1a` 源码）：`BootEntryManagement.c` 的 `AddBootEntryFromSelfRecovery` 在 `HideAuxiliary` 为真时直接返回，不加 `com.apple.recovery.boot` 条目；`BuiltinPicker.c` 中空格键（`OC_INPUT_MORE`）把 `HideAuxiliary` 置假并重建菜单。即 H1-A 自己加的 `HideAuxiliary=true` 导致恢复项被隐藏，U 盘文件与镜像无问题（`BaseSystem.dmg`/`.chunklist` 大小与校验时一致）。
-- 处理：S3 改为在菜单按空格显示辅助项，不改 U 盘。若想默认显示，可把 `HideAuxiliary` 改为 `false`（写 U 盘，需单独批准）。
+- 处理：先建议菜单内按空格；用户（17:15）回复“你先改，我不会按的”，即批准改 U 盘。H1-A、H1-B 的 `config.plist` 只把 `HideAuxiliary` 改为 `false`（plist 逐键 diff 仅此一键，ocvalidate 均无问题），原文件备份在沙箱 `config-bak-before-hideaux\`，候选目录 `SHA256SUMS.txt` 同步更新。写入前核对 E: 属于磁盘 1（KIOXIA、USB），写入后 U 盘与候选哈希一致：`config.plist` `30A3AA4F…`、`config-B.plist` `99C1F42C…`。其余 U 盘文件未动。
