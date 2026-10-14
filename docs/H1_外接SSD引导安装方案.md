@@ -92,4 +92,16 @@ H1 安全调整（相对 1401 输出，均通过 ocvalidate 1.0.9）：
 - S0 等用户插好 U 盘与外接 SSD 后执行。
 
 ## 附录：S0 磁盘识别记录
-（待填）
+
+2026-10-14 13:33，`Get-Disk`/`Get-Partition`/`Get-Volume` 只读（未取序列号）：
+
+| 磁盘 | 型号 | BusType | 容量 | 分区表 | IsBoot/IsSystem | 结论 |
+|---|---|---|---|---|---|---|
+| 0 | SAMSUNG MZVL2512HCJQ-00B00 | NVMe | 476.9 GB | GPT，7 个分区 | True/True | 内置盘，永不碰 |
+| 1 | KIOXIA TransMemory | USB | 28.9 GB | MBR，2 个分区 | False/False | 用户 U 盘，**含个人数据，不可直接用于 S1** |
+
+- 磁盘 1：分区 1 exFAT 卷标 `System`（E:，28.24 GB，已用 25.42 GB）+ 分区 2 约 0.29 GB（类型未知），布局与微PE（WEPE）启动盘一致。根目录有个人项目文件夹/文档、Windows 与 Office 安装文件、旧 OpenCore 0.8.4 EFI 等（只看文件名，未打开文件）。
+- 根目录有 `System Volume Information.exe`（伪装成系统文件夹名的可执行文件，疑似 U 盘蠕虫），已提醒用户勿运行并查杀，未触碰。
+- 外接 SSD 本次未插入。
+- 卷空间：C: 剩 8.8 GB，D: 剩 104.3 GB。
+- **决定**：S1 暂停，待用户选择：换空 U 盘 / 先备份本 U 盘 / 改用外接 SSD 兼做安装盘。
