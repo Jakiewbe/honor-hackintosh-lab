@@ -27,6 +27,10 @@ on:
         description: "Optional B2 NVRM/pinned patch diagnostic ONLY; expected BLOCKED (WP1 unknown), never load"
         type: boolean
         default: false
+      run_b4_probe:
+        description: "Optional B4 patched NVRM.cpp native compile/link (requires B1 and B2; never load)"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -258,17 +262,24 @@ jobs:
           print("G1_INPUTS_SHADERS_AND_CLOSURE_COMPLETE (static object comparison only; no GPU validation)")
           PY
 
-      - name: B2 native NVRM and pinned patch diagnostic (explicit opt-in; not acceptance)
-        if: ${{ inputs.run_b2_probe }}
+      - name: B2/B4 native compile, patched link candidate (explicit opt-in; not acceptance)
+        if: ${{ inputs.run_b2_probe || inputs.run_b4_probe }}
         shell: bash
+        env:
+          B4_ENABLED: ${{ inputs.run_b4_probe }}
         run: |
           set -euo pipefail
           python3 scripts/g1/test_b3_linkmap.py
+          b4_opts=()
+          if [[ "$B4_ENABLED" == "true" ]]; then
+            b4_opts+=(--b4-patch scripts/g1/patches/b4_nvrm_manual_go_msi_preflight.patch)
+          fi
           python3 scripts/g1/b2_native_probe.py \
             --nullmoth "$RUNNER_TEMP/nm" \
             --ogkm "$RUNNER_TEMP/nv" \
             --b1-logs "$RUNNER_TEMP/g1-logs" \
             --report "$RUNNER_TEMP/g1-logs/b2-native-probe.json" \
+            "${b4_opts[@]}" \
             2>&1 | tee "$RUNNER_TEMP/g1-logs/b2-native-probe.txt"
           # Nonzero is deliberate until the actual WP1 patch and NVRM link are evidenced.
 
