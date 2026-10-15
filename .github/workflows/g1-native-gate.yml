@@ -23,6 +23,10 @@ on:
         description: "Run the B1 rebuild candidate job"
         type: boolean
         default: true
+      run_b2_probe:
+        description: "Optional B2 NVRM/pinned patch diagnostic ONLY; expected BLOCKED (WP1 unknown), never load"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -253,6 +257,19 @@ jobs:
               raise SystemExit("DIAGNOSTICS_INCOMPLETE: " + "; ".join(errors))
           print("G1_INPUTS_SHADERS_AND_CLOSURE_COMPLETE (static object comparison only; no GPU validation)")
           PY
+
+      - name: B2 native NVRM and pinned patch diagnostic (explicit opt-in; not acceptance)
+        if: ${{ inputs.run_b2_probe }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/g1/b2_native_probe.py \
+            --nullmoth "$RUNNER_TEMP/nm" \
+            --ogkm "$RUNNER_TEMP/nv" \
+            --b1-logs "$RUNNER_TEMP/g1-logs" \
+            --report "$RUNNER_TEMP/g1-logs/b2-native-probe.json" \
+            2>&1 | tee "$RUNNER_TEMP/g1-logs/b2-native-probe.txt"
+          # Nonzero is deliberate until the actual WP1 patch and NVRM link are evidenced.
 
       - name: Upload text diagnostics only (no objects, no kext)
         if: ${{ always() }}
