@@ -1,0 +1,95 @@
+--- a/kexts/NVRM/NVRM.cpp
++++ b/kexts/NVRM/NVRM.cpp
+@@ -116,3 +116,5 @@
+     bool         fPrivateState = false;
+-    bool         fAdapter = false;
++    bool         fAdapter = false;
++    // A failed rm_init_adapter may leave RM/GSP in a partial state.
++    bool         fAdapterInitFailed = false;
+     uint32_t     fPassDone = 0;
+@@ -305,4 +307,9 @@
+     nv->fb   = &nv->bars[NV_GPU_BAR_INDEX_FB];
+-    snapshotBootScreen();
+-    const bool bar1Placed = placeLargeBar1();
++    // Manual go does not require automatic BAR1/root-port relocation.
++    // This is NOT a safe-to-load or read-only guarantee for the driver.
++    char nogo[8] = { 0 };
++    const bool manualGo = PE_parse_boot_argn("-nvrmnogo", nogo, sizeof(nogo));
++    snapshotBootScreen();
++    const bool bar1Placed = manualGo ? false : placeLargeBar1();
++    if (manualGo) setProperty("nvrm-bar1-placement", "skipped (-nvrmnogo)");
+     fBar1Placed = bar1Placed;
+@@ -325,7 +332,6 @@
+     {
+-        char nogo[8] = { 0 };
+-        thread_t th = THREAD_NULL;
+-        fAutoGoSettleMs = bar1Placed ? 500 : 100000;
+-        { uint32_t ms = 0; if (PE_parse_boot_argn("nvrmsettle", &ms, sizeof(ms))) fAutoGoSettleMs = ms; }
+-        if (PE_parse_boot_argn("-nvrmnogo", nogo, sizeof(nogo))) {
++        thread_t th = THREAD_NULL;
++        fAutoGoSettleMs = bar1Placed ? 500 : 100000;
++        { uint32_t ms = 0; if (PE_parse_boot_argn("nvrmsettle", &ms, sizeof(ms))) fAutoGoSettleMs = ms; }
++        if (manualGo) {
+             setProperty("nvrm-autogo", "off (-nvrmnogo)"); LOG("auto-go OFF (-nvrmnogo): idle until `nvrmctl go <pass>`");
+@@ -1011,8 +1017,10 @@
+     }
+-    if (pass >= 2 && fPassDone < 2) {
+-        nv->os_state = this;
+-        fPCI->setMemoryEnable(true);
+-        fPCI->setBusMasterEnable(true);
+-        LOG("bus master + memory enabled (command 0x%04x)", fPCI->configRead16(0x04));
+-        int msi = -1;
++    if (pass >= 2 && fPassDone < 2) {
++        if (fAdapterInitFailed) {
++            LOG("go(2) blocked: previous rm_init_adapter failed, partial-state unwind unknown");
++            return kIOReturnNotReady;
++        }
++        // Check MSI without first modifying PCI command. Bus mastering may
++        // only be enabled after interrupt prerequisites are established.
++        int msi = -1;
+         for (int i = 0; i < 8; i++) {
+@@ -1024,8 +1032,28 @@
+         if (msi < 0) { LOG("no MSI source on the device — refusing (the RM needs message-signalled interrupts)"); return kIOReturnUnsupported; }
+-        fWorkLoop = IOWorkLoop::workLoop();
+-        fIntSrc = IOFilterInterruptEventSource::filterInterruptEventSource(this,
+-                    OSMemberFunctionCast(IOInterruptEventAction, this, &NVRM::interruptOccurred),
+-                    OSMemberFunctionCast(IOFilterInterruptAction, this, &NVRM::interruptFilter), fPCI, msi);
+-        if (!fWorkLoop || !fIntSrc || fWorkLoop->addEventSource(fIntSrc) != kIOReturnSuccess) { LOG("interrupt source setup FAILED"); return kIOReturnError; }
+-        fIntSrc->enable();
++        fWorkLoop = IOWorkLoop::workLoop();
++        if (!fWorkLoop) {
++            LOG("work loop allocation FAILED before PCI command change");
++            return kIOReturnNoMemory;
++        }
++        fIntSrc = IOFilterInterruptEventSource::filterInterruptEventSource(this,
++                    OSMemberFunctionCast(IOInterruptEventAction, this, &NVRM::interruptOccurred),
++                    OSMemberFunctionCast(IOFilterInterruptAction, this, &NVRM::interruptFilter), fPCI, msi);
++        if (!fIntSrc) {
++            LOG("interrupt source allocation FAILED before PCI command change");
++            fWorkLoop->release(); fWorkLoop = NULL;
++            return kIOReturnNoMemory;
++        }
++        if (fWorkLoop->addEventSource(fIntSrc) != kIOReturnSuccess) {
++            LOG("interrupt source attach FAILED before PCI command change");
++            fIntSrc->release(); fIntSrc = NULL;
++            fWorkLoop->release(); fWorkLoop = NULL;
++            return kIOReturnError;
++        }
++        // From here RM/GSP initialization may mutate the device. There is no
++        // proven generic cleanup routine for a failed rm_init_adapter call.
++        nv->os_state = this;
++        fPCI->setMemoryEnable(true);
++        fPCI->setBusMasterEnable(true);
++        LOG("bus master + memory enabled (command 0x%04x)", fPCI->configRead16(0x04));
++        fIntSrc->enable();
+         nv->interrupt_line = (NvU32)msi;
+@@ -1036,3 +1064,8 @@
+         nv_xnu_dump_gsp_regs(nv);
+-        if (!ok) return kIOReturnError;
++        if (!ok) {
++            // Do not call rm_shutdown_adapter on an unproven partial state.
++            fAdapterInitFailed = true;
++            LOG("rm_init_adapter failed: partial-state unwind UNVERIFIED; retry prohibited");
++            return kIOReturnError;
++        }
+         fAdapter = true;
