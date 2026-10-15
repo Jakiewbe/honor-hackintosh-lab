@@ -31,3 +31,35 @@
 5. 之后才是 NVIDIA 独立 GPU 命令提交、真实像素读回，再进一步讨论跨 GPU 复制与 Intel 内屏 WindowServer 加速。
 
 每个阶段分开记录 **编译、链接、加载、初始化、真实渲染、内屏加速** 六种证据；不再以 CI 的成功颜色替代功能验收。
+
+
+## 2026-10-16 追加：B3 FSP 修复归档链接已实证，转入真实初始化安全阻塞
+
+基于 [Actions #38786989788](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38786989788) 文本产物：
+
+- Commit `dde94b4091bd76cc5699255f60d1cd718011410e`，Xcode 16.4 / SDK 15.5；B1 RM 1055/1055、modeset 230/230、NVRM 本地源码 11/11 均编译。
+- 两个 FSP 补丁的编译产物 `kern_fsp.c.o`、`timer_ostimer.c.o` 确认各被 ld64 选中一次，原始 `kern_fsp.o`、`timer_ostimer.o` 选中零次；这是**实际链接映射来源证据**，不仅是文件名搜索。
+- FSP 补丁版 Apple 内核 bundle 链接退出码 0、MH_KEXT_BUNDLE x86_64、16,501,192 B、SHA256 `09e433f3b2a0a9fa0b6c2df8ab6fada7a4882f7f2d5be68e5b8e3ac5926f7703`；462 个未定义外部符号尚需目标内核 ABI 核实。二进制没有上传或加载，不能推出可用性。
+- 整体 CI Failure 是 B2 在 WP1 和运行时未验收时按设计退出 2；**B3 FSP 链接子目标已实现并冻结**，不应继续重复跑同一套代码。
+
+### P0：当前上游可证实的风险，不得用 `-nvrmnogo` 当作只读/零副作用开关
+
+固定 NullMoth `kexts/NVRM/NVRM.cpp`（`cd8e2bb04da48d2fa70cf1895879608f3588dbfb`）：
+
+1. `NVRM::start` 在解析 `-nvrmnogo` **之前**执行 `snapshotBootScreen(); placeLargeBar1(); readBARs();`。尤其 `placeLargeBar1` 在满足条件时直接写 GPU BAR1/BAR3 PCI config 和 Root Port prefetchable window，并可能进行 BAR resizing。即使内屏走 Intel 46A6，仍可能影响总线资源。**boot arg 仅关闭自动 go，不是被动探测模式**。
+2. `placeLargeBar1` 成功写入硬件后，构建 `OSArray/IODeviceMemory` 失败时当前可直接 `return false`，没有在这个分支恢复 PCI BAR / Root Port 寄存器。正常成功后也看不到跨 `stop()` 生命周期的完整 BAR/Root Port 原状态恢复闭包。
+3. `NVRM::go(2)` 在验证 MSI 是否存在**之前**执行 `fPCI->setMemoryEnable(true)` 和 `fPCI->setBusMasterEnable(true)`。当无 MSI、事件源创建失败或 `rm_init_adapter` 失败时直接返回；当前代码没有统一的 unwind 路径来恢复原始 PCI command / MSI / WorkLoop。`stop` 仅根据 `fAdapter` 判断是否 shutdown adapter，部分初始化成功但未置 `fAdapter` 的状态不能据此保证安全。
+4. `NVRM::start` 还会自动调度 `autoGo`，启动显示栈及可能的翻转路径。对于当前 Intel 核显挂载内屏且缺乏图形加速的机器，不允许把一次成功编译的候选直接带入该路径。
+5. GSP `nv_get_firmware` 从固定路径读取文件，没有经过 HONOR 机器上的固件来源、完整性及存在性验证。不能因为 Ampere 分支有 `gsp_ga10x.bin` 映射就断言 RTX 2050 已有可用 GSP 固件。
+
+### 下一项真正的软件开发交付（不是继续增加指标）
+
+**先开发一份独立、可审计的 NVRM 启动安全补丁；此处仅是开发约束，不是补丁已完成：**
+
+- 将不可逆/可观测 PCI 写入之前的预检条件明确化；`-nvrmnogo` 的语义必须与实际副作用一致，不允许宣称其可安全观察。
+- 对 `placeLargeBar1` 的 BAR resize、BAR1/BAR3、Root Port 0x24/0x28/0x2c、设备内存映射保留前值和有效标志，区分尚未修改、部分写入、完全修改。每个内存分配失败/校验失败分支按反向顺序恢复；失败后若无法证明恢复，明确 NO-GO，而不是继续调用 `go(2)`。
+- 对 `go(2)` 的 PCI command、MSI EventSource、WorkLoop、RM private state、adapter init 进行资源所有权与状态转移建模，先核对上游 RM 半初始化时的合法清理接口；**不能武断对失败的 `rm_init_adapter` 调用 `rm_shutdown_adapter`**。
+- 处理线程、boot hold 和 stop 的并发/生命周期：确认 `autoGo` 仍在运行时不发生并发销毁或重复释放。
+- 通过固定源码 apply/compile/link、故障注入路径审查后，仍必须完成备份、EFI/磁盘/BitLocker 与实际恢复操作的核对；没有用户对实机加载的独立授权前继续禁止安装/加载。
+
+**状态表：** NVRM FSP 补丁链接 `PASS (CI only)`；PCI 状态失败回滚 `UNVERIFIED / P0`；FSP/GSP 真实初始化 `UNVERIFIED`；GPU 指令与像素读回 `UNVERIFIED`；Intel 内屏硬件加速 `NOT ACHIEVED`；实机 `NO-GO`。
