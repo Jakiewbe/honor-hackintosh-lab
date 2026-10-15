@@ -1,0 +1,265 @@
+name: HONOR G1 native gate (B1 rebuild candidate + validator compile)
+
+# Manual only. Builds OGKM 610.57.04 RM/KMS objects for Darwin with an INFERRED configuration (from static analysis
+# of the NullMoth v1.15.0 release) and compares them with the released NVRM. Output is a "rebuild candidate" report,
+# never a released or loadable driver. No signing, install, load, or binary upload; text logs only.
+
+on:
+  workflow_dispatch:
+    inputs:
+      xcode:
+        description: "Xcode 16 to use: newest | all | exact app name such as Xcode_16.4"
+        required: true
+        default: newest
+      extra_cflags:
+        description: "Inferred extra macros/flags (EXTRA_CFLAGS) for OGKM objects"
+        required: true
+        default: "-DNV_UNIX -DNV_LINUX"
+      drop_flags:
+        description: "Space-separated exact flags removed from every compiler call (empty = none); only after a logged failure"
+        required: false
+        default: ""
+      run_rebuild:
+        description: "Run the B1 rebuild candidate job"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: honor-g1-native-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  NULLMOTH_COMMIT: cd8e2bb04da48d2fa70cf1895879608f3588dbfb
+  NVIDIA_COMMIT: e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb
+  RELEASE_URL: https://github.com/nullmoth/nvidia-macos-driver/releases/download/v1.15.0/nullmoth-nvidia-1.15.0.tar.gz
+  RELEASE_SHA256: 6101cf8c37e4a500059ea8ce4d9f131ea107e35ccbeafcbb124d78a97e37e3ec
+  NVRM_MEMBER: pkgroot/Library/Extensions/NVRM.kext/Contents/MacOS/NVRM
+  NVRM_SHA256: e15a281a0795955711dd89d77f0267365af68483834401a832a91c54898646ff
+
+jobs:
+  xcode-inventory:
+    runs-on: macos-15-intel
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.pick.outputs.matrix }}
+    steps:
+      - id: pick
+        shell: bash
+        env:
+          WANT: ${{ inputs.xcode }}
+        run: |
+          set -euo pipefail
+          [[ "$(uname -m)" == x86_64 ]] || { echo 'BLOCKED: not an Intel macOS runner'; exit 2; }
+          ls -d /Applications/Xcode_16*.app 2>/dev/null | grep -vi beta | xargs -n1 basename | sed 's/\.app$//' > apps.txt || true
+          cat apps.txt
+          [[ -s apps.txt ]] || { echo 'BLOCKED: no Xcode 16 installed'; exit 2; }
+          matrix="$(WANT="$WANT" python3 - <<'PY'
+          import json, os, re
+          apps = [a.strip() for a in open("apps.txt") if a.strip()]
+          key = lambda a: [int(x) for x in re.findall(r"\d+", a)]
+          apps.sort(key=key)
+          want = os.environ["WANT"]
+          sel = apps if want == "all" else [apps[-1]] if want == "newest" else [a for a in apps if a == want]
+          if not sel:
+              raise SystemExit(f"BLOCKED: {want} not installed; available {apps}")
+          print(json.dumps({"xcode": sel}))
+          PY
+          )"
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+          echo "Selected: $matrix"
+
+  b1-rebuild-candidate:
+    if: ${{ inputs.run_rebuild }}
+    needs: xcode-inventory
+    runs-on: macos-15-intel
+    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.xcode-inventory.outputs.matrix) }}
+    env:
+      EXTRA: ${{ inputs.extra_cflags }}
+      G1_DROP_FLAGS: ${{ inputs.drop_flags }}
+    steps:
+      - name: Checkout lab scripts only
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Select Xcode and record toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          dev="/Applications/${{ matrix.xcode }}.app/Contents/Developer"
+          [[ -d "$dev" ]] || { echo "BLOCKED: $dev missing"; exit 2; }
+          echo "DEVELOPER_DIR=$dev" >> "$GITHUB_ENV"
+          export DEVELOPER_DIR="$dev"
+          brew install make xz >/dev/null
+          logs="$RUNNER_TEMP/g1-logs"; mkdir -p "$logs"
+          {
+            sw_vers
+            xcodebuild -version
+            clang --version
+            xcrun --sdk macosx --show-sdk-version
+            gmake --version | head -1
+            echo "EXTRA_CFLAGS=$EXTRA"
+          } | tee "$logs/toolchain.txt"
+
+      - name: Fetch pinned sources and the release oracle
+        shell: bash
+        run: |
+          set -euo pipefail
+          logs="$RUNNER_TEMP/g1-logs"
+          for spec in "nm https://github.com/nullmoth/nvidia-macos-driver.git $NULLMOTH_COMMIT" \
+                      "nv https://github.com/NVIDIA/open-gpu-kernel-modules.git $NVIDIA_COMMIT"; do
+            set -- $spec
+            d="$RUNNER_TEMP/$1"
+            git init -q "$d"; git -C "$d" remote add origin "$2"
+            git -C "$d" fetch --no-tags --depth 1 origin "$3"
+            git -C "$d" checkout --detach -q FETCH_HEAD
+            [[ "$(git -C "$d" rev-parse HEAD)" == "$3" ]]
+          done
+          o="$RUNNER_TEMP/oracle"; mkdir -p "$o"
+          curl -fsSL --proto '=https' --retry 3 -o "$o/release.tar.gz" "$RELEASE_URL"
+          echo "$RELEASE_SHA256  $o/release.tar.gz" | shasum -a 256 -c -
+          tar -xzf "$o/release.tar.gz" -C "$o" "$NVRM_MEMBER"
+          echo "$NVRM_SHA256  $o/$NVRM_MEMBER" | shasum -a 256 -c -
+          rm -f "$o/release.tar.gz"
+          echo 'PINNED_SOURCES_AND_ORACLE_VERIFIED (oracle is read, never executed)' | tee "$logs/sources.txt"
+
+      - name: Build OGKM Darwin objects with the inferred configuration (objects only)
+        shell: bash
+        run: |
+          set -uo pipefail
+          logs="$RUNNER_TEMP/g1-logs"
+          nv="$RUNNER_TEMP/nv"
+          jobs="$(sysctl -n hw.ncpu)"
+          cc="$RUNNER_TEMP/cc-wrap"
+          cat > "$cc" <<'SH'
+          #!/bin/bash
+          # Pass-through to clang, removing exact flags listed in G1_DROP_FLAGS (recorded in toolchain.txt).
+          args=()
+          for a in "$@"; do
+            keep=1
+            for d in $G1_DROP_FLAGS; do [[ "$a" == "$d" ]] && keep=0; done
+            [[ $keep == 1 ]] && args+=("$a")
+          done
+          exec clang "${args[@]}"
+          SH
+          chmod +x "$cc"
+          echo "G1_DROP_FLAGS=${G1_DROP_FLAGS:-<none>}" | tee -a "$logs/toolchain.txt"
+          for m in nvidia nvidia-modeset; do
+            # -k: the final ELF link (GNU ld -T / objcopy) cannot run on macOS; objects are what is compared.
+            gmake -C "$nv/src/$m" -k -j"$jobs" TARGET_OS=Darwin TARGET_ARCH=x86_64 CC="$cc" \
+              NV_VERBOSE=1 EXTRA_CFLAGS="$EXTRA" > "$logs/make-$m.log" 2>&1
+            echo "make $m rc=$?" | tee -a "$logs/build-summary.txt"
+            n="$(ls "$nv/src/$m/_out/Darwin_x86_64/"*.o 2>/dev/null | wc -l | tr -d ' ')"
+            e="$(grep -c 'error:' "$logs/make-$m.log" || true)"
+            echo "$m objects=$n compile_errors=$e" | tee -a "$logs/build-summary.txt"
+            grep -E ' -c [^ ]+\.(c|cpp) ' "$logs/make-$m.log" | sed "s#$RUNNER_TEMP#/RUNNER_TEMP#g" \
+              > "$logs/compile_cmds-candidate-$m.sh" || true
+            grep -B2 -A6 'error:' "$logs/make-$m.log" | head -400 > "$logs/first-errors-$m.txt" || true
+          done
+          echo 'NOTE: compile_cmds-candidate-*.sh are a RECONSTRUCTION CANDIDATE from inferred flags, not NullMoth inputs.' \
+            | tee -a "$logs/build-summary.txt"
+
+      - name: Compare candidate objects with the released NVRM
+        shell: bash
+        run: |
+          set -euo pipefail
+          logs="$RUNNER_TEMP/g1-logs"
+          python3 scripts/g1/b1_rebuild_compare.py \
+            --nvrm "$RUNNER_TEMP/oracle/$NVRM_MEMBER" \
+            --nullmoth-nvrm-src "$RUNNER_TEMP/nm/kexts/NVRM" \
+            --rm-objs "$RUNNER_TEMP/nv/src/nvidia/_out/Darwin_x86_64" \
+            --kms-objs "$RUNNER_TEMP/nv/src/nvidia-modeset/_out/Darwin_x86_64" \
+            --label "${{ matrix.xcode }} EXTRA_CFLAGS=$EXTRA DROP=${G1_DROP_FLAGS:-none}" \
+            --out "$logs/b1-rebuild-compare.json" | tee "$logs/b1-rebuild-compare.txt"
+
+      - name: Require complete object build diagnostics
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - "$RUNNER_TEMP/g1-logs" <<'PY'
+          import json, pathlib, re, sys
+          logs = pathlib.Path(sys.argv[1])
+          report = json.loads((logs / "b1-rebuild-compare.json").read_text())
+          errors = []
+          summary = (logs / "build-summary.txt").read_text()
+          # Five pinned modeset shader objects are included in the expected count.
+          for module, expected in (("nvidia", 1055), ("nvidia-modeset", 230)):
+              count = report[module]["objects"]
+              if count != expected:
+                  errors.append(f"{module}: expected {expected} objects, got {count}")
+              match = re.search(rf"^{module} objects=\d+ compile_errors=(\d+)$", summary, re.M)
+              if match is None or int(match[1]) != 0:
+                  errors.append(f"{module}: compiler errors or missing diagnostic count")
+          if errors:
+              raise SystemExit("DIAGNOSTICS_INCOMPLETE: " + "; ".join(errors))
+          print("OBJECT_BUILD_DIAGNOSTICS_COMPLETE (comparison still requires human review)")
+          PY
+
+      - name: Upload text diagnostics only (no objects, no kext)
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: honor-g1-b1-${{ matrix.xcode }}
+          path: ${{ runner.temp }}/g1-logs/
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Record validation boundary
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          {
+            echo "## G1 B1 rebuild candidate — ${{ matrix.xcode }}"
+            echo '- Inferred configuration, compared against released NVRM v1.15.0; a match is evidence, not NullMoth inputs.'
+            echo '- Objects only: no NVRM link, signing, install, load, or binary upload.'
+            echo '- No RTX 2050 hardware on this runner; says nothing about GPU rendering.'
+            [[ -f "$RUNNER_TEMP/g1-logs/b1-rebuild-compare.txt" ]] && sed 's/^/    /' "$RUNNER_TEMP/g1-logs/b1-rebuild-compare.txt"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  validator-native-compile:
+    needs: xcode-inventory
+    runs-on: macos-15-intel
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.xcode-inventory.outputs.matrix) }}
+    env:
+      DEVELOPER_DIR: /Applications/${{ matrix.xcode }}.app/Contents/Developer
+    steps:
+      - name: Checkout lab scripts only
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Compile and unit-test the offscreen validator with macOS clang (not run against any GPU)
+        shell: bash
+        run: |
+          set -euo pipefail
+          logs="$RUNNER_TEMP/g1-logs"; mkdir -p "$logs"
+          brew install vulkan-headers >/dev/null
+          inc="$(brew --prefix)/include"
+          cd research/g1-validator
+          { xcodebuild -version; clang --version; } | tee "$logs/toolchain.txt"
+          python3 gen_spirv.py --check && echo 'SPIRV_HEADER_MATCHES_GENERATOR' | tee -a "$logs/validator.txt"
+          clang -std=c11 -O2 -Wall -Wextra -Werror -I"$inc" g1_offscreen.c g1_ref.c -o "$RUNNER_TEMP/g1_offscreen" 2>&1 | tee -a "$logs/validator.txt"
+          clang -std=c11 -O2 -Wall -Wextra -Werror test_ref.c g1_ref.c -o "$RUNNER_TEMP/test_ref" 2>&1 | tee -a "$logs/validator.txt"
+          "$RUNNER_TEMP/test_ref" | tee -a "$logs/validator.txt"
+          "$RUNNER_TEMP/test_ref" kat > "$logs/kat-macos.txt"
+          diff -u kat-expected.txt "$logs/kat-macos.txt" && echo 'KAT_MATCHES_LINUX_REFERENCE' | tee -a "$logs/validator.txt"
+          "$RUNNER_TEMP/g1_offscreen" --help > "$logs/usage.txt" 2>&1 || true
+          echo 'VALIDATOR_NATIVE_COMPILE_PASS (compiled and unit-tested only; no Vulkan device used)' | tee -a "$logs/validator.txt"
+
+      - name: Upload text diagnostics only
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: honor-g1-validator-${{ matrix.xcode }}
+          path: ${{ runner.temp }}/g1-logs/
+          if-no-files-found: warn
+          retention-days: 14
