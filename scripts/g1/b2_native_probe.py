@@ -357,6 +357,122 @@ def link_symbol_inventory(nv, scratch, report):
         rec["error"] = str(exc)
 
 
+def native_nvrm_link_candidate(nv, scratch, logs, report):
+    """Attempt an actual Apple ld kext link, never sign/install/load/upload it.
+
+    This intentionally links the *unmodified B1 OGKM inputs* with the 11
+    compiled NVRM sources. The two separately probed upstream patches and
+    the undefined WP1 work package are NOT silently injected.
+    """
+    record = {
+        "status": "NOT_RUN",
+        "label": "UNPATCHED_OGKM_INFERRED_NVRM_LINK_CANDIDATE",
+        "wp1_included": False,
+        "upstream_patch_objects_included": False,
+        "sign_or_load": False,
+        "binary_uploaded": False,
+        "acceptance": "LINK_RESULT_ONLY_NOT_GPU_HARDWARE_VALIDATION",
+        "toolchain": "selected Xcode / xcrun libtool + clang++",
+        "static_libraries_order": ["libnvkernel-candidate.a", "libnvkms-candidate.a"],
+        "link_flags_source": "pinned NullMoth build/accel_build.sh (NVAccel pattern, adapted to NVRM)",
+    }
+    report["native_link_candidate"] = record
+    source_count = len(NVRM_CPP + NVRM_C)
+    nr = report.get("nvrm", {})
+    if nr.get("compiled_objects") != source_count or nr.get("required_objects") != source_count:
+        record["status"] = "BLOCKED_NVRM_OBJECTS_INCOMPLETE"
+        return
+    out = scratch / "nvrm-link-candidate"
+    out.mkdir(exist_ok=True)
+    inputs = []
+    for module, count in (("nvidia", 1055), ("nvidia-modeset", 230)):
+        objdir = nv / "src" / module / "_out/Darwin_x86_64"
+        objs = sorted(
+            p for p in objdir.glob("*.o") if p.is_file()
+            and not (module == "nvidia-modeset" and p.name == "nv-modeset-kernel.o")
+        )
+        if len(objs) != count:
+            record["status"] = "BLOCKED_INPUT_OBJECT_COUNT"
+            record["error"] = f"{module}: {len(objs)} != expected {count}"
+            return
+        for p in objs:
+            parsed = MachO(p)
+            if parsed.filetype != 1 or int.from_bytes(parsed.data[4:8], "little") != 0x01000007:
+                raise ValueError(f"{p.name}: not x86_64 MH_OBJECT")
+        inputs.append((module, objs))
+    nvrm_objs = [scratch / ("NVRM-" + name + ".o") for name in NVRM_CPP + NVRM_C]
+    for p in nvrm_objs:
+        parsed = MachO(p)
+        if parsed.filetype != 1 or int.from_bytes(parsed.data[4:8], "little") != 0x01000007:
+            raise ValueError(f"{p.name}: invalid NVRM x86_64 MH_OBJECT")
+    record["input_counts"] = {"nvidia": 1055, "nvidia-modeset": 230, "NVRM": source_count}
+
+    archives = []
+    for module, objs in inputs:
+        name = "libnvkernel-candidate.a" if module == "nvidia" else "libnvkms-candidate.a"
+        dst = out / name
+        # Use a libtool filelist (not a GNU archive or an ELF aggregate).
+        # The list and the archive remain inside the ephemeral scratch directory.
+        filelist = out / (module + "-archive-inputs.txt")
+        filelist.write_text("".join(str(p) + "\n" for p in objs), encoding="utf-8")
+        cmd = ["xcrun", "libtool", "-static", "-o", str(dst), "-filelist", str(filelist)]
+        rc = command(cmd, nv / "src" / module, logs / (module + "-archive-create.txt"))
+        if rc:
+            record["status"] = "ARCHIVE_CREATE_FAILED"
+            record["failed_archive"] = module
+            record["first_error"] = first_compiler_error(logs / (module + "-archive-create.txt"))
+            record["archive_return_code"] = rc
+            return
+        if not dst.is_file() or dst.stat().st_size == 0:
+            record["status"] = "ARCHIVE_MISSING_AFTER_SUCCESSFUL_TOOL_EXIT"
+            return
+        archives.append(dst)
+    record["archives_created"] = [p.name for p in archives]
+
+    # Link directly against original, verified RM/KMS archive candidates.
+    # Do not suppress undefined externals, inject replacement symbols, force
+    # load duplicate object definitions or link any previously released binary.
+    linked = out / "NVRM-link-candidate"
+    args = ["xcrun", "clang++", "-arch", "x86_64", "-fapple-kext",
+            "-nostdlib", "-Xlinker", "-kext", "-o", str(linked)]
+    args += [str(p) for p in nvrm_objs]
+    args += [str(p) for p in archives]
+    args += ["-lkmodc++", "-lkmod", "-lcc_kext"]
+    record["link_argv_without_absolute_object_paths"] = [
+        "xcrun clang++ -arch x86_64 -fapple-kext -nostdlib -Xlinker -kext",
+        "11 NVRM native MH_OBJECTs", "libnvkernel-candidate.a", "libnvkms-candidate.a",
+        "-lkmodc++ -lkmod -lcc_kext",
+    ]
+    linklog = logs / "nvrm-real-link.txt"
+    code = command(args, out, linklog)
+    record["link_return_code"] = code
+    if code:
+        record["status"] = "NVRM_NATIVE_LINK_FAILED"
+        record["first_error"] = first_compiler_error(linklog)
+        if not record["first_error"]:
+            for line in linklog.read_text(errors="replace").splitlines():
+                if any(word in line.lower() for word in
+                       ("ld:", "not found", "undefined", "duplicate", "unable")):
+                    record["first_error"] = line.strip()[:1200]
+                    break
+        return
+    if not linked.is_file() or linked.stat().st_size == 0:
+        record["status"] = "BLOCKED_NO_LINK_OUTPUT"
+        return
+    result = MachO(linked)
+    record.update({
+        "macho_cputype": int.from_bytes(result.data[4:8], "little"),
+        "macho_filetype": result.filetype,
+        "size_bytes": linked.stat().st_size,
+        "sha256": hash_bytes(linked.read_bytes()),
+        "undefined_symbols_count": len(result.undefined()),
+    })
+    if record["macho_cputype"] != 0x01000007 or result.filetype != 11:
+        record["status"] = "LINKED_WRONG_MACHO_FORMAT"
+        return
+    record["status"] = "NVRM_NATIVE_LINK_CANDIDATE_CREATED_NOT_LOADABLE_EVIDENCE"
+
+
 def main():
     p = argparse.ArgumentParser()
     for name in ("nullmoth", "ogkm", "b1-logs", "report"):
@@ -380,6 +496,13 @@ def main():
             patched_probe(nm, nv, details, Path(t), report)
             nvrm_probe(nm, nv, details, Path(t), report)
             link_symbol_inventory(nv, Path(t), report)
+            # The real Apple kext link is diagnostic until WP1 and system
+            # symbol provenance are established; it never changes B1 verdict.
+            try:
+                native_nvrm_link_candidate(nv, Path(t), details, report)
+            except Exception as exc:
+                report.setdefault("native_link_candidate", {})["status"] = "LINK_PROBE_EXCEPTION"
+                report["native_link_candidate"]["error"] = str(exc)
             report["status"] = "BLOCKED_WP1_OR_NVRM_LINK_PROVENANCE"
         except Exception as exc:
             report["status"] = "BLOCKED_PREREQUISITE"
