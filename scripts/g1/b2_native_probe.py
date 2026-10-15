@@ -126,6 +126,60 @@ def patched_probe(nm, nv, logs, scratch, report):
             entry["error"] = str(exc)
 
 
+def b1_rm_compile_contract(nv, make_log):
+    """Reuse real B1 RM portability defines; never synthesize NvPort types."""
+    original = make_command(make_log, "arch/nvalloc/unix/src/osapi.c")
+    includes = [original[i + 1] for i, arg in enumerate(original[:-1])
+                if arg == "-include"]
+    if includes != ["../common/sdk/nvidia/inc/cpuopsys.h"]:
+        raise ValueError("unexpected B1 osapi.c forced-include contract")
+    header = nv / "src/common/sdk/nvidia/inc/cpuopsys.h"
+    if not header.is_file():
+        raise ValueError("B1 forced include is missing in pinned OGKM")
+
+    # Do not transplant C-only language toggles into Darwin C++.
+    # Keep the verified B1 portability/RM macro contracts instead of inventing
+    # typedefs or defining away errors in an adapter header.
+    omit = {"_LANGUAGE_C", "__NO_CTYPE", "NV_UNIX", "NV_LINUX",
+            "NV_X86_64", "NV_ARCH_BITS"}
+    defines = []
+    found = {}
+    for arg in original:
+        if not arg.startswith("-D") or len(arg) <= 2:
+            continue
+        name, _, value = arg[2:].partition("=")
+        if name in omit:
+            continue
+        if name in found and found[name] != value:
+            raise ValueError("conflicting B1 compiler define " + name)
+        if name not in found:
+            found[name] = value
+            defines.append(arg)
+    must_match = {"PORT_IS_KERNEL_BUILD": "1",
+                  "PORT_IS_CHECKED_BUILD": "0",
+                  "PORT_MODULE_atomic": "1",
+                  "PORT_MODULE_memory": "1",
+                  "PORT_MODULE_core": "1"}
+    for key, expected in must_match.items():
+        if found.get(key) != expected:
+            raise ValueError(f"B1 portability macro drift: {key}={found.get(key)}")
+    return ["-include", str(header)] + defines, {
+        "reference_source": "arch/nvalloc/unix/src/osapi.c",
+        "source": "B1_MAKE_LOG_RECONSTRUCTION_CANDIDATE",
+        "forced_include": str(header),
+        "forced_include_sha256": hash_bytes(header.read_bytes()),
+        "transplanted_macros": defines,
+        "excluded_c_only_or_duplicate_macros": sorted(omit),
+    }
+
+
+def first_compiler_error(path):
+    for line in path.read_text(errors="replace").splitlines():
+        if "error:" in line or "fatal error:" in line:
+            return line.strip()[:1000]
+    return None
+
+
 def nvrm_probe(nm, nv, logs, scratch, report):
     rec = {"label": "INFERRED_NVRM_SOURCE_PROBE_NOT_FULL_LINK", "objects": []}
     report["nvrm"] = rec
@@ -158,9 +212,16 @@ def nvrm_probe(nm, nv, logs, scratch, report):
               "NV_UNIX", "NV_LINUX", "NV_X86_64", "NV_ARCH_BITS=64")
     rec["macros_inferred"] = list(macros)
     rec["missing_inferred_include_dirs"] = [str(p) for p in include if not p.is_dir()]
+    try:
+        b1_contract, rec["b1_portability_provenance"] = b1_rm_compile_contract(
+            nv, logs.parent / "make-nvidia.log")
+    except Exception as exc:
+        rec["status"] = "BLOCKED_B1_PORTABILITY_PROVENANCE"
+        rec["error"] = str(exc)
+        return
     base = ["-arch", "x86_64", "-fapple-kext", "-mkernel", "-nostdinc"] + [
         "-I" + str(p) for p in include] + ["-D" + d for d in macros] + [
-        "-fno-common", "-fno-builtin", "-O2"]
+        "-fno-common", "-fno-builtin", "-O2"] + b1_contract
     for src in NVRM_CPP + NVRM_C:
         item = {"source": src}
         rec["objects"].append(item)
@@ -174,12 +235,25 @@ def nvrm_probe(nm, nv, logs, scratch, report):
             "-std=c++17", "-fno-rtti", "-fno-exceptions"])
         cmd = (["clang" if is_c else "clang++"] + base + flags +
                ["-c", str(path), "-o", str(dest)])
-        item["compile_rc"] = command(cmd, scratch, logs / ("NVRM-" + src + ".txt"))
+        compile_log = logs / ("NVRM-" + src + ".txt")
+        item["compile_rc"] = command(cmd, scratch, compile_log)
+        item["verified_object"] = False
         if item["compile_rc"] == 0:
-            obj = MachO(dest)
-            item["verified_object"] = (obj.filetype == 1 and
-                                       int.from_bytes(obj.data[4:8], "little") == 0x01000007)
-    rec["status"] = "SOURCE_COMPILE_PROBE_ONLY_NOT_LINKED"
+            try:
+                obj = MachO(dest)
+                item["verified_object"] = (obj.filetype == 1 and
+                                           int.from_bytes(obj.data[4:8], "little") == 0x01000007)
+                if not item["verified_object"]:
+                    item["error"] = "compiled output is not an x86_64 MH_OBJECT"
+            except Exception as exc:
+                item["error"] = "object parse failure: " + str(exc)
+        else:
+            item["first_error"] = first_compiler_error(compile_log)
+    rec["compiled_objects"] = sum(bool(x.get("verified_object")) for x in rec["objects"])
+    rec["required_objects"] = len(NVRM_CPP + NVRM_C)
+    rec["status"] = ("SOURCE_COMPILE_PROBE_COMPLETE_NOT_LINKED"
+                     if rec["compiled_objects"] == rec["required_objects"]
+                     else "SOURCE_COMPILE_INCOMPLETE_NOT_LINKED")
 
 
 def main():
