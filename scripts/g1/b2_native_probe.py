@@ -256,6 +256,107 @@ def nvrm_probe(nm, nv, logs, scratch, report):
                      else "SOURCE_COMPILE_INCOMPLETE_NOT_LINKED")
 
 
+def link_symbol_inventory(nv, scratch, report):
+    """Text-only symbol inventory; NOT an ld run or a proof of NVRM linkability.
+
+    Unresolved externals can legitimately be provided by macOS kernel exports.
+    Duplicate providers may be weak; this reader does not decode n_desc.
+    Never substitute unresolved symbols or count the KMS aggregate twice.
+    """
+    rec = {"label": "B2_CANDIDATE_STATIC_SYMBOL_INVENTORY_NOT_LINKED",
+           "status": "NOT_RUN",
+           "rules": ["All 11 NVRM compiled MH_OBJECTs required",
+                     "Pinned RM 1055 and KMS 230 inputs required",
+                     "nv-modeset-kernel.o aggregate excluded",
+                     "Undefined imports are NOT automatically link errors",
+                     "Weak vs strong symbol binding not classified here"]}
+    report["link_symbol_inventory"] = rec
+    objdata = []
+    try:
+        nvrm = report["nvrm"]
+        if nvrm.get("compiled_objects") != 11 or nvrm.get("required_objects") != 11:
+            rec["status"] = "BLOCKED_NVRM_COMPILE_INCOMPLETE"
+            return
+        for filename in NVRM_CPP + NVRM_C:
+            objdata.append(("NVRM", scratch / ("NVRM-" + filename + ".o")))
+        expected = (("nvidia", 1055), ("nvidia-modeset", 230))
+        for module, count in expected:
+            objdir = nv / "src" / module / "_out/Darwin_x86_64"
+            found = sorted(p for p in objdir.glob("*.o") if p.is_file()
+                           and not (module == "nvidia-modeset" and
+                                    p.name == "nv-modeset-kernel.o"))
+            if len(found) != count:
+                rec["status"] = "BLOCKED_INPUT_OBJECT_COUNT"
+                rec["error"] = f"{module}: found {len(found)}, required {count}"
+                return
+            objdata.extend((module, p) for p in found)
+
+        from collections import defaultdict
+        defined, undefined, provider = {}, {}, defaultdict(set)
+        for module, path in objdata:
+            key = module + "/" + path.name
+            obj = MachO(path)
+            if obj.filetype != 1 or int.from_bytes(obj.data[4:8], "little") != 0x01000007:
+                raise ValueError("not an x86_64 MH_OBJECT: " + key)
+            defs = {n for n, t, sec, v in obj.defined() if t & 1}
+            defined[key], undefined[key] = defs, obj.undefined()
+            for symbol in defs:
+                provider[symbol].add(key)
+
+        # NVRM objects are always linked explicitly. Only pull external RM/KMS
+        # objects by actual undefined symbols, not by broad source-text names.
+        selected = {k for k in defined if k.startswith("NVRM/")}
+        encountered = set()
+        missing = set()
+        ambiguous = {}
+        todo = [sym for key in selected for sym in undefined[key]]
+        while todo:
+            symbol = todo.pop()
+            if symbol in encountered:
+                continue
+            encountered.add(symbol)
+            if any(symbol in defined[k] for k in selected):
+                continue
+            candidates = provider.get(symbol, set()) - selected
+            if len(candidates) == 1:
+                key = next(iter(candidates))
+                selected.add(key)
+                todo.extend(undefined[key])
+            elif len(candidates) > 1:
+                ambiguous[symbol] = sorted(candidates)
+            else:
+                missing.add(symbol)
+
+        # A root may have been classified as unresolved before a later input
+        # introduced its provider; recompute unresolved from the final selection.
+        resolved = set().union(*(defined[k] for k in selected))
+        residual = set().union(*(undefined[k] for k in selected)) - resolved
+        ambiguous_final = {n: sorted(provider[n] - selected) for n in residual
+                           if len(provider.get(n, set()) - selected) > 1}
+        unique_available = {n for n in residual
+                            if len(provider.get(n, set()) - selected) == 1}
+        external = residual - set(ambiguous_final) - unique_available
+        rec.update({
+            "status": "STATIC_SYMBOL_INVENTORY_COMPLETE_NOT_LINKED",
+            "input_objects": {"NVRM": len(NVRM_CPP + NVRM_C),
+                              "nvidia": 1055, "nvidia-modeset": 230},
+            "selected_count": {m: sum(k.startswith(m + "/") for k in selected)
+                               for m in ("NVRM", "nvidia", "nvidia-modeset")},
+            "distinct_undefined_in_selected": len(set().union(*(undefined[k] for k in selected))),
+            "unprovided_by_selected": len(residual),
+            "possible_ambiguous_input_providers": len(ambiguous_final),
+            "ambiguous_examples": dict(sorted(ambiguous_final.items())[:60]),
+            "unique_provider_not_selected": len(unique_available),
+            "external_or_system_provider_unknown": len(external),
+            "external_symbol_examples": sorted(external)[:120],
+            "warning": "Candidate static selection only; no Darwin ld, archive ordering, "
+                       "weak/strong classification, kernel export resolution or WP1 validation."
+        })
+    except Exception as exc:
+        rec["status"] = "BLOCKED_STATIC_INVENTORY"
+        rec["error"] = str(exc)
+
+
 def main():
     p = argparse.ArgumentParser()
     for name in ("nullmoth", "ogkm", "b1-logs", "report"):
@@ -278,6 +379,7 @@ def main():
                     raise ValueError("fixed source revision mismatch: " + str(repo))
             patched_probe(nm, nv, details, Path(t), report)
             nvrm_probe(nm, nv, details, Path(t), report)
+            link_symbol_inventory(nv, Path(t), report)
             report["status"] = "BLOCKED_WP1_OR_NVRM_LINK_PROVENANCE"
         except Exception as exc:
             report["status"] = "BLOCKED_PREREQUISITE"
