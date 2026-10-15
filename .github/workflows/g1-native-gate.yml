@@ -236,7 +236,7 @@ jobs:
                   errors.append(f"{module}: expected {expected} input objects, got {r.get('objects')}")
               if r.get("unparsable"):
                   errors.append(f"{module}: unparsable Mach-O objects: {r['unparsable'][:3]}")
-              match = re.search(rf"^{module} objects=\\d+ compile_errors=(\\d+)$", summary, re.M)
+              match = re.search(rf"^{module} objects=\d+ compile_errors=(\d+)$", summary, re.M)
               if match is None or int(match[1]) != 0:
                   errors.append(f"{module}: compiler errors or missing diagnostic count")
               if not r.get("functions", {}).get("compared"):
