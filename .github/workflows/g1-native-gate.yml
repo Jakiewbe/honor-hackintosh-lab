@@ -129,6 +129,14 @@ jobs:
           rm -f "$o/release.tar.gz"
           echo 'PINNED_SOURCES_AND_ORACLE_VERIFIED (oracle is read, never executed)' | tee "$logs/sources.txt"
 
+      - name: Pack actual modeset shader data as Darwin candidate objects
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/g1/pack_shader_objects.py --ogkm "$RUNNER_TEMP/nv" \
+            --out-report "$RUNNER_TEMP/g1-logs/shader-pack-candidate.json" \
+            2>&1 | tee "$RUNNER_TEMP/g1-logs/shader-pack-candidate.txt"
+
       - name: Build OGKM Darwin objects with the inferred configuration (objects only)
         shell: bash
         run: |
@@ -166,7 +174,7 @@ jobs:
             echo "$m objects=$n compile_errors=$e" | tee -a "$logs/build-summary.txt"
             grep -E ' -c [^ ]+\.(c|cpp) ' "$logs/make-$m.log" | sed "s#$RUNNER_TEMP#/RUNNER_TEMP#g" \
               > "$logs/compile_cmds-candidate-$m.sh" || true
-            grep -B2 -A6 'error:' "$logs/make-$m.log" | head -400 > "$logs/first-errors-$m.txt" || true
+            grep -B2 -A6 -E 'error:|ld:|gmake: \*\*\*|not remade|not found|No such file' "$logs/make-$m.log" | head -400 > "$logs/first-errors-$m.txt" || true
           done
           echo 'NOTE: compile_cmds-candidate-*.sh are a RECONSTRUCTION CANDIDATE from inferred flags, not NullMoth inputs.' \
             | tee -a "$logs/build-summary.txt"
