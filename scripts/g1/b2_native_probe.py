@@ -357,18 +357,83 @@ def link_symbol_inventory(nv, scratch, report):
         rec["error"] = str(exc)
 
 
-def native_nvrm_link_candidate(nv, scratch, logs, report):
-    """Attempt an actual Apple ld kext link, never sign/install/load/upload it.
+def verified_fsp_replacements(nv, scratch, logs, report, original_rm_objects):
+    """Exactly two fixed-upstream FSP source objects replace their own RM members.
 
-    This intentionally links the *unmodified B1 OGKM inputs* with the 11
-    compiled NVRM sources. The two separately probed upstream patches and
-    the undefined WP1 work package are NOT silently injected.
+    The already-compiled patch objects come from patched_probe() operating on
+    pinned, pristine copies, using each original B1 compile command. This
+    function cannot silently accept another patch, another source or a
+    generated stub. The display patch is intentionally excluded.
+    """
+    rec = report.get("patch_probes", {}).get("fsp-timer-double-destroy", {})
+    if rec.get("status") != "COMPILED_PROBE":
+        raise ValueError("FSP upstream patch compilation has not passed")
+    if rec.get("patch") != "610-fsp-timer-double-destroy.patch":
+        raise ValueError("unexpected FSP patch identity")
+    if rec.get("patch_sha256") != "2998eb54ae95310724b12d24f99e92b34cd4f6812bf9236cd0ba8249832784f0":
+        raise ValueError("pinned FSP patch SHA256 changed")
+    required = {
+        "src/nvidia/src/kernel/gpu/fsp/kern_fsp.c",
+        "src/nvidia/src/kernel/gpu/timer/timer_ostimer.c",
+    }
+    entries = rec.get("results", [])
+    if len(entries) != 2 or {x.get("source") for x in entries} != required:
+        raise ValueError("FSP patch inputs differ from fixed two-source contract")
+    rm_root = nv / "src/nvidia"
+    expected_originals = {p.resolve() for p in original_rm_objects}
+    replaced = {}
+    evidence = []
+    for entry in entries:
+        rel = entry["source"]
+        if not entry.get("verified_object") or entry.get("compile_rc") != 0:
+            raise ValueError("patched FSP compile result not accepted: " + rel)
+        rel_rm = rel[len("src/nvidia/"):]
+        argv = make_command(logs.parent / "make-nvidia.log", rel_rm)
+        if argv.count("-o") != 1:
+            raise ValueError("FSP original B1 object output ambiguous: " + rel)
+        original = (rm_root / argv[argv.index("-o") + 1]).resolve()
+        patched = scratch / "fsp-timer-double-destroy" / (Path(rel).name + ".o")
+        if original not in expected_originals:
+            raise ValueError("original FSP member missing from exactly 1055 RM inputs: " + rel)
+        if original in replaced:
+            raise ValueError("FSP original RM member reused")
+        if not patched.is_file():
+            raise ValueError("compiled patched FSP object is missing: " + str(patched))
+        orig_obj, patched_obj = MachO(original), MachO(patched)
+        for path, obj in ((original, orig_obj), (patched, patched_obj)):
+            if obj.filetype != 1 or int.from_bytes(obj.data[4:8], "little") != 0x01000007:
+                raise ValueError("FSP replacement not x86_64 MH_OBJECT: " + str(path))
+        original_sha, patched_sha = hash_bytes(original.read_bytes()), hash_bytes(patched.read_bytes())
+        if original_sha == patched_sha:
+            raise ValueError("patch unexpectedly produced byte-identical source objects")
+        replaced[original] = patched
+        evidence.append({
+            "source": rel,
+            "original_member": original.name,
+            "patched_member": patched.name,
+            "original_object_sha256": original_sha,
+            "patched_object_sha256": patched_sha,
+            "pinned_patch_sha256": rec["patch_sha256"],
+            "patched_source_sha256": entry.get("patched_sha256"),
+        })
+    if len(replaced) != 2:
+        raise ValueError("expected exactly two replaced FSP members")
+    return replaced, evidence
+
+
+def native_nvrm_link_candidate(nv, scratch, logs, report):
+    """Link the FSP-cleanup-patched RM plus baseline KMS and 11 NVRM objects.
+
+    Only two pinned and separately compiled FSP objects replace their
+    original B1 archive members. No WP1, display flip patch, NVAccel or
+    framebuffer implementation is silently included. Never install/load.
     """
     record = {
         "status": "NOT_RUN",
-        "label": "UNPATCHED_OGKM_INFERRED_NVRM_LINK_CANDIDATE",
+        "label": "FSP_CLEANUP_PATCHED_NVRM_NATIVE_LINK_CANDIDATE",
         "wp1_included": False,
-        "upstream_patch_objects_included": False,
+        "upstream_patch_objects_included": ["610-fsp-timer-double-destroy.patch"],
+        "excluded_upstream_patch": "610-display-completion.patch (requires paired NVRMFB/NVAccel qualification)",
         "sign_or_load": False,
         "binary_uploaded": False,
         "acceptance": "LINK_RESULT_ONLY_NOT_GPU_HARDWARE_VALIDATION",
@@ -407,6 +472,26 @@ def native_nvrm_link_candidate(nv, scratch, logs, report):
             raise ValueError(f"{p.name}: invalid NVRM x86_64 MH_OBJECT")
     record["input_counts"] = {"nvidia": 1055, "nvidia-modeset": 230, "NVRM": source_count}
 
+    # Replace the known original RM members *before* archiving. Using the
+    # original plus a patched extra object would create duplicate definitions,
+    # and could silently link the unpatched implementation.
+    try:
+        rm_inputs = next(objects for mod, objects in inputs if mod == "nvidia")
+        replacements, record["fsp_replacement_evidence"] = verified_fsp_replacements(
+            nv, scratch, logs, report, rm_inputs)
+        inputs = [(module, [replacements.get(p.resolve(), p) for p in objects])
+                  if module == "nvidia" else (module, objects)
+                  for module, objects in inputs]
+        if sum(p in set(replacements.values()) for m, objs in inputs for p in objs) != 2:
+            raise ValueError("two FSP replacement objects were not included exactly once")
+        if any(p in {x.resolve() for x in rm_inputs}
+               for m, objs in inputs for p in objs if p in replacements):
+            raise ValueError("unpatched FSP member remains in archive input list")
+    except Exception as exc:
+        record["status"] = "BLOCKED_FSP_REPLACEMENT_PROVENANCE"
+        record["error"] = str(exc)
+        return
+
     archives = []
     for module, objs in inputs:
         name = "libnvkernel-candidate.a" if module == "nvidia" else "libnvkms-candidate.a"
@@ -433,14 +518,28 @@ def native_nvrm_link_candidate(nv, scratch, logs, report):
     # Do not suppress undefined externals, inject replacement symbols, force
     # load duplicate object definitions or link any previously released binary.
     linked = out / "NVRM-link-candidate"
+    # This is a CI-only link floor, not a claim about the installed macOS
+    # version on the HONOR laptop. Align the link deployment target to the
+    # actual selected SDK's kmod libraries to eliminate the previous warnings.
+    sdk_version = subprocess.check_output(
+        ["xcrun", "--sdk", "macosx", "--show-sdk-version"], text=True).strip()
+    if not sdk_version or not all(x.isdigit() for x in sdk_version.split(".")):
+        record["status"] = "BLOCKED_UNKNOWN_SDK_VERSION"
+        return
+    record["native_sdk_version"] = sdk_version
+    record["ci_only_link_min_macos"] = sdk_version
+    link_map = out / "nvrm-link-map.txt"
     args = ["xcrun", "clang++", "-arch", "x86_64", "-fapple-kext",
-            "-nostdlib", "-Xlinker", "-kext", "-o", str(linked)]
+            "-mmacosx-version-min=" + sdk_version,
+            "-nostdlib", "-Xlinker", "-kext",
+            "-Xlinker", "-map", "-Xlinker", str(link_map),
+            "-o", str(linked)]
     args += [str(p) for p in nvrm_objs]
     args += [str(p) for p in archives]
     args += ["-lkmodc++", "-lkmod", "-lcc_kext"]
     record["link_argv_without_absolute_object_paths"] = [
         "xcrun clang++ -arch x86_64 -fapple-kext -nostdlib -Xlinker -kext",
-        "11 NVRM native MH_OBJECTs", "libnvkernel-candidate.a", "libnvkms-candidate.a",
+        "11 NVRM native MH_OBJECTs", "libnvkernel-candidate.a (2 FSP members replaced)", "libnvkms-candidate.a",
         "-lkmodc++ -lkmod -lcc_kext",
     ]
     linklog = logs / "nvrm-real-link.txt"
@@ -459,6 +558,22 @@ def native_nvrm_link_candidate(nv, scratch, logs, report):
     if not linked.is_file() or linked.stat().st_size == 0:
         record["status"] = "BLOCKED_NO_LINK_OUTPUT"
         return
+    if not link_map.is_file():
+        record["status"] = "BLOCKED_LINK_MAP_UNAVAILABLE"
+        return
+    map_content = link_map.read_text(errors="replace")
+    provenance = {}
+    for member in record["fsp_replacement_evidence"]:
+        evidence_name = member["patched_member"]
+        provenance[evidence_name] = evidence_name in map_content
+        if member["original_member"] in map_content:
+            record["status"] = "BLOCKED_UNPATCHED_FSP_MEMBER_IN_LINK_MAP"
+            record["link_map_patch_evidence"] = provenance
+            return
+    record["link_map_patch_evidence"] = provenance
+    if not all(provenance.values()):
+        record["status"] = "BLOCKED_PATCHED_FSP_OBJECT_NOT_IN_LINK_MAP"
+        return
     result = MachO(linked)
     record.update({
         "macho_cputype": int.from_bytes(result.data[4:8], "little"),
@@ -470,7 +585,7 @@ def native_nvrm_link_candidate(nv, scratch, logs, report):
     if record["macho_cputype"] != 0x01000007 or result.filetype != 11:
         record["status"] = "LINKED_WRONG_MACHO_FORMAT"
         return
-    record["status"] = "NVRM_NATIVE_LINK_CANDIDATE_CREATED_NOT_LOADABLE_EVIDENCE"
+    record["status"] = "FSP_PATCHED_NVRM_NATIVE_LINK_COMPLETE_NOT_LOADABLE_EVIDENCE"
 
 
 def main():
