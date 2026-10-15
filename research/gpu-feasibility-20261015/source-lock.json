@@ -1,0 +1,198 @@
+[
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "README.md",
+    "sha256": "9f50e61338ad816a94bbf2d98f0a1ac30974c4e01a83f76013af405101809485",
+    "bytes": 8786
+  },
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "docs/HOW-IT-WORKS.md",
+    "sha256": "7044a324106c24863de8c3a13ebcf5009ab05a39ee3c1083c01066b87613cfc2",
+    "bytes": 9246
+  },
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "app/Resources/nvidia_gsp_ids.json",
+    "sha256": "881732ab642fd0d2c9c0b6f91ac0544a90f25a26d53684bdeacb620026ca1fc7",
+    "bytes": 10514
+  },
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "app/Resources/nullmoth-install.sh",
+    "sha256": "c4240485495d5a9c00600786e72e4152b6a24dc87033033a229dc9a0cf55b982",
+    "bytes": 25088
+  },
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "app/Resources/nullmoth-uninstall.sh",
+    "sha256": "17abb85c851f673dc6eed2b86b43a79ec60e2f3977c6fabe8220418548f62568",
+    "bytes": 5726
+  },
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "package/install.sh",
+    "sha256": "c4240485495d5a9c00600786e72e4152b6a24dc87033033a229dc9a0cf55b982",
+    "bytes": 25088
+  },
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "package/uninstall.sh",
+    "sha256": "17abb85c851f673dc6eed2b86b43a79ec60e2f3977c6fabe8220418548f62568",
+    "bytes": 5726
+  },
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "kexts/NMIntelFB/Info.plist",
+    "sha256": "ad531bbf2fb9755a62346f7415c7ef89ee5a639341be2eebe889cb5e4e844316",
+    "bytes": 1706
+  },
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "kexts/NMIntelFB/intelfb.cpp",
+    "sha256": "fc4d76f9b2baac12426c5c91a08bf5943da5e52329fe5d1b81ebe5b282f7e85b",
+    "bytes": 28863
+  },
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "kexts/NMIntelFB/nvrm_vram_abi.h",
+    "sha256": "0af697573a8e89234e846b23f831a9906fdf4ff84024f9014238ffa234df2a5e",
+    "bytes": 741
+  },
+  {
+    "repo": "b00t0x/WhateverXe",
+    "commit": "61a449255d385aeb468f64e5d5042e126f387b90",
+    "file": "README.md",
+    "sha256": "3d91b993a308ea67bf9e81ca1623eb67f662c06b97332cb8f7f3e5f3d1670071",
+    "bytes": 5426
+  },
+  {
+    "repo": "b00t0x/WhateverXe",
+    "commit": "61a449255d385aeb468f64e5d5042e126f387b90",
+    "file": "docs/device-selection.md",
+    "sha256": "fbfa7d6c6af9409b364d681c5224d4791ebe835beda804545487c150a760813c",
+    "bytes": 2227
+  },
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "app/Resources/nullmoth-setup.sh",
+    "bytes": 122930,
+    "sha256": "da7e77302a484ce2a7ad86a0c1bbbcee2f534dcce8b76889bd52a7c558680609"
+  },
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "kexts/NVRM/accel/nvrm-accel.cpp",
+    "bytes": 108826,
+    "sha256": "30be0c7936bcbbbf347fd1bd42b5045af9b4c887a51ac1944d9a12a13f0fde21"
+  },
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "kexts/NMIntelFB/display_ids.inc",
+    "bytes": 1267,
+    "sha256": "5b138cc0cac47168858573bea4a2c2a9c32724afcadf0828c4adf0de07707815"
+  },
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "CHANGELOG.md",
+    "bytes": 5851,
+    "sha256": "1d170d1881b5ad755fe3dd980a5400af01f7b319e184b3597b94cf6fca96d0cc"
+  },
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "kexts/NVRM/fb/Info.plist",
+    "bytes": 1898,
+    "sha256": "a44dcb9ece863a7de948ea377e558c74c036d8a126268c834458bf0f3cd781cd"
+  },
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "kexts/NVRM/fb/nvrm-fb.cpp",
+    "bytes": 90725,
+    "sha256": "d84282a50659cdaba46a8783c3152b6d1bbaf21acd00c02f44eaa3a4e2643227"
+  },
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "tools/igfx/igfx_plan.py",
+    "bytes": 12571,
+    "sha256": "b2e46047ca55d54760293edd62eb49644aba749bd077799fc453064016e940d1"
+  },
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "tools/igfx/igfx_check.py",
+    "bytes": 4834,
+    "sha256": "1aa3d4f967e28a82f0f6d7e7dd4518cbfddaf8e2429b47b71cd03775cc4f7159"
+  },
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "tools/igfx/igfx_trace.py",
+    "bytes": 4297,
+    "sha256": "2645ae538b10fe64de001e05da060c298732517372e5f8c830c08221af309b5a"
+  },
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "build/accel_build.sh",
+    "bytes": 2629,
+    "sha256": "c41fe1d4e3020144bf24bb000dbcf53c395396ea825f93b5b3b3b71e1cc36ce1"
+  },
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "build/accel_build_all.sh",
+    "bytes": 1022,
+    "sha256": "671ca4f58d716df305b2253f7360065c35ba38affc35bc06cef4e1b2cb54ca56"
+  },
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "build/build263.sh",
+    "bytes": 2422,
+    "sha256": "c23ec6d17a7a616a4839bc5b05308acec6feee5d7a5fbfc2ababd4b4d6fe8429"
+  },
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "gpu-port/README.md",
+    "bytes": 8913,
+    "sha256": "b999a335eabb62c8b5394660aa8e3cc16bebb8483aace53abf9a16991addff42"
+  },
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "LICENSE",
+    "bytes": 4647,
+    "sha256": "1b5c7a92697863d38fd2779af76732acfb8f521b758781eab057ad966701b0b7"
+  },
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "kexts/NMIntelFB/Info-virtual.plist",
+    "bytes": 2034,
+    "sha256": "c6fbd649c0fc2d1420f2c6b007ead03c3303f4de513d7ce80279c034d1eccaee"
+  },
+  {
+    "repo": "nullmoth/nvidia-macos-driver",
+    "commit": "cd8e2bb04da48d2fa70cf1895879608f3588dbfb",
+    "file": "kexts/NVRM/nvrm_vram_abi.h",
+    "bytes": 741,
+    "sha256": "0af697573a8e89234e846b23f831a9906fdf4ff84024f9014238ffa234df2a5e"
+  }
+]

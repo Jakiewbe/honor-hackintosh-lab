@@ -1,5 +1,16 @@
 # HONOR Hackintosh Lab — Intel + NVIDIA macOS Compatibility Research
 
+## 2026-10-15 最新增量：已进入桌面，显卡加速仍未验证
+
+用户通过 H1-COUNT 越过 EXITBS，完成外接 SSD 安装并进入正式桌面；内屏 2160×1440 可显示。两块 GPU 的系统报告均为 No Kext Loaded，桌面卡顿，尚无硬件加速验收。用户已关机，本阶段只做显卡驱动可行性调研；没有安装或加载新驱动、修改 BIOS 变量或触发 CI。
+
+本轮[调研归档](research/gpu-feasibility-20261015/README.md)含路线比较、固定源码版本与检查记录。RTX2050 渲染到 Intel 内屏桥接是待验证方案。此前记录的 31 项通过、0 项失败仅为源码/文档检查；没有新原生构建或硬件测试。本次上传已获用户明确授权。原始照片、设备日志、EFI 和驱动二进制不上传。
+
+**以下保留历史记录；其中“仍卡 EXITBS”“尚未进入 macOS”等描述已不代表最新用户实测。旧自主驱动的未验收结论仍成立。.agent/ 本轮未迁移，接手时请先读上述增量。**
+
+---
+
+
 > **Codex handoff / 当前权威入口（2026-10-12）**：**先读 [AGENTS.md](AGENTS.md) → [knowledge/README.md](knowledge/README.md) → [当前状态](knowledge/02_CURRENT_STATE.md) → [Codex 交接任务](knowledge/10_CODEX_HANDOFF.md)**。原 README 以下的 R0.6–R1.4-B 章节是**历史过程记录**，不能单独代表当前准入等级；阶段/源码/实验、冻结工作及实际 CI 以知识库和原始报告为准。
 >
 > **最新策略：自主 Intel `8086:46A6` 内屏 L1 研究；FreeBSD/Linux 6.1 同系列源码仅为候选；自主驱动未进行 native build 或实机运行；`RUNTIME_NO_GO`。** 已确认内屏在 Windows 连接 Intel 核显、独显实测为 RTX 2050 `10DE:25A9`（非 3050）。**不得触碰主力 Windows、EFI、BIOS、磁盘、安全设置，不得加载/签名 kext；不得代用户启动 Actions。**

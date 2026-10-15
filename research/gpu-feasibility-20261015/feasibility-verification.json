@@ -1,0 +1,134 @@
+{
+  "phase": "research only",
+  "passed": 31,
+  "failed": 0,
+  "checks": [
+    {
+      "check": "nullmoth/nvidia-macos-driver/README.md",
+      "pass": true
+    },
+    {
+      "check": "nullmoth/nvidia-macos-driver/docs/HOW-IT-WORKS.md",
+      "pass": true
+    },
+    {
+      "check": "nullmoth/nvidia-macos-driver/app/Resources/nvidia_gsp_ids.json",
+      "pass": true
+    },
+    {
+      "check": "nullmoth/nvidia-macos-driver/app/Resources/nullmoth-install.sh",
+      "pass": true
+    },
+    {
+      "check": "nullmoth/nvidia-macos-driver/app/Resources/nullmoth-uninstall.sh",
+      "pass": true
+    },
+    {
+      "check": "nullmoth/nvidia-macos-driver/package/install.sh",
+      "pass": true
+    },
+    {
+      "check": "nullmoth/nvidia-macos-driver/package/uninstall.sh",
+      "pass": true
+    },
+    {
+      "check": "nullmoth/nvidia-macos-driver/kexts/NMIntelFB/Info.plist",
+      "pass": true
+    },
+    {
+      "check": "nullmoth/nvidia-macos-driver/kexts/NMIntelFB/intelfb.cpp",
+      "pass": true
+    },
+    {
+      "check": "nullmoth/nvidia-macos-driver/kexts/NMIntelFB/nvrm_vram_abi.h",
+      "pass": true
+    },
+    {
+      "check": "b00t0x/WhateverXe/README.md",
+      "pass": true
+    },
+    {
+      "check": "b00t0x/WhateverXe/docs/device-selection.md",
+      "pass": true
+    },
+    {
+      "check": "nullmoth/nvidia-macos-driver/app/Resources/nullmoth-setup.sh",
+      "pass": true
+    },
+    {
+      "check": "nullmoth/nvidia-macos-driver/kexts/NVRM/accel/nvrm-accel.cpp",
+      "pass": true
+    },
+    {
+      "check": "nullmoth/nvidia-macos-driver/kexts/NMIntelFB/display_ids.inc",
+      "pass": true
+    },
+    {
+      "check": "nullmoth/nvidia-macos-driver/CHANGELOG.md",
+      "pass": true
+    },
+    {
+      "check": "nullmoth/nvidia-macos-driver/kexts/NVRM/fb/Info.plist",
+      "pass": true
+    },
+    {
+      "check": "nullmoth/nvidia-macos-driver/kexts/NVRM/fb/nvrm-fb.cpp",
+      "pass": true
+    },
+    {
+      "check": "nullmoth/nvidia-macos-driver/tools/igfx/igfx_plan.py",
+      "pass": true
+    },
+    {
+      "check": "nullmoth/nvidia-macos-driver/tools/igfx/igfx_check.py",
+      "pass": true
+    },
+    {
+      "check": "nullmoth/nvidia-macos-driver/tools/igfx/igfx_trace.py",
+      "pass": true
+    },
+    {
+      "check": "nullmoth/nvidia-macos-driver/build/accel_build.sh",
+      "pass": true
+    },
+    {
+      "check": "nullmoth/nvidia-macos-driver/build/accel_build_all.sh",
+      "pass": true
+    },
+    {
+      "check": "nullmoth/nvidia-macos-driver/build/build263.sh",
+      "pass": true
+    },
+    {
+      "check": "nullmoth/nvidia-macos-driver/gpu-port/README.md",
+      "pass": true
+    },
+    {
+      "check": "nullmoth/nvidia-macos-driver/LICENSE",
+      "pass": true
+    },
+    {
+      "check": "nullmoth/nvidia-macos-driver/kexts/NMIntelFB/Info-virtual.plist",
+      "pass": true
+    },
+    {
+      "check": "nullmoth/nvidia-macos-driver/kexts/NVRM/nvrm_vram_abi.h",
+      "pass": true
+    },
+    {
+      "check": "ABI header source copies identical",
+      "pass": true
+    },
+    {
+      "check": "report and fixed input lock available",
+      "pass": true
+    },
+    {
+      "check": "frame calculation matches current panel resolution",
+      "pass": true
+    }
+  ],
+  "new_native_build": false,
+  "hardware_test": false,
+  "new_driver_implementation": false
+}

@@ -1,0 +1,8 @@
+{
+  "passed": 25,
+  "failed": 0,
+  "candidate_match_passed": 6,
+  "candidate_match_failed": 0,
+  "driver_deployed": false,
+  "runtime_gpu_success": false
+}
