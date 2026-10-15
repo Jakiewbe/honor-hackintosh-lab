@@ -202,22 +202,56 @@ jobs:
         run: |
           set -euo pipefail
           python3 - "$RUNNER_TEMP/g1-logs" <<'PY'
-          import json, pathlib, re, sys
+          import hashlib, json, pathlib, re, sys
           logs = pathlib.Path(sys.argv[1])
           report = json.loads((logs / "b1-rebuild-compare.json").read_text())
+          shader_report = json.loads((logs / "shader-pack-candidate.json").read_text())
           errors = []
           summary = (logs / "build-summary.txt").read_text()
-          # Five pinned modeset shader objects are included in the expected count.
-          for module, expected in (("nvidia", 1055), ("nvidia-modeset", 230)):
-              count = report[module]["objects"]
-              if count != expected:
-                  errors.append(f"{module}: expected {expected} objects, got {count}")
-              match = re.search(rf"^{module} objects=\d+ compile_errors=(\d+)$", summary, re.M)
+
+          # The packer's pre-build verification is insufficient if make overwrites
+          # an object. Recheck hashes of all five genuine shader inputs AFTER make.
+          expected_shaders = {"turing", "ampere", "hopper", "blackwell", "gb20x"}
+          entries = shader_report.get("shaders", [])
+          names = [s.get("arch") for s in entries]
+          if (shader_report.get("status") != "complete" or
+                  len(entries) != len(expected_shaders) or set(names) != expected_shaders):
+              errors.append("shader pack report is missing, incomplete, or has duplicate/unknown inputs")
+          else:
+              shader_dir = pathlib.Path(__import__("os").environ["RUNNER_TEMP"]) / "nv/src/nvidia-modeset/_out/Darwin_x86_64"
+              for s in entries:
+                  obj = shader_dir / (s["arch"] + "_shaders.xz.o")
+                  if not obj.is_file():
+                      errors.append(f"shader object missing after make: {obj.name}")
+                  elif hashlib.sha256(obj.read_bytes()).hexdigest() != s.get("object_sha256"):
+                      errors.append(f"shader object changed after verified packaging: {obj.name}")
+              if not (shader_dir / "g_nvid_string.o").is_file():
+                  errors.append("generated g_nvid_string.o missing")
+
+          expected_members = {"nvidia": 1055, "nvidia-modeset": 230}
+          expected_closure = {"nvidia": 954, "nvidia-modeset": 189}
+          for module, expected in expected_members.items():
+              r = report[module]
+              if r.get("objects") != expected:
+                  errors.append(f"{module}: expected {expected} input objects, got {r.get('objects')}")
+              if r.get("unparsable"):
+                  errors.append(f"{module}: unparsable Mach-O objects: {r['unparsable'][:3]}")
+              match = re.search(rf"^{module} objects=\\d+ compile_errors=(\\d+)$", summary, re.M)
               if match is None or int(match[1]) != 0:
                   errors.append(f"{module}: compiler errors or missing diagnostic count")
+              if not r.get("functions", {}).get("compared"):
+                  errors.append(f"{module}: no uniquely comparable functions")
+              closure = r.get("closure", {})
+              want = expected_closure[module]
+              for field in ("predicted_pulled", "observed_in_nvrm", "agree"):
+                  if closure.get(field) != want:
+                      errors.append(f"{module}: {field}={closure.get(field)} expected {want}")
+              for field in ("predicted_not_observed", "observed_not_predicted"):
+                  if closure.get(field):
+                      errors.append(f"{module}: {field} is nonempty")
           if errors:
               raise SystemExit("DIAGNOSTICS_INCOMPLETE: " + "; ".join(errors))
-          print("OBJECT_BUILD_DIAGNOSTICS_COMPLETE (comparison still requires human review)")
+          print("G1_INPUTS_SHADERS_AND_CLOSURE_COMPLETE (static object comparison only; no GPU validation)")
           PY
 
       - name: Upload text diagnostics only (no objects, no kext)
