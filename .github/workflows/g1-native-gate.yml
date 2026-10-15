@@ -132,7 +132,7 @@ jobs:
       - name: Build OGKM Darwin objects with the inferred configuration (objects only)
         shell: bash
         run: |
-          set -uo pipefail
+          set -euo pipefail
           logs="$RUNNER_TEMP/g1-logs"
           nv="$RUNNER_TEMP/nv"
           jobs="$(sysctl -n hw.ncpu)"
@@ -152,10 +152,16 @@ jobs:
           echo "G1_DROP_FLAGS=${G1_DROP_FLAGS:-<none>}" | tee -a "$logs/toolchain.txt"
           for m in nvidia nvidia-modeset; do
             # -k: the final ELF link (GNU ld -T / objcopy) cannot run on macOS; objects are what is compared.
-            gmake -C "$nv/src/$m" -k -j"$jobs" TARGET_OS=Darwin TARGET_ARCH=x86_64 CC="$cc" \
-              NV_VERBOSE=1 EXTRA_CFLAGS="$EXTRA" > "$logs/make-$m.log" 2>&1
-            echo "make $m rc=$?" | tee -a "$logs/build-summary.txt"
-            n="$(ls "$nv/src/$m/_out/Darwin_x86_64/"*.o 2>/dev/null | wc -l | tr -d ' ')"
+            # Actions starts bash with -e: capture the expected final-link failure explicitly.
+            if gmake -C "$nv/src/$m" -k -j"$jobs" TARGET_OS=Darwin TARGET_ARCH=x86_64 CC="$cc" \
+              NV_VERBOSE=1 EXTRA_CFLAGS="$EXTRA" > "$logs/make-$m.log" 2>&1; then
+              make_rc=0
+            else
+              make_rc=$?
+            fi
+            echo "make $m rc=$make_rc" | tee -a "$logs/build-summary.txt"
+            # An absent output directory must yield 0, without an ls/pipefail early exit.
+            n="$(python3 -c 'import pathlib,sys; print(sum(1 for p in pathlib.Path(sys.argv[1]).glob("*.o") if p.is_file()))' "$nv/src/$m/_out/Darwin_x86_64")"
             e="$(grep -c 'error:' "$logs/make-$m.log" || true)"
             echo "$m objects=$n compile_errors=$e" | tee -a "$logs/build-summary.txt"
             grep -E ' -c [^ ]+\.(c|cpp) ' "$logs/make-$m.log" | sed "s#$RUNNER_TEMP#/RUNNER_TEMP#g" \
@@ -219,7 +225,11 @@ jobs:
             echo '- Inferred configuration, compared against released NVRM v1.15.0; a match is evidence, not NullMoth inputs.'
             echo '- Objects only: no NVRM link, signing, install, load, or binary upload.'
             echo '- No RTX 2050 hardware on this runner; says nothing about GPU rendering.'
-            [[ -f "$RUNNER_TEMP/g1-logs/b1-rebuild-compare.txt" ]] && sed 's/^/    /' "$RUNNER_TEMP/g1-logs/b1-rebuild-compare.txt"
+            if [[ -f "$RUNNER_TEMP/g1-logs/b1-rebuild-compare.txt" ]]; then
+              sed 's/^/    /' "$RUNNER_TEMP/g1-logs/b1-rebuild-compare.txt"
+            else
+              echo '- Comparison unavailable: inspect build and first-error diagnostics; B1 is not accepted.'
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
 
   validator-native-compile:
