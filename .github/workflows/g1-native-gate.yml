@@ -263,6 +263,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          python3 scripts/g1/test_b3_linkmap.py
           python3 scripts/g1/b2_native_probe.py \
             --nullmoth "$RUNNER_TEMP/nm" \
             --ogkm "$RUNNER_TEMP/nv" \

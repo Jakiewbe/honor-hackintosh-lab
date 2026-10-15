@@ -421,6 +421,65 @@ def verified_fsp_replacements(nv, scratch, logs, report, original_rm_objects):
     return replaced, evidence
 
 
+def fsp_link_map_proof(map_content, replacement_evidence):
+    """Parse ld64's indexed # Object files table, not arbitrary substrings.
+
+    This proves archive member selection only, not hardware patch effectiveness.
+    """
+    import re
+    entries = []
+    in_object_section = False
+    seen_header = False
+    seen_footer = False
+    for line in map_content.splitlines():
+        if line.strip() == "# Object files:":
+            if seen_header:
+                return "BLOCKED_AMBIGUOUS_LINK_MAP", {"reason": "duplicate object table"}
+            seen_header = in_object_section = True
+            continue
+        if in_object_section and line.startswith("# "):
+            if line.strip() == "# Sections:":
+                seen_footer = True
+                break
+            return "BLOCKED_LINK_MAP_UNEXPECTED_SECTION", {"reason": line.strip()}
+        if in_object_section:
+            m = re.match(r"^\s*\[\s*\d+\s*\]\s+(.+?)\s*$", line)
+            if m:
+                entries.append(m.group(1))
+            elif line.strip():
+                return "BLOCKED_LINK_MAP_PARSE", {"unexpected": line.strip()[:200]}
+    if not seen_header or not seen_footer or not entries:
+        return "BLOCKED_LINK_MAP_PARSE", {
+            "object_table_found": seen_header,
+            "section_end_found": seen_footer,
+            "object_row_count": len(entries),
+        }
+    proof = {
+        "link_map_object_rows": len(entries),
+        "RM_archive": "libnvkernel-candidate.a",
+        "members": {},
+    }
+    archived = [e for e in entries if "libnvkernel-candidate.a(" in e]
+    for item in replacement_evidence:
+        original = "libnvkernel-candidate.a(" + item["original_member"] + ")"
+        patched = "libnvkernel-candidate.a(" + item["patched_member"] + ")"
+        original_rows = [x for x in archived if x.endswith(original)]
+        patched_rows = [x for x in archived if x.endswith(patched)]
+        proof["members"][item["source"]] = {
+            "original_member": item["original_member"],
+            "patched_member": item["patched_member"],
+            "original_selected_count": len(original_rows),
+            "patched_selected_count": len(patched_rows),
+        }
+        if original_rows:
+            return "BLOCKED_UNPATCHED_FSP_MEMBER_IN_LINK_MAP", proof
+        if len(patched_rows) != 1:
+            return "BLOCKED_PATCHED_FSP_MEMBER_SELECTION_NOT_EXACTLY_ONE", proof
+    if len(replacement_evidence) != 2:
+        return "BLOCKED_FSP_REPLACEMENT_COUNT", proof
+    return "FSP_PATCH_MEMBERS_SELECTED", proof
+
+
 def native_nvrm_link_candidate(nv, scratch, logs, report):
     """Link the FSP-cleanup-patched RM plus baseline KMS and 11 NVRM objects.
 
@@ -561,18 +620,11 @@ def native_nvrm_link_candidate(nv, scratch, logs, report):
     if not link_map.is_file():
         record["status"] = "BLOCKED_LINK_MAP_UNAVAILABLE"
         return
-    map_content = link_map.read_text(errors="replace")
-    provenance = {}
-    for member in record["fsp_replacement_evidence"]:
-        evidence_name = member["patched_member"]
-        provenance[evidence_name] = evidence_name in map_content
-        if member["original_member"] in map_content:
-            record["status"] = "BLOCKED_UNPATCHED_FSP_MEMBER_IN_LINK_MAP"
-            record["link_map_patch_evidence"] = provenance
-            return
-    record["link_map_patch_evidence"] = provenance
-    if not all(provenance.values()):
-        record["status"] = "BLOCKED_PATCHED_FSP_OBJECT_NOT_IN_LINK_MAP"
+    status, proof = fsp_link_map_proof(
+        link_map.read_text(errors="replace"), record["fsp_replacement_evidence"])
+    record["link_map_patch_evidence"] = proof
+    if status != "FSP_PATCH_MEMBERS_SELECTED":
+        record["status"] = status
         return
     result = MachO(linked)
     record.update({
