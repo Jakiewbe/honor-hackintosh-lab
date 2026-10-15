@@ -63,3 +63,23 @@
 - 通过固定源码 apply/compile/link、故障注入路径审查后，仍必须完成备份、EFI/磁盘/BitLocker 与实际恢复操作的核对；没有用户对实机加载的独立授权前继续禁止安装/加载。
 
 **状态表：** NVRM FSP 补丁链接 `PASS (CI only)`；PCI 状态失败回滚 `UNVERIFIED / P0`；FSP/GSP 真实初始化 `UNVERIFIED`；GPU 指令与像素读回 `UNVERIFIED`；Intel 内屏硬件加速 `NOT ACHIEVED`；实机 `NO-GO`。
+
+
+## B4 2026-10-16 源码补丁与隔离原生链接候选（未运行 Actions）
+
+提交链：
+
+- `98454a4be6594c25ae5926a7286a136850e6ece5`：首次独立 B4 源码补丁，仅修改固定上游 `kexts/NVRM/NVRM.cpp` 的 6 个局部位置。
+- `3f587e893e341146e0acb5a6f17b28c6c5af9772`：将 B4 接入显式选择的 GitHub Actions 编译/链接路径；原 B3 链接候选保留不变，B4 对象、临时目录、链接报告独立。
+
+静态校验：六个补丁 hunk 已与固定上游 `NVRM.cpp` 精确逐行匹配（Git blob `bf16040acf05fc1b3dee679a93b8d9973d557d06`），原生 `git apply --check`、`clang++` 和 `ld64` 尚未运行验证，因此不能标记 B4 PASS。
+
+B4 修复内容是有界的：
+
+1. 在 `NVRM::start` 更早读取 `-nvrmnogo`。若手动启动模式被选择，跳过启动前的 `placeLargeBar1` 调用，但仍会运行其他初始化与屏幕快照代码，**不能称为 read-only 模式**；之后人工执行 `go(2)` 仍有真实 PCI/GSP 侧效应。
+2. 在 `NVRM::go(2)` 中把 MSI 查询、工作队列及中断源创建和附加移动到 PCI Memory/Bus Master 使能之前，已发生的预初始化内存分配失败不应开启设备总线主控。
+3. 已进入 `rm_init_adapter` 并失败时将实例置为“禁止再次初始化”。此标志仅作用于**该 NVRM 实例**，不是跨卸载或重启的安全机制，也不证明 DMA/GSP 资源已回收。
+
+**严格保留的 P0 阻塞：** 正常自动模式 `placeLargeBar1` 成功改写后尚无完整 stop 回退；BAR 修改后的对象分配失败存在未恢复状态；`rm_init_rm`/事件锁分阶段失败处理不完整；`rm_init_adapter` 半初始化清理合同没有上游可核验的闭包；`autoGo`、中断回调与 `stop` 的并发释放关系未验收。**B4 即使编译/链接成功，实机仍维持 NO-GO。**
+
+下一次手动 CI 参数：`main` / `Xcode_16.4.0` / `EXTRA=-DNV_UNIX -DNV_LINUX` / `drop_flags` 留空； `run_rebuild=true`、`run_b2_probe=true`、`run_b4_probe=true`。本次运行按既有策略始终返回 B2 `BLOCKED`；按 `b2-native-probe.json` 的 `b4_source_patch` 和 `b4_native_link_candidate` 判读真实结果，不以上层红色状态代表 B4 链接失败。二进制不上传、不签名、不安装、不加载。
