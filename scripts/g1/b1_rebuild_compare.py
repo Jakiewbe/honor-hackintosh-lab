@@ -59,11 +59,24 @@ def idents(src_dir):
     return out
 
 
-def module_report(objdir, nvrm, nvrm_funcs, nvrm_defined, roots_src):
-    objs = sorted(p for p in Path(objdir).glob("*.o"))
+def module_report(objdir, nvrm, nvrm_funcs, nvrm_defined, roots_src, derived_output=None):
+    # The pinned OGKM Makefile may successfully link its 230 modeset inputs
+    # into nv-modeset-kernel.o. That *output* is not a 231st archive member:
+    # including it duplicates every definition and invalidates comparison.
+    all_objs = sorted(p for p in Path(objdir).glob("*.o") if p.is_file())
+    excluded = [p for p in all_objs if p.name == derived_output]
+    objs = [p for p in all_objs if p.name != derived_output]
     if not objs:
-        return {"objects": 0, "error": f"no objects in {objdir}"}
+        return {"objects": 0, "error": f"no input objects in {objdir}"}
     parsed, bad = {}, []
+    # Still parse-check the excluded aggregate; do not silently hide a bad .o.
+    for p in excluded:
+        try:
+            aggregate = MachO(p)
+            if aggregate.filetype != 1:
+                raise ValueError("derived output is not an MH_OBJECT")
+        except Exception as e:
+            bad.append(f"derived {p.name}: {e}")
     for p in objs:
         try:
             parsed[p.name] = MachO(p)
@@ -122,7 +135,8 @@ def module_report(objdir, nvrm, nvrm_funcs, nvrm_defined, roots_src):
                 imports[n] += 1
     worst = sorted(((c["different"], o) for o, c in per_obj.items() if c["different"]), reverse=True)[:25]
     return {
-        "objects": len(objs), "unparsable": bad,
+        "objects": len(objs), "objects_on_disk": len(all_objs),
+        "excluded_derived_outputs": [p.name for p in excluded], "unparsable": bad,
         "closure": {"roots": len(roots), "predicted_pulled": len(pulled), "observed_in_nvrm": len(observed),
                     "agree": len(pulled & observed), "predicted_not_observed": sorted(pulled - observed)[:50],
                     "observed_not_predicted": sorted(observed - pulled)[:50]},
@@ -151,7 +165,8 @@ def main():
     report = {"label": a.label, "nvrm": a.nvrm, "nvrm_functions": len(nvrm_funcs),
               "reference_link": {"nvidia": "954/954 pulled objects observed", "nvidia-modeset": "189/189"},
               "nvidia": module_report(a.rm_objs, nvrm, nvrm_funcs, nvrm_defined, roots_src),
-              "nvidia-modeset": module_report(a.kms_objs, nvrm, nvrm_funcs, nvrm_defined, roots_src)}
+              "nvidia-modeset": module_report(a.kms_objs, nvrm, nvrm_funcs, nvrm_defined, roots_src,
+                                              derived_output="nv-modeset-kernel.o")}
     Path(a.out).write_text(json.dumps(report, indent=1), encoding="utf-8")
     incomplete = False
     for m in ("nvidia", "nvidia-modeset"):
@@ -163,7 +178,9 @@ def main():
         if r["unparsable"] or not r["functions"].get("compared"):
             incomplete = True
         c = r["closure"]
-        print(f"{m}: objects {r['objects']} unparsable {len(r['unparsable'])}; closure agree {c['agree']} "
+        print(f"{m}: input objects {r['objects']} (disk {r['objects_on_disk']}, "
+              f"derived excluded {r['excluded_derived_outputs']}) unparsable {len(r['unparsable'])}; "
+              f"closure agree {c['agree']} "
               f"(pulled {c['predicted_pulled']}, observed {c['observed_in_nvrm']}); functions {r['functions']} "
               f"identical_rate {r['identical_rate']}; markers {r['markers']}; imports {r['imports_by_pulled_objects']}")
 

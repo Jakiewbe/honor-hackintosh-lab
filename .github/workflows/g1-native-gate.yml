@@ -169,7 +169,12 @@ jobs:
             fi
             echo "make $m rc=$make_rc" | tee -a "$logs/build-summary.txt"
             # An absent output directory must yield 0, without an ls/pipefail early exit.
-            n="$(python3 -c 'import pathlib,sys; print(sum(1 for p in pathlib.Path(sys.argv[1]).glob("*.o") if p.is_file()))' "$nv/src/$m/_out/Darwin_x86_64")"
+            # The modeset Makefile can link its inputs into a separate aggregate .o.
+            # Count only the 230 inputs; preserve and account for all five shader .o files.
+            n="$(python3 -c 'import pathlib,sys; d=pathlib.Path(sys.argv[1]); mod=sys.argv[2]; print(sum(1 for p in d.glob("*.o") if p.is_file() and not (mod=="nvidia-modeset" and p.name=="nv-modeset-kernel.o")))' "$nv/src/$m/_out/Darwin_x86_64" "$m")"
+            if [[ "$m" == nvidia-modeset && -f "$nv/src/$m/_out/Darwin_x86_64/nv-modeset-kernel.o" ]]; then
+              echo 'nvidia-modeset derived_output=nv-modeset-kernel.o (excluded from 230 inputs; separately parse-checked)' | tee -a "$logs/build-summary.txt"
+            fi
             e="$(grep -c 'error:' "$logs/make-$m.log" || true)"
             echo "$m objects=$n compile_errors=$e" | tee -a "$logs/build-summary.txt"
             grep -E ' -c [^ ]+\.(c|cpp) ' "$logs/make-$m.log" | sed "s#$RUNNER_TEMP#/RUNNER_TEMP#g" \
