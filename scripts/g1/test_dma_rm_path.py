@@ -68,7 +68,7 @@ class RmIovaPathTests(unittest.TestCase):
     def test_commented_owner_assignment_must_not_pass(self):
         with self.assertRaisesRegex(ValueError, "manually review"):
             inspect(MAC, RM.replace("pIovaMapping->pOsData = pPriv;",
-                                     "// pIovaMapping->pOsData = pPriv;"))
+                                     "/* pIovaMapping->pOsData = pPriv; */"))
 
     def test_quoted_owner_assignment_must_not_pass(self):
         with self.assertRaisesRegex(ValueError, "manually review"):
@@ -83,7 +83,7 @@ class RmIovaPathTests(unittest.TestCase):
     def test_peer_null_assignment_in_comment_must_not_pass(self):
         with self.assertRaisesRegex(ValueError, "manually review"):
             inspect(MAC, RM.replace("else if (peer != nv) { pIovaMapping->pOsData = NULL;",
-                                     "else if (peer != nv) { // pIovaMapping->pOsData = NULL;"))
+                                     "else if (peer != nv) { /* pIovaMapping->pOsData = NULL; */"))
 
 
 if __name__ == "__main__":
