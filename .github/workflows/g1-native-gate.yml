@@ -39,6 +39,10 @@ on:
         description: "B6 experimental BAR stop ownership compile/link (requires B4+B5; no GPU loading)"
         type: boolean
         default: false
+      run_b7_probe:
+        description: "B7 staged RM event-lock preflight compile/link (requires B4+B5+B6; no load)"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -271,12 +275,13 @@ jobs:
           PY
 
       - name: B2/B4 native compile, patched link candidate (explicit opt-in; not acceptance)
-        if: ${{ inputs.run_b2_probe || inputs.run_b4_probe || inputs.run_b5_probe || inputs.run_b6_probe }}
+        if: ${{ inputs.run_b2_probe || inputs.run_b4_probe || inputs.run_b5_probe || inputs.run_b6_probe || inputs.run_b7_probe }}
         shell: bash
         env:
-          B4_ENABLED: ${{ inputs.run_b4_probe || inputs.run_b5_probe || inputs.run_b6_probe }}
-          B5_ENABLED: ${{ inputs.run_b5_probe || inputs.run_b6_probe }}
-          B6_ENABLED: ${{ inputs.run_b6_probe }}
+          B4_ENABLED: ${{ inputs.run_b4_probe || inputs.run_b5_probe || inputs.run_b6_probe || inputs.run_b7_probe }}
+          B5_ENABLED: ${{ inputs.run_b5_probe || inputs.run_b6_probe || inputs.run_b7_probe }}
+          B6_ENABLED: ${{ inputs.run_b6_probe || inputs.run_b7_probe }}
+          B7_ENABLED: ${{ inputs.run_b7_probe }}
         run: |
           set -euo pipefail
           python3 scripts/g1/test_b3_linkmap.py
@@ -290,6 +295,9 @@ jobs:
           fi
           if [[ "$B6_ENABLED" == "true" ]]; then
             b4_opts+=(--b6-patch scripts/g1/patches/b6_nvrm_bar_stop_ownership.patch)
+          fi
+          if [[ "$B7_ENABLED" == "true" ]]; then
+            b4_opts+=(--b7-patch scripts/g1/patches/b7_nvrm_rm_preflight_event_locks.patch)
           fi
           python3 scripts/g1/b2_native_probe.py \
             --nullmoth "$RUNNER_TEMP/nm" \
