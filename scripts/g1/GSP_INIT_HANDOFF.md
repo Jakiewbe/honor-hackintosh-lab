@@ -216,3 +216,14 @@ NullMoth 原代码 `NVRM::go(1)` 在 `rm_init_rm` 成功后立刻设置 `gRmInit
 - 实际 B7 产物：x86_64 `MH_KEXT_BUNDLE`，16,506,136 字节；SHA256 `0a6c1eca5f6a6519ea4148fda4b4520455a48c3ba4e8963fa0f91976541e77ea`；462 个未定义外部符号的目标 macOS 内核 ABI/导出仍未通过实机合同验证。所有候选二进制只存在于 CI 临时目录，没有上传、签名、安装或加载。
 - Actions 总体 `failure` 原因是顶层 B2 依设计以 `BLOCKED_WP1_OR_NVRM_LINK_PROVENANCE` 返回 exit 2，**不是 B7 本地编译或链接失败**。当前将 B7 的构建子目标标为 `PASS (native build/link only)`，不再原样重跑 B3–B7。
 - **仍然 NO-GO 的关键事项**：RM control/per-GPU event lock 的最终销毁与重载全局状态一致性、`rm_init_adapter` 半初始化 GSP/RM 资源的可证明清理、MSI/WorkLoop/autoGo 与 stop 的并发顺序及 DMA 静默、GSP 固件文件真实来源/哈希、目标 macOS 内核/IOKit ABI、RTX 2050 实际初始化与指令执行。不能从本次链接 PASS 推出 NVRM 可加载，更不能推出 Intel 46A6 内屏 Metal 加速。
+
+
+## G1-B8 source milestone (2026-10-16, NOT native compiled)
+
+Commit `cb107caf07b523375145743734fb1a2afb8c89af` introduces source-pinned `scripts/g1/patches/b8_nvrm_global_rm_stop_gate.patch`, Git blob `PATCH_SHA`. It cleanly follows pinned NullMoth NVRM + B4 (6 hunks) + B5 (5) + B6 (8) + B7 (5); B8 adds 10 hunks.
+
+Code changes: do not schedule autoGo merely by loading the kext; `-nvrmautogo` would require a separate deliberate experimental opt-in; poison future `go` if global RM or control-state event-lock creation failed; reject newly admitted `go` when `stop()` sets `fStopping`; exit headWatch at next loop and cancel autoGo after its settling wait when stop is already set.
+
+**P0 unresolved:** `go()` already in flight may still race against `stop()`; stop does not wait for all RM/ISR/client callbacks, confirm DMA quiescence, destroy GPU/control RM event locks safely or unwind a partially initialized GSP. The boot-hold timeout/threads also have unverified lifetimes. Manual `go` is still a hardware-mutation entrypoint. This patch is not a safe loader.
+
+**Validation status:** exact source-hunk application PASS; Apple native compile/link NOT RUN; hardware tests NOT RUN; CI workflow B8 opt-in integration NOT COMMITTED. Two earlier attempted workflow edits were aborted before GitHub write on strict anchor mismatch. Do not claim CI is available for B8 until it is actually committed and verified. Previous B7 build/link remains frozen PASS. Live system remains NO-GO.
