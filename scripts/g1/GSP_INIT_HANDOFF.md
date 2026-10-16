@@ -227,3 +227,17 @@ Code changes: do not schedule autoGo merely by loading the kext; `-nvrmautogo` w
 **P0 unresolved:** `go()` already in flight may still race against `stop()`; stop does not wait for all RM/ISR/client callbacks, confirm DMA quiescence, destroy GPU/control RM event locks safely or unwind a partially initialized GSP. The boot-hold timeout/threads also have unverified lifetimes. Manual `go` is still a hardware-mutation entrypoint. This patch is not a safe loader.
 
 **Validation status:** exact source-hunk application PASS; Apple native compile/link NOT RUN; hardware tests NOT RUN; CI workflow B8 opt-in integration NOT COMMITTED. Two earlier attempted workflow edits were aborted before GitHub write on strict anchor mismatch. Do not claim CI is available for B8 until it is actually committed and verified. Previous B7 build/link remains frozen PASS. Live system remains NO-GO.
+
+
+## G1-B8 — 2026-10-16 实际原生编译/链接验收（冻结构建证据）
+
+本节替代上文“B8 未运行原生编译”的历史阶段判断；不改动原有试验记录。
+
+- 真实 GitHub Actions 运行：[38846766604](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38846766604)，head commit `3dd0155dbbf37d73389776796985e078538cd95b`，Xcode 16.4 / macOS SDK 15.5。已读取上传的诊断 ZIP `honor-g1-b1-Xcode_16.4.0` 中 `b2-native-probe.json`、`b2-details/b8-NVRM-compile.txt` 及 native link 日志。
+- RM/Modeset B1 对象 1055/230 构建完成，B3–B8 在独立链接候选路径执行，B8 继承已经通过的 B7 源并应用 Git blob `ca6f45d20df3c2b7b2ff260499d42ddcda3d4e9e` 的固定补丁。
+- B8 改动后的 `NVRM.cpp` 原生编译 RC=0（**40 warnings，0 errors**，数量与本轮 B7 相同）；Apple `clang++ -fapple-kext` 链接 RC=0，Mach-O 为 x86_64 `MH_KEXT_BUNDLE`。
+- ld64 Object Files 映射：`NVRM-NVRM.cpp.b8.o` 选中 **1 次**、基线 `NVRM-NVRM.cpp.o` **0 次**；FSP 补丁 `kern_fsp.c.o`、`timer_ostimer.c.o` 各选中 1 次，原始对象 0 次。证明 B8 实际修补源码参与链接。
+- B8 Mach-O **16,506,312 字节**；SHA256 `6ddb0658a43b4b368eadf7bda7ee59858c11ea0c2cd804cf10eaf816bb3adb09`；**462** 个未定义外部符号，目标内核 ABI 是否满足未证明。候选仅生成在 CI 临时目录，未上传驱动二进制、签名、安装或加载。
+- 上层 Actions conclusion=failure 来自 `BLOCKED_WP1_OR_NVRM_LINK_PROVENANCE` 的预期退出码 2，并非 B8 原生构建错误。B8 子目标标记 `PASS (native compile/link only)`，B3–B8 相同静态构建门槛已验证，不再重复运行。
+- **必须保留的 NO-GO**：B8 的 `fStopping` 及共享 RM 失败标志未提供完备的跨线程同步、正在执行的 `go()` 与 `stop()` 的 drain、ISR/MSI 与 WorkLoop 回调停止证明；RM 控制/设备事件锁销毁尚无生命周期闭环；失败中的 `rm_init_adapter()` 半初始化 GSP/DMA 资源没有已验证的清理合同。硬件 GSP 固件来源/哈希、RTX 2050 `10DE:25A9` 实际初始化及计算、Intel `8086:46A6` 内屏路径均无实证。不得从 CI 静态链接成功推导可装机性或 macOS GPU/Metal 加速。
+- **下一阶段目标**：先在隔离源候选中设计并验证进入/退出 `go()` 的并发所有权（包括停止时等待机制）、ISR/MSI 与 WorkLoop 销毁顺序和事件锁所有权；不在未知半初始化 RM/GSP 状态下胡乱调用 `rm_shutdown_adapter()`。任何实机加载均需要另行审查与授权。
