@@ -25,6 +25,8 @@ jobs:
           python3 -m unittest discover -s scripts/g1 -p test_dma_transaction.py -v
           python3 -m unittest discover -s scripts/g1 -p test_dma_rm_path.py -v
           python3 -m unittest discover -s scripts/g1 -p test_dmar_evidence.py -v
+          g++ -std=c++17 -O2 -Wall -Wextra -Werror -pedantic             scripts/g1/test_dma_page_array.cpp -o "$RUNNER_TEMP/g1-dma-page-array-test"
+          "$RUNNER_TEMP/g1-dma-page-array-test"
 
       - name: Download both pinned upstream source trees
         shell: bash
