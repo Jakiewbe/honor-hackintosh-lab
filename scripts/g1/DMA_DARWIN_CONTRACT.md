@@ -58,3 +58,8 @@ Apple 官方文档：[IODMACommand](https://developer.apple.com/documentation/ke
 
 后续开发必须先明确 allocation record 与 DMA map record 的双句柄所有权、`bReadOnlyDeviceMap` 与平台内存访问方向、错误时句柄保留、完整 IOVA 资源释放和 GSP quiescence；任何假造非空 `pOsData`、改成返回 `NV_OK`、强制 identity/bypass 的措施都不能作为正式适配。
 
+## 2026-10-16 固定 HONOR 实机 DMAR 快照的只读拓扑验证
+
+项目已有 `docs/hardware-survey-20261012/evidence/acpi/fw_DMAR.bin`（136 字节），对应 P40 报告：签名 DMAR、checksum 合法、HONOR/ADL-P-M、SHA256 `e84c886dfcc89640faf9c3386d5fbb4dc77483901c816eb38fdcb22a6c298f86`。本轮添加 `scripts/g1/dmar_evidence.py`，拒绝非该 SHA256 的文件，重新验证 ACPI 表长度/校验和并解析 DRHD、RMRR、ATSR 的段号、重映射硬件 MMIO register base、include_all 与 PCI 设备 path；对未知 structure 保留未解释标签，不猜测。六项合成正反例已在隔离环境运行通过，实机快照内容需在下一次 CI 输出 `dmar-topology.json` 后核对。
+
+注意：ACPI DMAR 的存在只说明固件发布了 DMA Remapping Table；**它不证明 macOS 内核已启用/管理 IOMMU，不证明设备 10DE:25A9 属于正确的 translation domain，更不证明 MSI/GSP/DMA 停止与内核可加载性**。下游不得据 DMAR 符号或硬件寄存器地址去进行危险的裸 MMIO 写入。RM 源码审计器已修复注释伪造赋值的假阳性（`479e345`），新测试/真实报告均待 CI 验收。

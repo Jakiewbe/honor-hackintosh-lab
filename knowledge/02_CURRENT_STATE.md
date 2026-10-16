@@ -1,5 +1,12 @@
 # 02｜当前事实、阻塞与决策（Codex 最新状态）
 
+## 2026-10-16 P0-DMA 最新：源码审计防假阳性 + 实机 ACPI DMAR 拓扑取证（待云端 CI）
+
+新增 [RM 审计器防假阳性修复](https://github.com/Jakiewbe/honor-hackintosh-lab/commit/479e3459ef17e99e8f459219dd963b781ec13d5e)：此前正则即使匹配到 **注释中的赋值**也会被误认作实际 `pOsData=pPriv`，在隔离环境中已复现。现在先剔除注释/字符串，再核对实际 peer 分支对 NULL 的赋值及 failed-unmap 是否提前退出，新增四项负向用例，RM 专项测试数从 7 到 11。**仅本地等价测试验证，远程当前提交尚未运行**。
+
+同时新增 [DMAR 结构解析工具](https://github.com/Jakiewbe/honor-hackintosh-lab/commit/444e959421edaa61beac09ffc1dd0360cff58e67)。仓库既有实机 Windows P40 ACPI 证据 `docs/hardware-survey-20261012/evidence/acpi/fw_DMAR.bin`：136 字节、签名 DMAR、ACPI 校验和在 P40 报告中为真，SHA256 `e84c886dfcc89640faf9c3386d5fbb4dc77483901c816eb38fdcb22a6c298f86`；新 `dmar_evidence.py` 会验签并解析 DRHD、RMRR、ATSR 及 PCI device scopes，生成 `dmar-topology.json`。其 6 项合成表结构/负向用例本地 PASS，**实际实机 DMAR 内容细项还没有新 CI 报告**。DMAR ACPI 表存在不等于目标 OS 正在启用 Intel VT-d，更不等于 RTX2050/GSP 可正确 DMA。RUNTIME NO-GO 不变。
+
+
 ## 2026-10-16 P0-DMA RM IOVA 映射所有权新证据（待独立 CI）
 
 固定 NVIDIA 610.57.04 的 [os.c](https://github.com/NVIDIA/open-gpu-kernel-modules/blob/e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb/src/nvidia/arch/nvalloc/unix/src/os.c)（Git blob `b441a66fe735e834f830bae9344333c31b16c1f2`）已确认：`osIovaMap` 通过局部 `pPriv=memdescGetMemData(...)` 将映射地址数组交给 `nv_dma_map_alloc`，并将返回句柄记录为 `pIovaMapping->pOsData`。NullMoth 固定 `os-xnu2.cpp` 的映射回调将该局部指针清空并返回 `NV_OK`，使系统内存映射记录在该路径中为 NULL。RM `osIovaUnmap` 按 `pOsData` 是否 NULL 选择 system DMA 或 peer DMA 的解除路径；此外它在底层 DMA unmap 失败后仍清空该映射记录。**这些是源码控制流和条件分支证据，非已执行的硬件路径。**

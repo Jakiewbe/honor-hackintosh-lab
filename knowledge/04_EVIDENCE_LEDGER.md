@@ -1,5 +1,12 @@
 # 04｜可核实证据账本：正式 CI、脚本与限制
 
+## 2026-10-16 P0-DMA 增量证据（RM 正则与 ACPI DMAR）
+
+- 固定上游 NullMoth/NVIDIA `osIovaMap/osIovaUnmap` 源码数据流仍为 P0：系统 DMA 返回 `pOsData=NULL` 会与 peer 映射判别冲突，且错误路径可能丢失 mapping owner；并非已执行硬件故障。原本的审计器存在注释假阳性；提交 `479e3459ef17e99e8f459219dd963b781ec13d5e` 改为清理注释/字符串并加入 4 项反例，测试共 11 项。隔离环境对应逻辑 11/11 PASS；**当前主线新 CI NOT RUN**。
+- 先前已采集的 P40 ACPI DMAR：实机 HONOR/ADL-P-M，长度 136，revision 2，`checksum_ok=true`，SHA256 `e84c886dfcc89640faf9c3386d5fbb4dc77483901c816eb38fdcb22a6c298f86`。提交 `444e959421edaa61beac09ffc1dd0360cff58e67` 增加只读 `dmar_evidence.py` / 6 项合成测试，并让下一次手动 [P0-DMA Contract](../.github/workflows/g1-dma-contract.yml) 自动生成 `dmar-topology.json`。此报告尚未运行；尚未从真实 136 字节表中获取 DRHD/PCI device scope 结论。
+- DMAR 的 MMIO base、PCI scope、RMRR 是固件静态声明，不能证明 Intel IOMMU 在目标 macOS 中开启、实际翻译域或设备页表可达，更不能证明 NVIDIA 10DE:25A9 的 GSP DMA 静默。所有设备激活依然 **NO-GO**。
+
+
 ## 2026-10-16 P0-DMA RM 映射所有权与分类门禁
 
 - 已实际通过：[Actions #38903242709](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38903242709)，原有 10+13 项主机端模型/源码合同测试 PASS；不能推出真实 GPU DMA。

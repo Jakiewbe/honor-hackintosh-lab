@@ -1,5 +1,12 @@
 # 10｜Codex 正式交接单：现在接手做什么
 
+## 2026-10-16 P0-DMA 新交接重点：验收真实 DMAR + 修复后的 RM 调用链审计
+
+1. 在 `main` 手动运行 [G1 P0 DMA contract](../.github/workflows/g1-dma-contract.yml)：应跑既有 23 + 最新 RM 11 + 新 DMAR 6 共**40 项预期合成测试**；确认两个固定来源及仓库实机 `fw_DMAR.bin` 的 SHA256。下载两个映射源合同 JSON 与新增的 `dmar-topology.json`，核对 DRHD 的 segment/include_all、各 PCI device scopes/RMRR。**目前新 CI 未运行，切勿提前标记通过**。
+2. 仍待运行 [Darwin DMA SDK API compile-only](../.github/workflows/g1-darwin-dma-sdk.yml)：验证真实 Xcode16.4 `IODMACommand` API 类型、编译和未定义符号，不链接/加载 kext。
+3. 之后以真实 Windows BIOS/ACPI PCI BDF 与 DMAR device scopes 做静态相关性分析，再审查 macOS IOMapper 与 allocation mapping ownership；DMAR 存在或 DRHD include_all 不是运行时 IOMMU 证明。不修改 Windows/EFI/BIOS，不启动 GPU，维持设备 **NO-GO**。
+
+
 ## 2026-10-16 P0-DMA 新交接：两项可证伪门禁
 
 (1) 手动运行 [DMA source contract](../.github/workflows/g1-dma-contract.yml) 以验收新增 `test_dma_rm_path.py` 的 7 个负向用例、真实固定源码 `dma_rm_path.py` 及 `dma-rm-path.json`，重点观察系统内存 DMA 路径被 `pOsData=NULL` 分类为 peer，以及失败时丢弃映射记录的控制流。它只能证明**源码分支可达条件**，没有 GPU 执行。
