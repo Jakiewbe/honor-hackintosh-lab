@@ -105,3 +105,30 @@ B4 修复内容是有界的：
 4. **并发 stop 及自动线程。** 检查 `autoGo`、boot-hold timer、中断回调、用户客户端与 `NVRM::stop()` 的生命周期；在拥有证据前不允许以“能链接”替代安全性验收。
 
 **硬件状态仍为 NO-GO：** 当前 HONOR 内屏挂载 Intel 46A6，macOS 桌面严重卡顿；两块 GPU 的 Metal 加速均未实证，RTX 2050 的 GSP 启动、命令执行和像素读回均未验证。正式实机加载需要独立的备份、回退和授权条件。
+
+
+## 2026-10-16 G1-B5 原生链接实测结果及下一阶段 P0（已核对实际产物）
+
+实际运行：[GitHub Actions #38838922705](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38838922705)，提交 `e626b0eb0de5702ff19502290aa9b2e3dc3e95b3`，Xcode 16.4、macOS SDK 15.5，实际 JSON 产物 `b2-native-probe.json` 与编译/链接文本日志一致。
+
+### B5 构建证据
+
+- B1：RM 1055/1055 与 modeset 230/230 原生对象构建完成。B3 基线、B4、B5 分别在隔离目录中链接。
+- B4 修补版：`NVRM.cpp` 编译 RC 0，Apple 内核 bundle 链接 RC 0；`NVRM.cpp.b4.o` 在 Apple 链接映射中实际选中一次，基线 `NVRM.cpp.o` 零次；16,501,256 字节，SHA256 `e564ab111e9185c0973e20966d37aba18194eae29e9b7e12029b69a38687bce6`。
+- B5 叠加 B4：固定上游 `b5_nvrm_bar_rollback.patch` 被 `git apply --check`、`git apply` 接受；B5 的 `NVRM.cpp` 原生编译 RC 0（38 warnings），链接 RC 0；`NVRM.cpp.b5.o` 在链接映射中选中一次，未修补基线对象零次；16,501,424 字节，SHA256 `57f2f2d8fb46e84d50a37f5d659a2d0df1e338943d58025500957b668d4590a2`。
+- B5 链接保持 FSP 两个已修补成员 `kern_fsp.c.o` 和 `timer_ostimer.c.o` 各选中一次，两个原始成员均未选中。格式 x86_64 `MH_KEXT_BUNDLE`；剩余 462 个未定义外部符号，尚不能推断目标 macOS 内核的符号提供能力。
+- Actions 的 `failure` 来自 B2 依设计返回 `BLOCKED_WP1_OR_NVRM_LINK_PROVENANCE`（RC 2），而非 B4/B5 编译失败。**B5 的真实原生链接子目标已 PASS，无需原样重复同一 CI。**
+
+### B5 源码的实际边界与仍待修复的 P0
+
+固定补丁 `scripts/g1/patches/b5_nvrm_bar_rollback.patch` 将 `OSArray`、`IODeviceMemory` 分配与对象列表填充放在首次 PCI 写入之前；为失败路径增加原 PCI command、BAR1/BAR3、ReBAR、Root Port prefetchable window 的恢复及读回验证，并在读回失败时阻止继续设备注册。这是**具体的局部安全改动**，不是整套 GPU 生命周期安全证明。
+
+仍存在必须通过实际补丁关闭的风险：
+
+1. **成功的 BAR 重定位未见完整逆操作。** B5 在重定位成功后设置 `nvrm-bar1-placed` 并返回 true，固定 NVRM 的 `stop()` 只处理 RM adapter、MSI 事件源、WorkLoop、private state，不恢复 BAR1/BAR3、ReBAR、Root Port 原始窗口及对应 IOPCIFamily 设备内存描述符。必须明确恢复责任、时序和同一桥上其它设备的依赖，不能把失败回滚等同于正常 stop 回滚。
+2. **`rm_init_adapter()` 失败后的半初始化状态未安全清理。** B4 的 sticky flag 阻止同一对象上的重新执行，但无法证明 GSP、DMA、RM 锁和 GPU 中断资源均可安全销毁，或重新实例化后不会重入损坏状态。
+3. **PCI command/MSI 状态仍未形成统一生命周期合同。** B4 改善了初始化前置检查，但 `stop()` 和故障终止时原始 PCI command 的恢复、已激活的中断回调与工作队列 drain、设备所有权仍需独立实现与审查。
+4. **自动启动、定时器与 stop 并发风险依旧。** 必须针对 `autoGo`、boot-hold cap、headWatch 与 stop 的取消/引用计数作事件顺序验证。
+5. **GSP 固件与目标硬件/系统兼容性没有证据。** 固定路径 `/Users/Shared/nvfw/nvidia/610.57.04/` 的真实文件存在性、来源、哈希及 macOS 版本合同仍未知；CI runner 未连接 RTX 2050。
+
+**验收原则：** B3、B4、B5 `PASS (native compile/link only)`；安全加载 `NO-GO`；RTX 2050 实际 GSP 初始化/命令执行/像素读回及 Intel 内屏加速仍然 `UNVERIFIED`。下一步不重复链接统计，优先实现可审计的 PCI/BAR 成功路径 stop 回退与 adapter 错误状态所有权合同；实机操作必须待独立备份、回滚实证及用户授权。
