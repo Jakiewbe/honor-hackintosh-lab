@@ -61,13 +61,23 @@ def routine(source, regex):
     raise ValueError("unterminated function body")
 
 
+def executable(source):
+    """Discard C/C++ comments and quoted literals before inspecting code tokens.
+
+    This is deliberately a pinned-source heuristic, not a complete C/C++ parser.
+    Preserve newlines to keep code layout; unrecognized source must fail closed.
+    """
+    pattern = r"//[^\n]*|/\*[\s\S]*?\*/|\"(?:\\.|[^\"\\])*\"|'(?:\\.|[^'\\])*'"
+    return re.sub(pattern, lambda m: re.sub(r"[^\n]", " ", m.group()), source)
+
+
 def inspect(nullmoth, ogkm):
-    alloc = routine(nullmoth, r"\bNV_STATUS\s+NV_API_CALL\s+nv_alloc_pages\s*\(")
-    macmap = routine(nullmoth, r"\bNV_STATUS\s+NV_API_CALL\s+nv_dma_map_alloc\s*\(")
-    free = routine(nullmoth, r"\bNV_STATUS\s+NV_API_CALL\s+nv_free_pages\s*\(")
-    rmmap = routine(ogkm, r"\bosIovaMap\s*\(\s*PIOVAMAPPING\s+pIovaMapping")
-    rmunmap = routine(ogkm, r"\bosIovaUnmap\s*\(\s*PIOVAMAPPING\s+pIovaMapping")
-    rmfree = routine(ogkm, r"\bosFreePagesInternal\s*\(\s*MEMORY_DESCRIPTOR\s*\*\s*pMemDesc")
+    alloc = executable(routine(nullmoth, r"\bNV_STATUS\s+NV_API_CALL\s+nv_alloc_pages\s*\("))
+    macmap = executable(routine(nullmoth, r"\bNV_STATUS\s+NV_API_CALL\s+nv_dma_map_alloc\s*\("))
+    free = executable(routine(nullmoth, r"\bNV_STATUS\s+NV_API_CALL\s+nv_free_pages\s*\("))
+    rmmap = executable(routine(ogkm, r"\bosIovaMap\s*\(\s*PIOVAMAPPING\s+pIovaMapping"))
+    rmunmap = executable(routine(ogkm, r"\bosIovaUnmap\s*\(\s*PIOVAMAPPING\s+pIovaMapping"))
+    rmfree = executable(routine(ogkm, r"\bosFreePagesInternal\s*\(\s*MEMORY_DESCRIPTOR\s*\*\s*pMemDesc"))
 
     facts = {
         "alloc_returns_separate_private_allocation":
@@ -83,13 +93,14 @@ def inspect(nullmoth, ogkm):
         "rm_records_returned_slot_as_mapping_owner":
             bool(re.search(r"pIovaMapping->pOsData\s*=\s*pPriv\s*;", rmmap)),
         "rm_intentionally_uses_null_as_peer_discriminator":
-            "pOsData must be NULL to distinguish a peer DMA mapping" in rmmap,
+            bool(re.search(r"else\s+if\s*\(\s*peer\s*!=\s*nv\s*\)\s*\{[\s\S]*?pIovaMapping->pOsData\s*=\s*NULL\s*;", rmmap)),
         "rm_unmap_branches_on_null_mapping_owner":
             bool(re.search(r"if\s*\(\s*pPriv\s*!=\s*NULL\s*\)\s*\{[^}]*nv_dma_unmap_alloc\s*\(", rmunmap, re.S)) and
             bool(re.search(r"else\s*\{\s*nv_dma_unmap_peer\s*\(", rmunmap)),
         "rm_unmap_clears_owner_after_failed_unmap":
-            bool(re.search(r"if\s*\(\s*status\s*!=\s*NV_OK\s*\)\s*\{[^}]*failed to unmap allocation[^}]*\}", rmunmap, re.S)) and
-            rmunmap.rfind("pIovaMapping->pOsData = NULL;") > rmunmap.rfind("nv_dma_unmap_peer("),
+            bool(re.search(r"if\s*\(\s*status\s*!=\s*NV_OK\s*\)\s*\{[^}]*\}", rmunmap, re.S)) and
+            rmunmap.rfind("pIovaMapping->pOsData = NULL;") > rmunmap.rfind("nv_dma_unmap_peer(") and
+            not re.search(r"if\s*\(\s*status\s*!=\s*NV_OK\s*\)\s*\{[^}]*\b(?:return|goto)\b", rmunmap, re.S),
         "rm_free_gets_memdesc_separate_owner":
             bool(re.search(r"nv_free_pages\s*\([^;]*memdescGetMemData\s*\(\s*pMemDesc\s*\)", rmfree, re.S)),
     }

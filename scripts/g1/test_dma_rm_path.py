@@ -15,7 +15,8 @@ nv_free_pages(nv, osPageCount, contig, cached, memdescGetMemData(pMemDesc));
 NV_STATUS osIovaMap(PIOVAMAPPING pIovaMapping) {
 void *pPriv = memdescGetMemData(pIovaMapping->pPhysMemDesc);
 status = nv_dma_map_alloc(dev, pages, array, contiguous, readOnly, &pPriv);
-pIovaMapping->pOsData = pPriv;
+if (is_system) { pIovaMapping->pOsData = pPriv; }
+else if (peer != nv) { pIovaMapping->pOsData = NULL; }
 // pOsData must be NULL to distinguish a peer DMA mapping
 }
 void osIovaUnmap(PIOVAMAPPING pIovaMapping) {
@@ -63,6 +64,26 @@ class RmIovaPathTests(unittest.TestCase):
             "NV_STATUS NV_API_CALL nv_dma_map_alloc() {"
             ' /* { } */ const char *v = "}"; return NV_OK; }',
             r"\bNV_STATUS\s+NV_API_CALL\s+nv_dma_map_alloc\s*\("))
+
+    def test_commented_owner_assignment_must_not_pass(self):
+        with self.assertRaisesRegex(ValueError, "manually review"):
+            inspect(MAC, RM.replace("pIovaMapping->pOsData = pPriv;",
+                                     "// pIovaMapping->pOsData = pPriv;"))
+
+    def test_quoted_owner_assignment_must_not_pass(self):
+        with self.assertRaisesRegex(ValueError, "manually review"):
+            inspect(MAC, RM.replace("pIovaMapping->pOsData = pPriv;",
+                                     'const char *fake = "pIovaMapping->pOsData = pPriv;";'))
+
+    def test_failed_unmap_with_early_return_requires_reaudit(self):
+        with self.assertRaisesRegex(ValueError, "manually review"):
+            inspect(MAC, RM.replace('NV_PRINTF(LEVEL_ERROR, "failed to unmap allocation");',
+                                     "return;"))
+
+    def test_peer_null_assignment_in_comment_must_not_pass(self):
+        with self.assertRaisesRegex(ValueError, "manually review"):
+            inspect(MAC, RM.replace("else if (peer != nv) { pIovaMapping->pOsData = NULL;",
+                                     "else if (peer != nv) { // pIovaMapping->pOsData = NULL;"))
 
 
 if __name__ == "__main__":
