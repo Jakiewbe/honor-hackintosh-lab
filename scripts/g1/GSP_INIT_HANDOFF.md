@@ -169,3 +169,38 @@ B6 为**真正源码候选变更**，包括：
 - Actions 顶层 failure 为 B2 持续阻塞运行时与未定义 WP1 的预期 RC 2；**B6 native build/link 子目标 PASS 并冻结**。不要反复重跑同一 CI 证明静态链接。
 
 **下一阶段 P0：** 只继续解决来源确定的 GSP firmware、`rm_init_adapter` 半初始化对象的合法清理合同、PCI/MSI 中断 drain 与 `autoGo/stop` 并发；之后才可能讨论分阶段受控的 25A9 实机加载。B6 的 BAR 资源恢复是**受条件限制的源码设计**，尚无硬件执行证据；当 stop 恢复被拒绝时，当前实现释放保存的 IOKit 引用并保留失败状态，不能解释成硬件已经恢复。即使编译成功也必须保持主力 HONOR EFI/BIOS/Windows/macOS 不变、硬件 NO-GO。
+
+
+## 2026-10-16 G1-B7：RM 控制/设备事件锁分阶段初始化（源码修复已提交，CI 待运行）
+
+目标提交：`95a68485ac8aad80a0a938bc5feebffe5f78286d`（驱动源补丁）；`386d5653824926a173c8eec2fb738a6a11d3abf4`（独立 B7 原生编译与链接脚本）。目标文件：`scripts/g1/patches/b7_nvrm_rm_preflight_event_locks.patch`，固定 Git blob `3a47f85508017fcd8d56a88c81dd85899b72d9c5`。已基于固定 NullMoth 原始源码和 B4/B5/B6 补丁链精确应用，B7 新增 5 个修改块。**还没有运行新的 B7 Actions；不得声称原生编译、链接或 GPU 功能通过。**
+
+### NVIDIA OGKM 610.57.04 源码事实
+
+固定 NVIDIA 源码 `src/nvidia/arch/nvalloc/unix/src/osapi.c`：
+
+- `rm_init_rm` 调用 `RmInitRm()` 并返回布尔结果；这只是 RM 全局初始化，**不表示设备事件锁、私有状态或 GSP 准备完成**。
+- `rm_init_event_locks(sp, nv)` 为传入的 `nv_state_t` 分配 `event_spinlock`，失败返回 `NV_FALSE`。`rm_destroy_event_locks` 提供对应销毁 API，但实现不将 `event_spinlock` 指针置空；销毁时机必须确认不会与中断、用户客户端/事件队列并发。
+- `rm_init_adapter` 调用 `RmInitAdapter()`；`rm_shutdown_adapter` 调用 `RmShutdownAdapter()`。不能推断失败中的 `RmInitAdapter()` 可以安全配对销毁；固定的 Linux `kernel-open/nvidia/nv.c` 在适配器初始化失败路径主要清理 IRQ、内核队列等已知外围资源，没有直接在该分支调用 `rm_shutdown_adapter`。
+
+### B7 实际修正
+
+NullMoth 原代码 `NVRM::go(1)` 在 `rm_init_rm` 成功后立刻设置 `gRmInitDone`，而后续控制设备事件锁和 GPU 自身事件锁的建立仍可能失败；后续对同一/另一 GPU 的 `go(1)` 会基于 `gRmInitDone` 跳过锁初始化。B7 现在：
+
+1. 区分 `gRmInitDone`（全局 RM 已初始化）、`gRmCtlEventLocksReady`（控制设备事件锁）和 `fGpuEventLocksReady`（当前 GPU 事件锁），避免将它们归入一个全局分支。
+2. 在进入 `rm_init_private_state` 和后续 `go(2)/rm_init_adapter` 之前，分别确认两类事件锁已创建。即使全局 RM 已初始化，仍需为每个 GPU 建立自己的锁。
+3. 对 `rm_init_rm`、任一事件锁、`rm_is_supported_device`、`rm_init_private_state` 失败设置本实例 `fRmPreflightFailed`，拒绝在同一个设备实例上重复初始化，不假设半初始化对象已安全回滚。
+4. 保留 B4-B6 的 FSP/PCI BAR 原生候选、原有 GSP 和 MSI 逻辑；B7 没有主动调用未证明合法的半初始化清理函数。
+
+### 明确还未解决的缺口
+
+- **已有事件锁的最终销毁**：B7 只增加就绪状态，不等于正确实现 `rm_destroy_event_locks` 的驱动停止清理。GPU 停止、活动 `IOUserClient`、ISR 以及全局 RM 控制状态的并发安全还需核实。
+- **全局 RM 生命周期**：`gRmInitDone` 和 `gRmCtlEventLocksReady` 均未随 module unload/reset 建立完整状态恢复；如果全局半初始化，另一设备实例的行为仍不一定安全。
+- **适配器失败后的资源所有权**：B4 的 `fAdapterInitFailed` 仅阻止同一对象重试；并不能证明 GSP、DMA、MSI、BAR 或 RM 锁已干净释放。
+- **firmware 和实际 GPU 运行**：RTX 2050 `10DE:25A9` 对应的实际 GSP 固件文件、来源 SHA256、目标机 macOS 内核 API/ABI、固件启动/指令执行和 Intel 内屏传输均尚未实证。
+
+### 下一个明确的 CI 验收
+
+手动启动 `.github/workflows/g1-native-gate.yml`：`main` / `Xcode_16.4.0` / `extra_cflags=-DNV_UNIX -DNV_LINUX` / `drop_flags` 空；开启 `run_rebuild`、`run_b2_probe`、`run_b4_probe`、`run_b5_probe`、`run_b6_probe`、`run_b7_probe`。B7 仅在 B6 构建实际通过后，在临时源码目录追加固定 B7 补丁，复用 B6 native clang flags，独立链接并输出 `b7_source_patch` 与 `b7_native_link_candidate`。二进制不上传/签名/安装/加载；总 B2 门禁继续 `BLOCKED`，不能用 Actions 红绿代替 B7 子目标判定。
+
+**实机状态：NO-GO。** 不触碰 HONOR EFI、BIOS、Windows、macOS 主力安装；直到有独立备份恢复演练和明确实机实验授权。
