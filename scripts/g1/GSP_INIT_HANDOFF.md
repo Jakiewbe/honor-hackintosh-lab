@@ -204,3 +204,15 @@ NullMoth 原代码 `NVRM::go(1)` 在 `rm_init_rm` 成功后立刻设置 `gRmInit
 手动启动 `.github/workflows/g1-native-gate.yml`：`main` / `Xcode_16.4.0` / `extra_cflags=-DNV_UNIX -DNV_LINUX` / `drop_flags` 空；开启 `run_rebuild`、`run_b2_probe`、`run_b4_probe`、`run_b5_probe`、`run_b6_probe`、`run_b7_probe`。B7 仅在 B6 构建实际通过后，在临时源码目录追加固定 B7 补丁，复用 B6 native clang flags，独立链接并输出 `b7_source_patch` 与 `b7_native_link_candidate`。二进制不上传/签名/安装/加载；总 B2 门禁继续 `BLOCKED`，不能用 Actions 红绿代替 B7 子目标判定。
 
 **实机状态：NO-GO。** 不触碰 HONOR EFI、BIOS、Windows、macOS 主力安装；直到有独立备份恢复演练和明确实机实验授权。
+
+
+## 2026-10-16 G1-B7 原生链接实测验收（冻结）
+
+证据：[GitHub Actions #38844286925](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38844286925)，运行提交 `28740527217eed59e53520a7872f64ef770248c2`，Xcode 16.4 / macOS SDK 15.5。读取该 run 的文本 artifact `honor-g1-b1-Xcode_16.4.0` 内 `b2-native-probe.json`、`b2-details/b7-NVRM-compile.txt` 和 `b2-details/nvrm-real-link.txt`。
+
+- B1 原生 OGKM 构建 1055 RM / 230 modeset；B3–B7 候选编译及 Apple kext 原生链接均为 RC 0。
+- B7 `NVRM.cpp` 源码实际基于已验证的 B6 源应用固定 B7 patch（Git blob `3a47f85508017fcd8d56a88c81dd85899b72d9c5`），本轮 B7 编译 RC 0，**40 warnings，0 errors**。警告混有 Apple SDK IOKit 头文件 override 提示及源码自身类型转换等，编译成功不能作为运行时安全证据。
+- ld64 真实 Object Files 映射包含 `NVRM-NVRM.cpp.b7.o` 一次、基线 `NVRM-NVRM.cpp.o` 零次；FSP 修复后的 `kern_fsp.c.o`、`timer_ostimer.c.o` 均选中一次、未修复成员零次。
+- 实际 B7 产物：x86_64 `MH_KEXT_BUNDLE`，16,506,136 字节；SHA256 `0a6c1eca5f6a6519ea4148fda4b4520455a48c3ba4e8963fa0f91976541e77ea`；462 个未定义外部符号的目标 macOS 内核 ABI/导出仍未通过实机合同验证。所有候选二进制只存在于 CI 临时目录，没有上传、签名、安装或加载。
+- Actions 总体 `failure` 原因是顶层 B2 依设计以 `BLOCKED_WP1_OR_NVRM_LINK_PROVENANCE` 返回 exit 2，**不是 B7 本地编译或链接失败**。当前将 B7 的构建子目标标为 `PASS (native build/link only)`，不再原样重跑 B3–B7。
+- **仍然 NO-GO 的关键事项**：RM control/per-GPU event lock 的最终销毁与重载全局状态一致性、`rm_init_adapter` 半初始化 GSP/RM 资源的可证明清理、MSI/WorkLoop/autoGo 与 stop 的并发顺序及 DMA 静默、GSP 固件文件真实来源/哈希、目标 macOS 内核/IOKit ABI、RTX 2050 实际初始化与指令执行。不能从本次链接 PASS 推出 NVRM 可加载，更不能推出 Intel 46A6 内屏 Metal 加速。
