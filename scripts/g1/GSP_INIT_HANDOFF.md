@@ -315,3 +315,23 @@ Code changes: do not schedule autoGo merely by loading the kext; `-nvrmautogo` w
 - Top-level Actions `failure` = expected B2 fail-closed `BLOCKED_WP1_OR_NVRM_LINK_PROVENANCE`, exit code 2. B10 subtarget: `B10_NATIVE_LINK_CANDIDATE_PASS_NOT_LOADABLE`. Do not rerun B3–B10 unchanged simply to repeat native link evidence.
 - P0 NO-GO remains: ISR active counter equal to zero is **not** a proof that IOKit queued callbacks/filters cannot enter later; `fStopping` uses volatile state with no independently established cross-thread memory-ordering/interrupt-drain contract. `stop()` may still invoke `super::stop(provider)` after go/ISR timeout or RM/GSP partial init failure; retained references are not a substitute for provider-safe termination, hardware DMA quiescence or GSP stop. RM event-lock teardown and user-client lifetime remain unclosed. This patch intentionally disables autoGo worker scheduling but does not prove manual `go()` safe.
 - No RTX 2050 10DE:25A9 real initialization, compute or framebuffer readback, no GSP firmware provenance and no Intel 8086:46A6 hybrid-display/Metal evidence. Main Windows/EFI/BIOS/macOS must remain unchanged. Before any hardware test: obtain verified backups and recovery drill, target macOS version/ABI, firmware integrity, explicit safety and stop criteria.
+
+## G1-S0 / P0：实际 ABI 导入名单与设备 DMA 映射合同（2026-10-16）
+
+**提交和证据：** S0 GitHub 提交 `54c1f70587b0f7092bc8a1cd3525c7405c40cb78`。新增 `scripts/g1/abi_contract.py`、`scripts/g1/test_abi_contract.py`，在 B10 实际 Mach-O 链接完成后将所有外部 undefined 符号（期望 462 项）写入文本 artifact `b2-details/b10-abi-import-manifest.json`，包含候选 SHA256 和逐项名称。七项合成 Mach-O 测试已完成本地验证，新增脚本的**实际 GitHub macOS CI 还未运行**。
+
+**输入/输出合同：** `collect --candidate PATH --out JSON --expected-count 462` 提取全量未定义符号；`compare --imports JSON --exports JSON --out JSON` 与指定构建的声明导出清单做严格名称差集。目标导出 JSON 的 schema 为 `honor.g1.target-exports.v1`，需 `target_os_build`、`origin`、去重排序的 `exports` 数组。这个工具并不鉴别外部清单真伪、KDK 是否对应真实机系统、ABI 函数签名和 Apple 内核装载策略。**完全匹配也固定返回 `BLOCKED_RUNTIME_ABI_UNVERIFIED`**。B10 原链接验收仍为 PASS；S0 名称清单提取尚待新的 CI。
+
+### 固定上游中存在更底层的 DMA / IOMMU 硬阻塞
+
+已逐行核对固定 NullMoth `kexts/NVRM/os-xnu2.cpp`，Git blob `c1fe41e9ff30649c6d02827aee5995f8eaa944b3`，固定版本 `cd8e2bb04da48d2fa70cf1895879608f3588dbfb`：
+
+- `nv_requires_dma_remap()` 不检查设备/桥/IOMMU 情况，直接返回 `NV_FALSE`。
+- `nv_alloc_pages()` 使用 `IOBufferMemoryDescriptor::inTaskWithPhysicalMask(...)` 分配页，通过 `getPhysicalSegment(..., kIOMemoryMapperNone)` 返回物理地址。这说明真实的主机内存页分配存在，但**不等于这些物理地址在 RTX 2050 的 DMA 地址域可用**。
+- `nv_dma_map_alloc()` 直接记录 `(identity)`，将 `*priv=NULL` 并返回 `NV_OK`；`nv_dma_unmap_alloc()` 直接返回 `NV_OK`。这两个 API 内没有建立、记录或撤销设备 DMA 地址映射。
+
+以上是**固定源码事实**，并不等价于已经证明设备 DMA 必然失败；若目标机硬件和启动状态刚好提供可用的 identity mapping，理论上可能成立，但目前完全没有 10DE:25A9 / HONOR GLO-FX6P 对此的验证。更不能在已经存在混合 GPU/平台 IOMMU 不确定性时，仅根据 `NV_OK` 认定设备/GSP 可以安全 DMA。
+
+**新的工程优先级：P0-DMA**，先查清 `nv_dma_map_alloc` 的调用约定、GSP/FB/用户显存三条地址空间的实际要求、`IOMapper`/`IODMACommand`/IOMMU 的合法装配流程，建立正向映射、逆向撤销、生命周期和错误返回的主机侧模拟测试。未经设备映射合同核验禁止 `go(2)`、PCI Bus Master 和任何实机 KEXT 加载。P0-ABI 与 P0-DMA 都不能由 B3–B10 的原生链接成功消除。
+
+**当前实际进度：** B10 仍仅为静态 Mach-O 链接成功；S0 工具源码及 CI 采集入口已提交但没有拿到真实逐项符号清单；P0-DMA 是已查明的上游实现行为，未开发可用的替代映射。HONOR 主力 Windows/BIOS/EFI/macOS 不做任何变更。
