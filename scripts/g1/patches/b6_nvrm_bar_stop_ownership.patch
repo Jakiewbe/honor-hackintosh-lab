@@ -48,7 +48,7 @@
 -    if (!gNvClientsLock) { LOG("IOLockAlloc FAILED"); return false; }
 +    // Client lock was allocated before any experimental BAR changes.
      {
-@@ -925,4 +949,11 @@
+@@ -925,4 +949,16 @@
  
 -    const UInt16 cmd = fPCI->configRead16(0x04);
 -    // Restore BAR/ReBAR and bridge configuration with decode and DMA disabled.
@@ -60,9 +60,14 @@
 +        return false;
 +    }
 +    const UInt16 cmd = fPCI->configRead16(0x04);
++    if (cmd & 0x4) {
++        LOG("bar1: original PCI bus master already enabled; refusing relocation");
++        releaseStage();
++        return false;
++    }
 +    // Restore BAR/ReBAR and bridge configuration with decode and DMA disabled.
      // A failed readback blocks this device from proceeding into RM/GSP.
-@@ -992,5 +1023,25 @@
+@@ -992,5 +1028,25 @@
  
 -    fPCI->setDeviceMemory(arr);
 -    releaseStage();
@@ -91,7 +96,7 @@
 +    releaseStage();
 +    fPCI->setProperty("nvrm-bar1-placed", bar1Base, 64);
      LOG("bar1: PLACED — BAR1 %llu MB live at 0x%llx", bar1Size >> 20, bar1Base);
-@@ -999,3 +1050,78 @@
+@@ -999,3 +1055,78 @@
  
 -void NVRM::readBARs()
 +void NVRM::releaseBarStopSnapshot()
@@ -171,7 +176,7 @@
 +
 +void NVRM::readBARs()
  {
-@@ -1167,4 +1293,7 @@
+@@ -1167,4 +1298,7 @@
      if (fWorkLoop) { fWorkLoop->release(); fWorkLoop = NULL; }
 -    if (fPrivateState) { rm_free_private_state(NULL, &fNv); fPrivateState = false; }
 -    super::stop(provider);

@@ -896,7 +896,7 @@ def b6_compile_and_link(nm, nv, scratch, logs, report, b6_arg, b5_arg, b4_arg):
         # Hard stop if the checked-in experimental B6 source patch drifts.
         b6_blob = subprocess.check_output(
             ["git", "hash-object", str(patches[2])], text=True).strip()
-        if b6_blob != "4bfc5bb81b3246a61c5a02af745ce9c45e53850e":
+        if b6_blob != "9fe603c6b1a84831ef9904471ddfd27378d6927b":
             raise ValueError("B6 experimental patch Git blob differs from reviewed source")
         rec["patches_sha256"] = {tag: hash_bytes(p.read_bytes())
                                   for tag, p in zip(("B4", "B5", "B6"), patches)}
