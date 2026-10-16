@@ -1,5 +1,10 @@
 # 10｜Codex 正式交接单：现在接手做什么
 
+## 2026-10-17 接手验证节点已转换（不需要重复 CI）
+
+`P0-DMA Contract` [run #38939252741](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38939252741) 已取得 40/40 PASS 与三份原始 JSON 的 SHA256，固定 DMAR 显示 2 个 DRHD（核显专用、第二组 include-all）及核显 RMRR；归档于 [专题](../scripts/g1/P0_DMA_20261017_EVIDENCE.md)。[Darwin SDK Probe #38931389598](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38931389598) 亦已原生编译 PASS，无需重复。**下一项仅源码/隔离环境工作：** 对照 NVIDIA `nv_dma_map_alloc` 的 RM `pPriv/pOsData` 双层归属，设计 macOS 真实 IODMACommand 资源状态机和失败时句柄保留合同；单独核查目标 Build/KDK、IOMapper provider 与 `01:00.0` 运行态 IOMMU 配置。不可将静态 DMAR include-all 当成已映射运行态证据；NO-GO。
+
+
 ## 2026-10-17 P0-DMA 下一步单项验证任务
 
 已拿到 Xcode 16.4/macOS SDK15.5 `IODMACommand` compile-only 成功证据（run 38931389598），**无需再重复运行该 SDK 探针**。手动运行更新后的 [P0-DMA contract](../.github/workflows/g1-dma-contract.yml) 于 `main`（必须包含提交 `636ac9a`）：期望原 10+13、修复后的 RM 11、ACPI DMAR 6，共 40 个单元测试，并产生 `dma-source-contract.json`、`dma-rm-path.json`、`dmar-topology.json`。注意前一运行 38931378828 两个负例 fixture 的 `//` 吃掉了同行 `}`，导致无效 C 样本；新提交用 block-comment 修复而未降低检测要求。**在新 CI 结果返回前不允许宣告 PASS。** DMAR 固件静态拓扑即使可解析，也不能证明 OS runtime VT-d/DMA 页表/RTX2050 GSP 已工作，NO-GO。

@@ -1,5 +1,10 @@
 # 04｜可核实证据账本：正式 CI、脚本与限制
 
+## 2026-10-17 实际 P0-DMA 三份 JSON 证据
+
+[Actions #38939252741](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38939252741)（`791ba38`）工作流/Job SUCCESS：10/10+13/13+11/11+6/6。Artifact 12062915390 ZIP SHA256 `c9385ac96e52e24767b562cf1dd29ac8767f02388f2e14e2bca02e3affca80a1`；详见 [P0 DMA 2026-10-17 专题](../scripts/g1/P0_DMA_20261017_EVIDENCE.md)，包含三份 JSON SHA、固定来源 blob、两个 DRHD 与 RMRR，和明确的 OS runtime NO-GO。无硬件加载。
+
+
 ## 2026-10-17 云端原生 SDK 和 DMA CI 最新实际验收
 
 - Xcode 16.4 Build 16F6 / macOS SDK 15.5；[run 38931389598](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38931389598) SUCCESS，`CLANG_RC=0`、`Mach-O 64-bit object x86_64`；Artifact `honor-g1-darwin-dma-sdk-evidence` ID 12059785493，ZIP SHA256 `a9552330c2b26b353617f358d843bffa0f5b47f94c31fdcd67648cf73e06d65b`。探针源 SHA256 `9362ff4c0cb8ccf712a9abdcaf0e383ea5e94e5fd6e96541e93365aa2c1773bb`，临时 `.o` SHA256 `e9bc99109f81904b80137155d0872b79b236f12494334284fd2c3dd267b45018`。nm undefined 导出为 `IODMACommand::OutputHost64` 和 `IODMACommand::withSpecification` 两个 C++ 符号；virtual lifecycle 调用不应被误解为这两个名字覆盖了全部 ABI/运行时接口。**编译通过不等于链接或可加载性。**

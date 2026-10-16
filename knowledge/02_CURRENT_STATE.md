@@ -1,5 +1,10 @@
 # 02｜当前事实、阻塞与决策（Codex 最新状态）
 
+## 2026-10-17 G1 P0-DMA 40/40 CI & 真实 DMAR 拓扑 PASS（运行安全仍 NO-GO）
+
+[Actions #38939252741](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38939252741) 在提交 `791ba38a9bef3e5acb8a8a1e6901b3e434b37d2e` 实际运行，10+13+11+6 **40/40 PASS**，两个固定上游来源审计与已有实机 136-byte DMAR 静态拓扑解析全 PASS。三份真实 JSON 与 SHA256 已永久记在 [专题证据](../scripts/g1/P0_DMA_20261017_EVIDENCE.md)，后续不必重复运行完全相同的 CI。DMAR 报告为两个 DRHD：`0xFED90000` 针对核显 `00:02.0`，`0xFED91000` 是 `include_all=true`；RMRR 仅针对核显 `00:02.0`，范围 `0x4C000000–0x503FFFFF`（68 MiB）。此前 Windows RTX 2050 `01:00.0` 预期属于第二 DRHD 的固件范围，不等于 OS 启用了真实 IOMMU domain。目标 macOS IOVA/GSP/DMA/stop 一律 `NO-GO`。
+
+
 ## 2026-10-17 两条 P0-DMA 工作流真实结论（含故障修复）
 
 - [Darwin DMA SDK #38931389598](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38931389598) 真正 **SUCCESS**，运行 `71ebc42`；Xcode 16.4（16F6）、SDK macOS 15.5，Intel x86_64、`CLANG_RC=0`、空编译日志、Mach-O 64-bit object x86_64。证据 artifact 12059785493；只验证 C++ API 对象编译，不证明内核链接、真实 IOVA/IOMapper/GSP DMA。

@@ -69,3 +69,9 @@ Apple 官方文档：[IODMACommand](https://developer.apple.com/documentation/ke
 Darwin [CI 38931389598](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38931389598) 在 Xcode16.4/macOS SDK15.5 产生 x86_64 `MH_OBJECT`，`CLANG_RC=0`、无编译诊断。真实二进制未上传，诊断文本 artifact ID 12059785493；nm 仅列出 `IODMACommand::OutputHost64`、`IODMACommand::withSpecification` 两项未定义符号。**这不是内核 vtable/ABI、IOMMU provider、IOVA 地址范围、GSP DMA 适配或 stop 清理安全的验证。**
 
 P0-DMA [CI 38931378828](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38931378828) 在 RM 正则负向用例中 2 项失败，故此前真实 `fw_DMAR.bin` 的拓扑 JSON 未生成。用 [`636ac9a`](https://github.com/Jakiewbe/honor-hackintosh-lab/commit/636ac9a967b4825750bc163f6e8ec3348778b254) 修正两条测试生成的非法 `//` 注释 C fixture，改为合法 `/*...*/`，预期仍触发审计失败；**本修复还未被 CI 重新验证**，需在手动下一次 DMA 40 项测试后验收。
+
+## 2026-10-17 P0-DMA 40 项 CI 与真实 DMAR/PCI 交叉核对
+
+实际 [P0-DMA #38939252741](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38939252741) PASS，40/40 tests。静态 `fw_DMAR.bin` SHA256 与 ACPI checksum 正确，DRHD-A 0xFED90000 scope 核显 `00:02.0`，DRHD-B 0xFED91000 include-all，RMRR 核显保留 0x4C000000–0x503FFFFF（68MiB）；此前 Windows PCI 枚举 RTX 2050 位于 `01:00.0` 经 `00:06.0` 根端口，在固件声明上预计受第二 DRHD 覆盖。完整原始 JSON hash 与不推导 runtime 的边界见 [专题](P0_DMA_20261017_EVIDENCE.md)。
+
+**现状**：固件表解析 + RM 静态控制流审计 + Python mapping 模拟模型 PASS；macOS 核心 ABI、IOMapper 实例合法性、设备 IOVA 地址可达性、GSP DMA 静默与 GPU 渲染均未证明。保持 NO-GO。
