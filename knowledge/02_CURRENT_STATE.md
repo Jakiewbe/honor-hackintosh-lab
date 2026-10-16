@@ -1,5 +1,10 @@
 # 02｜当前事实、阻塞与决策（Codex 最新状态）
 
+## 2026-10-17 P0-DMA 新增 IOVM64→RM page-array C++ 合同（未运行新 CI）
+
+源码提交 410ad56：新增两轮地址段转换器、17 项 CPU-only C++ 用例和 Apple IODMACommand Segment64 的 compile-only 桥接源。提交 71e6b5d 扩展 macOS 15 Intel/Xcode16.4 探针，只保存编译器/nm/散列文本。两个新增测试均未运行，不能承袭 40/40 旧测试或旧 native SDK 的 PASS。完整合同在 scripts/g1/IOVM_PAGE_ARRAY_CONTRACT.md。真实 mapper 资源、nv_xnu_alloc::md prepare 兼容、RM pOsData ownership、GSP DMA/quiescence 与 KDK ABI 全部 NO-GO。
+
+
 ## 2026-10-17 G1 P0-DMA 40/40 CI & 真实 DMAR 拓扑 PASS（运行安全仍 NO-GO）
 
 [Actions #38939252741](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38939252741) 在提交 `791ba38a9bef3e5acb8a8a1e6901b3e434b37d2e` 实际运行，10+13+11+6 **40/40 PASS**，两个固定上游来源审计与已有实机 136-byte DMAR 静态拓扑解析全 PASS。三份真实 JSON 与 SHA256 已永久记在 [专题证据](../scripts/g1/P0_DMA_20261017_EVIDENCE.md)，后续不必重复运行完全相同的 CI。DMAR 报告为两个 DRHD：`0xFED90000` 针对核显 `00:02.0`，`0xFED91000` 是 `include_all=true`；RMRR 仅针对核显 `00:02.0`，范围 `0x4C000000–0x503FFFFF`（68 MiB）。此前 Windows RTX 2050 `01:00.0` 预期属于第二 DRHD 的固件范围，不等于 OS 启用了真实 IOMMU domain。目标 macOS IOVA/GSP/DMA/stop 一律 `NO-GO`。

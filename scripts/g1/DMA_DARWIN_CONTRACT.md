@@ -75,3 +75,9 @@ P0-DMA [CI 38931378828](https://github.com/Jakiewbe/honor-hackintosh-lab/actions
 实际 [P0-DMA #38939252741](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38939252741) PASS，40/40 tests。静态 `fw_DMAR.bin` SHA256 与 ACPI checksum 正确，DRHD-A 0xFED90000 scope 核显 `00:02.0`，DRHD-B 0xFED91000 include-all，RMRR 核显保留 0x4C000000–0x503FFFFF（68MiB）；此前 Windows PCI 枚举 RTX 2050 位于 `01:00.0` 经 `00:06.0` 根端口，在固件声明上预计受第二 DRHD 覆盖。完整原始 JSON hash 与不推导 runtime 的边界见 [专题](P0_DMA_20261017_EVIDENCE.md)。
 
 **现状**：固件表解析 + RM 静态控制流审计 + Python mapping 模拟模型 PASS；macOS 核心 ABI、IOMapper 实例合法性、设备 IOVA 地址可达性、GSP DMA 静默与 GPU 渲染均未证明。保持 NO-GO。
+
+## 2026-10-17 P0-DMA 新增 IOVM64→RM page-array C++ 合同（未运行新 CI）
+
+源码提交 410ad56：新增两轮地址段转换器、17 项 CPU-only C++ 用例和 Apple IODMACommand Segment64 的 compile-only 桥接源。提交 71e6b5d 扩展 macOS 15 Intel/Xcode16.4 探针，只保存编译器/nm/散列文本。两个新增测试均未运行，不能承袭 40/40 旧测试或旧 native SDK 的 PASS。完整合同在 scripts/g1/IOVM_PAGE_ARRAY_CONTRACT.md。真实 mapper 资源、nv_xnu_alloc::md prepare 兼容、RM pOsData ownership、GSP DMA/quiescence 与 KDK ABI 全部 NO-GO。
+
+详见 IOVM_PAGE_ARRAY_CONTRACT.md；转换器无 IOMapper 或 GPU 运行时集成。

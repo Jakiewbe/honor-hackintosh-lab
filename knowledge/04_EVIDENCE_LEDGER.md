@@ -1,5 +1,10 @@
 # 04｜可核实证据账本：正式 CI、脚本与限制
 
+## 2026-10-17 P0-DMA 新增 IOVM64→RM page-array C++ 合同（未运行新 CI）
+
+源码提交 410ad56：新增两轮地址段转换器、17 项 CPU-only C++ 用例和 Apple IODMACommand Segment64 的 compile-only 桥接源。提交 71e6b5d 扩展 macOS 15 Intel/Xcode16.4 探针，只保存编译器/nm/散列文本。两个新增测试均未运行，不能承袭 40/40 旧测试或旧 native SDK 的 PASS。完整合同在 scripts/g1/IOVM_PAGE_ARRAY_CONTRACT.md。真实 mapper 资源、nv_xnu_alloc::md prepare 兼容、RM pOsData ownership、GSP DMA/quiescence 与 KDK ABI 全部 NO-GO。
+
+
 ## 2026-10-17 实际 P0-DMA 三份 JSON 证据
 
 [Actions #38939252741](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38939252741)（`791ba38`）工作流/Job SUCCESS：10/10+13/13+11/11+6/6。Artifact 12062915390 ZIP SHA256 `c9385ac96e52e24767b562cf1dd29ac8767f02388f2e14e2bca02e3affca80a1`；详见 [P0 DMA 2026-10-17 专题](../scripts/g1/P0_DMA_20261017_EVIDENCE.md)，包含三份 JSON SHA、固定来源 blob、两个 DRHD 与 RMRR，和明确的 OS runtime NO-GO。无硬件加载。

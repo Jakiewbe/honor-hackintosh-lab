@@ -1,5 +1,12 @@
 # 10｜Codex 正式交接单：现在接手做什么
 
+## 2026-10-17 P0-DMA 新增 IOVM64→RM page-array C++ 合同（未运行新 CI）
+
+源码提交 410ad56：新增两轮地址段转换器、17 项 CPU-only C++ 用例和 Apple IODMACommand Segment64 的 compile-only 桥接源。提交 71e6b5d 扩展 macOS 15 Intel/Xcode16.4 探针，只保存编译器/nm/散列文本。两个新增测试均未运行，不能承袭 40/40 旧测试或旧 native SDK 的 PASS。完整合同在 scripts/g1/IOVM_PAGE_ARRAY_CONTRACT.md。真实 mapper 资源、nv_xnu_alloc::md prepare 兼容、RM pOsData ownership、GSP DMA/quiescence 与 KDK ABI 全部 NO-GO。
+
+下一步：在 main 手动验收 DMA workflow 新增 17 项 C++ host 断言，以及 Darwin SDK 新原生对象 compile-only。随后针对 md->prepare 已存在的前提、IOMapper provider 与双资源 owner 的错误回滚设计证据合同；不动主力 Windows/EFI/BIOS。
+
+
 ## 2026-10-17 接手验证节点已转换（不需要重复 CI）
 
 `P0-DMA Contract` [run #38939252741](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38939252741) 已取得 40/40 PASS 与三份原始 JSON 的 SHA256，固定 DMAR 显示 2 个 DRHD（核显专用、第二组 include-all）及核显 RMRR；归档于 [专题](../scripts/g1/P0_DMA_20261017_EVIDENCE.md)。[Darwin SDK Probe #38931389598](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38931389598) 亦已原生编译 PASS，无需重复。**下一项仅源码/隔离环境工作：** 对照 NVIDIA `nv_dma_map_alloc` 的 RM `pPriv/pOsData` 双层归属，设计 macOS 真实 IODMACommand 资源状态机和失败时句柄保留合同；单独核查目标 Build/KDK、IOMapper provider 与 `01:00.0` 运行态 IOMMU 配置。不可将静态 DMAR include-all 当成已映射运行态证据；NO-GO。
