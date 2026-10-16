@@ -282,3 +282,25 @@ Code changes: do not schedule autoGo merely by loading the kext; `-nvrmautogo` w
 **运行时安全 NO-GO（B9 链接通过不改变）：** B9 的 `go()` 引用保留、同锁停止准入和最多 2 秒等待仅覆盖同步 go() 函数。`autoGo/headWatch`、boot-hold cap、NVRM UserClient、MSI/filter/WorkLoop、RM 事件锁、GSP 固件与 DMA 仍可能在 `go()` 返回后活动。尤其超时和 rm_init_adapter 半初始化失败时，代码虽然避免显式释放 RM/MSI/PCI 对象，但仍调用 `super::stop(provider)`；不得将这当作安全卸载。未验证主力机器的 GSP 固件来源/哈希、目标 macOS 兼容性、RTX 2050 指令执行、像素读回或 Intel 46A6 内屏 Metal 加速。
 
 **下一阶段优先事项：** 定义可审查的活动引用/工作线程和 ISR 回调销毁合同；在失败路径安全停止语义不明确前，只构建隔离源码与测试，不触发真实设备加载、BAR/PCI 改写、EFI/BIOS 修改。
+
+
+## G1-B10：异步任务禁入与 RM ISR 同步计数（源码已提交，macOS 原生构建待验证）
+
+本阶段源补丁提交 `32efe12223637a892aeb974fad144e065a86cd9e`；CI 实验入口提交 `b7c34e70753d2c486be5710fc6aa6b5610fb6759`。源补丁 `scripts/g1/patches/b10_nvrm_async_isr_gate.patch`，Git blob `BLOB`，对固定 NullMoth + B4–B9 复合源码增加 5 个修改块。来源链 B4(6)→B5(5)→B6(8)→B7(5)→B8(10)→B9(3)→B10(5) 已逐行模拟应用通过。**不是 Xcode 原生编译通过，也不是实机运行通过**。
+
+### 实现边界
+
+1. **彻底封禁自动线程调度，而非简单改变启动参数默认值。** 从 `NVRM::start()` 删除异步 `kernel_thread_start(&NVRM::autoGo)` 和 `thread_call_enter_delayed` 调度入口。遗留的静态 `autoGo/headWatch/bootHoldCap` 函数仍存在，但启动过程不再生成这三种后台任务，即使附带 `-nvrmautogo` 也不允许重新激活。保留具有真实硬件改写风险的手动 `go()` 仅供后续独立批准的受控实验，**当前仍禁止实机调用**。
+2. **中断处理期间显式跟踪活动状态。** `interruptOccurred()` 以 `OSIncrementAtomic` / `OSDecrementAtomic` 包括 `rm_isr` 与条件性 `rm_isr_bh` 的执行期；`interruptFilter()` 在检测到停止标记时不再调度新处理。`stop()` 对仍活动的 RM ISR 做最多约 2 秒有界等待，超时则不执行原有 RM/MSI/PCI 显式清理。
+3. **沿用 B9 的 go 调用期活动引用/等待**，避免停止时直接与正在执行的同步 RM 初始化竞争。B10 未自动销毁 RM 事件锁或对半初始化 GSP 调用未经验证的 shutdown API。
+
+### 不能称为已解决的 P0
+
+- 原子 ISR 活动数为 0 **不代表**已排队的 `IOFilterInterruptEventSource` 回调不会在随后运行，更不代表中断源 `disable` / `removeEventSource` 与提供者终止的所有线程安全已证明；本补丁不假装已经证明 IOKit 的回调同步机制。
+- 在观察到 go/ISR 超时或适配器半初始化失败时，B9/B10 仍可能走 `super::stop(provider)`，这会推进 IOKit 生命周期，却没有保证 RM/GSP/DMA 的活动全部完成。当前处理是 fail-stop 状态记录和尽量避免**本项目**直接释放仍在使用的内核对象，**不是安全卸载**。
+- `rm_shutdown_adapter`、`rm_isr_bh`、PCI Bus Master/MSI、DMA 排空、全局控制/设备事件锁销毁及资源最终所有权仍需实证；GSP 固件实际来源/哈希和 HONOR 10DE:25A9 的 macOS 运行环境也未核实。
+- 禁止实机加载、EFI/BIOS/磁盘改写，也不接入用户的 Intel 内屏。B10 的 CI 只在 Mac runner 中编译、链接临时候选二进制，不上传/安装/加载任何 KEXT。
+
+### 下一次有意义的验证
+
+手动 <Link...> `.github/workflows/g1-native-gate.yml`：选 `main`、`Xcode_16.4.0`、`extra_cflags=-DNV_UNIX -DNV_LINUX`，`drop_flags` 空、`run_rebuild=true`、`run_b10_probe=true`。B4–B9 自动作为源码/编译/链接前提执行。检查 `b10_source_patch`、`b10_native_link_candidate`、`b10-NVRM-compile.txt` 和 ld64 map 选中 `NVRM-NVRM.cpp.b10.o` 的次数；总 B2 gate 的 RC=2 仍属运行时/来源未验收的预期阻断。

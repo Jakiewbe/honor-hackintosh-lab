@@ -1275,10 +1275,10 @@ def b9_compile_and_link(nv, scratch, logs, report, b9_arg):
 
 
 def b10_compile_and_link(nv, scratch, logs, report, b10_arg):
-    """Strictly isolated native link of the B10 go-stop admission candidate.
+    """Native-only link of the B10 async-worker suppression and RM ISR gate.
 
-    This does not establish runtime MSI, DMA, GSP, asynchronous autoGo or
-    user-client quiescence; it must never enable installation or loading.
+    This does not establish queued IOKit interrupt cancellation, DMA/GSP
+    quiescence, provider-safe stop, or user-client lifetime. Never load.
     """
     rec = {"status": "NOT_RUN", "label": "B10_ASYNC_ISR_LIFECYCLE_NOT_LOADABLE",
            "binary_uploaded": False, "hardware_activation": "NEVER"}
