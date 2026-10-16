@@ -1,5 +1,12 @@
 # 02｜当前事实、阻塞与决策（Codex 最新状态）
 
+## 2026-10-17 两条 P0-DMA 工作流真实结论（含故障修复）
+
+- [Darwin DMA SDK #38931389598](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38931389598) 真正 **SUCCESS**，运行 `71ebc42`；Xcode 16.4（16F6）、SDK macOS 15.5，Intel x86_64、`CLANG_RC=0`、空编译日志、Mach-O 64-bit object x86_64。证据 artifact 12059785493；只验证 C++ API 对象编译，不证明内核链接、真实 IOVA/IOMapper/GSP DMA。
+- [P0-DMA #38931378828](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38931378828) **FAILURE**，10/10 源码+13/13 事务模型测试通过；RM 11 项仅 9 项通过，另外 2 项的 `//` 注释吞掉相同行 `}`，导致测试代码自行制造了不闭合 C 函数、异常信息与断言不符。因 `set -e`，固定上游取证与 DMAR JSON 步骤均**未运行**。
+- 已修复两处负例 fixture：[`636ac9a`](https://github.com/Jakiewbe/honor-hackintosh-lab/commit/636ac9a967b4825750bc163f6e8ec3348778b254) 改用 `/* ... */`，仍要求注释伪造的赋值不能通过 RM audit。此修复**尚未通过新的 CI**；不应提前宣布 40/40 PASS。实机驱动/GSP/PCI/EFI/BIOS 仍 NO-GO。
+
+
 ## 2026-10-16 P0-DMA 最新：源码审计防假阳性 + 实机 ACPI DMAR 拓扑取证（待云端 CI）
 
 新增 [RM 审计器防假阳性修复](https://github.com/Jakiewbe/honor-hackintosh-lab/commit/479e3459ef17e99e8f459219dd963b781ec13d5e)：此前正则即使匹配到 **注释中的赋值**也会被误认作实际 `pOsData=pPriv`，在隔离环境中已复现。现在先剔除注释/字符串，再核对实际 peer 分支对 NULL 的赋值及 failed-unmap 是否提前退出，新增四项负向用例，RM 专项测试数从 7 到 11。**仅本地等价测试验证，远程当前提交尚未运行**。

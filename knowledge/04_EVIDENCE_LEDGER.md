@@ -1,5 +1,11 @@
 # 04｜可核实证据账本：正式 CI、脚本与限制
 
+## 2026-10-17 云端原生 SDK 和 DMA CI 最新实际验收
+
+- Xcode 16.4 Build 16F6 / macOS SDK 15.5；[run 38931389598](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38931389598) SUCCESS，`CLANG_RC=0`、`Mach-O 64-bit object x86_64`；Artifact `honor-g1-darwin-dma-sdk-evidence` ID 12059785493，ZIP SHA256 `a9552330c2b26b353617f358d843bffa0f5b47f94c31fdcd67648cf73e06d65b`。探针源 SHA256 `9362ff4c0cb8ccf712a9abdcaf0e383ea5e94e5fd6e96541e93365aa2c1773bb`，临时 `.o` SHA256 `e9bc99109f81904b80137155d0872b79b236f12494334284fd2c3dd267b45018`。nm undefined 导出为 `IODMACommand::OutputHost64` 和 `IODMACommand::withSpecification` 两个 C++ 符号；virtual lifecycle 调用不应被误解为这两个名字覆盖了全部 ABI/运行时接口。**编译通过不等于链接或可加载性。**
+- [run 38931378828](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38931378828) FAILED：首两组 10+13 项均 PASS；`test_dma_rm_path.py` 11 项中 2 项 FAIL，日志报 `unterminated function body`，根因是测试构造了非法 line-comment fixture，非实际固定源码错误。随后 upstream 和 DMAR 取证未执行，上传 artifact 为空。仅修复测试 fixture 的提交 `636ac9a` 已推送、**尚未重新验收**。下次应对 40 项测试、两个 DMA 合同 JSON 与 `dmar-topology.json` 取得完整证据。
+
+
 ## 2026-10-16 P0-DMA 增量证据（RM 正则与 ACPI DMAR）
 
 - 固定上游 NullMoth/NVIDIA `osIovaMap/osIovaUnmap` 源码数据流仍为 P0：系统 DMA 返回 `pOsData=NULL` 会与 peer 映射判别冲突，且错误路径可能丢失 mapping owner；并非已执行硬件故障。原本的审计器存在注释假阳性；提交 `479e3459ef17e99e8f459219dd963b781ec13d5e` 改为清理注释/字符串并加入 4 项反例，测试共 11 项。隔离环境对应逻辑 11/11 PASS；**当前主线新 CI NOT RUN**。

@@ -63,3 +63,9 @@ Apple 官方文档：[IODMACommand](https://developer.apple.com/documentation/ke
 项目已有 `docs/hardware-survey-20261012/evidence/acpi/fw_DMAR.bin`（136 字节），对应 P40 报告：签名 DMAR、checksum 合法、HONOR/ADL-P-M、SHA256 `e84c886dfcc89640faf9c3386d5fbb4dc77483901c816eb38fdcb22a6c298f86`。本轮添加 `scripts/g1/dmar_evidence.py`，拒绝非该 SHA256 的文件，重新验证 ACPI 表长度/校验和并解析 DRHD、RMRR、ATSR 的段号、重映射硬件 MMIO register base、include_all 与 PCI 设备 path；对未知 structure 保留未解释标签，不猜测。六项合成正反例已在隔离环境运行通过，实机快照内容需在下一次 CI 输出 `dmar-topology.json` 后核对。
 
 注意：ACPI DMAR 的存在只说明固件发布了 DMA Remapping Table；**它不证明 macOS 内核已启用/管理 IOMMU，不证明设备 10DE:25A9 属于正确的 translation domain，更不证明 MSI/GSP/DMA 停止与内核可加载性**。下游不得据 DMAR 符号或硬件寄存器地址去进行危险的裸 MMIO 写入。RM 源码审计器已修复注释伪造赋值的假阳性（`479e345`），新测试/真实报告均待 CI 验收。
+
+## 2026-10-17 已验证的 macOS SDK API vs 未验证的 DMA
+
+Darwin [CI 38931389598](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38931389598) 在 Xcode16.4/macOS SDK15.5 产生 x86_64 `MH_OBJECT`，`CLANG_RC=0`、无编译诊断。真实二进制未上传，诊断文本 artifact ID 12059785493；nm 仅列出 `IODMACommand::OutputHost64`、`IODMACommand::withSpecification` 两项未定义符号。**这不是内核 vtable/ABI、IOMMU provider、IOVA 地址范围、GSP DMA 适配或 stop 清理安全的验证。**
+
+P0-DMA [CI 38931378828](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38931378828) 在 RM 正则负向用例中 2 项失败，故此前真实 `fw_DMAR.bin` 的拓扑 JSON 未生成。用 [`636ac9a`](https://github.com/Jakiewbe/honor-hackintosh-lab/commit/636ac9a967b4825750bc163f6e8ec3348778b254) 修正两条测试生成的非法 `//` 注释 C fixture，改为合法 `/*...*/`，预期仍触发审计失败；**本修复还未被 CI 重新验证**，需在手动下一次 DMA 40 项测试后验收。

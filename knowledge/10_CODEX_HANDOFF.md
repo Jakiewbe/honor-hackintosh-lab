@@ -1,5 +1,10 @@
 # 10｜Codex 正式交接单：现在接手做什么
 
+## 2026-10-17 P0-DMA 下一步单项验证任务
+
+已拿到 Xcode 16.4/macOS SDK15.5 `IODMACommand` compile-only 成功证据（run 38931389598），**无需再重复运行该 SDK 探针**。手动运行更新后的 [P0-DMA contract](../.github/workflows/g1-dma-contract.yml) 于 `main`（必须包含提交 `636ac9a`）：期望原 10+13、修复后的 RM 11、ACPI DMAR 6，共 40 个单元测试，并产生 `dma-source-contract.json`、`dma-rm-path.json`、`dmar-topology.json`。注意前一运行 38931378828 两个负例 fixture 的 `//` 吃掉了同行 `}`，导致无效 C 样本；新提交用 block-comment 修复而未降低检测要求。**在新 CI 结果返回前不允许宣告 PASS。** DMAR 固件静态拓扑即使可解析，也不能证明 OS runtime VT-d/DMA 页表/RTX2050 GSP 已工作，NO-GO。
+
+
 ## 2026-10-16 P0-DMA 新交接重点：验收真实 DMAR + 修复后的 RM 调用链审计
 
 1. 在 `main` 手动运行 [G1 P0 DMA contract](../.github/workflows/g1-dma-contract.yml)：应跑既有 23 + 最新 RM 11 + 新 DMAR 6 共**40 项预期合成测试**；确认两个固定来源及仓库实机 `fw_DMAR.bin` 的 SHA256。下载两个映射源合同 JSON 与新增的 `dmar-topology.json`，核对 DRHD 的 segment/include_all、各 PCI device scopes/RMRR。**目前新 CI 未运行，切勿提前标记通过**。
