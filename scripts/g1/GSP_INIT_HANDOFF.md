@@ -132,3 +132,25 @@ B4 修复内容是有界的：
 5. **GSP 固件与目标硬件/系统兼容性没有证据。** 固定路径 `/Users/Shared/nvfw/nvidia/610.57.04/` 的真实文件存在性、来源、哈希及 macOS 版本合同仍未知；CI runner 未连接 RTX 2050。
 
 **验收原则：** B3、B4、B5 `PASS (native compile/link only)`；安全加载 `NO-GO`；RTX 2050 实际 GSP 初始化/命令执行/像素读回及 Intel 内屏加速仍然 `UNVERIFIED`。下一步不重复链接统计，优先实现可审计的 PCI/BAR 成功路径 stop 回退与 adapter 错误状态所有权合同；实机操作必须待独立备份、回滚实证及用户授权。
+
+
+## 2026-10-16 G1-B6：实验性 BAR 正常停止恢复候选（代码完成，macOS 编译待验收）
+
+当前基线最新提交 `ffced5daf01e152a16392fb79e23c9e6b67c21ff`，补丁为 `scripts/g1/patches/b6_nvrm_bar_stop_ownership.patch`，固定 Git blob SHA1 `9fe603c6b1a84831ef9904471ddfd27378d6927b`。已从固定 NullMoth 原始 `NVRM.cpp` 顺序应用 B4（6 hunks）+B5（5 hunks）+B6（8 hunks）做源码行级验证通过；**尚未在 Xcode 下执行 B6 `git apply`、`clang++` 或 `ld64`**，不得写作 B6 LINK PASS。
+
+B6 为**真正源码候选变更**，包括：
+
+- 自动模式下默认跳过 `placeLargeBar1()`，需显式实验参数 `-nvrmrelocate` 才进入资源重定位（此参数**不构成安全运行许可**）。保留 B4 `-nvrmnogo` 的手动路径：手动模式永不自动重定位。
+- 在 BAR 写入前分配共用客户端锁，并确认原 `OSArray` 资源描述符可保留且无既有本实例快照。**如果原 PCI command bus-master 位已启用，就立即拒绝实验性重定位**，以免正常停止时错误重新启用 DMA。
+- 对成功重定位的 BAR1/BAR3、ReBAR 配置、Root Port 预取窗口以及 IOPCIFamily 原始设备内存描述符保存独立实例快照及 retain 引用。B5 失败回滚不被替换。
+- `stop()` 先处理 `rm_shutdown_adapter`、中断事件源与 WorkLoop，再**有条件**调用 `restorePlacedBar1ForStop`。只在没有已知 `rm_init_adapter` 半初始化失败、没有适配器活跃标志、原硬件配置仍与快照一致且当前 PCI bus-master 已关闭的情况下，尝试恢复原寄存器并读回核验。否则明确标记 BLOCKED，不推测 DMA 已停。
+- 成功恢复后重新设置 IOKit 原始内存描述符并验证 PCI command；停止阶段统一释放保存的 IOObject 引用。失败时仍标记无有效回退，实机保持 NO-GO。
+
+**尚未解决的 P0 风险，阻止安装/加载：**
+
+1. `rm_shutdown_adapter` 的返回语义和 DMA 完全静默、MSI 回调 drain 没有得到独立确认。`fAdapter=false` 并不能证明 GPU 没有在使用旧 BAR。
+2. `autoGo`、`headWatch`、boot-hold 定时器、`IOUserClient` 与 `stop()` 的并发所有权未形成闭包；本补丁没有将这些线程同步化。
+3. GSP 固件真实来源/校验、macOS 目标内核 API/ABI、异常终止后 GPU 和 PCIe Root Port 的完整硬件状态未得到验证。
+4. B6 源码使用实验性恢复逻辑，**目前只有行级补丁匹配证据，不存在编译、链接、可加载或硬件安全结论**。即便 CI 原生链接通过，仍不能把失败回退通过或 Metal 加速通过混同。
+
+`G1 native gate` 已加入 B6 **显式手动选项**，默认 `false`；需设置 `run_rebuild=true`、`run_b2_probe=true`、`run_b4_probe=true`、`run_b5_probe=true`、`run_b6_probe=true`，其他采用经验证的 Xcode 16.4 / 原 EXTRA 参数。实际诊断字段为 `b6_source_patch` / `b6_native_link_candidate`，与 B3/B4/B5 隔离。所有产物仅临时对象和文本日志，**绝不上传、签名、安装、加载任何 kext**。最终 B2 总门禁仍因 WP1、硬件初始化及运行时资格保持 BLOCKED。
