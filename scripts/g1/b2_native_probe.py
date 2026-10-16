@@ -507,7 +507,11 @@ def native_nvrm_link_candidate(nv, scratch, logs, report, nvrm_override=None, re
     if nr.get("compiled_objects") != source_count or nr.get("required_objects") != source_count:
         record["status"] = "BLOCKED_NVRM_OBJECTS_INCOMPLETE"
         return
-    out = scratch / ("nvrm-link-candidate-b5" if nvrm_override is not None and Path(nvrm_override).name.endswith(".b5.o") else "nvrm-link-candidate-b4" if nvrm_override else "nvrm-link-candidate")
+    # B3/B4/B5/B6 must each retain a distinct native Mach-O and link map.
+    variant = ("b6" if nvrm_override is not None and Path(nvrm_override).name.endswith(".b6.o")
+               else "b5" if nvrm_override is not None and Path(nvrm_override).name.endswith(".b5.o")
+               else "b4" if nvrm_override else "b3")
+    out = scratch / ("nvrm-link-candidate-" + variant)
     out.mkdir(exist_ok=True)
     inputs = []
     for module, count in (("nvidia", 1055), ("nvidia-modeset", 230)):
@@ -869,12 +873,113 @@ def b5_compile_and_link(nm, nv, scratch, logs, report, patch_arg, b4_arg):
         rec["error"] = str(exc)
 
 
+def b6_compile_and_link(nm, nv, scratch, logs, report, b6_arg, b5_arg, b4_arg):
+    """Compile pinned B4+B5+B6 NVRM.cpp, link without runtime activation.
+
+    This is evidence for a modified native source candidate only. Restoring
+    PCI on real hardware remains NO-GO until concurrent stop/GSP quiescence
+    and PCI root-port ownership are independently demonstrated.
+    """
+    rec = {"label": "B6_BAR_STOP_OWNERSHIP_EXPERIMENTAL_NOT_LOADABLE",
+           "status": "NOT_RUN", "binary_uploaded": False,
+           "activation": "NEVER", "source_patches": ["B4", "B5", "B6"]}
+    report["b6_source_patch"] = rec
+    try:
+        patches = [Path(p).resolve() for p in (b4_arg, b5_arg, b6_arg)]
+        expected_names = [
+            "b4_nvrm_manual_go_msi_preflight.patch",
+            "b5_nvrm_bar_rollback.patch",
+            "b6_nvrm_bar_stop_ownership.patch",
+        ]
+        if [p.name for p in patches] != expected_names or not all(p.is_file() for p in patches):
+            raise ValueError("B6 patch identities missing or changed")
+        # Hard stop if the checked-in experimental B6 source patch drifts.
+        b6_blob = subprocess.check_output(
+            ["git", "hash-object", str(patches[2])], text=True).strip()
+        if b6_blob != "4bfc5bb81b3246a61c5a02af745ce9c45e53850e":
+            raise ValueError("B6 experimental patch Git blob differs from reviewed source")
+        rec["patches_sha256"] = {tag: hash_bytes(p.read_bytes())
+                                  for tag, p in zip(("B4", "B5", "B6"), patches)}
+        if rec["patches_sha256"]["B4"] != "deed09545b1a3a54096ab36a7f4809a0b891fea5eef8d5ca1615bbd2bb9b5e44":
+            raise ValueError("B4 parent patch pin changed")
+        upstream = nm / "kexts/NVRM/NVRM.cpp"
+        original = upstream.read_bytes()
+        if original != subprocess.check_output(
+                ["git", "-C", str(nm), "show", "HEAD:kexts/NVRM/NVRM.cpp"]):
+            raise ValueError("pinned upstream source not pristine")
+        staging = scratch / "b6-staged-source"
+        dest = staging / "kexts/NVRM/NVRM.cpp"
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes(original)
+        rec["upstream_source_sha256"] = hash_bytes(original)
+        for label, patch in zip(("b4", "b5", "b6"), patches):
+            if command(["git", "apply", "--check", str(patch)], staging,
+                       logs / (label + "-b6-check.txt")):
+                raise ValueError(label + " git apply --check failed in B6 staging")
+            if command(["git", "apply", str(patch)], staging,
+                       logs / (label + "-b6-apply.txt")):
+                raise ValueError(label + " git apply failed in B6 staging")
+        patched = dest.read_bytes()
+        if patched == original:
+            raise ValueError("B6 applied source still byte-identical to upstream")
+        txt = patched.decode("utf-8")
+        rec["patched_source_sha256"] = hash_bytes(patched)
+        begin = txt.index("bool NVRM::placeLargeBar1()")
+        end = txt.index("void NVRM::readBARs()", begin)
+        bar = txt[begin:end]
+        start = txt[txt.index("bool NVRM::start(IOService *provider)"):begin]
+        stop = txt[txt.index("void NVRM::stop(IOService *provider)"):
+                   txt.index("#undef super", txt.index("void NVRM::stop(IOService *provider)"))]
+        if not ("explicitRelocate ? placeLargeBar1() : false" in start
+                and "fBarOriginalMemory = mem;" in bar
+                and "fBarRootPort = rp;" in bar
+                and "bool NVRM::restorePlacedBar1ForStop()" in txt
+                and "if (fAdapterInitFailed || fAdapter)" in txt
+                and "if (currentCommand & 0x4)" in txt
+                and "restorePlacedBar1ForStop()" in stop):
+            raise ValueError("B6 BAR transaction/stop preconditions incomplete")
+
+        # Reuse B5's actual successful native NVRM.cpp compiler invocation.
+        native_compile_log = logs / "b5-NVRM-compile.txt"
+        first_line = native_compile_log.read_text(errors="replace").splitlines()[0]
+        if not first_line.startswith("ARGV="):
+            raise ValueError("B5 native compilation did not capture argv")
+        argv = json.loads(first_line[5:])
+        if (not isinstance(argv, list) or argv.count("-c") != 1
+                or argv.count("-o") != 1
+                or Path(argv[argv.index("-c") + 1]).name != "NVRM.cpp"):
+            raise ValueError("B5 compiler provenance changed")
+        output = scratch / "NVRM-NVRM.cpp.b6.o"
+        argv[argv.index("-c") + 1] = str(dest)
+        argv[argv.index("-o") + 1] = str(output)
+        rec["compile_rc"] = command(argv, scratch, logs / "b6-NVRM-compile.txt")
+        if rec["compile_rc"]:
+            rec["status"] = "B6_NATIVE_COMPILE_FAILED"
+            rec["first_error"] = first_compiler_error(logs / "b6-NVRM-compile.txt")
+            return
+        obj = MachO(output)
+        if obj.filetype != 1 or int.from_bytes(obj.data[4:8], "little") != 0x01000007:
+            raise ValueError("B6 object is not native x86_64 MH_OBJECT")
+        rec["compiled_object_sha256"] = hash_bytes(output.read_bytes())
+        native_nvrm_link_candidate(nv, scratch, logs, report, nvrm_override=output,
+                                   report_key="b6_native_link_candidate")
+        rec["link_status"] = report["b6_native_link_candidate"]["status"]
+        rec["status"] = ("B6_NATIVE_LINK_CANDIDATE_PASS_NOT_LOADABLE"
+                         if rec["link_status"] ==
+                            "FSP_PATCHED_NVRM_NATIVE_LINK_COMPLETE_NOT_LOADABLE_EVIDENCE"
+                         else "B6_NATIVE_LINK_CANDIDATE_BLOCKED")
+    except Exception as exc:
+        rec["status"] = "B6_BLOCKED_PREREQUISITE"
+        rec["error"] = str(exc)
+
+
 def main():
     p = argparse.ArgumentParser()
     for name in ("nullmoth", "ogkm", "b1-logs", "report"):
         p.add_argument("--" + name, required=True)
     p.add_argument("--b4-patch", help="Optional pinned manual-go/MSI patch (compile and link only)")
     p.add_argument("--b5-patch", help="Optional B5 BAR rollback patch (requires B4)")
+    p.add_argument("--b6-patch", help="Optional B6 BAR stop ownership patch (requires B4+B5)")
     a = p.parse_args()
     nm, nv, logroot = Path(a.nullmoth).resolve(), Path(a.ogkm).resolve(), Path(a.b1_logs).resolve()
     report = {"label": "G1_B2_DISCOVERY_ONLY", "status": "BLOCKED",
@@ -908,6 +1013,14 @@ def main():
                     report["b5_source_patch"] = {"status": "BLOCKED_REQUIRES_SUCCESSFUL_B4_LINK"}
                 else:
                     b5_compile_and_link(nm, nv, Path(t), details, report, a.b5_patch, a.b4_patch)
+            if a.b6_patch:
+                if (not a.b4_patch or not a.b5_patch or
+                    report.get("b5_source_patch", {}).get("status") !=
+                    "B5_LINK_CANDIDATE_PASS_NOT_LOADABLE"):
+                    report["b6_source_patch"] = {"status": "BLOCKED_REQUIRES_SUCCESSFUL_B5_LINK"}
+                else:
+                    b6_compile_and_link(nm, nv, Path(t), details, report,
+                                        a.b6_patch, a.b5_patch, a.b4_patch)
             report["status"] = "BLOCKED_WP1_OR_NVRM_LINK_PROVENANCE"
         except Exception as exc:
             report["status"] = "BLOCKED_PREREQUISITE"
