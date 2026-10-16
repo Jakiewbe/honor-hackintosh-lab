@@ -266,3 +266,19 @@ Code changes: do not schedule autoGo merely by loading the kext; `-nvrmautogo` w
 ### 唯一必要的下一次 CI
 
 在 GitHub `.github/workflows/g1-native-gate.yml` 手动选择 `main` / `Xcode_16.4.0` / `-DNV_UNIX -DNV_LINUX`、空 `drop_flags`；打开 `run_rebuild` 和 `run_b9_probe`，B4–B8 依赖会自动打开。读取 `b9_source_patch`、`b9_native_link_candidate`、 `b9-NVRM-compile.txt` 以及 ld64 对象映射；顶层返回 2 仍表示 WP1/runtime NO-GO，不等同于 B9 原生链接失败。**尚未运行本次 B9 CI。**
+
+
+## G1-B9 2026-10-16 实际原生编译/链接验收（冻结）
+
+这是 B9 的**实际 CI 验证**，覆盖上文“B9 原生编译待验收”的历史描述；原实验日志保留。
+
+- Actions [#38851526101](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38851526101)，运行提交 `bf5a97fc8b4f5fddcbacf1d94dbbc6d3f98d59f0`，Xcode 16.4 / macOS SDK 15.5；已下载并解压 artifact `honor-g1-b1-Xcode_16.4.0`，实读 `b2-native-probe.json` 和 `b2-details/b9-NVRM-compile.txt`。档案 ZIP SHA256：`c198cc78d95c35860b35f6223f15242a94fffa9ba3d628dd1d70eb69718289f6`。
+- B1 RM/modeset 编译对象计数 `1055/230`，报告均 0 编译错误。补丁链 B4–B9 成功；B9 patch Git blob `fa6ee96cc0da18a923ceb33204c360d48ef6cf7b`，SHA256 `20ee6d5e165073c3450c98a8a94e222e5a78364a65c0880d0b11402856ba2a3f`，B9 合成源 SHA256 `954d6e616be48358806151ea7d51c50cf24616d24e53ca42f93757843ab0ce2e`。
+- B9 `NVRM.cpp` native clang++ **RC=0**、**40 warnings、0 errors**，对象 SHA256 `f5a470ec01aa6b8ad04c526a91f69f01bd25d06a50e20ef738179fd14e2453e8`。Apple ld64/native KEXT link **RC=0**，并成功输出 x86_64 Mach-O `MH_KEXT_BUNDLE`（filetype=11）。
+- 链接映射证据：B9 修补源 `NVRM-NVRM.cpp.b9.o` 选中**一次**，基线源 `NVRM-NVRM.cpp.o` **零次**；FSP 受检修补成员 `kern_fsp.c.o` 和 `timer_ostimer.c.o` 各选中一次，各对应原始成员零次。
+- B9 二进制候选 **16,506,344 字节**，SHA256 `3bf77043a1ed33481d51b02dee0559fe3157897e1a9a07f0f1cf04bb136cf039`，462 个 unresolved 外部符号（是否由目标系统内核提供尚未经 API/ABI 合同验收）。候选二进制未上传、签名、安装或加载。
+- 顶层 workflow `failure` 来自明确保留的 B2 总门禁 `BLOCKED_WP1_OR_NVRM_LINK_PROVENANCE`、exit 2，**不是 B9 链接失败**。B3–B9 原生构建/链接子目标已通过，不需要重跑相同链路来证明静态链接。
+
+**运行时安全 NO-GO（B9 链接通过不改变）：** B9 的 `go()` 引用保留、同锁停止准入和最多 2 秒等待仅覆盖同步 go() 函数。`autoGo/headWatch`、boot-hold cap、NVRM UserClient、MSI/filter/WorkLoop、RM 事件锁、GSP 固件与 DMA 仍可能在 `go()` 返回后活动。尤其超时和 rm_init_adapter 半初始化失败时，代码虽然避免显式释放 RM/MSI/PCI 对象，但仍调用 `super::stop(provider)`；不得将这当作安全卸载。未验证主力机器的 GSP 固件来源/哈希、目标 macOS 兼容性、RTX 2050 指令执行、像素读回或 Intel 46A6 内屏 Metal 加速。
+
+**下一阶段优先事项：** 定义可审查的活动引用/工作线程和 ISR 回调销毁合同；在失败路径安全停止语义不明确前，只构建隔离源码与测试，不触发真实设备加载、BAR/PCI 改写、EFI/BIOS 修改。
