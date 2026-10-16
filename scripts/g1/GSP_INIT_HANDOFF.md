@@ -335,3 +335,20 @@ Code changes: do not schedule autoGo merely by loading the kext; `-nvrmautogo` w
 **新的工程优先级：P0-DMA**，先查清 `nv_dma_map_alloc` 的调用约定、GSP/FB/用户显存三条地址空间的实际要求、`IOMapper`/`IODMACommand`/IOMMU 的合法装配流程，建立正向映射、逆向撤销、生命周期和错误返回的主机侧模拟测试。未经设备映射合同核验禁止 `go(2)`、PCI Bus Master 和任何实机 KEXT 加载。P0-ABI 与 P0-DMA 都不能由 B3–B10 的原生链接成功消除。
 
 **当前实际进度：** B10 仍仅为静态 Mach-O 链接成功；S0 工具源码及 CI 采集入口已提交但没有拿到真实逐项符号清单；P0-DMA 是已查明的上游实现行为，未开发可用的替代映射。HONOR 主力 Windows/BIOS/EFI/macOS 不做任何变更。
+
+## 2026-10-16 P0-DMA 源码合同与独立只读 CI（已提交，尚未运行）
+
+- 源码提交 `39234acb79dedd60fc9a4bf8089e1798da5dbfe7`，工作流提交 `8c77cf4192c83febd873d011372e639d7c42e727`。路径：`scripts/g1/dma_contract.py`、`scripts/g1/test_dma_contract.py` 与 `.github/workflows/g1-dma-contract.yml`。GitHub Actions 手动工作流独立于 B1–B10 原生编译。
+- 固定 NullMoth `cd8e2bb04da48d2fa70cf1895879608f3588dbfb` 的 `kexts/NVRM/os-xnu2.cpp` Git blob `c1fe41e9ff30649c6d02827aee5995f8eaa944b3`；固定 NVIDIA `e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb` 的 Linux 参考 `kernel-open/nvidia/nv-dma.c` Git blob `f3541a6bf629ce9400ce60dd8a7e09786db337ea`。工具同时核验源码 HEAD 与文件 blob，版本变化时停止且要求人工复审。
+- 实际 Linux 对照：`nv_dma_map_alloc` 调度 `nv_dma_map_pages` 或 `nv_dma_map_sgt`；解除映射走 `nv_dma_unmap_pages` / `nv_dma_unmap_sgt`，底层还执行 `dma_mapping_error`、`nv_dma_is_addressable` 范围判断以及 `dma_unmap_page_attrs` 等路径。NullMoth 固定 macOS `nv_dma_map_alloc` 是 `*priv=NULL; return NV_OK` 的 identity 假设，`nv_dma_unmap_alloc` 仅返回成功，`nv_requires_dma_remap` 返回 `NV_FALSE`，物理段用 `kIOMemoryMapperNone` 获取。**这些是两个平台不同驱动实现的源码事实，不能武断认为 Linux API 应当直接移植到 Darwin**。
+- 合成 `FakeDmaLedger` 仅用于验证未来映射合同必须处理设备所属权、地址掩码、页边界、重复映射、部分失败回滚、跨设备解除映射与二次解除映射等行为。**它不是设备 IOMMU 映射实现，也不证明 Apple 的 IODMACommand / IOMapper 合同已满足**。10 项测试已提交，新的远程 CI 实际执行结果待验收。
+- 合同审计完成后 JSON 固定返回 `BLOCKED_DEVICE_DMA_MAPPING_UNVERIFIED`；`return 0` 表示“静态取证成功”而非“驱动加载允许”。输出 `dma-source-contract.json` 是文本 artifact，不包含原生 KEXT、驱动内存镜像或固件。
+
+### 工程进入下一关的必要证据
+
+1. 实际 HONOR GLO-FX6P GPU 的 IOMMU / PCIe DMA 地址域和 Windows 可只读获得的相关硬件事实；不能以 Linux/macOS 文档替代实测。
+2. macOS 目标具体版本与 Build，对应 KDK、IOMapper/IODMACommand 的合法使用与生命周期证据；独立于 462 个外部符号名称的 ABI 匹配。
+3. 明确 GSP 固件交互所需 host-physical 地址与 device-IOVA 是否有重映射、方向、同步和缓存要求；应核查 610.57.04 固件及接口版本。
+4. 新的真实 macOS DMA 适配实现必须有映射句柄所有权、失败路径回滚、解绑同步与 DMA 停止合同，且在 mock 故障注入验证之后仍不能直接实机使用。
+
+**当前客观结论：** B3–B10 静态链接已通过；S0 ABI 名称采集新增 CI 还未运行；P0-DMA 源码审计与 10 项合成测试已提交，专用 CI 尚待手动运行。实机 GPU/GSP 初始化、BAR1 改写、EFI/BIOS 修改和驱动安装继续 NO-GO。
