@@ -83,3 +83,25 @@ B4 修复内容是有界的：
 **严格保留的 P0 阻塞：** 正常自动模式 `placeLargeBar1` 成功改写后尚无完整 stop 回退；BAR 修改后的对象分配失败存在未恢复状态；`rm_init_rm`/事件锁分阶段失败处理不完整；`rm_init_adapter` 半初始化清理合同没有上游可核验的闭包；`autoGo`、中断回调与 `stop` 的并发释放关系未验收。**B4 即使编译/链接成功，实机仍维持 NO-GO。**
 
 下一次手动 CI 参数：`main` / `Xcode_16.4.0` / `EXTRA=-DNV_UNIX -DNV_LINUX` / `drop_flags` 留空； `run_rebuild=true`、`run_b2_probe=true`、`run_b4_probe=true`。本次运行按既有策略始终返回 B2 `BLOCKED`；按 `b2-native-probe.json` 的 `b4_source_patch` 和 `b4_native_link_candidate` 判读真实结果，不以上层红色状态代表 B4 链接失败。二进制不上传、不签名、不安装、不加载。
+
+
+## 2026-10-16 G1-B4 CI 实测结果（已冻结，下一阶段不重复相同测试）
+
+- 实际运行：[GitHub Actions #38836458007](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38836458007)，提交 `14b585231be2ac4411e88a425281fa1dcb5e36f7`，Xcode 16.4、macOS SDK 15.5。
+- B1：RM 对象 1055/1055、modeset 对象 230/230，独立 validator 通过。
+- B3 基线：带两份 FSP 修补对象的 NVRM 完整链接成功（Apple clang++ RC=0）；修补后的 `kern_fsp.c.o`、`timer_ostimer.c.o` 在链接映射中各选中一次，原件均未选中。
+- B4：固定源码的 `b4_nvrm_manual_go_msi_preflight.patch` 通过 SHA256 校验（`deed09545b1a3a54096ab36a7f4809a0b891fea5eef8d5ca1615bbd2bb9b5e44`），`git apply --check` 和 `git apply` 均 RC=0；修改后的 `NVRM.cpp` 原生编译 RC=0，38 条 warning，未出现编译错误。
+- B4：Apple 原生 NVRM 链接 RC=0，x86_64 `MH_KEXT_BUNDLE`，大小 16,501,256 B，SHA256 `d1dfc28888fd75983a02654a6f43dd8114025f9f5e5f0f9257e76f487d64b05a`；链接映射中 B4 `NVRM.cpp` 对象选中 1 次，未修补原始对象 0 次；FSP 两个修补对象仍各选中 1 次。剩余 462 个未定义外部引用仅为静态数量，不代表 macOS 内核一定可以满足。
+- GitHub Actions 总结果 `failure` 源于测试脚本保守返回 `BLOCKED_WP1_OR_NVRM_LINK_PROVENANCE`（exit 2），**不是 B4 原生编译或链接失败**。
+- 未生成可发布的 kext 安装包，没有签名、安装、加载或访问 RTX 2050 硬件。
+
+### 下一项功能阻塞：B5 PCI/BAR 与半初始化安全清理（尚未实现）
+
+不应再重复已验证的 B3/B4 原生链接。应以固定 NullMoth 源码真实实现以下狭窄 P0 修复，再进行一次新的原生编译/链接：
+
+1. **BAR1 改写事务的异常回滚。** `NVRM::placeLargeBar1()` 在 GPU BAR1/BAR3、Resizable BAR 和 Root Port 窗口写入后，构建 `OSArray/IODeviceMemory` 失败时可能直接返回 false。应保存修改前硬件状态，识别部分修改，按反向依赖恢复 BAR、桥窗和命令寄存器，并逐项读回核验；不可仅恢复一部分状态就报告成功。
+2. **PCI command 所有权与中断资源。** `NVRM::go(2)` 已在 B4 将 MSI 查询/资源准备放在 Memory/Bus Master 使能之前。但正常 stop 及错误路径尚不能证明恢复原始 PCI command；不能假定强行关闭 DMA 在部分 GSP 初始化失败后总是安全。
+3. **半初始化 RM/GSP 的清理合同。** 要先核对被固定的 NVIDIA RM 的内部生命周期和 `rm_init_adapter()` 失败语义，明确何时可安全调用 `rm_shutdown_adapter()`，避免虚构回退逻辑；需要以 `fAdapterInitFailed` 区分故障终止、手动重试和重入场景。
+4. **并发 stop 及自动线程。** 检查 `autoGo`、boot-hold timer、中断回调、用户客户端与 `NVRM::stop()` 的生命周期；在拥有证据前不允许以“能链接”替代安全性验收。
+
+**硬件状态仍为 NO-GO：** 当前 HONOR 内屏挂载 Intel 46A6，macOS 桌面严重卡顿；两块 GPU 的 Metal 加速均未实证，RTX 2050 的 GSP 启动、命令执行和像素读回均未验证。正式实机加载需要独立的备份、回退和授权条件。
