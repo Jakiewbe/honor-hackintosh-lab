@@ -57,6 +57,30 @@ jobs:
           shasum -a 256 scripts/g1/dma_sdk_probe.cpp > "$out/source.sha256"
           shasum -a 256 "$out/dma-sdk-probe.o" > "$out/object.sha256"
           echo "DARWIN_DMA_SDK_NATIVE_OBJECT_PASS_RUNTIME_NO_GO" | tee -a "$out/result.txt"
+          # New typed Segment64 -> NVIDIA per-page translation API compile.
+          # Object is discarded on runner; upload only text evidence.
+          set +e
+          xcrun clang++ -arch x86_64 -fapple-kext -mkernel -nostdinc \
+            -I "$khdr" -DKERNEL -DKERNEL_PRIVATE -DDRIVER_PRIVATE -DAPPLE -DNeXT \
+            -std=c++17 -fno-rtti -fno-exceptions -fno-builtin -fno-common \
+            -Wall -Wextra -Werror -Wno-unused-parameter -Wno-inconsistent-missing-override -O2 \
+            -c scripts/g1/dma_iokit_segments_probe.cpp -o "$out/dma-segments-probe.o" \
+            > "$out/segments-compile.log" 2>&1
+          rc=$?
+          set -e
+          cat "$out/segments-compile.log"
+          echo "G1_DMA_SEGMENTS_CLANG_RC=$rc" | tee "$out/segments-result.txt"
+          if [[ "$rc" -ne 0 ]]; then
+            echo "BLOCKED_DARWIN_IOVM_SEGMENT_SDK_COMPILE" | tee -a "$out/segments-result.txt"
+            exit "$rc"
+          fi
+          file "$out/dma-segments-probe.o" | tee -a "$out/segments-result.txt"
+          file "$out/dma-segments-probe.o" | grep -q 'Mach-O 64-bit object x86_64' || exit 2
+          xcrun nm -u "$out/dma-segments-probe.o" > "$out/segments-undefined-symbols.txt"
+          shasum -a 256 scripts/g1/dma_iokit_segments_probe.cpp > "$out/segments-source.sha256"
+          shasum -a 256 scripts/g1/dma_page_array.hpp > "$out/segments-header.sha256"
+          shasum -a 256 "$out/dma-segments-probe.o" > "$out/segments-object.sha256"
+          echo "G1_DARWIN_IOVM_SEGMENTS_OBJECT_PASS_RUNTIME_NO_GO" | tee -a "$out/segments-result.txt"
 
       - name: Upload text diagnostics only
         if: always()
@@ -70,5 +94,11 @@ jobs:
             ${{ runner.temp }}/g1-dma-sdk/undefined-symbols.txt
             ${{ runner.temp }}/g1-dma-sdk/source.sha256
             ${{ runner.temp }}/g1-dma-sdk/object.sha256
+            ${{ runner.temp }}/g1-dma-sdk/segments-compile.log
+            ${{ runner.temp }}/g1-dma-sdk/segments-result.txt
+            ${{ runner.temp }}/g1-dma-sdk/segments-undefined-symbols.txt
+            ${{ runner.temp }}/g1-dma-sdk/segments-source.sha256
+            ${{ runner.temp }}/g1-dma-sdk/segments-header.sha256
+            ${{ runner.temp }}/g1-dma-sdk/segments-object.sha256
           if-no-files-found: warn
           retention-days: 14
