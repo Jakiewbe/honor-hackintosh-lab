@@ -25,8 +25,11 @@ jobs:
           python3 -m unittest discover -s scripts/g1 -p test_dma_transaction.py -v
           python3 -m unittest discover -s scripts/g1 -p test_dma_rm_path.py -v
           python3 -m unittest discover -s scripts/g1 -p test_dmar_evidence.py -v
-          g++ -std=c++17 -O2 -Wall -Wextra -Werror -pedantic             scripts/g1/test_dma_page_array.cpp -o "$RUNNER_TEMP/g1-dma-page-array-test"
-          "$RUNNER_TEMP/g1-dma-page-array-test"
+          g++ -std=c++17 -O2 -Wall -Wextra -Werror -pedantic \
+            scripts/g1/test_dma_page_array.cpp -o "$RUNNER_TEMP/g1-dma-page-array-test"
+          "$RUNNER_TEMP/g1-dma-page-array-test" | tee dma-page-array-test.log
+          sha256sum scripts/g1/dma_page_array.hpp scripts/g1/test_dma_page_array.cpp \
+            > dma-page-array-source.sha256
 
       - name: Download both pinned upstream source trees
         shell: bash
@@ -71,5 +74,7 @@ jobs:
             dma-source-contract.json
             dma-rm-path.json
             dmar-topology.json
+            dma-page-array-test.log
+            dma-page-array-source.sha256
           if-no-files-found: warn
           retention-days: 14
