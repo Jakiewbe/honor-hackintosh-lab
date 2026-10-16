@@ -678,6 +678,27 @@ def native_nvrm_link_candidate(nv, scratch, logs, report, nvrm_override=None, re
     if record["macho_cputype"] != 0x01000007 or result.filetype != 11:
         record["status"] = "LINKED_WRONG_MACHO_FORMAT"
         return
+    # B10 was linked, but the target kernel/KDK exports are NOT known.
+    # Preserve every real Mach-O import name before ephemeral cleanup.
+    if variant == "b10":
+        try:
+            from abi_contract import collect, write_json
+            manifest = collect(linked, expected_count=462)
+            out_json = logs / "b10-abi-import-manifest.json"
+            write_json(out_json, manifest)
+            record["abi_import_evidence"] = {
+                "status": "IMPORT_NAMES_CAPTURED_TARGET_ABI_UNVERIFIED",
+                "manifest_file": out_json.name,
+                "manifest_sha256": hash_bytes(out_json.read_bytes()),
+                "import_count": manifest["import_count"],
+                "runtime_abi_status": manifest["runtime_abi_status"],
+            }
+        except Exception as exc:
+            record["abi_import_evidence"] = {
+                "status": "BLOCKED_IMPORT_EXTRACTION",
+                "error": str(exc),
+                "runtime_abi_status": "BLOCKED_RUNTIME_ABI_UNVERIFIED",
+            }
     record["status"] = "FSP_PATCHED_NVRM_NATIVE_LINK_COMPLETE_NOT_LOADABLE_EVIDENCE"
 
 
