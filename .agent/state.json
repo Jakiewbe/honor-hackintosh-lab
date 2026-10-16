@@ -3,20 +3,20 @@
   "kit_version": "1.2.0",
   "project_id": "f6a08808-ada4-48fe-b2ad-82c0c827154b",
   "name": "HONOR Hackintosh Lab",
-  "revision": 38,
-  "task_revision": 18,
-  "current_task_revision": 18,
+  "revision": 43,
+  "task_revision": 22,
+  "current_task_revision": 22,
   "goal_version": 3,
   "goal_approved": true,
-  "updated_at": "2026-10-14T10:50:00+00:00",
+  "updated_at": "2026-10-16T18:30:12Z",
   "snapshot_keep": 20,
   "log_max_bytes": 65536,
   "hashes": {
     "GOAL.md": "4c6323099a407ffc95ef2c3c39d7944a7a2f01dd70974fb50ee37ce201e8baee",
-    "CURRENT.md": "6a601e4c6f98b0a92eecb29f2d1680837f2d24ef0b627a76ef4f9a4eecaae896",
+    "CURRENT.md": "cbe2e51a709a773f93caa2c7bf547b98eedf2c33f9484086c18435d5ffca45a8",
     "DECISIONS.md": "cecd177075f22265f3bc732dd285c31da89925d1631efb0eb044bc08f45f4eec",
     "LESSONS.md": "bc132e21024d06589d7643874c14814b2b026eccc1478f1bba288c3b421cfc4a",
-    "tasks.json": "fa582846798f638f5b44ec9f0503e63bb9d815a046d870850cff595383f93993"
+    "tasks.json": "6112f145f94d39b73ba1e21d088bf482c1f2bd8c2ca697d0cc3dad5bcf699632"
   },
   "history": [
     {
@@ -406,6 +406,44 @@
       "action": "state:update",
       "reason": "CURRENT的Git检查改为已推送，供Codex接手",
       "timestamp": "2026-10-14T10:50:00+00:00"
+    },
+    {
+      "revision": 39,
+      "action": "task:update",
+      "reason": "H1 blocker纠正：已进入macOS桌面，保留独立复启/回滚验收缺口",
+      "timestamp": "2026-10-16T18:30:12Z"
+    },
+    {
+      "revision": 40,
+      "action": "task:add",
+      "reason": "H2 外设离线调查成为唯一当前活跃任务",
+      "timestamp": "2026-10-16T18:30:12Z"
+    },
+    {
+      "revision": 41,
+      "action": "task:add",
+      "reason": "H3 Intel显示提供者/持续刷新列为主线未完成任务",
+      "timestamp": "2026-10-16T18:30:12Z"
+    },
+    {
+      "revision": 42,
+      "action": "task:add",
+      "reason": "H4 图形加速冻结，旧DMA构建仅供研究证据",
+      "timestamp": "2026-10-16T18:30:12Z"
+    },
+    {
+      "action": "document-version",
+      "file": "CURRENT.md",
+      "previous_sha256": "6a601e4c6f98b0a92eecb29f2d1680837f2d24ef0b627a76ef4f9a4eecaae896",
+      "content": "# 当前断点\n\n## 当前阶段\nH1 外接SSD引导与安装：U盘实机引导已做5轮，全部卡在 EXITBS:START；用户 10-14 18:2x 决定先停，记录结论。\n\n## 当前任务\nH1 blocked：i5-12500H 在 OpenCore 下过不了 boot.efi→内核交接（零内核输出、Caps Lock 无反应）。\nR14C0 blocked（L1源码闭包，现归入H3）；R14C0PRE、A1401 done。\n\n## 已完成工作\nD-17：用户批准GOAL扩展为整机分阶段适配H1-H4；外接SSD实机，内置NVMe/Windows永不改。\nU盘（KIOXIA，磁盘1）：原数据已备份校验；GPT+FAT32 OCINSTALL；macOS 15 恢复镜像（内核24.4.0）。\nSecure Boot 已由用户关闭。OpenCore 阶段全部成功：恢复项加载、29个kext注入、CPU补丁、内置NVMe隐藏属性。\n已排除（逐项日志确认生效仍卡死）：ForceExitBootServices、删DMAR、SetupVirtualMap=false、cpus=8；HideAuxiliary 已撤销、Timeout 改 0。\nMADT 只读核对：性能核在前（APIC 0/1/8/9/16/17/24/25），能效核 32–46 偶数；“能效核被当主核”假设不成立。\n候选EFI：D:\\Hactk\\efi-candidates\\GLO-FX6P-1401-20261013（H1-A…H1-E）；U盘当前 config.plist=H1-E，备份 config-A/B/C/D。\n\n## 当前阻塞\nDortania bugtracker 336：12500H 需 BIOS 关超线程或关能效核才能过 EXITBS。可见菜单没有这些项；3.09 固件里有（CpuSetup+0x05 超线程，默认开）。无已知 Sequoia 纯软件解法（Q-18）。\n\n## 下一步动作（均需用户重新决定，未批准）\n1. 关掉1401额外的3条“force HT enabled”内核补丁（_cpu_thread_alloc），U盘单变量试验。\n2. 核心数/包 128→16 的用户内核补丁（需先能读取内核验证落点；本机无DMG工具）。\n3. 隐藏超线程的只读研究已完成（见 H1 文档附录）。改 CpuSetup 仍未批准，写错可能无法开机。\n用户返回时先确认是否继续 H1；Windows 正常，引导文件只在U盘。\n\n## 状态修订\n以state.json/tasks.json为准，写入前status；H1细节见docs/H1_外接SSD引导安装方案.md附录与logs/RESEARCH_LOG.md。\n\n## Git 检查\n2026-10-14 用户要求推送后，origin/main 与本地 main 同步（含 BIOS 3.09 只读结论）。不建分支/工作树。\n",
+      "user_approved": false,
+      "timestamp": "2026-10-16T18:30:12Z"
+    },
+    {
+      "revision": 43,
+      "action": "state:update",
+      "reason": "D-18主线 H1–H4 恢复，更新10-15桌面事实并同步任务哈希；不包含新硬件授权",
+      "timestamp": "2026-10-16T18:30:12Z"
     }
   ]
 }

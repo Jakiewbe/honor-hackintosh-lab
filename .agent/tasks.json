@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project_id": "f6a08808-ada4-48fe-b2ad-82c0c827154b",
-  "revision": 18,
+  "revision": 22,
   "tasks": [
     {
       "task_id": "R14C0",
@@ -117,8 +117,70 @@
         "macOS安装到外接SSD并能从其独立启动，内置盘与Windows启动验证未受影响"
       ],
       "status": "blocked",
-      "blocker": "i5-12500H卡EXITBS:START（Dortania bugtracker 336）。可见BIOS无此项；3.09固件CpuSetup+0x05是超线程（默认开），改变量未批准。5轮U盘试验失败，用户暂停",
-      "updated_at": "2026-10-14T10:45:00+00:00"
+      "blocker": "2026-10-15 H1-COUNT 已越过 EXITBS、安装外接 SSD macOS 并进入桌面；旧 EXITBS 阻塞已解除。独立再次启动、Windows 正常启动复核、回退演练仍缺独立证据；未经针对性批准不可操作系统。",
+      "updated_at": "2026-10-17T02:19:00+08:00",
+      "evidence": [
+        {
+          "type": "file",
+          "criterion": 2,
+          "detail": "research/gpu-feasibility-20261015/README.md：用户已进入外接 SSD macOS 正式桌面"
+        },
+        {
+          "type": "file",
+          "criterion": 3,
+          "detail": "knowledge/12_MAINLINE_ALIGNMENT.md：首次安装成功，但独立复启、Windows 和回滚证据待补，不标记 H1 done"
+        }
+      ]
+    },
+    {
+      "task_id": "H2",
+      "title": "整机外设逐项适配与验收",
+      "milestone": "H2",
+      "plan": "approved",
+      "status": "doing",
+      "dependencies": [],
+      "description": "只读调研；据2026-10-15实测建立Wi-Fi AX201、I2C触控板、键盘、蓝牙、音频、电池、USB、亮度、睡眠矩阵，任何安装/改EFI必须另授权",
+      "acceptance_criteria": [
+        "建立每项外设成功/失败/未测矩阵及证据来源",
+        "优先 Wi-Fi/触控板，核查驱动候选风险与回退、设计下次只读检查",
+        "实机正常工作、关机恢复和 Windows 未受损有独立证据才算完成"
+      ],
+      "blocker": "仅离线研究获准；已知键盘可用、Wi-Fi和触控板不可用，其他项未完整验证。",
+      "updated_at": "2026-10-17T02:19:00+08:00"
+    },
+    {
+      "task_id": "H3",
+      "title": "Intel 46A6 内屏持续显示和提供者确认",
+      "milestone": "H3",
+      "plan": "approved",
+      "status": "blocked",
+      "dependencies": [],
+      "description": "调查Intel内屏2160x1440实际显示提供者、IOFramebuffer、刷新/背光与安全停机恢复；不以No Kext Loaded的桌面误称驱动或Metal成功",
+      "acceptance_criteria": [
+        "得到显示服务/IORegistry与WindowServer和GPU驱动来源证据",
+        "持续刷新、亮度、输入与停止/恢复实机证据完整",
+        "未经合法可回滚适配方案不得部署新显示kext"
+      ],
+      "blocker": "实机已显示桌面但两GPU No Kext Loaded，图形加速与真正Intel驱动接管未验证；没有新硬件操作授权。",
+      "updated_at": "2026-10-17T02:19:00+08:00"
+    },
+    {
+      "task_id": "H4",
+      "title": "图形硬件加速技术储备（已冻结）",
+      "milestone": "H4",
+      "plan": "approved",
+      "status": "blocked",
+      "dependencies": [
+        "H3"
+      ],
+      "description": "Intel Metal和RTX2050 GSP/NVRM/DMA/混合输出属于后置可行性研究；固定旧构建与40项DMA合成测试，停止新模型/无实机价值CI",
+      "acceptance_criteria": [
+        "目标macOS Build、隔离回滚和H2/H3真实瓶颈已经确认",
+        "设备DMA/IOMapper映射、GSP固件来源和完整stop资源回收有可验证方案",
+        "经用户分别授权后获取真正GPU命令执行、像素读回和混合内屏显示证据"
+      ],
+      "blocker": "真实RTX/GSP/Intel GPU加速均未验证；新17项C++和Segment64探针尚未运行，不能视为成功；默认暂缓研究。",
+      "updated_at": "2026-10-17T02:19:00+08:00"
     }
   ],
   "history": [
@@ -453,6 +515,94 @@
         "blocker": "i5-12500H卡EXITBS:START（Dortania bugtracker 336）。可见BIOS无此项；3.09固件CpuSetup+0x05是超线程（默认开），改变量未批准。5轮U盘试验失败，用户暂停"
       },
       "reason": "只读解析BIOS 3.09隐藏CPU项，未改变量"
+    },
+    {
+      "revision": 19,
+      "action": "update",
+      "payload": {
+        "task_id": "H1",
+        "status": "blocked",
+        "blocker": "2026-10-15 H1-COUNT 已越过 EXITBS、安装外接 SSD macOS 并进入桌面；旧 EXITBS 阻塞已解除。独立再次启动、Windows 正常启动复核、回退演练仍缺独立证据；未经针对性批准不可操作系统。",
+        "evidence": [
+          {
+            "type": "file",
+            "criterion": 2,
+            "detail": "research/gpu-feasibility-20261015/README.md：用户已进入外接 SSD macOS 正式桌面"
+          },
+          {
+            "type": "file",
+            "criterion": 3,
+            "detail": "knowledge/12_MAINLINE_ALIGNMENT.md：首次安装成功，但独立复启、Windows 和回滚证据待补，不标记 H1 done"
+          }
+        ]
+      },
+      "reason": "重核10-15成功桌面，废止10-14 EXITBS 旧阻塞（回滚尚未全验收）",
+      "timestamp": "2026-10-17T02:19:00+08:00"
+    },
+    {
+      "revision": 20,
+      "action": "add",
+      "payload": {
+        "task_id": "H2",
+        "title": "整机外设逐项适配与验收",
+        "description": "只读调研；据2026-10-15实测建立Wi-Fi AX201、I2C触控板、键盘、蓝牙、音频、电池、USB、亮度、睡眠矩阵，任何安装/改EFI必须另授权",
+        "milestone": "H2",
+        "plan": "approved",
+        "status": "doing",
+        "dependencies": [],
+        "acceptance_criteria": [
+          "建立每项外设成功/失败/未测矩阵及证据来源",
+          "优先 Wi-Fi/触控板，核查驱动候选风险与回退、设计下次只读检查",
+          "实机正常工作、关机恢复和 Windows 未受损有独立证据才算完成"
+        ],
+        "blocker": "仅离线研究获准；已知键盘可用、Wi-Fi和触控板不可用，其他项未完整验证。"
+      },
+      "reason": "用户要求回归已批准 D-17 H1–H4 主线，未授予任何硬件副作用操作",
+      "timestamp": "2026-10-17T02:19:00+08:00"
+    },
+    {
+      "revision": 21,
+      "action": "add",
+      "payload": {
+        "task_id": "H3",
+        "title": "Intel 46A6 内屏持续显示和提供者确认",
+        "description": "调查Intel内屏2160x1440实际显示提供者、IOFramebuffer、刷新/背光与安全停机恢复；不以No Kext Loaded的桌面误称驱动或Metal成功",
+        "milestone": "H3",
+        "plan": "approved",
+        "status": "blocked",
+        "dependencies": [],
+        "acceptance_criteria": [
+          "得到显示服务/IORegistry与WindowServer和GPU驱动来源证据",
+          "持续刷新、亮度、输入与停止/恢复实机证据完整",
+          "未经合法可回滚适配方案不得部署新显示kext"
+        ],
+        "blocker": "实机已显示桌面但两GPU No Kext Loaded，图形加速与真正Intel驱动接管未验证；没有新硬件操作授权。"
+      },
+      "reason": "用户要求回归已批准 D-17 H1–H4 主线，未授予任何硬件副作用操作",
+      "timestamp": "2026-10-17T02:19:00+08:00"
+    },
+    {
+      "revision": 22,
+      "action": "add",
+      "payload": {
+        "task_id": "H4",
+        "title": "图形硬件加速技术储备（已冻结）",
+        "description": "Intel Metal和RTX2050 GSP/NVRM/DMA/混合输出属于后置可行性研究；固定旧构建与40项DMA合成测试，停止新模型/无实机价值CI",
+        "milestone": "H4",
+        "plan": "approved",
+        "status": "blocked",
+        "dependencies": [
+          "H3"
+        ],
+        "acceptance_criteria": [
+          "目标macOS Build、隔离回滚和H2/H3真实瓶颈已经确认",
+          "设备DMA/IOMapper映射、GSP固件来源和完整stop资源回收有可验证方案",
+          "经用户分别授权后获取真正GPU命令执行、像素读回和混合内屏显示证据"
+        ],
+        "blocker": "真实RTX/GSP/Intel GPU加速均未验证；新17项C++和Segment64探针尚未运行，不能视为成功；默认暂缓研究。"
+      },
+      "reason": "用户要求回归已批准 D-17 H1–H4 主线，未授予任何硬件副作用操作",
+      "timestamp": "2026-10-17T02:19:00+08:00"
     }
   ]
 }

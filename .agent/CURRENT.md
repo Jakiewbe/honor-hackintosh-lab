@@ -1,31 +1,26 @@
-# 当前断点
+# 当前断点（2026-10-17：H1–H4 主线复位）
 
-## 当前阶段
-H1 外接SSD引导与安装：U盘实机引导已做5轮，全部卡在 EXITBS:START；用户 10-14 18:2x 决定先停，记录结论。
+> **优先级与准入以 [主线复位门禁](../knowledge/12_MAINLINE_ALIGNMENT.md) 为准。** 此文件与任务账本同步更新，旧 EXITBS 失败不再是当前阶段。
 
-## 当前任务
-H1 blocked：i5-12500H 在 OpenCore 下过不了 boot.efi→内核交接（零内核输出、Caps Lock 无反应）。
-R14C0 blocked（L1源码闭包，现归入H3）；R14C0PRE、A1401 done。
+## 最近已确认的实机情况
 
-## 已完成工作
-D-17：用户批准GOAL扩展为整机分阶段适配H1-H4；外接SSD实机，内置NVMe/Windows永不改。
-U盘（KIOXIA，磁盘1）：原数据已备份校验；GPT+FAT32 OCINSTALL；macOS 15 恢复镜像（内核24.4.0）。
-Secure Boot 已由用户关闭。OpenCore 阶段全部成功：恢复项加载、29个kext注入、CPU补丁、内置NVMe隐藏属性。
-已排除（逐项日志确认生效仍卡死）：ForceExitBootServices、删DMAR、SetupVirtualMap=false、cpus=8；HideAuxiliary 已撤销、Timeout 改 0。
-MADT 只读核对：性能核在前（APIC 0/1/8/9/16/17/24/25），能效核 32–46 偶数；“能效核被当主核”假设不成立。
-候选EFI：D:\Hactk\efi-candidates\GLO-FX6P-1401-20261013（H1-A…H1-E）；U盘当前 config.plist=H1-E，备份 config-A/B/C/D。
+2026-10-17 之前最后一次有据可查的实测发生于 2026-10-15：通过 H1-COUNT 越过 EXITBS，在外接 SSD 完成 macOS 安装、首次设置并进入内屏 2160×1440 正式桌面。键盘可用，Wi-Fi、触控板不可用；蓝牙、音频、亮度、电池、USB、睡眠尚无完整验收。系统报告 Intel/NVIDIA 均 No Kext Loaded，桌面卡顿；显示画面不等于实际 GPU 加速。
 
-## 当前阻塞
-Dortania bugtracker 336：12500H 需 BIOS 关超线程或关能效核才能过 EXITBS。可见菜单没有这些项；3.09 固件里有（CpuSetup+0x05 超线程，默认开）。无已知 Sequoia 纯软件解法（Q-18）。
+## 现行 H1–H4 任务
 
-## 下一步动作（均需用户重新决定，未批准）
-1. 关掉1401额外的3条“force HT enabled”内核补丁（_cpu_thread_alloc），U盘单变量试验。
-2. 核心数/包 128→16 的用户内核补丁（需先能读取内核验证落点；本机无DMG工具）。
-3. 隐藏超线程的只读研究已完成（见 H1 文档附录）。改 CpuSetup 仍未批准，写错可能无法开机。
-用户返回时先确认是否继续 H1；Windows 正常，引导文件只在U盘。
+- H1：外接 SSD 安装与首次桌面成功。独立复启、Windows 完好与恢复演练没有足够证据，故任务账本仍标为 blocked（剩余验收），**不再使用 10-14 EXITBS 死点作为当前 blocker**。
+- H2：当前主线，仅做离线外设基线/诊断矩阵；优先 Wi-Fi AX201、I2C 触控板，记录其他外设已测/未测及风险/回滚。硬件动作待单独批准。
+- H3：Intel 46A6 内屏已看到桌面，真实 IOFramebuffer/WindowServer 驱动提供者、持续刷新、亮度和停止恢复未核验；目前保持 blocked，准备将来只读诊断。
+- H4：Intel Metal 与 RTX 2050 GSP/NVRM/DMA/混合显示冻结为技术研究档案。旧 B3–B10 静态链接、40/40 DMA、Darwin SDK API 编译 PASS 均非 GPU 运行证据；新增 17 项 C++/Segment64 探针 CI 尚未运行。
 
-## 状态修订
-以state.json/tasks.json为准，写入前status；H1细节见docs/H1_外接SSD引导安装方案.md附录与logs/RESEARCH_LOG.md。
+## 本阶段唯一允许的新增研究
 
-## Git 检查
-2026-10-14 用户要求推送后，origin/main 与本地 main 同步（含 BIOS 3.09 只读结论）。不建分支/工作树。
+离线整理 H1 不足证据、H2 每项外设现状和候选方案、H3 显示来源的无破坏性诊断清单；每一项必须指向 H1/H2/H3 的真实验收问题。停止新增 NVIDIA DMA Mock、驱动补丁和重复 CI，除非出现直接解决 H2/H3 的新证据或用户明确重启 H4。
+
+## 绝对安全约束
+
+主力 Windows / 内置 NVMe / 内置 ESP / BCD / BitLocker / TPM 不修改。每次重新开机、操作外接 SSD、EFI/BIOS/SIP/Secure Boot 变更及 kext 安装/加载都需用户针对该项单独授权。当前没有新授权，不得自行触发 Actions 或 GPU 实机试验。
+
+## 来源与修订
+
+最新现场：research/gpu-feasibility-20261015/README.md；正式门禁：knowledge/12_MAINLINE_ALIGNMENT.md；研发决策：knowledge/07_DECISIONS.md D-17/D-18。2026-10-14 EXITBS 五轮失败仍保存在历史材料中，不应被新代理误当作现状。
