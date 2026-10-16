@@ -24,11 +24,11 @@ class B4PatchContractTests(unittest.TestCase):
         self.assertTrue(b4_patch_has_fixed_contract(self.text))
 
     def test_second_file_header_not_mistaken_for_extra_target(self):
-        self.assertEqual(self.text.count("\\n+++ "), 1)
+        self.assertEqual(self.text.count("\n+++ "), 1)
         self.assertTrue(b4_patch_has_fixed_contract(self.text))
 
     def test_second_target_rejected(self):
-        tampered = self.text + "\\n--- a/other.cpp\\n+++ b/other.cpp\\n"
+        tampered = self.text + "\n--- a/other.cpp\n+++ b/other.cpp\n"
         self.assertFalse(b4_patch_has_fixed_contract(tampered))
 
     def test_missing_hunk_rejected(self):
@@ -37,7 +37,7 @@ class B4PatchContractTests(unittest.TestCase):
 
     def test_extra_hunk_rejected(self):
         self.assertFalse(b4_patch_has_fixed_contract(
-            self.text + "\\n@@ -1,1 +1,1 @@\\n"))
+            self.text + "\n@@ -1,1 +1,1 @@\n"))
 
     def test_wrong_target_rejected(self):
         self.assertFalse(b4_patch_has_fixed_contract(

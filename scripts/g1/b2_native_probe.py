@@ -680,7 +680,7 @@ def b4_patch_has_fixed_contract(text):
         return False
     hunks = [line for line in lines if line.startswith("@@ ")]
     if len(hunks) != 6 or any(not re.fullmatch(
-            r"@@ -\\d+(?:,\\d+)? \\+\\d+(?:,\\d+)? @@(?:.*)?", h)
+            r"@@ -\d+(?:,\d+)? \+\d+(?:,\d+)? @@(?:.*)?", h)
             for h in hunks):
         return False
     if any(line.startswith(("diff --git ", "Index: ")) for line in lines):
