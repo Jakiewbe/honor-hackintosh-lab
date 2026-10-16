@@ -43,3 +43,18 @@ Apple 官方文档：[IODMACommand](https://developer.apple.com/documentation/ke
 **最新源码事实**：固定 Apple XNU `a1e26a70f38d1d7daa7b49b258e2f8538ad81650` 的 `iokit/IOKit/IODMACommand.h` Git blob `c9e75dc4df8b6446788c154a893a7c670d063fd1`。其 `IODMACommand::withSpecification` 返回 `OSPtr<IODMACommand>`，映射选项 `kMapped` 与显式 `IOMapper*` 参数存在；`setMemoryDescriptor(const IOMemoryDescriptor*, bool autoPrepare=true)` 的默认 autoPrepare 可能阻塞，而 `prepare()` 的源码说明禁止在 WorkLoop gate/intr 上下文使用；`gen64IOVMSegments` 返回实际 IOVM 段；`prepare/complete` 必须配对，`clearMemoryDescriptor(false)` 负责显式清理。
 
 实际 Kernel SDK 的可用性由 [手动 g1-darwin-dma-sdk.yml](../../.github/workflows/g1-darwin-dma-sdk.yml) 检查，它只用 Xcode16.4/macOS15 Intel 构建 `dma_sdk_probe.cpp` 临时 x86_64 内核 `MH_OBJECT`，提交文本编译器输出、`nm -u` 和 hash，不上传对象、不链接、签名、安装或加载 kext。**2026-10-16 目前该新工作流尚未运行**。这不证明目标机运行的 macOS Build 具有同样 KDK/内核符号、不证明 provider IOMapper/设备 IOVA 正确、不证明 GSP 能用该地址，不证明 stop 已经完成 DMA 排空。
+
+## 2026-10-16：发现 RM IOVA 数据流分类冲突（更精确的 P0）
+
+**固定输入**：NVIDIA OGKM 610.57.04 `e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb` 的 `src/nvidia/arch/nvalloc/unix/src/os.c`（Git blob `b441a66fe735e834f830bae9344333c31b16c1f2`）；NullMoth `cd8e2bb04da48d2fa70cf1895879608f3588dbfb` 的 `kexts/NVRM/os-xnu2.cpp`（Git blob `c1fe41e9ff30649c6d02827aee5995f8eaa944b3`）。
+
+完整数据流：`nv_alloc_pages` 生成 `nv_xnu_alloc *a` 并设置 `*priv_data=a` → RM `osIovaMap` 将 `memdescGetMemData(pPhysMemDesc)` 复制进局部变量 `pPriv` → 传入 `nv_dma_map_alloc(...,&pPriv)` → macOS 固定版强行写 `*priv=NULL` 并返回成功 → RM 将 `NULL` 存成 `pIovaMapping->pOsData` → 如 `osIovaUnmap` 执行且非 guest/carveout/peer MMIO 等前置排除分支，它会从 `pOsData=NULL` 推断应走 `nv_dma_unmap_peer` 而非 `nv_dma_unmap_alloc`。RM 源码注释明确用 NULL 作为 peer 与 system DMA 映射的区分标志。**非空的映射句柄是控制流要求，不是可用假指针绕过的检查。**
+
+第二个隐患：`osIovaUnmap` 如果系统映射分支调用 `nv_dma_unmap_alloc` 后得到错误，只记日志，随后依然将 `pOsData` 置为 NULL；这可能丢失故障清理所需句柄，需真实所有权机制和上层错误传播修正。
+
+**已修正旧推断**：主 RM 路径对 `pPriv` 使用局部副本，原始 `nv_xnu_alloc` 保留在 `MEMORY_DESCRIPTOR` 中，`osFreePagesInternal` 通过 `memdescGetMemData` 独立回收，不能宣称已证明原始 allocation owner 遭覆盖。另有 P2P 等调用路径尚待排查，本结论仅针对已核对主路径。
+
+新源代码审计器 `dma_rm_path.py`、7 个负向断言以及独立 JSON 证据已接入原有手动 DMA workflow，**新的 CI 未运行**。预期源码来源和事实不变会输出 `BLOCKED_RM_IOVA_OWNER_AND_DMA_UNVERIFIED`，绝非硬件安全成功。与先前 23/23 合成模型 PASS、B3–B10 链接 PASS 的验收等级严格区分。
+
+后续开发必须先明确 allocation record 与 DMA map record 的双句柄所有权、`bReadOnlyDeviceMap` 与平台内存访问方向、错误时句柄保留、完整 IOVA 资源释放和 GSP quiescence；任何假造非空 `pOsData`、改成返回 `NV_OK`、强制 identity/bypass 的措施都不能作为正式适配。
+

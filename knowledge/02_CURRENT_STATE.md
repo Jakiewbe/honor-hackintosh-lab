@@ -1,5 +1,12 @@
 # 02｜当前事实、阻塞与决策（Codex 最新状态）
 
+## 2026-10-16 P0-DMA RM IOVA 映射所有权新证据（待独立 CI）
+
+固定 NVIDIA 610.57.04 的 [os.c](https://github.com/NVIDIA/open-gpu-kernel-modules/blob/e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb/src/nvidia/arch/nvalloc/unix/src/os.c)（Git blob `b441a66fe735e834f830bae9344333c31b16c1f2`）已确认：`osIovaMap` 通过局部 `pPriv=memdescGetMemData(...)` 将映射地址数组交给 `nv_dma_map_alloc`，并将返回句柄记录为 `pIovaMapping->pOsData`。NullMoth 固定 `os-xnu2.cpp` 的映射回调将该局部指针清空并返回 `NV_OK`，使系统内存映射记录在该路径中为 NULL。RM `osIovaUnmap` 按 `pOsData` 是否 NULL 选择 system DMA 或 peer DMA 的解除路径；此外它在底层 DMA unmap 失败后仍清空该映射记录。**这些是源码控制流和条件分支证据，非已执行的硬件路径。**
+
+早先关于「原始分配 `nv_xnu_alloc` 指针必然丢失」的判断不成立：主 RM 调用路径用局部副本，原始分配记录仍存在 memory descriptor，供 `osFreePagesInternal` 使用。新 [`dma_rm_path.py`](../scripts/g1/dma_rm_path.py) 及 7 项负向测试已写入手动 DMA CI，**新测试尚未运行**；若源码版本、句柄归属或分类流程不同将要求重新人工审查。原 [Darwin SDK 探针](../.github/workflows/g1-darwin-dma-sdk.yml) 同样尚未运行。实际 IOMMU/GSP/设备 DMA/目标内核 ABI 一律保持 `RUNTIME_NO_GO`。
+
+
 ## 2026-10-16 P0-DMA 最新工作：Darwin API 原生编译核验待执行
 
 [P0-DMA 23/23 合成测试](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38903242709) 已真实通过，固定源码审计返回 `BLOCKED_DEVICE_DMA_MAPPING_UNVERIFIED`。本轮新增 `scripts/g1/dma_sdk_probe.cpp` 和默认手动 `.github/workflows/g1-darwin-dma-sdk.yml`，核对 Xcode 16.4/macOS15 Intel SDK 中的 `IODMACommand` 真正 C++ API 与 x86_64 内核对象编译。**当前工作流未运行，不能标记 SDK BUILD PASS；真实 IOMMU/IOVA、GSP/DMA 和目标内核 ABI 仍 NO-GO。**

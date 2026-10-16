@@ -1,5 +1,14 @@
 # 04｜可核实证据账本：正式 CI、脚本与限制
 
+## 2026-10-16 P0-DMA RM 映射所有权与分类门禁
+
+- 已实际通过：[Actions #38903242709](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38903242709)，原有 10+13 项主机端模型/源码合同测试 PASS；不能推出真实 GPU DMA。
+- 新的源码事实：NullMoth `nv_dma_map_alloc()` 为 `*priv=NULL; return NV_OK`。固定 NVIDIA `osIovaMap()` 用 `&pPriv` 调该回调，然后 `pIovaMapping->pOsData=pPriv`；`osIovaUnmap()` 用 `pOsData==NULL` 区分 peer 路径，且错误时仍清空该字段。固定 NVIDIA `os.c` Git blob `b441a66fe735e834f830bae9344333c31b16c1f2`，固定 NullMoth `os-xnu2.cpp` blob `c1fe41e9ff30649c6d02827aee5995f8eaa944b3`。
+- [`dma_rm_path.py`](../scripts/g1/dma_rm_path.py) 与 [`test_dma_rm_path.py`](../scripts/g1/test_dma_rm_path.py) 已提交，人工触发 [G1 P0 DMA contract](../.github/workflows/g1-dma-contract.yml) 后将输出 `dma-rm-path.json`。**NOT RUN**，不能将源码意图审计视作真实 GPU 错误重现。JSON verdict 固定 `BLOCKED_RM_IOVA_OWNER_AND_DMA_UNVERIFIED`。
+- `osFreePagesInternal` 通过 `memdescGetMemData` 回收的是不同的分配句柄，不应混淆其与 `pOsData` DMA 映射句柄。后续必须保留两套独立所有权并验证不同的生命周期。
+- [Darwin Xcode 原生 SDK Probe](../.github/workflows/g1-darwin-dma-sdk.yml) 仍 **NOT RUN**；不把 Apple API 源码声明冒充原生构建或目标机兼容。
+
+
 ## 2026-10-16 P0-DMA 新的原生接口验证门禁
 
 - 实测源合同 / 模型：[Actions #38903242709](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38903242709)，10+13 Python tests PASS；静态 7 项来源断言 PASS，实际设备 DMA 未测试。

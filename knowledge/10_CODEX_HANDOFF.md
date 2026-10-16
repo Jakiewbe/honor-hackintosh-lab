@@ -1,5 +1,14 @@
 # 10｜Codex 正式交接单：现在接手做什么
 
+## 2026-10-16 P0-DMA 新交接：两项可证伪门禁
+
+(1) 手动运行 [DMA source contract](../.github/workflows/g1-dma-contract.yml) 以验收新增 `test_dma_rm_path.py` 的 7 个负向用例、真实固定源码 `dma_rm_path.py` 及 `dma-rm-path.json`，重点观察系统内存 DMA 路径被 `pOsData=NULL` 分类为 peer，以及失败时丢弃映射记录的控制流。它只能证明**源码分支可达条件**，没有 GPU 执行。
+
+(2) 运行已存在的独立 [Darwin DMA SDK compile-only](../.github/workflows/g1-darwin-dma-sdk.yml) 检验 Xcode 16.4 的真实 API 类型；该流程尚未实际运行，须手动触发，无论是否编译成功均保持硬件 NO-GO。
+
+之后再审查 `pOsData` 与 `memdescGetMemData` 两套独立资源的合法释放顺序、`bReadOnlyDeviceMap` 的传递，以及真正的 IOMMU/provider 原生接口；在此之前禁止以非空假句柄、identity 地址或成功 Stub 解锁实机加载。
+
+
 ## 2026-10-16 新交接（只读、手动）
 
 已经固定 P0-DMA 23/23 合成测试，不再重复。[手动执行 G1 Darwin DMA SDK API compile-only](../.github/workflows/g1-darwin-dma-sdk.yml)：运行 `main`，核对 `toolchain.txt`、`compile.log`、`undefined-symbols.txt` 和临时 x86_64 Mach-O `MH_OBJECT` 证据；不要下载/上传可加载驱动，不修改 HONOR 主机。若编译失败，定位 Xcode16.4 实际 Kernel.framework 头文件与固定公开 XNU 声明差异，修正最小 probe；**不能绕过 SDK 编译后伪称可用**。无论通过与否，RUNTIME_NO_GO；后续分析具体 macOS Build/KDK、IOMapper provider 归属、rm `nv_dma_map_alloc` 来源及 DMA 停止合同。
