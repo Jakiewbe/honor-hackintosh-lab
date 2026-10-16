@@ -154,3 +154,18 @@ B6 为**真正源码候选变更**，包括：
 4. B6 源码使用实验性恢复逻辑，**目前只有行级补丁匹配证据，不存在编译、链接、可加载或硬件安全结论**。即便 CI 原生链接通过，仍不能把失败回退通过或 Metal 加速通过混同。
 
 `G1 native gate` 已加入 B6 **显式手动选项**，默认 `false`；需设置 `run_rebuild=true`、`run_b2_probe=true`、`run_b4_probe=true`、`run_b5_probe=true`、`run_b6_probe=true`，其他采用经验证的 Xcode 16.4 / 原 EXTRA 参数。实际诊断字段为 `b6_source_patch` / `b6_native_link_candidate`，与 B3/B4/B5 隔离。所有产物仅临时对象和文本日志，**绝不上传、签名、安装、加载任何 kext**。最终 B2 总门禁仍因 WP1、硬件初始化及运行时资格保持 BLOCKED。
+
+
+## 2026-10-16 G1-B6 CI 验收：原生链接通过，硬件仍 NO-GO
+
+本节覆盖上文“B6 未编译”的历史阶段描述，保留其作为当时记录。新的实证为 [Actions #38841991105](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38841991105)，已读取原始产物 `b2-native-probe.json` 和 `b2-details/b6-NVRM-compile.txt`、`b2-details/nvrm-real-link.txt`。
+
+- 运行提交 `ea5c35ee02dc83f3dbb3cc99d3afb13171725d61`、Xcode 16.4、macOS SDK 15.5。
+- B1 RM 1055/1055，modeset 230/230 对象成功。
+- B4、B5、B6 补丁依次 `git apply` 成功；B6 `NVRM.cpp` 原生编译 RC 0（40 warnings），Apple kext 链接 RC 0。
+- B6 输出 Mach-O x86_64 `MH_KEXT_BUNDLE`（filetype 11），16,506,080 字节，SHA256 `acee793fad42535f0f89f1572348c1399d294086c769d43a712b37cedb560396`；462 个未定义外部引用，尚未验收目标机内核 ABI。
+- B6 修补后的 `NVRM-NVRM.cpp.b6.o` 在 ld64 object table 中选中一次，基线 `NVRM-NVRM.cpp.o` 零次；FSP 的 `kern_fsp.c.o`、`timer_ostimer.c.o` 各选中一次，原始 RM 成员零次。即 B6 候选实证来自修补源码。
+- 诊断脚本原本误将 B6 的 `source_variant` 标签显示为 B4，且把任意替换源的统计字段称为 `b4_source_object_link_map_count`；这是**元数据标签错误**，实际对象名、ld64 链接命令和选中计数正确。后续代码改为据对象后缀记录 B3/B4/B5/B6 实际变体，统一使用 `selected_override_object_link_map_count`。
+- Actions 顶层 failure 为 B2 持续阻塞运行时与未定义 WP1 的预期 RC 2；**B6 native build/link 子目标 PASS 并冻结**。不要反复重跑同一 CI 证明静态链接。
+
+**下一阶段 P0：** 只继续解决来源确定的 GSP firmware、`rm_init_adapter` 半初始化对象的合法清理合同、PCI/MSI 中断 drain 与 `autoGo/stop` 并发；之后才可能讨论分阶段受控的 25A9 实机加载。B6 的 BAR 资源恢复是**受条件限制的源码设计**，尚无硬件执行证据；当 stop 恢复被拒绝时，当前实现释放保存的 IOKit 引用并保留失败状态，不能解释成硬件已经恢复。即使编译成功也必须保持主力 HONOR EFI/BIOS/Windows/macOS 不变、硬件 NO-GO。

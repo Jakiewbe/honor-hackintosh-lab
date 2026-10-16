@@ -501,7 +501,8 @@ def native_nvrm_link_candidate(nv, scratch, logs, report, nvrm_override=None, re
         "link_flags_source": "pinned NullMoth build/accel_build.sh (NVAccel pattern, adapted to NVRM)",
     }
     report[report_key] = record
-    record["source_variant"] = ("B5_PATCHED_NVRM_CPP" if nvrm_override is not None and Path(nvrm_override).name.endswith(".b5.o") else "B4_PATCHED_NVRM_CPP" if nvrm_override else "B3_BASELINE_NVRM_CPP")
+    # Actual candidate identity is established from the selected source object
+    # below; B6 must not be mislabeled as B4.
     source_count = len(NVRM_CPP + NVRM_C)
     nr = report.get("nvrm", {})
     if nr.get("compiled_objects") != source_count or nr.get("required_objects") != source_count:
@@ -512,6 +513,10 @@ def native_nvrm_link_candidate(nv, scratch, logs, report, nvrm_override=None, re
                else "b5" if nvrm_override is not None and Path(nvrm_override).name.endswith(".b5.o")
                else "b4" if nvrm_override else "b3")
     out = scratch / ("nvrm-link-candidate-" + variant)
+    record["source_variant"] = {"b3": "B3_BASELINE_NVRM_CPP",
+                                "b4": "B4_PATCHED_NVRM_CPP",
+                                "b5": "B5_PATCHED_NVRM_CPP",
+                                "b6": "B6_PATCHED_NVRM_CPP"}[variant]
     out.mkdir(exist_ok=True)
     inputs = []
     for module, count in (("nvidia", 1055), ("nvidia-modeset", 230)):
@@ -640,7 +645,7 @@ def native_nvrm_link_candidate(nv, scratch, logs, report, nvrm_override=None, re
         import re
         objects_section = map_content.split("# Object files:\n", 1)
         if len(objects_section) != 2 or "# Sections:\n" not in objects_section[1]:
-            record["status"] = "BLOCKED_B4_LINK_MAP_PARSE"
+            record["status"] = "BLOCKED_OVERRIDE_LINK_MAP_PARSE"
             return
         object_rows = re.findall(r"^\s*\[\s*\d+\s*\]\s+(.+?)\s*$",
                                  objects_section[1].split("# Sections:\n", 1)[0], re.M)
@@ -648,10 +653,11 @@ def native_nvrm_link_candidate(nv, scratch, logs, report, nvrm_override=None, re
         hits = [row for row in object_rows if row == needle]
         baseline_hits = [row for row in object_rows
                          if row == str((scratch / "NVRM-NVRM.cpp.o").resolve())]
-        record["b4_source_object_link_map_count"] = len(hits)
+        record["selected_override_object_link_map_count"] = len(hits)
         record["baseline_source_object_link_map_count"] = len(baseline_hits)
+        record["selected_override_object_name"] = Path(nvrm_override).name
         if len(hits) != 1 or baseline_hits:
-            record["status"] = "BLOCKED_B4_SOURCE_OBJECT_NOT_EXACTLY_ONCE"
+            record["status"] = "BLOCKED_OVERRIDE_SOURCE_OBJECT_NOT_EXACTLY_ONCE"
             return
     result = MachO(linked)
     record.update({
