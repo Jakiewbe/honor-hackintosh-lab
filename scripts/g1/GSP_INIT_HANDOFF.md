@@ -352,3 +352,17 @@ Code changes: do not schedule autoGo merely by loading the kext; `-nvrmautogo` w
 4. 新的真实 macOS DMA 适配实现必须有映射句柄所有权、失败路径回滚、解绑同步与 DMA 停止合同，且在 mock 故障注入验证之后仍不能直接实机使用。
 
 **当前客观结论：** B3–B10 静态链接已通过；S0 ABI 名称采集新增 CI 还未运行；P0-DMA 源码审计与 10 项合成测试已提交，专用 CI 尚待手动运行。实机 GPU/GSP 初始化、BAR1 改写、EFI/BIOS 修改和驱动安装继续 NO-GO。
+
+
+## P0-DMA 静态源码合同首次实际 CI 验收（2026-10-16）
+
+来源：[GitHub Actions #38901244659 / Job #116973757123](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38901244659/job/116973757123)，运行提交 `29e6a1edd5786cb3d7f6c6bffa5f3cef22bc6141`，workflow_dispatch，整个 Job/workflow 均 conclusion=**success**。ubuntu-latest runner 中 10 项 Python `test_dma_contract.py` 合成源合同/所有权/故障注入测试通过（10/10；0.002 秒）。拉取固定 NullMoth commit `cd8e2bb04da48d2fa70cf1895879608f3588dbfb` 与 NVIDIA OGKM commit `e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb` 均成功。
+
+已下载并解压实际 artifact `honor-g1-p0-dma-source-contract`（artifact ID `12046176153`）；ZIP 826 字节，SHA256 `0c23ad0442d5ff99a7f0274a3a01494b5fd39f1f8c8cdb04db57721c5c034c2c`。内部唯一文件 `dma-source-contract.json`，所有七项 `facts` 均为 `true`。报告源证据：
+- NullMoth `kexts/NVRM/os-xnu2.cpp` Git blob `c1fe41e9ff30649c6d02827aee5995f8eaa944b3`，SHA256 `d392d29ce2ff2e5b9d9e3b9fd9fa2b28d29297f274af844a339f96ef6c1c6838`。
+- NVIDIA `kernel-open/nvidia/nv-dma.c` Git blob `f3541a6bf629ce9400ce60dd8a7e09786db337ea`，SHA256 `db5858344ab4570898e24c527957ba46646c0d55bd3432546087e57893fe93dc`。
+- 实际 `runtime_verdict=BLOCKED_DEVICE_DMA_MAPPING_UNVERIFIED`，`device_activation=NO_GO`；`actual_macos_dma_mapping_proven=false`，`real_device_iommu_translation_proven=false`，`device_addressability_proven=false`，`unmapping_and_rollback_proven=false`，`gsp_dma_quiescence_proven=false`。
+
+**判定：仅 P0-DMA 只读取证工具验收通过。** 绿色工作流是预期结果，并不表示 macOS DMA 已经实现、也不表示 GPU 故障已被实机复现。不能将 synthetic FakeDmaLedger 当作 IOMMU DMA 映射实现。
+
+**后续工作：** 先审查 NVIDIA `nv_dma_map_alloc` 对 `va_array` 的原地更新、`*priv` 映射所有权及 `nv_dma_unmap_alloc` 对应恢复/回收合同；与 macOS `IOMemoryDescriptor`、`IOMapper`、`IODMACommand` 的 ABI 可用性和指定机器 IOMMU 状态逐项交叉。**未经证明禁止替换为未经审查的 identity/bypass 补丁，禁止主动 PCI Bus Master、GSP 初始化和任何 KEXT 实机加载。** S0 ABI 清单仍待真实 CI 获取。
