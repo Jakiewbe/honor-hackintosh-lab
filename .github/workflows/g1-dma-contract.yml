@@ -1,0 +1,60 @@
+name: HONOR G1 P0 DMA contract (read-only)
+
+# Fast manual source-provenance audit. Does not compile or load any KEXT.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dma-source-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout contract tests
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Test DMA failure and ownership model
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s scripts/g1 -p test_dma_contract.py -v
+
+      - name: Download both pinned upstream source trees
+        shell: bash
+        env:
+          NULLMOTH_PIN: cd8e2bb04da48d2fa70cf1895879608f3588dbfb
+          NVIDIA_PIN: e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb
+        run: |
+          set -euo pipefail
+          for spec in "nm https://github.com/nullmoth/nvidia-macos-driver.git $NULLMOTH_PIN" \
+                      "nv https://github.com/NVIDIA/open-gpu-kernel-modules.git $NVIDIA_PIN"; do
+            set -- $spec
+            git init -q "$RUNNER_TEMP/$1"
+            git -C "$RUNNER_TEMP/$1" remote add origin "$2"
+            git -C "$RUNNER_TEMP/$1" fetch --no-tags --depth 1 origin "$3"
+            git -C "$RUNNER_TEMP/$1" checkout --detach -q FETCH_HEAD
+            test "$(git -C "$RUNNER_TEMP/$1" rev-parse HEAD)" = "$3"
+          done
+
+      - name: Audit real pinned DMA callbacks
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/g1/dma_contract.py \
+            --nullmoth "$RUNNER_TEMP/nm" \
+            --ogkm "$RUNNER_TEMP/nv" \
+            --out dma-source-contract.json
+          grep -q BLOCKED_DEVICE_DMA_MAPPING_UNVERIFIED dma-source-contract.json
+
+      - name: Upload JSON evidence only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: honor-g1-p0-dma-source-contract
+          path: dma-source-contract.json
+          if-no-files-found: warn
+          retention-days: 14
