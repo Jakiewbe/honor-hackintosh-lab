@@ -1,0 +1,96 @@
+--- a/kexts/NVRM/NVRM.cpp
++++ b/kexts/NVRM/NVRM.cpp
+@@ -135,3 +135,6 @@
+     // A failed rm_init_adapter may leave RM/GSP in a partial state.
+-    bool         fAdapterInitFailed = false;
++    bool         fAdapterInitFailed = false;
++    // B7: own per-GPU event lock separately from module/global RM state.
++    bool         fGpuEventLocksReady = false;
++    bool         fRmPreflightFailed = false;
+     uint32_t     fPassDone = 0;
+@@ -270,3 +273,6 @@
+ OSDefineMetaClassAndStructors(NVRM, IOService)
+-static bool gRmInitDone = false;
++static bool gRmInitDone = false;
++// The control-state event lock and GPU-specific event locks have different
++// lifetimes. rm_init_rm() success does not prove either lock was created.
++static bool gRmCtlEventLocksReady = false;
+ 
+@@ -1173,16 +1179,42 @@
+     LOG("anchor: os_mem_set runtime 0x%llx (slide = runtime - its nm link address)", (unsigned long long)(uintptr_t)&os_mem_set);
+-    if (pass >= 1 && fPassDone < 1) {
+-        if (!gRmInitDone) {
+-            LOG("rm_init_rm()");
+-            if (!rm_init_rm(NULL)) { LOG("rm_init_rm FAILED"); return kIOReturnError; }
+-            gRmInitDone = true;
+-            LOG("rm_init_rm OK");
+-            if (!rm_init_event_locks(NULL, nv_get_ctl_state())) { LOG("rm_init_event_locks(ctl) FAILED"); return kIOReturnError; }
+-            if (!rm_init_event_locks(NULL, nv))                 { LOG("rm_init_event_locks(gpu) FAILED"); return kIOReturnError; }
+-            LOG("event locks created for the control device and the GPU");
+-            rm_write_registry_string(NULL, NULL, "RmMsg", ":", 1);
+-            rm_write_registry_dword(NULL, NULL, "ResmanDebugLevel", 0);
+-            LOG("registry: RmMsg=\":\" ResmanDebugLevel=0 (verbose RM)");
+-        }
+-        {
++    // A failed RM preflight may have left global/private RM state partially
++    // initialized. Block re-entry on this NVRM object rather than retrying
++    // an incomplete event-lock or private-state construction.
++    if (fRmPreflightFailed) {
++        LOG("go blocked: previous RM preflight failed; state is not retryable");
++        return kIOReturnNotReady;
++    }
++    if (pass >= 1 && fPassDone < 1) {
++        if (!gRmInitDone) {
++            LOG("rm_init_rm()");
++            if (!rm_init_rm(NULL)) {
++                fRmPreflightFailed = true;
++                LOG("rm_init_rm FAILED; refusing further go on this device");
++                return kIOReturnError;
++            }
++            gRmInitDone = true;
++            LOG("rm_init_rm OK");
++            rm_write_registry_string(NULL, NULL, "RmMsg", ":", 1);
++            rm_write_registry_dword(NULL, NULL, "ResmanDebugLevel", 0);
++            LOG("registry: RmMsg=\":\" ResmanDebugLevel=0 (verbose RM)");
++        }
++        if (!gRmCtlEventLocksReady) {
++            if (!rm_init_event_locks(NULL, nv_get_ctl_state())) {
++                fRmPreflightFailed = true;
++                LOG("rm_init_event_locks(ctl) FAILED; GSP initialization forbidden");
++                return kIOReturnError;
++            }
++            gRmCtlEventLocksReady = true;
++            LOG("RM control event lock ready");
++        }
++        if (!fGpuEventLocksReady) {
++            if (!rm_init_event_locks(NULL, nv)) {
++                fRmPreflightFailed = true;
++                LOG("rm_init_event_locks(gpu) FAILED; GSP initialization forbidden");
++                return kIOReturnError;
++            }
++            fGpuEventLocksReady = true;
++            LOG("RM per-device GPU event lock ready");
++        }
++        {
+             NV_STATUS sup = rm_is_supported_device(NULL, nv);
+@@ -1189,5 +1221,6 @@
+             if (sup != NV_OK) {
+-                LOG("rm_is_supported_device -> 0x%x: RM will not drive device 0x%04x - stopping, card untouched",
+-                    (unsigned)sup, nv->pci_info.device_id);
+-                return kIOReturnUnsupported;
++                fRmPreflightFailed = true;
++                LOG("rm_is_supported_device -> 0x%x: RM unsupported for 0x%04x, refusing further attempts",
++                    (unsigned)sup, nv->pci_info.device_id);
++                return kIOReturnUnsupported;
+             }
+@@ -1196,3 +1229,9 @@
+         LOG("rm_init_private_state()");
+-        if (!rm_init_private_state(NULL, nv)) { LOG("rm_init_private_state FAILED"); return kIOReturnError; }
++        if (!rm_init_private_state(NULL, nv)) {
++            // This API returns a bool and provides no partial-construction
++            // cleanup contract; never assume rm_free_private_state is safe.
++            fRmPreflightFailed = true;
++            LOG("rm_init_private_state FAILED; partial RM ownership unknown, refusing retry");
++            return kIOReturnError;
++        }
+         fPrivateState = true;
