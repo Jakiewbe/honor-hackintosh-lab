@@ -31,6 +31,10 @@ on:
         description: "Optional B4 patched NVRM.cpp native compile/link (requires B1 and B2; never load)"
         type: boolean
         default: false
+      run_b5_probe:
+        description: "B5 experimental PCI BAR rollback compile/link (requires B4; no GPU loading)"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -263,10 +267,11 @@ jobs:
           PY
 
       - name: B2/B4 native compile, patched link candidate (explicit opt-in; not acceptance)
-        if: ${{ inputs.run_b2_probe || inputs.run_b4_probe }}
+        if: ${{ inputs.run_b2_probe || inputs.run_b4_probe || inputs.run_b5_probe }}
         shell: bash
         env:
-          B4_ENABLED: ${{ inputs.run_b4_probe }}
+          B4_ENABLED: ${{ inputs.run_b4_probe || inputs.run_b5_probe }}
+          B5_ENABLED: ${{ inputs.run_b5_probe }}
         run: |
           set -euo pipefail
           python3 scripts/g1/test_b3_linkmap.py
@@ -274,6 +279,9 @@ jobs:
           b4_opts=()
           if [[ "$B4_ENABLED" == "true" ]]; then
             b4_opts+=(--b4-patch scripts/g1/patches/b4_nvrm_manual_go_msi_preflight.patch)
+          fi
+          if [[ "$B5_ENABLED" == "true" ]]; then
+            b4_opts+=(--b5-patch scripts/g1/patches/b5_nvrm_bar_rollback.patch)
           fi
           python3 scripts/g1/b2_native_probe.py \
             --nullmoth "$RUNNER_TEMP/nm" \
