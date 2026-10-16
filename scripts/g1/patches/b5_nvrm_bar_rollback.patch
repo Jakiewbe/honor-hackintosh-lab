@@ -1,0 +1,141 @@
+--- a/kexts/NVRM/NVRM.cpp
++++ b/kexts/NVRM/NVRM.cpp
+@@ -107,5 +107,7 @@
+     IOBufferMemoryDescriptor *fBootScreen = nullptr; uint32_t fBootW = 0, fBootH = 0, fBootPitch = 0;
+     uint32_t     fAutoGoSettleMs = 10000;
+-    bool         fBar1Placed = false;
++    bool         fBar1Placed = false;
++    // Sticky if a failed PCI write cannot be restored and read back.
++    bool         fBar1RollbackFailed = false;
+     volatile UInt32 fBootHold = 0;
+     virtual IOReturn callPlatformFunction(const OSSymbol *fn, bool wait,
+@@ -313,6 +315,10 @@
+     const bool bar1Placed = manualGo ? false : placeLargeBar1();
+     if (manualGo) setProperty("nvrm-bar1-placement", "skipped (-nvrmnogo)");
+-    fBar1Placed = bar1Placed;
+-    readBARs();
++    fBar1Placed = bar1Placed;
++    if (fBar1RollbackFailed) {
++        LOG("BAR1 restore mismatch: refusing registration and GPU initialization");
++        return false;
++    }
++    readBARs();
+     {
+         const char *nm = rm_get_device_name(nv->pci_info.device_id, nv->subsystem_vendor, nv->subsystem_id);
+@@ -889,6 +895,70 @@
+         bar1Size >> 20, bar1Base, bar3Size >> 20, bar3Base, bar1Base, winEnd, rp24, rp28, rp2c);
+ 
+-    UInt16 cmd = fPCI->configRead16(0x04);
+-    fPCI->configWrite16(0x04, cmd & ~0x2);
++    // Pre-stage all aperture descriptors before the first PCI write.
++    const unsigned memCount = mem ? mem->getCount() : 0;
++    OSArray *arr = OSArray::withCapacity(memCount + 3);
++    IODeviceMemory *m1 = IODeviceMemory::withRange(bar1Base, bar1Size);
++    IODeviceMemory *m3 = IODeviceMemory::withRange(bar3Base, bar3Size);
++    IODeviceMemory *m0 = bar0 ? NULL : IODeviceMemory::withRange(lo10 & ~0xFULL, bar0Size);
++    auto releaseStage = [&]() {
++        OSSafeReleaseNULL(arr); OSSafeReleaseNULL(m1);
++        OSSafeReleaseNULL(m3); OSSafeReleaseNULL(m0);
++    };
++    if (!arr || !m1 || !m3 || (!bar0 && !m0)) {
++        LOG("bar1: aperture allocation failed BEFORE PCI changes");
++        releaseStage();
++        return false;
++    }
++    bool staged = arr->setObject(bar0 ? bar0 : m0) && arr->setObject(m1) && arr->setObject(m3);
++    for (unsigned i = 0; i < memCount && staged; i++) {
++        IOMemoryDescriptor *m = OSDynamicCast(IOMemoryDescriptor, mem->getObject(i));
++        if (!m || m == bar0) continue;
++        UInt64 pa = m->getPhysicalAddress();
++        if (pa == bar3Old || pa == (old18 & ~0xFULL)) continue;
++        staged = arr->setObject(m);
++    }
++    if (!staged) {
++        LOG("bar1: aperture list population failed BEFORE PCI changes");
++        releaseStage();
++        return false;
++    }
++
++    const UInt16 cmd = fPCI->configRead16(0x04);
++    // Restore BAR/ReBAR and bridge configuration with decode and DMA disabled.
++    // A failed readback blocks this device from proceeding into RM/GSP.
++    auto restoreBarConfiguration = [&]() -> bool {
++        fPCI->configWrite16(0x04, cmd & ~(UInt16)0x6);
++        rp->configWrite32(0x24, 0x0000fff0);
++        if (newSize) fPCI->extendedConfigWrite32(rbCtlOff, rbCtlOld);
++        fPCI->configWrite32(0x14, lo14);
++        fPCI->configWrite32(0x18, old18);
++        fPCI->configWrite32(0x1c, lo1c);
++        fPCI->configWrite32(0x20, hi20);
++        rp->configWrite32(0x28, rp28);
++        rp->configWrite32(0x2c, rp2c);
++        rp->configWrite32(0x24, rp24);
++        bool restored = fPCI->configRead32(0x14) == lo14 &&
++                        fPCI->configRead32(0x18) == old18 &&
++                        fPCI->configRead32(0x1c) == lo1c &&
++                        fPCI->configRead32(0x20) == hi20 &&
++                        rp->configRead32(0x24) == rp24 &&
++                        rp->configRead32(0x28) == rp28 &&
++                        rp->configRead32(0x2c) == rp2c &&
++                        (!newSize || fPCI->extendedConfigRead32(rbCtlOff) == rbCtlOld);
++        if (restored) {
++            fPCI->configWrite16(0x04, cmd);
++            restored = fPCI->configRead16(0x04) == cmd;
++        }
++        if (!restored) {
++            fBar1RollbackFailed = true;
++            setProperty("nvrm-bar1-rollback", "FAILED: initialization blocked");
++            LOG("bar1: rollback readback FAILED; memory/bus mastering held disabled");
++        } else {
++            setProperty("nvrm-bar1-rollback", "original BAR and root-port state verified");
++            LOG("bar1: original BAR/ReBAR/root-port and PCI command verified");
++        }
++        return restored;
++    };
++    fPCI->configWrite16(0x04, cmd & ~0x2);
+     if (newSize) {   // PCIe 7.8.6: change the size only while memory decode is off
+         fPCI->extendedConfigWrite32(rbCtlOff, (rbCtlOld & ~0x3f00u) | ((UInt32)(__builtin_ctzll(newSize) - 20) << 8));
+@@ -896,6 +966,7 @@
+         if (((got >> 8) & 0x3f) != (UInt32)(__builtin_ctzll(newSize) - 20)) {
+             LOG("bar1: resize to %llu MB did not take (ctl 0x%x) — restoring", newSize >> 20, got);
+-            fPCI->extendedConfigWrite32(rbCtlOff, rbCtlOld); fPCI->configWrite32(0x14, lo14); fPCI->configWrite32(0x18, old18);
+-            fPCI->configWrite16(0x04, cmd); return false;
++            restoreBarConfiguration();
++            releaseStage();
++            return false;
+         }
+         LOG("bar1: resized BAR1 to %llu MB", newSize >> 20);
+@@ -914,28 +985,12 @@
+         LOG("bar1: read-back MISMATCH (bar 0x%08x %08x, rp 0x%08x %08x %08x) — restoring what IOPCIFamily left",
+             fPCI->configRead32(0x14), fPCI->configRead32(0x18), rp->configRead32(0x24), rp->configRead32(0x28), rp->configRead32(0x2c));
+-        rp->configWrite32(0x24, 0x0000fff0); rp->configWrite32(0x28, rp28); rp->configWrite32(0x2c, rp2c); rp->configWrite32(0x24, rp24);
+-        if (newSize) fPCI->extendedConfigWrite32(rbCtlOff, rbCtlOld);
+-        fPCI->configWrite32(0x14, lo14); fPCI->configWrite32(0x18, old18); fPCI->configWrite32(0x1c, lo1c); fPCI->configWrite32(0x20, hi20);
+-        fPCI->configWrite16(0x04, cmd);
+-        return false;
++        restoreBarConfiguration();
++        releaseStage();
++        return false;
+     }
+     fPCI->configWrite16(0x04, cmd | 0x2);
+ 
+-    const unsigned memCount = mem ? mem->getCount() : 0;
+-    OSArray *arr = OSArray::withCapacity(memCount + 3);
+-    IODeviceMemory *m1 = IODeviceMemory::withRange(bar1Base, bar1Size), *m3 = IODeviceMemory::withRange(bar3Base, bar3Size);
+-    IODeviceMemory *m0 = bar0 ? NULL : IODeviceMemory::withRange(lo10 & ~0xFULL, bar0Size);
+-    if (!arr || !m1 || !m3 || (!bar0 && !m0)) { LOG("bar1: placed in hardware but the aperture list could not be built (no memory)"); OSSafeReleaseNULL(arr); OSSafeReleaseNULL(m1); OSSafeReleaseNULL(m3); OSSafeReleaseNULL(m0); return false; }
+-    arr->setObject(bar0 ? bar0 : m0); arr->setObject(m1); arr->setObject(m3);
+-    OSSafeReleaseNULL(m0);
+-    for (unsigned i = 0; i < memCount; i++) {
+-        IOMemoryDescriptor *m = OSDynamicCast(IOMemoryDescriptor, mem->getObject(i));
+-        if (!m || m == bar0) continue;
+-        UInt64 pa = m->getPhysicalAddress();
+-        if (pa == bar3Old || pa == (old18 & ~0xFULL)) { LOG("bar1: dropping stale aperture 0x%llx+0x%llx", pa, (UInt64)m->getLength()); continue; }
+-        arr->setObject(m);
+-    }
+-    fPCI->setDeviceMemory(arr);
+-    m1->release(); m3->release(); arr->release();
++    fPCI->setDeviceMemory(arr);
++    releaseStage();
+     fPCI->setProperty("nvrm-bar1-placed", bar1Base, 64);
+     LOG("bar1: PLACED — BAR1 %llu MB live at 0x%llx", bar1Size >> 20, bar1Base);
