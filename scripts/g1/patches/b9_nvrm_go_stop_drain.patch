@@ -1,0 +1,114 @@
+--- a/kexts/NVRM/NVRM.cpp
++++ b/kexts/NVRM/NVRM.cpp
+@@ -138,6 +138,9 @@
+     bool         fGpuEventLocksReady = false;
+     bool         fRmPreflightFailed = false;
+-    // B8: monotonic stop admission gate; this does NOT drain an active go().
+-    volatile UInt32 fStopping = 0;
++    // B9: fStopping/fGoInFlight are protected by gNvClientsLock for
++    // admission and stop-wait. A ref is retained by every accepted go().
++    volatile UInt32 fStopping = 0;
++    bool fGoInFlight = false;
++    bool fGoStopTimedOut = false;
+     uint32_t     fPassDone = 0;
+     IOWorkLoop  *fWorkLoop = NULL;
+@@ -1187,15 +1190,32 @@
+ {
+     static bool gGoBusy;
+-    // Lock interlocks admission of *new* go() calls with stop(). It does
+-    // not establish an in-flight adapter teardown/drain contract.
+-    bool stopping = false, busy = false;
+-    IOLockLock(gNvClientsLock);
+-    stopping = fStopping != 0;
+-    busy = gGoBusy;
+-    if (!stopping && !busy) gGoBusy = true;
+-    IOLockUnlock(gNvClientsLock);
+-    if (stopping) { LOG("go(%u) refused: provider is stopping", pass); return kIOReturnNotReady; }
+-    if (busy) { LOG("go(%u) refused: another go is running", pass); return kIOReturnBusy; }
+-    struct Unbusy { ~Unbusy() { IOLockLock(gNvClientsLock); gGoBusy = false; IOLockUnlock(gNvClientsLock); } } unbusy;
++    // B9: set go ownership under the SAME lock as the stop admission gate.
++    // The retained reference keeps this IOService alive until go() unwinds.
++    bool stopping = false, busy = false;
++    if (!gNvClientsLock) {
++        LOG("go(%u) refused: client lock unavailable", pass);
++        return kIOReturnNotReady;
++    }
++    IOLockLock(gNvClientsLock);
++    stopping = fStopping != 0;
++    busy = gGoBusy || fGoInFlight;
++    if (!stopping && !busy) {
++        gGoBusy = true;
++        fGoInFlight = true;
++        retain();
++    }
++    IOLockUnlock(gNvClientsLock);
++    if (stopping) { LOG("go(%u) refused: provider is stopping", pass); return kIOReturnNotReady; }
++    if (busy) { LOG("go(%u) refused: another go is running", pass); return kIOReturnBusy; }
++    struct Unbusy {
++        NVRM *owner;
++        ~Unbusy() {
++            IOLockLock(gNvClientsLock);
++            owner->fGoInFlight = false;
++            gGoBusy = false;
++            IOLockUnlock(gNvClientsLock);
++            owner->release();
++        }
++    } unbusy = { this };
+     kprintf("NVRM-xnu: go(%u) begins (fPassDone %d)\n", pass, fPassDone);
+     static const char *const kBuildMark = "NVRM build 2026-09-14 19:30 (boot daemon + fb sampler)"; (void)kBuildMark;
+@@ -1365,16 +1385,43 @@
+ void NVRM::stop(IOService *provider)
+ {
+-    // B8: refuse new go() requests while stop processes this device.
+-    // This is admission control, not proof that an already running go()
+-    // has finished or that GSP/DMA/interrupts are quiescent.
+-    if (gNvClientsLock) {
+-        IOLockLock(gNvClientsLock);
+-        fStopping = 1;
+-        IOLockUnlock(gNvClientsLock);
+-    } else {
+-        fStopping = 1;
+-    }
+-    releaseBootHold("device stopping");
+-    if (fAdapter) { rm_shutdown_adapter(NULL, &fNv); fAdapter = false; }
++    // B9: close go() admission under the same lock and *then* wait, with
++    // the lock released, for a previously accepted go() to finish.
++    // Bounded wait avoids indefinitely blocking IOKit termination if GSP
++    // firmware hangs. On timeout never free objects still used by go().
++    bool active = false;
++    if (gNvClientsLock) {
++        IOLockLock(gNvClientsLock);
++        fStopping = 1;
++        active = fGoInFlight;
++        IOLockUnlock(gNvClientsLock);
++    } else {
++        fStopping = 1;
++        active = true; // lock ownership unverified; prohibit teardown
++    }
++    releaseBootHold("device stopping");
++    for (unsigned tick = 0; active && tick < 200; tick++) {
++        IOSleep(10);
++        if (!gNvClientsLock) break;
++        IOLockLock(gNvClientsLock);
++        active = fGoInFlight;
++        IOLockUnlock(gNvClientsLock);
++    }
++    if (active) {
++        fGoStopTimedOut = true;
++        setProperty("nvrm-stop-quiescence", "BLOCKED: go in flight / missing lock");
++        LOG("stop: go() did not drain in 2 s; RM/PCI/MSI teardown skipped");
++        // IOKit may still detach this provider; retained go() ownership
++        // prevents premature object destruction, NOT hardware safety.
++        super::stop(provider);
++        return;
++    }
++    if (fAdapterInitFailed) {
++        setProperty("nvrm-stop-quiescence", "BLOCKED: partial RM/GSP adapter state");
++        LOG("stop: rm_init_adapter failed earlier; unsafe half-init teardown skipped");
++        super::stop(provider);
++        return;
++    }
++    setProperty("nvrm-stop-quiescence", "go() admission closed; no go in flight");
++    if (fAdapter) { rm_shutdown_adapter(NULL, &fNv); fAdapter = false; }
+     if (fIntSrc) { fIntSrc->disable(); if (fWorkLoop) fWorkLoop->removeEventSource(fIntSrc); fIntSrc->release(); fIntSrc = NULL; }
+     if (fWorkLoop) { fWorkLoop->release(); fWorkLoop = NULL; }
