@@ -51,6 +51,10 @@ on:
         description: "B9 go-stop bounded drain native compile/link (requires B8; never load)"
         type: boolean
         default: false
+      run_b10_probe:
+        description: "B10 async-worker suppression and ISR drain native compile/link (requires B9; never load)"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -283,15 +287,16 @@ jobs:
           PY
 
       - name: B2/B4 native compile, patched link candidate (explicit opt-in; not acceptance)
-        if: ${{ inputs.run_b2_probe || inputs.run_b4_probe || inputs.run_b5_probe || inputs.run_b6_probe || inputs.run_b7_probe || inputs.run_b8_probe || inputs.run_b9_probe }}
+        if: ${{ inputs.run_b2_probe || inputs.run_b4_probe || inputs.run_b5_probe || inputs.run_b6_probe || inputs.run_b7_probe || inputs.run_b8_probe || inputs.run_b9_probe || inputs.run_b10_probe }}
         shell: bash
         env:
-          B4_ENABLED: ${{ inputs.run_b4_probe || inputs.run_b5_probe || inputs.run_b6_probe || inputs.run_b7_probe || inputs.run_b8_probe || inputs.run_b9_probe }}
-          B5_ENABLED: ${{ inputs.run_b5_probe || inputs.run_b6_probe || inputs.run_b7_probe || inputs.run_b8_probe || inputs.run_b9_probe }}
-          B6_ENABLED: ${{ inputs.run_b6_probe || inputs.run_b7_probe || inputs.run_b8_probe || inputs.run_b9_probe }}
-          B7_ENABLED: ${{ inputs.run_b7_probe || inputs.run_b8_probe || inputs.run_b9_probe }}
-          B8_ENABLED: ${{ inputs.run_b8_probe || inputs.run_b9_probe }}
-          B9_ENABLED: ${{ inputs.run_b9_probe }}
+          B4_ENABLED: ${{ inputs.run_b4_probe || inputs.run_b5_probe || inputs.run_b6_probe || inputs.run_b7_probe || inputs.run_b8_probe || inputs.run_b9_probe || inputs.run_b10_probe }}
+          B5_ENABLED: ${{ inputs.run_b5_probe || inputs.run_b6_probe || inputs.run_b7_probe || inputs.run_b8_probe || inputs.run_b9_probe || inputs.run_b10_probe }}
+          B6_ENABLED: ${{ inputs.run_b6_probe || inputs.run_b7_probe || inputs.run_b8_probe || inputs.run_b9_probe || inputs.run_b10_probe }}
+          B7_ENABLED: ${{ inputs.run_b7_probe || inputs.run_b8_probe || inputs.run_b9_probe || inputs.run_b10_probe }}
+          B8_ENABLED: ${{ inputs.run_b8_probe || inputs.run_b9_probe || inputs.run_b10_probe }}
+          B9_ENABLED: ${{ inputs.run_b9_probe || inputs.run_b10_probe }}
+          B10_ENABLED: ${{ inputs.run_b10_probe }}
         run: |
           set -euo pipefail
           python3 scripts/g1/test_b3_linkmap.py
@@ -314,6 +319,9 @@ jobs:
           fi
           if [[ "$B9_ENABLED" == "true" ]]; then
             b4_opts+=(--b9-patch scripts/g1/patches/b9_nvrm_go_stop_drain.patch)
+          fi
+          if [[ "$B10_ENABLED" == "true" ]]; then
+            b4_opts+=(--b10-patch scripts/g1/patches/b10_nvrm_async_isr_gate.patch)
           fi
           python3 scripts/g1/b2_native_probe.py \
             --nullmoth "$RUNNER_TEMP/nm" \

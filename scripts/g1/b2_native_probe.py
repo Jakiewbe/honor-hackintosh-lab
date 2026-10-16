@@ -509,7 +509,8 @@ def native_nvrm_link_candidate(nv, scratch, logs, report, nvrm_override=None, re
         record["status"] = "BLOCKED_NVRM_OBJECTS_INCOMPLETE"
         return
     # B3/B4/B5/B6 must each retain a distinct native Mach-O and link map.
-    variant = ("b9" if nvrm_override is not None and Path(nvrm_override).name.endswith(".b9.o")
+    variant = ("b10" if nvrm_override is not None and Path(nvrm_override).name.endswith(".b10.o")
+               else "b9" if nvrm_override is not None and Path(nvrm_override).name.endswith(".b9.o")
                else "b8" if nvrm_override is not None and Path(nvrm_override).name.endswith(".b8.o")
                else "b7" if nvrm_override is not None and Path(nvrm_override).name.endswith(".b7.o")
                else "b6" if nvrm_override is not None and Path(nvrm_override).name.endswith(".b6.o")
@@ -522,7 +523,8 @@ def native_nvrm_link_candidate(nv, scratch, logs, report, nvrm_override=None, re
                                 "b6": "B6_PATCHED_NVRM_CPP",
                                 "b7": "B7_PATCHED_NVRM_CPP",
                                 "b8": "B8_PATCHED_NVRM_CPP",
-                                "b9": "B9_PATCHED_NVRM_CPP"}[variant]
+                                "b9": "B9_PATCHED_NVRM_CPP",
+                                "b10": "B10_PATCHED_NVRM_CPP"}[variant]
     out.mkdir(exist_ok=True)
     inputs = []
     for module, count in (("nvidia", 1055), ("nvidia-modeset", 230)):
@@ -1272,6 +1274,107 @@ def b9_compile_and_link(nv, scratch, logs, report, b9_arg):
         rec["error"] = str(exc)
 
 
+def b10_compile_and_link(nv, scratch, logs, report, b10_arg):
+    """Strictly isolated native link of the B10 go-stop admission candidate.
+
+    This does not establish runtime MSI, DMA, GSP, asynchronous autoGo or
+    user-client quiescence; it must never enable installation or loading.
+    """
+    rec = {"status": "NOT_RUN", "label": "B10_ASYNC_ISR_LIFECYCLE_NOT_LOADABLE",
+           "binary_uploaded": False, "hardware_activation": "NEVER"}
+    report["b10_source_patch"] = rec
+    try:
+        patch = Path(b10_arg).resolve()
+        if not patch.is_file() or patch.name != "b10_nvrm_async_isr_gate.patch":
+            raise ValueError("B10 expected source patch not found")
+        blob = subprocess.check_output(
+            ["git", "hash-object", str(patch)], text=True).strip()
+        if blob != "649426166a727eb0bb95b8e11b70d58f66eb333c":
+            raise ValueError("B10 reviewed patch differs from pinned Git object")
+        rec["patch_git_blob"] = blob
+        rec["patch_sha256"] = hash_bytes(patch.read_bytes())
+
+        parent = report.get("b9_source_patch", {})
+        if parent.get("status") != "B9_NATIVE_LINK_CANDIDATE_PASS_NOT_LOADABLE":
+            raise ValueError("B9 native prerequisite has not passed")
+        old = scratch / "b9-staged-source/kexts/NVRM/NVRM.cpp"
+        if not old.is_file() or hash_bytes(old.read_bytes()) != parent.get("patched_source_sha256"):
+            raise ValueError("B9 compiler input digest mismatch")
+        rec["parent_b9_source_sha256"] = hash_bytes(old.read_bytes())
+        stage = scratch / "b10-staged-source"
+        new = stage / "kexts/NVRM/NVRM.cpp"
+        new.parent.mkdir(parents=True, exist_ok=True)
+        new.write_bytes(old.read_bytes())
+        if command(["git", "apply", "--check", str(patch)], stage,
+                   logs / "b10-patch-check.txt") != 0:
+            raise ValueError("B10 patch cannot apply to B9 source")
+        if command(["git", "apply", str(patch)], stage,
+                   logs / "b10-patch-apply.txt") != 0:
+            raise ValueError("B10 patch failed to apply")
+        body = new.read_text()
+        if new.read_bytes() == old.read_bytes():
+            raise ValueError("B10 patch did not change the candidate")
+        rec["patched_source_sha256"] = hash_bytes(new.read_bytes())
+        # Validate B10 source gates in their intended method boundaries:
+        # no asynchronous GPU start/timer even when -nvrmautogo was passed,
+        # and ISR counter covers top plus bottom half.
+        start = body[body.index("bool NVRM::start(IOService *provider)"):
+                     body.index("extern \"C\" int sysctlbyname(", body.index("bool NVRM::start(IOService *provider)"))]
+        irq = body[body.index("bool NVRM::interruptFilter("):
+                   body.index("void NVRM::stop(IOService *provider)")]
+        stop = body[body.index("void NVRM::stop(IOService *provider)"):
+                    body.index("#undef super", body.index("void NVRM::stop(IOService *provider)"))]
+        if not (
+            'nvrm-autogo", "DISABLED (B10: no async worker lifetime proof)' in start
+            and "kernel_thread_start(&NVRM::autoGo" not in start
+            and "thread_call_enter_delayed(" not in start
+            and "volatile SInt32 fIsrHandlerActive = 0;" in body
+            and "if (fStopping) return false;" in irq
+            and "OSIncrementAtomic(&fIsrHandlerActive);" in irq
+            and irq.count("OSDecrementAtomic(&fIsrHandlerActive);") == 2
+            and stop.count("OSAddAtomic(0, &fIsrHandlerActive)") >= 2
+            and stop.index('if (isrActive) {') <
+                stop.index('rm_shutdown_adapter(NULL, &fNv);')
+            and 'BLOCKED: RM ISR still active' in stop
+            and 'if (fGoStopTimedOut)' not in stop
+        ):
+            raise ValueError("B10 asynchronous-thread or ISR lifetime source contract missing")
+
+        line = (logs / "b9-NVRM-compile.txt").read_text(
+            errors="replace").splitlines()[0]
+        if not line.startswith("ARGV="):
+            raise ValueError("B9 verified compiler command missing")
+        argv = json.loads(line[5:])
+        if not isinstance(argv, list) or argv.count("-c") != 1 or argv.count("-o") != 1:
+            raise ValueError("ambiguous B9 compiler flags")
+        if Path(argv[argv.index("-c") + 1]).resolve() != old.resolve():
+            raise ValueError("B9 compiler source provenance drift")
+        target = scratch / "NVRM-NVRM.cpp.b10.o"
+        argv[argv.index("-c") + 1] = str(new)
+        argv[argv.index("-o") + 1] = str(target)
+        rec["compile_rc"] = command(argv, scratch, logs / "b10-NVRM-compile.txt")
+        if rec["compile_rc"] != 0:
+            rec["status"] = "B10_NATIVE_COMPILE_FAILED"
+            rec["first_error"] = first_compiler_error(logs / "b10-NVRM-compile.txt")
+            return
+        macho = MachO(target)
+        if macho.filetype != 1 or int.from_bytes(macho.data[4:8], "little") != 0x01000007:
+            raise ValueError("B10 object not native x86_64 MH_OBJECT")
+        rec["compiled_object_sha256"] = hash_bytes(target.read_bytes())
+        native_nvrm_link_candidate(
+            nv, scratch, logs, report, nvrm_override=target,
+            report_key="b10_native_link_candidate")
+        rec["link_status"] = report["b10_native_link_candidate"]["status"]
+        rec["status"] = (
+            "B10_NATIVE_LINK_CANDIDATE_PASS_NOT_LOADABLE"
+            if rec["link_status"] ==
+                "FSP_PATCHED_NVRM_NATIVE_LINK_COMPLETE_NOT_LOADABLE_EVIDENCE"
+            else "B10_NATIVE_LINK_CANDIDATE_BLOCKED")
+    except Exception as exc:
+        rec["status"] = "B10_BLOCKED_PREREQUISITE"
+        rec["error"] = str(exc)
+
+
 def main():
     p = argparse.ArgumentParser()
     for name in ("nullmoth", "ogkm", "b1-logs", "report"):
@@ -1282,6 +1385,7 @@ def main():
     p.add_argument("--b7-patch", help="Optional B7 RM event-lock preflight patch (requires B6)")
     p.add_argument("--b8-patch", help="Optional B8 global RM/stop-admission patch (requires B7)")
     p.add_argument("--b9-patch", help="Optional B9 go-stop ownership patch (requires B8)")
+    p.add_argument("--b10-patch", help="Optional B10 async-worker suppression and ISR gate (requires B9)")
     a = p.parse_args()
     nm, nv, logroot = Path(a.nullmoth).resolve(), Path(a.ogkm).resolve(), Path(a.b1_logs).resolve()
     report = {"label": "G1_B2_DISCOVERY_ONLY", "status": "BLOCKED",
@@ -1346,6 +1450,14 @@ def main():
                         "status": "BLOCKED_REQUIRES_SUCCESSFUL_B8_LINK"}
                 else:
                     b9_compile_and_link(nv, Path(t), details, report, a.b9_patch)
+            if a.b10_patch:
+                if (not a.b9_patch or
+                    report.get("b9_source_patch", {}).get("status") !=
+                    "B9_NATIVE_LINK_CANDIDATE_PASS_NOT_LOADABLE"):
+                    report["b10_source_patch"] = {
+                        "status": "BLOCKED_REQUIRES_SUCCESSFUL_B9_LINK"}
+                else:
+                    b10_compile_and_link(nv, Path(t), details, report, a.b10_patch)
             report["status"] = "BLOCKED_WP1_OR_NVRM_LINK_PROVENANCE"
         except Exception as exc:
             report["status"] = "BLOCKED_PREREQUISITE"
