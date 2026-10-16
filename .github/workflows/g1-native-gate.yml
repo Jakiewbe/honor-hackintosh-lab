@@ -270,6 +270,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 scripts/g1/test_b3_linkmap.py
+          python3 scripts/g1/test_b4_patch_contract.py
           b4_opts=()
           if [[ "$B4_ENABLED" == "true" ]]; then
             b4_opts+=(--b4-patch scripts/g1/patches/b4_nvrm_manual_go_msi_preflight.patch)

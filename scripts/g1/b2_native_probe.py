@@ -663,6 +663,31 @@ def native_nvrm_link_candidate(nv, scratch, logs, report, nvrm_override=None, re
     record["status"] = "FSP_PATCHED_NVRM_NATIVE_LINK_COMPLETE_NOT_LOADABLE_EVIDENCE"
 
 
+def b4_patch_has_fixed_contract(text):
+    """Validate the two file headers separately from six unified-diff hunks.
+
+    The original implementation counted the mandatory second +++ header as
+    an unexpected extra file, preventing *every* B4 compilation attempt.
+    """
+    import re
+    lines = text.splitlines()
+    if lines[:2] != ["--- a/kexts/NVRM/NVRM.cpp",
+                     "+++ b/kexts/NVRM/NVRM.cpp"]:
+        return False
+    if sum(line.startswith("--- ") for line in lines) != 1:
+        return False
+    if sum(line.startswith("+++ ") for line in lines) != 1:
+        return False
+    hunks = [line for line in lines if line.startswith("@@ ")]
+    if len(hunks) != 6 or any(not re.fullmatch(
+            r"@@ -\\d+(?:,\\d+)? \\+\\d+(?:,\\d+)? @@(?:.*)?", h)
+            for h in hunks):
+        return False
+    if any(line.startswith(("diff --git ", "Index: ")) for line in lines):
+        return False
+    return True
+
+
 def b4_compile_and_link(nm, nv, scratch, logs, report, patch_arg):
     """Opt-in B4 patched NVRM.cpp: pristine-source apply, compile, real link.
 
@@ -681,11 +706,9 @@ def b4_compile_and_link(nm, nv, scratch, logs, report, patch_arg):
         raw = patch.read_bytes()
         rec["patch_sha256"] = hash_bytes(raw)
         text = raw.decode("utf-8")
-        if not (text.startswith("--- a/kexts/NVRM/NVRM.cpp\n"
-                                "+++ b/kexts/NVRM/NVRM.cpp\n")
-                and text.count("\n--- ") == 0
-                and text.count("\n+++ ") == 0
-                and text.count("\n@@ ") == 6):
+        if rec["patch_sha256"] != "deed09545b1a3a54096ab36a7f4809a0b891fea5eef8d5ca1615bbd2bb9b5e44":
+            raise ValueError("B4 source patch SHA256 differs from validated candidate")
+        if not b4_patch_has_fixed_contract(text):
             raise ValueError("B4 patch changed its single-target six-hunk contract")
         upstream = nm / rec["source"]
         original = upstream.read_bytes()
