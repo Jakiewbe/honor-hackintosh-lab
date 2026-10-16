@@ -1,5 +1,10 @@
 # 02｜当前事实、阻塞与决策（Codex 最新状态）
 
+## 2026-10-17 唯一主线当前状态：H1 已进入桌面，H2/H3 优先，H4 冻结
+
+权威验收与防偏移规则：[12_MAINLINE_ALIGNMENT.md](12_MAINLINE_ALIGNMENT.md)。**不应从本文后面的 DMA 增量标题判断项目最优先任务**。实机 2026-10-15 首次进入外接 SSD macOS 正式桌面，Intel 内屏 2160×1440；键盘可用，Wi-Fi/触控板不可用；声卡、亮度、蓝牙、睡眠等未完整验收；两 GPU No Kext Loaded、桌面卡顿。H1 安装/首桌面目标已达成，但独立再次启动与 Windows/回退复核缺证据。H2 设备可用性矩阵为当前工作包；H3 显示源与持续刷新需证据；H4 NVIDIA DMA/GSP 当前冻结为研究储备。历史 [DMA 40/40](../scripts/g1/P0_DMA_20261017_EVIDENCE.md) PASS 和旧 Xcode API 编译 PASS 不等于加速；新增 17 项 C++ / Segment64 SDK 验证还未运行，暂不触发。仅允许离线整理和经授权的只读实机取证；无新系统修改授权。
+
+
 ## 2026-10-17 P0-DMA 新增 IOVM64→RM page-array C++ 合同（未运行新 CI）
 
 源码提交 410ad56：新增两轮地址段转换器、17 项 CPU-only C++ 用例和 Apple IODMACommand Segment64 的 compile-only 桥接源。提交 71e6b5d 扩展 macOS 15 Intel/Xcode16.4 探针，只保存编译器/nm/散列文本。两个新增测试均未运行，不能承袭 40/40 旧测试或旧 native SDK 的 PASS。完整合同在 scripts/g1/IOVM_PAGE_ARRAY_CONTRACT.md。真实 mapper 资源、nv_xnu_alloc::md prepare 兼容、RM pOsData ownership、GSP DMA/quiescence 与 KDK ABI 全部 NO-GO。

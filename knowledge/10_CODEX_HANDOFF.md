@@ -1,5 +1,11 @@
 # 10｜Codex 正式交接单：现在接手做什么
 
+## 2026-10-17 最新 Codex 唯一优先交接：H1→H2→H3；H4 冻结
+
+**先读 [主线复位与防偏移门禁](12_MAINLINE_ALIGNMENT.md)**。本文件下面的 NVIDIA DMA 技术增量留作 H4 历史，**不是当前下一步任务**。最后实机：外接 SSD 安装完成并进入 2160×1440 桌面；键盘可用、Wi-Fi 和触控板不可用，两块 GPU 为 No Kext Loaded，桌面卡顿；音频/亮度/蓝牙/睡眠尚缺实测。H1 仍需独立复启/Windows 与回退验证，H2 基础外设矩阵优先，H3 Intel 显示提供者调查随后或并行。
+
+**本轮及下一轮允许的最小代码/文档工作**：离线整理 H1 不足证据、H2 每项外围驱动候选及回退风险、H3 的 IORegistry/WindowServer/Framebuffer 下次只读采集清单；不得自行重启电脑、修改 EFI/SIP/BIOS、安装/加载 kext 或触发 Actions。只有这些交付对真实使用状态有增量后，再决定是否要恢复 H4。**不继续编写新的 NVIDIA DMA/Page-array/ABI 模型**。
+
 ## 2026-10-17 P0-DMA 新增 IOVM64→RM page-array C++ 合同（未运行新 CI）
 
 源码提交 410ad56：新增两轮地址段转换器、17 项 CPU-only C++ 用例和 Apple IODMACommand Segment64 的 compile-only 桥接源。提交 71e6b5d 扩展 macOS 15 Intel/Xcode16.4 探针，只保存编译器/nm/散列文本。两个新增测试均未运行，不能承袭 40/40 旧测试或旧 native SDK 的 PASS。完整合同在 scripts/g1/IOVM_PAGE_ARRAY_CONTRACT.md。真实 mapper 资源、nv_xnu_alloc::md prepare 兼容、RM pOsData ownership、GSP DMA/quiescence 与 KDK ABI 全部 NO-GO。

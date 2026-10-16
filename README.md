@@ -1,5 +1,7 @@
 # HONOR Hackintosh Lab — Intel + NVIDIA macOS Compatibility Research
 
+**2026-10-17 主线复位：以 [H1–H4 主线状态与防偏移门禁](knowledge/12_MAINLINE_ALIGNMENT.md) 为当前唯一任务优先级。** 10-15 已在外接 SSD 进入 macOS 桌面；Wi-Fi/触控板不可用，Intel/NVIDIA 均 No Kext Loaded，图形加速未证明。H4 NVIDIA DMA/GSP 现阶段归档冻结，下一阶段是 H1 回滚证据、H2 外设矩阵和 H3 显示提供者的只读调查。以下旧阶段的「最新」仅指其发布时点，不能盖过本入口。
+
 ## 2026-10-15 最新增量：已进入桌面，显卡加速仍未验证
 
 用户通过 H1-COUNT 越过 EXITBS，完成外接 SSD 安装并进入正式桌面；内屏 2160×1440 可显示。两块 GPU 的系统报告均为 No Kext Loaded，桌面卡顿，尚无硬件加速验收。用户已关机，本阶段只做显卡驱动可行性调研；没有安装或加载新驱动、修改 BIOS 变量或触发 CI。

@@ -1,5 +1,7 @@
 # Codex 项目级规则 — HONOR Hackintosh Lab
 
+> **主线防偏移门禁（2026-10-17，用户要求恢复 H1–H4 优先级）**：新会话**先读 [knowledge/12_MAINLINE_ALIGNMENT.md](knowledge/12_MAINLINE_ALIGNMENT.md)**，再读 `.agent/GOAL.md` 和 `knowledge/02_CURRENT_STATE.md`。10-15 实机已进入外接 SSD macOS 桌面，早期 EXITBS:START 的 `.agent/CURRENT.md`/任务残留不得当成今天的现场事实。**H1 收尾证据 → H2 Wi-Fi/触控板及外设 → H3 Intel 46A6 显示机制 → H4 加速**。G1/NVIDIA DMA 研发是当前冻结的 H4 技术储备，暂不新增 GPU/DMA 原型、mock 或 CI；除非新证据显示它直接解决 H2/H3，或用户明确重启 H4。每项行动先回答里程碑、最小验收、证据增量、风险/回退，不能回答即 DEFER。无论本条如何，下面所有逐项授权/Windows 安全限制仍然有效。
+
 > 本文件供 Codex / 自动化开发代理在**每次工作开始前**读取。本项目采用“证据先行、失败即停止、原 Windows 不动”的实验规范。下级目录新增 AGENTS.md 不能削弱本文件的安全限制。
 
 ## 项目定位和唯一主目标

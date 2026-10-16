@@ -34,3 +34,8 @@
 
 ## 2026-10-12 R1.4-C0.1 电源失败不能依赖返回值名称
 按真实源码，ADLP选择xelpd表，power void链吞掉poll失败而缓存置真；XNU PM负返回值也被当作确认完成。独立接口必须有真实后置条件/故障状态/所有权及有限时退出合同；不能只返回Linux errno，也不能无限等待。四项合同BLOCKED，必要语义未闭合前不写kext。见[证据](../research/independent-i915/c01/build-and-providers.md)。
+
+
+## D-18｜2026-10-17 回归 H1–H4 主线（用户要求防止目标偏移）
+
+**决定（对 D-17 的优先级重申，不修改其安全权限）：** 以外接 SSD macOS 可用、可复现、可回退为唯一工程目标；已通过 H1-COUNT 进入 macOS 桌面的 2026-10-15 实机事实覆盖 10-14 EXITBS 失败旧断点。接下来 H1 证据收尾、H2 外设（尤其 Wi-Fi/触控板）、H3 Intel 内屏真实显示链优先；H4 NVIDIA NVRM/GSP/DMA/Metal 暂时冻结，不再用增加原生对象/Mock/CI 数量替代实际整机进度。旧 H4 代码/40 项 CI/DMAR 与新 17 项未运行验证均保留原样，只在新证据或用户明确选择 H4 时重新启动。每项任务必须对应主线验收、独立证据、风险和回退，否则 DEFER。**本决定不授权新的重启、写盘、变更 BIOS/EFI 或加载 KEXT。** 详见 [12_MAINLINE_ALIGNMENT.md](12_MAINLINE_ALIGNMENT.md)。

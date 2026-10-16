@@ -1,5 +1,10 @@
 # 04｜可核实证据账本：正式 CI、脚本与限制
 
+## 2026-10-17 证据范围与主线修订
+
+主线依据 2026-10-15 [实机阶段报告](../research/gpu-feasibility-20261015/README.md)：H1 已进入外接 SSD macOS 桌面，Wi-Fi/触控板未工作，显卡驱动/加速未验证。H4 的 [P0 DMA 40/40 CI](../scripts/g1/P0_DMA_20261017_EVIDENCE.md)、原生 B10 链接和旧 SDK 原生 API 编译均为不同级别的技术证据；不能作为 H2/H3 验收。2026-10-17 新 IOVM64 C++/SDK 验证仅存在代码，**未实际运行**。主线优先级见 [12](12_MAINLINE_ALIGNMENT.md)，本轮仅调整工作流治理与知识库，不声称新增硬件或 GPU 测试。
+
+
 ## 2026-10-17 P0-DMA 新增 IOVM64→RM page-array C++ 合同（未运行新 CI）
 
 源码提交 410ad56：新增两轮地址段转换器、17 项 CPU-only C++ 用例和 Apple IODMACommand Segment64 的 compile-only 桥接源。提交 71e6b5d 扩展 macOS 15 Intel/Xcode16.4 探针，只保存编译器/nm/散列文本。两个新增测试均未运行，不能承袭 40/40 旧测试或旧 native SDK 的 PASS。完整合同在 scripts/g1/IOVM_PAGE_ARRAY_CONTRACT.md。真实 mapper 资源、nv_xnu_alloc::md prepare 兼容、RM pOsData ownership、GSP DMA/quiescence 与 KDK ABI 全部 NO-GO。
