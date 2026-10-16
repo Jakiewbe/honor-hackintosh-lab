@@ -366,3 +366,14 @@ Code changes: do not schedule autoGo merely by loading the kext; `-nvrmautogo` w
 **判定：仅 P0-DMA 只读取证工具验收通过。** 绿色工作流是预期结果，并不表示 macOS DMA 已经实现、也不表示 GPU 故障已被实机复现。不能将 synthetic FakeDmaLedger 当作 IOMMU DMA 映射实现。
 
 **后续工作：** 先审查 NVIDIA `nv_dma_map_alloc` 对 `va_array` 的原地更新、`*priv` 映射所有权及 `nv_dma_unmap_alloc` 对应恢复/回收合同；与 macOS `IOMemoryDescriptor`、`IOMapper`、`IODMACommand` 的 ABI 可用性和指定机器 IOMMU 状态逐项交叉。**未经证明禁止替换为未经审查的 identity/bypass 补丁，禁止主动 PCI Bus Master、GSP 初始化和任何 KEXT 实机加载。** S0 ABI 清单仍待真实 CI 获取。
+
+
+## 2026-10-16 P0-DMA 事务式合成测试实际 CI 验收（冻结）
+
+- [Actions #38903242709 / Job #116980394309](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38903242709/job/116980394309)，运行提交 `71e737140469660d75a2355f581974779fcae0b2`；workflow_dispatch、Job/workflow `conclusion=success`，非模拟的云端 CI 运行证据。
+- 原先 `test_dma_contract.py` 源码合同/映射账本合成测试 **10/10 通过**；新增 `test_dma_transaction.py` 事务式映射模型 **13/13 通过**。日志分别记载 `Ran 10 tests in 0.002s` 与 `Ran 13 tests in 0.001s`，均无失败；包括错误页边界、地址范围、跨设备释放、映射部分失败撤销、撤销失败保留 receipt/quarantine、成功时才发布 IOVA 等。
+- 固定 NullMoth/NVIDIA 源码获取/核验与真实固定回调源码审计全部成功，日志输出 `P0_DMA_VERDICT=BLOCKED_DEVICE_DMA_MAPPING_UNVERIFIED`。
+- Artifact `honor-g1-p0-dma-source-contract` ID `12046917797`，ZIP 826 字节，SHA256 `fe134243a0eb7e6f6eac668caae82bc1350acfa96155ad849e3d83eb978bc7cc`。内部只有 `dma-source-contract.json`，7 项固定源码事实均为 true。固定源码 SHA256：NullMoth `d392d29ce2ff2e5b9d9e3b9fd9fa2b28d29297f274af844a339f96ef6c1c6838`；NVIDIA Linux `db5858344ab4570898e24c527957ba46646c0d55bd3432546087e57893fe93dc`。
+- **证据类型严格区分：** 23 项测试成功的原始记录来自 *Job 日志*，而不是上述 JSON 文件；JSON 只证明固定源码分析及五项 runtime/hardware 证明位均为 false。`test_dma_transaction.py` 不是 macOS DMA API 测试，未使用实际 IOMMU 或 RTX/GSP。
+- 判定：P0-DMA **合成模型与固定源码审计工具验收 PASS**；**设备地址映射、IOMapper/IODMACommand 集成、实际 GPU/GSP DMA、逆映射/回滚及 macOS 目标 ABI 仍为 NO-GO**。B3–B10 的历史 Mach-O 原生链接成功也不改变这一状态。
+- 下一步：复核事务模型的真实 RM 参数 / priv 句柄 ABI 与多线程资源所有权差异；只在隔离环境中验证 IODMACommand mock/provider 依赖及错误注入。没有版本确切的 macOS Build/KDK 和 GSP/PCIe DMA 证据前，不实施实机加载。
