@@ -1,0 +1,119 @@
+--- a/kexts/NVRM/NVRM.cpp
++++ b/kexts/NVRM/NVRM.cpp
+@@ -142,4 +142,7 @@
+     volatile UInt32 fStopping = 0;
+-    bool fGoInFlight = false;
+-    bool fGoStopTimedOut = false;
++    bool fGoInFlight = false;
++    bool fGoStopTimedOut = false;
++    // B10: synchronous RM ISR bottom-half callback ownership only.
++    // Filter admission and queued callbacks still require real IOKit proof.
++    volatile SInt32 fIsrHandlerActive = 0;
+     uint32_t     fPassDone = 0;
+@@ -374,40 +377,8 @@
+     // Client lock was allocated before any experimental BAR changes.
+-    {
+-        thread_t th = THREAD_NULL;
+-        fAutoGoSettleMs = bar1Placed ? 500 : 100000;
+-        { uint32_t ms = 0; if (PE_parse_boot_argn("nvrmsettle", &ms, sizeof(ms))) fAutoGoSettleMs = ms; }
+-        // B8: explicit opt-in for the hazardous asynchronous GPU startup.
+-        // Manual go remains available, but loading alone must not start GSP.
+-        char autogoArg[8] = { 0 };
+-        const bool explicitAutoGo = !manualGo &&
+-            PE_parse_boot_argn("-nvrmautogo", autogoArg, sizeof(autogoArg));
+-        if (!explicitAutoGo) {
+-            setProperty("nvrm-autogo", "off (B8 default: explicit opt-in required)");
+-            LOG("auto-go OFF by default: use manual nvrmctl go after safety authorization");
+-        } else {
+-            fBootHold = 1; adjustBusy(1); setProperty("nvrm-boot-hold", "holding");
+-            if (thread_call_t cap = thread_call_allocate(&NVRM::bootHoldCap, this)) {
+-                // The BAR fallback settles for 100 s. A 40 s timer from start() expired before
+-                // autoGo could run, so its display-arm CAS always failed on that path.
+-                // Keep the 40 s bring-up budget, measured after the configured settling delay.
+-                uint64_t dl, settle;
+-                clock_interval_to_deadline(40000, kMillisecondScale, &dl);
+-                clock_interval_to_absolutetime_interval(fAutoGoSettleMs, kMillisecondScale, &settle);
+-                dl += settle;
+-                retain(); thread_call_enter_delayed(cap, dl);
+-            } else { releaseBootHold("no cap timer — not holding"); }
+-            retain();
+-            if (kernel_thread_start(&NVRM::autoGo, this, &th) == KERN_SUCCESS) {
+-                thread_deallocate(th);
+-                setProperty("nvrm-autogo-settle-ms", fAutoGoSettleMs, 32);
+-                setProperty("nvrm-autogo", "scheduled");
+-                LOG("auto-go: go(2) in %u ms on its own thread (BAR1 %s); registry held busy until the display is armed (cap settle + 40 s)",
+-                    fAutoGoSettleMs, bar1Placed ? "placed outside the console" : "not placed");
+-            } else {
+-                release();
+-                setProperty("nvrm-autogo", "kernel_thread_start FAILED"); LOG("auto-go: kernel_thread_start FAILED — idle until asked");
+-                releaseBootHold("no auto-go thread");
+-            }
+-        }
+-    }
++    // B10: asynchronous autoGo/headWatch/bootHoldCap have no proven
++    // cancellation and thread-call ownership closure. Completely disable
++    // their scheduling; even -nvrmautogo cannot bypass this safety gate.
++    // Explicit manual go() remains a mutating, UNAUTHORIZED live experiment.
++    setProperty("nvrm-autogo", "DISABLED (B10: no async worker lifetime proof)");
++    LOG("B10: autoGo and boot-hold timer scheduling disabled until worker drain is demonstrated");
+     registerService();
+@@ -1368,5 +1339,8 @@
+ 
+-bool NVRM::interruptFilter(IOFilterInterruptEventSource *src)
+-{
+-    unsigned long n = ++gNvIsrCount;
++bool NVRM::interruptFilter(IOFilterInterruptEventSource *src)
++{
++    // Filter context may not sleep or acquire gNvClientsLock. This is a
++    // best-effort closing gate; filter/ISR teardown still needs IOKit proof.
++    if (fStopping) return false;
++    unsigned long n = ++gNvIsrCount;
+     if (n <= 3 || (n % 1000) == 0) kprintf("NVRM-xnu: MSI #%lu -> work loop (handled so far %lu)\n", n, gNvIsrHandled);
+@@ -1374,11 +1348,15 @@
+ }
+-void NVRM::interruptOccurred(IOInterruptEventSource *src, int count)
+-{
+-    NvU32 needBottomHalf = 0;
+-    nv_xnu_isr_thread = current_thread();
+-    NvBool handled = rm_isr(NULL, &fNv, &needBottomHalf);
+-    nv_xnu_isr_thread = NULL;
+-    if (handled) gNvIsrHandled++;
+-    if (handled && needBottomHalf) rm_isr_bh(NULL, &fNv);
+-}
++void NVRM::interruptOccurred(IOInterruptEventSource *src, int count)
++{
++    // Account for the entire top+bottom half while it accesses fNv.
++    OSIncrementAtomic(&fIsrHandlerActive);
++    if (fStopping) { OSDecrementAtomic(&fIsrHandlerActive); return; }
++    NvU32 needBottomHalf = 0;
++    nv_xnu_isr_thread = current_thread();
++    NvBool handled = rm_isr(NULL, &fNv, &needBottomHalf);
++    nv_xnu_isr_thread = NULL;
++    if (handled) gNvIsrHandled++;
++    if (handled && needBottomHalf) rm_isr_bh(NULL, &fNv);
++    OSDecrementAtomic(&fIsrHandlerActive);
++}
+ 
+@@ -1423,4 +1401,20 @@
+     }
+-    setProperty("nvrm-stop-quiescence", "go() admission closed; no go in flight");
+-    if (fAdapter) { rm_shutdown_adapter(NULL, &fNv); fAdapter = false; }
++    // B10: stop cannot free fNv or WorkLoop while RM ISR callback is active.
++    // Closing fStopping makes newly dispatched callbacks no-op; older ones
++    // are counted until their bottom half has completed.
++    bool isrActive = OSAddAtomic(0, &fIsrHandlerActive) != 0;
++    for (unsigned tick = 0; isrActive && tick < 200; tick++) {
++        IOSleep(10);
++        isrActive = OSAddAtomic(0, &fIsrHandlerActive) != 0;
++    }
++    if (isrActive) {
++        setProperty("nvrm-stop-quiescence", "BLOCKED: RM ISR still active");
++        LOG("stop: ISR did not drain in 2 s; RM/MSI/PCI teardown skipped");
++        super::stop(provider);
++        return;
++    }
++    // No ISR was observed in flight. This is NOT evidence of MSI queued
++    // callback cancellation, GSP completion or DMA quiescence.
++    setProperty("nvrm-stop-quiescence", "go drained; RM ISR counter idle (DMA unverified)");
++    if (fAdapter) { rm_shutdown_adapter(NULL, &fNv); fAdapter = false; }
+     if (fIntSrc) { fIntSrc->disable(); if (fWorkLoop) fWorkLoop->removeEventSource(fIntSrc); fIntSrc->release(); fIntSrc = NULL; }
