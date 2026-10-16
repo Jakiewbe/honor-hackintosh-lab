@@ -1,5 +1,10 @@
 # 02｜当前事实、阻塞与决策（Codex 最新状态）
 
+## 2026-10-16 P0-DMA 最新工作：Darwin API 原生编译核验待执行
+
+[P0-DMA 23/23 合成测试](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38903242709) 已真实通过，固定源码审计返回 `BLOCKED_DEVICE_DMA_MAPPING_UNVERIFIED`。本轮新增 `scripts/g1/dma_sdk_probe.cpp` 和默认手动 `.github/workflows/g1-darwin-dma-sdk.yml`，核对 Xcode 16.4/macOS15 Intel SDK 中的 `IODMACommand` 真正 C++ API 与 x86_64 内核对象编译。**当前工作流未运行，不能标记 SDK BUILD PASS；真实 IOMMU/IOVA、GSP/DMA 和目标内核 ABI 仍 NO-GO。**
+
+
 ## 2026-10-15 最新增量：已进入桌面，显卡加速仍未验证
 
 用户通过 H1-COUNT 越过 EXITBS，完成外接 SSD 安装并进入正式桌面；内屏 2160×1440 可显示。两块 GPU 的系统报告均为 No Kext Loaded，桌面卡顿，尚无硬件加速验收。用户已关机，本阶段只做显卡驱动可行性调研；没有安装或加载新驱动、修改 BIOS 变量或触发 CI。

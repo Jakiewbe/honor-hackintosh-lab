@@ -1,5 +1,12 @@
 # 04｜可核实证据账本：正式 CI、脚本与限制
 
+## 2026-10-16 P0-DMA 新的原生接口验证门禁
+
+- 实测源合同 / 模型：[Actions #38903242709](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/38903242709)，10+13 Python tests PASS；静态 7 项来源断言 PASS，实际设备 DMA 未测试。
+- 新增 `scripts/g1/dma_sdk_probe.cpp` 和 [只编译手动工作流](../.github/workflows/g1-darwin-dma-sdk.yml)：**NOT RUN**。固定 Apple XNU macOS15.5 `a1e26a70f38d1d7daa7b49b258e2f8538ad81650` 的 `iokit/IOKit/IODMACommand.h`，blob `c9e75dc4df8b6446788c154a893a7c670d063fd1`。源码声明级证据已核对：`withSpecification` 返回 `OSPtr<IODMACommand>`，`setMemoryDescriptor` 默认 `autoPrepare=true`，`prepare` 可阻塞；`gen64IOVMSegments` 是 64 位 I/O 地址段接口。待 CI 提供真实 SDK C++/Mach-O 对象级证据。
+- 绝不把 Xcode 源码探针编译成功等同于真实 DMA/GSP/设备 IOMMU；该工作流不上传/运行二进制。
+
+
 ## 2026-10-15 最新增量：已进入桌面，显卡加速仍未验证
 
 用户通过 H1-COUNT 越过 EXITBS，完成外接 SSD 安装并进入正式桌面；内屏 2160×1440 可显示。两块 GPU 的系统报告均为 No Kext Loaded，桌面卡顿，尚无硬件加速验收。用户已关机，本阶段只做显卡驱动可行性调研；没有安装或加载新驱动、修改 BIOS 变量或触发 CI。

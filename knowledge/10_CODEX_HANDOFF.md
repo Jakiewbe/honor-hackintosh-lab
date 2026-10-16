@@ -1,5 +1,10 @@
 # 10｜Codex 正式交接单：现在接手做什么
 
+## 2026-10-16 新交接（只读、手动）
+
+已经固定 P0-DMA 23/23 合成测试，不再重复。[手动执行 G1 Darwin DMA SDK API compile-only](../.github/workflows/g1-darwin-dma-sdk.yml)：运行 `main`，核对 `toolchain.txt`、`compile.log`、`undefined-symbols.txt` 和临时 x86_64 Mach-O `MH_OBJECT` 证据；不要下载/上传可加载驱动，不修改 HONOR 主机。若编译失败，定位 Xcode16.4 实际 Kernel.framework 头文件与固定公开 XNU 声明差异，修正最小 probe；**不能绕过 SDK 编译后伪称可用**。无论通过与否，RUNTIME_NO_GO；后续分析具体 macOS Build/KDK、IOMapper provider 归属、rm `nv_dma_map_alloc` 来源及 DMA 停止合同。
+
+
 ## 2026-10-15 最新增量：已进入桌面，显卡加速仍未验证
 
 用户通过 H1-COUNT 越过 EXITBS，完成外接 SSD 安装并进入正式桌面；内屏 2160×1440 可显示。两块 GPU 的系统报告均为 No Kext Loaded，桌面卡顿，尚无硬件加速验收。用户已关机，本阶段只做显卡驱动可行性调研；没有安装或加载新驱动、修改 BIOS 变量或触发 CI。

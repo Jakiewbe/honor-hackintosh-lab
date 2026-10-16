@@ -37,3 +37,9 @@ Apple 官方文档：[IODMACommand](https://developer.apple.com/documentation/ke
 - **主力系统禁止项**：目前不加载 KEXT、不调用危险的手动 go、不更改 BIOS/EFI/磁盘、不关闭系统安全防护、不试图用 `NV_OK` 隐瞒真实映射失败。
 
 下一个代码任务不是 B11 继续链接，而是 **将 RM 的 DMA 调用方、`nv_alloc_pages` 的 page descriptor 生命周期、`IODMACommand` 能否接受该类内存描述符的来源逐一打通**。在证据充分前保持 NO-GO。
+
+## 2026-10-16 XNU 15.5 公开头文件与 Xcode SDK 的分级验证
+
+**最新源码事实**：固定 Apple XNU `a1e26a70f38d1d7daa7b49b258e2f8538ad81650` 的 `iokit/IOKit/IODMACommand.h` Git blob `c9e75dc4df8b6446788c154a893a7c670d063fd1`。其 `IODMACommand::withSpecification` 返回 `OSPtr<IODMACommand>`，映射选项 `kMapped` 与显式 `IOMapper*` 参数存在；`setMemoryDescriptor(const IOMemoryDescriptor*, bool autoPrepare=true)` 的默认 autoPrepare 可能阻塞，而 `prepare()` 的源码说明禁止在 WorkLoop gate/intr 上下文使用；`gen64IOVMSegments` 返回实际 IOVM 段；`prepare/complete` 必须配对，`clearMemoryDescriptor(false)` 负责显式清理。
+
+实际 Kernel SDK 的可用性由 [手动 g1-darwin-dma-sdk.yml](../../.github/workflows/g1-darwin-dma-sdk.yml) 检查，它只用 Xcode16.4/macOS15 Intel 构建 `dma_sdk_probe.cpp` 临时 x86_64 内核 `MH_OBJECT`，提交文本编译器输出、`nm -u` 和 hash，不上传对象、不链接、签名、安装或加载 kext。**2026-10-16 目前该新工作流尚未运行**。这不证明目标机运行的 macOS Build 具有同样 KDK/内核符号、不证明 provider IOMapper/设备 IOVA 正确、不证明 GSP 能用该地址，不证明 stop 已经完成 DMA 排空。
