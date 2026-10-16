@@ -23,6 +23,7 @@ jobs:
           set -euo pipefail
           python3 -m unittest discover -s scripts/g1 -p test_dma_contract.py -v
           python3 -m unittest discover -s scripts/g1 -p test_dma_transaction.py -v
+          python3 -m unittest discover -s scripts/g1 -p test_dma_rm_path.py -v
 
       - name: Download both pinned upstream source trees
         shell: bash
@@ -50,12 +51,19 @@ jobs:
             --ogkm "$RUNNER_TEMP/nv" \
             --out dma-source-contract.json
           grep -q BLOCKED_DEVICE_DMA_MAPPING_UNVERIFIED dma-source-contract.json
+          python3 scripts/g1/dma_rm_path.py \
+            --nullmoth "$RUNNER_TEMP/nm" \
+            --ogkm "$RUNNER_TEMP/nv" \
+            --out dma-rm-path.json
+          grep -q BLOCKED_RM_IOVA_OWNER_AND_DMA_UNVERIFIED dma-rm-path.json
 
       - name: Upload JSON evidence only
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: honor-g1-p0-dma-source-contract
-          path: dma-source-contract.json
+          path: |
+            dma-source-contract.json
+            dma-rm-path.json
           if-no-files-found: warn
           retention-days: 14
