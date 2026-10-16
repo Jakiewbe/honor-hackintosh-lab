@@ -1,0 +1,115 @@
+--- a/kexts/NVRM/NVRM.cpp
++++ b/kexts/NVRM/NVRM.cpp
+@@ -138,3 +138,5 @@
+     bool         fGpuEventLocksReady = false;
+-    bool         fRmPreflightFailed = false;
++    bool         fRmPreflightFailed = false;
++    // B8: monotonic stop admission gate; this does NOT drain an active go().
++    volatile UInt32 fStopping = 0;
+     uint32_t     fPassDone = 0;
+@@ -276,3 +278,5 @@
+ // lifetimes. rm_init_rm() success does not prove either lock was created.
+-static bool gRmCtlEventLocksReady = false;
++static bool gRmCtlEventLocksReady = false;
++// B8: a failed global RM or control lock init poisons all GPU instances.
++static bool gRmGlobalPreflightFailed = false;
+ 
+@@ -371,5 +375,11 @@
+         { uint32_t ms = 0; if (PE_parse_boot_argn("nvrmsettle", &ms, sizeof(ms))) fAutoGoSettleMs = ms; }
+-        if (manualGo) {
+-            setProperty("nvrm-autogo", "off (-nvrmnogo)"); LOG("auto-go OFF (-nvrmnogo): idle until `nvrmctl go <pass>`");
+-        } else {
++        // B8: explicit opt-in for the hazardous asynchronous GPU startup.
++        // Manual go remains available, but loading alone must not start GSP.
++        char autogoArg[8] = { 0 };
++        const bool explicitAutoGo = !manualGo &&
++            PE_parse_boot_argn("-nvrmautogo", autogoArg, sizeof(autogoArg));
++        if (!explicitAutoGo) {
++            setProperty("nvrm-autogo", "off (B8 default: explicit opt-in required)");
++            LOG("auto-go OFF by default: use manual nvrmctl go after safety authorization");
++        } else {
+             fBootHold = 1; adjustBusy(1); setProperty("nvrm-boot-hold", "holding");
+@@ -504,4 +514,5 @@
+         uint64_t t0 = mach_absolute_time(), released = 0, ns = 0;
+-        for (;;) {
+-            const uint64_t now = mach_absolute_time();
++        for (;;) {
++            if (s->fStopping) break; // avoid further diagnostic MMIO on stop
++            const uint64_t now = mach_absolute_time();
+             absolutetime_to_nanoseconds(now - t0, &ns);
+@@ -577,4 +588,10 @@
+     }
+-    s->measureBootRaster();
+-    { thread_t hw = THREAD_NULL; s->retain();
++    // stop may begin during the settling delay; cancel before BAR reads
++    // or starting the GPU if this worker was explicitly opted in.
++    if (s->fStopping) {
++        s->releaseBootHold("auto-go canceled by stop");
++        s->release(); thread_terminate(current_thread()); return;
++    }
++    s->measureBootRaster();
++    { thread_t hw = THREAD_NULL; s->retain();
+       if (kernel_thread_start(&NVRM::headWatch, s, &hw) == KERN_SUCCESS) thread_deallocate(hw); else s->release(); }
+@@ -1171,3 +1188,12 @@
+     static bool gGoBusy;
+-    { IOLockLock(gNvClientsLock); bool busy = gGoBusy; if (!busy) gGoBusy = true; IOLockUnlock(gNvClientsLock); if (busy) { kprintf("NVRM-xnu: go(%u) refused: another go is running\n", pass); return kIOReturnBusy; } }
++    // Lock interlocks admission of *new* go() calls with stop(). It does
++    // not establish an in-flight adapter teardown/drain contract.
++    bool stopping = false, busy = false;
++    IOLockLock(gNvClientsLock);
++    stopping = fStopping != 0;
++    busy = gGoBusy;
++    if (!stopping && !busy) gGoBusy = true;
++    IOLockUnlock(gNvClientsLock);
++    if (stopping) { LOG("go(%u) refused: provider is stopping", pass); return kIOReturnNotReady; }
++    if (busy) { LOG("go(%u) refused: another go is running", pass); return kIOReturnBusy; }
+     struct Unbusy { ~Unbusy() { IOLockLock(gNvClientsLock); gGoBusy = false; IOLockUnlock(gNvClientsLock); } } unbusy;
+@@ -1182,6 +1208,10 @@
+     // an incomplete event-lock or private-state construction.
+-    if (fRmPreflightFailed) {
+-        LOG("go blocked: previous RM preflight failed; state is not retryable");
+-        return kIOReturnNotReady;
+-    }
++    if (gRmGlobalPreflightFailed) {
++        LOG("go blocked: previous global RM/control initialization failed");
++        return kIOReturnNotReady;
++    }
++    if (fRmPreflightFailed) {
++        LOG("go blocked: previous RM preflight failed; state is not retryable");
++        return kIOReturnNotReady;
++    }
+     if (pass >= 1 && fPassDone < 1) {
+@@ -1189,4 +1219,5 @@
+             LOG("rm_init_rm()");
+-            if (!rm_init_rm(NULL)) {
+-                fRmPreflightFailed = true;
++            if (!rm_init_rm(NULL)) {
++                gRmGlobalPreflightFailed = true;
++                fRmPreflightFailed = true;
+                 LOG("rm_init_rm FAILED; refusing further go on this device");
+@@ -1201,4 +1232,5 @@
+         if (!gRmCtlEventLocksReady) {
+-            if (!rm_init_event_locks(NULL, nv_get_ctl_state())) {
+-                fRmPreflightFailed = true;
++            if (!rm_init_event_locks(NULL, nv_get_ctl_state())) {
++                gRmGlobalPreflightFailed = true;
++                fRmPreflightFailed = true;
+                 LOG("rm_init_event_locks(ctl) FAILED; GSP initialization forbidden");
+@@ -1332,4 +1364,15 @@
+ 
+-void NVRM::stop(IOService *provider)
+-{
++void NVRM::stop(IOService *provider)
++{
++    // B8: refuse new go() requests while stop processes this device.
++    // This is admission control, not proof that an already running go()
++    // has finished or that GSP/DMA/interrupts are quiescent.
++    if (gNvClientsLock) {
++        IOLockLock(gNvClientsLock);
++        fStopping = 1;
++        IOLockUnlock(gNvClientsLock);
++    } else {
++        fStopping = 1;
++    }
++    releaseBootHold("device stopping");
+     if (fAdapter) { rm_shutdown_adapter(NULL, &fNv); fAdapter = false; }
