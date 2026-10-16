@@ -241,3 +241,28 @@ Code changes: do not schedule autoGo merely by loading the kext; `-nvrmautogo` w
 - 上层 Actions conclusion=failure 来自 `BLOCKED_WP1_OR_NVRM_LINK_PROVENANCE` 的预期退出码 2，并非 B8 原生构建错误。B8 子目标标记 `PASS (native compile/link only)`，B3–B8 相同静态构建门槛已验证，不再重复运行。
 - **必须保留的 NO-GO**：B8 的 `fStopping` 及共享 RM 失败标志未提供完备的跨线程同步、正在执行的 `go()` 与 `stop()` 的 drain、ISR/MSI 与 WorkLoop 回调停止证明；RM 控制/设备事件锁销毁尚无生命周期闭环；失败中的 `rm_init_adapter()` 半初始化 GSP/DMA 资源没有已验证的清理合同。硬件 GSP 固件来源/哈希、RTX 2050 `10DE:25A9` 实际初始化及计算、Intel `8086:46A6` 内屏路径均无实证。不得从 CI 静态链接成功推导可装机性或 macOS GPU/Metal 加速。
 - **下一阶段目标**：先在隔离源候选中设计并验证进入/退出 `go()` 的并发所有权（包括停止时等待机制）、ISR/MSI 与 WorkLoop 销毁顺序和事件锁所有权；不在未知半初始化 RM/GSP 状态下胡乱调用 `rm_shutdown_adapter()`。任何实机加载均需要另行审查与授权。
+
+
+## G1-B9 — 2026-10-16 go/stop 单实例活动所有权候选（等待真实 Xcode CI）
+
+当前 B8 已由 Actions 38846766604 证明 macOS 原生对象编译和 Apple kext 静态链接成功；**不能以此证明运行时安全**。新阶段提交：
+
+- `50fc8b67b9f76f300ebec0da32e64a64073c770b`：新增 `scripts/g1/patches/b9_nvrm_go_stop_drain.patch`（Git blob `BLOB_SHA`），作为固定 B8 已合并源码上的 3 hunk 实验补丁。
+- `cdf9956d20edaa63fe78399e7a4cbdb60f28c975`：为该版本增加单独 B9 原生编译/链接路径和手动 `run_b9_probe` 输入；保留 B3–B8 产物及原链接映射，禁止签名/上传/加载。
+
+### 实际改动
+
+1. `NVRM::go` 在 `gNvClientsLock` 下检查 `fStopping`/全局 busy 状态，成功接受调用时设置 `fGoInFlight` 并保留该 `NVRM` 对象引用；在所有返回路径由 RAII 清除运行标记并释放额外引用。保护范围是**当前 go 函数的执行期**，不是后台 GSP、GPU DMA 或已生成异步任务的执行期。
+2. `NVRM::stop` 在同一把锁下关闭后续 `go` 进入通道，并放开锁，以最多 200 次 × 10 ms 的周期观察实例是否仍有 `go` 在运行。正常观察到其结束后才进入现有 RM/MSI/PCI 释放路径。
+3. 如果 2 秒内未结束，或全局客户端锁根本不可用，则明确标记 `nvrm-stop-quiescence=BLOCKED`，不调用当前 stop 中危险的 RM/MSI/PCI 显式清理。若曾发生 `rm_init_adapter` 失败而处于半初始化状态，同样跳过显式资源销毁（不猜测可调用 `rm_shutdown_adapter`）。
+
+### P0：不可据此视为安全卸载
+
+- 有界等待超时后仍调用 `super::stop(provider)`，这只能避免当前代码进一步直接释放活动 RM/MSI 对象，**不能证明 IOKit 提供者断开、其他驱动回调或设备内存映射仍然安全**。设备实例虽然由在途 go 保留引用，但被终止的 provider 可能仍使 GPU 状态失效。超时明确视为无法安全停止，绝不能作为实机成功。
+- B8 的 `autoGo`、`headWatch`、boot-hold cap 等工作线程可能在 go 函数返回后继续运行；本次同步保护只覆盖 go 的函数调用，不覆盖线程余生，也不等待它们退出。
+- MSI 的 filter/workloop handler 完成、RM/GSP 异步任务、DMA quiescence、`rm_shutdown_adapter` 返回后的固件/PCI 状态、控制/设备事件锁销毁及重载全局状态仍待独立源码证明与故障注入。当前 B9 未引入强制 GSP reset 或未知半初始化对象清理 API。
+- 目标 HONOR GLO-FX6P 仍无经过验证的 macOS 版本、GSP 固件 SHA/来源、目标内核 ABI 或 RTX 2050 真实指令执行、像素读回、Intel 46A6 内屏加速证据。**主力电脑实机仍为 NO-GO。**
+
+### 唯一必要的下一次 CI
+
+在 GitHub `.github/workflows/g1-native-gate.yml` 手动选择 `main` / `Xcode_16.4.0` / `-DNV_UNIX -DNV_LINUX`、空 `drop_flags`；打开 `run_rebuild` 和 `run_b9_probe`，B4–B8 依赖会自动打开。读取 `b9_source_patch`、`b9_native_link_candidate`、 `b9-NVRM-compile.txt` 以及 ld64 对象映射；顶层返回 2 仍表示 WP1/runtime NO-GO，不等同于 B9 原生链接失败。**尚未运行本次 B9 CI。**
