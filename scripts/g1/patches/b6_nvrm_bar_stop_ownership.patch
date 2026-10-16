@@ -1,0 +1,183 @@
+--- a/kexts/NVRM/NVRM.cpp
++++ b/kexts/NVRM/NVRM.cpp
+@@ -110,3 +110,18 @@
+     // Sticky if a failed PCI write cannot be restored and read back.
+-    bool         fBar1RollbackFailed = false;
++    bool         fBar1RollbackFailed = false;
++    // B6: BAR ownership snapshot, only populated after a verified placement.
++    bool fBarStopRestorePending = false;
++    bool fBarStopRestoreFailed = false;
++    IOPCIDevice *fBarRootPort = NULL;
++    OSArray *fBarOriginalMemory = NULL;
++    UInt16 fBarOriginalCommand = 0;
++    UInt32 fBarOriginalGpuRegs[4] = {};
++    UInt32 fBarPlacedGpuRegs[4] = {};
++    UInt32 fBarOriginalPortRegs[3] = {};
++    UInt32 fBarPlacedPortRegs[3] = {};
++    UInt32 fBarRebarCtlOffset = 0;
++    UInt32 fBarRebarOriginal = 0;
++    UInt32 fBarRebarPlaced = 0;
++    bool restorePlacedBar1ForStop();
++    void releaseBarStopSnapshot();
+     volatile UInt32 fBootHold = 0;
+@@ -293,3 +308,7 @@
+     gNVRMService = this;
+-    nv_xnu_log_init();
++    nv_xnu_log_init();
++    // Allocate the shared client lock before an optional BAR transaction:
++    // a later start() failure must not abandon already-modified PCI windows.
++    if (!gNvClientsLock) gNvClientsLock = IOLockAlloc();
++    if (!gNvClientsLock) { LOG("IOLockAlloc FAILED before BAR preflight"); return false; }
+     UInt8 bus = fPCI->getBusNumber(), dev = fPCI->getDeviceNumber(), fn = fPCI->getFunctionNumber();
+@@ -314,4 +333,10 @@
+     snapshotBootScreen();
+-    const bool bar1Placed = manualGo ? false : placeLargeBar1();
+-    if (manualGo) setProperty("nvrm-bar1-placement", "skipped (-nvrmnogo)");
++    // Experimental BAR movement is OFF by default even for auto-go.
++    // Do not implicitly rewrite the Root Port window on a hybrid laptop.
++    char relocateArg[8] = { 0 };
++    const bool explicitRelocate = !manualGo &&
++        PE_parse_boot_argn("-nvrmrelocate", relocateArg, sizeof(relocateArg));
++    const bool bar1Placed = explicitRelocate ? placeLargeBar1() : false;
++    if (!explicitRelocate) setProperty("nvrm-bar1-placement",
++        manualGo ? "skipped (-nvrmnogo)" : "disabled by default (B6)");
+     fBar1Placed = bar1Placed;
+@@ -335,4 +360,3 @@
+     fPCI->setProperty("nvrm-claimed", kOSBooleanTrue);
+-    if (!gNvClientsLock) gNvClientsLock = IOLockAlloc();
+-    if (!gNvClientsLock) { LOG("IOLockAlloc FAILED"); return false; }
++    // Client lock was allocated before any experimental BAR changes.
+     {
+@@ -925,4 +949,11 @@
+ 
+-    const UInt16 cmd = fPCI->configRead16(0x04);
+-    // Restore BAR/ReBAR and bridge configuration with decode and DMA disabled.
++    // Without a retained original IOPCIFamily descriptor, stop cannot
++    // reverse a successful transaction. Refuse to move the BAR at all.
++    if (!mem || fBarStopRestorePending) {
++        LOG("bar1: original aperture unavailable or BAR already owned; refusing PCI write");
++        releaseStage();
++        return false;
++    }
++    const UInt16 cmd = fPCI->configRead16(0x04);
++    // Restore BAR/ReBAR and bridge configuration with decode and DMA disabled.
+     // A failed readback blocks this device from proceeding into RM/GSP.
+@@ -992,5 +1023,25 @@
+ 
+-    fPCI->setDeviceMemory(arr);
+-    releaseStage();
+-    fPCI->setProperty("nvrm-bar1-placed", bar1Base, 64);
++    // Commit ownership only after hardware writeback validation succeeded.
++    // Keep both the old IOKit aperture list and its owning Root Port alive.
++    mem->retain();
++    rp->retain();
++    fBarOriginalMemory = mem;
++    fBarRootPort = rp;
++    fBarOriginalCommand = cmd;
++    fBarOriginalGpuRegs[0] = lo14; fBarOriginalGpuRegs[1] = old18;
++    fBarOriginalGpuRegs[2] = lo1c; fBarOriginalGpuRegs[3] = hi20;
++    fBarOriginalPortRegs[0] = rp24; fBarOriginalPortRegs[1] = rp28;
++    fBarOriginalPortRegs[2] = rp2c;
++    for (unsigned i = 0; i < 4; i++)
++        fBarPlacedGpuRegs[i] = fPCI->configRead32(0x14 + i * 4);
++    fBarPlacedPortRegs[0] = rp->configRead32(0x24);
++    fBarPlacedPortRegs[1] = rp->configRead32(0x28);
++    fBarPlacedPortRegs[2] = rp->configRead32(0x2c);
++    fBarRebarCtlOffset = newSize ? rbCtlOff : 0;
++    fBarRebarOriginal = newSize ? rbCtlOld : 0;
++    fBarRebarPlaced = newSize ? fPCI->extendedConfigRead32(rbCtlOff) : 0;
++    fBarStopRestorePending = true;
++    fPCI->setDeviceMemory(arr);
++    releaseStage();
++    fPCI->setProperty("nvrm-bar1-placed", bar1Base, 64);
+     LOG("bar1: PLACED — BAR1 %llu MB live at 0x%llx", bar1Size >> 20, bar1Base);
+@@ -999,3 +1050,78 @@
+ 
+-void NVRM::readBARs()
++void NVRM::releaseBarStopSnapshot()
++{
++    // Release only saved object references; this does NOT modify PCI hardware.
++    if (fBarOriginalMemory) { fBarOriginalMemory->release(); fBarOriginalMemory = NULL; }
++    if (fBarRootPort) { fBarRootPort->release(); fBarRootPort = NULL; }
++    fBarStopRestorePending = false;
++}
++
++bool NVRM::restorePlacedBar1ForStop()
++{
++    if (!fBarStopRestorePending) return true;
++    auto blocked = [&](const char *why) -> bool {
++        fBarStopRestoreFailed = true;
++        setProperty("nvrm-bar1-stop-restore", why);
++        LOG("bar1: stop restoration BLOCKED: %s", why);
++        return false;
++    };
++    // Never overwrite PCI registers after a failed RM/GSP initialization:
++    // ownership of DMA, interrupts and firmware state is still unknown.
++    if (fAdapterInitFailed || fAdapter)
++        return blocked("RM/GSP adapter not proven quiescent");
++    if (!fPCI || !fBarRootPort || !fBarOriginalMemory)
++        return blocked("BAR ownership snapshot unavailable");
++    IOPCIDevice *rp = fBarRootPort;
++    // Do not clobber any external PCI reconfiguration made since placement.
++    for (unsigned i = 0; i < 4; i++)
++        if (fPCI->configRead32(0x14 + 4 * i) != fBarPlacedGpuRegs[i])
++            return blocked("GPU BAR modified by another owner");
++    if (rp->configRead32(0x24) != fBarPlacedPortRegs[0] ||
++        rp->configRead32(0x28) != fBarPlacedPortRegs[1] ||
++        rp->configRead32(0x2c) != fBarPlacedPortRegs[2])
++        return blocked("Root Port prefetchable window modified by another owner");
++    if (fBarRebarCtlOffset &&
++        fPCI->extendedConfigRead32(fBarRebarCtlOffset) != fBarRebarPlaced)
++        return blocked("Resizable BAR changed by another owner");
++
++    // We cannot prove DMA has drained while the PCI bus-master bit is set.
++    // Do not forcefully disable a potentially live GPU during this experiment.
++    UInt16 currentCommand = fPCI->configRead16(0x04);
++    if (currentCommand & 0x4)
++        return blocked("PCI bus master still enabled; DMA quiescence unknown");
++
++    fPCI->configWrite16(0x04, currentCommand & ~(UInt16)0x6);
++    rp->configWrite32(0x24, 0x0000fff0);
++    if (fBarRebarCtlOffset)
++        fPCI->extendedConfigWrite32(fBarRebarCtlOffset, fBarRebarOriginal);
++    fPCI->configWrite32(0x14, fBarOriginalGpuRegs[0]);
++    fPCI->configWrite32(0x18, fBarOriginalGpuRegs[1]);
++    fPCI->configWrite32(0x1c, fBarOriginalGpuRegs[2]);
++    fPCI->configWrite32(0x20, fBarOriginalGpuRegs[3]);
++    rp->configWrite32(0x28, fBarOriginalPortRegs[1]);
++    rp->configWrite32(0x2c, fBarOriginalPortRegs[2]);
++    rp->configWrite32(0x24, fBarOriginalPortRegs[0]);
++
++    bool restored =
++        fPCI->configRead32(0x14) == fBarOriginalGpuRegs[0] &&
++        fPCI->configRead32(0x18) == fBarOriginalGpuRegs[1] &&
++        fPCI->configRead32(0x1c) == fBarOriginalGpuRegs[2] &&
++        fPCI->configRead32(0x20) == fBarOriginalGpuRegs[3] &&
++        rp->configRead32(0x24) == fBarOriginalPortRegs[0] &&
++        rp->configRead32(0x28) == fBarOriginalPortRegs[1] &&
++        rp->configRead32(0x2c) == fBarOriginalPortRegs[2] &&
++        (!fBarRebarCtlOffset || fPCI->extendedConfigRead32(fBarRebarCtlOffset) == fBarRebarOriginal);
++    if (!restored)
++        return blocked("PCI restore readback mismatch; memory/bus mastering remain disabled");
++
++    fPCI->setDeviceMemory(fBarOriginalMemory);
++    fPCI->configWrite16(0x04, fBarOriginalCommand);
++    if (fPCI->configRead16(0x04) != fBarOriginalCommand)
++        return blocked("PCI command restore readback mismatch");
++    setProperty("nvrm-bar1-stop-restore", "RESTORED: original PCI config and IOKit apertures");
++    LOG("bar1: stop restored original PCI configuration and aperture descriptors");
++    return true;
++}
++
++void NVRM::readBARs()
+ {
+@@ -1167,4 +1293,7 @@
+     if (fWorkLoop) { fWorkLoop->release(); fWorkLoop = NULL; }
+-    if (fPrivateState) { rm_free_private_state(NULL, &fNv); fPrivateState = false; }
+-    super::stop(provider);
++    if (fPrivateState) { rm_free_private_state(NULL, &fNv); fPrivateState = false; }
++    if (fBarStopRestorePending && !restorePlacedBar1ForStop())
++        LOG("BAR1 remains in experimental placement: recovery NOT verified");
++    releaseBarStopSnapshot();
++    super::stop(provider);
+ }
