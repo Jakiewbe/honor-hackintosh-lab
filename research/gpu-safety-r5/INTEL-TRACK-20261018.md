@@ -135,3 +135,34 @@ Intel 结构合同 **25/25**。
 ### 仍然只有编译证据
 
 发行包不含 Intel kext，所以以上全部未经运行验证；"重启后失效"这条尤其需要实机重现才能确认修复有效。
+
+## 9. R19（2026-10-18）：owner-copy 不再依赖借来的 kva
+
+R17 引入 owner-copy 之后仍留了一个尾巴：`nvAccelCopyToScanout` 在尝试 owner-copy **之前**就要求
+SCANOUT 查询返回 `q.kva`/`q.pitch`——也就是说，如果对端只实现了拷贝入口、不再外借映射，这段代码根本走不到。
+
+R19 把顺序改成：
+
+1. 只要求**几何**（`q.width`/`q.height`）就能尝试 owner-copy；
+2. owner-copy 成功即返回，全程没有用到 `q.kva`；
+3. 只有 owner-copy 不可用时，才要求 `q.kva`/`q.pitch` 走旧路径；两者都没有就明确拒绝并记日志
+   （"peer offers neither owner-copy nor a scanout mapping"）。
+
+这样"外借映射"从**必经之路**降级为**兼容回退**。
+
+实测（[Run 39056413162](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39056413162)，`success`）：**19 个补丁**、**16/16 对象**、告警零增量；
+`NMIntelFB` 44664 B、`NMIntelFBVirtual` 58752 B、NVRMFB 315744 B。
+
+## 10. 只读取证清单（`tools/gpu-forensics/collect.sh` 新增）
+
+下次进 macOS 一次采全，不需要装任何东西：
+
+| 文件 | 回答什么 |
+|---|---|
+| `50-intel-kexts.txt` | 当前到底加载了哪些 intel/nvrm/nvaccel kext（"No Kext Loaded" 的确切反面） |
+| `51-intel-fb-tree.txt` | `IOFramebuffer` 树：内屏由谁发布、有几个 framebuffer |
+| `52-fb-provider.txt` | `display0` 的 provider 链 |
+| `53-display-full.txt` | 完整显示信息（分辨率/刷新/连接类型） |
+| `54-counters.txt` | `debug.nmintelfb_sample`、`debug.nvrm_kms_close_deferred`、`debug.nvrm_pm_waited`、`debug.nvaccel_iop_ok_h4` |
+
+这些全部只读；脚本仍不加载、不写入、不改 SIP/EFI。
