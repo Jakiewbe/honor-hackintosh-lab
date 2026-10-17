@@ -99,12 +99,15 @@ def main():
                         "-std=c++17", "-fno-rtti", "-fno-exceptions", "-fno-builtin", "-fno-common", "-O2",
                         "-Wall", "-Wno-unused-parameter", "-Wno-inconsistent-missing-override", "-Wno-unused-function"]
         # Same selected compiler/profile for original and candidate; no use of published binary objects.
+        # NVRMFB is included because R7/R8 change kexts/NVRM/fb/nvrm-fb.cpp: a gate that skips that
+        # translation unit would report a green build for code it never compiled.
         for label, tree in (("original", nm), ("candidate", candidate)):
-            for unit in ("NMIntelFB", "NMIntelFBVirtual", "NVAccel", "NVKMSOS", "NVRM"):
-                if unit in ("NVAccel", "NVKMSOS", "NVRM"):
+            for unit in ("NMIntelFB", "NMIntelFBVirtual", "NVAccel", "NVKMSOS", "NVRM", "NVRMFB"):
+                if unit in ("NVAccel", "NVKMSOS", "NVRM", "NVRMFB"):
                     relsource = {"NVAccel":"kexts/NVRM/accel/nvrm-accel.cpp",
                                  "NVKMSOS":"kexts/NVRM/os-nvkms-xnu.cpp",
-                                 "NVRM":"kexts/NVRM/NVRM.cpp"}[unit]
+                                 "NVRM":"kexts/NVRM/NVRM.cpp",
+                                 "NVRMFB":"kexts/NVRM/fb/nvrm-fb.cpp"}[unit]
                     source = tree / relsource
                     flags = [*common_flags, *definitions, *["-I" + str(p) for p in includes]]
                     flags += ["-I" + str(tree / "kexts/NVRM"), "-I" + str(source.parent),
@@ -138,7 +141,7 @@ def main():
         for entry in report["objects"]:
             if "warnings" in entry:
                 counts[(entry["profile"], entry["unit"])] = entry["warnings"]
-        for unit in ("NMIntelFB", "NMIntelFBVirtual", "NVAccel", "NVKMSOS", "NVRM"):
+        for unit in ("NMIntelFB", "NMIntelFBVirtual", "NVAccel", "NVKMSOS", "NVRM", "NVRMFB"):
             before, after = counts.get(("original", unit)), counts.get(("candidate", unit))
             if before is not None and after is not None and after > before:
                 failures.append(f"{unit}-new-warnings")
