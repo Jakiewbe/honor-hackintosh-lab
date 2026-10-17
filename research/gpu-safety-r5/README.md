@@ -56,6 +56,23 @@ GitHub UI → Actions → **HONOR GPU safety R5 native object and kext link gate
 - `freeDevice()` 返回 void，销毁失败不可上报；该路径必须先经原生门禁。
 - KAPI 事件回调与 Device 销毁的先后顺序、PM busy 后仍进 standby、VRAM/GPUVA 跨 sleep 无代际、真实 IOMapper/IOVA 与 GSP DMA 静默——全部未验证。
 
+## R8 门禁：先抓出我自己的编译错误，再通过（2026-10-18）
+
+加入 R8 后连续三次运行，过程本身是结论的一部分：
+
+1. [Run 39049358408](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39049358408) `success` — 但查看
+   `native-report.json` 才发现：门禁的编译单元里**没有 `kexts/NVRM/fb/nvrm-fb.cpp`**，而 R7/R8 改的正是这个文件。
+   也就是说那份"通过"对 R7/R8 零覆盖。
+2. 把 `NVRMFB` 加入门禁后，[Run 39049526982](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39049526982) **failure**：
+   `error: 'dropKapiDevice' is a protected member of 'NVRMNVDAFramebuffer'`——**R8 原本编译不过**，
+   因为回滚守卫是命名空间作用域的结构体，无权调用 protected 成员。主机测试与结构门禁都没发现，只有真正的
+   Darwin 编译能发现。
+3. 把守卫改成**类内嵌套类**（`NVRMNVDAFramebuffer::KapiRollback`），重新以 R1..R7 为基准生成补丁，
+   [Run 39049760247](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39049760247) `success`：8 个 NullMoth 补丁 + OGKM 补丁全部应用；
+   **14/14 对象编译成功**（original 与 candidate 各 7 个 TU，新增 NVRMFB：两profile 均 exit 0、告警 25/25 相同）；
+   NVAccel kext 仍然链接成功（244400 B，`sha256 89f9839e…`）。
+
+教训写进流程：**"门禁通过"必须先核对门禁到底编译了哪些文件**，否则它只是证明了没被编译的那部分没问题。
 ## R8（2026-10-18）：共享 Device 的生命周期闭环
 
 R7 只处理了 `kapiInit()` 内部失败。R8 把同一件事做成可复用的成员函数 `dropKapiDevice()`，让三条路径共用：
