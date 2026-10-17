@@ -1,0 +1,151 @@
+diff --git a/kexts/NMIntelFB/intelfb.cpp b/kexts/NMIntelFB/intelfb.cpp
+index 6e42982..bf9e7d7 100644
+--- a/kexts/NMIntelFB/intelfb.cpp
++++ b/kexts/NMIntelFB/intelfb.cpp
+@@ -78,7 +78,10 @@ class NMIntelFB : public IOFramebuffer {
+     OSDeclareDefaultStructors(NMIntelFB)
+     IOPCIDevice *fPCI = nullptr;
+     IOMemoryMap *fMMIO = nullptr;
+-    IOMemoryMap *fSurfMap = nullptr;   // write-combined CPU view of the scan-out surface (NVIDIA frames land here)
++    IOMemoryMap *fSurfMap = nullptr;
++    // Serializes the owner-copy against stop(): the copy holds this while it writes into the
++    // mapping, and stop() holds it while it releases the mapping, so neither can undercut the other.
++    IOLock *fCopyLock = nullptr;   // write-combined CPU view of the scan-out surface (NVIDIA frames land here)
+     // WindowServer paces an accelerated display on its VBL interrupt: the NVIDIA display pipe completes each frame on it.
+     // Without one the first frame never completed and WindowServer stalled every display (in testing, the
+     // virtual panel froze the Mac). A 60 Hz timer is the VBL, as NVRMFB's fallback is.
+@@ -169,6 +172,7 @@ public:
+     IOReturn setDisplayMode(IODisplayModeID mode, IOIndex depth) override { return (mode == 1 && depth == 0) ? kIOReturnSuccess : kIOReturnUnsupported; }
+     IOItemCount getConnectionCount() override { return 1; }
+     IOReturn callPlatformFunction(const OSSymbol *fn, bool wait, void *p1, void *p2, void *p3, void *p4) override;
++    IOReturn copyToScanout(struct NVRMVramCopyRequest *r);
+     IOReturn registerForInterruptType(IOSelect type, IOFBInterruptProc proc, OSObject *target, void *ref, void **iref) override {
+         if (type == kIOFBVBLInterruptType) { fVbl = { proc, target, ref }; if (iref) *iref = &fVbl; return kIOReturnSuccess; }
+         if (type == kIOFBConnectInterruptType) { fConnect = { proc, target, ref }; if (iref) *iref = &fConnect; return kIOReturnSuccess; }
+@@ -336,6 +340,8 @@ bool NMIntelFB::start(IOService *provider)
+     // display pipe copies each frame into fSurfMap. Without NVAccel the panel stays a plain framebuffer.
+     if (IODeviceMemory *sm = IODeviceMemory::withRange(fApertureBase + fSurf, (IOPhysicalLength)fRowBytes * fHeight)) {
+         fSurfMap = sm->map(kIOMapWriteCombineCache); sm->release();
++    if (!fCopyLock) fCopyLock = IOLockAlloc();
++    if (!fCopyLock) IFBLOG("copy lock allocation failed: owner-copy will be refused");
+     }
+     if (fSurfMap) {
+         setProperty("IOFBDependentID", 0x4E56524D00000001ull, 64);
+@@ -371,7 +377,9 @@ void NMIntelFB::stop(IOService *provider)
+         if (!released) IFBLOG("vbl thread call still in flight after 100 ms: kept allocated, stopping anyway");
+         else IFBLOG("vbl thread call released");
+     }
++    if (fCopyLock) { IOLockLock(fCopyLock); }   // drain an owner-copy before the mapping goes
+     OSSafeReleaseNULL(fSurfMap); OSSafeReleaseNULL(fMMIO); fRegs = nullptr;
++    if (fCopyLock) { IOLockUnlock(fCopyLock); IOLockFree(fCopyLock); fCopyLock = nullptr; }
+     IOFramebuffer::stop(provider);
+ }
+ 
+@@ -417,11 +425,48 @@ IOReturn NMIntelFB::getAttributeForConnection(IOIndex idx, IOSelect attr, uintpt
+     }
+ }
+ 
++// Owner-copy of one frame into this panel's own mapping. The caller keeps its source buffer; this side
++// validates the geometry against its mapping, takes the lock stop() also takes, and copies row by row,
++// so the destination can never be unmapped while a copy is in flight.
++IOReturn NMIntelFB::copyToScanout(struct NVRMVramCopyRequest *r)
++{
++    if (!r || r->version != NVRM_VRAM_ABI_VERSION) return kIOReturnBadArgument;
++    if (fStopping || !fSurfMap || !fCopyLock) return kIOReturnNotReady;
++    if (!r->src || !r->width || !r->height) return kIOReturnBadArgument;
++    if ((r->srcPitch & 3u) || r->srcPitch < r->width * 4u) return kIOReturnBadArgument;
++    if (r->width > fWidth || r->height > fHeight) return kIOReturnBadArgument;
++
++    IOLockLock(fCopyLock);
++    IOReturn ret = kIOReturnSuccess;
++    if (fStopping || !fSurfMap) {
++        ret = kIOReturnNotReady;                     // stop() began while we waited for the lock
++    } else {
++        const unsigned char *s = (const unsigned char *)r->src;
++        unsigned char *d = (unsigned char *)fSurfMap->getVirtualAddress();
++        if (!d) {
++            ret = kIOReturnNotReady;
++        } else {
++            const unsigned rowb = r->width * 4u;
++            for (unsigned y = 0; y < r->height; y++) {
++                volatile unsigned int *dp = (volatile unsigned int *)(d + (unsigned long)y * fRowBytes);
++                const volatile unsigned int *sp = (const volatile unsigned int *)(s + (unsigned long)y * r->srcPitch);
++                for (unsigned x = 0; x < rowb / 4u; x++) dp[x] = sp[x];
++            }
++            r->dstPitch = fRowBytes;
++        }
++    }
++    IOLockUnlock(fCopyLock);
++    return ret;
++}
++
+ // NVAccel's display pipe asks every head for its scan-out (NVRM_VRAM_FN_SCANOUT). This head answers with a CPU mapping and
+ // no VRAM address: phys 0 keeps NVAccel from treating Intel memory as NVIDIA VRAM (it is not in the NVIDIA card's BAR1),
+ // so frames reach the panel only through the copy into kva.
+ IOReturn NMIntelFB::callPlatformFunction(const OSSymbol *fn, bool wait, void *p1, void *p2, void *p3, void *p4)
+ {
++    if (fn && fn->isEqualTo(NVRM_VRAM_FN_COPY)) {
++        return copyToScanout((struct NVRMVramCopyRequest *)p1);
++    }
+     if (fn && fn->isEqualTo(NVRM_VRAM_FN_SCANOUT)) {
+         NVRMVramRequest *r = (NVRMVramRequest *)p1;
+         if (!r || r->version != NVRM_VRAM_ABI_VERSION) return kIOReturnBadArgument;
+diff --git a/kexts/NVRM/accel/nvrm-accel.cpp b/kexts/NVRM/accel/nvrm-accel.cpp
+index 2e7f259..b05a676 100644
+--- a/kexts/NVRM/accel/nvrm-accel.cpp
++++ b/kexts/NVRM/accel/nvrm-accel.cpp
+@@ -2156,6 +2156,28 @@ static bool nvAccelCopyToScanout(IOAccelResource2 *res)
+         return false;
+     }
+ 
++    struct NVRMVramCopyRequest copyReq;
++    for (unsigned i = 0; i < sizeof copyReq; i++) ((volatile unsigned char *)&copyReq)[i] = 0;
++    copyReq.version = NVRM_VRAM_ABI_VERSION;
++    copyReq.src = vm->fKva;
++    copyReq.srcPitch = pitch;
++    copyReq.width = (w < q.width) ? w : q.width;
++    copyReq.height = (h < q.height) ? h : q.height;
++    struct NVRMVramCopyRequest *srcReq = &copyReq;
++
++    // Prefer the owner-copy: the peer copies into its own mapping under the lock its stop() also takes,
++    // so the destination cannot be unmapped underneath this frame. The kva path below stays as the
++    // fallback for a peer that does not implement the newer entry point.
++    static const OSSymbol *symCopy = nullptr;
++    if (!symCopy) symCopy = OSSymbol::withCStringNoCopy(NVRM_VRAM_FN_COPY);
++    if (symCopy && a->fFB && a->fFB->callPlatformFunction(symCopy, false, srcReq, nullptr, nullptr, nullptr) == kIOReturnSuccess) {
++        nvScanoutCopies++;
++        if (nvScanoutCopies <= 3 || nvScanoutCopies == NVSCANOUT_COPY_MAX)
++            ALOG("*** COPIED THE COMPOSITED FRAME ONTO THE PANEL (owner-copy) *** #%u: %ux%u src pitch %u",
++                 nvScanoutCopies, w, h, pitch);
++        return true;
++    }
++
+     const unsigned rows = (h < q.height) ? h : q.height;
+     const unsigned rowb = ((pitch < q.pitch) ? pitch : q.pitch) & ~3u;
+     const unsigned words = rowb / 4;
+diff --git a/kexts/NVRM/nvrm_vram_abi.h b/kexts/NVRM/nvrm_vram_abi.h
+index 430fcb4..cace870 100644
+--- a/kexts/NVRM/nvrm_vram_abi.h
++++ b/kexts/NVRM/nvrm_vram_abi.h
+@@ -11,9 +11,21 @@
+ #define NVRM_VRAM_FN_FREE     "nvFreeVram"
+ 
+ #define NVRM_VRAM_FN_SCANOUT  "nvScanoutInfo"
++// Owner-copy: the peer copies into its own scanout instead of lending a kva that stop() can unmap.
++#define NVRM_VRAM_FN_COPY     "nvCopyToScanout"
+ 
+ #define NVRM_VRAM_BAR1_BUDGET (192ull * 1024ull * 1024ull)
+ 
++// Request for NVRM_VRAM_FN_COPY. The peer validates every field against its own mapping and
++// copies row by row while holding the lock stop() also takes.
++struct NVRMVramCopyRequest {
++    unsigned int       version;
++    const void        *src;        // source pixels (NVIDIA staging buffer)
++    unsigned int       srcPitch;
++    unsigned int       width, height;
++    unsigned int       dstPitch;   // out: the peer's row bytes, for logging only
++};
++
+ struct NVRMVramRequest {
+     unsigned int       version;
+     unsigned int       flags;
