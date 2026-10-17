@@ -1,26 +1,112 @@
 diff --git a/kexts/NVRMFB/fb/nvrm-fb.cpp b/kexts/NVRMFB/fb/nvrm-fb.cpp
-index d6fd785..2a6a43d 100644
+index 1028674..2a6a43d 100644
 --- a/kexts/NVRMFB/fb/nvrm-fb.cpp
 +++ b/kexts/NVRMFB/fb/nvrm-fb.cpp
-@@ -30,10 +30,6 @@
- #include "nvrm-hud.h"
- #include "nvrm-fb-safety.h"
- #include "nvrm-allocation-table.h"
--// Answered by the NVKMS OS layer: false while NVKMS is suspended or LOST. KAPI teardown
--// (releaseOwnership/freeDevice) reaches NVKMS through nvkms_ioctl_from_kapi, which waits on
--// the PM gate and is refused once the GPU is LOST - a stop path must not tear down there.
--extern "C" NvBool nvkms_xnu_pm_running(void);
- static IORecursiveLock *startLock();
- class NVRMCallReference {
-     OSObject *owner;
-@@ -682,6 +678,10 @@ void NVRMNVDAFramebuffer::surveyBar1()
- // nvkms_ioctl_from_kapi(), which waits on the PM gate (up to 30 s) and is refused when the GPU is
- // LOST while FreeDevice() still frees the RM half; a stop path must not run that, so a device is
- // only dropped while NVKMS can touch the GPU, otherwise it is kept and the leak is logged.
+@@ -378,6 +378,17 @@ class NVRMNVDAFramebuffer : public IOFramebuffer {
+     static void flipWake(unsigned head);
+     bool waitFlipDone(unsigned limitMs);
+     bool kapiInit();
++    // Give back this framebuffer's modeset ownership and, once no framebuffer drives it
++    // any more, the shared device. Used by kapiInit failures, a failed super::start() and stop().
++    void dropKapiDevice();
++    bool fGrabbedOwnership = false;   // grabOwnership() succeeded and was not released
++    // Scope guard for failures between binding the device and publishing this framebuffer.
++    // Nested, so it may call the protected dropKapiDevice().
++    struct KapiRollback {
++        NVRMNVDAFramebuffer *fb;
++        bool armed;
++        ~KapiRollback() { if (armed) fb->dropKapiDevice(); }
++    };
+     bool applyMode();
+     void hudDraw();
+ public:
+@@ -449,6 +460,9 @@ struct nvrm_dpy_rec {
+     NvU32 edidSize; NvU8 edid[NVKMS_KAPI_EDID_BUFFER_SIZE];
+ };
+ static struct NvKmsKapiDevice *gDev;
++// Framebuffer instances currently holding fDev. The last one to drop it frees the
++// shared device, so it cannot outlive the privateData/eventCallback that point at them.
++static int gDevUsers;
+ static struct nvrm_dpy_rec gDpy[NVKMS_KAPI_MAX_CONNECTORS * 2];
+ static int gNDpy = -1;
+ // How many displays the boot enumeration found. A framebuffer whose display index is >= this exists because a display
+@@ -659,9 +673,42 @@ void NVRMNVDAFramebuffer::surveyBar1()
+     if (!shown) FBLOG("  BAR survey: NO structured region found in %llu MB", fBarLen >> 20);
+     else        FBLOG("  BAR survey: %u structured region(s) listed above", shown);
+ }
++// Undo what this framebuffer bound: its head bit, its modeset ownership and - once no other
++// framebuffer drives it - the shared device. KAPI teardown reaches NVKMS through
++// nvkms_ioctl_from_kapi(), which waits on the PM gate (up to 30 s) and is refused when the GPU is
++// LOST while FreeDevice() still frees the RM half; a stop path must not run that, so a device is
++// only dropped while NVKMS can touch the GPU, otherwise it is kept and the leak is logged.
 +// Answered by the NVKMS OS layer: false while NVKMS is suspended or LOST. KAPI teardown
 +// (releaseOwnership/freeDevice) reaches NVKMS through nvkms_ioctl_from_kapi, which waits on
 +// the PM gate and is refused once the GPU is LOST - a stop path must not tear down there.
 +extern "C" NvBool nvkms_xnu_pm_running(void);
- void NVRMNVDAFramebuffer::dropKapiDevice()
++void NVRMNVDAFramebuffer::dropKapiDevice()
++{
++    if (fOwnsHead) { gHeadsTaken &= ~(1u << fHead); fOwnsHead = false; }
++    if (!fDev) return;
++    if (!nvkms_xnu_pm_running()) {
++        FBLOG("device 0x%llx kept: NVKMS is not running -- teardown would block or split RM state",
++              (unsigned long long)(uintptr_t)fDev);
++        return;
++    }
++    if (fGrabbedOwnership) { fKms->releaseOwnership(fDev); fGrabbedOwnership = false; }
++    const int remaining = --gDevUsers;
++    if (remaining > 0) {
++        FBLOG("device 0x%llx kept: %d other framebuffer(s) still drive it",
++              (unsigned long long)(uintptr_t)fDev, remaining);
++        fDev = nullptr;
++        return;
++    }
++    fKms->freeDevice(fDev);
++    if (gDev == fDev) gDev = nullptr;
++    fDev = nullptr;
++    FBLOG("shared NvKmsKapiDevice released (last user)");
++}
++
+ bool NVRMNVDAFramebuffer::kapiInit()
  {
-     if (fOwnsHead) { gHeadsTaken &= ~(1u << fHead); fOwnsHead = false; }
+     struct NvKmsKapiAllocateDeviceParams ap = {}; ap.gpuId = fGpuId; ap.privateData = this; ap.eventCallback = eventCallback;
++    KapiRollback rollback = { this, true };
+     if (gDev) {
+         fDev = gDev;
+         FBLOG("index %u: reusing the shared NvKmsKapiDevice", fIndex);
+@@ -670,7 +717,9 @@ bool NVRMNVDAFramebuffer::kapiInit()
+         if (!fDev) { FBLOG("allocateDevice(gpu 0x%x) failed", fGpuId); return false; }
+         gDev = fDev;
+     }
++    gDevUsers++;
+     if (!fKms->grabOwnership(fDev)) { FBLOG("grabOwnership failed"); return false; }
++    fGrabbedOwnership = true;   // ownership is ours now, so the rollback has to give it back
+     struct NvKmsKapiDeviceResourcesInfo *ri = (struct NvKmsKapiDeviceResourcesInfo *)IOMalloc(sizeof *ri);
+     if (!ri) return false;
+     nvu_zero(ri, sizeof *ri);
+@@ -1129,6 +1178,7 @@ bool NVRMNVDAFramebuffer::kapiInit()
+         if (take) take->release(); if (done) done->release();
+     }
+     if (!painted) for (NvU64 i = 0; i < fSize / 4; i++) px[i] = 0x00000000;
++    rollback.armed = false;   // the device stays for this framebuffer's lifetime
+     return true;
+ }
+ 
+@@ -2028,7 +2078,9 @@ bool NVRMNVDAFramebuffer::start(IOService *provider)
+     if (fInternal) publishBacklight();   // before super::start(): IOFramebuffer::open looks for "backlight"
+     if (!super::start(provider)) {
+         NVRMDisplayGate gate; if (gate.valid() && fOwnsHead) { gHeadsTaken &= ~(1u << fHead); fOwnsHead = false; }
+-        FBLOG("super::start failed after kapiInit succeeded"); return false;
++        FBLOG("super::start failed after kapiInit succeeded -- releasing the device bound here");
++        dropKapiDevice();   // the device's privateData is about to be freed
++        return false;
+     }
+     fSleepTap = addFramebufferNotification(&NVRMNVDAFramebuffer::sleepTap, this, nullptr);
+     if (!fSleepTap) FBLOG("sleep/wake notification tap not registered - a wake after dark wakes may leave the accelerator off");
+@@ -2113,6 +2165,7 @@ void NVRMNVDAFramebuffer::stop(IOService *provider)
+     if (fWakeGate) { if (IOWorkLoop *wl = getWorkLoop()) wl->removeEventSource(fWakeGate); OSSafeReleaseNULL(fWakeGate); }
+     if (fSleepTap) { fSleepTap->remove(); fSleepTap = nullptr; }
+     super::stop(provider);
++    dropKapiDevice();   // last user frees the shared device
+ }
+ 
+ // The internal panel's brightness control, when NVKMS registered a backlight for it (needs the NBCI _DSM).
