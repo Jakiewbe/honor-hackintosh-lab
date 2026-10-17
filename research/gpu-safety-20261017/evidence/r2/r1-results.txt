@@ -1,0 +1,14 @@
+PASS: wrapper allocation failure has no downstream side effects
+FAIL: worker allocation failure rejects open before nvKmsOpen
+FAIL: nvKmsOpen failure rolls back preallocated call and wrapper
+FAIL: rollback call-free failure reports and retains callback argument
+PASS: KAPI open acquires worker and actual per-open handle
+PASS: closing KAPI client rejects new worker submission
+PASS: KAPI event submissions coalesce
+FAIL: ioctl bridge keeps kernel semantics without KAPI worker
+FAIL: ioctl bridge exposes queued events to polling caller
+PASS: ioctl bridge clears poll availability after dequeue
+PASS: existing user-space event polling preserved
+FAIL: close call-free failure retains closing callback argument
+PASS: ordinary idle KAPI close frees each resource once
+RESULT: 7/13 passed (platform dependencies injected; no concurrency or GPU proof)

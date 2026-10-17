@@ -1,0 +1,28 @@
+{
+ "manual_only": true,
+ "read_only_repository_permission": true,
+ "shell_syntax": [
+  {
+   "step": "Select Intel Xcode and record toolchain",
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "step": "Fetch complete fixed inputs without executing upstream scripts",
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "step": "Compile original and candidate full translation units (objects only)",
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "step": "Record evidence boundary",
+   "exit": 0,
+   "stderr": ""
+  }
+ ],
+ "python_syntax": "PASS",
+ "darwin_execution": "NOT_RUN"
+}

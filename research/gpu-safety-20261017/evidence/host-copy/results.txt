@@ -1,0 +1,3 @@
+PASS: 2160x1440 exact pixels, row padding and guards
+PASS: 257x131 exact pixels, row padding and guards
+PASS: nine invalid requests left destination unchanged; exact final-row boundary accepted

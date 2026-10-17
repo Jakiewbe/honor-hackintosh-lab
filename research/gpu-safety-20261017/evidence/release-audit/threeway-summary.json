@@ -1,0 +1,251 @@
+{
+  "v2.3.1..v2.3.2": {
+    "sha256sums_changed": {
+      "BASELINE-IDENTITY.json": {
+        "v2.3.1": "ded2e1dd0d53351d1e9507dd7505a4ed25c4641face156afee64053cf3a97ebf",
+        "v2.3.2": "ea1d45c445e03efdee5da7624fc2127997b083c80f6ee3cfc08332e2cc8ecea4"
+      },
+      "Library/Extensions/NVRM.kext/Contents/MacOS/NVRM": {
+        "v2.3.1": "cb3775fa7f8261641cc08328e12793aa7c3698d12a3264c443a68c4f55fb1bdb",
+        "v2.3.2": "19de7ea08d7ce97a74a3f37efc75bf60222fcaa5ba393b9ab832415e8aa58afa"
+      },
+      "Library/Extensions/NVRMFB.kext/Contents/MacOS/NVRMFB": {
+        "v2.3.1": "6b8befff08e286d92f5e911c27e92e5b2951964e781eb4bea6b5554baafad1e4",
+        "v2.3.2": "ac5dd6133cd9c7a4e1235feeceaa0d943e3f5a4aea5934589143162efba676b9"
+      },
+      "Library/GPUBundles/NVMTLDriver.bundle/Contents/MacOS/NVMTLDriver": {
+        "v2.3.1": "bda8aca1e3d1d2c7dda9c15a149b903b5fd8c7091497c498ce3f61baf9dd9b05",
+        "v2.3.2": "39f2ecc8dd7db952dcac7e25ac727ff6b065e94e2dd7ba564a2add4a243e4171"
+      },
+      "Library/NullMoth/kexts/26/NVAccel.kext/Contents/MacOS/NVAccel": {
+        "v2.3.1": "09747ce0ad0b7a4f26de9e0099710b2982054452305c6eed55ed6dafe7e1354b",
+        "v2.3.2": "c54cd1a30adb8124316f20ffcc15c37f73ab0ed6aa0d64f9770349d1ee6a88d7"
+      },
+      "VERSION": {
+        "v2.3.1": "ad8650bc9057d9dfd809961b69dbad640c288d809fa44437d44d83d3b118c821",
+        "v2.3.2": "e1d31f14bed34a1c7e6227931673f0bb4ec1e26ee4278d00dac169809c4d9539"
+      },
+      "install.sh": {
+        "v2.3.1": "af3cb806ec8f6a5dbac221c215b084b6731c4dcc1cbf1596b271ef9f751012fa",
+        "v2.3.2": "79899394a6c2c18b5bdcbccb1dd9b86c757718f7a1ac602c1b397ad97a805e2a"
+      }
+    },
+    "metadata_changed": [
+      "pkgroot/BASELINE-IDENTITY.json",
+      "pkgroot/SHA256SUMS",
+      "pkgroot/VERSION"
+    ],
+    "driver_members_changed": [
+      "pkgroot/Library/Extensions/NVRM.kext/Contents/MacOS/NVRM",
+      "pkgroot/Library/Extensions/NVRMFB.kext/Contents/MacOS/NVRMFB",
+      "pkgroot/Library/GPUBundles/NVMTLDriver.bundle/Contents/MacOS/NVMTLDriver",
+      "pkgroot/Library/NullMoth/kexts/26/NVAccel.kext/Contents/MacOS/NVAccel"
+    ]
+  },
+  "v2.3.2..v2.3.3": {
+    "sha256sums_changed": {
+      "BASELINE-IDENTITY.json": {
+        "v2.3.2": "ea1d45c445e03efdee5da7624fc2127997b083c80f6ee3cfc08332e2cc8ecea4",
+        "v2.3.3": "e980730adfead090178fd4ac2d10d3ed4240205449af1cc550dbf172576d92e3"
+      },
+      "Library/Extensions/NVRM.kext/Contents/MacOS/NVRM": {
+        "v2.3.2": "19de7ea08d7ce97a74a3f37efc75bf60222fcaa5ba393b9ab832415e8aa58afa",
+        "v2.3.3": "cb3775fa7f8261641cc08328e12793aa7c3698d12a3264c443a68c4f55fb1bdb"
+      },
+      "Library/Extensions/NVRMFB.kext/Contents/MacOS/NVRMFB": {
+        "v2.3.2": "ac5dd6133cd9c7a4e1235feeceaa0d943e3f5a4aea5934589143162efba676b9",
+        "v2.3.3": "6b8befff08e286d92f5e911c27e92e5b2951964e781eb4bea6b5554baafad1e4"
+      },
+      "Library/GPUBundles/NVMTLDriver.bundle/Contents/MacOS/NVMTLDriver": {
+        "v2.3.2": "39f2ecc8dd7db952dcac7e25ac727ff6b065e94e2dd7ba564a2add4a243e4171",
+        "v2.3.3": "c3f6bce53e14ae1274f478e9b11d1c4aecc821e8e2920a93aa9efb94457b062d"
+      },
+      "Library/NullMoth/kexts/26/NVAccel.kext/Contents/MacOS/NVAccel": {
+        "v2.3.2": "c54cd1a30adb8124316f20ffcc15c37f73ab0ed6aa0d64f9770349d1ee6a88d7",
+        "v2.3.3": "09747ce0ad0b7a4f26de9e0099710b2982054452305c6eed55ed6dafe7e1354b"
+      },
+      "VERSION": {
+        "v2.3.2": "e1d31f14bed34a1c7e6227931673f0bb4ec1e26ee4278d00dac169809c4d9539",
+        "v2.3.3": "ef6949f5950f6f55fd1676a55619a3decdff9426d41a7d8078d3c4dab2e4449b"
+      }
+    },
+    "metadata_changed": [
+      "pkgroot/BASELINE-IDENTITY.json",
+      "pkgroot/SHA256SUMS",
+      "pkgroot/VERSION"
+    ],
+    "driver_members_changed": [
+      "pkgroot/Library/Extensions/NVRM.kext/Contents/MacOS/NVRM",
+      "pkgroot/Library/Extensions/NVRMFB.kext/Contents/MacOS/NVRMFB",
+      "pkgroot/Library/GPUBundles/NVMTLDriver.bundle/Contents/MacOS/NVMTLDriver",
+      "pkgroot/Library/NullMoth/kexts/26/NVAccel.kext/Contents/MacOS/NVAccel"
+    ]
+  },
+  "v2.3.1..v2.3.3": {
+    "sha256sums_changed": {
+      "BASELINE-IDENTITY.json": {
+        "v2.3.1": "ded2e1dd0d53351d1e9507dd7505a4ed25c4641face156afee64053cf3a97ebf",
+        "v2.3.3": "e980730adfead090178fd4ac2d10d3ed4240205449af1cc550dbf172576d92e3"
+      },
+      "Library/GPUBundles/NVMTLDriver.bundle/Contents/MacOS/NVMTLDriver": {
+        "v2.3.1": "bda8aca1e3d1d2c7dda9c15a149b903b5fd8c7091497c498ce3f61baf9dd9b05",
+        "v2.3.3": "c3f6bce53e14ae1274f478e9b11d1c4aecc821e8e2920a93aa9efb94457b062d"
+      },
+      "VERSION": {
+        "v2.3.1": "ad8650bc9057d9dfd809961b69dbad640c288d809fa44437d44d83d3b118c821",
+        "v2.3.3": "ef6949f5950f6f55fd1676a55619a3decdff9426d41a7d8078d3c4dab2e4449b"
+      },
+      "install.sh": {
+        "v2.3.1": "af3cb806ec8f6a5dbac221c215b084b6731c4dcc1cbf1596b271ef9f751012fa",
+        "v2.3.3": "79899394a6c2c18b5bdcbccb1dd9b86c757718f7a1ac602c1b397ad97a805e2a"
+      }
+    },
+    "metadata_changed": [
+      "pkgroot/BASELINE-IDENTITY.json",
+      "pkgroot/SHA256SUMS",
+      "pkgroot/VERSION"
+    ],
+    "driver_members_changed": [
+      "pkgroot/Library/GPUBundles/NVMTLDriver.bundle/Contents/MacOS/NVMTLDriver"
+    ]
+  },
+  "identity": {
+    "v2.3.1": {
+      "package_version": "2.3.1",
+      "previous_package_version": "2.3.0",
+      "previous_archive_sha256": "c3175a5d902b9be36af2d4ddfe6ab178d97824d6a82bb1161e08d3c02d21feef",
+      "runtime_minimum_macos": "15.5",
+      "runtime_qualification": {
+        "os": "15.8.1",
+        "gpu": "RTX 5060",
+        "displays": 2,
+        "guarded_boot": "passed",
+        "refresh_change_commits": "60, 75 and 100 Hz committed on the changed display",
+        "known_issue": "after a refresh change on one display the other display can show blank frames until restart",
+        "metal_buffer_copy_bytes": 4096,
+        "metal_copy_verified": true
+      },
+      "paired_kexts": {
+        "NVRM": {
+          "sha256": "cb3775fa7f8261641cc08328e12793aa7c3698d12a3264c443a68c4f55fb1bdb"
+        },
+        "NVRMFB": {
+          "sha256": "6b8befff08e286d92f5e911c27e92e5b2951964e781eb4bea6b5554baafad1e4"
+        },
+        "NVAccel": {
+          "sha256": "f0edef4ec10372255fd407efd4009a74abc312172db351bbe65e683979d26b54"
+        },
+        "NVRMAGDC": {
+          "sha256": "223a327f0b94ecd9a0ca321f5d69f149d8c4275b0a4e8f6be63d0c6266c6b2de"
+        }
+      },
+      "scope": "1.1.0 plus: the install leaves the Metal allow list readable by WindowServer (the CoreDisplay 'Failed to create MetalDevice' crash loop after install), and the kexts stay off while the boot-picker remove flag is set, so the way back survives a restart. This update installs only on macOS 15.",
+      "unqualified": [
+        "refresh changes with two displays connected (known issue, fix planned for 1.2)",
+        "macOS 26",
+        "RTX 5090 physical qualification",
+        "universal device and application support",
+        "DRM",
+        "automatic internal EFI migration",
+        "optional DTrace capture"
+      ]
+    },
+    "v2.3.2": {
+      "package_version": "2.3.2",
+      "previous_package_version": "2.3.1",
+      "previous_archive_sha256": "3522e2f5481b70a88ead5abcaeea7e236f01cc08088000e74ccab2be42ca6429",
+      "runtime_minimum_macos": "15.5",
+      "runtime_qualification": {
+        "os": "15.8.1",
+        "gpu": "RTX 5060",
+        "displays": 2,
+        "guarded_boot": "passed",
+        "refresh_change_commits": "60, 75 and 100 Hz committed on the changed display",
+        "known_issue": "after a refresh change on one display the other display can show blank frames until restart",
+        "metal_buffer_copy_bytes": 4096,
+        "metal_copy_verified": true
+      },
+      "paired_kexts": {
+        "NVRM": {
+          "sha256": "19de7ea08d7ce97a74a3f37efc75bf60222fcaa5ba393b9ab832415e8aa58afa"
+        },
+        "NVRMFB": {
+          "sha256": "ac5dd6133cd9c7a4e1235feeceaa0d943e3f5a4aea5934589143162efba676b9"
+        },
+        "NVAccel": {
+          "sha256": "f0edef4ec10372255fd407efd4009a74abc312172db351bbe65e683979d26b54"
+        },
+        "NVRMAGDC": {
+          "sha256": "223a327f0b94ecd9a0ca321f5d69f149d8c4275b0a4e8f6be63d0c6266c6b2de"
+        }
+      },
+      "scope": "1.1.0 plus: the install leaves the Metal allow list readable by WindowServer (the CoreDisplay 'Failed to create MetalDevice' crash loop after install), and the kexts stay off while the boot-picker remove flag is set, so the way back survives a restart. This update installs only on macOS 15.",
+      "unqualified": [
+        "refresh changes with two displays connected (known issue, fix planned for 1.2)",
+        "macOS 26",
+        "RTX 5090 physical qualification",
+        "universal device and application support",
+        "DRM",
+        "automatic internal EFI migration",
+        "optional DTrace capture"
+      ]
+    },
+    "v2.3.3": {
+      "package_version": "2.3.3",
+      "previous_package_version": "2.3.2",
+      "previous_archive_sha256": "33bf069592903c59a52de7393fc2c4104298d9820c378c9287ae39cfa3944a4e",
+      "runtime_minimum_macos": "15.5",
+      "runtime_qualification": {
+        "os": "15.8.1",
+        "gpu": "RTX 5060",
+        "displays": 2,
+        "guarded_boot": "passed",
+        "refresh_change_commits": "60, 75 and 100 Hz committed on the changed display",
+        "known_issue": "after a refresh change on one display the other display can show blank frames until restart",
+        "metal_buffer_copy_bytes": 4096,
+        "metal_copy_verified": true
+      },
+      "paired_kexts": {
+        "NVRM": {
+          "sha256": "cb3775fa7f8261641cc08328e12793aa7c3698d12a3264c443a68c4f55fb1bdb"
+        },
+        "NVRMFB": {
+          "sha256": "6b8befff08e286d92f5e911c27e92e5b2951964e781eb4bea6b5554baafad1e4"
+        },
+        "NVAccel": {
+          "sha256": "f0edef4ec10372255fd407efd4009a74abc312172db351bbe65e683979d26b54"
+        },
+        "NVRMAGDC": {
+          "sha256": "223a327f0b94ecd9a0ca321f5d69f149d8c4275b0a4e8f6be63d0c6266c6b2de"
+        }
+      },
+      "scope": "1.1.0 plus: the install leaves the Metal allow list readable by WindowServer (the CoreDisplay 'Failed to create MetalDevice' crash loop after install), and the kexts stay off while the boot-picker remove flag is set, so the way back survives a restart. This update installs only on macOS 15.",
+      "unqualified": [
+        "refresh changes with two displays connected (known issue, fix planned for 1.2)",
+        "macOS 26",
+        "RTX 5090 physical qualification",
+        "universal device and application support",
+        "DRM",
+        "automatic internal EFI migration",
+        "optional DTrace capture"
+      ]
+    }
+  },
+  "manifest_install_sha_matches_source": {
+    "v2.3.1": {
+      "v2.3.1": true,
+      "v2.3.2": false,
+      "v2.3.3": false
+    },
+    "v2.3.2": {
+      "v2.3.1": false,
+      "v2.3.2": true,
+      "v2.3.3": true
+    },
+    "v2.3.3": {
+      "v2.3.1": false,
+      "v2.3.2": true,
+      "v2.3.3": true
+    }
+  }
+}

@@ -1,0 +1,23 @@
+[
+ {
+  "tag": "v2.3.1",
+  "commit": "418051b47f219e1751c30e361f509e71a1101132",
+  "archive_sha256": "55b461510dcbc8f4a052c3103dc0c61b4998d75f6b9e30f11e8a6cb5bf05bc62",
+  "source_root": "D:\\Hactk\\gpu-mainline-20261017\\upstream\\nullmoth-v2.3.1-418051b\\nvidia-macos-driver-418051b47f219e1751c30e361f509e71a1101132",
+  "files": 608
+ },
+ {
+  "tag": "v2.3.2",
+  "commit": "7a32692db59990d98df03293474470972c913556",
+  "archive_sha256": "141e602050e31c115444fd8ad1bfb82f8e0e6cb81aaee684d7fbba6c473d3504",
+  "source_root": "D:\\Hactk\\gpu-mainline-20261017\\upstream\\nullmoth-v2.3.2-7a32692\\nvidia-macos-driver-7a32692db59990d98df03293474470972c913556",
+  "files": 610
+ },
+ {
+  "tag": "v2.3.3",
+  "commit": "ac55984c473e746c2a8ebea7ba0913461aa7c393",
+  "archive_sha256": "5c4c6769580587632dc8005d4ed0b2963bbb92ffac4666c246f3743092672fe6",
+  "source_root": "D:\\Hactk\\gpu-mainline-20261017\\upstream\\nullmoth-v2.3.3-ac55984\\nvidia-macos-driver-ac55984c473e746c2a8ebea7ba0913461aa7c393",
+  "files": 611
+ }
+]

@@ -1,0 +1,267 @@
+diff --git a/kexts/NMIntelFB/intelfb.cpp b/kexts/NMIntelFB/intelfb.cpp
+--- a/kexts/NMIntelFB/intelfb.cpp
++++ b/kexts/NMIntelFB/intelfb.cpp
+@@ -412,9 +412,10 @@
+     if (fn && fn->isEqualTo(NVRM_VRAM_FN_SCANOUT)) {
+         NVRMVramRequest *r = (NVRMVramRequest *)p1;
+         if (!r || r->version != NVRM_VRAM_ABI_VERSION) return kIOReturnBadArgument;
+-        if (!fSurfMap) return kIOReturnNotReady;
++        // Reject new queries after stop begins; this is not a mapping lease.
++        if (fStopping || !fSurfMap) return kIOReturnNotReady;
+         r->kva = (void *)fSurfMap->getVirtualAddress();
+-        r->phys = 0; r->actualSize = 0;
++        r->phys = 0; r->actualSize = fSurfMap->getLength();
+         r->width = fWidth; r->height = fHeight; r->pitch = fRowBytes;
+         return kIOReturnSuccess;
+     }
+diff --git a/kexts/NVRM/accel/frame_copy_checked.h b/kexts/NVRM/accel/frame_copy_checked.h
+new file mode 100644
+--- /dev/null
++++ b/kexts/NVRM/accel/frame_copy_checked.h
+@@ -0,0 +1,30 @@
++// SPDX-License-Identifier: MIT
++// Bounded CPU copy only. The caller owns both mappings and must prove GPU completion.
++#ifndef HONOR_FRAME_COPY_CHECKED_H
++#define HONOR_FRAME_COPY_CHECKED_H
++
++static inline bool honorCopyFrame32(volatile unsigned int *dst, unsigned long long dstLength,
++                                   unsigned dstPitch, const volatile unsigned int *src,
++                                   unsigned long long srcLength, unsigned srcPitch,
++                                   unsigned width, unsigned height)
++{
++    static_assert(sizeof(unsigned int) == 4, "32-bit pixel words required");
++    if (!dst || !src || !width || !height) return false;
++    const unsigned long long row = (unsigned long long)width * 4;
++    if (row > srcPitch || row > dstPitch || (srcPitch & 3u) || (dstPitch & 3u)) return false;
++    const unsigned long long srcSpan = (unsigned long long)(height - 1) * srcPitch + row;
++    const unsigned long long dstSpan = (unsigned long long)(height - 1) * dstPitch + row;
++    if (srcSpan > srcLength || dstSpan > dstLength) return false;
++    const __UINTPTR_TYPE__ sb = (__UINTPTR_TYPE__)src, db = (__UINTPTR_TYPE__)dst;
++    const __UINTPTR_TYPE__ max = ~(__UINTPTR_TYPE__)0;
++    if ((sb & 3u) || (db & 3u) || srcSpan > max - sb || dstSpan > max - db) return false;
++    if (sb < db + dstSpan && db < sb + srcSpan) return false;
++    for (unsigned y = 0; y < height; ++y) {
++        const volatile unsigned int *s = src + (unsigned long long)y * (srcPitch / 4);
++        volatile unsigned int *d = dst + (unsigned long long)y * (dstPitch / 4);
++        for (unsigned x = 0; x < width; ++x) d[x] = s[x];
++    }
++    return true;
++}
++
++#endif
+diff --git a/kexts/NVRM/accel/nvrm-accel.cpp b/kexts/NVRM/accel/nvrm-accel.cpp
+--- a/kexts/NVRM/accel/nvrm-accel.cpp
++++ b/kexts/NVRM/accel/nvrm-accel.cpp
+@@ -41,6 +41,7 @@
+ #define ALOG(fmt, ...) do { kprintf(NV_LOG_TAG fmt "\n", ##__VA_ARGS__); IOLog(NV_LOG_TAG fmt "\n", ##__VA_ARGS__); } while (0)
+ #include <libkern/c++/OSSymbol.h>
+ #include "nvrm_vram_abi.h"
++#include "frame_copy_checked.h"
+ #include <IOKit/IODeviceMemory.h>
+ #include "tahoe_fwd.h"   // macOS 26: inherited slots Apple no longer exports, forwarded through its vtables
+ #include "nvaccel_stubs.h"
+@@ -261,9 +262,14 @@
+         (void)ref; (void)note;
+         NVAccel *me = (NVAccel *)target;
+         if (!me || !newService) return true;
+-        unsigned idx = 0;
+         OSNumber *num = OSDynamicCast(OSNumber, newService->getProperty("IOFBDependentIndex"));
+-        if (num) idx = num->unsigned32BitValue();
++        OSNumber *controller = OSDynamicCast(OSNumber, newService->getProperty("IOFBDependentID"));
++        if (!num || !controller || controller->unsigned64BitValue() != 0x4E56524D00000001ull ||
++            num->unsigned64BitValue() >= kNvMaxFB) {
++            ALOG("framebuffer publication rejected: missing, foreign or out-of-range dependent identity");
++            return true;
++        }
++        const unsigned idx = num->unsigned32BitValue();
+         const char *what = "kept";
+         if (idx >= kNvMaxFB) what = "OUT OF RANGE -- this head will get no pipe";
+         else {
+@@ -385,8 +391,6 @@
+             ALOG("  %s: calling found_framebuffer(%s index %u) -- count before %u", why, fb->getName(), i, b);
+             fDM->found_framebuffer((IOFramebuffer *)fb);
+             unsigned c = fDM->getFramebufferCount();
+-            fFBRegistered |= 1u << i;
+-            gNvHeadsRegistered = fFBRegistered;
+             if (c != b + 1) {
+                 ALOG("  %s: index %u -- count went %u -> %u; the family did not add it (already known, or the cap "
+                      "accel+0xcb0 = %u refused it). Stopping here so no later head takes this one's pipe number.",
+@@ -409,6 +413,9 @@
+                 break;
+             }
+             ALOG("  %s: index %u -> pipe %u (%p), count %u", why, i, b, pipe, c);
++            // Commit bookkeeping only after count, non-NULL pipe and framebuffer identity checks.
++            fFBRegistered |= 1u << i;
++            gNvHeadsRegistered = fFBRegistered;
+             gNvHeadsPiped |= 1u << i;
+             added++;
+         }
+@@ -932,7 +939,10 @@
+     e->id = 0;
+     if (md->prepare() != kIOReturnSuccess) return nullptr;
+     IOMemoryMap *m = md->map(kIOMapReadOnly);
+-    if (!m) { md->complete(); return nullptr; }
++    if (!m || m->getLength() < need || !m->getVirtualAddress()) {
++        if (m) m->release();
++        md->complete(); return nullptr;
++    }
+     md->retain(); e->md = md; e->map = m; e->id = id;
+     NVIOPLOG("mapped source surface 0x%x (%llu bytes) into slot %u", id, (unsigned long long)m->getLength(), (fIopNext - 1) % kIopSrcSlots);
+     return (const void *)m->getVirtualAddress();
+@@ -968,6 +978,7 @@
+     if (!s && !ro) { OSAddAtomic64(1, &gCntIopEmpty); return kIOReturnSuccess; }
+ 
+     const volatile unsigned int *src = nullptr; unsigned w = 0, h = 0, pitch = 0; bool fromRes = false;
++    unsigned long long sourceBytes = 0;
+     NVResource *res = OSDynamicCast(NVResource, ro);
+     NVVidMemory *vm = res ? nvres_vidmem(res) : nullptr;
+     static SInt32 gIopK6Logs;
+@@ -989,7 +1000,7 @@
+         pitch = *(const volatile unsigned int   *)(rr + 0xb8);
+         if ((unsigned long long)pitch < 4ull * w) NVIOP_FAIL(kIOReturnBadArgument, "resource %ux%u: +0xb8 reads %u, which is not a row pitch (need >= %u) — not a surface buffer", w, h, pitch, 4u * w);
+         if ((unsigned long long)h * pitch > vm->fBytes) NVIOP_FAIL(kIOReturnOverrun, "resource %ux%u pitch %u exceeds its %llu bytes", w, h, pitch, (unsigned long long)vm->fBytes);
+-        src = (const volatile unsigned int *)vm->fKva; fromRes = true;
++        src = (const volatile unsigned int *)vm->fKva; fromRes = true; sourceBytes = vm->fBytes;
+     } else if (s && nvAccelIopFlip(fb, head, s, this)) {
+         OSAddAtomic64(1, &gCntIopSrcSurf); OSAddAtomic64(1, &gCntIopOk); OSAddAtomic64(1, &gCntIopOkHead[head]);
+         return kIOReturnSuccess;
+@@ -998,8 +1009,10 @@
+         // stale, one-colour buffer on the panel every other frame: full-screen flicker, 5 of 40 flicker recordings
+         // (1.13-1.14.1), nvaccel_iop_blank about half of every copied frame, never on machines whose frames all flip.
+         // Such a frame now keeps the previous picture on the panel instead.
+-        nvSurfWaitReady(s->getSurfaceID());   // a copied frame is read here, so its GPU work must be done first
+-        if (!nvAccelSurfCopyReady(s, head)) return kIOReturnSuccess;
++        if (!nvSurfWaitReady(s->getSurfaceID()))
++            NVIOP_FAIL(kIOReturnNotReady, "surface 0x%x GPU completion unproven or timed out", s->getSurfaceID());
++        if (!nvAccelSurfCopyReady(s, head))
++            NVIOP_FAIL(kIOReturnNotReady, "surface 0x%x has no current CPU-visible contents", s->getSurfaceID());
+         const unsigned fmt = s->getPixelFormat();
+         if (fmt != 0x42475241u) NVIOP_FAIL(kIOReturnUnsupported, "surface 0x%x format 0x%08x is not BGRA", s->getSurfaceID(), fmt);
+         const unsigned long long W = s->getWidth(), H = s->getHeight(), P = s->getBytesPerRow();
+@@ -1009,7 +1022,7 @@
+         if (!md) NVIOP_FAIL(kIOReturnNoMemory, "surface 0x%x has no memory descriptor", s->getSurfaceID());
+         src = (const volatile unsigned int *)iopMapSurface(s->getSurfaceID(), md, H * P);
+         if (!src) NVIOP_FAIL(kIOReturnVMError, "surface 0x%x would not prepare/map %llu bytes", s->getSurfaceID(), H * P);
+-        w = (unsigned)W; h = (unsigned)H; pitch = (unsigned)P;
++        w = (unsigned)W; h = (unsigned)H; pitch = (unsigned)P; sourceBytes = H * P;
+     } else {
+         NVIOP_FAIL(kIOReturnUnsupported, "plane resource %p is not an NVResource with a CPU mapping, and there is no IOSurface", ro);
+     }
+@@ -1023,14 +1036,10 @@
+     if (w != q.width || h != q.height) NVIOP_FAIL(kIOReturnBadArgument, "source %ux%u is not the scanout's %ux%u", w, h, q.width, q.height);
+ 
+     nvAccelIopHome(fb, head);
+-    const unsigned words = (((pitch < q.pitch) ? pitch : q.pitch) & ~3u) / 4;
+-    const unsigned spr = pitch / 4, dpr = q.pitch / 4;
++    const unsigned spr = pitch / 4;
+     volatile unsigned int *d = (volatile unsigned int *)q.kva;
+-    for (unsigned y = 0; y < h; y++) {
+-        const volatile unsigned int *sp = src + (unsigned long)y * spr;
+-        volatile unsigned int *dp = d + (unsigned long)y * dpr;
+-        for (unsigned x = 0; x < words; x++) dp[x] = sp[x];
+-    }
++    if (!honorCopyFrame32(d, q.actualSize, q.pitch, src, sourceBytes, pitch, w, h))
++        NVIOP_FAIL(kIOReturnOverrun, "frame copy rejected: invalid pitches, mapping bounds or overlapping ranges");
+     OSAddAtomic64(1, fromRes ? &gCntIopSrcRes : &gCntIopSrcSurf);
+     const SInt64 n = OSAddAtomic64(1, &gCntIopOk);
+     const SInt64 nh = OSAddAtomic64(1, &gCntIopOkHead[head]);
+@@ -1165,10 +1174,11 @@
+ static int gSurfGpuOn = 1;
+ static SInt64 gCntSurfMarks, gCntSurfWaits, gCntSurfTimeouts;
+ static int gSurfWaitMaxUs;
+-static const unsigned kSurfGpuWaitMs = 100;   // a GPU that has not finished a composite in 100 ms is hung; flip anyway
++static const unsigned kSurfGpuWaitMs = 100;   // bounded wait; expiry is not permission to read the frame
+ struct NVSurfPending { unsigned int id; unsigned int seq; };
+ static NVSurfPending gSurfPend[32];
+ static unsigned int gSurfPendSeq;
++static bool gSurfPendLost;   // lock-protected: an untracked pending frame makes readiness unprovable
+ static IOLock *gSurfPendLock;
+ static IOLock *nvSurfLock()
+ {
+@@ -1180,15 +1190,19 @@
+     IOLock *l = nvSurfLock();
+     if (!l || !id) return;
+     IOLockLock(l);
+-    unsigned slot = 32, oldest = 0;
++    unsigned slot = 32;
+     for (unsigned i = 0; i < 32; i++) {
+         if (gSurfPend[i].id == id) { slot = i; break; }
+         if (slot == 32 && !gSurfPend[i].id) slot = i;
+-        if (gSurfPend[i].seq < gSurfPend[oldest].seq) oldest = i;
+     }
+     if (pending) {
+-        if (slot == 32) slot = oldest;   // 32 surfaces in flight at once is not a compositor; the oldest mark goes
+-        gSurfPend[slot].id = id; gSurfPend[slot].seq = ++gSurfPendSeq;
++        if (slot == 32) {
++            // Never evict an unfinished frame and later mistake its absence for completion.
++            gSurfPendLost = true;
++            IOLockWakeup(l, gSurfPend, false);
++        } else {
++            gSurfPend[slot].id = id; gSurfPend[slot].seq = ++gSurfPendSeq;
++        }
+     } else if (slot < 32 && gSurfPend[slot].id == id) {
+         gSurfPend[slot].id = 0;
+         IOLockWakeup(l, gSurfPend, false);
+@@ -1199,21 +1213,25 @@
+ static bool nvSurfWaitReady(unsigned int id)
+ {
+     IOLock *l = gSurfPendLock;
+-    if (!l || !id || !gSurfGpuOn) return true;   // switched off: marks left from before never hold a swap
++    if (!id) return false;
++    if (!gSurfGpuOn) return true;   // explicit plugin fallback: WindowServer retains its own wait
++    if (!l) return false;          // no completion tracker is not evidence of GPU completion
+     uint64_t start = mach_absolute_time(), deadline = 0;
+     clock_interval_to_deadline(kSurfGpuWaitMs, kMillisecondScale, &deadline);
+     bool waited = false, ready = true;
+     IOLockLock(l);
+     for (;;) {
++        if (gSurfPendLost) { ready = false; break; }
+         unsigned i = 0;
+         while (i < 32 && gSurfPend[i].id != id) i++;
+         if (i == 32) break;
+-        if (mach_absolute_time() >= deadline) { gSurfPend[i].id = 0; ready = false; break; }
++        // Timeout is not completion: retain the mark until the real ready notification.
++        if (mach_absolute_time() >= deadline) { ready = false; break; }
+         waited = true;
+         IOLockSleepDeadline(l, gSurfPend, deadline, THREAD_UNINT);
+     }
+     IOLockUnlock(l);
+-    if (waited) {
++    if (waited || !ready) {
+         uint64_t ns = 0; absolutetime_to_nanoseconds(mach_absolute_time() - start, &ns);
+         if ((int)(ns / 1000) > gSurfWaitMaxUs) gSurfWaitMaxUs = (int)(ns / 1000);
+         OSAddAtomic64(1, ready ? &gCntSurfWaits : &gCntSurfTimeouts);
+@@ -1887,7 +1905,7 @@
+ static bool nvAccelSurfCopyReady(IOSurface *s, unsigned head)
+ {
+     NVAccel *a = NVAccel::gAccel;
+-    if (!s || !a) return true;
++    if (!s || !a) return false;
+     const unsigned id = _ZNK9IOSurface12getSurfaceIDEv((void *)s);
+     bool ready = !nvSVPend(id, 2);
+     if (!ready) {
+@@ -1898,17 +1916,19 @@
+             OSObject *ctx = cache ? *(OSObject *volatile *)((unsigned char *)cache + 0x20) : nullptr;
+             NVResource *res = OSDynamicCast(NVResource, ctx);
+             volatile unsigned short *valid = res ? *(unsigned short *volatile *)((volatile unsigned char *)res + 0x30) : nullptr;
+-            if (!res || !valid || (valid[0] & 1u)) ready = true;
+-            else if (!nvAccelIopCopyNeedsPageoff(false, nvAccelResPluginWrote(res))) { ready = true; OSAddAtomic64(1, &gCntIopCopyUnwritten); }
+-            else { bool out = false; res->pageoff(nullptr, true, &out, 0); ready = out || (valid[0] & 1u); }
++            if (res && valid) {
++                if (valid[0] & 1u) ready = true;
++                else if (!nvAccelIopCopyNeedsPageoff(false, nvAccelResPluginWrote(res))) { ready = true; OSAddAtomic64(1, &gCntIopCopyUnwritten); }
++                else { bool out = false; res->pageoff(nullptr, true, &out, 0); ready = out || (valid[0] & 1u); }
++            }
+             if (ready) nvSVPend(id, 0);
+             if (cache) ((OSObject *)cache)->release();
+             nvFamUnlock(a);
+         }
+     }
+-    if (head >= kNvMaxFB) return true;
++    if (head >= kNvMaxFB) return false;
+     if (ready) { gIopCopyHeld[head] = 0; return true; }
+-    if (++gIopCopyHeld[head] > 4) { gIopCopyHeld[head] = 0; return true; }
++    if (gIopCopyHeld[head] < ~0u) ++gIopCopyHeld[head];
+     OSAddAtomic64(1, &gCntIopCopySkip);
+     return false;
+ }

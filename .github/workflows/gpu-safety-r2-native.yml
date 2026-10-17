@@ -1,0 +1,89 @@
+name: HONOR GPU safety R2 native object gate
+
+# Manual only. Complete pinned source, original/candidate object compilation; never install/load/run a driver.
+on:
+  workflow_dispatch:
+    inputs:
+      xcode:
+        description: "Exact Xcode app name (without .app)"
+        required: true
+        default: Xcode_16.4
+
+permissions:
+  contents: read
+
+concurrency:
+  group: honor-gpu-safety-r2-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  native-objects:
+    runs-on: macos-15-intel
+    timeout-minutes: 30
+    env:
+      WANT_XCODE: ${{ inputs.xcode }}
+      NULLMOTH_PIN: ac55984c473e746c2a8ebea7ba0913461aa7c393
+      OGKM_PIN: e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Select Intel Xcode and record toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          logs="$RUNNER_TEMP/gpu-safety-r2-logs"
+          mkdir -p "$logs"
+          [[ "$(uname -m)" == x86_64 ]] || { echo 'BLOCKED: Intel runner required'; exit 2; }
+          [[ "$WANT_XCODE" =~ ^Xcode_16[.0-9]*$ ]] || { echo 'BLOCKED: exact Xcode 16 app name required'; exit 2; }
+          dev="/Applications/$WANT_XCODE.app/Contents/Developer"
+          [[ -d "$dev" ]] || { echo "BLOCKED: Xcode not installed: $WANT_XCODE"; exit 2; }
+          echo "DEVELOPER_DIR=$dev" >> "$GITHUB_ENV"
+          export DEVELOPER_DIR="$dev"
+          brew install make >/dev/null
+          { sw_vers; xcodebuild -version; xcrun clang++ --version; xcrun --show-sdk-version; gmake --version; } > "$logs/toolchain.txt"
+
+      - name: Fetch complete fixed inputs without executing upstream scripts
+        shell: bash
+        run: |
+          set -euo pipefail
+          for spec in "nm https://github.com/nullmoth/nvidia-macos-driver.git $NULLMOTH_PIN" \
+                      "nv https://github.com/NVIDIA/open-gpu-kernel-modules.git $OGKM_PIN"; do
+            set -- $spec
+            d="$RUNNER_TEMP/gpu-safety-r2-$1"
+            git init -q "$d"
+            git -C "$d" remote add origin "$2"
+            git -C "$d" fetch --no-tags --depth 1 origin "$3"
+            git -C "$d" checkout --detach -q FETCH_HEAD
+            [[ "$(git -C "$d" rev-parse HEAD)" == "$3" ]]
+          done
+
+      - name: Compile original and candidate full translation units (objects only)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/gpu-safety-r2/native_compile.py \
+            --nm "$RUNNER_TEMP/gpu-safety-r2-nm" --nv "$RUNNER_TEMP/gpu-safety-r2-nv" \
+            --assets research/gpu-safety-r2 --out "$RUNNER_TEMP/gpu-safety-r2-logs" \
+            2>&1 | tee "$RUNNER_TEMP/gpu-safety-r2-logs/probe.txt"
+
+      - name: Upload text diagnostics only
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: honor-gpu-safety-r2-native-${{ inputs.xcode }}
+          path: ${{ runner.temp }}/gpu-safety-r2-logs/
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Record evidence boundary
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          {
+            echo '## GPU safety R2 — candidate object compilation only'
+            echo '- Source tag ac55984 is not claimed to reproduce the v2.3.3 released driver.'
+            echo '- No kext link, signing, installation, loading, device access or binary upload.'
+            echo '- Kernel/private family ABI, headless memory owner, mapping lifetime and GPU runtime remain BLOCKED.'
+          } >> "$GITHUB_STEP_SUMMARY"

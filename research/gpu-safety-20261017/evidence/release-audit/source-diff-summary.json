@@ -1,0 +1,62 @@
+{
+  "v2.3.1..v2.3.2": {
+    "added": [
+      "build/build_plugin_release.sh",
+      "kexts/NVRM/patches/610-backlight-register-log.patch"
+    ],
+    "removed": [],
+    "changed": [
+      "CHANGELOG.md",
+      "kexts/NVRM/accel/nvrm-accel.cpp",
+      "kexts/NVRM/build-completion-archive.py",
+      "kexts/NVRM/os-xnu2.cpp",
+      "kexts/NVRM/patches/README.md",
+      "kexts/NVRMFB/fb/nvrm-fb.cpp",
+      "package/install.sh",
+      "plugin/NVMTLEventSync.m",
+      "plugin/NVMTLObjects.m",
+      "plugin/nvmtl_vk.c",
+      "tools/test_submission_copies.py",
+      "tools/test_surface_publication.py",
+      "tools/test_surface_queue.py"
+    ]
+  },
+  "v2.3.2..v2.3.3": {
+    "added": [
+      "tools/test_iop_flip_gate.py"
+    ],
+    "removed": [],
+    "changed": [
+      "CHANGELOG.md",
+      "kexts/NVRM/accel/nvaccel_stubs.h",
+      "kexts/NVRM/accel/nvrm-accel.cpp",
+      "kexts/NVRMFB/fb/nvrm-fb.cpp",
+      "tools/test_boot_raster_modes.py"
+    ]
+  },
+  "v2.3.1..v2.3.3": {
+    "added": [
+      "build/build_plugin_release.sh",
+      "kexts/NVRM/patches/610-backlight-register-log.patch",
+      "tools/test_iop_flip_gate.py"
+    ],
+    "removed": [],
+    "changed": [
+      "CHANGELOG.md",
+      "kexts/NVRM/accel/nvaccel_stubs.h",
+      "kexts/NVRM/accel/nvrm-accel.cpp",
+      "kexts/NVRM/build-completion-archive.py",
+      "kexts/NVRM/os-xnu2.cpp",
+      "kexts/NVRM/patches/README.md",
+      "kexts/NVRMFB/fb/nvrm-fb.cpp",
+      "package/install.sh",
+      "plugin/NVMTLEventSync.m",
+      "plugin/NVMTLObjects.m",
+      "plugin/nvmtl_vk.c",
+      "tools/test_boot_raster_modes.py",
+      "tools/test_submission_copies.py",
+      "tools/test_surface_publication.py",
+      "tools/test_surface_queue.py"
+    ]
+  }
+}

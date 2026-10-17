@@ -1,3 +1,15 @@
+## 2026-10-17 本轮发布授权补记
+
+用户要求将网页端协作材料直接提交到本实验仓库并提供具体链接。本次纳入 GPU R1/R2 源码补丁、测试与证据、R2 手动对象门禁及独立审查任务；不触发 Actions，不改 .agent，不扩大为设备部署。完整入口见 [GPU R2 研究记录](../research/gpu-safety-20261017/README.md)。下方“未提交/未推送”是生成候选时的历史状态，不能据此否认本次发布。
+
+## 2026-10-17 GPU 候选 R2 增量（待审阅，运行 NO-GO）
+
+在完整 ac55984 上按 R1→R2 顺序应用并反向恢复均通过。R2 仅修改 os-nvkms-xnu.cpp：KAPI worker 分配失败不再返回成功 open；无 KAPI Device 的 kernel bridge 改走已有事件轮询；thread_call_free 拒绝时报告并保留 wrapper。实际函数平台依赖故障注入 R2 13/13，旧实现按新合同 7/13（预期负向对照）；单线程 HOST-TEST，不是原生/并发/GPU 证据。原生八对象手动门禁 ci-export-r2 已准备、未运行。PM 失败、close 自等待、在途 ioctl 引用和上层 void freeDevice 继续释放仍阻塞；不宣称 stop 安全。下一先审跨 OGKM/XNU 的 freeDevice 前可失败 pre-quiesce 合同。详情 research/gpu-safety-20261017/reports/DELIVERY-R2.zh-CN.md。未提交、推送、触发 Actions、改 .agent 或设备。
+
+## 2026-10-17 后续用户任务覆盖：GPU 优先，仅隔离研发
+
+用户最新明确任务为“接管显卡主线，推进原生构建与GPU闭环”，并明确GPU优先、外设暂缓。因此下文D-18冻结作为历史保留，本轮按D-19恢复GPU源码/编译研究；所有系统/设备权限不变。单项门禁仍独立，不能把源码应用、CPU拷贝、编译或链接当真实GPU/内屏加速。当前成果仅gpu-safety-r1候选，详见research/gpu-safety-20261017/。此为未推送的审阅覆盖层，不修改原始取证或.agent。
+
 # HONOR Hackintosh Lab｜H1–H4 主线复位与防偏移门禁
 
 > 时间：2026-10-17。此文件按已批准的 D-17 整机适配路线解释当前任务优先级；用户本次仅要求回归主线，不意味着授权新的重启、写盘、EFI/BIOS、安全设置或 KEXT 操作。

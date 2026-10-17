@@ -1,0 +1,38 @@
+{
+ "commit": "ac55984c473e746c2a8ebea7ba0913461aa7c393",
+ "ogkm_commit": "e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb",
+ "source": "kexts/NVRM/os-nvkms-xnu.cpp",
+ "candidate_sha256": "3b96cfcfe1dee46b3d87da734bf13db476c2c80474004ffbcee029b52d4af1be",
+ "objects": [
+  "original-NVKMSOS.o",
+  "candidate-NVKMSOS.o"
+ ],
+ "exports": [
+  "nvkms_open_from_kapi",
+  "nvkms_close_from_kapi",
+  "nvkms_xnu_open",
+  "nvkms_xnu_close",
+  "nvkms_event_queue_changed"
+ ],
+ "changed_internal_functions": [
+  "kms_open_common",
+  "kms_close_common"
+ ],
+ "platform_dependencies": [
+  "thread_call_allocate_with_options",
+  "thread_call_free",
+  "IOLockLock",
+  "IOLockUnlock",
+  "nvKmsOpen",
+  "nvKmsClose"
+ ],
+ "new_external_symbols": [],
+ "internal_struct_layout_changed": false,
+ "public_function_signature_changed": false,
+ "license": "PolyForm-Noncommercial-1.0.0; original file notice retained",
+ "actual_darwin_object_hashes": null,
+ "actual_nm_list": null,
+ "darwin_compile": "NOT_RUN",
+ "kext_link": "BLOCKED",
+ "runtime": "NO-GO"
+}

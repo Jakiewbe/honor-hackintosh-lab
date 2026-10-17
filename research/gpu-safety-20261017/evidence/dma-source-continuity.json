@@ -1,0 +1,23 @@
+[
+ {
+  "function": "nv_dma_map_alloc",
+  "same_as_cd8e2bb": true,
+  "old_sha256": "74ac9911da0188b590367bd54cb52a458cb1ad3a05e63ffb9914a5ab7ecc817f",
+  "new_sha256": "74ac9911da0188b590367bd54cb52a458cb1ad3a05e63ffb9914a5ab7ecc817f",
+  "new_body": "nv_dma_map_alloc(nv_dma_device_t *dev, NvU64 page_count, NvU64 *va_array, NvBool contig, NvBool cache_type, void **priv)\n{\n    kprintf(\"NVRM-xnu: >nv_dma_map_alloc pages=%llu contig=%u first=0x%llx (identity)\\n\", page_count, contig, va_array ? va_array[0] : 0);\n    *priv = NULL; return NV_OK;\n}"
+ },
+ {
+  "function": "nv_dma_unmap_alloc",
+  "same_as_cd8e2bb": true,
+  "old_sha256": "08296e087c963c599ac7635733452d8ed63df065232a0373651a647e27eecab2",
+  "new_sha256": "08296e087c963c599ac7635733452d8ed63df065232a0373651a647e27eecab2",
+  "new_body": "nv_dma_unmap_alloc(nv_dma_device_t *dev, NvU64 page_count, NvU64 *va_array, void **priv) { TRC; return NV_OK; }"
+ },
+ {
+  "function": "nv_requires_dma_remap",
+  "same_as_cd8e2bb": true,
+  "old_sha256": "ac470ced68e13ddf7d1fa0f455929d0eb2b06eca99a0b280dd9500eee6c52b3d",
+  "new_sha256": "ac470ced68e13ddf7d1fa0f455929d0eb2b06eca99a0b280dd9500eee6c52b3d",
+  "new_body": "nv_requires_dma_remap(nv_state_t *nv) { TRC; return NV_FALSE; }"
+ }
+]

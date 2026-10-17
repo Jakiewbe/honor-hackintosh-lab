@@ -1,3 +1,15 @@
+## 2026-10-17 本轮发布授权补记
+
+用户要求将网页端协作材料直接提交到本实验仓库并提供具体链接。本次纳入 GPU R1/R2 源码补丁、测试与证据、R2 手动对象门禁及独立审查任务；不触发 Actions，不改 .agent，不扩大为设备部署。完整入口见 [GPU R2 研究记录](../research/gpu-safety-20261017/README.md)。下方“未提交/未推送”是生成候选时的历史状态，不能据此否认本次发布。
+
+## 2026-10-17 GPU 候选 R2 增量（待审阅，运行 NO-GO）
+
+在完整 ac55984 上按 R1→R2 顺序应用并反向恢复均通过。R2 仅修改 os-nvkms-xnu.cpp：KAPI worker 分配失败不再返回成功 open；无 KAPI Device 的 kernel bridge 改走已有事件轮询；thread_call_free 拒绝时报告并保留 wrapper。实际函数平台依赖故障注入 R2 13/13，旧实现按新合同 7/13（预期负向对照）；单线程 HOST-TEST，不是原生/并发/GPU 证据。原生八对象手动门禁 ci-export-r2 已准备、未运行。PM 失败、close 自等待、在途 ioctl 引用和上层 void freeDevice 继续释放仍阻塞；不宣称 stop 安全。下一先审跨 OGKM/XNU 的 freeDevice 前可失败 pre-quiesce 合同。详情 research/gpu-safety-20261017/reports/DELIVERY-R2.zh-CN.md。未提交、推送、触发 Actions、改 .agent 或设备。
+
+## 2026-10-17 最新 GPU 接手断点（用户明确选择，待审阅）
+
+先读research/gpu-safety-20261017/。输入ac55984完整源码上仅应用gpu-safety-r1.patch，不混用2.3.3发行kext、旧B3-B10或缺失BRIDGE-01～06。CPU/补丁应用证据已有，不重复刷同质模型。下一项：审阅并按需提交manual native对象门禁，由用户网页运行；之后先解决os-nvkms-xnu.cpp:kms_close_common自等待/可失败关闭，再把Device唯一owner置于NVRM，VRAM/GPUVA脱离显示器。当前NMIntelFB裸kva/stop与真实DMA/GSP仍NO-GO，不启用Head4或实验功能。没有推送/触发/设备授权；此前H1进入桌面事实不变。
+
 # 10｜Codex 正式交接单：现在接手做什么
 
 ## 2026-10-17 最新 Codex 唯一优先交接：H1→H2→H3；H4 冻结

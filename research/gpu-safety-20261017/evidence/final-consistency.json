@@ -1,0 +1,11 @@
+{
+ "v2.3.1_source_hashes_match": true,
+ "v2.3.2_source_hashes_match": true,
+ "v2.3.3_source_hashes_match": true,
+ "candidate_full_tree_matches_record": true,
+ "export_patch_matches_main": true,
+ "export_test_matches_host": true,
+ "status_document_patch_check_exit": 0,
+ "status_document_patch_check_stderr": "",
+ "level": "SOURCE-REVIEW / PATCH-APPLIED / HOST-TEST only; new Darwin compile not run"
+}

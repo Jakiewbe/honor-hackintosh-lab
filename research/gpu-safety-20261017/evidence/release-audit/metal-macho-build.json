@@ -1,0 +1,71 @@
+{
+  "v2.3.1": {
+    "pkgroot/Library/GPUBundles/NVMTLDriver.bundle/Contents/MacOS/NVMTLDriver": {
+      "cpu": 16777223,
+      "subcpu": 3,
+      "filetype": 8,
+      "ncmds": 21,
+      "load_command_bytes": 3928,
+      "build_version": [
+        {
+          "command": "LC_BUILD_VERSION",
+          "platform": 1,
+          "minos": "26.0.0",
+          "sdk": "26.5.0",
+          "tools": [
+            {
+              "tool": 3,
+              "version": "1267.0.0"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "v2.3.2": {
+    "pkgroot/Library/GPUBundles/NVMTLDriver.bundle/Contents/MacOS/NVMTLDriver": {
+      "cpu": 16777223,
+      "subcpu": 3,
+      "filetype": 8,
+      "ncmds": 21,
+      "load_command_bytes": 3928,
+      "build_version": [
+        {
+          "command": "LC_BUILD_VERSION",
+          "platform": 1,
+          "minos": "15.0.0",
+          "sdk": "26.5.0",
+          "tools": [
+            {
+              "tool": 3,
+              "version": "1267.0.0"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "v2.3.3": {
+    "pkgroot/Library/GPUBundles/NVMTLDriver.bundle/Contents/MacOS/NVMTLDriver": {
+      "cpu": 16777223,
+      "subcpu": 3,
+      "filetype": 8,
+      "ncmds": 21,
+      "load_command_bytes": 3928,
+      "build_version": [
+        {
+          "command": "LC_BUILD_VERSION",
+          "platform": 1,
+          "minos": "15.0.0",
+          "sdk": "26.5.0",
+          "tools": [
+            {
+              "tool": 3,
+              "version": "1267.0.0"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

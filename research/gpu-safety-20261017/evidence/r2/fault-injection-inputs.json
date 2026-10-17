@@ -1,0 +1,22 @@
+{
+ "r1": {
+  "source_sha256": "10e9a191841d79198dcbcadc2a533b8c79842fd2f8cf896beaa080c88bc6ac2a",
+  "extracted_markers": [
+   "struct nvkms_per_open {",
+   "static struct nvkms_per_open *kms_open_common(",
+   "static void kms_close_common(",
+   "void nvkms_event_queue_changed("
+  ],
+  "fixture_sha256": "efa5e6b7c9fc72cc0c22f231d71e35ddede214caae9476aaab9591a9f6c2252b"
+ },
+ "r2": {
+  "source_sha256": "3b96cfcfe1dee46b3d87da734bf13db476c2c80474004ffbcee029b52d4af1be",
+  "extracted_markers": [
+   "struct nvkms_per_open {",
+   "static struct nvkms_per_open *kms_open_common(",
+   "static void kms_close_common(",
+   "void nvkms_event_queue_changed("
+  ],
+  "fixture_sha256": "0825d010a0a3803dd9f178d9aa3c4a07968473ad8d72f065542812d23466f1fa"
+ }
+}

@@ -1,0 +1,42 @@
+{
+ "checks": [
+  {
+   "version": "v2.3.1",
+   "commit": "418051b47f219e1751c30e361f509e71a1101132",
+   "full_source_files": 608,
+   "exit_code": 1,
+   "stdout": "",
+   "stderr": "error: patch failed: kexts/NVRM/accel/nvrm-accel.cpp:1898\nerror: kexts/NVRM/accel/nvrm-accel.cpp: patch does not apply\n"
+  },
+  {
+   "version": "v2.3.2",
+   "commit": "7a32692db59990d98df03293474470972c913556",
+   "full_source_files": 610,
+   "exit_code": 1,
+   "stdout": "",
+   "stderr": "error: patch failed: kexts/NVRM/accel/nvrm-accel.cpp:1898\nerror: kexts/NVRM/accel/nvrm-accel.cpp: patch does not apply\n"
+  },
+  {
+   "version": "v2.3.3",
+   "commit": "ac55984c473e746c2a8ebea7ba0913461aa7c393",
+   "full_source_files": 611,
+   "exit_code": 0,
+   "stdout": "",
+   "stderr": ""
+  }
+ ],
+ "full_apply_exit": 0,
+ "full_applied_tree_matches_candidate": true,
+ "reverse_apply_exit": 0,
+ "full_rollback_matches_input": true,
+ "changed_files": [
+  "kexts/NMIntelFB/intelfb.cpp",
+  "kexts/NVRM/accel/frame_copy_checked.h",
+  "kexts/NVRM/accel/nvrm-accel.cpp"
+ ],
+ "patch_sha256": "ad176fb5ced857718fdb7a3fd99f4e5db4cc67b0c58ca82929a2a013158dcf0b",
+ "candidate_files": 612,
+ "original_files": 611,
+ "level": "PATCH-APPLIED; no Darwin compilation",
+ "initial_attempt": "Windows Git core.autocrlf converted applied files to CRLF; text matched but byte identity failed. Retried with per-command core.autocrlf=false; no global config changed."
+}

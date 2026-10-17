@@ -1,0 +1,9 @@
+{
+ "r2_patch_sha256": "5abc69a716dd9fc2d6293d68f1140d64b9aa57e159668111b8164b3013e44ece",
+ "native_compile_script_sha256": "2e9f9e7c36c56bc57566f65b1134428a4c52fbb829fc89eec1b0d15ebb5168f3",
+ "native_workflow_sha256": "41f62b1c1f3e04ab78f845451904591074e58e18c4117d57c9275b8978677d21",
+ "export_patches_match": true,
+ "candidate_source_matches_fault_injection": true,
+ "native_execution": "NOT_RUN",
+ "runtime": "NO-GO"
+}

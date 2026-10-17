@@ -1,0 +1,119 @@
+{
+ "upstream_commit": "ac55984c473e746c2a8ebea7ba0913461aa7c393",
+ "sequence": [
+  "gpu-safety-r1.patch",
+  "gpu-safety-r2-kms-open.patch"
+ ],
+ "steps": [
+  {
+   "argv": [
+    "git",
+    "-c",
+    "core.autocrlf=false",
+    "apply",
+    "--check",
+    "--whitespace=error-all",
+    "D:\\Hactk\\gpu-mainline-20261017\\patches\\gpu-safety-r1.patch"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": ""
+  },
+  {
+   "argv": [
+    "git",
+    "-c",
+    "core.autocrlf=false",
+    "apply",
+    "--whitespace=error-all",
+    "D:\\Hactk\\gpu-mainline-20261017\\patches\\gpu-safety-r1.patch"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": ""
+  },
+  {
+   "argv": [
+    "git",
+    "-c",
+    "core.autocrlf=false",
+    "apply",
+    "--check",
+    "--whitespace=error-all",
+    "D:\\Hactk\\gpu-mainline-20261017\\patches\\gpu-safety-r2-kms-open.patch"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": ""
+  },
+  {
+   "argv": [
+    "git",
+    "-c",
+    "core.autocrlf=false",
+    "apply",
+    "--whitespace=error-all",
+    "D:\\Hactk\\gpu-mainline-20261017\\patches\\gpu-safety-r2-kms-open.patch"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": ""
+  },
+  {
+   "argv": [
+    "git",
+    "-c",
+    "core.autocrlf=false",
+    "apply",
+    "--reverse",
+    "D:\\Hactk\\gpu-mainline-20261017\\patches\\gpu-safety-r2-kms-open.patch"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": ""
+  },
+  {
+   "argv": [
+    "git",
+    "-c",
+    "core.autocrlf=false",
+    "apply",
+    "--reverse",
+    "D:\\Hactk\\gpu-mainline-20261017\\patches\\gpu-safety-r1.patch"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": ""
+  }
+ ],
+ "full_source_files": 611,
+ "candidate_files": 612,
+ "full_apply_matches_candidate": true,
+ "reverse_r2_restores_r1": true,
+ "reverse_r1_restores_original": true,
+ "r1_recorded_source_hashes_unchanged": true,
+ "r2_changes_from_r1": [
+  "kexts/NVRM/os-nvkms-xnu.cpp"
+ ],
+ "changed_source": {
+  "path": "kexts/NVRM/os-nvkms-xnu.cpp",
+  "original_sha256": "10e9a191841d79198dcbcadc2a533b8c79842fd2f8cf896beaa080c88bc6ac2a",
+  "r2_sha256": "3b96cfcfe1dee46b3d87da734bf13db476c2c80474004ffbcee029b52d4af1be"
+ },
+ "patch_sha256": "5abc69a716dd9fc2d6293d68f1140d64b9aa57e159668111b8164b3013e44ece",
+ "export_patches_match": true,
+ "macro_parser_unchanged_from_locally_validated_r1": true,
+ "host_fault_injection": {
+  "r1_exit": 1,
+  "r2_exit": 0,
+  "r1": "7/13 of new R2 contract; expected nonzero negative control",
+  "r2": "13/13; real production function bodies, platform dependencies injected; single threaded",
+  "r1_compile_exit": 0,
+  "r2_compile_exit": 0,
+  "sanitizers": "address,undefined",
+  "strict_warnings": "-Wall -Wextra -Wconversion -Werror"
+ },
+ "darwin_compile": "NOT_RUN",
+ "kext_link": "BLOCKED",
+ "runtime": "NO-GO"
+}

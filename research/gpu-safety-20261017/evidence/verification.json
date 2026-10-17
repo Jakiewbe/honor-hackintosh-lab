@@ -1,0 +1,57 @@
+{
+ "lab_commit": "bb523a58757c9a4d1721f8f1f1cc98b89dc9bdbc",
+ "upstream_commit": "ac55984c473e746c2a8ebea7ba0913461aa7c393",
+ "ogkm_commit": "e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb",
+ "candidate_files": [
+  {
+   "path": "kexts/NMIntelFB/intelfb.cpp",
+   "original_sha256": "fc4d76f9b2baac12426c5c91a08bf5943da5e52329fe5d1b81ebe5b282f7e85b",
+   "candidate_sha256": "873408d1678792c6d13ad0250a8a6034cc0b91c06932bd126ec5294aaf9a23a8",
+   "candidate_git_blob": "bd44fff604be658e59d76a75e4fcd0b4a85f4baa"
+  },
+  {
+   "path": "kexts/NVRM/accel/nvrm-accel.cpp",
+   "original_sha256": "bd24249e5406f53cce20d636d7a4bb9b99a779bcd128380fee5bf11a0cf43397",
+   "candidate_sha256": "8d226333ab43c5a95a0a7fc078130a5a40be852e84cb17982c6b896457b1eba6",
+   "candidate_git_blob": "2e7f259c88540d8337e818ddacd48767e1f84b8d"
+  },
+  {
+   "path": "kexts/NVRM/accel/frame_copy_checked.h",
+   "original_sha256": null,
+   "candidate_sha256": "625ccca2aa0b2f440fc94e2fdfeec5a90a9ec762081c3378e866b986d99d65be",
+   "candidate_git_blob": "e3b99cf6b9c2133500504722a0cb6acd76c65e29"
+  }
+ ],
+ "source_object_symbol": [
+  {
+   "source": "kexts/NMIntelFB/intelfb.cpp",
+   "object": "original/candidate NMIntelFB.o and NMIntelFBVirtual.o",
+   "symbols": "NMIntelFB::callPlatformFunction (actual nm list pending CI)",
+   "darwin_compile": null
+  },
+  {
+   "source": "kexts/NVRM/accel/nvrm-accel.cpp",
+   "object": "original/candidate NVAccel.o",
+   "symbols": "NVDisplayPipe::performTransaction; NVAccel registration; actual nm list pending CI",
+   "darwin_compile": null
+  },
+  {
+   "source": "kexts/NVRM/accel/frame_copy_checked.h",
+   "object": "inlined into candidate NVAccel.o; separately executed in real CPU host test",
+   "symbols": "honorCopyFrame32 (static inline; no external provider)",
+   "host_test": "PASS",
+   "darwin_compile": null
+  }
+ ],
+ "licenses": {
+  "upstream": "PolyForm-Noncommercial-1.0.0; original per-file notices retained",
+  "new_helper": "MIT",
+  "ogkm": "MIT except per-file notices",
+  "private_iofamily_headers": "upstream reconstructed declarations; target kernel ABI/link exports unverified"
+ },
+ "native_status": "BLOCKED_NO_LOCAL_MACOS_XCODE; manual workflow prepared, not run",
+ "kernel_link": "BLOCKED_TARGET_BUILD_KDK_PRIVATE_FAMILY_ABI_EXPORTS",
+ "runtime": "NO-GO",
+ "old_bridge_packages": "NOT_FOUND_IN_BOUNDED_SEARCH; NOT_RECREATED_AS_ORIGINAL",
+ "safety": "No .agent, original snapshots, old checkout, Windows or device changes. No commit, push, branch/worktree or Actions dispatch."
+}
