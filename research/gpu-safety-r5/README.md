@@ -78,7 +78,27 @@ GitHub UI → Actions → **HONOR GPU safety R5 native object and kext link gate
 [Run 39050097952](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39050097952) `success`（提交 `c5e04ca`）：**10 个补丁**（9 个 NullMoth + OGKM）全部应用，
 **14/14 对象编译成功**（含 NVRMFB），每单元告警数与 original 相同，NVAccel kext 链接成功（244400 B）。
 
-### R11（2026-10-18）：给"保留"的共享 Device 一条恢复路径
+### R12（2026-10-18）：共享 Device 状态的竞态
+
+**先取证，再改。** 两条结论来自源码而不是推测：
+
+1. **谁还能销毁这个 Device？** OGKM `nvkms-kapi.c`（固定 `e4a5faa`）里，`FreeDevice()` 只有一个非表项调用点——
+   `AllocateDevice()` 自己的 `failed:` 分支（L988，此时设备从未交给我们）。也就是说：**设备一旦分配成功，
+   除了我们自己的 `freeDevice()` 之外没有任何路径会销毁它**。这证明 `nvkms_xnu_pm_running()` 作为"
+   设备是否还能被安全拆除"的判据是充分的（它回答的是 NVKMS 能不能碰 GPU，而不是设备是否存在）。
+2. **`dropKapiDevice()` 没有持锁。** `kapiInit()` 在 `startLock()`（`IORecursiveLock`）里跑，
+   `stop()` 只在更新 `gFBs[]` 时短暂持锁，然后**在锁外**于函数末尾调用 `dropKapiDevice()`。
+   而 `gDev` / `gDevUsers` / `gDevOrphaned` / `gHeadsTaken` 是全局共享的——一个 framebuffer 在 stop、
+   另一个在 start，就会在这些全局量上交错。
+
+R12：`dropKapiDevice()` 与 `finishOrphanedDevice()` 都先取 `NVRMDisplayGate`（就是 `startLock()` 的 RAII
+守卫，递归锁，所以 `kapiInit` 内的回滚可以安全重入）。拿不到锁就**保留设备并记日志**，不做无锁拆除。
+
+实测（[Run 39051324224](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39051324224)，`success`）：**13 个补丁**、**16/16 对象**、告警零增量；
+NVAccel kext 244400 B；NVRMFB kext **311488 B / 174 导出**（比 R11 的 311376 B 多 112 B，对应新增的守卫）。
+主机测试 **22/22**；结构合同 **36/36**（含"drop 先取 gate""拒绝无锁拆除""bind 路径持锁跨 kapiInit"）。
+
+## R11（2026-10-18）：给"保留"的共享 Device 一条恢复路径
 
 R10 的规则是"NVKMS 不能调用时不拆除"，代价是有界泄漏。R11 把这个泄漏变成可恢复：
 
