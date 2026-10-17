@@ -1,3 +1,10 @@
+| R8–R12 设备生命周期 | HOST-TEST / SOURCE-STRUCTURE | 22/22、36/36（两源文件各自期望值） | `research/gpu-safety-r5/README.md` |
+| R10 生产文件修正 | DARWIN-COMPILE | 16/16 对象（含生产 NVRMFB 与遗留副本），告警零增量 | run 39050580870 |
+| R11 孤儿回收 | DARWIN-COMPILE | NVRMFB kext 311376 B / 174 导出 | run 39051079369 |
+| R12 串行化 | DARWIN-COMPILE | NVRMFB kext 311488 B / 174 导出 | run 39051324224 |
+| R13 NVRM 链接 | 负结果 | 361768 B / 649 符号 vs 发行版 16787920 B / 34302（约 2%） | run 39051715396 |
+| 目标 GPU 在 OGKM 支持表 | SOURCE-REVIEW | 610.57.04 `README.md` 列有 `RTX 2050 / 25A9` | `reference/OGKM-README.md` |
+
 | R5–R7 原生对象门禁 | DARWIN-COMPILE | 12/12 对象 exit 0（original+candidate 各 6 TU），告警零增量 | run 39048772269 |
 | R5–R7 NVAccel kext 链接 | KEXT-LINK | exit 0，244400 B，`sha256 89f9839e…5e6cf1` | run 39048772269 |
 | 签名 / 加载 / GPU 执行 | — | **未运行，NO-GO** | — |

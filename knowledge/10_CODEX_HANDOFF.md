@@ -1,3 +1,18 @@
+## 2026-10-18 GPU R8–R13 交接：离线工作已到边界，下一步需要用户决定
+
+R7–R12 把 NVIDIA 侧设备生命周期修到"失败即保留、最后使用者释放、PM 不可用不拆、孤儿下次回收、状态转换串行化"，
+全部有主机测试与结构合同，并在 Xcode 16.4 上编译（16/16 对象）。R10 纠正了"改错文件"（生产 NVRMFB 在
+`kexts/NVRMFB/fb/`）。R13 是负结果：`NVRM.kext` 无法用公开源码重建。
+
+**下一步只有三种：**
+1. 用户授权一次隔离的 `KEXT-LOAD` 取证实验（自有 NVAccel/NVRMFB + 上游 NVRM，采日志后立即回退）→ 才可能进入
+   `GPU-RUNTIME`；
+2. 用户不接受用无构建证据的 NVRM → 记为"不可验证"，停止 NVIDIA 方向；
+3. 实验显示 RM/GSP 无法初始化 → 出技术止损结论。
+
+判断依据与条件见 [FEASIBILITY-STOPLOSS-20261018.md](../research/gpu-safety-r5/FEASIBILITY-STOPLOSS-20261018.md)。
+不再新增离线补丁，除非它直接服务于上述三者之一。
+
 ## 2026-10-18 门禁已通过（DARWIN-COMPILE + KEXT-LINK），下一步是加载前的对称销毁与内存 owner
 
 [Run 39048772269](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39048772269) 首次通过：12/12 对象、告警零增量、NVAccel kext 链接成功（244400 B，

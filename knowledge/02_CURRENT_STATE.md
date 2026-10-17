@@ -1,3 +1,21 @@
+## 2026-10-18 GPU R8–R13：设备生命周期闭环、生产文件修正、NVRM 不可重建
+
+- **R8/R10**：`kapiInit()` 失败、`super::start()` 失败、`stop()` 三条路径共用 `dropKapiDevice()`；共享 Device
+  由 `gDevUsers` 计数，最后一个使用者才 `freeDevice()`。
+- **R9**：拆除必须发生在 `nvkms_xnu_pm_running()` 为真时（OGKM 的 `ReleaseOwnership`/`KmsFreeDevice` 都经
+  `nvkms_ioctl_from_kapi`，挂起时等 30 秒、LOST 时请求被拒而 `FreeDevice` 仍释放 RM 侧 → 阻塞 + 撕裂）。
+- **R10（重要修正）**：仓库里有两个 `nvrm-fb.cpp`，**发行版 NVRMFB 由 `kexts/NVRMFB/fb/` 构建**（发行二进制含其
+  独有字符串、不含另一份的；`package/install.sh` 与上游测试也只引用它）。R7–R9 改的 `kexts/NVRM/fb/` 是遗留副本，
+  对发行驱动无作用；R10 把全部修复移植到生产文件，门禁同时编译两者。
+- **R11**：`finishOrphanedDevice()` 在下一次 start 时回收"PM 不可用而保留"的孤儿设备。
+- **R12**：`dropKapiDevice()` 原来在 `stop()` 末尾**无锁**执行，与持 `startLock()` 的 `kapiInit()` 竞态；现两者都取
+  `NVRMDisplayGate`（递归锁），拿不到锁则保留并记日志。
+- **R13（负结果）**：`kexts/NVRM/` 全部 9 个根 TU 编译链接得 361768 B / 649 符号，发行版为 16787920 B / 34302 符号
+  （约 2%），仓库内无预编译对象 → **NVRM.kext 无法用公开源码重建**，`KEXT-LINK` 覆盖面仍只有 NVAccel 与 NVRMFB。
+
+证据等级：`DARWIN-COMPILE` + `KEXT-LINK`（NVAccel 244400 B、生产 NVRMFB 311488 B）；`KEXT-LOAD` 及之后 **NO-GO**。
+可行性与止损判断见 [FEASIBILITY-STOPLOSS-20261018.md](../research/gpu-safety-r5/FEASIBILITY-STOPLOSS-20261018.md)。
+
 ## 2026-10-18 GPU R5–R7 原生门禁首次通过（DARWIN-COMPILE + KEXT-LINK）
 
 [Run 39048772269](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39048772269) 在 `bfa7c3e` 上 `completed success`：Xcode 16.4 (16F6) / clang 17.0.0 /
