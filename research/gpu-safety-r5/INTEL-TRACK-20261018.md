@@ -48,3 +48,32 @@
 `BLOCKED_FREEBSD_BASE_SELECTION`，本轮**没有**重新拾起那条线——因为它需要新的源码闭包证据，
 而不是又一次源码摘要。Intel 轨当前选择的是"先把这个已存在的 Intel kext 弄清楚"，
 它比从零移植 i915 便宜得多，也更容易被证据推翻。
+
+## 6. R16（2026-10-18）：`stop()` 里的无界等待
+
+审计 `kexts/NMIntelFB/intelfb.cpp` 的停止路径时发现：VBL 定时器的释放是一个**没有出口的循环**——
+
+```c
+if (fVblTimer) { thread_call_cancel(fVblTimer);
+                 while (!thread_call_free(fVblTimer)) { thread_call_cancel(fVblTimer); IOSleep(5); } ... }
+```
+
+只要回调一直"在途"（或者客户端注册的 VBL 处理函数阻塞），`stop()` 就永远不会返回，卸载与关机都会挂在这里。
+这跟 NVIDIA 侧 R2 修的是同一类问题：**`thread_call_free` 失败不等于可以无限重试**。
+
+修法（与 NVRM 同一套纪律）：
+
+- 先把句柄搬到局部并 `fVblTimer = nullptr`，防止重入的 stop 二次释放；
+- `cancel` 之后给 **至多 ~100 ms** 的有界窗口，成功即退出；
+- 仍失败则**保留该 thread call 并继续停止**（`fStopping` 已置位，回调不会再 re-arm），并打一条明确日志。
+
+实测（[Run 39055162192]({RUN})，`success`）：**16 个补丁**、**16/16 对象**、告警零增量；
+Intel kext 链接：`NMIntelFB` **44416 B / 33 符号**、`NMIntelFBVirtual` **54408 B / 55 符号**；
+NVRMFB 315744 B。Intel 停止路径结构合同 **8/8**。
+
+### 仍未关闭的 Intel 项
+
+- **在途帧拷贝窗口**：R1 的补丁只做到"stop 开始后拒绝新的 kva 查询"，已经拿到 kva 的拷入线程仍可能在
+  `OSSafeReleaseNULL(fSurfMap)` 之后继续写。这需要与 NVIDIA 侧同规格的"租约/排空"设计，本轮**没有**做。
+- 发行包不含 Intel kext，因此这一切仍只有编译与链接证据，没有任何运行证据。
+
