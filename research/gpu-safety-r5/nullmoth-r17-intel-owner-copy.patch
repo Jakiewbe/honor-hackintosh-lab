@@ -90,6 +90,32 @@ index 6e42982..bf9e7d7 100644
      if (fn && fn->isEqualTo(NVRM_VRAM_FN_SCANOUT)) {
          NVRMVramRequest *r = (NVRMVramRequest *)p1;
          if (!r || r->version != NVRM_VRAM_ABI_VERSION) return kIOReturnBadArgument;
+diff --git a/kexts/NMIntelFB/nvrm_vram_abi.h b/kexts/NMIntelFB/nvrm_vram_abi.h
+index 430fcb4..cace870 100644
+--- a/kexts/NMIntelFB/nvrm_vram_abi.h
++++ b/kexts/NMIntelFB/nvrm_vram_abi.h
+@@ -11,9 +11,21 @@
+ #define NVRM_VRAM_FN_FREE     "nvFreeVram"
+ 
+ #define NVRM_VRAM_FN_SCANOUT  "nvScanoutInfo"
++// Owner-copy: the peer copies into its own scanout instead of lending a kva that stop() can unmap.
++#define NVRM_VRAM_FN_COPY     "nvCopyToScanout"
+ 
+ #define NVRM_VRAM_BAR1_BUDGET (192ull * 1024ull * 1024ull)
+ 
++// Request for NVRM_VRAM_FN_COPY. The peer validates every field against its own mapping and
++// copies row by row while holding the lock stop() also takes.
++struct NVRMVramCopyRequest {
++    unsigned int       version;
++    const void        *src;        // source pixels (NVIDIA staging buffer)
++    unsigned int       srcPitch;
++    unsigned int       width, height;
++    unsigned int       dstPitch;   // out: the peer's row bytes, for logging only
++};
++
+ struct NVRMVramRequest {
+     unsigned int       version;
+     unsigned int       flags;
 diff --git a/kexts/NVRM/accel/nvrm-accel.cpp b/kexts/NVRM/accel/nvrm-accel.cpp
 index 2e7f259..b05a676 100644
 --- a/kexts/NVRM/accel/nvrm-accel.cpp
@@ -127,6 +153,32 @@ diff --git a/kexts/NVRM/nvrm_vram_abi.h b/kexts/NVRM/nvrm_vram_abi.h
 index 430fcb4..cace870 100644
 --- a/kexts/NVRM/nvrm_vram_abi.h
 +++ b/kexts/NVRM/nvrm_vram_abi.h
+@@ -11,9 +11,21 @@
+ #define NVRM_VRAM_FN_FREE     "nvFreeVram"
+ 
+ #define NVRM_VRAM_FN_SCANOUT  "nvScanoutInfo"
++// Owner-copy: the peer copies into its own scanout instead of lending a kva that stop() can unmap.
++#define NVRM_VRAM_FN_COPY     "nvCopyToScanout"
+ 
+ #define NVRM_VRAM_BAR1_BUDGET (192ull * 1024ull * 1024ull)
+ 
++// Request for NVRM_VRAM_FN_COPY. The peer validates every field against its own mapping and
++// copies row by row while holding the lock stop() also takes.
++struct NVRMVramCopyRequest {
++    unsigned int       version;
++    const void        *src;        // source pixels (NVIDIA staging buffer)
++    unsigned int       srcPitch;
++    unsigned int       width, height;
++    unsigned int       dstPitch;   // out: the peer's row bytes, for logging only
++};
++
+ struct NVRMVramRequest {
+     unsigned int       version;
+     unsigned int       flags;
+diff --git a/kexts/NVRMFB/nvrm_vram_abi.h b/kexts/NVRMFB/nvrm_vram_abi.h
+index 430fcb4..cace870 100644
+--- a/kexts/NVRMFB/nvrm_vram_abi.h
++++ b/kexts/NVRMFB/nvrm_vram_abi.h
 @@ -11,9 +11,21 @@
  #define NVRM_VRAM_FN_FREE     "nvFreeVram"
  
