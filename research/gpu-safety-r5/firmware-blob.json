@@ -1,0 +1,14 @@
+{
+ "const_size": 8500128,
+ "xz_magic_at": 0,
+ "compressed_crc32_header": "6922de36",
+ "stream_consumed": 1048576,
+ "decompressed_bytes": 244480,
+ "decompressed_sha256": "1ece380881f8ec14a4906da60b18f72ab5853dc24258c22d19cec626d5e3601f",
+ "decompressed_head_hex": "810404020000000000000000000000000000000000000000030000000b000000",
+ "head_ascii": "................................................................",
+ "identifier_strings": [],
+ "identifier_string_count": 0,
+ "payload_magic": "8104040200000000",
+ "payload_kind": "unknown"
+}

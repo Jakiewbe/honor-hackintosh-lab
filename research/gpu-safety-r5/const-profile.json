@@ -1,0 +1,104 @@
+{
+ "const_size": 8500128,
+ "analysed_from": 80000,
+ "block_size": 65536,
+ "blocks": 129,
+ "high_entropy_blocks": 125,
+ "low_entropy_blocks": 1,
+ "texty_blocks": 0,
+ "high_entropy_runs": [
+  {
+   "start": 80000,
+   "end": 342144,
+   "size": 262144
+  },
+  {
+   "start": 407680,
+   "end": 8337536,
+   "size": 7929856
+  }
+ ],
+ "top_strings": [
+  [
+   "CEA-861B:#0",
+   68
+  ],
+  [
+   "VESA Established",
+   58
+  ],
+  [
+   "VESA DMT/RB",
+   26
+  ],
+  [
+   "k0v<||l/-W",
+   2
+  ],
+  [
+   "j~);m^w:M%",
+   2
+  ],
+  [
+   "g w7_fRY}@",
+   2
+  ],
+  [
+   "h9F;<P^_3#",
+   2
+  ],
+  [
+   "$\",3BO#$o}c",
+   2
+  ],
+  [
+   "}^Yx-(DupUM#",
+   2
+  ],
+  [
+   "7r\\a(}\\WzV",
+   2
+  ],
+  [
+   "\"JSVd9A\\EyV",
+   2
+  ],
+  [
+   "HALG}85sL__",
+   2
+  ],
+  [
+   "[xQfbWt6JYc",
+   2
+  ],
+  [
+   "<m2QuecV >",
+   2
+  ],
+  [
+   "\\[Tc/|R@Il]",
+   2
+  ],
+  [
+   "RH*Z20N0NS",
+   2
+  ],
+  [
+   "Bdpiu1]6{`,(|",
+   2
+  ],
+  [
+   "'yqOR0eP5$^",
+   2
+  ],
+  [
+   "eae+zqGr8^",
+   2
+  ],
+  [
+   "9/4+^a~'`K",
+   2
+  ]
+ ],
+ "distinct_strings": 488
+}

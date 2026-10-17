@@ -1,0 +1,179 @@
+{
+ "binary": "D:\\Hactk\\gpu-r5-20261017\\work\\release-probe\\pkgroot\\Library\\Extensions\\NVRM.kext\\Contents\\MacOS\\NVRM",
+ "bytes": 16787920,
+ "sections": {
+  "__TEXT,__text": 4757867,
+  "__TEXT,__cstring": 896112,
+  "__TEXT,__const": 8500128,
+  "__TEXT,__ustring": 12,
+  "__DATA,__mod_init_func": 8,
+  "__DATA,__mod_term_func": 8,
+  "__DATA,__const": 340448,
+  "__DATA,__data": 70721,
+  "__DATA,__got": 3424,
+  "__DATA,__bss": 952736,
+  "__DATA,__common": 135546
+ },
+ "symbols_in_sections": {
+  "__text": 30170,
+  "other": 2342
+ },
+ "symbols_pointing_into_const": 1318,
+ "const_samples": [
+  "__ZL10kKmsPmName.rel",
+  "__ZL16nv_xnu_nbci_guid",
+  "__ZL10nv_pv_kind.rel",
+  "_dsmOrderOfPrecedenceList",
+  "_genDsmSubFuncRemapTable",
+  "_pciePeerAccessCaps",
+  "_confComputeSetKeyRotationThreshold_IMPL.keyRotationUpperThreshold",
+  "_cperDumpRecord.nvEventSectionType",
+  "_cperGuidIsNull.nullGuid",
+  "_RmValidateIoctl.RmIoctlsTable"
+ ],
+ "const_size": 8500128,
+ "const_markers": {
+  "RM": 121
+ },
+ "const_string_count": 2492,
+ "const_common_strings": [
+  [
+   "CEA-861B:#0",
+   68
+  ],
+  [
+   "VESA DMT",
+   62
+  ],
+  [
+   "VESA Established",
+   58
+  ],
+  [
+   "VESA DMT/RB",
+   26
+  ],
+  [
+   "V%4z8==6",
+   2
+  ],
+  [
+   "k0v<||l/-W",
+   2
+  ],
+  [
+   "pPQlB8dAm",
+   2
+  ],
+  [
+   "YUJ~mHjy",
+   2
+  ],
+  [
+   "F }h!(#=Y",
+   2
+  ],
+  [
+   "dhX1XwEN",
+   2
+  ],
+  [
+   "j~);m^w:M%",
+   2
+  ],
+  [
+   "-:'a8IJY",
+   2
+  ],
+  [
+   "}?}X&RSy",
+   2
+  ],
+  [
+   "5'(4XjIDe",
+   2
+  ],
+  [
+   "g w7_fRY}@",
+   2
+  ]
+ ],
+ "const_first_bytes": "fd377a585a0000016922de3604c09e880180f60e21011000000000003bc96cc1",
+ "nvkmskapi_symbols": [],
+ "nvkmskapi_all": [
+  "_nvKmsKapiAllocateChannelEvent",
+  "_nvKmsKapiAllocateNotifiers",
+  "_nvKmsKapiAllocateSemaphores",
+  "_nvKmsKapiAllocateSystemMemory",
+  "_nvKmsKapiAllocateVideoMemory",
+  "_nvKmsKapiCancelDisplaySemaphore",
+  "_nvKmsKapiF16ToF32Internal",
+  "_nvKmsKapiF32AddInternal",
+  "_nvKmsKapiF32DivInternal",
+  "_nvKmsKapiF32MulInternal",
+  "_nvKmsKapiF32ToF16Internal",
+  "_nvKmsKapiF32ToUI32RMinMagInternal",
+  "_nvKmsKapiFreeChannelEvent",
+  "_nvKmsKapiFreeNisoSurface",
+  "_nvKmsKapiFreeRmHandle",
+  "_nvKmsKapiFreeSemaphoreSurface",
+  "_nvKmsKapiGenerateRmHandle",
+  "_nvKmsKapiGetDisplaySemaphoreOffset",
+  "_nvKmsKapiGetFunctionsTableInternal",
+  "_nvKmsKapiHandleEventQueueChange",
+  "_nvKmsKapiImportSemaphoreSurface",
+  "_nvKmsKapiProbe",
+  "_nvKmsKapiRegisterSemaphoreSurfaceCallback",
+  "_nvKmsKapiRemove",
+  "_nvKmsKapiSetCallbacks",
+  "_nvKmsKapiSetSemaphoreSurfaceValue",
+  "_nvKmsKapiSignalDisplaySemaphore",
+  "_nvKmsKapiSuspendResume",
+  "_nvKmsKapiTryInitDisplaySemaphore",
+  "_nvKmsKapiUI32ToF32Internal",
+  "_nvKmsKapiUnregisterSemaphoreSurfaceCallback"
+ ],
+ "nvkmskapi_count": 31,
+ "nvxnu_all": [
+  "__ZL11nv_pm_matchPK12nv_xnu_allocyyPy",
+  "__ZL11nv_xnu_live",
+  "__ZL11nv_xnu_maps",
+  "__ZL12nv_xnu_slots",
+  "__ZL13nv_xnu_live_n",
+  "__ZL13nv_xnu_nslots",
+  "__ZL15nv_xnu_dma_bits",
+  "__ZL15nv_xnu_gpu_acpiP10nv_state_t",
+  "__ZL15nv_xnu_log_call",
+  "__ZL15nv_xnu_log_head",
+  "__ZL15nv_xnu_log_ring",
+  "__ZL15nv_xnu_log_tail",
+  "__ZL16nv_xnu_ctl_state",
+  "__ZL16nv_xnu_log_drainPvS_",
+  "__ZL16nv_xnu_maps_high",
+  "__ZL16nv_xnu_nano_firePvS_",
+  "__ZL16nv_xnu_nbci_guid",
+  "__ZL16nv_xnu_work_lock",
+  "__ZL17nv_xnu_acpi_nodes",
+  "__ZL18nv_xnu_log_dropped",
+  "__ZL18nv_xnu_work_threadPvi",
+  "__ZL19nv_xnu_acpi_extractP8OSObjectPhjPj",
+  "__ZL19nv_xnu_log_draining",
+  "__ZL19nv_xnu_work_running",
+  "__ZL20nv_xnu_dump_gsp_regsP10nv_state_t",
+  "__ZL20nv_xnu_work_flushing",
+  "__ZL8nv_q_putP12nv_xnu_alloc",
+  "__ZZL24nv_xnu_acpi_backlight_onvE2on",
+  "_nv_xnu_alloc_md",
+  "_nv_xnu_chat",
+  "_nv_xnu_dump_live_allocs",
+  "_nv_xnu_gpu_os_device",
+  "_nv_xnu_gpu_state",
+  "_nv_xnu_in_isr",
+  "_nv_xnu_isr_thread",
+  "_nv_xnu_kmap_overlap",
+  "_nv_xnu_log_init",
+  "_nv_xnu_lookup_fd",
+  "_nv_xnu_mmap_context",
+  "_nv_xnu_phys_for_kernel_va"
+ ]
+}

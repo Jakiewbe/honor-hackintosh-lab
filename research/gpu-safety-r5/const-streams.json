@@ -1,0 +1,55 @@
+{
+ "const_size": 8500128,
+ "xz_stream_count": 5,
+ "streams": [
+  {
+   "offset": 0,
+   "compressed_consumed": 1048576,
+   "decompressed": 244480,
+   "sha256": "1ece380881f8ec14",
+   "head_hex": "810404020000000000000000000000000000000000000000",
+   "head_ascii": "........................"
+  },
+  {
+   "offset": 17504,
+   "compressed_consumed": 1048576,
+   "decompressed": 253184,
+   "sha256": "20bba59a17ece34c",
+   "head_hex": "810400020000000000000000000000000000000000000000",
+   "head_ascii": "........................"
+  },
+  {
+   "offset": 34112,
+   "compressed_consumed": 1048576,
+   "decompressed": 252288,
+   "sha256": "fd8094ddc71f35cf",
+   "head_hex": "810408020000000000000000000000000000000000000000",
+   "head_ascii": "........................"
+  },
+  {
+   "offset": 53360,
+   "compressed_consumed": 1048576,
+   "decompressed": 244224,
+   "sha256": "a15e1d0ed70bf1d6",
+   "head_hex": "810400020000000000000000000000000000000000000000",
+   "head_ascii": "........................"
+  },
+  {
+   "offset": 70352,
+   "compressed_consumed": 1048576,
+   "decompressed": 247296,
+   "sha256": "4004e888b2be8d86",
+   "head_hex": "81040a020000000000000000000000000000000000000000",
+   "head_ascii": "........................"
+  }
+ ],
+ "compressed_bytes_covered": 5242880,
+ "uncovered_bytes": 3257248,
+ "first_offsets": [
+  0,
+  17504,
+  34112,
+  53360,
+  70352
+ ]
+}

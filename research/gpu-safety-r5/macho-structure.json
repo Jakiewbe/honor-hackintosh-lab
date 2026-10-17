@@ -1,0 +1,360 @@
+[
+ {
+  "file": "release-probe\\pkgroot\\Library\\Extensions\\NVRM.kext\\Contents\\MacOS\\NVRM",
+  "bytes": 16787920,
+  "magic": "0xfeedfacf",
+  "filetype": 11,
+  "cputype": 16777223,
+  "segments": [
+   {
+    "name": "__TEXT",
+    "filesize": 14155776,
+    "vmaddr": "0x0",
+    "vmsize": 14155776
+   },
+   {
+    "name": "__DATA",
+    "filesize": 417792,
+    "vmaddr": "0xd80000",
+    "vmsize": 1503232
+   },
+   {
+    "name": "__LINKEDIT",
+    "filesize": 2214352,
+    "vmaddr": "0xeef000",
+    "vmsize": 2228224
+   }
+  ],
+  "sections": [
+   {
+    "segment": "__TEXT",
+    "section": "__text",
+    "size": 4757867,
+    "fileoff": 1312,
+    "addr": "0x520",
+    "entropy": 6.331
+   },
+   {
+    "segment": "__TEXT",
+    "section": "__cstring",
+    "size": 896112,
+    "fileoff": 4759184,
+    "addr": "0x489e90",
+    "entropy": 5.589
+   },
+   {
+    "segment": "__TEXT",
+    "section": "__const",
+    "size": 8500128,
+    "fileoff": 5655296,
+    "addr": "0x564b00",
+    "entropy": 7.98
+   },
+   {
+    "segment": "__TEXT",
+    "section": "__ustring",
+    "size": 12,
+    "fileoff": 14155424,
+    "addr": "0xd7fea0"
+   },
+   {
+    "segment": "__DATA",
+    "section": "__mod_init_func",
+    "size": 8,
+    "fileoff": 14155776,
+    "addr": "0xd80000"
+   },
+   {
+    "segment": "__DATA",
+    "section": "__mod_term_func",
+    "size": 8,
+    "fileoff": 14155784,
+    "addr": "0xd80008"
+   },
+   {
+    "segment": "__DATA",
+    "section": "__const",
+    "size": 340448,
+    "fileoff": 14155792,
+    "addr": "0xd80010",
+    "entropy": 3.279
+   },
+   {
+    "segment": "__DATA",
+    "section": "__data",
+    "size": 70721,
+    "fileoff": 14496240,
+    "addr": "0xdd31f0",
+    "entropy": 1.84
+   },
+   {
+    "segment": "__DATA",
+    "section": "__got",
+    "size": 3424,
+    "fileoff": 14566968,
+    "addr": "0xde4638"
+   },
+   {
+    "segment": "__DATA",
+    "section": "__bss",
+    "size": 952736,
+    "fileoff": 0,
+    "addr": "0xde53a0"
+   },
+   {
+    "segment": "__DATA",
+    "section": "__common",
+    "size": 135546,
+    "fileoff": 0,
+    "addr": "0xecdd40"
+   }
+  ],
+  "build": {
+   "uuid": "bee3d9da52963211aea72739054a65f4",
+   "source_version": 0
+  },
+  "symbols": {
+   "defined_external": 17679,
+   "families": {
+    "gpu": 1157,
+    "Rm": 1133,
+    "Gpu": 1089,
+    "disp": 490,
+    "gsp": 214,
+    "nvEvo": 170,
+    "rm_": 146,
+    "Gsp": 118,
+    "NVRM": 110,
+    "nvKms": 49,
+    "nvKmsKapi": 28,
+    "nv_xnu": 17,
+    "NvKms": 3
+   },
+   "samples_nvkms": [
+    "_nvKmsKapiAllocateChannelEvent",
+    "_nvKmsKapiAllocateNotifiers",
+    "_nvKmsKapiAllocateSemaphores",
+    "_nvKmsKapiAllocateSystemMemory",
+    "_nvKmsKapiAllocateVideoMemory"
+   ],
+   "samples_nvxnu": [
+    "_nv_xnu_alloc_md",
+    "_nv_xnu_chat",
+    "_nv_xnu_dump_live_allocs",
+    "_nv_xnu_gpu_os_device",
+    "_nv_xnu_gpu_state"
+   ],
+   "samples_rm": [
+    "_rm_access_registry",
+    "_rm_acpi_notify",
+    "_rm_acpi_nvpcf_notify",
+    "_rm_acquire_all_gpus_lock",
+    "_rm_acquire_api_lock"
+   ]
+  },
+  "linkedit": {
+   "symtab": {
+    "symoff": 14820040,
+    "nsyms": 34302,
+    "stroff": 15397760,
+    "strsize": 1259744
+   },
+   "code_signature": {
+    "offset": 16657504,
+    "size": 130416
+   }
+  },
+  "embedded": [
+   {
+    "section": "__TEXT,__text",
+    "size": 4757867,
+    "entropy": 6.331
+   },
+   {
+    "section": "__TEXT,__cstring",
+    "size": 896112,
+    "entropy": 5.589
+   },
+   {
+    "section": "__TEXT,__const",
+    "size": 8500128,
+    "entropy": 7.98
+   },
+   {
+    "section": "__DATA,__const",
+    "size": 340448,
+    "entropy": 3.279
+   },
+   {
+    "section": "__DATA,__data",
+    "size": 70721,
+    "entropy": 1.84
+   },
+   {
+    "section": "__DATA,__bss",
+    "size": 952736,
+    "entropy": null
+   },
+   {
+    "section": "__DATA,__common",
+    "size": 135546,
+    "entropy": null
+   }
+  ]
+ },
+ {
+  "file": "release-probe\\pkgroot\\Library\\Extensions\\NVRMFB.kext\\Contents\\MacOS\\NVRMFB",
+  "bytes": 306736,
+  "magic": "0xfeedfacf",
+  "filetype": 11,
+  "cputype": 16777223,
+  "segments": [
+   {
+    "name": "__TEXT",
+    "filesize": 126976,
+    "vmaddr": "0x0",
+    "vmsize": 126976
+   },
+   {
+    "name": "__DATA",
+    "filesize": 114688,
+    "vmaddr": "0x1f000",
+    "vmsize": 233472
+   },
+   {
+    "name": "__LINKEDIT",
+    "filesize": 65072,
+    "vmaddr": "0x58000",
+    "vmsize": 65536
+   }
+  ],
+  "sections": [
+   {
+    "segment": "__TEXT",
+    "section": "__text",
+    "size": 93230,
+    "fileoff": 1232,
+    "addr": "0x4d0",
+    "entropy": 5.77
+   },
+   {
+    "segment": "__TEXT",
+    "section": "__cstring",
+    "size": 31056,
+    "fileoff": 94462,
+    "addr": "0x170fe",
+    "entropy": 5.219
+   },
+   {
+    "segment": "__TEXT",
+    "section": "__const",
+    "size": 562,
+    "fileoff": 125520,
+    "addr": "0x1ea50"
+   },
+   {
+    "segment": "__DATA",
+    "section": "__mod_init_func",
+    "size": 8,
+    "fileoff": 126976,
+    "addr": "0x1f000"
+   },
+   {
+    "segment": "__DATA",
+    "section": "__mod_term_func",
+    "size": 8,
+    "fileoff": 126984,
+    "addr": "0x1f008"
+   },
+   {
+    "segment": "__DATA",
+    "section": "__const",
+    "size": 11056,
+    "fileoff": 126992,
+    "addr": "0x1f010",
+    "entropy": 0.249
+   },
+   {
+    "segment": "__DATA",
+    "section": "__data",
+    "size": 100280,
+    "fileoff": 138048,
+    "addr": "0x21b40",
+    "entropy": 0.06
+   },
+   {
+    "segment": "__DATA",
+    "section": "__got",
+    "size": 128,
+    "fileoff": 238328,
+    "addr": "0x3a2f8"
+   },
+   {
+    "segment": "__DATA",
+    "section": "__common",
+    "size": 160,
+    "fileoff": 0,
+    "addr": "0x3a378"
+   },
+   {
+    "segment": "__DATA",
+    "section": "__bss",
+    "size": 121761,
+    "fileoff": 0,
+    "addr": "0x3a420"
+   }
+  ],
+  "build": {
+   "uuid": "a3b59a1e38203181837f7fb6a3057e41",
+   "source_version": 0
+  },
+  "symbols": {
+   "defined_external": 169,
+   "families": {
+    "NVRM": 147,
+    "NvKms": 5,
+    "disp": 2,
+    "Gpu": 1,
+    "gpu": 1
+   },
+   "samples_nvkms": [],
+   "samples_nvxnu": [],
+   "samples_rm": []
+  },
+  "linkedit": {
+   "symtab": {
+    "symoff": 243016,
+    "nsyms": 760,
+    "stroff": 276512,
+    "strsize": 30224
+   }
+  },
+  "embedded": [
+   {
+    "section": "__TEXT,__text",
+    "size": 93230,
+    "entropy": 5.77
+   },
+   {
+    "section": "__TEXT,__cstring",
+    "size": 31056,
+    "entropy": 5.219
+   },
+   {
+    "section": "__DATA,__const",
+    "size": 11056,
+    "entropy": 0.249
+   },
+   {
+    "section": "__DATA,__data",
+    "size": 100280,
+    "entropy": 0.06
+   },
+   {
+    "section": "__DATA,__bss",
+    "size": 121761,
+    "entropy": null
+   }
+  ]
+ }
+]
