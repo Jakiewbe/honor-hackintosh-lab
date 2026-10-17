@@ -56,3 +56,31 @@
 
 - `reference/i915_reg_v61.h`（358,525 B，来自 `torvalds/linux` @ `830b3c68`）
 - 审计对象：`kexts/NMIntelFB/intelfb.cpp:50-67`（`constexpr` 偏移表）与 `adoptFirmwareMode()`（读取路径）
+
+## 6. R20：把"未验证"变成"可在机器上验证"的工具
+
+偏移表取不到，又不能猜，所以本轮给驱动加了一个**只读**寄存器快照：
+
+```c
+// -nvintelregdump：启动时把 p=0..3 的 TRANSCONF / PLANE_CTL / SIZE / STRIDE / SURF
+// 与 HTOTAL / HBLANK / HSYNC / VTOTAL / VBLANK / VSYNC / FRMCOUNT 原样打印出来。
+```
+
+- 只调用 `rd()`，**没有任何写入**（结构检查断言 `wr(` 不出现）；
+- 只在 boot-arg `-nvintelregdump` 存在时执行，默认不产生任何额外读写；
+- 在 MMIO 映射建立之后、`adoptFirmwareMode()` 之前执行。
+
+**它怎么回答问题**：哪个 pipe/transcoder 的 `TRANSCONF`/`PLANE_CTL` 有 enable 位（bit 31），就是固件真正在用的那条；
+同时打印的时序值是否"像人样"（例如 `HTOTAL>HBLANK`、非 0xFFFFFFFF）直接反映线性偏移假设是否成立。
+如果是 D 管且读到垃圾值，就说明 `+p*0x1000` 在那里不成立——那时再按实测改常数，而不是凭猜。
+
+实测（[Run 39056924734](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39056924734)，`success`）：**20 个补丁**、**16/16 对象**、告警零增量；
+`NMIntelFB` **44824 B**（R19 时 44664，差 160 B 正是这段只读代码）、`NMIntelFBVirtual` 58752 B；
+Intel 结构合同 **30/30**。
+
+### 使用方式（需要你，且只读）
+
+1. 在 OpenCore 的 boot-args 里临时加 `-nvintelregdump`（**这是 EFI 改动，需要你单独授权**）；
+2. 正常进 macOS，`log show --last 5m | grep regdump` 取回输出；
+3. 不需要装任何 kext——这段代码在 Intel kext 里，但**不加载它就没有输出**；所以它真正可用的前提是
+   "Intel kext 被加载"，而发行包不含它。**这一点必须说清楚：工具已就绪，但触发它需要一次加载实验。**
