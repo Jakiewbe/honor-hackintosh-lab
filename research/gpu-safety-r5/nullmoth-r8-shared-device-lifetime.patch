@@ -1,135 +1,44 @@
 diff --git a/kexts/NVRM/fb/nvrm-fb.cpp b/kexts/NVRM/fb/nvrm-fb.cpp
-index 39a8e22..dce2b03 100644
+index dce2b03..155e4d3 100644
 --- a/kexts/NVRM/fb/nvrm-fb.cpp
 +++ b/kexts/NVRM/fb/nvrm-fb.cpp
-@@ -103,6 +103,12 @@ class NVRMNVDAFramebuffer : public IOFramebuffer {
-     bool reflip();
-     static void eventCallback(const struct NvKmsKapiEvent *event) { FBLOG("kapi event type %d", (int)event->type); }
-     bool kapiInit();
-+    // Undo what this framebuffer bound: give back its modeset ownership, its head bit, and the
-+    // shared device once no framebuffer drives it any more. Used by kapiInit failures, by a
-+    // failed super::start(), and by stop().
-+    void dropKapiDevice();
-+    bool fGrabbedOwnership = false;   // grabOwnership() succeeded and has not been released
-+    NvU32 fHeadBit = 0;               // bit this instance set in gHeadsTaken
+@@ -109,6 +109,13 @@ class NVRMNVDAFramebuffer : public IOFramebuffer {
+     void dropKapiDevice();
+     bool fGrabbedOwnership = false;   // grabOwnership() succeeded and has not been released
+     NvU32 fHeadBit = 0;               // bit this instance set in gHeadsTaken
++    // Scope guard for the failures between binding the shared device and publishing this
++    // framebuffer. A nested class, so it may call the protected dropKapiDevice() above.
++    struct KapiRollback {
++        NVRMNVDAFramebuffer *fb;
++        bool armed;
++        ~KapiRollback() { if (armed) fb->dropKapiDevice(); }
++    };
      bool applyMode();
      void hudDraw();
  public:
-@@ -161,6 +167,9 @@ struct nvrm_dpy_rec {
-     NvU32 edidSize; NvU8 edid[NVKMS_KAPI_EDID_BUFFER_SIZE];
- };
- static struct NvKmsKapiDevice *gDev;
-+// Framebuffer instances currently holding fDev. The last one to drop it frees the shared device,
-+// so a device no longer driven by any framebuffer cannot outlive its privateData/eventCallback.
-+static int gDevUsers;
- static struct nvrm_dpy_rec gDpy[NVKMS_KAPI_MAX_CONNECTORS * 2];
- static int gNDpy = -1;
- static int gBootHead = -2;
-@@ -236,6 +245,30 @@ void NVRMNVDAFramebuffer::surveyBar1()
-     if (!shown) FBLOG("  BAR survey: NO structured region found in %llu MB", fBarLen >> 20);
-     else        FBLOG("  BAR survey: %u structured region(s) listed above", shown);
- }
-+// kapiInit binds this framebuffer to the one shared NvKmsKapiDevice. Whoever binds it must be able
-+// to unbind it again: the device's privateData and eventCallback point at this framebuffer, so it
-+// must never outlive the last framebuffer that drives it, and it must not stay reachable through
-+// gDev after the owner failed to start. Ownership is released per instance (the grab in kapiInit is
-+// not a no-op), and only the last holder calls freeDevice(). freeDevice() returns void, so a
-+// teardown failure cannot be reported - the log is the only signal.
-+void NVRMNVDAFramebuffer::dropKapiDevice()
-+{
-+    if (fHeadBit) { gHeadsTaken &= ~fHeadBit; fHeadBit = 0; }
-+    if (!fDev) return;
-+    if (fGrabbedOwnership) { fKms->releaseOwnership(fDev); fGrabbedOwnership = false; }
-+    const int remaining = --gDevUsers;
-+    if (remaining > 0) {
-+        FBLOG("device 0x%llx kept: %d other framebuffer(s) still drive it",
-+              (unsigned long long)(uintptr_t)fDev, remaining);
-+        fDev = nullptr;
-+        return;
-+    }
-+    fKms->freeDevice(fDev);
-+    if (gDev == fDev) gDev = nullptr;
-+    fDev = nullptr;
-+    FBLOG("shared NvKmsKapiDevice released (last user)");
-+}
-+
+@@ -272,20 +279,14 @@ void NVRMNVDAFramebuffer::dropKapiDevice()
  // kapiInit creates the one shared NvKmsKapiDevice on first use. If a later step fails, that
  // device must not stay reachable through gDev: its privateData and eventCallback point at this
  // framebuffer, so the next framebuffer would silently reuse a device whose owner never started,
-@@ -244,28 +277,15 @@ void NVRMNVDAFramebuffer::surveyBar1()
- // returns void, so a teardown failure cannot be reported - the log is the only signal, and the
- // GPU stays NO-GO until this path has been exercised natively.
- struct KapiDeviceRollback {
--    struct NvKmsKapiFunctionsTable *kms;
--    struct NvKmsKapiDevice **dev;
--    NvU32 *headsTaken;
--    NvU32 headBit;
--    bool own, grabbed, armed;
--    ~KapiDeviceRollback()
--    {
--        if (!armed) return;
--        if (headsTaken && headBit) *headsTaken &= ~headBit;
--        if (!own || !dev || !*dev) return;
--        if (grabbed) kms->releaseOwnership(*dev);
--        kms->freeDevice(*dev);
--        if (gDev == *dev) gDev = nullptr;
--        *dev = nullptr;
--    }
-+    NVRMNVDAFramebuffer *fb;
-+    bool armed;
-+    ~KapiDeviceRollback() { if (armed) fb->dropKapiDevice(); }
- };
- 
+-// and NVKMS would keep calling into it. Free only what this instance created; a device reused
+-// from another framebuffer belongs to that framebuffer and is never touched here. freeDevice()
+-// returns void, so a teardown failure cannot be reported - the log is the only signal, and the
+-// GPU stays NO-GO until this path has been exercised natively.
+-struct KapiDeviceRollback {
+-    NVRMNVDAFramebuffer *fb;
+-    bool armed;
+-    ~KapiDeviceRollback() { if (armed) fb->dropKapiDevice(); }
+-};
+-
++// and NVKMS would keep calling into it. The unwind itself is KapiRollback (a nested class, so it
++// may call the protected dropKapiDevice()); freeDevice() returns void, so a teardown failure
++// cannot be reported - the log is the only signal, and the GPU stays NO-GO until this path has
++// been exercised natively.
  bool NVRMNVDAFramebuffer::kapiInit()
  {
      struct NvKmsKapiAllocateDeviceParams ap = {}; ap.gpuId = fGpuId; ap.privateData = this; ap.eventCallback = eventCallback;
--    const bool ownDevice = (gDev == nullptr);
--    KapiDeviceRollback rollback = { fKms, &fDev, &gHeadsTaken, 0, ownDevice, false, true };
-+    KapiDeviceRollback rollback = { this, true };
+-    KapiDeviceRollback rollback = { this, true };
++    KapiRollback rollback = { this, true };
      if (gDev) {
          fDev = gDev;
          FBLOG("index %u: reusing the shared NvKmsKapiDevice", fIndex);
-@@ -274,8 +294,9 @@ bool NVRMNVDAFramebuffer::kapiInit()
-         if (!fDev) { FBLOG("allocateDevice(gpu 0x%x) failed", fGpuId); return false; }
-         gDev = fDev;
-     }
-+    gDevUsers++;
-     if (!fKms->grabOwnership(fDev)) { FBLOG("grabOwnership failed"); return false; }
--    rollback.grabbed = true;   // ownership is ours now, so the rollback has to give it back
-+    fGrabbedOwnership = true;   // ownership is ours now, so the rollback has to give it back
-     struct NvKmsKapiDeviceResourcesInfo *ri = (struct NvKmsKapiDeviceResourcesInfo *)IOMalloc(sizeof *ri);
-     if (!ri) return false;
-     nvu_zero(ri, sizeof *ri);
-@@ -411,7 +432,7 @@ bool NVRMNVDAFramebuffer::kapiInit()
-         }
-         fHead = 0; while (fHead < 32 && !(avail & (1u << fHead))) fHead++;
-         gHeadsTaken |= (1u << fHead);
--        rollback.headBit = 1u << fHead;
-+        fHeadBit = 1u << fHead;
-         FBLOG("index %u -> display 0x%x connector 0x%x headMask 0x%x -> head %u (taken now 0x%x)",
-               fIndex, fDisplay, (unsigned)fConnector, (unsigned)r->headMask, fHead,
-               (unsigned)gHeadsTaken);
-@@ -1085,7 +1106,13 @@ bool NVRMNVDAFramebuffer::start(IOService *provider)
-         return false;
-     }
-     setName("NVRMFramebuffer");
--    if (!super::start(provider)) { FBLOG("super::start failed after kapiInit succeeded"); return false; }
-+    if (!super::start(provider)) {
-+        // kapiInit succeeded, so the device exists and is bound to this instance; this path used to
-+        // leave it published with a privateData that is about to be freed.
-+        FBLOG("super::start failed after kapiInit succeeded -- releasing the device bound here");
-+        dropKapiDevice();
-+        return false;
-+    }
-     fVblTimer = thread_call_allocate(vblFire, this);
-     if (fVblTimer) { uint64_t d; clock_interval_to_deadline(16667, kMicrosecondScale, &d); thread_call_enter_delayed(fVblTimer, d); }
-     FBLOG("vbl timer %s", fVblTimer ? "armed (60 Hz)" : "ALLOCATE FAILED");
-@@ -1115,7 +1142,7 @@ bool NVRMNVDAFramebuffer::start(IOService *provider)
-     FBLOG("started on %s", provider->getName());
-     return true;
- }
--void NVRMNVDAFramebuffer::stop(IOService *provider) { if (fReflip) { thread_call_t r = fReflip; fReflip = nullptr; thread_call_cancel(r); thread_call_free(r); } if (fBars) { thread_call_t b = fBars; fBars = nullptr; thread_call_cancel(b); thread_call_free(b); } if (fVblTimer) { thread_call_t t = fVblTimer; fVblTimer = nullptr; thread_call_cancel(t); thread_call_free(t); } if (fSampler) { thread_call_cancel(fSampler); thread_call_free(fSampler); fSampler = nullptr; } if (fHeadProbe) { thread_call_t h = fHeadProbe; fHeadProbe = nullptr; thread_call_cancel(h); thread_call_free(h); } super::stop(provider); }
-+void NVRMNVDAFramebuffer::stop(IOService *provider) { if (fReflip) { thread_call_t r = fReflip; fReflip = nullptr; thread_call_cancel(r); thread_call_free(r); } if (fBars) { thread_call_t b = fBars; fBars = nullptr; thread_call_cancel(b); thread_call_free(b); } if (fVblTimer) { thread_call_t t = fVblTimer; fVblTimer = nullptr; thread_call_cancel(t); thread_call_free(t); } if (fSampler) { thread_call_cancel(fSampler); thread_call_free(fSampler); fSampler = nullptr; } if (fHeadProbe) { thread_call_t h = fHeadProbe; fHeadProbe = nullptr; thread_call_cancel(h); thread_call_free(h); } super::stop(provider); dropKapiDevice(); }
- 
- IOReturn NVRMNVDAFramebuffer::enableController()
- {
