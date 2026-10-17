@@ -1,0 +1,130 @@
+diff --git a/kexts/NVRM/os-nvkms-xnu.cpp b/kexts/NVRM/os-nvkms-xnu.cpp
+index 546ff61..d968ea8 100644
+--- a/kexts/NVRM/os-nvkms-xnu.cpp
++++ b/kexts/NVRM/os-nvkms-xnu.cpp
+@@ -39,6 +39,10 @@ static void kms_timer_drain(thread_call_param_t, thread_call_param_t);
+ // of a GPU that lost power spins in nvEvoMakeRoom forever.
+ enum { kKmsPmRunning = 0, kKmsPmSuspended = 1, kKmsPmLost = 2 };
+ static int gKmsPmState = kKmsPmRunning;
++// A teardown that passed nvkms_xnu_pm_running() holds a pin: suspend waits for it, so the
++// release/free pair can no longer be cut in half between the check and the call.
++static int gKmsPmPins;
++static const uint32_t kKmsPmPinWaitMs = 5000;
+ static const uint32_t kKmsPmWaitMs = 30000;
+ static const char *const kKmsPmName[] = { "running", "suspended", "lost" };
+ 
+@@ -191,6 +195,15 @@ void nvkms_xnu_suspend(NvU32 gpuId)
+     if (!gKmsLoaded) return;
+     nvKmsKapiSuspendResume(NV_TRUE);
+     IOLockLock(gKmsLock);
++    if (gKmsPmPins > 0) {
++        uint64_t deadline = 0;
++        clock_interval_to_deadline(kKmsPmPinWaitMs, kMillisecondScale, &deadline);
++        while (gKmsPmPins > 0) {
++            if (IOLockSleepDeadline(gKmsLock, &gKmsPmPins, deadline, THREAD_UNINT) == THREAD_TIMED_OUT) break;
++        }
++        if (gKmsPmPins > 0)
++            kprintf("NVRM-xnu: NVKMS suspend proceeded with %d teardown pin(s) still held\n", gKmsPmPins);
++    }
+     const bool wasRunning = gKmsPmState == kKmsPmRunning;
+     gKmsPmState = kKmsPmSuspended;
+     if (wasRunning) nvKmsSuspend(gpuId);
+@@ -211,6 +224,26 @@ void nvkms_xnu_resume(NvU32 gpuId, NvBool gpuOk)
+ // True while NVKMS may touch the GPU. KAPI teardown (releaseOwnership/freeDevice) reaches NVKMS
+ // through nvkms_ioctl_from_kapi, which waits on the PM gate and is refused once the GPU is LOST;
+ // a caller that must not block (a framebuffer stop) has to ask before it tears anything down.
++// Take a pin before tearing a KAPI device down: it succeeds only while NVKMS can be called, and it
++// keeps suspend from moving the state under the release/free pair. Always pair with unpin.
++NvBool nvkms_xnu_pm_pin(void)
++{
++    if (!gKmsLock) return NV_FALSE;
++    IOLockLock(gKmsLock);
++    const NvBool ok = (gKmsPmState == kKmsPmRunning);
++    if (ok) gKmsPmPins++;
++    IOLockUnlock(gKmsLock);
++    return ok;
++}
++void nvkms_xnu_pm_unpin(void)
++{
++    if (!gKmsLock) return;
++    IOLockLock(gKmsLock);
++    if (gKmsPmPins > 0) gKmsPmPins--;
++    if (gKmsPmPins == 0) IOLockWakeup(gKmsLock, &gKmsPmPins, false);
++    IOLockUnlock(gKmsLock);
++}
++
+ NvBool nvkms_xnu_pm_running(void)
+ {
+     if (!gKmsLock) return NV_FALSE;
+diff --git a/kexts/NVRMFB/fb/nvrm-fb.cpp b/kexts/NVRMFB/fb/nvrm-fb.cpp
+index 07a0335..95027db 100644
+--- a/kexts/NVRMFB/fb/nvrm-fb.cpp
++++ b/kexts/NVRMFB/fb/nvrm-fb.cpp
+@@ -694,6 +694,9 @@ void NVRMNVDAFramebuffer::surveyBar1()
+ // (releaseOwnership/freeDevice) reaches NVKMS through nvkms_ioctl_from_kapi, which waits on
+ // the PM gate and is refused once the GPU is LOST - a stop path must not tear down there.
+ extern "C" NvBool nvkms_xnu_pm_running(void);
++// Pin hold: guarantees suspend cannot run between the check and the release/free pair.
++extern "C" NvBool nvkms_xnu_pm_pin(void);
++extern "C" void nvkms_xnu_pm_unpin(void);
+ void NVRMNVDAFramebuffer::dropKapiDevice()
+ {
+     // gDev, gDevUsers, gDevOrphaned and gHeadsTaken are shared by every framebuffer instance and are
+@@ -708,12 +711,11 @@ void NVRMNVDAFramebuffer::dropKapiDevice()
+     }
+     if (fOwnsHead) { gHeadsTaken &= ~(1u << fHead); fOwnsHead = false; }
+     if (!fDev) return;
+-    if (!nvkms_xnu_pm_running()) {
+-        // This framebuffer is going away but NVKMS cannot be called. Release our slot and record the
+-        // grab we still owe; the device stays reachable through gDev for whoever else uses it, and
+-        // finishOrphanedDevice() settles the debt once NVKMS answers again.
++    // A pin, not a snapshot: suspend waits for it, so the PM state cannot change between this check
++    // and the release/free pair below.
++    if (!nvkms_xnu_pm_pin()) {
+         if (fGrabbedOwnership) { gOrphanGrab = true; fGrabbedOwnership = false; }
+-        if (gDevUsers > 0) gDevUsers--;      // we are no longer a user of this device
++        if (gDevUsers > 0) gDevUsers--;
+         gDevOrphaned = true;
+         FBLOG("device 0x%llx kept: NVKMS is not running -- %d user(s) remain, grab deferred",
+               (unsigned long long)(uintptr_t)fDev, gDevUsers);
+@@ -726,6 +728,7 @@ void NVRMNVDAFramebuffer::dropKapiDevice()
+         FBLOG("device 0x%llx kept: %d other framebuffer(s) still drive it",
+               (unsigned long long)(uintptr_t)fDev, remaining);
+         fDev = nullptr;
++        nvkms_xnu_pm_unpin();
+         return;
+     }
+     fKms->freeDevice(fDev);
+@@ -733,6 +736,7 @@ void NVRMNVDAFramebuffer::dropKapiDevice()
+     fDev = nullptr;
+     gDevOrphaned = false;
+     gOrphanGrab = false;
++    nvkms_xnu_pm_unpin();
+     // freeDevice() may still call back into privateData, so the creator retain is dropped last.
+     if (gDevCreator) { NVRMNVDAFramebuffer *creator = gDevCreator; gDevCreator = nullptr; creator->release(); }
+     FBLOG("shared NvKmsKapiDevice released (last user)");
+@@ -748,7 +752,8 @@ void NVRMNVDAFramebuffer::finishOrphanedDevice()
+     NVRMDisplayGate gate;
+     if (!gate.valid()) return;
+     if (!gDevOrphaned || !gDev) return;
+-    if (!nvkms_xnu_pm_running()) {
++    // Same pin discipline as dropKapiDevice(): the state cannot move between the check and the calls.
++    if (!nvkms_xnu_pm_pin()) {
+         FBLOG("orphaned device 0x%llx still kept: NVKMS is not running",
+               (unsigned long long)(uintptr_t)gDev);
+         return;
+@@ -760,12 +765,14 @@ void NVRMNVDAFramebuffer::finishOrphanedDevice()
+         gDevOrphaned = false;
+         FBLOG("orphan settled without freeing: %d framebuffer(s) still drive device 0x%llx",
+               gDevUsers, (unsigned long long)(uintptr_t)gDev);
++        nvkms_xnu_pm_unpin();
+         return;
+     }
+     if (gOrphanGrab) { fKms->releaseOwnership(gDev); gOrphanGrab = false; }
+     fKms->freeDevice(gDev);
+     gDev = nullptr;
+     gDevOrphaned = false;
++    nvkms_xnu_pm_unpin();
+     if (gDevCreator) { NVRMNVDAFramebuffer *creator = gDevCreator; gDevCreator = nullptr; creator->release(); }
+     FBLOG("orphaned shared NvKmsKapiDevice released (no other user)");
+ }
