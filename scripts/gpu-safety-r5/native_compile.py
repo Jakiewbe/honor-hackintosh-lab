@@ -249,6 +249,35 @@ def main():
                               "undefined_symbols": len(undefined), "status": "KEXT-LINK_INCOMPLETE_UNIT_SET"})
             report["kext_link_nvrm"] = entry
 
+        # Intel side: NMIntelFB is a single TU compiled twice (real / virtual), each with its own
+        # bundle. Linking both reports what the Intel kext actually becomes; it is not a GPU test.
+        intel_links = {}
+        for unit, bundle in (("NMIntelFB", "NMIntelFB.kext"), ("NMIntelFBVirtual", "NMIntelFBVirtual.kext")):
+            obj = out.parent / ("candidate-" + unit + ".o")
+            dest = out.parent / bundle / "Contents/MacOS" / bundle.replace(".kext", "")
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            cmd = ["xcrun", "clang++", "-arch", "x86_64", "-mmacosx-version-min=15.5", "-fapple-kext",
+                   "-isysroot", sdk, "-nostdlib", "-Xlinker", "-kext", "-lkmodc++", "-lkmod", "-lcc_kext",
+                   str(obj), "-o", str(dest)]
+            rc = execute(cmd, nm, out / (unit.lower() + "-kext-link.txt"))
+            entry = {"command": cmd, "exit": rc,
+                     "method": "NVRMFB link line with the Intel object and bundle; upstream publishes none"}
+            if rc:
+                entry["status"] = "LINK_FAILED"
+                failures.append(unit + "-kext-link")
+            else:
+                data = dest.read_bytes()
+                if len(data) < 16 or struct.unpack_from("<I", data)[0] not in (0xfeedface, 0xfeedfacf):
+                    raise ValueError("unexpected " + unit + " Mach-O magic")
+                execute(["xcrun", "nm", "-gU", str(dest)], nm, out / (unit.lower() + "-kext-defined.txt"))
+                defined = (out / (unit.lower() + "-kext-defined.txt")).read_text(
+                    encoding="utf-8", errors="replace").splitlines()
+                entry.update({"artifact": str(dest), "sha256": hashlib.sha256(data).hexdigest(),
+                              "size": len(data), "defined_symbols": len(defined),
+                              "status": "KEXT-LINK_ONLY_NOT_LOADED"})
+            intel_links[unit] = entry
+        report["kext_link_intel"] = intel_links
+
         # Real complete KAPI C translation unit, with a reconstructed profile.
         # Literal Makefile lines only: conditional blocks are NOT evaluated.
         # Linux branch macros are an explicit candidate inference, not an upstream Darwin configuration.
