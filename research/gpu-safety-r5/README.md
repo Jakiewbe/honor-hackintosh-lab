@@ -56,6 +56,23 @@ GitHub UI → Actions → **HONOR GPU safety R5 native object and kext link gate
 - `freeDevice()` 返回 void，销毁失败不可上报；该路径必须先经原生门禁。
 - KAPI 事件回调与 Device 销毁的先后顺序、PM busy 后仍进 standby、VRAM/GPUVA 跨 sleep 无代际、真实 IOMapper/IOVA 与 GSP DMA 静默——全部未验证。
 
+## R8（2026-10-18）：共享 Device 的生命周期闭环
+
+R7 只处理了 `kapiInit()` 内部失败。R8 把同一件事做成可复用的成员函数 `dropKapiDevice()`，让三条路径共用：
+
+| 路径 | 之前 | 现在 |
+|---|---|---|
+| `kapiInit()` 任一步失败 | R7 的作用域回滚 | 同一个 `dropKapiDevice()`（由 RAII 调用） |
+| `super::start()` 在 `kapiInit` 成功后失败 | **Device 留在 `gDev`，`privateData` 指向即将释放的实例** | 调用 `dropKapiDevice()` |
+| `stop()` / kext 卸载 | **从不释放，永久泄漏** | 归还自己的 ownership 与 head 位；最后一个使用者才 `freeDevice()` |
+
+新增 `gDevUsers` 计数：每次绑定 +1，每次 drop -1；`remaining > 0` 时只放弃自己的引用、不销毁 Device，
+归零时才 `freeDevice()` 并清 `gDev`（仍做身份比对，避免清掉别的共享设备）。"设备不能比它的 owner 活得更久"
+因此有了明确判定，而不是依赖"只有一个 framebuffer"的假设。
+
+实测：8 补丁完整源码正反向 exit 0（树哈希回到 `ea9467f4…`）；`dropKapiDevice()` 真实函数体主机测试
+**12/12**（ASan+UBSan）；生命周期结构合同 **19/19**。
+
 ## 原生门禁结果（2026-10-18，首次通过）
 
 [Run 39048772269](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39048772269) — `completed success`，提交 `bfa7c3e`，`workflow_dispatch`，Intel runner。
