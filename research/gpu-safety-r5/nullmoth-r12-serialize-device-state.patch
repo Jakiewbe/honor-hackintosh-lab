@@ -1,0 +1,31 @@
+diff --git a/kexts/NVRMFB/fb/nvrm-fb.cpp b/kexts/NVRMFB/fb/nvrm-fb.cpp
+index 787d559..9c91b47 100644
+--- a/kexts/NVRMFB/fb/nvrm-fb.cpp
++++ b/kexts/NVRMFB/fb/nvrm-fb.cpp
+@@ -690,6 +690,16 @@ void NVRMNVDAFramebuffer::surveyBar1()
+ extern "C" NvBool nvkms_xnu_pm_running(void);
+ void NVRMNVDAFramebuffer::dropKapiDevice()
+ {
++    // gDev, gDevUsers, gDevOrphaned and gHeadsTaken are shared by every framebuffer instance and are
++    // touched from stop(), from a failed start() and from kapiInit's rollback. The bind path takes
++    // startLock(); take the same lock here (it is recursive, so the rollback inside kapiInit
++    // re-enters safely) instead of leaving the teardown unserialized.
++    NVRMDisplayGate gate;
++    if (!gate.valid()) {
++        FBLOG("device 0x%llx kept: start lock unavailable -- refusing an unserialized teardown",
++              (unsigned long long)(uintptr_t)fDev);
++        return;
++    }
+     if (fOwnsHead) { gHeadsTaken &= ~(1u << fHead); fOwnsHead = false; }
+     if (!fDev) return;
+     if (!nvkms_xnu_pm_running()) {
+@@ -718,6 +728,9 @@ void NVRMNVDAFramebuffer::dropKapiDevice()
+ // cycle. If NVKMS is still not callable the device stays for the next attempt.
+ void NVRMNVDAFramebuffer::finishOrphanedDevice()
+ {
++    // Same shared state as dropKapiDevice(): serialize on the bind path's lock.
++    NVRMDisplayGate gate;
++    if (!gate.valid()) return;
+     if (!gDevOrphaned || !gDev) return;
+     if (!nvkms_xnu_pm_running()) {
+         FBLOG("orphaned device 0x%llx still kept: NVKMS is not running",

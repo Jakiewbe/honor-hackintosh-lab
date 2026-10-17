@@ -59,7 +59,7 @@ def main():
         candidate = out.parent / "nullmoth-v2.3.3-gpu-safety-r5-candidate"
         shutil.copytree(nm, candidate, ignore=shutil.ignore_patterns(".git"))
         report["patches"] = []
-        for number, name in enumerate(("gpu-safety-r1.patch", "gpu-safety-r2-kms-open.patch", "nullmoth-r3-thread-call-comment.patch", "nullmoth-r4-bridge-owner.patch", "nullmoth-r5-kms-close-deferred.patch", "nullmoth-r6-kms-close-reclaim.patch", "nullmoth-r7-kapi-device-rollback.patch", "nullmoth-r8-shared-device-lifetime.patch", "nullmoth-r9-pm-gated-device-teardown.patch", "nullmoth-r10-nvrmfb-production-lifetime.patch", "nullmoth-r11-orphan-device-recovery.patch"), 1):
+        for number, name in enumerate(("gpu-safety-r1.patch", "gpu-safety-r2-kms-open.patch", "nullmoth-r3-thread-call-comment.patch", "nullmoth-r4-bridge-owner.patch", "nullmoth-r5-kms-close-deferred.patch", "nullmoth-r6-kms-close-reclaim.patch", "nullmoth-r7-kapi-device-rollback.patch", "nullmoth-r8-shared-device-lifetime.patch", "nullmoth-r9-pm-gated-device-teardown.patch", "nullmoth-r10-nvrmfb-production-lifetime.patch", "nullmoth-r11-orphan-device-recovery.patch", "nullmoth-r12-serialize-device-state.patch"), 1):
             patch = assets / name
             for suffix in (["--check"], []):
                 if execute(["git", "-c", "core.autocrlf=false", "apply", *suffix, "--whitespace=error-all", str(patch)], candidate,
