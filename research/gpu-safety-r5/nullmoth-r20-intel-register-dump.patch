@@ -1,0 +1,33 @@
+diff --git a/kexts/NMIntelFB/intelfb.cpp b/kexts/NMIntelFB/intelfb.cpp
+index 6b0431e..093963e 100644
+--- a/kexts/NMIntelFB/intelfb.cpp
++++ b/kexts/NMIntelFB/intelfb.cpp
+@@ -136,6 +136,20 @@ private:
+     uint8_t fVer = 0;
+ 
+     uint32_t rd(uint32_t off) const { return *(volatile uint32_t *)(fRegs + off); }
++    // Read-only snapshot of every pipe and transcoder. The i915 offset tables could not be obtained,
++    // so whether the linear +0x1000 stride holds for B..D is answered here on the machine, not by
++    // guessing: the pipe with the enable bit is the one the firmware drives. Calls rd() only.
++    void dumpPipeRegisters()
++    {
++        for (int p = 0; p < 4; p++) {
++            IFBLOG("regdump pipe %c: TRANSCONF 0x%08x PLANE_CTL 0x%08x SIZE 0x%08x STRIDE 0x%08x SURF 0x%08x",
++                   'A' + p, rd(TRANSCONF(p)), rd(PLANE_CTL(p)), rd(PLANE_SIZE(p)),
++                   rd(PLANE_STRIDE(p)), rd(PLANE_SURF(p)));
++            IFBLOG("regdump tran %c: HTOTAL 0x%08x HBLANK 0x%08x HSYNC 0x%08x VTOTAL 0x%08x VBLANK 0x%08x VSYNC 0x%08x FRM %u",
++                   'A' + p, rd(HTOTAL(p)), rd(HBLANK(p)), rd(HSYNC(p)), rd(VTOTAL(p)),
++                   rd(VBLANK(p)), rd(VSYNC(p)), rd(FRMCOUNT(p)));
++        }
++    }
+     bool adoptFirmwareMode();
+ 
+ public:
+@@ -343,6 +357,7 @@ bool NMIntelFB::start(IOService *provider)
+     if (!fMMIO || !ap) { IFBLOG("BAR0 or BAR2 is not mapped - leaving the firmware screen"); OSSafeReleaseNULL(fMMIO); return false; }
+     fRegs = (volatile uint8_t *)fMMIO->getVirtualAddress();
+     fApertureBase = ap->getPhysicalAddress(); fApertureLen = ap->getLength();
++    { char dump[8] = { 0 }; if (PE_parse_boot_argn("-nvintelregdump", dump, sizeof dump)) dumpPipeRegisters(); }
+     if (!adoptFirmwareMode()) { OSSafeReleaseNULL(fMMIO); fRegs = nullptr; return false; }
+     if (!IOFramebuffer::start(provider)) { OSSafeReleaseNULL(fMMIO); fRegs = nullptr; return false; }
+     // Head 4 of the NVIDIA accelerator (NVAccel): WindowServer composites this panel on the NVIDIA card and the
