@@ -73,6 +73,11 @@ GitHub UI → Actions → **HONOR GPU safety R5 native object and kext link gate
    NVAccel kext 仍然链接成功（244400 B，`sha256 89f9839e…`）。
 
 教训写进流程：**"门禁通过"必须先核对门禁到底编译了哪些文件**，否则它只是证明了没被编译的那部分没问题。
+### R9 门禁结果（2026-10-18）
+
+[Run 39050097952](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39050097952) `success`（提交 `c5e04ca`）：**10 个补丁**（9 个 NullMoth + OGKM）全部应用，
+**14/14 对象编译成功**（含 NVRMFB），每单元告警数与 original 相同，NVAccel kext 链接成功（244400 B）。
+
 ## R9（2026-10-18）：拆除只允许发生在 NVKMS 能碰 GPU 的时候
 
 R8 让 `stop()` 也走 `dropKapiDevice()`，但**没有检查 NVKMS 当时能不能被调用**。读 OGKM 源码
