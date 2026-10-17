@@ -21,6 +21,7 @@
 | 原生编译 | 真实 Xcode 工具链 | ✅ 16/16 对象、告警零增量 | run 39057316645 | — |
 | Kext 链接 | NVAccel + 生产 NVRMFB 链成 | ✅ 248,584 B / 315,744 B | 同上 | — |
 | NVRM 可重建 | 与发行版符号/体积可比 | ❌ **BLOCKED**：361,936 B / 650 符号 vs 16,787,920 B / 17,679；REA 发现 7.93 MB 不透明载荷 | `REA-NVRM-BINARY-20261018.md` | 上游 |
+| 加载前一致性 | Info.plist 与链接产物、标识符、provider 类 | ✅ 30/30（`tools/check-bundles.py`） | `evidence/preload/bundle-consistency.json` | — |
 | 加载 | 实机加载并采集 RM/GSP 日志 | ⛔ **NO-GO** | `LOAD-EXPERIMENT-20261018.md`（脚本默认禁用） | **用户**（需重新授权） |
 | GPU 执行 / Metal / 内屏 | 运行证据 | ⛔ NO-GO | — | 用户 |
 
@@ -40,6 +41,7 @@
 | 拷贝不依赖 kva | owner-copy 优先、kva 仅回退 | ✅（R19） | 同上 | — |
 | **内屏由谁驱动** | 实机只读：`IOFramebuffer` 树 + kextstat | ❓ **未知** | `collect.sh` 的 50–54 项 | **用户**（只读采集） |
 | 发行物是否含 Intel kext | 发行包内容 | ❌ 不含（只有 NVAccel/NVRM/NVRMAGDC/NVRMFB） | `INTEL-TRACK-20261018.md` | — |
+| 加载前一致性 | plist 与链接产物一致、provider 类存在 | ✅ 30/30（同一脚本） | `tools/check-bundles.py` | — |
 | 加载 / 持续刷新 / 2160×1440 | 运行证据 | ⛔ NO-GO | — | 用户 |
 | i915/eDP 自研闭包 | FreeBSD base/LinuxKPI 固定 commit | ⛔ **BLOCKED_FREEBSD_BASE_SELECTION**（未变） | `knowledge/02` | 需要新证据 |
 
