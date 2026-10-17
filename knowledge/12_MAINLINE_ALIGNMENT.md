@@ -1,6 +1,14 @@
-## 2026-10-17 GPU R4 源码候选（无测试/原生编译结果）
+## 2026-10-17 GPU R4 原生对象门禁诊断（编译失败；运行 NO-GO）
 
-R4 为 NVRMUserClient 外部方法与映射增加串行会话门禁。NVKMS bridge 关闭失败时保留 per-open、UserClient 和 provider，并提供显式重试；启用 PM 时 gate 分配失败将拒绝启动，owner 检查放入 gate 锁内。PM users 超时后仍可能进入 standby；KAPI Device owner、fd lookup 裸引用、完整 RM/GPU quiescence 仍未解决。R4 十二对象原生门禁未运行。安全关闭 BLOCKED，设备运行 NO-GO。
+R4 为 NVRMUserClient 外部方法分发、映射和关闭增加串行会话门禁；NVKMS bridge close 失败时保留 per-open 与 owner，提供显式重试；启用 PM 时预先分配 gate，PM owner 检查在 gate 锁内执行。RM users 超时仍可能进入 standby，KAPI Device owner、回调排空、完整 RM/DMA quiescence 和裸 lookup_fd 引用合同仍未闭合。
+
+用户手动运行 [Actions #39043997733](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39043997733)，基线为 `b7ac4b0aacf9951f6105c18e3bd5c7777e173d86`、Xcode 16.4 Build 16F6 / macOS SDK 15.5。两个 NVKAPI C 对象编译通过；五个 C++ 翻译单元的原版与候选共 10 个对象均因 `IOPCIDevice` 弃用诊断被 `-Werror` 升级而失败。NVRM 日志达到编译器错误上限，其他诊断尚未完整确认。
+
+候选门禁脚本仅增加 `-Wno-error=deprecated-declarations`，保留弃用警告输出，其他 `-Werror` 检查不变；此修正尚未在 macOS runner 上验证，需用户手动重跑。该次运行未链接 Kext、未加载驱动、未访问设备、未运行 GPU。关闭安全仍 BLOCKED，实机加载/运行 NO-GO。详见 [R4 报告](../research/gpu-safety-20261017/DELIVERY-R4.zh-CN.md) 和 [诊断包](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39043997733/artifacts/12104692976) (SHA-256 `e0042ef033b4e7e71f919ce61603bf51234d77315fe1d6d41ccc75ff602b4367`).
+
+下一步仅为用户手动重新运行修正后的原生对象门禁；本记录不改变 H1→H2→H3 优先级或 H4 冻结状态。
+
+此项仅更新用户提供的 R4 原生门禁诊断，不改变 H4 冻结。
 
 ## 2026-10-17 GPU R3 增量（源码/主机验证，运行 NO-GO）
 

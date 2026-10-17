@@ -88,10 +88,11 @@ def main():
                      "inc/displayport", "nvlink/inband/interface", "unix/nvidia-push/interface", "unix/common/inc",
                      "modeset", "unix/common/utils/interface")]
         includes += [kms / p for p in ("os-interface/include", "kapi/interface", "kapi/include", "interface", "include")]
+        # Keep the Xcode 16.4 SDK deprecation visible; it is non-fatal for this legacy IOKit kext probe.
         common_flags = ["-arch", "x86_64", "-mmacosx-version-min=15.5", "-isysroot", sdk, "-fapple-kext", "-mkernel", "-nostdinc",
                         "-I" + str(khdr), "-DKERNEL", "-DKERNEL_PRIVATE", "-DDRIVER_PRIVATE", "-DAPPLE", "-DNeXT",
                         "-std=c++17", "-fno-rtti", "-fno-exceptions", "-fno-builtin", "-fno-common", "-O2",
-                        "-Wall", "-Wextra", "-Werror", "-Wno-unused-parameter", "-Wno-inconsistent-missing-override", "-Wno-unused-function"]
+                        "-Wall", "-Wextra", "-Werror", "-Wno-error=deprecated-declarations", "-Wno-unused-parameter", "-Wno-inconsistent-missing-override", "-Wno-unused-function"]
         # Same selected compiler/profile for original and candidate; no use of published binary objects.
         for label, tree in (("original", nm), ("candidate", candidate)):
             for unit in ("NMIntelFB", "NMIntelFBVirtual", "NVAccel", "NVKMSOS", "NVRM"):
@@ -193,3 +194,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
