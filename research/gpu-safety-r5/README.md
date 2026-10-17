@@ -78,7 +78,25 @@ GitHub UI → Actions → **HONOR GPU safety R5 native object and kext link gate
 [Run 39050097952](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39050097952) `success`（提交 `c5e04ca`）：**10 个补丁**（9 个 NullMoth + OGKM）全部应用，
 **14/14 对象编译成功**（含 NVRMFB），每单元告警数与 original 相同，NVAccel kext 链接成功（244400 B）。
 
-### 生产 NVRMFB 的 kext 链接（2026-10-18）
+### R11（2026-10-18）：给"保留"的共享 Device 一条恢复路径
+
+R10 的规则是"NVKMS 不能调用时不拆除"，代价是有界泄漏。R11 把这个泄漏变成可恢复：
+
+- `dropKapiDevice()` 在 PM 分支里置 `gDevOrphaned = true` 并保留句柄；
+- 新增 `finishOrphanedDevice()`：**在下一次 start 时**执行（此时 NVKMS 必然可调用），
+  先重新确认 `nvkms_xnu_pm_running()`，再 `releaseOwnership()`（那个死掉的实例抓过、且从未释放的正好一次）
+  → `freeDevice()` → 清 `gDev` / `gDevOrphaned` / `gDevUsers`；
+- `kapiInit()` 第一件事就是调用它，然后才考虑复用或新建 Device。
+
+这样"睡眠中卸载"导致的孤儿设备不会在每个睡眠周期累积，而是下一次加载时被清掉；如果那时 GPU 仍不可用，
+就继续保留，等下一次。
+
+实测（[Run 39051079369](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39051079369)，`success`）：**12 个补丁**、**16/16 对象**、告警零增量；
+NVAccel kext 244400 B；**NVRMFB kext 311376 B、174 个导出符号**（比 R10 的 311192 B / 173 个各多一点点，
+正好对应新增的那个函数）。主机测试 **22/22**（12 组场景，含"孤儿在 PM 恢复后被回收"与"仍挂起则继续保留"）；
+结构合同 **32/32**（两个源文件，各自期望值不同）。
+
+## 生产 NVRMFB 的 kext 链接（2026-10-18）
 
 上一轮之前，`KEXT-LINK` 只覆盖 NVAccel。本轮把**生产** `NVRMFB`（单 TU）也链接起来，
 链接行是 NVAccel 那行换对象与 bundle（上游没有为 NVRMFB 发布链接行，这一点在报告里标注）：
