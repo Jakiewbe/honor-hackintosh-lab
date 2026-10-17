@@ -92,7 +92,7 @@ def main():
         common_flags = ["-arch", "x86_64", "-mmacosx-version-min=15.5", "-isysroot", sdk, "-fapple-kext", "-mkernel", "-nostdinc",
                         "-I" + str(khdr), "-DKERNEL", "-DKERNEL_PRIVATE", "-DDRIVER_PRIVATE", "-DAPPLE", "-DNeXT",
                         "-std=c++17", "-fno-rtti", "-fno-exceptions", "-fno-builtin", "-fno-common", "-O2",
-                        "-Wall", "-Wextra", "-Werror", "-Wno-error=deprecated-declarations", "-Wno-unused-parameter", "-Wno-inconsistent-missing-override", "-Wno-unused-function"]
+                        "-Wall", "-Wextra", "-Werror", "-ferror-limit=100", "-Wno-error=deprecated-declarations", "-Wno-unused-parameter", "-Wno-inconsistent-missing-override", "-Wno-unused-function"]
         # Same selected compiler/profile for original and candidate; no use of published binary objects.
         for label, tree in (("original", nm), ("candidate", candidate)):
             for unit in ("NMIntelFB", "NMIntelFBVirtual", "NVAccel", "NVKMSOS", "NVRM"):
@@ -116,6 +116,11 @@ def main():
                 entry = {"profile": label, "unit": unit, "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(), "compile_exit": rc}
                 report["objects"].append(entry)
                 if rc:
+                    # Preserve first concrete compiler errors for original/candidate comparison.
+                    # Full logs remain in text artifacts; no warning family is silenced.
+                    entry["first_errors"] = [line.strip() for line in
+                        (out / (stem + "-compile.txt")).read_text(encoding="utf-8", errors="replace").splitlines()
+                        if ": error:" in line or "fatal error:" in line][:20]
                     failures.append(stem)
                     continue
                 data = obj.read_bytes()

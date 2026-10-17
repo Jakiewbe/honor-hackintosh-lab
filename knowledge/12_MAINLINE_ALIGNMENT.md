@@ -1,3 +1,7 @@
+## 当前有效覆盖（2026-10-17 用户 GPU 优先指令）
+
+外接 SSD 首次 macOS 桌面已达成的事实不变。用户当前唯一研发 P0 是 RTX 2050 `10DE:25A9` 的 NVRM/GSP、真实 GPU 执行/像素读回、错误传播与安全关闭；**H2 外设暂缓**，Intel `8086:46A6` 只维持现有基础显示，当前不推进 Head 4/WindowServer、Intel Metal、G2/G3。下文 D-18 冻结 H4、H2 优先的表格和验收路线保留为历史，不再是当前工作指令。所有 Windows、磁盘、EFI、BIOS、NVRAM、Kext 和 Actions 逐项授权/禁止规则继续有效，禁止实机部署。R4 最新构建与 P0 安全阻塞见 [审计](../research/gpu-safety-20261017/PM-R4-REVIEW-20261017.zh-CN.md)。
+
 ## 2026-10-17 GPU R4 原生对象门禁诊断（编译失败；运行 NO-GO）
 
 R4 为 NVRMUserClient 外部方法分发、映射和关闭增加串行会话门禁；NVKMS bridge close 失败时保留 per-open 与 owner，提供显式重试；启用 PM 时预先分配 gate，PM owner 检查在 gate 锁内执行。RM users 超时仍可能进入 standby，KAPI Device owner、回调排空、完整 RM/DMA quiescence 和裸 lookup_fd 引用合同仍未闭合。
@@ -6,9 +10,9 @@ R4 为 NVRMUserClient 外部方法分发、映射和关闭增加串行会话门�
 
 候选门禁脚本仅增加 `-Wno-error=deprecated-declarations`，保留弃用警告输出，其他 `-Werror` 检查不变；此修正尚未在 macOS runner 上验证，需用户手动重跑。该次运行未链接 Kext、未加载驱动、未访问设备、未运行 GPU。关闭安全仍 BLOCKED，实机加载/运行 NO-GO。详见 [R4 报告](../research/gpu-safety-20261017/DELIVERY-R4.zh-CN.md) 和 [诊断包](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39043997733/artifacts/12104692976) (SHA-256 `e0042ef033b4e7e71f919ce61603bf51234d77315fe1d6d41ccc75ff602b4367`).
 
-下一步仅为用户手动重新运行修正后的原生对象门禁；本记录不改变 H1→H2→H3 优先级或 H4 冻结状态。
+下一次 R4 原生对象验证仍仅由用户手动触发。本段的 `H4 冻结` 是旧 D-18 优先级；已由用户当前 GPU 优先指令覆盖，不改变 H1/H2/H3 历史验收或设备、Windows、EFI、Actions 权限。
 
-此项仅更新用户提供的 R4 原生门禁诊断，不改变 H4 冻结。
+此项为 7c9f50d 当时的历史叙述；用户当前明确恢复 GPU 优先，H4 源码适配已重新开放，设备加载/运行仍 NO-GO。
 
 ## 2026-10-17 GPU R3 增量（源码/主机验证，运行 NO-GO）
 

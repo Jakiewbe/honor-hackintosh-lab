@@ -1,3 +1,15 @@
+## 2026-10-17 GPU R4 当前接手核查（用户最新 GPU 优先；运行 NO-GO）
+
+用户明确恢复 RTX 2050 `10DE:25A9` GPU 驱动优先，H2 外设暂缓，Intel `8086:46A6` 保留现有基础显示；不扩展到 Head 4/Intel Metal/G2/G3。D-17/D-18 的历史决策不删除，本指令覆盖其中 H4 冻结优先级而不覆盖设备安全权限。
+
+远端 `main` 在核查时为 `7c9f50dee8b5d940cf6726c31f6fd236fb3857ca`，暂无基于这一提交的新 Actions。最近 R4 [#39043997733](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39043997733) 使用 `b7ac4b0`：NVKAPI C 两对象通过；原版/候选共十个 C++ 对象失败。修复 `-Wno-error=deprecated-declarations` 尚待用户手动原生验证；不能宣称新错误或构建成功。
+
+新增固定源码 SOURCE-REVIEW：`NVRM::gpuSuspend` 在 PM users 非零后仍进入 RM STANDBY；`kms_close_common` 的 KAPI per-open 保留失败无法向 OGKM `KmsFreeDevice/FreeDevice` 的 void 释放链传播；`nv_xnu_lookup_fd` 脱锁返回的内嵌裸指针尚无引用合同。详见 [精确调用链与 NO-GO 审计](../research/gpu-safety-20261017/PM-R4-REVIEW-20261017.zh-CN.md)。**无新的 DARWIN-COMPILE、KEXT-LINK、LOAD、GPU 或像素运行成功证据。**
+
+## D-20｜2026-10-17 最新 GPU 优先与受控提交权限
+
+用户本轮再次明确 RTX 2050 GPU 研发为唯一 P0，H2 外设暂缓；Intel 显示所有权不改变，不推进 Head 4/WindowServer/Intel Metal/G2/G3。D-17/D-18 原有时间点、实机事实不变；该新决定明确覆盖 D-18 的 H4 冻结优先级。主力 Windows/NVMe/EFI/BIOS/NVRAM、Kext 安装加载及 Actions 仍不获授权。用户允许对**实验 GitHub 仓库**已检查的相关文本与门禁脚本进行受控 main 快进提交，条件是先核查全部 workflow 不因 push 自动启动、检查 main SHA 及并发更新；不建 branch/worktree/PR，不强推，不代跑 Actions。
+
 ## 2026-10-17 GPU R4 原生对象门禁诊断（编译失败；运行 NO-GO）
 
 R4 为 NVRMUserClient 外部方法分发、映射和关闭增加串行会话门禁；NVKMS bridge close 失败时保留 per-open 与 owner，提供显式重试；启用 PM 时预先分配 gate，PM owner 检查在 gate 锁内执行。RM users 超时仍可能进入 standby，KAPI Device owner、回调排空、完整 RM/DMA quiescence 和裸 lookup_fd 引用合同仍未闭合。
@@ -6,7 +18,7 @@ R4 为 NVRMUserClient 外部方法分发、映射和关闭增加串行会话门�
 
 候选门禁脚本仅增加 `-Wno-error=deprecated-declarations`，保留弃用警告输出，其他 `-Werror` 检查不变；此修正尚未在 macOS runner 上验证，需用户手动重跑。该次运行未链接 Kext、未加载驱动、未访问设备、未运行 GPU。关闭安全仍 BLOCKED，实机加载/运行 NO-GO。详见 [R4 报告](../research/gpu-safety-20261017/DELIVERY-R4.zh-CN.md) 和 [诊断包](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39043997733/artifacts/12104692976) (SHA-256 `e0042ef033b4e7e71f919ce61603bf51234d77315fe1d6d41ccc75ff602b4367`).
 
-下一步仅为用户手动重新运行修正后的原生对象门禁；本记录不改变 H1→H2→H3 优先级或 H4 冻结状态。
+下一次 R4 原生对象验证仍仅由用户手动触发。本段 `H4 冻结` 是 D-18 的旧优先级，已被用户当前 GPU 优先指令覆盖；不改变原有实机事实或系统、设备、Actions 权限。
 
 ## 2026-10-17 GPU R3 增量（源码/主机验证，运行 NO-GO）
 

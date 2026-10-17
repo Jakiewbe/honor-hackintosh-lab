@@ -1,3 +1,5 @@
+> **当前有效任务优先级（2026-10-17）：GPU P0。** 用户明确恢复 RTX 2050 的 NVRM/GSP、真实渲染/读回与安全关闭研发；外设暂缓，Intel 内屏保持现状。下方 H4 冻结的段落仅保留为历史。R4 `7c9f50d` 的 C++ 弃用警告处理尚无新 macOS runner 结果。详见 [R4 PM/KAPI owner 审计](research/gpu-safety-20261017/PM-R4-REVIEW-20261017.zh-CN.md)。
+
 # 最新交付：GPU 源码候选 R4（2026-10-17）
 
 [完整报告](research/gpu-safety-20261017/DELIVERY-R4.zh-CN.md) · [R4 补丁](research/gpu-safety-20261017/nullmoth-r4-bridge-owner.patch) · [网页独立审查 WEB005](research/gpu-safety-20261017/WEB-REVIEW-005.md)。
@@ -10,7 +12,7 @@ R4 为 NVRMUserClient 外部方法分发、映射和关闭增加串行会话门�
 
 候选门禁脚本仅增加 `-Wno-error=deprecated-declarations`，保留弃用警告输出，其他 `-Werror` 检查不变；此修正尚未在 macOS runner 上验证，需用户手动重跑。该次运行未链接 Kext、未加载驱动、未访问设备、未运行 GPU。关闭安全仍 BLOCKED，实机加载/运行 NO-GO。详见 [R4 报告](research/gpu-safety-20261017/DELIVERY-R4.zh-CN.md) 和 [诊断包](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39043997733/artifacts/12104692976) (SHA-256 `e0042ef033b4e7e71f919ce61603bf51234d77315fe1d6d41ccc75ff602b4367`).
 
-下一步仅为用户手动重新运行修正后的原生对象门禁；本记录不改变 H1→H2→H3 优先级或 H4 冻结状态。
+下一次 R4 原生对象验证仍仅由用户手动触发。本段的 `H4 冻结` 是旧 D-18 优先级；已由用户当前 GPU 优先指令覆盖，不改变 H1/H2/H3 历史验收或设备、Windows、EFI、Actions 权限。
 
 ---
 # HONOR Hackintosh Lab — Intel + NVIDIA macOS Compatibility Research

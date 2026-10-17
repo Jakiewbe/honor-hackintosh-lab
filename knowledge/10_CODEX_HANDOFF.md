@@ -1,3 +1,10 @@
+## 当前执行断点｜R4 原生对象门禁与 KAPI owner（覆盖下文旧 H2/H4 冻结任务）
+
+1. 用户下一步手动在 [HONOR GPU safety R4 native object gate](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/workflows/gpu-safety-r4-native.yml) 选择 `main`，输入 `xcode=Xcode_16.4` 运行；核对实际 `head_sha`、`native_compile.py` 的 Git blob、`native-report.json` 与所有对象编译日志。**不由代理代触发。**
+2. 若出现新的原生编译错误，先比较 original/candidate 同一 TU：双方共有的错误是构建环境/编译参数/头文件候选问题；仅候选失败才追 R1→R4 diff。完整 obj 编译仍非 Kext 链接。
+3. 并行 SOURCE-REVIEW P0：`gpuSuspend` busy 后仍 STANDBY；KAPI `kms_close_common` 的失败无法通过 void `nvkms_close_from_kapi` 传入 OGKM `KmsFreeDevice/FreeDevice`；`nv_xnu_lookup_fd` 的裸指针锁外生命周期未证明。未确认 XNU PM/veto 和 per-open callback/drain/owner 之前**不提交危险运行时补丁**。详见 [R4 源码审计](../research/gpu-safety-20261017/PM-R4-REVIEW-20261017.zh-CN.md)。
+4. 固定 NullMoth `ac55984c473e746c2a8ebea7ba0913461aa7c393` 与 OGKM `e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb`，顺序应用四个 NullMoth 补丁与一个 OGKM 补丁。任何新补丁须独立编号、最小作用域、实测验证等级与回退。系统实机仍 NO-GO。
+
 ## 2026-10-17 GPU R4 原生对象门禁诊断（编译失败；运行 NO-GO）
 
 R4 为 NVRMUserClient 外部方法分发、映射和关闭增加串行会话门禁；NVKMS bridge close 失败时保留 per-open 与 owner，提供显式重试；启用 PM 时预先分配 gate，PM owner 检查在 gate 锁内执行。RM users 超时仍可能进入 standby，KAPI Device owner、回调排空、完整 RM/DMA quiescence 和裸 lookup_fd 引用合同仍未闭合。
@@ -6,7 +13,7 @@ R4 为 NVRMUserClient 外部方法分发、映射和关闭增加串行会话门�
 
 候选门禁脚本仅增加 `-Wno-error=deprecated-declarations`，保留弃用警告输出，其他 `-Werror` 检查不变；此修正尚未在 macOS runner 上验证，需用户手动重跑。该次运行未链接 Kext、未加载驱动、未访问设备、未运行 GPU。关闭安全仍 BLOCKED，实机加载/运行 NO-GO。详见 [R4 报告](../research/gpu-safety-20261017/DELIVERY-R4.zh-CN.md) 和 [诊断包](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39043997733/artifacts/12104692976) (SHA-256 `e0042ef033b4e7e71f919ce61603bf51234d77315fe1d6d41ccc75ff602b4367`).
 
-下一步仅为用户手动重新运行修正后的原生对象门禁；本记录不改变 H1→H2→H3 优先级或 H4 冻结状态。
+下一次 R4 原生对象验证仍仅由用户手动触发。本段 `H4 冻结` 是 D-18 的旧优先级，已被用户当前 GPU 优先指令覆盖；不改变原有实机事实或系统、设备、Actions 权限。
 
 ## 2026-10-17 GPU R3 增量（源码/主机验证，运行 NO-GO）
 
