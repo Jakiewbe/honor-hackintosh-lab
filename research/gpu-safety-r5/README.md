@@ -78,7 +78,26 @@ GitHub UI → Actions → **HONOR GPU safety R5 native object and kext link gate
 [Run 39050097952](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39050097952) `success`（提交 `c5e04ca`）：**10 个补丁**（9 个 NullMoth + OGKM）全部应用，
 **14/14 对象编译成功**（含 NVRMFB），每单元告警数与 original 相同，NVAccel kext 链接成功（244400 B）。
 
-### R15（2026-10-18）：用 pin 而不是快照，关掉 P0-2 的竞态窗口
+### R21（2026-10-18）：把"不可上报"变成"可计数、可判定"
+
+P0-2 的另一半是接口形状问题：`nvKmsClose()` / `FreeDevice()` 都是 `void`，NVKMS 拒绝关闭后调用方不可能知道。
+之前这只被记为"不可关闭"。但"不能向上传播"不等于"无法观测"：
+
+- `kms_close_common()` 在推迟分支里累加 `gKmsCloseDeferred`，并**区分原因**（PM 未运行 vs GPU LOST → `gKmsCloseDeferredLost`）；
+- 新增 `nvkms_xnu_kms_close_deferred_count()` 供拆除路径取样；
+- `dropKapiDevice()` 在 `freeDevice()` **前后**各取一次计数，出现增量就记录：
+  "freeDevice returned but NVKMS refused the close … RM state may be split; the void interface cannot report this upward"。
+
+这样一次真实加载后，日志里能直接回答"设备到底关干净了没有"，而不是只能看到"调用返回了、但不知道结果"。
+
+**诚实的边界**：这仍然**不是**错误传播——调用方拿不到失败。它把"不可知"降级为"事后可判定"，
+P0-2 的状态因此从「不可关闭」改为「竞态已关闭（R15）+ 失败可计数（R21）+ 无法向上传播（接口限制，仍开放）」。
+
+实测（[Run 39057316645](RUN_URL)，`success`）：**21 个补丁**、**16/16 对象**、告警零增量；
+生产 NVRMFB **315848 B**（R20 时 315744，差 104 B 正是取样与日志）、NVAccel 248584 B；
+结构合同 **60/60**（新增 6 条：计数在推迟分支、原因分类、样本包住 freeDevice、拒绝必记日志）。
+
+## R15（2026-10-18）：用 pin 而不是快照，关掉 P0-2 的竞态窗口
 
 复审指出：`nvkms_xnu_pm_running()` 只是一次状态快照，检查完到真正释放之间 PM 可能变化。再加一次检查是表演，
 所以这次改的是机制：
