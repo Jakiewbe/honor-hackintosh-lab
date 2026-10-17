@@ -1,0 +1,65 @@
+diff --git a/kexts/NVRM/fb/nvrm-fb.cpp b/kexts/NVRM/fb/nvrm-fb.cpp
+index dec88e4..39a8e22 100644
+--- a/kexts/NVRM/fb/nvrm-fb.cpp
++++ b/kexts/NVRM/fb/nvrm-fb.cpp
+@@ -236,9 +236,36 @@ void NVRMNVDAFramebuffer::surveyBar1()
+     if (!shown) FBLOG("  BAR survey: NO structured region found in %llu MB", fBarLen >> 20);
+     else        FBLOG("  BAR survey: %u structured region(s) listed above", shown);
+ }
++// kapiInit creates the one shared NvKmsKapiDevice on first use. If a later step fails, that
++// device must not stay reachable through gDev: its privateData and eventCallback point at this
++// framebuffer, so the next framebuffer would silently reuse a device whose owner never started,
++// and NVKMS would keep calling into it. Free only what this instance created; a device reused
++// from another framebuffer belongs to that framebuffer and is never touched here. freeDevice()
++// returns void, so a teardown failure cannot be reported - the log is the only signal, and the
++// GPU stays NO-GO until this path has been exercised natively.
++struct KapiDeviceRollback {
++    struct NvKmsKapiFunctionsTable *kms;
++    struct NvKmsKapiDevice **dev;
++    NvU32 *headsTaken;
++    NvU32 headBit;
++    bool own, grabbed, armed;
++    ~KapiDeviceRollback()
++    {
++        if (!armed) return;
++        if (headsTaken && headBit) *headsTaken &= ~headBit;
++        if (!own || !dev || !*dev) return;
++        if (grabbed) kms->releaseOwnership(*dev);
++        kms->freeDevice(*dev);
++        if (gDev == *dev) gDev = nullptr;
++        *dev = nullptr;
++    }
++};
++
+ bool NVRMNVDAFramebuffer::kapiInit()
+ {
+     struct NvKmsKapiAllocateDeviceParams ap = {}; ap.gpuId = fGpuId; ap.privateData = this; ap.eventCallback = eventCallback;
++    const bool ownDevice = (gDev == nullptr);
++    KapiDeviceRollback rollback = { fKms, &fDev, &gHeadsTaken, 0, ownDevice, false, true };
+     if (gDev) {
+         fDev = gDev;
+         FBLOG("index %u: reusing the shared NvKmsKapiDevice", fIndex);
+@@ -248,6 +275,7 @@ bool NVRMNVDAFramebuffer::kapiInit()
+         gDev = fDev;
+     }
+     if (!fKms->grabOwnership(fDev)) { FBLOG("grabOwnership failed"); return false; }
++    rollback.grabbed = true;   // ownership is ours now, so the rollback has to give it back
+     struct NvKmsKapiDeviceResourcesInfo *ri = (struct NvKmsKapiDeviceResourcesInfo *)IOMalloc(sizeof *ri);
+     if (!ri) return false;
+     nvu_zero(ri, sizeof *ri);
+@@ -383,6 +411,7 @@ bool NVRMNVDAFramebuffer::kapiInit()
+         }
+         fHead = 0; while (fHead < 32 && !(avail & (1u << fHead))) fHead++;
+         gHeadsTaken |= (1u << fHead);
++        rollback.headBit = 1u << fHead;
+         FBLOG("index %u -> display 0x%x connector 0x%x headMask 0x%x -> head %u (taken now 0x%x)",
+               fIndex, fDisplay, (unsigned)fConnector, (unsigned)r->headMask, fHead,
+               (unsigned)gHeadsTaken);
+@@ -616,6 +645,7 @@ bool NVRMNVDAFramebuffer::kapiInit()
+         if (take) take->release(); if (done) done->release();
+     }
+     if (!painted) for (NvU64 i = 0; i < fSize / 4; i++) px[i] = 0x00000000;
++    rollback.armed = false;   // the device is published and stays for the lifetime of the framebuffer
+     return true;
+ }
+ 

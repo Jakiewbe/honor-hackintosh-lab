@@ -1,0 +1,39 @@
+diff --git a/kexts/NVRM/os-nvkms-xnu.cpp b/kexts/NVRM/os-nvkms-xnu.cpp
+index 4ad9121..0cdba77 100644
+--- a/kexts/NVRM/os-nvkms-xnu.cpp
++++ b/kexts/NVRM/os-nvkms-xnu.cpp
+@@ -116,9 +116,22 @@ static struct nvkms_per_open *kms_open_common(enum NvKmsClientType type, struct
+ 
+ static void kms_close_common(struct nvkms_per_open *popen)
+ {
++    if (!popen) return;
+     IOLockLock(gKmsLock);
+-    if (kms_pm_wait_locked(false, kKmsPmWaitMs)) nvKmsClose(popen->data);
+-    else kprintf("NVRM-xnu: NVKMS close while the GPU is %s: per-open state left allocated\n", kKmsPmName[gKmsPmState]);
++    // nvidia-modeset-os-interface.h: NVKMS keeps the pointer handed to nvKmsOpen() as pOpenKernel and
++    // still passes it back to nvkms_event_queue_changed() until nvKmsClose() has destroyed that
++    // per-open. While the GPU is suspended or lost nvKmsClose() must not touch the display engine
++    // (a push to a core channel nobody serves spins in nvEvoMakeRoom), so a failed wait is not a
++    // completed close: keep the per-open, this wrapper and its event worker allocated, refuse new
++    // work, and never hand back memory NVKMS still points at.
++    if (!kms_pm_wait_locked(false, kKmsPmWaitMs)) {
++        popen->closing = true;
++        popen->eventWanted = false;
++        IOLockUnlock(gKmsLock);
++        kprintf("NVRM-xnu: NVKMS close deferred while the GPU is %s: per-open and wrapper kept\n", kKmsPmName[gKmsPmState]);
++        return;
++    }
++    if (popen->data) nvKmsClose(popen->data);
+     popen->data = NULL;
+     popen->closing = true;
+     if (popen->eventCall && popen->eventBusy) {
+@@ -139,7 +152,8 @@ static NvBool kms_ioctl_common(struct nvkms_per_open *popen, NvU32 cmd, NvU64 ad
+ {
+     NvBool ret = NV_FALSE;
+     IOLockLock(gKmsLock);
+-    if (popen->data && kms_pm_wait_locked(tryPm, kKmsPmWaitMs)) ret = nvKmsIoctl(popen->data, cmd, address, size);
++    // A deferred close keeps the per-open reachable for NVKMS but must not accept new work on it.
++    if (popen->data && !popen->closing && kms_pm_wait_locked(tryPm, kKmsPmWaitMs)) ret = nvKmsIoctl(popen->data, cmd, address, size);
+     IOLockUnlock(gKmsLock);
+     return ret;
+ }

@@ -1,3 +1,18 @@
+## 2026-10-18 GPU R5–R7 交接：下一个动作是手动运行原生门禁，不是继续写补丁
+
+有效序列 R1→R2→R3注释→R4→R5→R6→R7，完整源码 7 补丁正反向验证通过；R5 修关闭路径 UAF，R6 给它可观测
+回收者，R7 修初始化失败留下的半初始化共享 Device。三者均有主机测试或结构合同，但**没有任何一条经过
+Darwin 编译**。
+
+1. 在 [HONOR GPU safety R5 native object and kext link gate](../.github/workflows/gpu-safety-r5-native.yml)
+   手动选择 `main`、`xcode=Xcode_16.4` 运行；核对真实 `head_sha`、`native-report.json` 与逐对象日志。
+   **本门禁已改为上游 `build/accel_build.sh` 口径**（去掉自加的 `-Wextra -Werror`），并新增"候选不得比原版
+   多告警"的差分检查与 NVAccel kext 链接步骤。
+2. 若失败：先比 original/candidate 同一 TU；共有错误属构建环境/参数/头文件问题，仅候选失败才追 R1→R7 diff。
+3. 拿到原生结果后：F5b（`super::start` 失败与最后一个 framebuffer/kext 卸载的对称销毁）→ 单一内存 owner
+   （`NVRM.cpp` + `nvm_gpuva.cpp` 中的 GPUVA 路径）→ modeset ownership 与 Device 生命周期解耦 → 才谈
+   GSP/DMA/Metal/桥接。
+
 ## 当前执行断点｜R4 原生对象门禁与 KAPI owner（覆盖下文旧 H2/H4 冻结任务）
 
 1. 用户下一步手动在 [HONOR GPU safety R4 native object gate](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/workflows/gpu-safety-r4-native.yml) 选择 `main`，输入 `xcode=Xcode_16.4` 运行；核对实际 `head_sha`、`native_compile.py` 的 Git blob、`native-report.json` 与所有对象编译日志。**不由代理代触发。**

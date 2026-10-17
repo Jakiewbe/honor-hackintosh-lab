@@ -1,0 +1,53 @@
+diff --git a/kexts/NVRM/os-nvkms-xnu.cpp b/kexts/NVRM/os-nvkms-xnu.cpp
+--- a/kexts/NVRM/os-nvkms-xnu.cpp
++++ b/kexts/NVRM/os-nvkms-xnu.cpp
+@@ -94,11 +94,23 @@
+     struct nvkms_per_open *popen = (struct nvkms_per_open *)nvkms_alloc(sizeof *popen, NV_TRUE);
+     if (!popen) return NULL;
+     popen->type = type; popen->device = device;
++    // A kernel ioctl bridge has no KAPI Device and polls events instead. Only a
++    // real KAPI client needs a worker; acquire it before publishing an NVKMS open.
++    if (type == NVKMS_CLIENT_KERNEL_SPACE && device) {
++        popen->eventCall = thread_call_allocate_with_options(kms_kapi_event_fire, popen, THREAD_CALL_PRIORITY_KERNEL, THREAD_CALL_OPTIONS_ONCE);
++        if (!popen->eventCall) { nvkms_free(popen, sizeof *popen); return NULL; }
++    }
+     IOLockLock(gKmsLock);
+     popen->data = nvKmsOpen((NvU32)pid, type, popen);
+     IOLockUnlock(gKmsLock);
+-    if (!popen->data) { nvkms_free(popen, sizeof *popen); return NULL; }
+-    if (type == NVKMS_CLIENT_KERNEL_SPACE) popen->eventCall = thread_call_allocate_with_options(kms_kapi_event_fire, popen, THREAD_CALL_PRIORITY_KERNEL, THREAD_CALL_OPTIONS_ONCE);
++    if (!popen->data) {
++        if (popen->eventCall && !thread_call_free(popen->eventCall)) {
++            kprintf("NVRM-xnu: NVKMS open rollback could not free its unentered event call; wrapper retained\n");
++            return NULL;
++        }
++        nvkms_free(popen, sizeof *popen);
++        return NULL;
++    }
+     return popen;
+ }
+ 
+@@ -114,7 +126,12 @@
+         while (popen->eventBusy) IOLockSleep(gKmsLock, popen, THREAD_UNINT);
+     }
+     IOLockUnlock(gKmsLock);
+-    if (popen->eventCall) thread_call_free(popen->eventCall);
++    if (popen->eventCall && !thread_call_free(popen->eventCall)) {
++        // eventBusy becoming false does not prove the thread-call epilogue has
++        // returned. Do not free its argument on a failed thread_call_free.
++        kprintf("NVRM-xnu: NVKMS close could not free its event call; closing wrapper retained\n");
++        return;
++    }
+     nvkms_free(popen, sizeof *popen);
+ }
+ 
+@@ -379,7 +396,8 @@
+ void nvkms_event_queue_changed(nvkms_per_open_handle_t *pOpenKernel, NvBool eventsAvailable)
+ {
+     struct nvkms_per_open *popen = pOpenKernel;
+-    if (popen->type == NVKMS_CLIENT_USER_SPACE) popen->eventsAvailable = eventsAvailable;
++    if (popen->type == NVKMS_CLIENT_USER_SPACE || !popen->device)
++        popen->eventsAvailable = eventsAvailable;
+     else if (eventsAvailable && popen->eventCall && !popen->closing) {
+         popen->eventWanted = true;
+         if (!popen->eventBusy) {

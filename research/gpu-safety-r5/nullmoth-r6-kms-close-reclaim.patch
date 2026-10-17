@@ -1,0 +1,61 @@
+diff --git a/kexts/NVRM/NVRM.cpp b/kexts/NVRM/NVRM.cpp
+index d6bef54..b3d6477 100644
+--- a/kexts/NVRM/NVRM.cpp
++++ b/kexts/NVRM/NVRM.cpp
+@@ -166,6 +166,12 @@ static bool     gNvPmClosed;
+ static thread_t gNvPmOwner;
+ static SInt64   gNvPmWaited;
+ SYSCTL_QUAD(_debug, OID_AUTO, nvrm_pm_waited, CTLFLAG_RD, &gNvPmWaited, "RM calls that waited for a GPU resume");
++// Bridge closes that could not reach nvKmsClose() because the GPU was suspended or lost. They keep their
++// per-open, wrapper and provider retain until a later resume reclaims them; the counter is the field-visible
++// size of that set, so a growing value is a real symptom rather than a silent leak.
++static SInt64   gNvKmsCloseDeferred;
++SYSCTL_QUAD(_debug, OID_AUTO, nvrm_kms_close_deferred, CTLFLAG_RD, &gNvKmsCloseDeferred, "bridge closes waiting for the GPU to return");
++extern "C" SInt64 nv_xnu_kms_close_deferred(void) { return gNvKmsCloseDeferred; }
+ extern "C" int nv_xnu_pm_enter(void)
+ {
+     if (!gNvPmGate) return 0;
+@@ -412,6 +418,7 @@ bool NVRM::start(IOService *provider)
+             sysctl_register_oid(&sysctl__debug_nvrm_isr_count); sysctl_register_oid(&sysctl__debug_nvrm_isr_handled);
+             sysctl_register_oid(&sysctl__debug_nvrm_evt_posts); sysctl_register_oid(&sysctl__debug_nvrm_evt_waits);
+             sysctl_register_oid(&sysctl__debug_nvrm_pm_waited);
++            sysctl_register_oid(&sysctl__debug_nvrm_kms_close_deferred);
+         }
+     }
+     UInt8 bus = fPCI->getBusNumber(), dev = fPCI->getDeviceNumber(), fn = fPCI->getFunctionNumber();
+@@ -1433,6 +1440,18 @@ void NVRM::gpuResume()
+         (unsigned)st, (unsigned)cst, ns / 1000000ULL,
+         ok ? "GPU running, telling the framebuffers" : "GPU LOST: NVKMS refuses all display work until a restart");
+     notifyFramebuffers(ok ? 1 : 2);
++    // Reclaim bridge closes that were deferred while the GPU was away. Order matters: this runs after
++    // nv_xnu_pm_open(), so the RM calls a reclaimed close makes count as ordinary callers instead of
++    // being held by the gate this same thread just closed; and it runs on the PM thread, never inside an
++    // NVKMS event callback. When the resume failed (kGpuPmLost) the reclaim attempt fails the same way it
++    // did before, so nothing is reported as closed that is not. A reclaimed client drops the provider
++    // retain it took when it was quarantined, so this service is held across the scan.
++    if (nv_xnu_kms_close_deferred() > 0) {
++        retain();
++        const int deferred = nv_xnu_retry_kms_bridge_closes();
++        LOG("wake #%u: reclaimed bridge closes, %d still deferred", fPmCycles, deferred);
++        release();
++    }
+ }
+ 
+ void NVRM::pciSaveForSleep()
+@@ -1711,6 +1730,7 @@ IOReturn NVRMUserClient::clientClose(void)
+                     retain();
+                     if (fOwner) fOwner->retain();
+                     fKmsCloseHeld = true;
++                    OSIncrementAtomic64(&gNvKmsCloseDeferred);
+                 }
+                 kprintf("NVRM-xnu: bridge close deferred for fd %d; session and provider retained\n", fFd);
+                 return kIOReturnNotReady;
+@@ -1722,7 +1742,7 @@ IOReturn NVRMUserClient::clientClose(void)
+             if (fMmap.memArea.pRanges) { kern_os_free(fMmap.memArea.pRanges); fMmap.memArea.pRanges = NULL; }
+             if (nv_xnu_chat()) kprintf("NVRM-xnu: client fd %d closed\n", fFd);
+         }
+-        if (fKmsCloseHeld) { fKmsCloseHeld = false; releaseOwner = fOwner; releaseSelf = true; }
++        if (fKmsCloseHeld) { fKmsCloseHeld = false; releaseOwner = fOwner; releaseSelf = true; OSDecrementAtomic64(&gNvKmsCloseDeferred); }
+     }
+     terminate();
+     // Release the quarantine hold only after the session lock has been dropped.

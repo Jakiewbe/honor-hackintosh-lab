@@ -1,3 +1,10 @@
+| R5–R7 全序列往返 | PATCH-APPLIED | 7 补丁正向/反向 exit 0；树哈希 `ea9467f4…` → `adbad235…` → `ea9467f4…`（611 文件） | `research/gpu-safety-r5/README.md` |
+| R5 关闭合同 | HOST-TEST | 候选 40/40；改前对照 heap-use-after-free（释放栈在 `kms_close_common`） | 同上 |
+| R6 bridge-owner + 隔离计数 | HOST-TEST | 9/9 | 同上 |
+| R7 回滚析构器 | HOST-TEST | 15/15 | 同上 |
+| R6/R7 结构合同 | SOURCE-STRUCTURE | 12/12、14/14 | 同上 |
+| R5–R7 原生编译/链接 | — | **未运行** | `.github/workflows/gpu-safety-r5-native.yml`（仅手动） |
+
 ## 2026-10-17 GPU R4 当前接手核查（用户最新 GPU 优先；运行 NO-GO）
 
 用户明确恢复 RTX 2050 `10DE:25A9` GPU 驱动优先，H2 外设暂缓，Intel `8086:46A6` 保留现有基础显示；不扩展到 Head 4/Intel Metal/G2/G3。D-17/D-18 的历史决策不删除，本指令覆盖其中 H4 冻结优先级而不覆盖设备安全权限。

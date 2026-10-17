@@ -1,0 +1,264 @@
+diff --git a/kexts/NVRM/NVRM.cpp b/kexts/NVRM/NVRM.cpp
+--- a/kexts/NVRM/NVRM.cpp
++++ b/kexts/NVRM/NVRM.cpp
+@@ -49,7 +49,7 @@
+ #define LOG(fmt, ...) do { kprintf("NVRM-xnu: " fmt "\n", ##__VA_ARGS__); IOLog("NVRM-xnu: " fmt "\n", ##__VA_ARGS__); } while (0)
+ 
+ struct nvkms_per_open;
+-extern "C" { NvBool nvkms_xnu_load(void); struct nvkms_per_open *nvkms_xnu_open(int pid); void nvkms_xnu_close(struct nvkms_per_open *);
++extern "C" { NvBool nvkms_xnu_load(void); struct nvkms_per_open *nvkms_xnu_open(int pid); NvBool nvkms_xnu_try_close_bridge(struct nvkms_per_open *);
+              int nvkms_xnu_ioctl(struct nvkms_per_open *, NvU32 cmd, void *params, size_t size); int nvkms_xnu_events_available(struct nvkms_per_open *); }
+ static class NVRM *gNVRMService;
+ extern "C" nv_state_t *nv_xnu_gpu_state(void);
+@@ -168,8 +168,9 @@
+ SYSCTL_QUAD(_debug, OID_AUTO, nvrm_pm_waited, CTLFLAG_RD, &gNvPmWaited, "RM calls that waited for a GPU resume");
+ extern "C" int nv_xnu_pm_enter(void)
+ {
+-    if (!gNvPmGate || current_thread() == gNvPmOwner) return 0;
++    if (!gNvPmGate) return 0;
+     IOLockLock(gNvPmGate);
++    if (current_thread() == gNvPmOwner) { IOLockUnlock(gNvPmGate); return 0; }
+     if (gNvPmClosed) {
+         OSIncrementAtomic64(&gNvPmWaited);
+         while (gNvPmClosed) IOLockSleep(gNvPmGate, &gNvPmClosed, THREAD_UNINT);
+@@ -188,7 +189,7 @@
+ // Close the gate and wait up to waitMs for the calls already inside RM. Returns how many were still inside.
+ static int nv_xnu_pm_close(uint32_t waitMs)
+ {
+-    if (!gNvPmGate) return 0;
++    if (!gNvPmGate) return -1; // Missing synchronization is not zero active users.
+     uint64_t deadline; clock_interval_to_deadline(waitMs, kMillisecondScale, &deadline);
+     IOLockLock(gNvPmGate);
+     gNvPmClosed = true;
+@@ -269,12 +270,26 @@
+     return pid;
+ }
+ 
++// Lock order: client session -> gKmsLock / gNvClientsLock. The retry scanner
++// drops gNvClientsLock before entering a session. No KAPI callback uses this lock.
++class NvKmsClientLock {
++    IOLock *lock;
++public:
++    explicit NvKmsClientLock(IOLock *value) : lock(value) { IOLockLock(lock); }
++    ~NvKmsClientLock() { IOLockUnlock(lock); }
++    NvKmsClientLock(const NvKmsClientLock &) = delete;
++    NvKmsClientLock &operator=(const NvKmsClientLock &) = delete;
++};
++extern "C" int nv_xnu_retry_kms_bridge_closes(void);
++
+ class NVRMUserClient : public IOUserClient {
+     OSDeclareDefaultStructors(NVRMUserClient)
+     uint64_t fPm;
+ public:
+     bool start(IOService *provider) override;
+     IOReturn clientClose(void) override;
++    void free(void) override;
++    IOReturn retryKmsClose(void);
+     IOReturn externalMethod(uint32_t selector, IOExternalMethodArguments *args,
+                             IOExternalMethodDispatch *dispatch, OSObject *target, void *reference) override;
+     bool initWithTask(task_t owningTask, void *securityID, UInt32 type, OSDictionary *properties) override;
+@@ -295,6 +310,9 @@
+     int  fBound = -1;
+     bool fCleaned = false;
+     struct nvkms_per_open *fKms = nullptr;
++    IOLock *fKmsLock = nullptr;
++    bool fKmsClosing = false;
++    bool fKmsCloseHeld = false; // One self/provider retain while a close is quarantined.
+     IOReturn esc(uint32_t cmd, void *data, uint32_t size);
+     static IOReturn sGo(OSObject *target, void *reference, IOExternalMethodArguments *args);
+     static IOReturn sEsc(OSObject *target, void *reference, IOExternalMethodArguments *args);
+@@ -379,6 +397,12 @@
+     if (!super::start(provider)) return false;
+     fPCI = OSDynamicCast(IOPCIDevice, provider);
+     if (!fPCI) return false;
++    char nopm[8] = { 0 };
++    const bool pmDisabled = PE_parse_boot_argn("-nvrmnopm", nopm, sizeof nopm);
++    // Allocate the gate before publishing this service or launching autoGo.
++    // With PM explicitly disabled, retain the documented no-gate behavior.
++    if (!pmDisabled && !gNvPmGate) gNvPmGate = IOLockAlloc();
++    if (!pmDisabled && !gNvPmGate) { LOG("PM gate allocation failed; driver start refused"); return false; }
+     gNVRMService = this;
+     nv_xnu_log_init();
+     {
+@@ -467,12 +491,10 @@
+             { kIOPMPowerStateVersion1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+             { kIOPMPowerStateVersion1, kIOPMPowerOn | kIOPMDeviceUsable, kIOPMPowerOn, kIOPMPowerOn, 0, 0, 0, 0, 0, 0, 0, 0 },
+         };
+-        char nopm[8] = { 0 };
+-        if (PE_parse_boot_argn("-nvrmnopm", nopm, sizeof nopm)) {
++        if (pmDisabled) {
+             setProperty("nvrm-pm", "off (-nvrmnopm)");
+             LOG("power management OFF (-nvrmnopm): system sleep will lose the GPU");
+         } else {
+-            if (!gNvPmGate) gNvPmGate = IOLockAlloc();
+             PMinit();
+             fPCI->joinPMtree(this);
+             registerPowerDriver(this, kNvrmPowerStates, 2);
+@@ -1581,6 +1603,10 @@
+         *out = uc;
+         return kIOReturnSuccess;
+     }
++    if (fn && fn->isEqualTo("NVRMKmsRetryClose-v1")) {
++        if (!wait) return kIOReturnUnsupported;
++        return nv_xnu_retry_kms_bridge_closes() == 0 ? kIOReturnSuccess : kIOReturnNotReady;
++    }
+     if (fn && p1) {
+         const bool rmCall = fn->isEqualTo(NVRM_GPUVA_FN_ALLOC) || fn->isEqualTo(NVRM_GPUVA_FN_MAP) || fn->isEqualTo(NVRM_GPUVA_FN_FREE)
+                          || fn->isEqualTo(NVRM_SS_FN_RM) || fn->isEqualTo(NVRM_SS_FN_PAGEOFF);
+@@ -1616,10 +1642,13 @@
+     // userland opens it as the logged-in user -- and the escalated operations behind it are gated
+     // by the real-privilege check in _os_is_administrator and the root requirement on first init.
+     if (type > 1) return false;
++    fKmsLock = IOLockAlloc();
++    if (!fKmsLock) return false;
+     fIsCtl = (type == 0);
+     nvu_memset(&fNvfp, 0, sizeof fNvfp);
+     fNvfp.ctl_nvfp_priv = this;
+     if (!gNvClientsLock) gNvClientsLock = IOLockAlloc();
++    if (!gNvClientsLock) return false;
+     // One table serves every process, so one process (or one user's processes) could fill it and leave WindowServer
+     // unable to open a client. Two limits: a process holds at most kNvClientsPerPid (the busiest process measured on
+     // a desktop held 154: Maps; Firefox's GPU process 96, WindowServer 78), and the last kNvClientsReserved slots
+@@ -1660,21 +1689,78 @@
+     return true;
+ }
+ nv_state_t *NVRMUserClient::nvState() { return fIsCtl ? nv_get_ctl_state() : &fOwner->fNv; }
++void NVRMUserClient::free(void)
++{
++    // A quarantined close owns a self retain, so it cannot reach free().
++    if (fKmsLock) { IOLockFree(fKmsLock); fKmsLock = nullptr; }
++    super::free();
++}
+ IOReturn NVRMUserClient::clientClose(void)
+ {
+-    if (!fCleaned) {
+-        fCleaned = true;
+-        if (gNvClientsLock && fFd >= 0) { IOLockLock(gNvClientsLock); gNvClients[fFd] = NULL; nv_pm_close(fPm); IOLockUnlock(gNvClientsLock); }
+-        if (fKms) { nvkms_xnu_close(fKms); fKms = nullptr; }
+-        if (fOwner) { NvXnuPmUse pmUse; rm_cleanup_file_private(NULL, nvState(), &fNvfp); }
+-        if (fMmap.memArea.pRanges) { kern_os_free(fMmap.memArea.pRanges); fMmap.memArea.pRanges = NULL; }
+-        if (nv_xnu_chat()) kprintf("NVRM-xnu: client fd %d closed\n", fFd);
++    NVRM *releaseOwner = nullptr;
++    bool releaseSelf = false;
++    if (!fKmsLock) { terminate(); return kIOReturnSuccess; }
++    {
++        NvKmsClientLock session(fKmsLock);
++        fKmsClosing = true;
++        if (!fCleaned) {
++            // Serializes with the entire bridge ioctl, including a PM sleep.
++            // Failure leaves the session published, owned and available to retry.
++            if (fKms && !nvkms_xnu_try_close_bridge(fKms)) {
++                if (!fKmsCloseHeld) {
++                    retain();
++                    if (fOwner) fOwner->retain();
++                    fKmsCloseHeld = true;
++                }
++                kprintf("NVRM-xnu: bridge close deferred for fd %d; session and provider retained\n", fFd);
++                return kIOReturnNotReady;
++            }
++            fKms = nullptr;
++            fCleaned = true;
++            if (gNvClientsLock && fFd >= 0) { IOLockLock(gNvClientsLock); gNvClients[fFd] = NULL; nv_pm_close(fPm); IOLockUnlock(gNvClientsLock); }
++            if (fOwner) { NvXnuPmUse pmUse; rm_cleanup_file_private(NULL, nvState(), &fNvfp); }
++            if (fMmap.memArea.pRanges) { kern_os_free(fMmap.memArea.pRanges); fMmap.memArea.pRanges = NULL; }
++            if (nv_xnu_chat()) kprintf("NVRM-xnu: client fd %d closed\n", fFd);
++        }
++        if (fKmsCloseHeld) { fKmsCloseHeld = false; releaseOwner = fOwner; releaseSelf = true; }
+     }
+     terminate();
++    // Release the quarantine hold only after the session lock has been dropped.
++    if (releaseOwner) releaseOwner->release();
++    if (releaseSelf) release();
+     return kIOReturnSuccess;
+ }
++IOReturn NVRMUserClient::retryKmsClose(void)
++{
++    if (!fKmsLock) return kIOReturnSuccess;
++    {
++        NvKmsClientLock session(fKmsLock);
++        if (!fKmsCloseHeld) return kIOReturnSuccess;
++    }
++    return clientClose();
++}
++extern "C" int nv_xnu_retry_kms_bridge_closes(void)
++{
++    // Internal, explicit control-context retry. Never run on an event callback
++    // or while holding NVKMS/RM locks; no implicit work on the PM thread.
++    if (!gNvClientsLock) return 0;
++    int pending = 0;
++    for (int i = 0; i < NV_XNU_MAX_CLIENTS; i++) {
++        IOLockLock(gNvClientsLock);
++        NVRMUserClient *client = gNvClients[i];
++        if (client) client->retain();
++        IOLockUnlock(gNvClientsLock);
++        if (!client) continue;
++        if (client->retryKmsClose() != kIOReturnSuccess) pending++;
++        client->release();
++    }
++    return pending;
++}
+ IOReturn NVRMUserClient::clientMemoryForType(UInt32 type, IOOptionBits *options, IOMemoryDescriptor **memory)
+ {
++    if (!fKmsLock) return kIOReturnNotAttached;
++    NvKmsClientLock session(fKmsLock);
++    if (fKmsClosing || fCleaned) return kIOReturnNotReady;
+     nv_alloc_mapping_context_t *c = &fMmap;
+     if (!c->valid) { kprintf("NVRM-xnu: map on fd %d with no mapping context\n", fFd); return kIOReturnBadArgument; }
+     IOMemoryDescriptor *md = NULL;
+@@ -1729,6 +1815,9 @@
+         { sWaitEvent, 2, 0, 1, 0 },
+     };
+     if (selector >= sizeof tbl / sizeof tbl[0]) return kIOReturnBadArgument;
++    if (!fKmsLock) return kIOReturnNotAttached;
++    NvKmsClientLock session(fKmsLock);
++    if (fKmsClosing || fCleaned) return kIOReturnNotReady;
+     IOExternalMethodDispatch d = tbl[selector];
+     return super::externalMethod(selector, args, &d, this, reference);
+ }
+diff --git a/kexts/NVRM/os-nvkms-xnu.cpp b/kexts/NVRM/os-nvkms-xnu.cpp
+--- a/kexts/NVRM/os-nvkms-xnu.cpp
++++ b/kexts/NVRM/os-nvkms-xnu.cpp
+@@ -196,11 +196,42 @@
+ }
+ struct nvkms_per_open *nvkms_xnu_open(int pid) { return gKmsLoaded ? kms_open_common(NVKMS_CLIENT_KERNEL_SPACE, NULL, pid) : NULL; }
+ void nvkms_xnu_close(struct nvkms_per_open *popen) { if (popen) kms_close_common(popen); }
++// Internal bridge-only API. The UserClient session lock owns popen across
++// the PM wait. Never use this API for a KAPI Device or its event worker.
++NvBool nvkms_xnu_try_close_bridge(struct nvkms_per_open *popen)
++{
++    if (!popen) return NV_TRUE;
++    IOLockLock(gKmsLock);
++    if (popen->device || popen->eventCall || popen->type != NVKMS_CLIENT_KERNEL_SPACE) {
++        IOLockUnlock(gKmsLock);
++        return NV_FALSE;
++    }
++    if (!kms_pm_wait_locked(false, kKmsPmWaitMs)) {
++        IOLockUnlock(gKmsLock);
++        return NV_FALSE; // Keep both the real per-open and its owning wrapper.
++    }
++    // Suspend takes gKmsLock before closing the RM gate. Keep this lock from
++    // the successful PM check through backend close; there is no KAPI worker.
++    if (popen->data) nvKmsClose(popen->data);
++    popen->data = NULL;
++    popen->closing = true;
++    IOLockUnlock(gKmsLock);
++    nvkms_free(popen, sizeof *popen);
++    return NV_TRUE;
++}
++
+ int nvkms_xnu_ioctl(struct nvkms_per_open *popen, NvU32 cmd, void *params, size_t size)
+ {
+     return kms_ioctl_common(popen, cmd, (NvU64)(uintptr_t)params, size) ? 0 : -1;
+ }
+-int nvkms_xnu_events_available(struct nvkms_per_open *popen) { return popen ? popen->eventsAvailable : 0; }
++int nvkms_xnu_events_available(struct nvkms_per_open *popen)
++{
++    // Caller holds its UserClient session lock, which keeps the wrapper alive.
++    IOLockLock(gKmsLock);
++    const int available = popen ? popen->eventsAvailable : 0;
++    IOLockUnlock(gKmsLock);
++    return available;
++}
+ static struct NvKmsKapiFunctionsTable gKapiTable;
+ void *nvkms_xnu_kapi_table(void)
+ {

@@ -1,3 +1,18 @@
+## 2026-10-18 GPU 源码候选 R5–R7（源码 + 主机测试，原生构建仍未运行）
+
+R5 修 `kexts/NVRM/os-nvkms-xnu.cpp:kms_close_common` 的真实 use-after-free：GPU 挂起/丢失导致 PM 等待失败时，
+旧代码仍清 `data` 并释放 wrapper，而 `nvidia-modeset-os-interface.h` 规定该指针就是 NVKMS 之后回传
+`nvkms_event_queue_changed()` 的 `pOpenKernel`。现改为失败即保留 per-open/wrapper/worker，置 `closing` 并拒绝新
+ioctl。R6 给隔离态补上可观测回收者：隔离计数 + 唤醒成功后由 PM 线程回收 + 只读 sysctl
+`debug.nvrm_kms_close_deferred`。R7 修 `kapiInit()` 失败后留下的半初始化共享 Device：仅自建 Device 才
+`releaseOwnership` + `freeDevice` + 清 `gDev`，复用路径归还 head 位但不销毁 Device（依据 OGKM `e4a5faa` 的
+`nvkms-kapi.h`：两个函数均返回 void，销毁失败不可上报）。
+
+实测：7 补丁完整源码正反向 exit 0（树哈希回到 `ea9467f4…`）；关闭合同 40/40（改前对照 ASan 报 UAF）、
+bridge-owner 9/9、回滚析构器 15/15、调用点合同 12/12、回滚结构合同 14/14。
+**DARWIN-COMPILE / KEXT-LINK 未运行，KEXT-LOAD 及 GPU/内屏加速一律 NO-GO。** 详见
+[research/gpu-safety-r5/README.md](../research/gpu-safety-r5/README.md)。
+
 ## 2026-10-17 GPU R4 当前接手核查（用户最新 GPU 优先；运行 NO-GO）
 
 用户明确恢复 RTX 2050 `10DE:25A9` GPU 驱动优先，H2 外设暂缓，Intel `8086:46A6` 保留现有基础显示；不扩展到 Head 4/Intel Metal/G2/G3。D-17/D-18 的历史决策不删除，本指令覆盖其中 H4 冻结优先级而不覆盖设备安全权限。
