@@ -1,5 +1,5 @@
 diff --git a/kexts/NMIntelFB/intelfb.cpp b/kexts/NMIntelFB/intelfb.cpp
-index bf9e7d7..532e5e4 100644
+index bf9e7d7..6b0431e 100644
 --- a/kexts/NMIntelFB/intelfb.cpp
 +++ b/kexts/NMIntelFB/intelfb.cpp
 @@ -303,6 +303,11 @@ bool NMIntelFB::adoptFirmwareMode()
@@ -20,7 +20,7 @@ index bf9e7d7..532e5e4 100644
      armVbl();
 -    registerPowerDriver(this, kPowerStates, 2);
 -    gVirt = this; sysctl_register_oid(&sysctl__debug_nmintelfb_sample);
-+    if (registerPowerDriver(this, kPowerStates, 2) == nullptr)
++    if (registerPowerDriver(this, kPowerStates, 2) != kIOReturnSuccess)
 +        IFBLOG("virtual: power driver registration FAILED");
 +    if (gVirt != this) {
 +        gVirt = this;
@@ -43,7 +43,7 @@ index bf9e7d7..532e5e4 100644
      setProperty("built-in", kOSBooleanTrue);   // the panel is the laptop's own (kConnectionFlags says so too)
      armVbl();
 -    registerPowerDriver(this, kPowerStates, 2);
-+    if (registerPowerDriver(this, kPowerStates, 2) == nullptr)
++    if (registerPowerDriver(this, kPowerStates, 2) != kIOReturnSuccess)
 +        IFBLOG("power driver registration FAILED: sleep/wake handling will not run for this panel");
      IFBLOG("built-in panel published (%ux%u)", fWidth, fHeight);
      return true;
