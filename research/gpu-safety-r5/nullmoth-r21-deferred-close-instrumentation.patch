@@ -1,0 +1,71 @@
+diff --git a/kexts/NVRM/os-nvkms-xnu.cpp b/kexts/NVRM/os-nvkms-xnu.cpp
+index d968ea8..091b6d9 100644
+--- a/kexts/NVRM/os-nvkms-xnu.cpp
++++ b/kexts/NVRM/os-nvkms-xnu.cpp
+@@ -42,6 +42,10 @@ static int gKmsPmState = kKmsPmRunning;
+ // A teardown that passed nvkms_xnu_pm_running() holds a pin: suspend waits for it, so the
+ // release/free pair can no longer be cut in half between the check and the call.
+ static int gKmsPmPins;
++// nvKmsClose()/FreeDevice() are void: a refused close cannot be propagated upward. Counting it
++// with a reason still makes the failure observable after the fact.
++static volatile uint32_t gKmsCloseDeferred;
++static volatile uint32_t gKmsCloseDeferredLost;
+ static const uint32_t kKmsPmPinWaitMs = 5000;
+ static const uint32_t kKmsPmWaitMs = 30000;
+ static const char *const kKmsPmName[] = { "running", "suspended", "lost" };
+@@ -131,8 +135,11 @@ static void kms_close_common(struct nvkms_per_open *popen)
+     if (!kms_pm_wait_locked(false, kKmsPmWaitMs)) {
+         popen->closing = true;
+         popen->eventWanted = false;
++        gKmsCloseDeferred++;
++        if (gKmsPmState == kKmsPmLost) gKmsCloseDeferredLost++;
+         IOLockUnlock(gKmsLock);
+-        kprintf("NVRM-xnu: NVKMS close deferred while the GPU is %s: per-open and wrapper kept\n", kKmsPmName[gKmsPmState]);
++        kprintf("NVRM-xnu: NVKMS close deferred while the GPU is %s: per-open and wrapper kept (deferred #%u, lost #%u)\n",
++                kKmsPmName[gKmsPmState], (unsigned)gKmsCloseDeferred, (unsigned)gKmsCloseDeferredLost);
+         return;
+     }
+     if (popen->data) nvKmsClose(popen->data);
+@@ -226,6 +233,14 @@ void nvkms_xnu_resume(NvU32 gpuId, NvBool gpuOk)
+ // a caller that must not block (a framebuffer stop) has to ask before it tears anything down.
+ // Take a pin before tearing a KAPI device down: it succeeds only while NVKMS can be called, and it
+ // keeps suspend from moving the state under the release/free pair. Always pair with unpin.
++// Snapshot of the deferred-close counters: the teardown reads these around freeDevice(), so a close
++// that NVKMS refused shows up as a delta even though the call itself returns nothing.
++void nvkms_xnu_kms_close_deferred_count(uint32_t *total, uint32_t *lost)
++{
++    if (total) *total = gKmsCloseDeferred;
++    if (lost) *lost = gKmsCloseDeferredLost;
++}
++
+ NvBool nvkms_xnu_pm_pin(void)
+ {
+     if (!gKmsLock) return NV_FALSE;
+diff --git a/kexts/NVRMFB/fb/nvrm-fb.cpp b/kexts/NVRMFB/fb/nvrm-fb.cpp
+index 95027db..8bd312e 100644
+--- a/kexts/NVRMFB/fb/nvrm-fb.cpp
++++ b/kexts/NVRMFB/fb/nvrm-fb.cpp
+@@ -697,6 +697,7 @@ extern "C" NvBool nvkms_xnu_pm_running(void);
+ // Pin hold: guarantees suspend cannot run between the check and the release/free pair.
+ extern "C" NvBool nvkms_xnu_pm_pin(void);
+ extern "C" void nvkms_xnu_pm_unpin(void);
++extern "C" void nvkms_xnu_kms_close_deferred_count(uint32_t *total, uint32_t *lost);
+ void NVRMNVDAFramebuffer::dropKapiDevice()
+ {
+     // gDev, gDevUsers, gDevOrphaned and gHeadsTaken are shared by every framebuffer instance and are
+@@ -731,7 +732,15 @@ void NVRMNVDAFramebuffer::dropKapiDevice()
+         nvkms_xnu_pm_unpin();
+         return;
+     }
++    uint32_t deferredBefore = 0, lostBefore = 0, deferredAfter = 0, lostAfter = 0;
++    nvkms_xnu_kms_close_deferred_count(&deferredBefore, &lostBefore);
+     fKms->freeDevice(fDev);
++    nvkms_xnu_kms_close_deferred_count(&deferredAfter, &lostAfter);
++    if (deferredAfter != deferredBefore)
++        FBLOG("device 0x%llx: freeDevice returned but NVKMS refused the close (%u new deferral(s), %u from LOST)"
++              " -- RM state may be split; the void interface cannot report this upward",
++              (unsigned long long)(uintptr_t)fDev, (unsigned)(deferredAfter - deferredBefore),
++              (unsigned)(lostAfter - lostBefore));
+     if (gDev == fDev) gDev = nullptr;
+     fDev = nullptr;
+     gDevOrphaned = false;
