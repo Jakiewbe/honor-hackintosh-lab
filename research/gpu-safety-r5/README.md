@@ -72,6 +72,12 @@ GitHub UI → Actions → **HONOR GPU safety R5 native object and kext link gate
 `KEXT-LOAD` / `GPU-RUNTIME` / `DISPLAY-RUNTIME` / `ACCELERATED-DESKTOP` 仍为 **NO-GO**：
 本次没有加载任何驱动，也没有访问 GPU。
 
-已知遗留（下一轮门禁修正项）：链接行沿用上游写法，缺少 `-mmacosx-version-min=15.5`，因此三条 ld 部署目标
-警告属于配置不一致而非源码问题；`super::start()` 在 `kapiInit` 成功后失败、以及最后一个 framebuffer 停止 /
-kext 卸载时的对称销毁仍缺（F5b）。
+### 第二次运行（链接参数修正后，无任何诊断）
+
+[Run 39049023927](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39049023927) 在 `3ef269e` 上同样 `completed success`：链接行补 `-mmacosx-version-min=15.5`
+（与对象一致），三条 ld 部署目标警告消失，链接日志只剩 `ARGV` 与 `EXIT=0`。
+**kext 字节与第一次完全相同**（244400 B，`sha256 89f9839e…5e6cf1`）——说明该参数只消除了诊断，
+没有改变产物，这也反证第一次的告警是链接配置不一致而非源码问题。
+
+已知遗留：`super::start()` 在 `kapiInit` 成功后失败、以及最后一个 framebuffer 停止 / kext 卸载时的
+对称销毁仍缺（F5b）；共享 Device 的"最后使用者"判定尚未定义。

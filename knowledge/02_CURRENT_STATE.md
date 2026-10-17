@@ -10,6 +10,8 @@ macOS SDK 15.5 / macOS 15.7.9 Intel runner。R1→R7 七个补丁与 OGKM 补丁
 任何驱动，也没有访问 GPU。遗留：链接行缺 `-mmacosx-version-min=15.5`（三条 ld 部署目标警告，属配置不一致）；
 F5b（`super::start` 失败与最后一个 framebuffer/kext 卸载的对称销毁）仍未实现。详见
 [research/gpu-safety-r5/README.md](../research/gpu-safety-r5/README.md)。
+补充：[Run 39049023927](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39049023927) 在 `3ef269e` 上复跑同样通过，链接行补齐 `-mmacosx-version-min=15.5` 后三条 ld 部署目标警告消失，kext 字节与首次运行完全相同（244400 B，同一 sha256），说明该参数只消除了诊断、未改变产物。
+
 
 ## 2026-10-18 GPU 源码候选 R5–R7（源码 + 主机测试，原生构建仍未运行）
 
