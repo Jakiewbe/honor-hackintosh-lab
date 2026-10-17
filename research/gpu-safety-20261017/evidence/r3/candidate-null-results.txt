@@ -1,0 +1,1 @@
+PASS: actual FreeDevice(NULL) returns before any teardown dependency

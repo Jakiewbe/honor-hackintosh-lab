@@ -1,0 +1,27 @@
+{
+ "ogkm_commit": "e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb",
+ "kapi_license": "MIT; NVIDIA 2015-2025; notice preserved in function fixtures",
+ "nullmoth_license": "Inherited fixed source license; R3 only comment change; existing R1/R2 notices retained",
+ "xnu_excerpt_license": "APSL-2.0; excerpts attributed to Apple fixed source comparator",
+ "source_object_symbol": [
+  {
+   "label": "original",
+   "source_sha256": "66437bc38d96d3b4f15546c3e6f7a8c0caccc158b35893c2406f80f2e6e8816b",
+   "compile_exit": 0,
+   "object_sha256": "eb9e715dfeb1d08151f6cc223841148ff187d597442f06e44509ef6f0e4770f4",
+   "undefined_exit": 0,
+   "defined_exit": 0
+  },
+  {
+   "label": "candidate",
+   "source_sha256": "7e5492e0a0961e45ea75f664d2a16c49c66d728b93b8e3e87dca3ae9ebe38200",
+   "compile_exit": 0,
+   "object_sha256": "d22c3dfef969c8c066117b2808bfe7be961166e070d1c2f416d8093f52aacfae",
+   "undefined_exit": 0,
+   "defined_exit": 0
+  }
+ ],
+ "symbols": "*-kapi-defined.txt and *-kapi-undefined.txt",
+ "darwin": "NOT_RUN",
+ "binary_publication": false
+}

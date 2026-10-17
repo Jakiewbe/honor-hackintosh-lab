@@ -1,0 +1,20 @@
+{
+ "original": {
+  "source_sha256": "66437bc38d96d3b4f15546c3e6f7a8c0caccc158b35893c2406f80f2e6e8816b",
+  "fixture_sha256": "c9bd181a5e180132dafb7c34df91c1f16c54d9da08af4d19f8fc7f5d6bf2f7d9",
+  "exact_function_bodies": [
+   "KmsFreeDevice",
+   "FreeDevice"
+  ],
+  "dependency_injection": true
+ },
+ "candidate": {
+  "source_sha256": "7e5492e0a0961e45ea75f664d2a16c49c66d728b93b8e3e87dca3ae9ebe38200",
+  "fixture_sha256": "91caedd026a2604a67a96cf805d665ca63a3a61e952d6136be3f45551abdfbde",
+  "exact_function_bodies": [
+   "KmsFreeDevice",
+   "FreeDevice"
+  ],
+  "dependency_injection": true
+ }
+}

@@ -1,0 +1,14 @@
+diff --git a/kexts/NVRM/os-nvkms-xnu.cpp b/kexts/NVRM/os-nvkms-xnu.cpp
+--- a/kexts/NVRM/os-nvkms-xnu.cpp
++++ b/kexts/NVRM/os-nvkms-xnu.cpp
+@@ -127,8 +127,8 @@
+     }
+     IOLockUnlock(gKmsLock);
+     if (popen->eventCall && !thread_call_free(popen->eventCall)) {
+-        // eventBusy becoming false does not prove the thread-call epilogue has
+-        // returned. Do not free its argument on a failed thread_call_free.
++        // A pending or rearmed call makes thread_call_free fail. Keep the
++        // argument alive; successful release is not a callback join operation.
+         kprintf("NVRM-xnu: NVKMS close could not free its event call; closing wrapper retained\n");
+         return;
+     }

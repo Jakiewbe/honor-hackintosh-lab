@@ -1,0 +1,8 @@
+{
+ "actual_parser_against_fixed_makefile": "PASS",
+ "includes": 27,
+ "definitions": 15,
+ "matches_host_profile": true,
+ "conditionals_evaluated": false,
+ "darwin_compile": "NOT_RUN"
+}

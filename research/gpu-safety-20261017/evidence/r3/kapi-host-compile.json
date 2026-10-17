@@ -1,0 +1,78 @@
+{
+ "level": "HOST-COMPILE only; entire real KAPI translation unit, not Darwin or GPU execution",
+ "profile": {
+  "includes_relative_to_modeset": [
+   "../common/sdk/nvidia/inc",
+   "../common/sdk/nvidia/inc/hw",
+   "../common/shared/inc",
+   "../common/inc",
+   "../common/softfloat/nvidia",
+   "../common/softfloat/source/include",
+   "../common/softfloat/source/8086-SSE",
+   "../common/unix/common/utils/interface",
+   "../common/unix/common/inc",
+   "../common/modeset",
+   "os-interface/include",
+   "kapi/interface",
+   "../nvidia/arch/nvalloc/unix/include",
+   "interface",
+   "include",
+   "kapi/include",
+   "generated",
+   "../common/displayport/inc",
+   "../common/displayport/inc/dptestutil",
+   "../common/inc/displayport",
+   "../common/unix/nvidia-3d/interface",
+   "../common/unix/nvidia-push/interface",
+   "../common/unix/nvidia-3d/include",
+   "../common/unix/nvidia-push/include",
+   "../common/unix/xzminidec/interface",
+   "../common/unix/nvidia-headsurface",
+   "src/shaders"
+  ],
+  "make_definitions": [
+   "-DNDEBUG",
+   "-D_LANGUAGE_C",
+   "-D__NO_CTYPE",
+   "-DNV_CPU_INTRINSICS_KERNEL",
+   "-DNVHDMIPKT_RM_CALLS_INTERNAL=0",
+   "-DNVHDMIPKT_NVKMS",
+   "-DSOFTFLOAT_ROUND_ODD",
+   "-DSOFTFLOAT_FAST_DIV32TO16",
+   "-DSOFTFLOAT_FAST_DIV64TO32",
+   "-DNVT_USE_NVKMS",
+   "-DNV_SMG_IN_NVKMS",
+   "-DNV_PUSH_IN_KERNEL",
+   "-DNV_XZ_CUSTOM_MEM_HOOKS",
+   "-DNV_XZ_USE_NVTYPES",
+   "-DXZ_DEC_SINGLE"
+  ],
+  "platform_definitions": [
+   "-DNV_UNIX",
+   "-DNV_LINUX",
+   "-DNV_X86_64",
+   "-DNV_ARCH_BITS=64"
+  ],
+  "profile": "HOST-COMPILE reconstructed Linux profile from fixed modeset Makefile; not an upstream Darwin build",
+  "makefile_sha256": "53c348ba9664239e6edc262226a85c7a6c10b7567ccf3bd8d0eda31a7363d796",
+  "limitations": "Literal Makefile -I/-D lines collected; conditional blocks not evaluated. Potentially overbroad reconstruction, not the upstream effective command."
+ },
+ "checks": [
+  {
+   "label": "original",
+   "source_sha256": "66437bc38d96d3b4f15546c3e6f7a8c0caccc158b35893c2406f80f2e6e8816b",
+   "compile_exit": 0,
+   "object_sha256": "eb9e715dfeb1d08151f6cc223841148ff187d597442f06e44509ef6f0e4770f4",
+   "undefined_exit": 0,
+   "defined_exit": 0
+  },
+  {
+   "label": "candidate",
+   "source_sha256": "7e5492e0a0961e45ea75f664d2a16c49c66d728b93b8e3e87dca3ae9ebe38200",
+   "compile_exit": 0,
+   "object_sha256": "d22c3dfef969c8c066117b2808bfe7be961166e070d1c2f416d8093f52aacfae",
+   "undefined_exit": 0,
+   "defined_exit": 0
+  }
+ ]
+}

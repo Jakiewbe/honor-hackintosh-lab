@@ -1,0 +1,15 @@
+diff --git a/src/nvidia-modeset/kapi/src/nvkms-kapi.c b/src/nvidia-modeset/kapi/src/nvkms-kapi.c
+--- a/src/nvidia-modeset/kapi/src/nvkms-kapi.c
++++ b/src/nvidia-modeset/kapi/src/nvkms-kapi.c
+@@ -624,6 +624,11 @@
+ 
+ static void FreeDevice(struct NvKmsKapiDevice *device)
+ {
++    /* AllocateDevice() also reaches this path when its first allocation fails. */
++    if (device == NULL) {
++        return;
++    }
++
+     /* Free NVKMS objects allocated for NvKmsKapiDevice */
+ 
+     KmsFreeDevice(device);

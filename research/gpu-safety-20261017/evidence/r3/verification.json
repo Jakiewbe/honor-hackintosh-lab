@@ -1,0 +1,186 @@
+{
+ "steps": [
+  {
+   "argv": [
+    "git",
+    "-c",
+    "core.autocrlf=false",
+    "apply",
+    "--check",
+    "--whitespace=error-all",
+    "D:\\Hactk\\gpu-mainline-20261017\\patches\\ogkm-r3-kapi-null-free.patch"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": ""
+  },
+  {
+   "argv": [
+    "git",
+    "-c",
+    "core.autocrlf=false",
+    "apply",
+    "--whitespace=error-all",
+    "D:\\Hactk\\gpu-mainline-20261017\\patches\\ogkm-r3-kapi-null-free.patch"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": ""
+  },
+  {
+   "argv": [
+    "git",
+    "-c",
+    "core.autocrlf=false",
+    "apply",
+    "--reverse",
+    "--whitespace=error-all",
+    "D:\\Hactk\\gpu-mainline-20261017\\patches\\ogkm-r3-kapi-null-free.patch"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": ""
+  },
+  {
+   "argv": [
+    "git",
+    "-c",
+    "core.autocrlf=false",
+    "apply",
+    "--check",
+    "--whitespace=error-all",
+    "D:\\Hactk\\gpu-mainline-20261017\\patches\\gpu-safety-r1.patch"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": ""
+  },
+  {
+   "argv": [
+    "git",
+    "-c",
+    "core.autocrlf=false",
+    "apply",
+    "--whitespace=error-all",
+    "D:\\Hactk\\gpu-mainline-20261017\\patches\\gpu-safety-r1.patch"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": ""
+  },
+  {
+   "argv": [
+    "git",
+    "-c",
+    "core.autocrlf=false",
+    "apply",
+    "--check",
+    "--whitespace=error-all",
+    "D:\\Hactk\\gpu-mainline-20261017\\patches\\gpu-safety-r2-kms-open.patch"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": ""
+  },
+  {
+   "argv": [
+    "git",
+    "-c",
+    "core.autocrlf=false",
+    "apply",
+    "--whitespace=error-all",
+    "D:\\Hactk\\gpu-mainline-20261017\\patches\\gpu-safety-r2-kms-open.patch"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": ""
+  },
+  {
+   "argv": [
+    "git",
+    "-c",
+    "core.autocrlf=false",
+    "apply",
+    "--check",
+    "--whitespace=error-all",
+    "D:\\Hactk\\gpu-mainline-20261017\\patches\\nullmoth-r3-thread-call-comment.patch"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": ""
+  },
+  {
+   "argv": [
+    "git",
+    "-c",
+    "core.autocrlf=false",
+    "apply",
+    "--whitespace=error-all",
+    "D:\\Hactk\\gpu-mainline-20261017\\patches\\nullmoth-r3-thread-call-comment.patch"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": ""
+  },
+  {
+   "argv": [
+    "git",
+    "-c",
+    "core.autocrlf=false",
+    "apply",
+    "--reverse",
+    "--whitespace=error-all",
+    "D:\\Hactk\\gpu-mainline-20261017\\patches\\nullmoth-r3-thread-call-comment.patch"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": ""
+  },
+  {
+   "argv": [
+    "git",
+    "-c",
+    "core.autocrlf=false",
+    "apply",
+    "--reverse",
+    "--whitespace=error-all",
+    "D:\\Hactk\\gpu-mainline-20261017\\patches\\gpu-safety-r2-kms-open.patch"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": ""
+  },
+  {
+   "argv": [
+    "git",
+    "-c",
+    "core.autocrlf=false",
+    "apply",
+    "--reverse",
+    "--whitespace=error-all",
+    "D:\\Hactk\\gpu-mainline-20261017\\patches\\gpu-safety-r1.patch"
+   ],
+   "exit": 0,
+   "stdout": "",
+   "stderr": ""
+  }
+ ],
+ "darwin_compile": "NOT_RUN",
+ "kext_link": "BLOCKED",
+ "runtime": "NO-GO",
+ "ogkm": "full fixed tree check; actual apply/reverse on one-file sparse copy only",
+ "nullmoth_files_compared": 612,
+ "nullmoth_roundtrip": "PASS full source sequential apply/candidate comparison/reverse",
+ "undefined_symbols": {
+  "original": 58,
+  "candidate": 58,
+  "added": [],
+  "removed": []
+ },
+ "patches": {
+  "gpu-safety-r1.patch": "ad176fb5ced857718fdb7a3fd99f4e5db4cc67b0c58ca82929a2a013158dcf0b",
+  "gpu-safety-r2-kms-open.patch": "5abc69a716dd9fc2d6293d68f1140d64b9aa57e159668111b8164b3013e44ece",
+  "nullmoth-r3-thread-call-comment.patch": "290e42d6e23e6a48a136701915820581f85bc26b7ca097c506aba92b3da86ba9",
+  "ogkm-r3-kapi-null-free.patch": "75a98868e878c00fc63698cfa04a2309777ed341cf0178a94c4dd5658570a3d5"
+ }
+}
