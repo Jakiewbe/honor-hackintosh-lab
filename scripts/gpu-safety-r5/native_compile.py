@@ -203,6 +203,50 @@ def main():
                              "status": "KEXT-LINK_ONLY_NOT_LOADED"})
         report["kext_link_nvrmfb"] = fb_entry
 
+        # NVRM itself: no published recipe, so build it from every root C++ TU and report what the
+        # link says. The sibling kexts (accel/, agdc/, fb/) are separate bundles and are excluded.
+        nvrm_units = ["NVRM.cpp", "os-xnu.cpp", "os-xnu2.cpp", "os-nvkms-xnu.cpp", "nv_xnu_stubs.cpp",
+                      "nvrm_gpuva.cpp", "nvrm_fbinfo.cpp", "nvrm_surfshare.cpp", "nvkms_shaders.cpp"]
+        nvrm_objects, nvrm_compile = [], {}
+        for name in nvrm_units:
+            src = candidate / "kexts/NVRM" / name
+            obj = out.parent / ("candidate-NVRM_" + name.replace(".", "_") + ".o")
+            flags = [*common_flags, *definitions, *["-I" + str(p) for p in includes]]
+            flags += ["-I" + str(candidate / "kexts/NVRM")]
+            rc = execute(["xcrun", "clang++", *flags, "-c", str(src), "-o", str(obj)],
+                         candidate, out / ("candidate-NVRM_" + name.replace(".", "_") + "-compile.txt"))
+            nvrm_compile[name] = rc
+            if rc == 0:
+                nvrm_objects.append(obj)
+        report["nvrm_units"] = nvrm_compile
+        if len(nvrm_objects) != len(nvrm_units):
+            report["kext_link_nvrm"] = {"status": "COMPILE_INCOMPLETE", "units": nvrm_compile}
+            failures.append("NVRM-kext-compile")
+        else:
+            nvrm_out = out.parent / "NVRM.kext/Contents/MacOS/NVRM"
+            nvrm_out.parent.mkdir(parents=True, exist_ok=True)
+            nvrm_link = ["xcrun", "clang++", "-arch", "x86_64", "-mmacosx-version-min=15.5", "-fapple-kext",
+                         "-isysroot", sdk, "-nostdlib", "-Xlinker", "-kext", "-lkmodc++", "-lkmod", "-lcc_kext",
+                         *[str(o) for o in nvrm_objects], "-o", str(nvrm_out)]
+            rc = execute(nvrm_link, nm, out / "nvrm-kext-link.txt")
+            entry = {"command": nvrm_link, "exit": rc, "units": nvrm_units,
+                     "method": "every root C++ TU of kexts/NVRM, NVRMFB link line; upstream publishes none"}
+            if rc:
+                entry["status"] = "LINK_FAILED"
+                failures.append("NVRM-kext-link")
+            else:
+                data = nvrm_out.read_bytes()
+                if len(data) < 16 or struct.unpack_from("<I", data)[0] not in (0xfeedface, 0xfeedfacf):
+                    raise ValueError("unexpected NVRM Mach-O magic")
+                execute(["xcrun", "nm", "-gU", str(nvrm_out)], nm, out / "nvrm-kext-defined.txt")
+                execute(["xcrun", "nm", "-u", str(nvrm_out)], nm, out / "nvrm-kext-undefined.txt")
+                defined = (out / "nvrm-kext-defined.txt").read_text(encoding="utf-8", errors="replace").splitlines()
+                undefined = (out / "nvrm-kext-undefined.txt").read_text(encoding="utf-8", errors="replace").splitlines()
+                entry.update({"artifact": str(nvrm_out), "sha256": hashlib.sha256(data).hexdigest(),
+                              "size": len(data), "defined_symbols": len(defined),
+                              "undefined_symbols": len(undefined), "status": "KEXT-LINK_ONLY_NOT_LOADED"})
+            report["kext_link_nvrm"] = entry
+
         # Real complete KAPI C translation unit, with a reconstructed profile.
         # Literal Makefile lines only: conditional blocks are NOT evaluated.
         # Linux branch macros are an explicit candidate inference, not an upstream Darwin configuration.
