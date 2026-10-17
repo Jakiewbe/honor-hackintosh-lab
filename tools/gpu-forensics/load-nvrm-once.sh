@@ -10,6 +10,20 @@
 # 用法（需 root）:  sudo bash load-nvrm-once.sh
 set -u
 
+# ---------------------------------------------------------------------------
+# 默认拒绝执行（2026-10-18 复审结论：P0-3）。
+# 停止路径的安全闭环尚未验收（P0-1/P0-2 未关闭前不得进行真实加载）。启用需要：
+#   1) 用户当场在实机侧确认；2) 显式创建 ack 文件；3) 设置环境变量。
+# 缺任何一项，本脚本在改动任何状态之前退出。
+ACK_FILE="${GPU_LOAD_EXPERIMENT_ACK_FILE:-$HOME/GPU-LOAD-EXPERIMENT-ACK}"
+if [ "${GPU_LOAD_EXPERIMENT_ACK:-}" != "I_HOLD_A_ROLLBACK_PATH" ] || [ ! -f "$ACK_FILE" ]; then
+    echo "已禁用：本次实验在复审后被禁止执行（停止安全未验收）。"
+    echo "如确要执行，需用户当场确认并创建 $ACK_FILE，然后:"
+    echo "  sudo GPU_LOAD_EXPERIMENT_ACK=I_HOLD_A_ROLLBACK_PATH bash $0"
+    exit 90
+fi
+# ---------------------------------------------------------------------------
+
 KEXT="/Library/Extensions/NVRM.kext"
 # 脚本用 sudo 跑，但产物必须落在"发起者"的桌面，而不是 /var/root
 OWNER="${SUDO_USER:-$USER}"

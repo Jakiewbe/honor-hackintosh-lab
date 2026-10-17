@@ -1,0 +1,82 @@
+diff --git a/kexts/NVRMFB/fb/nvrm-fb.cpp b/kexts/NVRMFB/fb/nvrm-fb.cpp
+index 9c91b47..07a0335 100644
+--- a/kexts/NVRMFB/fb/nvrm-fb.cpp
++++ b/kexts/NVRMFB/fb/nvrm-fb.cpp
+@@ -469,6 +469,12 @@ static int gDevUsers;
+ // Set when a stop had to keep the shared device because NVKMS was suspended or LOST.
+ // The next start finishes that teardown before binding a device of its own.
+ static bool gDevOrphaned;
++// A kill on the PM-off path still owes its modeset grab; the orphan records that debt so the
++// ownership refcount is returned exactly once even though the framebuffer is gone.
++static bool gOrphanGrab;
++// allocateDevice() bakes privateData/eventCallback to the creator, so the creator must outlive
++// the shared device. Held from creation until the last user frees the device.
++static NVRMNVDAFramebuffer *gDevCreator;
+ static struct nvrm_dpy_rec gDpy[NVKMS_KAPI_MAX_CONNECTORS * 2];
+ static int gNDpy = -1;
+ // How many displays the boot enumeration found. A framebuffer whose display index is >= this exists because a display
+@@ -703,9 +709,15 @@ void NVRMNVDAFramebuffer::dropKapiDevice()
+     if (fOwnsHead) { gHeadsTaken &= ~(1u << fHead); fOwnsHead = false; }
+     if (!fDev) return;
+     if (!nvkms_xnu_pm_running()) {
+-        gDevOrphaned = true;   // finishOrphanedDevice() retries at the next start
+-        FBLOG("device 0x%llx kept: NVKMS is not running -- teardown would block or split RM state",
+-              (unsigned long long)(uintptr_t)fDev);
++        // This framebuffer is going away but NVKMS cannot be called. Release our slot and record the
++        // grab we still owe; the device stays reachable through gDev for whoever else uses it, and
++        // finishOrphanedDevice() settles the debt once NVKMS answers again.
++        if (fGrabbedOwnership) { gOrphanGrab = true; fGrabbedOwnership = false; }
++        if (gDevUsers > 0) gDevUsers--;      // we are no longer a user of this device
++        gDevOrphaned = true;
++        FBLOG("device 0x%llx kept: NVKMS is not running -- %d user(s) remain, grab deferred",
++              (unsigned long long)(uintptr_t)fDev, gDevUsers);
++        fDev = nullptr;
+         return;
+     }
+     if (fGrabbedOwnership) { fKms->releaseOwnership(fDev); fGrabbedOwnership = false; }
+@@ -719,6 +731,10 @@ void NVRMNVDAFramebuffer::dropKapiDevice()
+     fKms->freeDevice(fDev);
+     if (gDev == fDev) gDev = nullptr;
+     fDev = nullptr;
++    gDevOrphaned = false;
++    gOrphanGrab = false;
++    // freeDevice() may still call back into privateData, so the creator retain is dropped last.
++    if (gDevCreator) { NVRMNVDAFramebuffer *creator = gDevCreator; gDevCreator = nullptr; creator->release(); }
+     FBLOG("shared NvKmsKapiDevice released (last user)");
+ }
+ 
+@@ -737,12 +753,21 @@ void NVRMNVDAFramebuffer::finishOrphanedDevice()
+               (unsigned long long)(uintptr_t)gDev);
+         return;
+     }
+-    fKms->releaseOwnership(gDev);   // the orphan held exactly the one grab its start took
++    if (gDevUsers > 0) {
++        // Other framebuffers still drive this device. Freeing it here is what left them with a
++        // dangling fDev; only the dead instance's grab can be returned.
++        if (gOrphanGrab) { fKms->releaseOwnership(gDev); gOrphanGrab = false; }
++        gDevOrphaned = false;
++        FBLOG("orphan settled without freeing: %d framebuffer(s) still drive device 0x%llx",
++              gDevUsers, (unsigned long long)(uintptr_t)gDev);
++        return;
++    }
++    if (gOrphanGrab) { fKms->releaseOwnership(gDev); gOrphanGrab = false; }
+     fKms->freeDevice(gDev);
+     gDev = nullptr;
+     gDevOrphaned = false;
+-    gDevUsers = 0;
+-    FBLOG("orphaned shared NvKmsKapiDevice released before binding a new one");
++    if (gDevCreator) { NVRMNVDAFramebuffer *creator = gDevCreator; gDevCreator = nullptr; creator->release(); }
++    FBLOG("orphaned shared NvKmsKapiDevice released (no other user)");
+ }
+ 
+ bool NVRMNVDAFramebuffer::kapiInit()
+@@ -757,6 +782,9 @@ bool NVRMNVDAFramebuffer::kapiInit()
+         fDev = fKms->allocateDevice(&ap);
+         if (!fDev) { FBLOG("allocateDevice(gpu 0x%x) failed", fGpuId); return false; }
+         gDev = fDev;
++        // privateData/eventCallback were baked to this object; keep it alive until the device goes.
++        gDevCreator = this;
++        retain();
+     }
+     gDevUsers++;
+     if (!fKms->grabOwnership(fDev)) { FBLOG("grabOwnership failed"); return false; }
