@@ -77,3 +77,33 @@ NVRMFB 315744 B。Intel 停止路径结构合同 **8/8**。
   `OSSafeReleaseNULL(fSurfMap)` 之后继续写。这需要与 NVIDIA 侧同规格的"租约/排空"设计，本轮**没有**做。
 - 发行包不含 Intel kext，因此这一切仍只有编译与链接证据，没有任何运行证据。
 
+## 7. R17（2026-10-18）：owner-copy —— 不再把扫描缓冲的 kva 借出去
+
+之前的链路：NVAccel 向 NMIntelFB 要一个 CPU 映射（`kva`），然后**自己**往这个映射里逐行拷贝。
+`stop()` 一旦在拷贝中途 `OSSafeReleaseNULL(fSurfMap)`，拷贝就会往已解除的映射里写——R1 只做到"stop 后拒绝
+新查询"，管不了已经在写的那一帧。
+
+R17 把拷贝搬进 NMIntelFB 自己：
+
+- ABI 增加 `NVRM_VRAM_FN_COPY`（"nvCopyToScanout"）与 `struct NVRMVramCopyRequest`；
+- `copyToScanout()` 校验版本/几何/步幅，**对着自己的映射**逐行写，整个过程持有 `fCopyLock`；
+- `stop()` 在释放 `fSurfMap` 之前先取同一把 `fCopyLock`，拷贝不可能与解除映射重叠；随后才 `IOLockFree`；
+- NVAccel 优先走 owner-copy，**保留旧 kva 路径作为回退**（对端不实现时仍能工作）。
+
+### 一个必须记下来的教训
+
+第一次门禁 **失败**（[Run 39055521343](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39055521343)）：`member access into incomplete type 'NVRMVramCopyRequest'`。
+原因不是代码逻辑，而是仓库里 `nvrm_vram_abi.h` 有 **三份副本**（`kexts/NMIntelFB/`、`kexts/NVRM/`、`kexts/NVRMFB/`），
+我改的是 Intel 那份**并不 include** 的副本。这跟 R10 的 `nvrm-fb.cpp` 是同一类陷阱：
+**同一个声明存在多份拷贝时，改一份等于没改。**
+
+修正后三份副本字节一致，并新增结构检查"三份副本必须完全相同"，防止再次分叉。
+
+实测（[Run 39055702121](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39055702121)，`success`）：**17 个补丁**、**16/16 对象**、告警零增量；
+`NMIntelFB` **44656 B**、`NMIntelFBVirtual` **54600 B**（比 R16 各多 240/192 B，正是 owner-copy 的体量）；
+NVRMFB 315744 B。Intel 结构合同 **20/20**。
+
+### 仍未关闭
+
+- owner-copy 只有编译与结构证据，**没有一次运行**（发行包不含 Intel kext）。
+- 旧 kva 回退路径仍然存在同样的窗口——只有对端升级到 owner-copy 才真正生效。
