@@ -78,7 +78,52 @@ GitHub UI → Actions → **HONOR GPU safety R5 native object and kext link gate
 [Run 39050097952](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39050097952) `success`（提交 `c5e04ca`）：**10 个补丁**（9 个 NullMoth + OGKM）全部应用，
 **14/14 对象编译成功**（含 NVRMFB），每单元告警数与 original 相同，NVAccel kext 链接成功（244400 B）。
 
-### R21（2026-10-18）：把"不可上报"变成"可计数、可判定"
+### R22（2026-10-18）：安全收敛 —— 先修"改错了地方"
+
+复审发现 R17–R19 改的是**死代码**，这条成立，我复核后确认：
+
+```
+$ grep -n nvAccelCopyToScanout kexts/NVRM/accel/nvrm-accel.cpp
+32:   static bool nvAccelCopyToScanout(IOAccelResource2 *res);      ← 声明
+2113: static bool nvAccelCopyToScanout(IOAccelResource2 *res)       ← 定义
+```
+
+**零调用点。** 真正跑的是 `NVDisplayPipe::performTransaction()`，它在 `askFramebufferForScanout()` 之后
+直接往 `q.kva` 里拷贝。R17/R19 把 owner-copy 放进了没人调用的函数里，等于没改。
+
+### R22 修的三件
+
+1. **owner-copy 接进真实路径**（P0 功能缺口）：`performTransaction()` 现在先用几何信息尝试
+   `NVRM_VRAM_FN_COPY`，成功即返回——**不碰 kva**；只有对端不实现时才回退到旧的 `q.kva` 拷贝。
+   `q.kva` 从"必需"降级为"回退"。
+2. **孤儿 grab 债务改成计数**（复审 P0-2）：`gOrphanGrab` 布尔改为 `gOrphanGrabs` 整数，
+   两个 framebuffer 在 NVKMS 不可用时先后停止会记两笔债，`finishOrphanedDevice()` 用
+   `while (gOrphanGrabs > 0)` 逐笔归还。新增回归场景 16（两笔债 → 两次 release → 一次 free）。
+3. **VBL 调用持有对象引用**（复审 P0-3）：`armVbl()` `retain()`；若 `stop()` 有界窗口内仍无法
+   `thread_call_free`，则把引用交给回调，回调在 `fStopping` 分支里 `release()`。
+   这样"停止不再永久等待"的同时，**对象不会先死**。
+
+### R22 没有修的两件（如实记录）
+
+- **P0-1：`nvkms_xnu_suspend()` 仍在 5 s 超时后继续挂起**。pin 只降低窗口，不构成互斥。
+  正确做法是把挂起改成"pin 未归零则推迟到最后一个 unpin 执行"，但那要动睡眠时序且我无法在离线下验证，
+  **本轮不动**，留作 R23 的单一目标。
+- **P0-4：`freeDevice()` 之后发现关闭被拒，仍然继续释放**。R21 只做到记录。要真正阻止，
+  需要在 `freeDevice` 之前就确定"关闭会不会被拒"，而那需要 OGKM 改变 void 接口——不在本项目能力范围内。
+
+### 顺带发现：我自己的测试脚本会假通过
+
+改成计数后主机测试报 `COMPILE=1` 却仍打印 `38/38 passed`——因为它编译失败后**跑了上一次的旧二进制**。
+已修 `run-r11-test.sh`：编译失败直接 `exit 2`，并删除旧产物。这也意味着 **R21 那次"38/38"其实没有
+编译过**（缺 `nvkms_xnu_kms_close_deferred_count` 桩），是旧二进制在跑。已补桩，现在 **43/43 真通过**。
+
+### 实测
+
+[Run 39058264569](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39058264569) `success`：**22 个补丁**、**16/16 对象**、告警零增量；
+NVAccel **248768 B**（R21 是 248584，+184 正是接进真实路径的代码）、生产 NVRMFB 315848 B；
+结构合同 61/61 + 30/30；主机测试 **43/43**；20 补丁正反向树哈希复原。
+
+## R21（2026-10-18）：把"不可上报"变成"可计数、可判定"
 
 P0-2 的另一半是接口形状问题：`nvKmsClose()` / `FreeDevice()` 都是 `void`，NVKMS 拒绝关闭后调用方不可能知道。
 之前这只被记为"不可关闭"。但"不能向上传播"不等于"无法观测"：
