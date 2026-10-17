@@ -55,3 +55,23 @@ GitHub UI → Actions → **HONOR GPU safety R5 native object and kext link gate
 - `super::start()` 在 `kapiInit` 成功后失败，以及最后一个 framebuffer 停止 / kext 卸载，都没有对称销毁路径（F5b）。
 - `freeDevice()` 返回 void，销毁失败不可上报；该路径必须先经原生门禁。
 - KAPI 事件回调与 Device 销毁的先后顺序、PM busy 后仍进 standby、VRAM/GPUVA 跨 sleep 无代际、真实 IOMapper/IOVA 与 GSP DMA 静默——全部未验证。
+
+## 原生门禁结果（2026-10-18，首次通过）
+
+[Run 39048772269](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39048772269) — `completed success`，提交 `bfa7c3e`，`workflow_dispatch`，Intel runner。
+
+- 工具链：macOS 15.7.9 (24G830) / Xcode 16.4 (16F6) / Apple clang 17.0.0 / macOS SDK 15.5 / GNU Make 4.4.1
+- 补丁序列全部应用：r1 → r2 → r3注释 → r4 → r5 → r6 → r7 → OGKM
+- **12/12 对象编译成功**（original 与 candidate 各 6 个 TU：NMIntelFB、NMIntelFBVirtual、NVAccel、NVKMSOS、NVRM、NVKAPI），每个对象都由门禁校验为 Mach-O 64-bit x86_64 `MH_OBJECT`
+- **告警零增量**：original/candidate 每单元告警数完全相同（7/8/24/14/33），补丁没有引入任何新诊断
+- **KEXT-LINK 通过**：NVAccel kext 按上游 `build/accel_build.sh` 链接行生成，244400 字节，
+  `sha256 89f9839e0f39bccf1336672e0f8a5e8c047dfd8408d3fe5d1d4e6128095e6cf1`；
+  唯一输出是三条 `ld` 警告（SDK 15.5 静态库按 15.0 部署目标链接）
+
+**本轮达到的证据等级：`DARWIN-COMPILE` + `KEXT-LINK`（仅链接，未签名、未加载）。**
+`KEXT-LOAD` / `GPU-RUNTIME` / `DISPLAY-RUNTIME` / `ACCELERATED-DESKTOP` 仍为 **NO-GO**：
+本次没有加载任何驱动，也没有访问 GPU。
+
+已知遗留（下一轮门禁修正项）：链接行沿用上游写法，缺少 `-mmacosx-version-min=15.5`，因此三条 ld 部署目标
+警告属于配置不一致而非源码问题；`super::start()` 在 `kapiInit` 成功后失败、以及最后一个 framebuffer 停止 /
+kext 卸载时的对称销毁仍缺（F5b）。

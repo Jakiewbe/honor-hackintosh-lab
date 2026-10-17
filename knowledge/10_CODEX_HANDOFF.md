@@ -1,3 +1,16 @@
+## 2026-10-18 门禁已通过（DARWIN-COMPILE + KEXT-LINK），下一步是加载前的对称销毁与内存 owner
+
+[Run 39048772269](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39048772269) 首次通过：12/12 对象、告警零增量、NVAccel kext 链接成功（244400 B，
+`sha256 89f9839e…`）。**这证明的是"能编译、能链接"，不是"能加载、能跑 GPU"。**
+
+按顺序的下一步：
+1. **R8（源码）**：补 F5b——`super::start()` 在 `kapiInit` 成功后失败时用同一 RAII 回滚回收自建 Device；
+   最后一个 framebuffer 停止 / kext 卸载缺对称销毁，必须先定义"共享 Device 的最后使用者"判定（引用计数或
+   owner 移交），不得在单个 framebuffer 的 `stop()` 里直接 `freeDevice()`。
+2. **门禁修正**：链接行补 `-mmacosx-version-min=15.5`，消除三条部署目标不一致的 ld 警告。
+3. R8 合入后重跑门禁；通过后才讨论 KEXT-LOAD（需要用户对实机逐项授权）与 GPU 运行。
+4. 单一内存 owner（`NVRM.cpp` + `nvrm_gpuva.cpp`）仍排在 F5b 之后。
+
 ## 2026-10-18 GPU R5–R7 交接：下一个动作是手动运行原生门禁，不是继续写补丁
 
 有效序列 R1→R2→R3注释→R4→R5→R6→R7，完整源码 7 补丁正反向验证通过；R5 修关闭路径 UAF，R6 给它可观测

@@ -1,3 +1,16 @@
+## 2026-10-18 GPU R5–R7 原生门禁首次通过（DARWIN-COMPILE + KEXT-LINK）
+
+[Run 39048772269](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39048772269) 在 `bfa7c3e` 上 `completed success`：Xcode 16.4 (16F6) / clang 17.0.0 /
+macOS SDK 15.5 / macOS 15.7.9 Intel runner。R1→R7 七个补丁与 OGKM 补丁全部应用；original 与 candidate
+各 6 个 TU 共 **12/12 对象编译成功**，每个对象均为 Mach-O 64-bit x86_64 `MH_OBJECT`；**告警零增量**
+（每单元 original/candidate 完全相同）。NVAccel kext 按上游链接行生成：244400 B，
+`sha256 89f9839e…5e6cf1`，`KEXT-LINK_ONLY_NOT_LOADED`。
+
+**证据等级推进到 DARWIN-COMPILE + KEXT-LINK。KEXT-LOAD 及 GPU/内屏加速仍 NO-GO**——本次没有加载
+任何驱动，也没有访问 GPU。遗留：链接行缺 `-mmacosx-version-min=15.5`（三条 ld 部署目标警告，属配置不一致）；
+F5b（`super::start` 失败与最后一个 framebuffer/kext 卸载的对称销毁）仍未实现。详见
+[research/gpu-safety-r5/README.md](../research/gpu-safety-r5/README.md)。
+
 ## 2026-10-18 GPU 源码候选 R5–R7（源码 + 主机测试，原生构建仍未运行）
 
 R5 修 `kexts/NVRM/os-nvkms-xnu.cpp:kms_close_common` 的真实 use-after-free：GPU 挂起/丢失导致 PM 等待失败时，

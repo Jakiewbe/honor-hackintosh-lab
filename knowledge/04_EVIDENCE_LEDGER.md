@@ -1,3 +1,7 @@
+| R5–R7 原生对象门禁 | DARWIN-COMPILE | 12/12 对象 exit 0（original+candidate 各 6 TU），告警零增量 | run 39048772269 |
+| R5–R7 NVAccel kext 链接 | KEXT-LINK | exit 0，244400 B，`sha256 89f9839e…5e6cf1` | run 39048772269 |
+| 签名 / 加载 / GPU 执行 | — | **未运行，NO-GO** | — |
+
 | R5–R7 全序列往返 | PATCH-APPLIED | 7 补丁正向/反向 exit 0；树哈希 `ea9467f4…` → `adbad235…` → `ea9467f4…`（611 文件） | `research/gpu-safety-r5/README.md` |
 | R5 关闭合同 | HOST-TEST | 候选 40/40；改前对照 heap-use-after-free（释放栈在 `kms_close_common`） | 同上 |
 | R6 bridge-owner + 隔离计数 | HOST-TEST | 9/9 | 同上 |
