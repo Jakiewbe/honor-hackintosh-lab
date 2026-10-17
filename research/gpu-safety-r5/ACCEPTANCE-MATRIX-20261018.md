@@ -57,6 +57,15 @@
 
 ---
 
+## C2. 一条命令复现全部离线证据
+
+```bash
+python tools/verify-all.py --workspace <工作区>
+```
+
+11 步：bundle、apply（复用已验路径）、两个 structure、reset、roundtrip、publish、ASan。
+末尾固定声明未覆盖 `KEXT-LOAD` 及以上。
+
 ## D. 本矩阵的维护规则
 
 任何一格从 ❓/⛔ 变成 ✅，必须同时给出：run id 或日志路径、证据等级、以及"这一级**没有**证明什么"。

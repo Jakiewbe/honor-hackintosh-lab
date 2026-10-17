@@ -1,3 +1,44 @@
+## 2026-10-18 收尾交接（第 24 轮）
+
+### 一条命令复现全部离线证据
+
+```bash
+python tools/verify-all.py --workspace <工作区>
+```
+
+11 个步骤全绿：bundle 30/30、structure-nvidia 60/60、structure-intel 30/30、补丁应用与正反向复原
+（树哈希 `ea9467f4cca9c823`）、publish 7/7、ASan 主机测试。命令末尾固定打印
+**"not covered: KEXT-LOAD and above (needs the machine)"**，防止把离线全绿读成驱动可用。
+
+### 已经证到的（离线）
+
+| 层 | 结论 |
+|---|---|
+| PRE-LOAD | 6 个 bundle 的 plist 与链接产物一致；标识符唯一；**加载顺序 NVRM → NVRMFB/NVAccel** |
+| PATCH-APPLIED | 20 个补丁正反向，完整 611 文件树还原 |
+| HOST-TEST | 38/38（ASan，含"改前会 UAF"的对照） |
+| SOURCE-STRUCTURE | NVIDIA 60/60、Intel 30/30 |
+| DARWIN-COMPILE | 16/16 单元，告警零增量（真实 Xcode 16.4） |
+| KEXT-LINK | NVAccel 248584 B、NVRMFB 315848 B、NMIntelFB 44824 B、Intel 虚拟 58752 B |
+
+### 没有证到的（需要机器）
+
+`KEXT-LOAD`、`GPU-RUNTIME`、`DISPLAY-RUNTIME`、`ACCELERATED-DESKTOP` 全部未做。
+**任何继续改源码的动作都是在猜**，因为下一次观测必须来自实机。
+
+### 三个决定点（只能由用户选）
+
+1. **授权一次隔离的 NVRM 加载**：脚本已默认禁用（`exit 90` 守卫），恢复需你明确同意；
+   它验证的是**上游预编译件在你机器上能否起来**，不是我们的代码。
+2. **跑一次只读采集**：`tools/gpu-forensics/collect.sh`，不装任何东西，回答"内屏当前由谁驱动"。
+3. **接受上游预编译件**：正式关闭 2050 的自建路线（REA 已证明发行版含 7.93 MB 不透明载荷，无法从源码重建）。
+
+### 已知的、无法在本项目关闭的事项
+
+- `nvKmsClose`/`FreeDevice` 是 `void`：拒绝关闭**无法向上传播**（R21 已做到可计数、可分类、可事后判定）。
+- NVRM.kext 不可从公开源码重建（符号覆盖 3.7%、体积 2.15%，且含不透明载荷）。
+- i915/eDP 自研线停在 `BLOCKED_FREEBSD_BASE_SELECTION`，R16–R20 未改变其前提。
+
 ## 2026-10-18 交接：按验收矩阵推进，不要再写第 20 个补丁
 
 [验收矩阵](../research/gpu-safety-r5/ACCEPTANCE-MATRIX-20261018.md) 是当前唯一入口。两条轨都到了
