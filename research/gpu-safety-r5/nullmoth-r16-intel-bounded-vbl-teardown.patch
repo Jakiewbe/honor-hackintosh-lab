@@ -1,0 +1,28 @@
+diff --git a/kexts/NMIntelFB/intelfb.cpp b/kexts/NMIntelFB/intelfb.cpp
+index bd44fff..6e42982 100644
+--- a/kexts/NMIntelFB/intelfb.cpp
++++ b/kexts/NMIntelFB/intelfb.cpp
+@@ -356,8 +356,21 @@ void NMIntelFB::stop(IOService *provider)
+ #ifdef NMINTELFB_VIRTUAL
+     if (gVirt == this) { sysctl_unregister_oid(&sysctl__debug_nmintelfb_sample); gVirt = nullptr; }
+ #endif
+-    // thread_call_cancel_wait is not exported to kexts: cancel and retry the free until the callback is out (as NVRMFB)
+-    if (fVblTimer) { thread_call_cancel(fVblTimer); while (!thread_call_free(fVblTimer)) { thread_call_cancel(fVblTimer); IOSleep(5); } fVblTimer = nullptr; }
++    // thread_call_cancel_wait is not exported to kexts, and an unbounded retry loop here hangs unload
++    // (and shutdown) whenever the callback stays in flight. fStopping is already set, so the callback
++    // cannot re-arm: give it a bounded window to finish, then keep the call allocated rather than spin.
++    if (fVblTimer) {
++        thread_call_t vbl = fVblTimer; fVblTimer = nullptr;
++        thread_call_cancel(vbl);
++        bool released = false;
++        for (int i = 0; i < 100; i++) {            // at most ~100 ms
++            if (thread_call_free(vbl)) { released = true; break; }
++            thread_call_cancel(vbl);
++            IOSleep(1);
++        }
++        if (!released) IFBLOG("vbl thread call still in flight after 100 ms: kept allocated, stopping anyway");
++        else IFBLOG("vbl thread call released");
++    }
+     OSSafeReleaseNULL(fSurfMap); OSSafeReleaseNULL(fMMIO); fRegs = nullptr;
+     IOFramebuffer::stop(provider);
+ }
