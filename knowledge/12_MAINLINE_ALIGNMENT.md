@@ -1,3 +1,7 @@
+## 2026-10-17 GPU R4 源码候选（无测试/原生编译结果）
+
+R4 为 NVRMUserClient 外部方法与映射增加串行会话门禁。NVKMS bridge 关闭失败时保留 per-open、UserClient 和 provider，并提供显式重试；启用 PM 时 gate 分配失败将拒绝启动，owner 检查放入 gate 锁内。PM users 超时后仍可能进入 standby；KAPI Device owner、fd lookup 裸引用、完整 RM/GPU quiescence 仍未解决。R4 十二对象原生门禁未运行。安全关闭 BLOCKED，设备运行 NO-GO。
+
 ## 2026-10-17 GPU R3 增量（源码/主机验证，运行 NO-GO）
 
 修复 OGKM 首次分配失败的 FreeDevice(NULL) 崩溃；主机完整 KAPI 原版/候选编译通过，实际释放函数三项候选测试通过。纠正 R2 thread_call_free 解释，未宣称安全关闭已解决。原生十对象门禁已准备、未运行；Kext 链接 BLOCKED，实机加载/渲染 NO-GO。PM busy 后仍 standby 阻塞 pre-quiesce 合同。

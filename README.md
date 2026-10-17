@@ -1,3 +1,12 @@
+# 最新交付：GPU 源码候选 R4（2026-10-17）
+
+[完整报告](research/gpu-safety-20261017/DELIVERY-R4.zh-CN.md) · [R4 补丁](research/gpu-safety-20261017/nullmoth-r4-bridge-owner.patch) · [网页独立审查 WEB005](research/gpu-safety-20261017/WEB-REVIEW-005.md)。
+
+## 2026-10-17 GPU R4 源码候选（无测试/原生编译结果）
+
+R4 为 NVRMUserClient 外部方法与映射增加串行会话门禁。NVKMS bridge 关闭失败时保留 per-open、UserClient 和 provider，并提供显式重试；启用 PM 时 gate 分配失败将拒绝启动，owner 检查放入 gate 锁内。PM users 超时后仍可能进入 standby；KAPI Device owner、fd lookup 裸引用、完整 RM/GPU quiescence 仍未解决。R4 十二对象原生门禁未运行。安全关闭 BLOCKED，设备运行 NO-GO。
+
+
 # HONOR Hackintosh Lab — Intel + NVIDIA macOS Compatibility Research
 
 **2026-10-17 主线复位：以 [H1–H4 主线状态与防偏移门禁](knowledge/12_MAINLINE_ALIGNMENT.md) 为当前唯一任务优先级。** 10-15 已在外接 SSD 进入 macOS 桌面；Wi-Fi/触控板不可用，Intel/NVIDIA 均 No Kext Loaded，图形加速未证明。H4 NVIDIA DMA/GSP 现阶段归档冻结，下一阶段是 H1 回滚证据、H2 外设矩阵和 H3 显示提供者的只读调查。以下旧阶段的「最新」仅指其发布时点，不能盖过本入口。
