@@ -73,6 +73,28 @@ GitHub UI → Actions → **HONOR GPU safety R5 native object and kext link gate
    NVAccel kext 仍然链接成功（244400 B，`sha256 89f9839e…`）。
 
 教训写进流程：**"门禁通过"必须先核对门禁到底编译了哪些文件**，否则它只是证明了没被编译的那部分没问题。
+## R9（2026-10-18）：拆除只允许发生在 NVKMS 能碰 GPU 的时候
+
+R8 让 `stop()` 也走 `dropKapiDevice()`，但**没有检查 NVKMS 当时能不能被调用**。读 OGKM 源码
+（`nvkms-kapi.c`，固定 `e4a5faa`）后确认这条链是危险的：
+
+- `ReleaseOwnership()` 与 `KmsFreeDevice()` 都调用 `nvkms_ioctl_from_kapi()`
+  （`NVKMS_IOCTL_RELEASE_OWNERSHIP` / `NVKMS_IOCTL_FREE_DEVICE`）；
+- 我们的 OS 层把 `nvkms_ioctl_from_kapi` 映射到 `kms_ioctl_common()`，而它用
+  `kms_pm_wait_locked(false, 30000)` **最多等 30 秒**，GPU LOST 时直接返回失败；
+- `FreeDevice()` 不检查这些 ioctl 的返回值，仍会继续执行 `RmFreeDevice()` 与 `nvkms_close_gpu()`。
+
+因此在挂起/丢失状态下从 `stop()` 拆除会产生两个后果：**最长 30 秒的阻塞**，以及**RM 侧被释放、KMS 侧被拒绝**
+的撕裂状态——而 R5 的 `kms_close_common()` 又会在失败时保留 per-open，于是那个 per-open 的 `device` 指针
+指向已被释放的对象。
+
+R9 的做法：新增 `nvkms_xnu_pm_running()`（在 `gKmsLock` 下读 `gKmsPmState == kKmsPmRunning`），
+`dropKapiDevice()` 在释放 ownership / 调用 `freeDevice()` 之前必须先问它；不满足就**原样保留**并记录日志，
+head 位照常归还。这是有意的有界泄漏，换掉"阻塞 + 撕裂"。
+
+实测：9 补丁完整源码正反向 exit 0（树哈希回到 `ea9467f4…`）；`dropKapiDevice()` 真实函数体主机测试 **16/16**
+（含"NVKMS 未运行时不拆除"用例）；生命周期结构合同 **27/27**（含谓词位置与锁内读取）。
+
 ## R8（2026-10-18）：共享 Device 的生命周期闭环
 
 R7 只处理了 `kapiInit()` 内部失败。R8 把同一件事做成可复用的成员函数 `dropKapiDevice()`，让三条路径共用：

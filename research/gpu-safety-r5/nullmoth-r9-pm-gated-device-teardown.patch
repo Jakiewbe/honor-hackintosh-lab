@@ -1,0 +1,55 @@
+diff --git a/kexts/NVRM/fb/nvrm-fb.cpp b/kexts/NVRM/fb/nvrm-fb.cpp
+index 155e4d3..3a42087 100644
+--- a/kexts/NVRM/fb/nvrm-fb.cpp
++++ b/kexts/NVRM/fb/nvrm-fb.cpp
+@@ -25,6 +25,10 @@ extern "C" {
+ #include <libkern/OSAtomic.h>
+ #include "nvrm_vram_abi.h"
+ typedef NvU64 (*nvrm_phys_for_va_t)(const void *va);
++// Answered by the NVKMS OS layer: false while NVKMS is suspended or LOST. KAPI teardown
++// (releaseOwnership/freeDevice) reaches NVKMS through nvkms_ioctl_from_kapi, which waits on the PM
++// gate and is refused once the GPU is LOST - a framebuffer stop must therefore not tear down there.
++extern "C" NvBool nvkms_xnu_pm_running(void);
+ #include <mach/kmod.h>
+ extern "C" kern_return_t _start(kmod_info_t *ki, void *d); extern "C" kern_return_t _stop(kmod_info_t *ki, void *d);
+ extern "C" { KMOD_EXPLICIT_DECL(com.nullmoth.NVRMFB, "0.1", _start, _stop) }
+@@ -262,6 +266,16 @@ void NVRMNVDAFramebuffer::dropKapiDevice()
+ {
+     if (fHeadBit) { gHeadsTaken &= ~fHeadBit; fHeadBit = 0; }
+     if (!fDev) return;
++    // Both calls land in NVKMS through nvkms_ioctl_from_kapi(): while the GPU is suspended that
++    // waits on the PM gate for up to 30 s, and once NVKMS is LOST the FREE_DEVICE request is
++    // refused while FreeDevice() still frees the RM side - the KMS half would be left behind and
++    // the per-open kept by kms_close_common() would point at the freed device. Neither belongs in
++    // a stop path, so keep the device and report the leak instead of tearing down blind.
++    if (!nvkms_xnu_pm_running()) {
++        FBLOG("device 0x%llx kept: NVKMS is not running -- teardown would block or split RM state",
++              (unsigned long long)(uintptr_t)fDev);
++        return;
++    }
+     if (fGrabbedOwnership) { fKms->releaseOwnership(fDev); fGrabbedOwnership = false; }
+     const int remaining = --gDevUsers;
+     if (remaining > 0) {
+diff --git a/kexts/NVRM/os-nvkms-xnu.cpp b/kexts/NVRM/os-nvkms-xnu.cpp
+index 0cdba77..546ff61 100644
+--- a/kexts/NVRM/os-nvkms-xnu.cpp
++++ b/kexts/NVRM/os-nvkms-xnu.cpp
+@@ -208,6 +208,18 @@ void nvkms_xnu_resume(NvU32 gpuId, NvBool gpuOk)
+     if (gpuOk) nvKmsKapiSuspendResume(NV_FALSE);
+     kprintf("NVRM-xnu: NVKMS %s (gpu 0x%x)\n", gpuOk ? "resumed" : "left LOST: the GPU did not resume", gpuId);
+ }
++// True while NVKMS may touch the GPU. KAPI teardown (releaseOwnership/freeDevice) reaches NVKMS
++// through nvkms_ioctl_from_kapi, which waits on the PM gate and is refused once the GPU is LOST;
++// a caller that must not block (a framebuffer stop) has to ask before it tears anything down.
++NvBool nvkms_xnu_pm_running(void)
++{
++    if (!gKmsLock) return NV_FALSE;
++    IOLockLock(gKmsLock);
++    const NvBool running = (gKmsPmState == kKmsPmRunning);
++    IOLockUnlock(gKmsLock);
++    return running;
++}
++
+ struct nvkms_per_open *nvkms_xnu_open(int pid) { return gKmsLoaded ? kms_open_common(NVKMS_CLIENT_KERNEL_SPACE, NULL, pid) : NULL; }
+ void nvkms_xnu_close(struct nvkms_per_open *popen) { if (popen) kms_close_common(popen); }
+ // Internal bridge-only API. The UserClient session lock owns popen across
