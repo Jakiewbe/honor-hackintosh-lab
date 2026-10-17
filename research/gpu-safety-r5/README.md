@@ -78,6 +78,15 @@ GitHub UI → Actions → **HONOR GPU safety R5 native object and kext link gate
 [Run 39050097952](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39050097952) `success`（提交 `c5e04ca`）：**10 个补丁**（9 个 NullMoth + OGKM）全部应用，
 **14/14 对象编译成功**（含 NVRMFB），每单元告警数与 original 相同，NVAccel kext 链接成功（244400 B）。
 
+### R10 门禁结果（2026-10-18）
+
+- [Run 39050444884](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39050444884) **failure**：生产文件里 `extern "C" NvBool …` 被放在 `NvBool` 可见之前 →
+  `error: unknown type name 'NvBool'`。同一轮还暴露 `rollback.armed = false` 被写到 `return true` **之后**
+  （不可达 → 成功时会误拆设备），由结构合同的 "disarm before the success return" 检查抓出。
+- 修正后 [Run 39050580870](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39050580870) `success`：**11 个补丁**、**16/16 对象**（original 与 candidate 各 8 个 TU，
+  含生产 `NVRMFB` 与旧的 `NVRMFB_LEGACY`）、每单元告警数与 original 完全相同（生产 NVRMFB 34/34）、
+  NVAccel kext 链接成功。
+
 ## R10（2026-10-18）：R7–R9 修错了文件——生产 NVRMFB 是另一个 `nvrm-fb.cpp`
 
 仓库里有两个 `nvrm-fb.cpp`，两者的 `Info.plist`（`com.nullmoth.NVRMFB`）**完全一致**：
