@@ -78,7 +78,25 @@ GitHub UI → Actions → **HONOR GPU safety R5 native object and kext link gate
 [Run 39050097952](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39050097952) `success`（提交 `c5e04ca`）：**10 个补丁**（9 个 NullMoth + OGKM）全部应用，
 **14/14 对象编译成功**（含 NVRMFB），每单元告警数与 original 相同，NVAccel kext 链接成功（244400 B）。
 
-### R14（2026-10-18）：复审发现的 P0-1 返工 —— 孤儿回收会提前释放
+### R15（2026-10-18）：用 pin 而不是快照，关掉 P0-2 的竞态窗口
+
+复审指出：`nvkms_xnu_pm_running()` 只是一次状态快照，检查完到真正释放之间 PM 可能变化。再加一次检查是表演，
+所以这次改的是机制：
+
+- `os-nvkms-xnu.cpp` 新增 `nvkms_xnu_pm_pin()/unpin()`：**只有在 NVKMS RUNNING 时才能拿到 pin**；
+- `nvkms_xnu_suspend()` 在切到 SUSPENDED 之前**等待 pin 归零**（上限 5 s，超时记录并继续，避免挂起被永久卡住）；
+- `dropKapiDevice()` 与 `finishOrphanedDevice()` 改成**先拿 pin 再拆除**，每条出口都 `unpin`；
+  拿不到 pin 就走"保留 + 记 grab 债务"的既有路径。
+
+仍然**没有**关闭的部分（如实记录）：`nvKmsClose`/`FreeDevice` 都是 `void`，NVKMS 拒绝关闭后 `FreeDevice()`
+照样释放 RM 侧——这是 OGKM 的接口形状决定的，只能在"不要调用它"这一侧做防护（pin + 使用者计数），
+无法让失败向上传播。P0-2 记为**"竞态窗口已关闭，不可上报的部分保留"**。
+
+实测（[Run 39054729764](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39054729764)，`success`）：**15 个补丁**、**16/16 对象**、告警零增量；
+NVRMFB kext **315744 B / 174 导出**。主机测试 **38/38**（新增 4 条 pin 平衡断言，含"拒绝 pin 时零配对"）；
+结构合同 **50/50**（新增 pin 纪律、suspend 等待 pin、`!fDev` 早退不拿 pin）。
+
+## R14（2026-10-18）：复审发现的 P0-1 返工 —— 孤儿回收会提前释放
 
 复审给出的反例成立，我复现并修了：
 
