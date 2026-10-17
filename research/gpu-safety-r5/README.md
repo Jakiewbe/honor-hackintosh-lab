@@ -78,7 +78,34 @@ GitHub UI → Actions → **HONOR GPU safety R5 native object and kext link gate
 [Run 39050097952](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39050097952) `success`（提交 `c5e04ca`）：**10 个补丁**（9 个 NullMoth + OGKM）全部应用，
 **14/14 对象编译成功**（含 NVRMFB），每单元告警数与 original 相同，NVAccel kext 链接成功（244400 B）。
 
-### R12（2026-10-18）：共享 Device 状态的竞态
+### R13（2026-10-18）：NVRM.kext 无法用公开源码重建（负结果，带数字）
+
+问题：上游只发布 `NVRM.kext` 二进制，没有构建配方。能不能自己链一个？
+
+做法：把 `kexts/NVRM/` 根目录下**全部 9 个 C++ 翻译单元**（`NVRM.cpp`、`os-xnu.cpp`、`os-xnu2.cpp`、
+`os-nvkms-xnu.cpp`、`nv_xnu_stubs.cpp`、`nvrm_gpuva.cpp`、`nvrm_fbinfo.cpp`、`nvrm_surfshare.cpp`、
+`nvkms_shaders.cpp`，不含 accel/agdc/fb 这些独立 bundle）编译并链接成 `NVRM.kext`
+（[Run 39051715396](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39051715396)，`success`，9/9 编译 exit 0，链接 exit 0）。
+
+结果与发行版对照（Mach-O 解析，不是估算）：
+
+| | 我们的链接产物 | 发行版 `NVRM.kext/Contents/MacOS/NVRM` |
+|---|---|---|
+| 大小 | **361,768 B** | **16,787,920 B**（2.15%） |
+| `__TEXT` | — | 14,155,776 B |
+| 符号总数 | 649 导出 | **34,302**（33,830 defined / 17,679 external） |
+
+结论：**链接"成功"但只覆盖发行版约 2% 的符号**。仓库里也没有任何预编译对象（`kexts/NVRM` 下只有源码，
+最大的是 325 KB 的 `nvkms_shaders.cpp`）。也就是说 `NVRM.kext` 的绝大部分输入不在公开树里——最可能是
+OGKM 的 `nvidia-modeset` 核心源在私有构建里被一起编进去。
+
+因此：**`KEXT-LINK` 的覆盖面仍然只有 NVAccel 与 NVRMFB**，不能把这次的 NVRM 产物当成"NVRM kext 可构建"。
+门禁字段已改为 `KEXT-LINK_INCOMPLETE_UNIT_SET`，避免下一个人误读。
+
+下一步（若继续这条线）：把 OGKM `src/nvidia-modeset/**.c` 纳入 NVRM 链接再比符号覆盖——但那是一个独立的
+大工作量，且必须先把 `nvkms-kapi.h` 之外的内部头文件闭包固定下来。
+
+## R12（2026-10-18）：共享 Device 状态的竞态
 
 **先取证，再改。** 两条结论来自源码而不是推测：
 

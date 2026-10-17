@@ -242,9 +242,11 @@ def main():
                 execute(["xcrun", "nm", "-u", str(nvrm_out)], nm, out / "nvrm-kext-undefined.txt")
                 defined = (out / "nvrm-kext-defined.txt").read_text(encoding="utf-8", errors="replace").splitlines()
                 undefined = (out / "nvrm-kext-undefined.txt").read_text(encoding="utf-8", errors="replace").splitlines()
+                # The link succeeds with only ~2% of the shipped symbol count, so this is reported as an
+                # incomplete unit set, never as "NVRM links".
                 entry.update({"artifact": str(nvrm_out), "sha256": hashlib.sha256(data).hexdigest(),
                               "size": len(data), "defined_symbols": len(defined),
-                              "undefined_symbols": len(undefined), "status": "KEXT-LINK_ONLY_NOT_LOADED"})
+                              "undefined_symbols": len(undefined), "status": "KEXT-LINK_INCOMPLETE_UNIT_SET"})
             report["kext_link_nvrm"] = entry
 
         # Real complete KAPI C translation unit, with a reconstructed profile.
