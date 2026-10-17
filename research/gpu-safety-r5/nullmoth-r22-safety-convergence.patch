@@ -1,0 +1,132 @@
+diff --git a/kexts/NMIntelFB/intelfb.cpp b/kexts/NMIntelFB/intelfb.cpp
+index 093963e..cad9f9d 100644
+--- a/kexts/NMIntelFB/intelfb.cpp
++++ b/kexts/NMIntelFB/intelfb.cpp
+@@ -92,7 +92,7 @@ class NMIntelFB : public IOFramebuffer {
+     volatile bool fStopping = false;
+     static void vblFire(thread_call_param_t p0, thread_call_param_t) {
+         NMIntelFB *me = (NMIntelFB *)p0;
+-        if (me->fStopping) return;
++        if (me->fStopping) { me->release(); return; }   // stop() could not free the call: we own the ref
+         if (me->fVbl.proc) { me->fVbl.proc(me->fVbl.target, me->fVbl.ref); me->fVblCalls++; }
+         uint64_t period; nanoseconds_to_absolutetime(me->fFrameNs, &period);
+         uint64_t now = mach_absolute_time();
+@@ -100,6 +100,10 @@ class NMIntelFB : public IOFramebuffer {
+         thread_call_enter_delayed(me->fVblTimer, me->fVblNext);
+     }
+     void armVbl() {
++        // The call holds a reference on this object: a callback may still run (and dereference `me`)
++        // after stop() gives up freeing it, so the object must outlive the call. Whichever finishes
++        // last releases: a successful thread_call_free in stop(), or the callback on its way out.
++        retain();
+         fVblTimer = thread_call_allocate(vblFire, this);
+         if (fVblTimer) { uint64_t d; clock_interval_to_deadline((uint32_t)(fFrameNs / 1000), kMicrosecondScale, &d); fVblNext = d; thread_call_enter_delayed(fVblTimer, d); }
+         IFBLOG("vbl timer %s", fVblTimer ? "armed (60 Hz)" : "ALLOCATE FAILED");
+@@ -397,8 +401,13 @@ void NMIntelFB::stop(IOService *provider)
+             thread_call_cancel(vbl);
+             IOSleep(1);
+         }
+-        if (!released) IFBLOG("vbl thread call still in flight after 100 ms: kept allocated, stopping anyway");
+-        else IFBLOG("vbl thread call released");
++        if (!released) {
++            // The callback may still be running and will release the reference itself.
++            IFBLOG("vbl thread call still in flight after 100 ms: kept allocated, reference passed to it");
++        } else {
++            this->release();   // no callback can fire any more: drop the reference taken in armVbl()
++            IFBLOG("vbl thread call released");
++        }
+     }
+     if (fCopyLock) { IOLockLock(fCopyLock); }   // drain an owner-copy before the mapping goes
+     OSSafeReleaseNULL(fSurfMap); OSSafeReleaseNULL(fMMIO); fRegs = nullptr;
+diff --git a/kexts/NVRM/accel/nvrm-accel.cpp b/kexts/NVRM/accel/nvrm-accel.cpp
+index d5fe470..fa889d9 100644
+--- a/kexts/NVRM/accel/nvrm-accel.cpp
++++ b/kexts/NVRM/accel/nvrm-accel.cpp
+@@ -1032,9 +1032,36 @@ IOReturn NVDisplayPipe::performTransaction(IOAccelDisplayPipeTransaction2 *txn)
+     for (unsigned i = 0; i < sizeof q; i++) ((volatile unsigned char *)&q)[i] = 0;
+     q.version = NVRM_VRAM_ABI_VERSION;
+     IOReturn ret = a->askFramebufferForScanout(&q, fb);
+-    if (ret != kIOReturnSuccess || !q.kva || q.pitch < 4 || !q.height) NVIOP_FAIL(kIOReturnNotReady, "framebuffer would not describe its scanout (0x%x kva %p pitch %u)", (unsigned)ret, q.kva, q.pitch);
++    if (ret != kIOReturnSuccess) NVIOP_FAIL(kIOReturnNotReady, "framebuffer would not describe its scanout (0x%x)", (unsigned)ret);
++    if (!q.width || !q.height) NVIOP_FAIL(kIOReturnNotReady, "scanout geometry is empty (%ux%u)", q.width, q.height);
+     if (w != q.width || h != q.height) NVIOP_FAIL(kIOReturnBadArgument, "source %ux%u is not the scanout's %ux%u", w, h, q.width, q.height);
+ 
++    // Owner-copy first: the panel copies into its own mapping under the lock its stop() also takes, so
++    // the destination cannot be unmapped while this frame is in flight. This is the transaction the
++    // display pipe actually performs; the kva path below stays as the fallback for a peer without the
++    // copy entry.
++    static const OSSymbol *symCopy = nullptr;
++    if (!symCopy) symCopy = OSSymbol::withCStringNoCopy(NVRM_VRAM_FN_COPY);
++    if (symCopy) {
++        struct NVRMVramCopyRequest copyReq;
++        for (unsigned i = 0; i < sizeof copyReq; i++) ((volatile unsigned char *)&copyReq)[i] = 0;
++        copyReq.version = NVRM_VRAM_ABI_VERSION;
++        copyReq.src = (const void *)(uintptr_t)src;
++        copyReq.srcPitch = pitch;
++        copyReq.width = w;
++        copyReq.height = h;
++        if (fb->callPlatformFunction(symCopy, false, &copyReq, nullptr, nullptr, nullptr) == kIOReturnSuccess) {
++            OSAddAtomic64(1, fromRes ? &gCntIopSrcRes : &gCntIopSrcSurf);
++            const SInt64 n = OSAddAtomic64(1, &gCntIopOk);
++            OSAddAtomic64(1, &gCntIopOkHead[head]);
++            ALOG("iop: K6 transaction #%lld (head %u) copied to the panel by owner-copy %ux%u pitch %u",
++                 (long long)n, head, w, h, pitch);
++            return kIOReturnSuccess;
++        }
++    }
++
++    if (!q.kva || q.pitch < 4) NVIOP_FAIL(kIOReturnNotReady, "peer offers neither owner-copy nor a scanout mapping (kva %p pitch %u)", q.kva, q.pitch);
++
+     nvAccelIopHome(fb, head);
+     const unsigned spr = pitch / 4;
+     volatile unsigned int *d = (volatile unsigned int *)q.kva;
+diff --git a/kexts/NVRMFB/fb/nvrm-fb.cpp b/kexts/NVRMFB/fb/nvrm-fb.cpp
+index 8bd312e..f8886c0 100644
+--- a/kexts/NVRMFB/fb/nvrm-fb.cpp
++++ b/kexts/NVRMFB/fb/nvrm-fb.cpp
+@@ -471,7 +471,9 @@ static int gDevUsers;
+ static bool gDevOrphaned;
+ // A kill on the PM-off path still owes its modeset grab; the orphan records that debt so the
+ // ownership refcount is returned exactly once even though the framebuffer is gone.
+-static bool gOrphanGrab;
++// One debt per framebuffer that stopped while NVKMS could not be called: two stops owe two
++// grabs, and a single bool would return only one of them.
++static int gOrphanGrabs;
+ // allocateDevice() bakes privateData/eventCallback to the creator, so the creator must outlive
+ // the shared device. Held from creation until the last user frees the device.
+ static NVRMNVDAFramebuffer *gDevCreator;
+@@ -715,7 +717,7 @@ void NVRMNVDAFramebuffer::dropKapiDevice()
+     // A pin, not a snapshot: suspend waits for it, so the PM state cannot change between this check
+     // and the release/free pair below.
+     if (!nvkms_xnu_pm_pin()) {
+-        if (fGrabbedOwnership) { gOrphanGrab = true; fGrabbedOwnership = false; }
++        if (fGrabbedOwnership) { gOrphanGrabs++; fGrabbedOwnership = false; }
+         if (gDevUsers > 0) gDevUsers--;
+         gDevOrphaned = true;
+         FBLOG("device 0x%llx kept: NVKMS is not running -- %d user(s) remain, grab deferred",
+@@ -744,7 +746,7 @@ void NVRMNVDAFramebuffer::dropKapiDevice()
+     if (gDev == fDev) gDev = nullptr;
+     fDev = nullptr;
+     gDevOrphaned = false;
+-    gOrphanGrab = false;
++    gOrphanGrabs = 0;
+     nvkms_xnu_pm_unpin();
+     // freeDevice() may still call back into privateData, so the creator retain is dropped last.
+     if (gDevCreator) { NVRMNVDAFramebuffer *creator = gDevCreator; gDevCreator = nullptr; creator->release(); }
+@@ -770,14 +772,14 @@ void NVRMNVDAFramebuffer::finishOrphanedDevice()
+     if (gDevUsers > 0) {
+         // Other framebuffers still drive this device. Freeing it here is what left them with a
+         // dangling fDev; only the dead instance's grab can be returned.
+-        if (gOrphanGrab) { fKms->releaseOwnership(gDev); gOrphanGrab = false; }
++        while (gOrphanGrabs > 0) { fKms->releaseOwnership(gDev); gOrphanGrabs--; }
+         gDevOrphaned = false;
+         FBLOG("orphan settled without freeing: %d framebuffer(s) still drive device 0x%llx",
+               gDevUsers, (unsigned long long)(uintptr_t)gDev);
+         nvkms_xnu_pm_unpin();
+         return;
+     }
+-    if (gOrphanGrab) { fKms->releaseOwnership(gDev); gOrphanGrab = false; }
++    while (gOrphanGrabs > 0) { fKms->releaseOwnership(gDev); gOrphanGrabs--; }
+     fKms->freeDevice(gDev);
+     gDev = nullptr;
+     gDevOrphaned = false;
