@@ -78,7 +78,40 @@ GitHub UI → Actions → **HONOR GPU safety R5 native object and kext link gate
 [Run 39050097952](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39050097952) `success`（提交 `c5e04ca`）：**10 个补丁**（9 个 NullMoth + OGKM）全部应用，
 **14/14 对象编译成功**（含 NVRMFB），每单元告警数与 original 相同，NVAccel kext 链接成功（244400 B）。
 
-### R13（2026-10-18）：NVRM.kext 无法用公开源码重建（负结果，带数字）
+### R14（2026-10-18）：复审发现的 P0-1 返工 —— 孤儿回收会提前释放
+
+复审给出的反例成立，我复现并修了：
+
+> A、B 共享 `gDev`（`gDevUsers = 2`）→ GPU 挂起时 A 停止 → 置 `gDevOrphaned` 但**提前 return，没有减小计数**
+> → GPU 恢复，C 初始化时 `finishOrphanedDevice()` **不检查还有谁在用**就直接 `freeDevice` 并把计数清零
+> → B 的 `fDev` 成为悬空指针，且 B 自己那次 `grabOwnership` 永远没有配对释放。
+
+三处缺陷，一处设计改动：
+
+1. **PM-off 的 stop 现在放弃自己的槽位**（`gDevUsers--`）并把欠下的 grab 记成 `gOrphanGrab`，
+   然后再把本例的 `fDev` 清空——它不再算作使用者。
+2. **`finishOrphanedDevice()` 先看 `gDevUsers`**：还有人用就**只归还死者的 grab**，不释放设备；
+   只有无人使用时才 `freeDevice`。这才是"全部使用者退出"的判定。
+3. **创建者被 retain 到设备销毁为止**：`allocateDevice()` 把 `privateData`/`eventCallback` 烧进了创建者对象，
+   所以创建者必须比设备活得久，否则即使计数正确，回调仍指向已释放的对象。设备最终释放时最后才 drop 这个 retain。
+
+复查后仍**未关闭**的（如实记录）：
+
+- **P0-2（NVKMS 关闭失败不可上报）**：`nvKmsClose`/`FreeDevice` 都是 `void`，NVKMS 拒绝关闭后 `FreeDevice()`
+  仍会释放 RM 侧；`nvkms_xnu_pm_running()` 只是一次快照，检查与调用之间 PM 状态可变。
+  **真正的修法是给 OS 层加一个 pin（挂起阻断）语义，而不是再加一次检查**——那需要改 `os-nvkms-xnu.cpp`
+  的 suspend 路径，尚未实施。
+- **P0-3（加载脚本）**：已**默认禁用**，见 `LOAD-EXPERIMENT-20261018.md` 顶部与脚本内的 exit 90 守卫；
+  文档里"用户已授权"的表述已删除。
+- **R13 口径**：改为"导出符号 649/17,679 ≈ 3.7%，体积 ≈ 2.15%"，并注明两者不同口径；
+  结合 REA 的 7.93 MB 不透明载荷，"9 个 TU 不足以复现"成立，但**不能**据此推断其余实现不公开。
+
+实测（[Run 39054243492](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39054243492)，`success`）：**14 个补丁**、**16/16 对象**、告警零增量；
+NVRMFB kext **315680 B / 174 导出**（比 R12 的 311488 B 多 4 KB，正是这次所有权修复的体量）。
+主机测试 **34/34**（新增"两个使用者 + 挂起停止 + 后来者回收"与"唯一使用者 + 挂起 + 回收"两个场景）；
+结构合同 **45/45**（新增 9 条：计数递减、grab 债务、孤儿不越权释放、创建者 retain 配对）。
+
+## R13（2026-10-18）：NVRM.kext 无法用公开源码重建（负结果，带数字）
 
 问题：上游只发布 `NVRM.kext` 二进制，没有构建配方。能不能自己链一个？
 
