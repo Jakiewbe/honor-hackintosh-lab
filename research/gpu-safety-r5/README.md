@@ -78,7 +78,33 @@ GitHub UI → Actions → **HONOR GPU safety R5 native object and kext link gate
 [Run 39050097952](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39050097952) `success`（提交 `c5e04ca`）：**10 个补丁**（9 个 NullMoth + OGKM）全部应用，
 **14/14 对象编译成功**（含 NVRMFB），每单元告警数与 original 相同，NVAccel kext 链接成功（244400 B）。
 
-### R10 门禁结果（2026-10-18）
+### 生产 NVRMFB 的 kext 链接（2026-10-18）
+
+上一轮之前，`KEXT-LINK` 只覆盖 NVAccel。本轮把**生产** `NVRMFB`（单 TU）也链接起来，
+链接行是 NVAccel 那行换对象与 bundle（上游没有为 NVRMFB 发布链接行，这一点在报告里标注）：
+
+[Run 39050754261](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39050754261) `success`：
+
+| 项 | 结果 |
+|---|---|
+| 对象 | 16/16 exit 0（原版与候选各 8 TU，含生产 `NVRMFB` 与遗留 `NVRMFB_LEGACY`） |
+| NVAccel kext | 链接成功，244400 B |
+| **NVRMFB kext** | **链接成功**，311192 B，`sha256 f845538e…`，导出符号 173、未定义符号 481（内核/依赖导入，正常） |
+| 发行版 NVRMFB 参照 | 306736 B，`sha256 6B8BEFFF…`（我们的产物大 1.5%，编译器与 SDK 不同 + 新增代码） |
+
+这仍是 `KEXT-LINK_ONLY_NOT_LOADED`：只证明"能链成 Mach-O kext"，没有任何签名或加载。
+
+### 附带结论：`kexts/NVRM/fb/` 是遗留副本
+
+- `package/install.sh` 的 `KEXTS="NVRM NVAccel NVRMFB NVRMAGDC"`，装的是 `kexts/NVRMFB`；
+- 上游自带测试（`test_bar1_budget.py`、`test_boot_raster_modes.py`、`test_display_power_retry.py` 等）全部读
+  `kexts/NVRMFB/fb/nvrm-fb.cpp`；
+- 没有任何构建脚本或测试引用 `kexts/NVRM/fb/nvrm-fb.cpp`。
+
+所以 R7–R9 对那份旧拷贝的修改是**死代码修改**：对发行驱动无影响，保留它们只是为了不重写已验证的补丁序列；
+真正生效的是 R10。门禁同时编译两者，是为了让"哪份被改、哪份没被编译"不再可能被忽略。
+
+## R10 门禁结果（2026-10-18）
 
 - [Run 39050444884](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39050444884) **failure**：生产文件里 `extern "C" NvBool …` 被放在 `NvBool` 可见之前 →
   `error: unknown type name 'NvBool'`。同一轮还暴露 `rollback.armed = false` 被写到 `return true` **之后**
