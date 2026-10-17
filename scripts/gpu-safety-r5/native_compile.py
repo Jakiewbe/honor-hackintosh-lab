@@ -59,7 +59,7 @@ def main():
         candidate = out.parent / "nullmoth-v2.3.3-gpu-safety-r5-candidate"
         shutil.copytree(nm, candidate, ignore=shutil.ignore_patterns(".git"))
         report["patches"] = []
-        for number, name in enumerate(("gpu-safety-r1.patch", "gpu-safety-r2-kms-open.patch", "nullmoth-r3-thread-call-comment.patch", "nullmoth-r4-bridge-owner.patch", "nullmoth-r5-kms-close-deferred.patch", "nullmoth-r6-kms-close-reclaim.patch", "nullmoth-r7-kapi-device-rollback.patch", "nullmoth-r8-shared-device-lifetime.patch", "nullmoth-r9-pm-gated-device-teardown.patch"), 1):
+        for number, name in enumerate(("gpu-safety-r1.patch", "gpu-safety-r2-kms-open.patch", "nullmoth-r3-thread-call-comment.patch", "nullmoth-r4-bridge-owner.patch", "nullmoth-r5-kms-close-deferred.patch", "nullmoth-r6-kms-close-reclaim.patch", "nullmoth-r7-kapi-device-rollback.patch", "nullmoth-r8-shared-device-lifetime.patch", "nullmoth-r9-pm-gated-device-teardown.patch", "nullmoth-r10-nvrmfb-production-lifetime.patch"), 1):
             patch = assets / name
             for suffix in (["--check"], []):
                 if execute(["git", "-c", "core.autocrlf=false", "apply", *suffix, "--whitespace=error-all", str(patch)], candidate,
@@ -102,12 +102,15 @@ def main():
         # NVRMFB is included because R7/R8 change kexts/NVRM/fb/nvrm-fb.cpp: a gate that skips that
         # translation unit would report a green build for code it never compiled.
         for label, tree in (("original", nm), ("candidate", candidate)):
-            for unit in ("NMIntelFB", "NMIntelFBVirtual", "NVAccel", "NVKMSOS", "NVRM", "NVRMFB"):
-                if unit in ("NVAccel", "NVKMSOS", "NVRM", "NVRMFB"):
+            for unit in ("NMIntelFB", "NMIntelFBVirtual", "NVAccel", "NVKMSOS", "NVRM", "NVRMFB", "NVRMFB_LEGACY"):
+                if unit in ("NVAccel", "NVKMSOS", "NVRM", "NVRMFB", "NVRMFB_LEGACY"):
+                    # NVRMFB is kexts/NVRMFB/fb: the released binary contains strings unique to that
+                    # file and none unique to kexts/NVRM/fb. Both are compiled so neither is skipped.
                     relsource = {"NVAccel":"kexts/NVRM/accel/nvrm-accel.cpp",
                                  "NVKMSOS":"kexts/NVRM/os-nvkms-xnu.cpp",
                                  "NVRM":"kexts/NVRM/NVRM.cpp",
-                                 "NVRMFB":"kexts/NVRM/fb/nvrm-fb.cpp"}[unit]
+                                 "NVRMFB":"kexts/NVRMFB/fb/nvrm-fb.cpp",
+                                 "NVRMFB_LEGACY":"kexts/NVRM/fb/nvrm-fb.cpp"}[unit]
                     source = tree / relsource
                     flags = [*common_flags, *definitions, *["-I" + str(p) for p in includes]]
                     flags += ["-I" + str(tree / "kexts/NVRM"), "-I" + str(source.parent),
@@ -141,7 +144,7 @@ def main():
         for entry in report["objects"]:
             if "warnings" in entry:
                 counts[(entry["profile"], entry["unit"])] = entry["warnings"]
-        for unit in ("NMIntelFB", "NMIntelFBVirtual", "NVAccel", "NVKMSOS", "NVRM", "NVRMFB"):
+        for unit in ("NMIntelFB", "NMIntelFBVirtual", "NVAccel", "NVKMSOS", "NVRM", "NVRMFB", "NVRMFB_LEGACY"):
             before, after = counts.get(("original", unit)), counts.get(("candidate", unit))
             if before is not None and after is not None and after > before:
                 failures.append(f"{unit}-new-warnings")

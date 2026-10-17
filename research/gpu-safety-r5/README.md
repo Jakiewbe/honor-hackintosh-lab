@@ -78,6 +78,36 @@ GitHub UI → Actions → **HONOR GPU safety R5 native object and kext link gate
 [Run 39050097952](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39050097952) `success`（提交 `c5e04ca`）：**10 个补丁**（9 个 NullMoth + OGKM）全部应用，
 **14/14 对象编译成功**（含 NVRMFB），每单元告警数与 original 相同，NVAccel kext 链接成功（244400 B）。
 
+## R10（2026-10-18）：R7–R9 修错了文件——生产 NVRMFB 是另一个 `nvrm-fb.cpp`
+
+仓库里有两个 `nvrm-fb.cpp`，两者的 `Info.plist`（`com.nullmoth.NVRMFB`）**完全一致**：
+
+| 路径 | 行数 | 大小 | 内容差异 |
+|---|---|---|---|
+| `kexts/NVRM/fb/nvrm-fb.cpp` | 1631 | 90725 B | R1/R7/R8/R9 一直在改这个 |
+| `kexts/NVRMFB/fb/nvrm-fb.cpp` | **3406** | **210016 B** | 额外包含 `nvrm-fb-safety.h`、`nvrm-allocation-table.h`、`nvrm_eld.h` |
+
+用发行包 `release-v2.3.3.tar.gz` 里的 `NVRMFB.kext/Contents/MacOS/NVRMFB`（306736 B，
+`sha256 6B8BEFFF…`）做字符串判别：
+
+- 大文件独有串 **存在**：`hot-plug: display 0x%x … connected after boot`、`home flip #%u: pure`、`fbmodes: boot raster`
+- 小文件独有串 **不存在**：`getPixelInformation ap %d`、`park ceiling reached`
+
+也就是说**发行版 NVRMFB 是从 `kexts/NVRMFB/fb/nvrm-fb.cpp` 构建的**。R7/R8/R9 把关闭路径与共享 Device
+生命周期修在了小文件上：对生产驱动**没有任何作用**，而生产文件里的同一批缺陷（`kapiInit` 失败留下
+`gDev`、`super::start` 失败不回收、`stop()` 从不释放）仍然存在。
+
+R10 把这些修复移植到生产文件：`extern "C" NvBool nvkms_xnu_pm_running(void)`、`gDevUsers` 计数、
+`dropKapiDevice()`（PM 未运行则保留）、嵌套 `KapiRollback`、`kapiInit` 内绑定计数与
+`fGrabbedOwnership`、`super::start` 失败与 `stop()` 的拆除调用。生产文件已有 `fOwnsHead`，head 位沿用
+既有机制而不是新加字段。
+
+门禁同时改为编译**两个**文件：`NVRMFB`（生产）与 `NVRMFB_LEGACY`（旧拷贝），避免再次出现"编译了没被使用
+的文件"这种假通过。
+
+结构合同对两个文件各跑一遍：**32/32**（含"disarm 必须在成功返回之前"——这条抓出了我移植时把
+`rollback.armed = false` 写到 `return true` 之后的错误）。
+
 ## R9（2026-10-18）：拆除只允许发生在 NVKMS 能碰 GPU 的时候
 
 R8 让 `stop()` 也走 `dropKapiDevice()`，但**没有检查 NVKMS 当时能不能被调用**。读 OGKM 源码
