@@ -1,0 +1,50 @@
+diff --git a/kexts/NMIntelFB/intelfb.cpp b/kexts/NMIntelFB/intelfb.cpp
+index bf9e7d7..532e5e4 100644
+--- a/kexts/NMIntelFB/intelfb.cpp
++++ b/kexts/NMIntelFB/intelfb.cpp
+@@ -303,6 +303,11 @@ bool NMIntelFB::adoptFirmwareMode()
+ 
+ bool NMIntelFB::start(IOService *provider)
+ {
++    // A previous stop() set this; without the reset a restarted framebuffer would deliver no VBL and
++    // refuse every owner-copy for the rest of its life.
++    fStopping = false;
++    if (!fCopyLock) fCopyLock = IOLockAlloc();
++    if (!fCopyLock) IFBLOG("copy lock allocation failed: owner-copy will be refused");
+ #ifdef NMINTELFB_VIRTUAL
+     fWidth = 1920; fHeight = 1080; fRowBytes = 7680; fSurf = 0; fPipe = 0;
+     fHT = 2200; fVT = 1125; fHSS = 2008; fHSE = 2052; fVSS = 1084; fVSE = 1089; fPclk = 148500000ull;   // CEA 1080p60
+@@ -321,8 +326,12 @@ bool NMIntelFB::start(IOService *provider)
+         if (fTimer && wl->addEventSource(fTimer) == kIOReturnSuccess) fTimer->setTimeoutMS(2000);
+     }
+     armVbl();
+-    registerPowerDriver(this, kPowerStates, 2);
+-    gVirt = this; sysctl_register_oid(&sysctl__debug_nmintelfb_sample);
++    if (registerPowerDriver(this, kPowerStates, 2) == nullptr)
++        IFBLOG("virtual: power driver registration FAILED");
++    if (gVirt != this) {
++        gVirt = this;
++        sysctl_register_oid(&sysctl__debug_nmintelfb_sample);   // registering the same oid twice is a bug
++    }
+     IFBLOG("virtual panel published (1920x1080 at phys 0x%llx)", (unsigned long long)fApertureBase);
+     return true;
+ #endif
+@@ -340,8 +349,6 @@ bool NMIntelFB::start(IOService *provider)
+     // display pipe copies each frame into fSurfMap. Without NVAccel the panel stays a plain framebuffer.
+     if (IODeviceMemory *sm = IODeviceMemory::withRange(fApertureBase + fSurf, (IOPhysicalLength)fRowBytes * fHeight)) {
+         fSurfMap = sm->map(kIOMapWriteCombineCache); sm->release();
+-    if (!fCopyLock) fCopyLock = IOLockAlloc();
+-    if (!fCopyLock) IFBLOG("copy lock allocation failed: owner-copy will be refused");
+     }
+     if (fSurfMap) {
+         setProperty("IOFBDependentID", 0x4E56524D00000001ull, 64);
+@@ -351,7 +358,8 @@ bool NMIntelFB::start(IOService *provider)
+     setProperty("NMIntelFBDisplayVersion", fVer, 32);
+     setProperty("built-in", kOSBooleanTrue);   // the panel is the laptop's own (kConnectionFlags says so too)
+     armVbl();
+-    registerPowerDriver(this, kPowerStates, 2);
++    if (registerPowerDriver(this, kPowerStates, 2) == nullptr)
++        IFBLOG("power driver registration FAILED: sleep/wake handling will not run for this panel");
+     IFBLOG("built-in panel published (%ux%u)", fWidth, fHeight);
+     return true;
+ }
