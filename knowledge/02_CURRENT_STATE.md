@@ -1,3 +1,15 @@
+## 2026-10-18 双轨验收矩阵（一页看清缺什么）
+
+[NVIDIA 与 Intel 的验收矩阵](../research/gpu-safety-r5/ACCEPTANCE-MATRIX-20261018.md)：每个门禁需要什么证据、
+现在到哪、还差谁，数字全部取自 `evidence/ci-r5/verification.json` 与最近门禁报告。
+
+要点：**NVIDIA 侧**源码与构建已到顶（18 补丁、16/16 对象、NVAccel 248584 B、生产 NVRMFB 315744 B；
+关闭失败不可上报是 OGKM 的 `void` 接口决定的，记为不可关闭）；**Intel 侧** R16–R19 把停机、owner-copy、
+重启安全、kva 依赖全部处理完，下一步是只读确认内屏现状，不是继续改代码。
+
+**冻结复核**：R16–R19 未触及 FreeBSD base/LinuxKPI 闭包，`BLOCKED_FREEBSD_BASE_SELECTION` 的前提未变，
+i915/eDP 自研线**不重开**。
+
 ## 2026-10-18 GPU R8–R13：设备生命周期闭环、生产文件修正、NVRM 不可重建
 
 - **R8/R10**：`kapiInit()` 失败、`super::start()` 失败、`stop()` 三条路径共用 `dropKapiDevice()`；共享 Device
