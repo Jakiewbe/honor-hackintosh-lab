@@ -1,0 +1,31 @@
+diff --git a/kexts/NVRM/accel/nvrm-accel.cpp b/kexts/NVRM/accel/nvrm-accel.cpp
+index b05a676..d5fe470 100644
+--- a/kexts/NVRM/accel/nvrm-accel.cpp
++++ b/kexts/NVRM/accel/nvrm-accel.cpp
+@@ -2150,9 +2150,9 @@ static bool nvAccelCopyToScanout(IOAccelResource2 *res)
+     for (unsigned i = 0; i < sizeof q; i++) ((volatile unsigned char *)&q)[i] = 0;
+     q.version = NVRM_VRAM_ABI_VERSION;
+     IOReturn ret = a->askFramebufferForScanout(&q);
+-    if (ret != kIOReturnSuccess || !q.kva || !q.pitch) {
+-        NVFLIPWHY("copyToScanout: framebuffer would not describe its scanout (0x%x kva %p pitch %u)",
+-                  (unsigned)ret, q.kva, q.pitch);
++    if (ret != kIOReturnSuccess || !q.width || !q.height) {
++        NVFLIPWHY("copyToScanout: framebuffer would not describe its scanout geometry (0x%x %ux%u)",
++                  (unsigned)ret, q.width, q.height);
+         return false;
+     }
+ 
+@@ -2178,6 +2178,13 @@ static bool nvAccelCopyToScanout(IOAccelResource2 *res)
+         return true;
+     }
+ 
++    if (!q.kva || !q.pitch) {
++        // No owner-copy entry and no mapping to copy into: nothing safe to do. This is the case the
++        // borrowed-kva design could never handle without risking an unmap under the copy.
++        NVFLIPWHY("copyToScanout: peer offers neither owner-copy nor a scanout mapping");
++        return false;
++    }
++
+     const unsigned rows = (h < q.height) ? h : q.height;
+     const unsigned rowb = ((pitch < q.pitch) ? pitch : q.pitch) & ~3u;
+     const unsigned words = rowb / 4;

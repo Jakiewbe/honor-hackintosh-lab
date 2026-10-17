@@ -46,6 +46,13 @@ run 30-log-kernel.txt    bash -c 'log show --last 10m --style compact --predicat
 run 31-log-nvrm.txt      bash -c 'log show --last 30m --style compact --predicate "eventMessage CONTAINS \"NVRM\" OR eventMessage CONTAINS \"NVKMS\"" 2>&1 | tail -400'
 run 32-log-gpu.txt       bash -c 'log show --last 30m --style compact --predicate "eventMessage CONTAINS[c] \"gsp\" OR eventMessage CONTAINS[c] \"GPU\" OR eventMessage CONTAINS[c] \"nvidia\"" 2>&1 | tail -300'
 
+# 4b. Intel 内屏：谁在驱动它（只读）
+run 50-intel-kexts.txt    bash -c 'kextstat | grep -i -E "intel|nmintelfb|nvrm|nvaccel" || echo "no matching kext loaded"'
+run 51-intel-fb-tree.txt  bash -c 'ioreg -w0 -l -c IOFramebuffer 2>&1 | head -300'
+run 52-fb-provider.txt    bash -c 'ioreg -w0 -l -r -n display0 2>&1 | head -120'
+run 53-display-full.txt   bash -c 'system_profiler SPDisplaysDataType -detailLevel full 2>&1 | head -200'
+run 54-counters.txt       bash -c 'for k in debug.nmintelfb_sample debug.nvrm_kms_close_deferred debug.nvrm_pm_waited debug.nvaccel_iop_ok_h4; do printf "%s = " "$k"; sysctl -n "$k" 2>&1; done'
+
 # 5. 系统是否健康
 run 40-uptime.txt        uptime
 run 41-panic-files.txt   bash -c 'ls -la /Library/Logs/DiagnosticReports/*.panic 2>&1 | tail -10'
