@@ -174,6 +174,35 @@ def main():
                                "size": len(data), "status": "KEXT-LINK_ONLY_NOT_LOADED"})
         report["kext_link"] = link_entry
 
+        # NVRMFB is a single translation unit, so it can be linked the same way. Upstream ships no
+        # link line for it; this one is the NVAccel line with the object and bundle swapped, and it
+        # is reported as its own level rather than folded into the accelerator result.
+        fb_obj = out.parent / "candidate-NVRMFB.o"
+        fb_out = out.parent / "NVRMFB.kext/Contents/MacOS/NVRMFB"
+        fb_out.parent.mkdir(parents=True, exist_ok=True)
+        fb_link = ["xcrun", "clang++", "-arch", "x86_64", "-mmacosx-version-min=15.5", "-fapple-kext",
+                   "-isysroot", sdk, "-nostdlib", "-Xlinker", "-kext", "-lkmodc++", "-lkmod", "-lcc_kext",
+                   str(fb_obj), "-o", str(fb_out)]
+        rc = execute(fb_link, nm, out / "nvrmfb-kext-link.txt")
+        fb_entry = {"command": fb_link, "exit": rc,
+                    "method": "NVAccel link line with the NVRMFB object and bundle; upstream publishes none"}
+        if rc:
+            fb_entry["status"] = "LINK_FAILED"
+            failures.append("NVRMFB-kext-link")
+        else:
+            data = fb_out.read_bytes()
+            if len(data) < 16 or struct.unpack_from("<I", data)[0] not in (0xfeedface, 0xfeedfacf):
+                raise ValueError("unexpected NVRMFB Mach-O magic")
+            execute(["xcrun", "nm", "-gU", str(fb_out)], nm, out / "nvrmfb-kext-defined.txt")
+            execute(["xcrun", "nm", "-u", str(fb_out)], nm, out / "nvrmfb-kext-undefined.txt")
+            defined = (out / "nvrmfb-kext-defined.txt").read_text(encoding="utf-8", errors="replace").splitlines()
+            undefined = (out / "nvrmfb-kext-undefined.txt").read_text(encoding="utf-8", errors="replace").splitlines()
+            fb_entry.update({"artifact": str(fb_out), "sha256": hashlib.sha256(data).hexdigest(),
+                             "size": len(data), "defined_symbols": len(defined),
+                             "undefined_symbols": len(undefined),
+                             "status": "KEXT-LINK_ONLY_NOT_LOADED"})
+        report["kext_link_nvrmfb"] = fb_entry
+
         # Real complete KAPI C translation unit, with a reconstructed profile.
         # Literal Makefile lines only: conditional blocks are NOT evaluated.
         # Linux branch macros are an explicit candidate inference, not an upstream Darwin configuration.
