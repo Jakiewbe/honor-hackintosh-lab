@@ -1,3 +1,7 @@
+> **复现手册（2026-10-18）**：[REPRODUCTION-20261018.md](../research/gpu-safety-r5/REPRODUCTION-20261018.md)
+> 把 R1–R20 按主题分组，列出每个补丁依赖的上游形状与「脆弱锚点」（两个以上补丁共用的标识符），
+> 上游一改就知道哪几个补丁会失效。表格由补丁本身解析生成，不是手写。
+
 ## 2026-10-18 双轨验收矩阵（一页看清缺什么）
 
 [NVIDIA 与 Intel 的验收矩阵](../research/gpu-safety-r5/ACCEPTANCE-MATRIX-20261018.md)：每个门禁需要什么证据、
