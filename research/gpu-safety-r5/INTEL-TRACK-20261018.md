@@ -107,3 +107,31 @@ NVRMFB 315744 B。Intel 结构合同 **20/20**。
 
 - owner-copy 只有编译与结构证据，**没有一次运行**（发行包不含 Intel kext）。
 - 旧 kva 回退路径仍然存在同样的窗口——只有对端升级到 owner-copy 才真正生效。
+
+## 8. R18（2026-10-18）：重启后永久失效，以及三处失败路径
+
+审计 Intel 的 `start()`/`stop()` 失败路径，发现四个真实缺陷：
+
+1. **`fStopping` 只被置位、从不复位**：`stop()` 把它设成 `true`，`start()` 没有清。一旦这个 framebuffer 被重启
+   （显示重连、kext 重载），`vblFire` 第一行就 `return`——**没有 VBL 中断**，而 WindowServer 对加速显示要靠它
+   推进；同时 `copyToScanout` 永远拒绝。等于"重启后这个面板就废了"。
+2. **`fCopyLock` 只在真实路径分配**，虚拟面板那条分支从不分配，owner-copy 在那里必然被拒。
+3. **虚拟变体每次 start 都注册同一个 sysctl oid**，注册两次是 bug。
+4. **`registerPowerDriver` 的返回值被丢弃**：注册失败时睡眠/唤醒处理不存在，但日志里看不出来。
+
+修法：`start()` 开头（`#ifdef` 之前）复位 `fStopping` 并只在这里分配一次 `fCopyLock`；虚拟变体的注册用
+`if (gVirt != this)` 保护；两处 `registerPowerDriver` 都检查返回值并记录失败。
+
+### 门禁又抓到一次我自己的错
+
+第一次跑（[Run 39055993196](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39055993196)）编译失败：
+`invalid operands to binary expression ('IOReturn' (aka 'int') and 'std::nullptr_t')` ——
+`registerPowerDriver()` 返回 `IOReturn`，不是指针，我却写了 `== nullptr`。改成 `!= kIOReturnSuccess` 后通过。
+
+实测（[Run 39056169253](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39056169253)，`success`）：**18 个补丁**、**16/16 对象**、告警零增量；
+`NMIntelFB` **44664 B**、`NMIntelFBVirtual` **58752 B**（虚拟变体 +4 KB，正是这次新增检查的体量）；
+Intel 结构合同 **25/25**。
+
+### 仍然只有编译证据
+
+发行包不含 Intel kext，所以以上全部未经运行验证；"重启后失效"这条尤其需要实机重现才能确认修复有效。
