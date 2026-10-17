@@ -144,15 +144,19 @@ def main():
                 failures.append(f"{unit}-new-warnings")
         report["warning_counts"] = {f"{k[0]}/{k[1]}": v for k, v in counts.items()}
 
-        # Kext link for the accelerator, using the upstream build/accel_build.sh link line
-        # unchanged. This reports the level actually reached; it is never a load or a GPU run.
+        # Kext link for the accelerator. Upstream links without a deployment target, but the objects
+        # above are built with -mmacosx-version-min=15.5, and linking at the default 15.0 made ld
+        # report three "built for newer macOS version (15.5) than being linked (15.0)" warnings.
+        # Passing the same target keeps the measured Mach-O consistent with the objects it came from.
         link_obj = out.parent / "candidate-NVAccel.o"
         link_out = out.parent / "NVAccel.kext/Contents/MacOS/NVAccel"
         link_out.parent.mkdir(parents=True, exist_ok=True)
-        link = ["xcrun", "clang++", "-arch", "x86_64", "-fapple-kext", "-isysroot", sdk, "-nostdlib",
-                "-Xlinker", "-kext", "-lkmodc++", "-lkmod", "-lcc_kext", str(link_obj), "-o", str(link_out)]
+        link = ["xcrun", "clang++", "-arch", "x86_64", "-mmacosx-version-min=15.5", "-fapple-kext",
+                "-isysroot", sdk, "-nostdlib", "-Xlinker", "-kext", "-lkmodc++", "-lkmod", "-lcc_kext",
+                str(link_obj), "-o", str(link_out)]
         rc = execute(link, nm, out / "nvaccel-kext-link.txt")
-        link_entry = {"command": link, "exit": rc, "method": "upstream build/accel_build.sh link line, unchanged"}
+        link_entry = {"command": link, "exit": rc,
+                      "method": "upstream build/accel_build.sh link line plus the deployment target of its objects"}
         if rc:
             link_entry["status"] = "LINK_FAILED"
             failures.append("NVAccel-kext-link")
