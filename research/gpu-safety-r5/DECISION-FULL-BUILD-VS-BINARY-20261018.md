@@ -357,3 +357,49 @@ const char *const pNV_KMS_ID = NV_KMS_ID + 11;
 
 - 未实跑 make（需要 Linux 工具链，本机没有）；
 - 未把生成文件接入现有门禁（避免在未验证时改动构建）。
+
+## 四十八、全量编译实验：122/988，阻塞在**端口层**而非源码（R97）
+
+新增 	ools/g1_full_rm_probe.py + 独立工作流 gpu-safety-r5-fullrm.yml（不与共享门禁纠缠）。
+两次运行：
+
+| 轮次 | 配置 | 编译通过 | 链接 | 未定义 |
+|---|---|---|---|---|
+| run 39136676414 | 无 PORT_* | **119**/988 | exit 0（177,672 B） | 182 |
+| run 39137051867 | 加 PORT_IS_CHECKED_BUILD=0 等 | **122**/988 | exit 0（178,032 B） | 182 |
+
+失败原因随配置推进而变化，说明配置在起作用：
+
+1. 第一轮：
+vassert.h:964: NV_PORT_HEADER must define PORT_IS_CHECKED_BUILD
+2. 第二轮：
+vlog_defs.h:98: unknown type name 'PORT_ATOMIC'
+
+## 这两条错误的性质
+
+PORT_* 是 **makefile 开关**（
+vport.h:48-52 明确写 "must be defined to 0 or 1 by makefile"），
+树内没有任何文件定义它们。而 PORT_ATOMIC 在 src/common/inc/nvlog_defs.h:70 有条件定义，
+条件依赖平台层的 
+v.h（src/nvidia/arch/nvalloc/unix/include/nv.h:52 与
+kernel-open/common/inc/nv.h:52 各有一份）。
+
+也就是说：**RM 需要一个"端口层"（原子、同步、线程、时间、内存）才能编译**，
+而公开树只为 Linux/FreeBSD 提供了这一层（kernel-open/）。Darwin 没有。
+
+## 结论（本轮唯一硬结论）
+
+> 全量编译的阻塞点是**端口层实现**，不是源码缺失。
+> 988 个 TU 里 866 个失败，失败点集中在 PORT_* 与平台 
+v.h 的条件分支上。
+
+## 这改变了路径 A 的代价估计
+
+之前说"988 + 一个生成步骤 = 12–15 分钟一次 CI"。**这个估计是错的**：
+真正的成本是**写一个 Darwin 端口层**（nvport 的 atomic/sync/thread/time/memory 实现），
+那是一块子系统级工作，不是"跑一次编译"。
+
+## 未做
+
+- 未尝试用 -DPORT_ATOMIC=volatile 之类的宏"糊过去"——那只会把端口层问题掩盖成未定义行为；
+- 未评估 nvport 的接口规模（下一轮可量化）。
