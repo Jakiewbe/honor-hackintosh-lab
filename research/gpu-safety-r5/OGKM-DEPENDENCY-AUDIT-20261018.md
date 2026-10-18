@@ -235,3 +235,28 @@ _Nv04AllocContextDmaKernel、_Nv01AllocMemoryKernel、_RmDisableAdapter 等约 3
 - 两个产物混用了不同宏配置（探针带 -DNVRM，9 单元不带），**ABI/ODR 一致性未验证**，因此这个混合产物
   **不可用于加载**，只用于统计缺口；
 - 未加载、未签名、未操作实机。
+
+## 十一、altstack ABI 风险在当前配置下不成立（R57）
+
+NV_ENTER_RM_RUNTIME 的 altstack 分支只在 #if defined(__use_altstack__) 时启用
+（src/nvidia/arch/nvalloc/unix/include/osapi.h:34）。
+
+检索 OGKM 树内全部 23 个构建文件（Makefile / *.mk / *.sh / Kbuild）：
+
+`
+grep -rn 'altstack' → 无任何命中
+`
+
+也就是说 **OGKM 自己的构建系统不定义 __use_altstack__**。我们的探针使用由 Linux 干跑提取的宏，
+因此该宏同样不存在 → 编译出的 NV_ENTER_RM_RUNTIME 走的是**平凡分支**，没有 %rbp 改写。
+
+结论（限定范围）：**在当前探针配置下，altstack ABI 风险不激活。**
+
+同时必须写清反面：一旦有构建流程加入 -D__use_altstack__，本站在 31 处传 NULL 栈的 RM 调用
+（该计数来自并行提交 1dc3567 的审计）就会变成真实风险。所以这不是"已解决"，而是"当前未激活"。
+
+## 十二、与并行产出的关系
+
+1dc3567 已完成逐符号依赖清单（dependency-audit/dependencies.json，3824 文件、tree SHA 绑定），
+252775 已处理 owner-copy 的真实错误传播。本轮不重复这两项，只补它们未覆盖的编译侧实测：
+5/5 TU 编译通过、混合链接 42→23、以及本条 altstack 配置判定。
