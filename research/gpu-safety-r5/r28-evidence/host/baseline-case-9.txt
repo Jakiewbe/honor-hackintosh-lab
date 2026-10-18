@@ -1,0 +1,12 @@
+ARGV=["/mnt/d/Hactk/g1-closure-20261018/evidence/r28-host-release/baseline.bin", "9"]
+FAIL: exact transaction return status
+FAIL: fallback entry count
+FAIL: success and per-head counters
+FAIL: failure counter
+FAIL: source counters
+FAIL: fallback pixels or untouched destination
+FAIL: fallback pixels or untouched destination
+FAIL: fallback pixels or untouched destination
+FAIL: fallback pixels or untouched destination
+
+EXIT=1

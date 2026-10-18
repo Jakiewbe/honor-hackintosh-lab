@@ -1,3 +1,5 @@
+> **R28 SOURCE / CPU-CONTRACT / PATCH-APPLIED：** [报告与完整文本证据](../research/gpu-safety-r5/R28-OWNER-COPY-ERRORS-20261018.md)。g++ 13.3 / ASan+UBSan，完整真实事务候选 15/15，R27 基线预期失败 6 项，编译失败负控无产物/未执行；27 个 NullMoth 补丁完整正反向恢复，另有既有 OGKM 补丁。Darwin/链接未执行，无 GPU 或设备证据。
+
 > **2026-10-18 新增 SOURCE-LEXICAL 证据：** [35 符号依赖及 RM 栈 ABI 审计](../research/gpu-safety-r5/G1-CLOSURE-ABI-AUDIT-20261018.md)，含全部词法命中、固定输入哈希、71 个 Darwin 源 blob 核验和九项工具回归。旧 run [39090712869](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39090712869) 的五单元编译/混合链接已以 artifact `12123001015` 的 SHA256 绑定复核；不是新的构建通过。新增精确预处理/对象提供者取证尚未运行。无实机证据。
 
 | R8–R12 设备生命周期 | HOST-TEST / SOURCE-STRUCTURE | 22/22、36/36（两源文件各自期望值） | `research/gpu-safety-r5/README.md` |

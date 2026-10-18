@@ -1,0 +1,174 @@
+{
+  "level": "CPU-EXTRACTED-FUNCTION-CONTRACT",
+  "compiler": "/usr/bin/g++",
+  "profiles": {
+    "baseline": {
+      "source_sha256": "77ade45c7b13c62c6ade33ff0e61c4e0b23ea472e8c9794ecf05e4db09c0ee25",
+      "function_sha256": "bccb88d4155bc4b4373af51b4ea5bc8b15da61cc48e0320fb0cdb220ef9047b8",
+      "fixture_sha256": "f88c1849331edca92377e4cfc85ff9c2ed3395c886cc643ce86ac6e4b4e3030b",
+      "header_sha256": {
+        "kexts/NVRM/nvrm_vram_abi.h": "e324dfc4b9e7519a045c507c2eb28d875b3c417e38ac52d2b4ee5320594faae6",
+        "kexts/NVRM/accel/frame_copy_checked.h": "625ccca2aa0b2f440fc94e2fdfeec5a90a9ec762081c3378e866b986d99d65be"
+      },
+      "compile_exit": 0,
+      "cases": [
+        {
+          "case": 0,
+          "exit": 1
+        },
+        {
+          "case": 1,
+          "exit": 0
+        },
+        {
+          "case": 2,
+          "exit": 0
+        },
+        {
+          "case": 3,
+          "exit": 0
+        },
+        {
+          "case": 4,
+          "exit": 0
+        },
+        {
+          "case": 5,
+          "exit": 0
+        },
+        {
+          "case": 6,
+          "exit": 1
+        },
+        {
+          "case": 7,
+          "exit": 1
+        },
+        {
+          "case": 8,
+          "exit": 1
+        },
+        {
+          "case": 9,
+          "exit": 1
+        },
+        {
+          "case": 10,
+          "exit": 1
+        },
+        {
+          "case": 11,
+          "exit": 0
+        },
+        {
+          "case": 12,
+          "exit": 0
+        },
+        {
+          "case": 13,
+          "exit": 0
+        },
+        {
+          "case": 14,
+          "exit": 0
+        }
+      ]
+    },
+    "candidate": {
+      "source_sha256": "46522de7f9028fbba90f34850ca786ca2127efa0688ed99ce3bf93a7fe29fc7b",
+      "function_sha256": "c2be1adeb902331518741c00a3334aa92a425f279539c03e7e49abd2f6375420",
+      "fixture_sha256": "45308c75f6f58ec430181b1016f46279eef635b17d530610d001d1df120741d7",
+      "header_sha256": {
+        "kexts/NVRM/nvrm_vram_abi.h": "e324dfc4b9e7519a045c507c2eb28d875b3c417e38ac52d2b4ee5320594faae6",
+        "kexts/NVRM/accel/frame_copy_checked.h": "625ccca2aa0b2f440fc94e2fdfeec5a90a9ec762081c3378e866b986d99d65be"
+      },
+      "compile_exit": 0,
+      "cases": [
+        {
+          "case": 0,
+          "exit": 0
+        },
+        {
+          "case": 1,
+          "exit": 0
+        },
+        {
+          "case": 2,
+          "exit": 0
+        },
+        {
+          "case": 3,
+          "exit": 0
+        },
+        {
+          "case": 4,
+          "exit": 0
+        },
+        {
+          "case": 5,
+          "exit": 0
+        },
+        {
+          "case": 6,
+          "exit": 0
+        },
+        {
+          "case": 7,
+          "exit": 0
+        },
+        {
+          "case": 8,
+          "exit": 0
+        },
+        {
+          "case": 9,
+          "exit": 0
+        },
+        {
+          "case": 10,
+          "exit": 0
+        },
+        {
+          "case": 11,
+          "exit": 0
+        },
+        {
+          "case": 12,
+          "exit": 0
+        },
+        {
+          "case": 13,
+          "exit": 0
+        },
+        {
+          "case": 14,
+          "exit": 0
+        }
+      ]
+    }
+  },
+  "device_access": false,
+  "gpu_runtime": "NOT_RUN",
+  "negative_control": {
+    "compile_exit": 1,
+    "binary_exists": false,
+    "executed": false
+  },
+  "expected_baseline_failures": [
+    0,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "baseline_failures": [
+    0,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "result": "PASS"
+}

@@ -1,0 +1,33 @@
+--- a/kexts/NVRM/accel/nvrm-accel.cpp
++++ b/kexts/NVRM/accel/nvrm-accel.cpp
+@@ -1042,7 +1042,8 @@
+     // copy entry.
+     static const OSSymbol *symCopy = nullptr;
+     if (!symCopy) symCopy = OSSymbol::withCStringNoCopy(NVRM_VRAM_FN_COPY);
+-    if (symCopy) {
++    if (!symCopy) NVIOP_FAIL(kIOReturnNoMemory, "owner-copy symbol allocation failed");
++    {
+         struct NVRMVramCopyRequest copyReq;
+         for (unsigned i = 0; i < sizeof copyReq; i++) ((volatile unsigned char *)&copyReq)[i] = 0;
+         copyReq.version = NVRM_VRAM_ABI_VERSION;
+@@ -1050,7 +1051,8 @@
+         copyReq.srcPitch = pitch;
+         copyReq.width = w;
+         copyReq.height = h;
+-        if (fb->callPlatformFunction(symCopy, false, &copyReq, nullptr, nullptr, nullptr) == kIOReturnSuccess) {
++        const IOReturn copyStatus = fb->callPlatformFunction(symCopy, false, &copyReq, nullptr, nullptr, nullptr);
++        if (copyStatus == kIOReturnSuccess) {
+             OSAddAtomic64(1, fromRes ? &gCntIopSrcRes : &gCntIopSrcSurf);
+             const SInt64 n = OSAddAtomic64(1, &gCntIopOk);
+             OSAddAtomic64(1, &gCntIopOkHead[head]);
+@@ -1058,6 +1060,10 @@
+                  (long long)n, head, w, h, pitch);
+             return kIOReturnSuccess;
+         }
++        // Only absence of this entry permits the legacy mapping fallback.
++        // Execution failures must preserve their status and must not touch q.kva.
++        if (copyStatus != kIOReturnUnsupported)
++            NVIOP_FAIL(copyStatus, "owner-copy failed (0x%x)", (unsigned)copyStatus);
+     }
+ 
+     if (!q.kva || q.pitch < 4) NVIOP_FAIL(kIOReturnNotReady, "peer offers neither owner-copy nor a scanout mapping (kva %p pitch %u)", q.kva, q.pitch);

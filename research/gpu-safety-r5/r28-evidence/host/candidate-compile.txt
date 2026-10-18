@@ -1,0 +1,3 @@
+ARGV=["/usr/bin/g++", "-std=c++17", "-O1", "-g", "-fsanitize=address,undefined", "-fno-omit-frame-pointer", "-fno-pie", "-no-pie", "-I/mnt/d/Hactk/g1-closure-20261018/candidate-r28-owner-copy/kexts/NVRM", "-I/mnt/d/Hactk/g1-closure-20261018/candidate-r28-owner-copy/kexts/NVRM/accel", "/mnt/d/Hactk/g1-closure-20261018/evidence/r28-host-release/candidate.cpp", "-o", "/mnt/d/Hactk/g1-closure-20261018/evidence/r28-host-release/candidate.bin"]
+
+EXIT=0

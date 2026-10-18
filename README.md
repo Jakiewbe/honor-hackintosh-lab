@@ -1,3 +1,5 @@
+> **2026-10-18 R28 候选：** 真实 `performTransaction()` 仅在 owner-copy 返回 Unsupported 时回退，其他错误原样传播；CPU 真实函数合同 15/15，旧基线 6 项预期失败，编译失败负控通过。完整补丁序列可在临时副本正反向恢复。已接入原生门禁，Darwin/链接尚未运行；[实现与证据](research/gpu-safety-r5/R28-OWNER-COPY-ERRORS-20261018.md)。完整构建闭包/ABI 仍是主线，实机 NO-GO。
+
 > **2026-10-18 当前 G1 断点：构建闭包与 ABI。** 已定位的公开提供者仍需传递依赖与布局核验；不能以旧 R13/R48 文档认定源码缺失或必须转实机。见 [逐符号审计与下一步](research/gpu-safety-r5/G1-CLOSURE-ABI-AUDIT-20261018.md)。本轮新增 35 符号依赖表、跨三个 TU 的 altstack/NULL 栈条件风险证据及精确原生预处理/对象提供者采集入口；新增原生取证尚未运行。P0-1/P0-4 仍开放，KEXT-LOAD NO-GO。
 
 > **当前有效任务优先级（2026-10-17）：GPU P0。** 用户明确恢复 RTX 2050 的 NVRM/GSP、真实渲染/读回与安全关闭研发；外设暂缓，Intel 内屏保持现状。下方 H4 冻结的段落仅保留为历史。R4 `7c9f50d` 的 C++ 弃用警告处理尚无新 macOS runner 结果。详见 [R4 PM/KAPI owner 审计](research/gpu-safety-20261017/PM-R4-REVIEW-20261017.zh-CN.md)。

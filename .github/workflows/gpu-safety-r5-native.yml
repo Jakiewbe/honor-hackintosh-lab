@@ -59,6 +59,15 @@ jobs:
             [[ "$(git -C "$d" rev-parse HEAD)" == "$3" ]]
           done
 
+      - name: Verify complete NullMoth patch series in a disposable copy
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/check_g1_patch_series.py \
+            --nm "$RUNNER_TEMP/gpu-safety-r5-nm" --assets research/gpu-safety-r5 \
+            --native-script scripts/gpu-safety-r5/native_compile.py \
+            --out "$RUNNER_TEMP/gpu-safety-r5-logs/r28-series"
+
       - name: Compile original and candidate full translation units (objects only)
         shell: bash
         run: |
@@ -67,6 +76,15 @@ jobs:
             --nm "$RUNNER_TEMP/gpu-safety-r5-nm" --nv "$RUNNER_TEMP/gpu-safety-r5-nv" \
             --assets research/gpu-safety-r5 --out "$RUNNER_TEMP/gpu-safety-r5-logs" \
             2>&1 | tee "$RUNNER_TEMP/gpu-safety-r5-logs/probe.txt"
+
+      - name: Test real owner-copy transaction and baseline regression (CPU only)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/test_r28_owner_copy.py \
+            --candidate "$RUNNER_TEMP/nullmoth-v2.3.3-gpu-safety-r5-candidate" \
+            --patch research/gpu-safety-r5/nullmoth-r28-owner-copy-errors.patch \
+            --out "$RUNNER_TEMP/gpu-safety-r5-logs/r28-host" --cxx clang++
 
       - name: Audit probe preprocessor configuration and actual object providers
         shell: bash

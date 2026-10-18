@@ -1,3 +1,5 @@
+> **R28 接手补充：** [真实事务错误传播](../research/gpu-safety-r5/R28-OWNER-COPY-ERRORS-20261018.md) 已完成源码/CPU 合同候选，待新 head 的 Darwin 门禁。运行 `gpu-safety-r5-native.yml` / `Xcode_16.4` 后同时读取 `r28-host/report.json`、`r28-series/report.json` 和 `g1-probe-inventory.json`；不能用旧成功 run 验收。完整闭包与 ABI 优先级不变。
+
 > **2026-10-18 接力入口：** 读取 [G1 构建闭包与 ABI 审计](../research/gpu-safety-r5/G1-CLOSURE-ABI-AUDIT-20261018.md)。先验收新的 `g1-probe-inventory.json`、五单元宏表/传递 include/真实对象定义，再扩展 RM/modeset 核心闭包并核对 Darwin ABI。不要重复“找不到 35 个定义”或已通过的五单元首次编译。用户已授权本任务相关 main 快进推送与 compile-only Actions；实机仍 NO-GO，不改 .agent。
 
 ## 2026-10-18 收尾交接（第 24 轮）

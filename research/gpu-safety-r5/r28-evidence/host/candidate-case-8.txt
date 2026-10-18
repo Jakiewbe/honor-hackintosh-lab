@@ -1,0 +1,4 @@
+ARGV=["/mnt/d/Hactk/g1-closure-20261018/evidence/r28-host-release/candidate.bin", "8"]
+PASS case 8 (CPU contract only)
+
+EXIT=0

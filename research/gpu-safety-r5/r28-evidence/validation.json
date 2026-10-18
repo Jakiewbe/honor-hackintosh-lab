@@ -1,0 +1,23 @@
+{
+  "input_head": "80a5db6b8f2cc9d8928d7e0e09c1f0872dd54978",
+  "files": {
+    "research/gpu-safety-r5/nullmoth-r28-owner-copy-errors.patch": "ef21d54a3c9386628fc95d34aba083f5ae4bac98938c982b0d40966a1826a842",
+    "tools/test_r28_owner_copy.py": "cf6d63f6f4ed59f7fb3fab7184376ff8f655499bb756e5c42b24ae1b9bbe78bb",
+    "tools/check_g1_patch_series.py": "6482c965d437b56e271d8481f0921c6ef38692ae9d129a410fca75db22f2776c",
+    "scripts/gpu-safety-r5/native_compile.py": "34d37318879a12ad2d43859f1c119477dcbba2fd23dda38326eb49009dfe2b8a",
+    ".github/workflows/gpu-safety-r5-native.yml": "f560fe0764e745deb7b537a3a7da87dc5a5ea97b289e64ddd8342f979e1540a8"
+  },
+  "source_binding": "PASS",
+  "yaml_and_python_parse": "PASS",
+  "host": "15/15; baseline 6 expected failures; compile-failure control PASS",
+  "historical_regressions": {
+    "wp1": "10/10",
+    "fbclaim": "5/5",
+    "b2": "7/7",
+    "dependency_audit": "9/9"
+  },
+  "darwin_compile": "NOT_RUN",
+  "kext_link": "NOT_RUN",
+  "kext_load": "NO-GO",
+  "gpu_runtime": "NOT_RUN"
+}
