@@ -203,8 +203,9 @@ def baseline_objects(native, candidate, object_root, input_root=None):
     selected = [r for r in native.get('build_manifest', []) if r['role'] in ('nvrm-unified', 'candidate-c-probe')]
     if ({r['source'] for r in selected if r['role']=='nvrm-unified'} != BASELINE_CPP or
             {r['source'] for r in selected if r['role']=='candidate-c-probe'} != BASELINE_C):
-        raise ValueError('exact nine NVRM plus two local C baseline sources required')
-    archive_allowed(selected, 11)
+        raise ValueError('the baseline source sets must match exactly')
+    # Derive the expected count from the sets: a hard-coded 11 silently forbade adding a unit.
+    archive_allowed(selected, len(BASELINE_CPP) + len(BASELINE_C))
     input_root = input_root or object_root/'gpu-safety-r5-logs/input-snapshots'
     for row in selected:
         source = (candidate/row['source']).resolve()

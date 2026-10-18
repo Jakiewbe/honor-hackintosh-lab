@@ -153,7 +153,7 @@ class FullBuildTests(unittest.TestCase):
                     'source': rel, 'source_sha256': digest(source.read_bytes()), 'object': str(obj),
                     'object_sha256': digest(obj.read_bytes()), 'compile_exit': rc,
                     'compile_cwd':str(candidate.resolve()), 'dependency_snapshot':snapshot})
-            self.assertEqual(len(baseline_objects(report, candidate, objroot)), 11)
+            self.assertEqual(len(baseline_objects(report, candidate, objroot)), len(BASELINE_CPP | BASELINE_C))
             for kind in ['wrong-source', 'duplicate', 'wrong-pin', 'failed', 'source-hash', 'object-hash', 'outside','no-inputs']:
                 bad = copy.deepcopy(report)
                 row = bad['build_manifest'][0]
