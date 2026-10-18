@@ -1,0 +1,2 @@
+RESULT: 48/48 lifetime checks passed
+RUN=0

@@ -1,0 +1,5 @@
+FAIL: a state flip inside the pin prevents release and free
+FAIL: the device is kept and marked orphaned
+FAIL: the grab is recorded as a debt
+RESULT: 3 of 48 lifetime checks FAILED
+RUN=1
