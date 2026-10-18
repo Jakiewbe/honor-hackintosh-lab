@@ -54,7 +54,7 @@ class AbiTests(unittest.TestCase):
             source.write_text('int original;\n')
             before=source.read_bytes()
             generated=wrapper(source)
-            self.assertIn('#include "'+source.as_posix()+'"',generated)
+            self.assertIn('#include "'+source.resolve().as_posix()+'"',generated)
             self.assertNotIn('#define',generated)
             self.assertEqual(source.read_bytes(),before)
             source.write_text('int '+TABLE+';')

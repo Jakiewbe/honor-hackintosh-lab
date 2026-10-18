@@ -1,3 +1,5 @@
+> **2026-10-18 完整源码构建：** 实际驱动仍未完成。已定位 [run 39115546785](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39115546785) 的 macOS 路径测试断言错误，尚未进入驱动编译；本轮修正断言，并新增官方完整 1,280 个 C 编译单元与 5 个着色器嵌入对象的原生构建尝试，替代旧抽样成功率。任何必需项失败均禁止归档/链接；全部成功仍须另验内核导出和 ABI。当前新完整构建尚未运行，实机 NO-GO。[计划与实现](../research/gpu-safety-r5/FULL-SOURCE-BUILD-20261018.md)。
+
 > **2026-10-18 R80 符号身份与来源：** 修正 Mach-O 转 C 名称时删光下划线的问题；九项 UNKNOWN 已逐项定位为六项数据、一项函数、一项宏数据及一项生成配方候选。已接入本轮显式对象哈希/精确导出取证，47项工具测试及三组历史回归通过。新 Darwin/对象提供者/链接/ABI 尚未运行，完整闭包与设备仍 NO-GO。[报告](../research/gpu-safety-r5/R80-SYMBOL-IDENTITY-AND-SOURCES-20261018.md)｜[网页端复核 prompt](../research/gpu-safety-r5/R80-WEB-REVIEW-PROMPT.md)。
 
 > **2026-10-18 R79 审计纠错：** 已撤回“45个符号闭源”与“351→667证明增量闭包不收敛”；索引及同基线显式链接清单已修。固定346符号新扫描为337个词法候选、9个UNKNOWN，尚非对象闭包。27项工具测试和三组历史回归通过；加入六TU选定ABI布局诊断与严格文本发布。新Darwin/链接/ABI尚未执行。见 [本轮报告](../research/gpu-safety-r5/R79-AUDIT-CLOSURE-GATE-20261018.md)。完整闭包与实机继续NO-GO。

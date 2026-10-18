@@ -1,0 +1,13 @@
+test_both_undefined_formats_and_duplicates (test_g1_symbol_identity.SymbolIdentityTests.test_both_undefined_formats_and_duplicates) ... ok
+test_cpp_identity (test_g1_symbol_identity.SymbolIdentityTests.test_cpp_identity) ... ok
+test_defined_nm_and_diagnostics_fail_closed (test_g1_symbol_identity.SymbolIdentityTests.test_defined_nm_and_diagnostics_fail_closed) ... ok
+test_distinct_identifiers_never_merge (test_g1_symbol_identity.SymbolIdentityTests.test_distinct_identifiers_never_merge) ... ok
+test_failed_truncated_or_trailing_wrapped_inventory_rejected (test_g1_symbol_identity.SymbolIdentityTests.test_failed_truncated_or_trailing_wrapped_inventory_rejected) ... ok
+test_one_abi_prefix_only (test_g1_symbol_identity.SymbolIdentityTests.test_one_abi_prefix_only) ... ok
+test_runtime_and_iokit_heuristics_preserve_spelling (test_g1_symbol_identity.SymbolIdentityTests.test_runtime_and_iokit_heuristics_preserve_spelling) ... ok
+test_wrong_command_empty_or_unprefixed_rejected (test_g1_symbol_identity.SymbolIdentityTests.test_wrong_command_empty_or_unprefixed_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.001s
+
+OK

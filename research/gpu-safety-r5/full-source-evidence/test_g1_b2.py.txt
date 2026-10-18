@@ -1,0 +1,12 @@
+test_build263_needs_unpinned_host_inputs (__main__.BuildScripts.test_build263_needs_unpinned_host_inputs) ... ok
+test_plugin_is_one_translation_unit (__main__.BuildScripts.test_plugin_is_one_translation_unit) ... ok
+test_translator_and_plugin_build_from_local_trees (__main__.BuildScripts.test_translator_and_plugin_build_from_local_trees) ... ok
+test_translator_locks_and_license (__main__.BuildScripts.test_translator_locks_and_license) ... ok
+test_base_and_patch_format (__main__.MesaBase.test_base_and_patch_format) ... ok
+test_only_the_appended_hunk_is_off_position (__main__.MesaBase.test_only_the_appended_hunk_is_off_position) ... ok
+test_rm_headers_come_from_an_excluded_copy (__main__.MesaBase.test_rm_headers_come_from_an_excluded_copy) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.056s
+
+OK

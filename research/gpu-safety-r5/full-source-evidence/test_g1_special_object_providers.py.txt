@@ -1,0 +1,11 @@
+test_exact_export_spelling_not_substrings (test_g1_special_object_providers.SpecialObjectTests.test_exact_export_spelling_not_substrings) ... ok
+test_missing_and_failed_inputs_never_become_observed (test_g1_special_object_providers.SpecialObjectTests.test_missing_and_failed_inputs_never_become_observed) ... ok
+test_missing_manifest_or_wrong_pin_rejected (test_g1_special_object_providers.SpecialObjectTests.test_missing_manifest_or_wrong_pin_rejected) ... ok
+test_object_hash_source_hash_architecture_and_location (test_g1_special_object_providers.SpecialObjectTests.test_object_hash_source_hash_architecture_and_location) ... ok
+test_shared_object_observed_once_for_exact_exports_and_nm_failure (test_g1_special_object_providers.SpecialObjectTests.test_shared_object_observed_once_for_exact_exports_and_nm_failure) ... ok
+test_undefined_or_diagnostics_rejected (test_g1_special_object_providers.SpecialObjectTests.test_undefined_or_diagnostics_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.015s
+
+OK

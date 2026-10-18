@@ -19,7 +19,7 @@ concurrency:
 jobs:
   native-objects:
     runs-on: macos-15-intel
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
       WANT_XCODE: ${{ inputs.xcode }}
       NULLMOTH_PIN: ac55984c473e746c2a8ebea7ba0913461aa7c393
@@ -63,7 +63,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for test in test_index_definitions.py test_native_manifest.py test_text_diagnostics.py test_g1_rm_abi.py test_g1_symbol_identity.py test_g1_special_symbol_sources.py test_g1_special_object_providers.py; do
+          for test in test_index_definitions.py test_native_manifest.py test_text_diagnostics.py test_g1_rm_abi.py test_g1_symbol_identity.py test_g1_special_symbol_sources.py test_g1_special_object_providers.py test_g1_full_build.py; do
             python3 -m unittest discover -s tools -p "$test" -v
           done
           python3 tools/index-definitions.py "$RUNNER_TEMP/gpu-safety-r5-nv" \
@@ -87,6 +87,7 @@ jobs:
             --out "$RUNNER_TEMP/gpu-safety-r5-logs/r28-series"
 
       - name: Compile original and candidate full translation units (objects only)
+        id: native_compile
         shell: bash
         run: |
           set -euo pipefail
@@ -135,6 +136,18 @@ jobs:
             --definitions research/gpu-safety-r5/symbol-definitions.json \
             --logs "$RUNNER_TEMP/gpu-safety-r5-logs" \
             --out "$RUNNER_TEMP/gpu-safety-r5-logs/rm-abi"
+
+      - name: Attempt all official RM and modeset sources and complete candidate link
+        if: ${{ !cancelled() && steps.native_compile.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/g1_full_build.py \
+            --nv "$RUNNER_TEMP/gpu-safety-r5-nv" \
+            --candidate "$RUNNER_TEMP/nullmoth-v2.3.3-gpu-safety-r5-candidate" \
+            --native-logs "$RUNNER_TEMP/gpu-safety-r5-logs" \
+            --out "$RUNNER_TEMP/gpu-safety-r5-logs/full-source" --jobs 2 \
+            2>&1 | tee "$RUNNER_TEMP/gpu-safety-r5-logs/full-source-console.txt"
 
       - name: Prepare explicit text publication set
         id: text_publication

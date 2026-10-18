@@ -1,0 +1,70 @@
+{
+  "baseline": "b070bdef7cd7bcb5ba708d3630aff1996530e2f6",
+  "checks": [
+    {
+      "test": "test_index_definitions.py",
+      "exit": 0
+    },
+    {
+      "test": "test_native_manifest.py",
+      "exit": 0
+    },
+    {
+      "test": "test_text_diagnostics.py",
+      "exit": 0
+    },
+    {
+      "test": "test_g1_rm_abi.py",
+      "exit": 0
+    },
+    {
+      "test": "test_g1_symbol_identity.py",
+      "exit": 0
+    },
+    {
+      "test": "test_g1_special_symbol_sources.py",
+      "exit": 0
+    },
+    {
+      "test": "test_g1_special_object_providers.py",
+      "exit": 0
+    },
+    {
+      "test": "test_g1_full_build.py",
+      "exit": 0
+    },
+    {
+      "test": "test_g1_wp1.py",
+      "exit": 0
+    },
+    {
+      "test": "test_g1_fbclaim.py",
+      "exit": 0
+    },
+    {
+      "test": "test_g1_b2.py",
+      "exit": 0
+    },
+    {
+      "test": "historical 1055-command RM recipe parsed; AUTO_DEPEND tail removed in fixture only",
+      "exit": 0
+    }
+  ],
+  "tool_tests": 56,
+  "historical_regressions": {
+    "wp1": 10,
+    "fbclaim": 5,
+    "b2": 7
+  },
+  "manual_workflows": 17,
+  "official_sources": {
+    "nvidia": 1054,
+    "nvidia-modeset": 224
+  },
+  "generated_id_units": 2,
+  "shader_objects": 5,
+  "local_compilation": "NOT_RUN_WINDOWS",
+  "native_full_build": "NOT_YET_RUN",
+  "kext_load": "NO-GO",
+  "gpu_execution": false
+}

@@ -1,0 +1,14 @@
+test_baseline_requires_exact_sources_current_hashes_and_paths (test_g1_full_build.FullBuildTests.test_baseline_requires_exact_sources_current_hashes_and_paths) ... ok
+test_inventory_keeps_all_listed_directories_and_rejects_missing_input (test_g1_full_build.FullBuildTests.test_inventory_keeps_all_listed_directories_and_rejects_missing_input) ... ok
+test_missing_extra_duplicate_and_shell_compiles_rejected (test_g1_full_build.FullBuildTests.test_missing_extra_duplicate_and_shell_compiles_rejected) ... ok
+test_object_names_do_not_alias_same_basename (test_g1_full_build.FullBuildTests.test_object_names_do_not_alias_same_basename) ... ok
+test_official_plan_preserves_per_source_flags_and_quoted_macro (test_g1_full_build.FullBuildTests.test_official_plan_preserves_per_source_flags_and_quoted_macro) ... ok
+test_partial_failed_unhashed_or_duplicate_objects_cannot_archive (test_g1_full_build.FullBuildTests.test_partial_failed_unhashed_or_duplicate_objects_cannot_archive) ... ok
+test_shader_bytes_roundtrip_and_exact_symbols (test_g1_full_build.FullBuildTests.test_shader_bytes_roundtrip_and_exact_symbols) ... ok
+test_source_list_rejects_missing_duplicates_or_unknown_make_semantics (test_g1_full_build.FullBuildTests.test_source_list_rejects_missing_duplicates_or_unknown_make_semantics) ... ok
+test_wrong_macho_type_rejected (test_g1_full_build.FullBuildTests.test_wrong_macho_type_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.080s
+
+OK

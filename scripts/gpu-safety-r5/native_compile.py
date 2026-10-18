@@ -390,30 +390,11 @@ def main():
         probe_results.update(cand_probe)
         report["ogkm_probe"] = probe_results
 
-        # Failure-rate sample over the RM tree: every fifth .c under generated/ and kernel|core, compiled with
-        # the same configuration. Report-only; it answers "how much of RM can this toolchain even parse".
-        sample_files = []
-        for d in (probe_root / "src/nvidia/generated", probe_root / "src/nvidia/src/kernel",
-                  probe_root / "src/nvidia/src/core"):
-            if d.is_dir():
-                sample_files.extend(sorted(d.rglob("*.c"))[::5])
-        sample = {"attempted": 0, "compiled": 0, "failed": []}
-        sflags = [f for f in common_flags if f not in ("-std=c++17", "-fno-rtti", "-fno-exceptions")]
-        for sf in sample_files:
-            sample["attempted"] += 1
-            obj = object_destination(out.parent, "samp", sf.relative_to(probe_root))
-            log = out / (obj.stem + ".txt")
-            cmd = ["xcrun", "clang", "-x", "c", "-std=gnu11", *sflags, *definitions, "-DNVRM", *probe_inc,
-                   "-I" + str(sf.parent), "-I" + str(probe_root / "src/nvidia/generated"),
-                   "-c", str(sf), "-o", str(obj)]
-            rc = execute(cmd, probe_root, log)
-            if rc == 0:
-                sample["compiled"] += 1
-            else:
-                errs = [l for l in log.read_text(encoding="utf-8", errors="replace").splitlines()
-                        if "error:" in l][:2]
-                sample["failed"].append({"file": sf.name, "errors": errs})
-        report["rm_sample"] = sample
+        # The old every-fifth-source sample is superseded by the complete official
+        # source-list build in tools/g1_full_build.py, a separate workflow step.
+        # Do not turn its absent counts into a zero-failure or closure claim.
+        report["rm_sample"] = {"status": "SUPERSEDED_BY_COMPLETE_OFFICIAL_SOURCE_BUILD",
+                               "report": "full-source/report.json"}
 
         # Experiment: link the nine baseline units together with successful probe objects and measure how many of
         # the provider-less imports disappear. Report-only; the production artifact above is untouched.
