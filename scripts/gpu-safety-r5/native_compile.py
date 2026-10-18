@@ -284,7 +284,9 @@ def main():
                 compat_flags = ["-I" + str(compat), "-include", str(compat / "nv-darwin-compat.h")]
             # The gate takes its macros from the LINUX dry-run, so -DNV_LINUX is in there. A Darwin probe
             # must not claim to be Linux: drop it and keep the neutral NV_UNIX.
-            probe_defs = [d for d in definitions if d != "-DNV_LINUX"]
+            # nv_state_t lives inside #ifdef NVRM (src/.../unix/include/nv.h:266), and the gate strips
+            # -DNVRM from its own macro list. The probe puts it back and keeps the platform selector.
+            probe_defs = list(definitions) + ["-DNVRM"]
             cmd = ["xcrun", "clang", "-x", "c", "-std=gnu11", *c_flags, *probe_defs, *probe_inc,
                    *compat_flags, "-I" + str(srcp.parent), "-c", str(srcp), "-o", str(obj)]
             log = out / ("probe-" + rel.replace("/", "_") + ".txt")
