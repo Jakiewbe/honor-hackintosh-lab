@@ -1,3 +1,5 @@
+> **2026-10-18 接力入口：** 读取 [G1 构建闭包与 ABI 审计](../research/gpu-safety-r5/G1-CLOSURE-ABI-AUDIT-20261018.md)。先验收新的 `g1-probe-inventory.json`、五单元宏表/传递 include/真实对象定义，再扩展 RM/modeset 核心闭包并核对 Darwin ABI。不要重复“找不到 35 个定义”或已通过的五单元首次编译。用户已授权本任务相关 main 快进推送与 compile-only Actions；实机仍 NO-GO，不改 .agent。
+
 ## 2026-10-18 收尾交接（第 24 轮）
 
 ### 一条命令复现全部离线证据
@@ -273,3 +275,4 @@ R4 为 NVRMUserClient 外部方法分发、映射和关闭增加串行会话门�
 > **2026-10-13 附注**：另有用户授权的 1401 只读审计支线（D-16），其断点和续做方式在 [`logs/RESEARCH_LOG.md`](../logs/RESEARCH_LOG.md) 顶部，不影响下方 R1.4-C0 交接内容。用户未指定支线时，以下方主线为准。
 
 > 阅读根目录 AGENTS.md、knowledge/README.md、knowledge/02_CURRENT_STATE.md、knowledge/10_CODEX_HANDOFF.md 及所引原始文档。按 R1.4-C0 的 T0→T4 执行：先在 GitHub 核对既有成果避免重复，追溯 FreeBSD drm-kmod 6.1-lts 需要的 FreeBSD base/LinuxKPI 固定 commit，建立最小 Intel 8086:46A6 i915/eDP 的源/符号/许可证/接口依赖清单与 FAIL-CLOSED 检查。不得加载、安装或签名内核驱动，不触碰主力 Windows/EFI/BIOS，不自行启动 Actions，不写假成功 Stub。提交代码与报告，标明真实测试和未关闭阻塞，保持 RUNTIME_NO_GO。
+

@@ -68,6 +68,15 @@ jobs:
             --assets research/gpu-safety-r5 --out "$RUNNER_TEMP/gpu-safety-r5-logs" \
             2>&1 | tee "$RUNNER_TEMP/gpu-safety-r5-logs/probe.txt"
 
+      - name: Audit probe preprocessor configuration and actual object providers
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/g1_probe_inventory.py \
+            --nv "$RUNNER_TEMP/gpu-safety-r5-nv" \
+            --logs "$RUNNER_TEMP/gpu-safety-r5-logs" \
+            --definitions research/gpu-safety-r5/symbol-definitions.json
+
       - name: Upload text diagnostics only
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
@@ -82,8 +91,9 @@ jobs:
         shell: bash
         run: |
           {
-            echo '## GPU safety R5 鈥?candidate object compilation only'
+            echo '## GPU safety: native objects and candidate links; runtime NO-GO'
             echo '- Source tag ac55984 is not claimed to reproduce the v2.3.3 released driver.'
-            echo '- No kext link, signing, installation, loading, device access or binary upload.'
+            echo '- Objects and candidate kext links only; no signing, installation, loading, device access or binary upload.'
             echo '- Kernel/private family ABI, headless memory owner, mapping lifetime and GPU runtime remain BLOCKED.'
           } >> "$GITHUB_STEP_SUMMARY"
+

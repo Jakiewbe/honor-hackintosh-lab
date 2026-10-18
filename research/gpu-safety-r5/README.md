@@ -1,3 +1,5 @@
+> **2026-10-18 当前 G1 断点：构建闭包与 ABI。** 已定位的公开提供者仍需传递依赖与布局核验；不能以旧 R13/R48 文档认定源码缺失或必须转实机。见 [逐符号审计与下一步](G1-CLOSURE-ABI-AUDIT-20261018.md)。本轮新增 35 符号依赖表、跨三个 TU 的 altstack/NULL 栈条件风险证据及精确原生预处理/对象提供者采集入口；新增原生取证尚未运行。P0-1/P0-4 仍开放，KEXT-LOAD NO-GO。
+
 # GPU 主线 R5–R7：关闭路径、回收者与初始化回滚
 
 状态：**SOURCE-REVIEW + HOST-TEST + PATCH-APPLIED 已达成；DARWIN-COMPILE / KEXT-LINK 未运行；KEXT-LOAD 及 GPU/内屏加速 NO-GO。**
@@ -387,3 +389,4 @@ R7 只处理了 `kapiInit()` 内部失败。R8 把同一件事做成可复用的
 
 已知遗留：`super::start()` 在 `kapiInit` 成功后失败、以及最后一个 framebuffer 停止 / kext 卸载时的
 对称销毁仍缺（F5b）；共享 Device 的"最后使用者"判定尚未定义。
+

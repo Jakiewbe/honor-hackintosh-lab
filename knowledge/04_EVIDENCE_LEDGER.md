@@ -1,3 +1,5 @@
+> **2026-10-18 新增 SOURCE-LEXICAL 证据：** [35 符号依赖及 RM 栈 ABI 审计](../research/gpu-safety-r5/G1-CLOSURE-ABI-AUDIT-20261018.md)，含全部词法命中、固定输入哈希、71 个 Darwin 源 blob 核验和七项工具回归。旧 run [39090712869](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39090712869) 的五单元编译/混合链接已以 artifact `12123001015` 的 SHA256 绑定复核；不是新的构建通过。新增精确预处理/对象提供者取证尚未运行。无实机证据。
+
 | R8–R12 设备生命周期 | HOST-TEST / SOURCE-STRUCTURE | 22/22、36/36（两源文件各自期望值） | `research/gpu-safety-r5/README.md` |
 | R10 生产文件修正 | DARWIN-COMPILE | 16/16 对象（含生产 NVRMFB 与遗留副本），告警零增量 | run 39050580870 |
 | R11 孤儿回收 | DARWIN-COMPILE | NVRMFB kext 311376 B / 174 导出 | run 39051079369 |
@@ -159,3 +161,4 @@ R4 为 NVRMUserClient 外部方法分发、映射和关闭增加串行会话门�
 
 ## 2026-10-13 C0-pre选表-e修订
 同一ACPICA20250404/包20250404-1，无网络非root无宿主挂载容器。第一选择2通过14失败，精确新对象为DSDT/SSDT9的I2C0.TPD0._PS0/_PS3；仅改变两组内代表后16通过0失败。每目标13外部表及两项排除见selected-external-runs.json；原16张表全部仍作目标且不改。38项findings，NV/Igfx方法体未变，TCSS新增PCIC(1)/PCID(4)声明。DSDT外部方法警告及EDMX UnknownObj不因退出0消失；仅SOURCE-STATIC，RUNTIME_NO_GO。原调查目录/workflows不变，没有执行AML或硬件操作。
+

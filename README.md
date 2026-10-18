@@ -1,3 +1,5 @@
+> **2026-10-18 当前 G1 断点：构建闭包与 ABI。** 已定位的公开提供者仍需传递依赖与布局核验；不能以旧 R13/R48 文档认定源码缺失或必须转实机。见 [逐符号审计与下一步](research/gpu-safety-r5/G1-CLOSURE-ABI-AUDIT-20261018.md)。本轮新增 35 符号依赖表、跨三个 TU 的 altstack/NULL 栈条件风险证据及精确原生预处理/对象提供者采集入口；新增原生取证尚未运行。P0-1/P0-4 仍开放，KEXT-LOAD NO-GO。
+
 > **当前有效任务优先级（2026-10-17）：GPU P0。** 用户明确恢复 RTX 2050 的 NVRM/GSP、真实渲染/读回与安全关闭研发；外设暂缓，Intel 内屏保持现状。下方 H4 冻结的段落仅保留为历史。R4 `7c9f50d` 的 C++ 弃用警告处理尚无新 macOS runner 结果。详见 [R4 PM/KAPI owner 审计](research/gpu-safety-20261017/PM-R4-REVIEW-20261017.zh-CN.md)。
 
 # 最新交付：GPU 源码候选 R4（2026-10-17）
@@ -235,3 +237,4 @@ The NVIDIA and Intel graphics bridge remains experimental. PCI device IDs in a s
 A source-level audit of [NullMoth 1401 v1.14.2](https://github.com/nullmoth/1401/tree/46d9fee308bbb8e373807d59773823e6a93c1f63) and [nvidia-macos-driver v1.14.2](https://github.com/nullmoth/nvidia-macos-driver/tree/1083a98db33a0bb824290556de255f9a95ca5403) against this laptop: [initial audit report](reports/INITIAL_AUDIT.md), [hardware facts](research/HARDWARE.md), [sources](research/SOURCES.md), [compatibility matrix](research/COMPATIBILITY.md), [risks](research/RISK_ASSESSMENT.md), [open questions](research/OPEN_QUESTIONS.md), [research log](logs/RESEARCH_LOG.md).
 
 Key finding: the RTX 2050 is a PCI 3D controller (class `0x0302`) with no display sources, and the panel is on Intel 46A6, which macOS cannot accelerate. 1401 still marks `10DE:25A9` as macOS 15 capable because the ID is in NVIDIA's table (never hardware-tested), while emitting contradictory panel notes. No 1401 binary was run, no EFI was generated, nothing was written to disks or firmware.
+

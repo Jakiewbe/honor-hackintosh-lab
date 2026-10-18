@@ -1,3 +1,5 @@
+> **2026-10-18 当前 GPU 断点更新：构建闭包与跨平台 ABI。** 42 个原“无提供者导入”均已有候选公开定义，不能再按 R13/R48 旧文称源码缺失或静态研发到顶。新逐符号审计确认 35 个 OGKM 目标位于 5 个 TU，20 个 runtime 宏使用者跨 3 个 TU；固定 NullMoth 基线对其有 31 处 NULL 栈调用。是否启用 altstack 待精确预处理取证。详见 [当前审计与下一断点](../research/gpu-safety-r5/G1-CLOSURE-ABI-AUDIT-20261018.md)。五单元旧编译已用实际 artifact digest 复核；新增宏/对象提供者采集尚未运行。P0-1/P0-4 仍 BLOCKED/OPEN，KEXT-LOAD NO-GO。下方历史“不可重建/源码已到顶/风险只在一个文件”等表述不作为当前结论。
+
 > **复现手册（2026-10-18）**：[REPRODUCTION-20261018.md](../research/gpu-safety-r5/REPRODUCTION-20261018.md)
 > 把 R1–R20 按主题分组，列出每个补丁依赖的上游形状与「脆弱锚点」（两个以上补丁共用的标识符），
 > 上游一改就知道哪几个补丁会失效。表格由补丁本身解析生成，不是手写。
@@ -212,3 +214,4 @@ R4 为 NVRMUserClient 外部方法分发、映射和关闭增加串行会话门�
 
 ## R1.4-C0-pre（SOURCE-STATIC）
 [原表静态证据](../research/acpi-static-20261012/README.md)：36表校验通过；同一iasl20250404选择外部代表逐表16通过0失败；历史失败日志保留。38项findings有定位；两组重复对应空闲PEG1和蓝牙HS10，与MUX/内屏/OpRegion无关。DSDT外部方法警告与EDMX UnknownObj仍保留；NVS/OpRegion内容未取得，RUNTIME_NO_GO。
+
