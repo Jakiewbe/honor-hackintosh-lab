@@ -530,3 +530,56 @@ vport 的 Darwin inline 实现），否则编译无法越过 135/988。
 
 这是**静态引用统计**，不是"实现了就能编过"的承诺：原语的**语义**（非分页内存、睡眠上下文、
 锁的可睡眠性）才是移植的真正难点，统计只能给出规模。
+
+## 五十二、87 个原语的 Darwin 映射分档（R101）
+
+把覆盖 90% 引用的 87 个原语按"移植难度"分三档：
+
+| 档 | 含义 | 标识符 | 引用数 | 占比 |
+|---|---|---|---|---|
+| **A 直接映射** | 有现成 Darwin 等价物 | 10 | 3,694 | **48.9%** |
+| **B 需适配** | 概念对应但要实现 | 66 | 2,539 | 33.6% |
+| **C 语义冲突** | 语义不同，需设计决策 | 11 | 1,320 | 17.5% |
+
+### A 档（10 个，占近一半引用）
+
+portMemSet、portMemCopy、portMemCmp、portStringCopy/Length/Compare、
+PORT_UNREFERENCED_VARIABLE、PORT_ASSERT_CHECKED、PORT_BREAKPOINT_DEBUG/CHECKED
+
+→ 这些是 memset/memcpy/memcmp/strlcpy/strlen 与空宏，**无语义风险**。
+
+### B 档（66 个，约三分之一引用）
+
+portMemFree、PORT_MEM_ALLOCATOR_TRACKING、PORT_MEM_HEADER、PORT_MEM_TRACK_USE_LIMIT、
+spinlock / rwlock / mutex 的 create-acquire-release-destroy（约 15 个）、PORT_ATOMIC 与
+portAtomicIncrement/Decrement、portSafeAddU32/U64、portUtilCountTrailingZeros32/64、
+PORT_SPINLOCK、PORT_RWLOCK 等。
+
+→ 概念上都能对应到 lck_spin / IORWLock / IOLock / C11 原子，但**实现必须自己写**，
+且跟踪/统计类宏（PORT_MEM_*_TRACKING）与计数语义相关，不能简单置空。
+
+### C 档（11 个，最容易出事的部分）
+
+| 原语 | 冲突点 |
+|---|---|
+| portMemAllocNonPaged / portMemAllocPaged | "非分页"在 Darwin 上没有直接等价物；IOMalloc 的内存可能可分页，需 IOMallocContiguous/wired 才能保证不在缺页时阻塞 |
+| PORT_MEM_ALLOCATOR / portMemGlobals / portMemAllocatorGetGlobalNonPaged | 分配器对象模型需在 Darwin 上重建 |
+| PORT_ALLOC / PORT_FREE | 宏背后依赖分配器语义 |
+| PORT_CPU_CPUID_FEATURE_GET_BIT | x86 CPUID 特性位，Darwin 需 cpuid 指令封装 |
+| portDbgPrintf | 映射到 IOLog/kprintf，但**在中断上下文调用**是风险 |
+| portThreadGetCurrentThreadId | Darwin 的 current_thread() 语义不同 |
+| portTimeGetUptimeNanoseconds | mach_absolute_time 转换 |
+
+## 这套分档给出的判断
+
+- **近一半引用（48.9%）是零风险的直接映射**；
+- 三分之一是"能写但要小心"的同步/原子；
+- **真正需要设计决策的只有 11 个**，且集中在**内存语义**（非分页 → wired）上。
+
+这比"392 个原语要写"要清楚得多，也比"988 个 TU 编不过"更有指向性：
+**Darwin 端口层的核心难点是一个问题——如何提供不可分页的内核内存并保证分配器语义**。
+
+## 边界
+
+分档基于名称与常见语义判断，**未逐个核对每个原语在 RM 中的调用上下文**；
+portMemFree 归入 B 档而非 A，是因为它必须与 A 档的分配器配对，不能各自映射。
