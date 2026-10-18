@@ -1,0 +1,131 @@
+{
+  "schema": "honor.g1.full-abi-native-result.v1",
+  "source_head": "0308ed4f93cba2bfa7ddccf6c1dc0bf08f3e63b2",
+  "run_id": 39122635883,
+  "job_id": 117661164012,
+  "workflow_conclusion": "success",
+  "artifact_id": 12135031774,
+  "artifact_zip_sha256": "7a54d6c84d929851423e056d6dd0751089b5dfbaa51e06833ab9e08fece94e6c",
+  "full_source_report_sha256": "d7bb41dd1a1ab9a7240d14e3e0b1b58aded964a0f2f755c7c86ef67a793f2541",
+  "abi_report_sha256": "5f703d8d6cca94feade502ada04bff8de960398fd8dfb4ba610a7de0d7315895",
+  "result": "OBSERVED_SELECTED_FULL_FLAGS_CONTRACT_MATCH",
+  "full_abi_acceptance": "NOT_ESTABLISHED",
+  "profiles": 6,
+  "compared_layout_values": 136,
+  "boundary_symbols": 20,
+  "runtime_provider_definitions": 20,
+  "altstack_profiles_defined": 0,
+  "literal_null_lexical_occurrences": 31,
+  "complete_source_objects": 1285,
+  "darwin_addon_objects": 1,
+  "archives": [
+    {
+      "component": "nvidia",
+      "objects": 1055,
+      "sha256": "5ee8930a81308cb8f342c78740540d994d6cfd21ad0d9587b8c141ecc9e2575c"
+    },
+    {
+      "component": "nvidia-modeset",
+      "objects": 230,
+      "sha256": "800d7baf0c343b094bbf6202ab9cf5ef1e5eaec4af53ca5099d6486c27febb33"
+    }
+  ],
+  "candidate_sha256": "bbde79f1601ee7bc89bcef04f48dc45276d39f9dec9e3f8bbed456f157c1e1d3",
+  "remaining_imports": 472,
+  "target_exports_abi": "UNKNOWN_NOT_VERIFIED",
+  "local_verification": "text ZIP digest, source hashes, compile logs, raw IR/macros and contract recomputation; binary objects retained only in CI",
+  "preserved_text": [
+    {
+      "path": "full-flags-abi/full-abi-report.json",
+      "sha256": "5f703d8d6cca94feade502ada04bff8de960398fd8dfb4ba610a7de0d7315895"
+    },
+    {
+      "path": "full-flags-abi/source-inputs.json",
+      "sha256": "bedb352220cb43d29fa40e40114e910af0abfe003cd646df3e53c9f48dc6cfe2"
+    },
+    {
+      "path": "toolchain.txt",
+      "sha256": "aff4193a2f0b029c8c6f412fcfb2db84f72922ac99a94311a05671c17b1d5143"
+    },
+    {
+      "path": "full-source/full-nvrm-undefined.txt",
+      "sha256": "0691e92bc5ef4ce537668c89a0c7b0c71238990aaeafc1c60125293e59fb9dc8"
+    },
+    {
+      "path": "full-flags-abi/full-src_nvidia_arch_nvalloc_unix_src_unix_intr.c-ir.stderr.txt",
+      "sha256": "a250c9f91dd21dbd4f699b8b718b0fbcc8fb283e9b9eeeac3de80f6b0c58bb5d"
+    },
+    {
+      "path": "full-flags-abi/full-src_nvidia_arch_nvalloc_unix_src_unix_intr.c-macros.stderr.txt",
+      "sha256": "0201e02f98d51a8c3cd0cdf215e39ff21b8b7a366adb14d507f32927e3116736"
+    },
+    {
+      "path": "full-source/nvidia-unix_intr-4ef6a89328d65362.txt",
+      "sha256": "700bc7a0aa6371d8693d809013e48bebba0eeca1ae2ede5ed1e7704e77b68aa5"
+    },
+    {
+      "path": "full-flags-abi/full-src_nvidia_arch_nvalloc_unix_src_osapi.c-ir.stderr.txt",
+      "sha256": "bff75b1ea2dd8f99ed6aa5a9679b7317def0153eb2039de051baa35109566fb3"
+    },
+    {
+      "path": "full-flags-abi/full-src_nvidia_arch_nvalloc_unix_src_osapi.c-macros.stderr.txt",
+      "sha256": "7867fa4000e70b1b0fb49840338b617e913fb8757f101348055f781c71af26ff"
+    },
+    {
+      "path": "full-source/nvidia-osapi-f217437223c54c37.txt",
+      "sha256": "62319e343b6ef1aafcee8b49383525fdbe5545460b33d6439c5d8323d82c4161"
+    },
+    {
+      "path": "full-flags-abi/full-src_nvidia_arch_nvalloc_unix_src_dynamic-power.c-ir.stderr.txt",
+      "sha256": "93c3ccf711d6d10e61bd7fbec57aad0e4b9b7eeacb547bfe7434bc46e92fd7c1"
+    },
+    {
+      "path": "full-flags-abi/full-src_nvidia_arch_nvalloc_unix_src_dynamic-power.c-macros.stderr.txt",
+      "sha256": "f386260174d4f7333c4d707acd336c2ceb66c7ec63576c24ae6ad4524152d549"
+    },
+    {
+      "path": "full-source/nvidia-dynamic-power-2aca2a16d99aa8c8.txt",
+      "sha256": "d0ca57b64a5b24690b62b5d8d54c07f7da120fdc96a29ab52f1477c0bd68f544"
+    },
+    {
+      "path": "full-flags-abi/uni-NVRM_cpp-ir.stderr.txt",
+      "sha256": "052bbfbfd55574c2ee99264b686a55dcd6b5b1c225251c1bd9c19fb418e34ea2"
+    },
+    {
+      "path": "full-flags-abi/uni-NVRM_cpp-macros.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "uni-NVRM_cpp.txt",
+      "sha256": "893ab3808b07a35748f5f144778d812d7003dfb827a7c93ebbb305da794e40e1"
+    },
+    {
+      "path": "full-flags-abi/uni-os-nvkms-xnu_cpp-ir.stderr.txt",
+      "sha256": "dce0cfed6fef2942fed61d1fcf793d00197585e73bff033e2f575789fff576d1"
+    },
+    {
+      "path": "full-flags-abi/uni-os-nvkms-xnu_cpp-macros.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "uni-os-nvkms-xnu_cpp.txt",
+      "sha256": "29ad979f9a880e4d9f047de965c4e7548b03a5c124333673d11612ad71c5c5e0"
+    },
+    {
+      "path": "full-flags-abi/uni-os-xnu2_cpp-ir.stderr.txt",
+      "sha256": "0a8f0c679a9fcd75c9174bf26a2cc64bfc6146565be76cea1598896a41902fce"
+    },
+    {
+      "path": "full-flags-abi/uni-os-xnu2_cpp-macros.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "uni-os-xnu2_cpp.txt",
+      "sha256": "933e732e865116fee22fd4c42ff0c3348d21db6a795cd53b7321ccb4b990974d"
+    }
+  ],
+  "kext_load": "NO-GO",
+  "gpu_initialization": "NOT_RUN",
+  "gpu_render": "NOT_RUN",
+  "pixel_readback": "NOT_RUN"
+}

@@ -1,0 +1,64 @@
+ARGV=["xcrun", "clang", "-Wall", "-fno-strict-aliasing", "-fno-omit-frame-pointer", "-Wformat=2", "-Wno-unused-parameter", "-O2", "-DNV_UNIX", "-DNV_LINUX", "-DNV_X86_64", "-DNV_ARCH_BITS=64", "-include", "../common/sdk/nvidia/inc/cpuopsys.h", "-I", "kernel/inc", "-I", "interface", "-I", "../common/sdk/nvidia/inc", "-I", "../common/sdk/nvidia/inc/hw", "-I", "arch/nvalloc/common/inc", "-I", "arch/nvalloc/common/inc/gsp", "-I", "arch/nvalloc/common/inc/deprecated", "-I", "arch/nvalloc/unix/include", "-I", "inc", "-I", "inc/os", "-I", "../common/shared/inc", "-I", "../common/inc", "-I", "../common/uproc/os/libos-v2.0.0/include", "-I", "../common/uproc/os/common/include", "-I", "../common/inc/swref", "-I", "../common/inc/swref/published", "-I", "generated", "-I", "../common/nvswitch/kernel/inc", "-I", "../common/nvswitch/interface", "-I", "../common/nvswitch/common/inc/", "-I", "../common/inc/displayport", "-I", "../common/nvlink/interface/", "-I", "../common/nvlink/inband/interface", "-I", "src/mm/uvm/interface", "-I", "inc/libraries", "-I", "src/libraries", "-I", "inc/kernel", "-I", "../common/mbedtls/3.6.2/include", "-I", "../common/mbedtls/3.6.2/nvidia", "-DMBEDTLS_USER_CONFIG_FILE=<nvrm_mbedtls_config.h>", "-Werror-implicit-function-declaration", "-Wwrite-strings", "-Wundef", "-fno-common", "-ffreestanding", "-fno-stack-protector", "-msoft-float", "-mno-red-zone", "-mcmodel=kernel", "-mno-mmx", "-mno-sse", "-mno-sse2", "-mno-3dnow", "-fno-pic", "-D_LANGUAGE_C", "-D__NO_CTYPE", "-DNVRM", "-DLOCK_VAL_ENABLED=0", "-DPORT_ATOMIC_64_BIT_SUPPORTED=1", "-DPORT_IS_KERNEL_BUILD=1", "-DPORT_IS_CHECKED_BUILD=0", "-DPORT_MODULE_atomic=1", "-DPORT_MODULE_core=1", "-DPORT_MODULE_cpu=1", "-DPORT_MODULE_crypto=1", "-DPORT_MODULE_debug=1", "-DPORT_MODULE_memory=1", "-DPORT_MODULE_safe=1", "-DPORT_MODULE_string=1", "-DPORT_MODULE_sync=1", "-DPORT_MODULE_thread=1", "-DPORT_MODULE_time=1", "-DPORT_MODULE_util=1", "-DPORT_MODULE_example=0", "-DPORT_MODULE_mmio=0", "-DRS_STANDALONE=0", "-DRS_STANDALONE_TEST=0", "-DRS_COMPATABILITY_MODE=1", "-DRS_PROVIDES_API_STATE=0", "-DNV_CONTAINERS_NO_TEMPLATES", "-DINCLUDE_NVLINK_LIB", "-DINCLUDE_NVSWITCH_LIB", "-DNV_PRINTF_STRINGS_ALLOWED=1", "-DNV_ASSERT_FAILED_USES_STRINGS=1", "-DPORT_ASSERT_FAILED_USES_STRINGS=1", "-ffunction-sections", "-fdata-sections", "-fcf-protection=branch", "-fno-jump-tables", "-Wstrict-prototypes", "-Wold-style-definition", "-Wno-format-zero-length", "--std=gnu11", "-arch", "x86_64", "-mmacosx-version-min=15.5", "-isysroot", "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk", "-fapple-kext", "-mkernel", "-nostdinc", "-I/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers", "-DKERNEL", "-DKERNEL_PRIVATE", "-DDRIVER_PRIVATE", "-DAPPLE", "-DNeXT", "-c", "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/src/unix_intr.c", "-o", "/Users/runner/work/_temp/gpu-safety-r5-logs/full-source/objects/nvidia-unix_intr-4ef6a89328d65362.o"]
+warning: ignoring -fapple-kext which is valid for C++ and Objective-C++ only
+In file included from /Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/src/unix_intr.c:24:
+In file included from arch/nvalloc/unix/include/nv.h:44:
+In file included from arch/nvalloc/unix/include/nv-ioctl.h:29:
+In file included from arch/nvalloc/unix/include/nv-ioctl-numa.h:36:
+In file included from /Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/stdint.h:19:
+In file included from /Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/machine/types.h:35:
+In file included from /Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/i386/types.h:74:
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:967:16: warning: 'BOUND_CHECKS' is not defined, evaluates to 0 [-Wundef]
+  967 | #if KERNEL && !BOUND_CHECKS && !__has_ptrcheck
+      |                ^
+In file included from /Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/src/unix_intr.c:24:
+In file included from arch/nvalloc/unix/include/nv.h:50:
+In file included from inc/libraries/nvport/nvport.h:217:
+In file included from inc/libraries/nvport/util.h:270:
+In file included from inc/libraries/nvport/inline/util_generic.h:184:
+inc/libraries/nvport/inline/util_gcc_clang.h:111:12: warning: implicit conversion changes signedness: 'int' to 'NvU32' (aka 'unsigned int') [-Wsign-conversion]
+  111 |     return __builtin_clzll(n);
+      |     ~~~~~~ ^~~~~~~~~~~~~~~~~~
+inc/libraries/nvport/inline/util_gcc_clang.h:118:12: warning: implicit conversion changes signedness: 'int' to 'NvU32' (aka 'unsigned int') [-Wsign-conversion]
+  118 |     return __builtin_clz(n);
+      |     ~~~~~~ ^~~~~~~~~~~~~~~~
+inc/libraries/nvport/inline/util_gcc_clang.h:127:12: warning: implicit conversion changes signedness: 'int' to 'NvU32' (aka 'unsigned int') [-Wsign-conversion]
+  127 |     return __builtin_ctzll(n);
+      |     ~~~~~~ ^~~~~~~~~~~~~~~~~~
+inc/libraries/nvport/inline/util_gcc_clang.h:134:12: warning: implicit conversion changes signedness: 'int' to 'NvU32' (aka 'unsigned int') [-Wsign-conversion]
+  134 |     return __builtin_ctz(n);
+      |     ~~~~~~ ^~~~~~~~~~~~~~~~
+In file included from /Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/src/unix_intr.c:32:
+In file included from inc/kernel/gpu/bif/kernel_bif.h:2:
+generated/g_kernel_bif_nvoc.h:1898:13: warning: implicit conversion loses integer precision: 'unsigned int' to 'NvBool' (aka 'unsigned char') [-Wimplicit-int-conversion]
+ 1898 |     return (REF_VAL(BIF_DMA_CAPS_SNOOP, kbifGetDmaCaps(pGpu, pKernelBif)));
+      |     ~~~~~~  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../common/sdk/nvidia/inc/nvmisc.h:337:57: note: expanded from macro 'REF_VAL'
+  337 | #define REF_VAL(drf,v)            (((v)>>DRF_SHIFT(drf))&DRF_MASK(drf))
+      |                                    ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~
+In file included from /Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/src/unix_intr.c:33:
+In file included from inc/kernel/gpu/mmu/kern_gmmu.h:2:
+In file included from generated/g_kern_gmmu_nvoc.h:60:
+In file included from inc/libraries/mmu/gmmu_fmt.h:78:
+inc/libraries/field_desc.h:234:11: warning: variable 'aggregate_mask' set but not used [-Wunused-but-set-variable]
+  234 |     NvU32 aggregate_mask = 0;
+      |           ^
+In file included from /Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/src/unix_intr.c:33:
+In file included from inc/kernel/gpu/mmu/kern_gmmu.h:2:
+generated/g_kern_gmmu_nvoc.h:2583:12: warning: implicit conversion changes signedness: 'int' to 'NvU32' (aka 'unsigned int') [-Wsign-conversion]
+ 2583 |     return -1;
+      |     ~~~~~~ ^~
+generated/g_kern_gmmu_nvoc.h:2588:12: warning: implicit conversion changes signedness: 'int' to 'NvU32' (aka 'unsigned int') [-Wsign-conversion]
+ 2588 |     return -1;
+      |     ~~~~~~ ^~
+generated/g_kern_gmmu_nvoc.h:2795:12: warning: implicit conversion changes signedness: 'int' to 'NvU32' (aka 'unsigned int') [-Wsign-conversion]
+ 2795 |     return -1;
+      |     ~~~~~~ ^~
+/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/src/unix_intr.c:265:28: warning: declaration shadows a local variable [-Wshadow]
+  265 |             KernelDisplay *pKernelDisplay = GPU_GET_KERNEL_DISPLAY(pGpu);
+      |                            ^
+/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/src/unix_intr.c:179:22: note: previous declaration is here
+  179 |     KernelDisplay   *pKernelDisplay;
+      |                      ^
+12 warnings generated.
+
+EXIT=0

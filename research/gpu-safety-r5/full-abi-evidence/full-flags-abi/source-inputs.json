@@ -1,0 +1,634 @@
+{
+  "scope": "all C/C++/headers under candidate kexts/NVRM; three fixed RM TU definition bodies",
+  "manifest": [
+    {
+      "path": "kexts/NVRM/NVRM.cpp",
+      "sha256": "206c277f15c36d78d02d2e4c823c54991a3e92f3a6f6ae53d299d614695bd6a2"
+    },
+    {
+      "path": "kexts/NVRM/accel/frame_copy_checked.h",
+      "sha256": "625ccca2aa0b2f440fc94e2fdfeec5a90a9ec762081c3378e866b986d99d65be"
+    },
+    {
+      "path": "kexts/NVRM/accel/iofam/IOAccel2DContext2.h",
+      "sha256": "4195443553bd9772b222b293fac24a126f64521dba44084c1d0102f543fbe359"
+    },
+    {
+      "path": "kexts/NVRM/accel/iofam/IOAccelCLContext2.h",
+      "sha256": "cf43a33bc00a802b584189bcd0a2ff5f139efbb9a4566478d7b52948aefc4899"
+    },
+    {
+      "path": "kexts/NVRM/accel/iofam/IOAccelContext2.h",
+      "sha256": "d4d12e3828f499fb1a209c1b079effecb24c3aaab76616f07b007e0e0f7347b5"
+    },
+    {
+      "path": "kexts/NVRM/accel/iofam/IOAccelDisplayMachine.h",
+      "sha256": "2ecf13724bee37ce7438be754c6130d9ef53f7754e05c6da8f25c54ae3d5e973"
+    },
+    {
+      "path": "kexts/NVRM/accel/iofam/IOAccelDisplayPipe.h",
+      "sha256": "2b3408e07b7bb09dc42bd6acb7098f13b54658a08ab88739fd7cf0383b740c45"
+    },
+    {
+      "path": "kexts/NVRM/accel/iofam/IOAccelEventMachine2.h",
+      "sha256": "46708bbe43efbd53027658ac313d1404d811fc3d1e8342c76401963f41aa0726"
+    },
+    {
+      "path": "kexts/NVRM/accel/iofam/IOAccelEventMachineFast2.h",
+      "sha256": "9c66d93efb93cf1a7a7cf6bbf1b7044335529ebccf96fcf1596236b3e7c50469"
+    },
+    {
+      "path": "kexts/NVRM/accel/iofam/IOAccelGLContext2.h",
+      "sha256": "f9ab02cd67a17a5be4e2494655d1275b5ffe4519006e256c21a51d4341470217"
+    },
+    {
+      "path": "kexts/NVRM/accel/iofam/IOAccelLegacyDisplayMachine.h",
+      "sha256": "c3efc352470c524acb458542189d11ae5892b878ec3e608b287191ca4634fc84"
+    },
+    {
+      "path": "kexts/NVRM/accel/iofam/IOAccelLegacyDisplayPipe.h",
+      "sha256": "b8e5ffe6e78c38f8d0bb2a16b63963978c6a8ab0ce7ea95b03de96fe3a49b182"
+    },
+    {
+      "path": "kexts/NVRM/accel/iofam/IOAccelLegacySurface.h",
+      "sha256": "5e302a8c0e59d387dff2ffd966f66cafb5f00677721f873562b97996c835da91"
+    },
+    {
+      "path": "kexts/NVRM/accel/iofam/IOAccelMemory.h",
+      "sha256": "7975dc97b22ba40182fa799ee287450eb991183e378230a8892135a7cb28f30f"
+    },
+    {
+      "path": "kexts/NVRM/accel/iofam/IOAccelMemoryMap.h",
+      "sha256": "1be8c4796d40a9de2c6139662be7bc525fbe11b1b885ed0f6cd2cca84486df3d"
+    },
+    {
+      "path": "kexts/NVRM/accel/iofam/IOAccelResource2.h",
+      "sha256": "c52ec4f4e8e73c79323bb59bed734c22fcbe58930fdae4fdd8f7d8a4c95585b3"
+    },
+    {
+      "path": "kexts/NVRM/accel/iofam/IOAccelShared2.h",
+      "sha256": "f554613703890de1252e3710362cd3a8b643a82c66b8dacebe062a6a52bddc50"
+    },
+    {
+      "path": "kexts/NVRM/accel/iofam/IOAccelSubmitter2.h",
+      "sha256": "c959b8fdf4d6ad18509b3b209e63e1e55c28f6672c456511f4873da209c4b53f"
+    },
+    {
+      "path": "kexts/NVRM/accel/iofam/IOAccelSurface.h",
+      "sha256": "e8611c5d7149ca087dd23a243d231dd03ac6b75fd1a4ddbdb0c4fb44ae64d510"
+    },
+    {
+      "path": "kexts/NVRM/accel/iofam/IOAccelSysMemory.h",
+      "sha256": "9e738319d4df5ec9dd75bc6f61f5f52e476c86a6d468e5fe65ea1e4b2ab1c2fb"
+    },
+    {
+      "path": "kexts/NVRM/accel/iofam/IOAccelTask.h",
+      "sha256": "7626e7c7cbfa03002b379031a9be6aa21d6407aab9f70e8c3132150a0dbcf44a"
+    },
+    {
+      "path": "kexts/NVRM/accel/iofam/IOAccelVidMemory.h",
+      "sha256": "5b7ef999f334a3a47f12d99e5a9814db6cc872c0a4c5c130c65ff7bef639361b"
+    },
+    {
+      "path": "kexts/NVRM/accel/iofam/IOAccelVideoContext2.h",
+      "sha256": "5606fbcd000e12cfdc5977c0eaa191742136664f80b3ad1187fd22ef3da1ce64"
+    },
+    {
+      "path": "kexts/NVRM/accel/iofam/iofam_types.h",
+      "sha256": "8bf26aa669b858a895740df074cb5837437c5709e367ab7a20b3c239e1617084"
+    },
+    {
+      "path": "kexts/NVRM/accel/nvaccel_stubs.h",
+      "sha256": "d646a2a72a8882cb64fe1e59853e65f1b7c8639a240fe9f6bdbcb9716dea66ff"
+    },
+    {
+      "path": "kexts/NVRM/accel/nvrm-accel.cpp",
+      "sha256": "46522de7f9028fbba90f34850ca786ca2127efa0688ed99ce3bf93a7fe29fc7b"
+    },
+    {
+      "path": "kexts/NVRM/accel/re/IOAccelDevice2.h",
+      "sha256": "fc50ce9316c42628c27190623c3090114ac104b9bb4956602d4003c3e7cc014c"
+    },
+    {
+      "path": "kexts/NVRM/accel/re/IOAccelSharedUserClient2.h",
+      "sha256": "29ab4008ee71578a697835fa0404affff0e8fb47aadb396f80375d42824f751b"
+    },
+    {
+      "path": "kexts/NVRM/accel/re/IOAccelerator.h",
+      "sha256": "a11214e09988bf32ce92d259acf059ae4de44b2e90fd938ffb2c683f69175126"
+    },
+    {
+      "path": "kexts/NVRM/accel/re/IOGraphicsAccelerator2.h",
+      "sha256": "05b82d0170e69c410d58990694b5838485d2c02799e51e34cff31f3a5f341536"
+    },
+    {
+      "path": "kexts/NVRM/accel/tahoe_fwd.h",
+      "sha256": "b980ce88311a03300faeb4de1761a7acddb3e6950c82db86e1523aaed527d04f"
+    },
+    {
+      "path": "kexts/NVRM/agdc/AppleGraphicsDeviceControl_re.h",
+      "sha256": "5f697696c3b489a258afed0d26ce3d7d3d3e4d92ae87a1387b6da8496dd71b3c"
+    },
+    {
+      "path": "kexts/NVRM/agdc/iop-getmap.c",
+      "sha256": "0b8b3cf413651b303c7fecaf632f8459af717e18453ee923ee66710973582550"
+    },
+    {
+      "path": "kexts/NVRM/agdc/nvrm-agdc-k5.h",
+      "sha256": "8aa0f372e823171c320909c1d90cacb00950c20bd409ea7cd9958ce86d61f06f"
+    },
+    {
+      "path": "kexts/NVRM/agdc/nvrm-agdc.cpp",
+      "sha256": "ef40ba42704bb5442a37adb9a784de32f3e7e06beb83f5aac82049b086f238f0"
+    },
+    {
+      "path": "kexts/NVRM/fb/nvrm-fb.cpp",
+      "sha256": "8781c5813f89fc03ce5815d57efabf3f681f0accb73ce76dde8cc46729d9d17c"
+    },
+    {
+      "path": "kexts/NVRM/fb/nvrm-hud.h",
+      "sha256": "e5a523fdff723f046027f88e52db361e4a875a70d88c5fa0f809089a25e6f7b0"
+    },
+    {
+      "path": "kexts/NVRM/nv-xnu.h",
+      "sha256": "410711cdf0f0cd6dee51e6ae0f0b78faaba31a67dd79d992ea6cdd05c6f0d6cc"
+    },
+    {
+      "path": "kexts/NVRM/nv_xnu_stubs.cpp",
+      "sha256": "dbd3a51011e7bebe3e197614fd9873fb03c075ca019f60b442a3fddd0a3fd52a"
+    },
+    {
+      "path": "kexts/NVRM/nvidia-modeset-os-interface.h",
+      "sha256": "130f5bdcc47154fcf54a87533b97aba3ca4c1aa377b7657ec6a551f0c653bf12"
+    },
+    {
+      "path": "kexts/NVRM/nvkms_shaders.cpp",
+      "sha256": "fe9c7632069abd3085e2f9468fb4a4e6cb46e8b01f135a0411e0cf1016c80e8b"
+    },
+    {
+      "path": "kexts/NVRM/nvrm_fbinfo.cpp",
+      "sha256": "71b41a15be38281f3b834c944559f462194e48201b30a4a7a799c0718e03be7c"
+    },
+    {
+      "path": "kexts/NVRM/nvrm_gpuva.cpp",
+      "sha256": "57957e2476f4ba5c473cdc07a8ff9926306956dc32b1d57a9bf069a543ef65e3"
+    },
+    {
+      "path": "kexts/NVRM/nvrm_gpuva_abi.h",
+      "sha256": "9705ec434720308df236355173fa4f494410d04810696a75a8529a8925cc7c2e"
+    },
+    {
+      "path": "kexts/NVRM/nvrm_kapi_fields.c",
+      "sha256": "f26a7231cef8c9a4fa3895e673f59260276e92adff2352e94f3dfa6697d68af4"
+    },
+    {
+      "path": "kexts/NVRM/nvrm_off.h",
+      "sha256": "409f591790aca2ae312b00334ff0e7bf4cff198938337aac23e408515849efd2"
+    },
+    {
+      "path": "kexts/NVRM/nvrm_pageoff.c",
+      "sha256": "09097452da2d5b0eeed086f2fea50c90f7b31b756666dc19f4b9bda9993a7f9d"
+    },
+    {
+      "path": "kexts/NVRM/nvrm_surfshare.cpp",
+      "sha256": "8565047e29ae72acf5855a39e697ca04cf7d55dc1008944460ca376d2aa6079e"
+    },
+    {
+      "path": "kexts/NVRM/nvrm_surfshare_abi.h",
+      "sha256": "d37fc357d09e998a341e8a3e1473d13566c2981cb89b7f8524e80830fa303318"
+    },
+    {
+      "path": "kexts/NVRM/nvrm_vram_abi.h",
+      "sha256": "e324dfc4b9e7519a045c507c2eb28d875b3c417e38ac52d2b4ee5320594faae6"
+    },
+    {
+      "path": "kexts/NVRM/os-nvkms-xnu.cpp",
+      "sha256": "9949ddbc0d259fec4003e16acd77c735efd3469575ea6b2f2fb6dc560bde26fa"
+    },
+    {
+      "path": "kexts/NVRM/os-xnu.cpp",
+      "sha256": "cca41f6325c144172a411df68ac2c335bc51269fadcb5721db12d72994fc05d0"
+    },
+    {
+      "path": "kexts/NVRM/os-xnu2.cpp",
+      "sha256": "b02c75a364a1a88302c786339f02ad6cc017b7599fd10fcd790394a65f5ee7a9"
+    }
+  ],
+  "runtime_targets": [
+    {
+      "name": "rm_isr",
+      "path": "src/nvidia/arch/nvalloc/unix/src/unix_intr.c",
+      "line": 780,
+      "source_sha256": "952e1ccb8b3214c83cfb54748324131900eaff68986169ad7e794be29ef86819",
+      "body_sha256": "6fe0c3b84330afbfbbf30f09a48b15b25dbb83d0bf2468ead5e7b15ca7a4b6a9"
+    },
+    {
+      "name": "rm_isr_bh",
+      "path": "src/nvidia/arch/nvalloc/unix/src/unix_intr.c",
+      "line": 830,
+      "source_sha256": "952e1ccb8b3214c83cfb54748324131900eaff68986169ad7e794be29ef86819",
+      "body_sha256": "69e999dad22928aba37f147b5358a02bf64db1ac0e19fdc00a65d13b6dafe27a"
+    },
+    {
+      "name": "rm_init_private_state",
+      "path": "src/nvidia/arch/nvalloc/unix/src/osapi.c",
+      "line": 1742,
+      "source_sha256": "7b349926c3b3cd0f309b25a8e466639ed184102dee133a7286bb899f1928ebf8",
+      "body_sha256": "fcd4517b7df3a2a14ed5c948fb89594486f1aa7a0d5a1bc534a8dcc0f5cabccf"
+    },
+    {
+      "name": "rm_free_private_state",
+      "path": "src/nvidia/arch/nvalloc/unix/src/osapi.c",
+      "line": 1759,
+      "source_sha256": "7b349926c3b3cd0f309b25a8e466639ed184102dee133a7286bb899f1928ebf8",
+      "body_sha256": "aea85b21ce7416dfb807cbe6cece33787629d195c521f6127f4fc0bdd04f5dd2"
+    },
+    {
+      "name": "rm_init_adapter",
+      "path": "src/nvidia/arch/nvalloc/unix/src/osapi.c",
+      "line": 1773,
+      "source_sha256": "7b349926c3b3cd0f309b25a8e466639ed184102dee133a7286bb899f1928ebf8",
+      "body_sha256": "ff6f9d3d4383fb458fca7663709bc49e6015d5b4e72412ff238d7cd5590b57dc"
+    },
+    {
+      "name": "rm_shutdown_adapter",
+      "path": "src/nvidia/arch/nvalloc/unix/src/osapi.c",
+      "line": 1876,
+      "source_sha256": "7b349926c3b3cd0f309b25a8e466639ed184102dee133a7286bb899f1928ebf8",
+      "body_sha256": "5e9d207346bf95424f9a70147bfb00c954eac988004cfd75bd03a049eb381f1e"
+    },
+    {
+      "name": "rm_init_rm",
+      "path": "src/nvidia/arch/nvalloc/unix/src/osapi.c",
+      "line": 2754,
+      "source_sha256": "7b349926c3b3cd0f309b25a8e466639ed184102dee133a7286bb899f1928ebf8",
+      "body_sha256": "058aa31c28608b4a0d8c5d8b010d17ce01b3f35a21195ef0b99cc85aa4b89e51"
+    },
+    {
+      "name": "rm_init_event_locks",
+      "path": "src/nvidia/arch/nvalloc/unix/src/osapi.c",
+      "line": 2783,
+      "source_sha256": "7b349926c3b3cd0f309b25a8e466639ed184102dee133a7286bb899f1928ebf8",
+      "body_sha256": "21d0d988c77e54be01612e58d5b96e79ac1c594f2a886a790128722b4062a89c"
+    },
+    {
+      "name": "rm_stop_user_channels",
+      "path": "src/nvidia/arch/nvalloc/unix/src/osapi.c",
+      "line": 2815,
+      "source_sha256": "7b349926c3b3cd0f309b25a8e466639ed184102dee133a7286bb899f1928ebf8",
+      "body_sha256": "c38277d4fe62c68fd8015c4039462f37c9aad4ed02a2a9218b37b8ed5a901f2d"
+    },
+    {
+      "name": "rm_restart_user_channels",
+      "path": "src/nvidia/arch/nvalloc/unix/src/osapi.c",
+      "line": 2845,
+      "source_sha256": "7b349926c3b3cd0f309b25a8e466639ed184102dee133a7286bb899f1928ebf8",
+      "body_sha256": "38c7575ec128951f6ae605d5bcfaa1c4a68af5d60d0b6e25fb9f1616df253e11"
+    },
+    {
+      "name": "rm_ioctl",
+      "path": "src/nvidia/arch/nvalloc/unix/src/osapi.c",
+      "line": 2950,
+      "source_sha256": "7b349926c3b3cd0f309b25a8e466639ed184102dee133a7286bb899f1928ebf8",
+      "body_sha256": "546989c7939f050476c4bbcc45f2af27cf98032d1009bf98f14ddf280c275b87"
+    },
+    {
+      "name": "rm_cleanup_file_private",
+      "path": "src/nvidia/arch/nvalloc/unix/src/osapi.c",
+      "line": 3047,
+      "source_sha256": "7b349926c3b3cd0f309b25a8e466639ed184102dee133a7286bb899f1928ebf8",
+      "body_sha256": "1e084d6732df845578a1ae21a6d9aba5b449f591341d64108409909c283f5181"
+    },
+    {
+      "name": "rm_write_registry_dword",
+      "path": "src/nvidia/arch/nvalloc/unix/src/osapi.c",
+      "line": 3206,
+      "source_sha256": "7b349926c3b3cd0f309b25a8e466639ed184102dee133a7286bb899f1928ebf8",
+      "body_sha256": "fb6bdb691c4fdf959fc1e857fb786dce6404524c48d2634c162308a85f001d24"
+    },
+    {
+      "name": "rm_write_registry_string",
+      "path": "src/nvidia/arch/nvalloc/unix/src/osapi.c",
+      "line": 3283,
+      "source_sha256": "7b349926c3b3cd0f309b25a8e466639ed184102dee133a7286bb899f1928ebf8",
+      "body_sha256": "583d7e2ac0b5aa4282c44a76a4a54496ed4a13167497156aa47f73081a9192bc"
+    },
+    {
+      "name": "rm_run_nano_timer_callback",
+      "path": "src/nvidia/arch/nvalloc/unix/src/osapi.c",
+      "line": 3518,
+      "source_sha256": "7b349926c3b3cd0f309b25a8e466639ed184102dee133a7286bb899f1928ebf8",
+      "body_sha256": "8e1d04411707676e2956235a260807a7128fff50bf72986386a6339c880b93bc"
+    },
+    {
+      "name": "rm_execute_work_item",
+      "path": "src/nvidia/arch/nvalloc/unix/src/osapi.c",
+      "line": 3550,
+      "source_sha256": "7b349926c3b3cd0f309b25a8e466639ed184102dee133a7286bb899f1928ebf8",
+      "body_sha256": "373ad1367b2684338b099ec675448829356546dde95a636c52c632edd8625788"
+    },
+    {
+      "name": "rm_is_supported_device",
+      "path": "src/nvidia/arch/nvalloc/unix/src/osapi.c",
+      "line": 3693,
+      "source_sha256": "7b349926c3b3cd0f309b25a8e466639ed184102dee133a7286bb899f1928ebf8",
+      "body_sha256": "5402d5f39cb3d9662e5908838485e5210b3a555ade4e955b98d1cd60a60635e9"
+    },
+    {
+      "name": "rm_perform_version_check",
+      "path": "src/nvidia/arch/nvalloc/unix/src/osapi.c",
+      "line": 4498,
+      "source_sha256": "7b349926c3b3cd0f309b25a8e466639ed184102dee133a7286bb899f1928ebf8",
+      "body_sha256": "53a578acce2d2ccd632551e021f50adf83fe36f3cf4c2bc6526bf2b4561f5a58"
+    },
+    {
+      "name": "rm_kernel_rmapi_op",
+      "path": "src/nvidia/arch/nvalloc/unix/src/osapi.c",
+      "line": 5143,
+      "source_sha256": "7b349926c3b3cd0f309b25a8e466639ed184102dee133a7286bb899f1928ebf8",
+      "body_sha256": "df982649a09aadb37ae6347fbffcc97745288dc7ba4a5fea3101839da6446d1f"
+    },
+    {
+      "name": "rm_power_management",
+      "path": "src/nvidia/arch/nvalloc/unix/src/dynamic-power.c",
+      "line": 2538,
+      "source_sha256": "d8bd82ad7722412f7954230a971709cb3979710689f52c5f417651f921fc9d71",
+      "body_sha256": "f9e7412621993e3224f223fd7762bbf91915bbeef0dd32a7d5b4e0e144308de1"
+    }
+  ],
+  "occurrences": [
+    {
+      "name": "rm_init_rm",
+      "path": "kexts/NVRM/NVRM.cpp",
+      "line": 1274,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_init_event_locks",
+      "path": "kexts/NVRM/NVRM.cpp",
+      "line": 1277,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_init_event_locks",
+      "path": "kexts/NVRM/NVRM.cpp",
+      "line": 1278,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_write_registry_string",
+      "path": "kexts/NVRM/NVRM.cpp",
+      "line": 1280,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_write_registry_dword",
+      "path": "kexts/NVRM/NVRM.cpp",
+      "line": 1281,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_write_registry_dword",
+      "path": "kexts/NVRM/NVRM.cpp",
+      "line": 1288,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_is_supported_device",
+      "path": "kexts/NVRM/NVRM.cpp",
+      "line": 1293,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_init_private_state",
+      "path": "kexts/NVRM/NVRM.cpp",
+      "line": 1302,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_init_adapter",
+      "path": "kexts/NVRM/NVRM.cpp",
+      "line": 1330,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_isr",
+      "path": "kexts/NVRM/NVRM.cpp",
+      "line": 1367,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_isr_bh",
+      "path": "kexts/NVRM/NVRM.cpp",
+      "line": 1370,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_shutdown_adapter",
+      "path": "kexts/NVRM/NVRM.cpp",
+      "line": 1376,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_free_private_state",
+      "path": "kexts/NVRM/NVRM.cpp",
+      "line": 1379,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_stop_user_channels",
+      "path": "kexts/NVRM/NVRM.cpp",
+      "line": 1445,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_power_management",
+      "path": "kexts/NVRM/NVRM.cpp",
+      "line": 1447,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_power_management",
+      "path": "kexts/NVRM/NVRM.cpp",
+      "line": 1465,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_restart_user_channels",
+      "path": "kexts/NVRM/NVRM.cpp",
+      "line": 1467,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_cleanup_file_private",
+      "path": "kexts/NVRM/NVRM.cpp",
+      "line": 1775,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_perform_version_check",
+      "path": "kexts/NVRM/NVRM.cpp",
+      "line": 2059,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_ioctl",
+      "path": "kexts/NVRM/NVRM.cpp",
+      "line": 2076,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_kernel_rmapi_op",
+      "path": "kexts/NVRM/nvrm_fbinfo.cpp",
+      "line": 18,
+      "first_argument": "nvidia_stack_t *sp",
+      "literal_null": false,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_kernel_rmapi_op",
+      "path": "kexts/NVRM/nvrm_fbinfo.cpp",
+      "line": 61,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_kernel_rmapi_op",
+      "path": "kexts/NVRM/nvrm_fbinfo.cpp",
+      "line": 76,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_kernel_rmapi_op",
+      "path": "kexts/NVRM/nvrm_fbinfo.cpp",
+      "line": 88,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_kernel_rmapi_op",
+      "path": "kexts/NVRM/nvrm_gpuva.cpp",
+      "line": 16,
+      "first_argument": "nvidia_stack_t *sp",
+      "literal_null": false,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_kernel_rmapi_op",
+      "path": "kexts/NVRM/nvrm_gpuva.cpp",
+      "line": 74,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_kernel_rmapi_op",
+      "path": "kexts/NVRM/nvrm_gpuva.cpp",
+      "line": 87,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_kernel_rmapi_op",
+      "path": "kexts/NVRM/nvrm_gpuva.cpp",
+      "line": 191,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_kernel_rmapi_op",
+      "path": "kexts/NVRM/nvrm_gpuva.cpp",
+      "line": 225,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_kernel_rmapi_op",
+      "path": "kexts/NVRM/nvrm_surfshare.cpp",
+      "line": 16,
+      "first_argument": "nvidia_stack_t *sp",
+      "literal_null": false,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_kernel_rmapi_op",
+      "path": "kexts/NVRM/nvrm_surfshare.cpp",
+      "line": 38,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_kernel_rmapi_op",
+      "path": "kexts/NVRM/os-nvkms-xnu.cpp",
+      "line": 415,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_execute_work_item",
+      "path": "kexts/NVRM/os-xnu2.cpp",
+      "line": 1228,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    },
+    {
+      "name": "rm_run_nano_timer_callback",
+      "path": "kexts/NVRM/os-xnu2.cpp",
+      "line": 1535,
+      "first_argument": "NULL",
+      "literal_null": true,
+      "limitation": "lexical occurrence; non-null text is not a validity proof"
+    }
+  ],
+  "literal_null_count": 31
+}

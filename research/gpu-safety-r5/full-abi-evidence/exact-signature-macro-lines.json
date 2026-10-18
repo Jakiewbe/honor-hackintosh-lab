@@ -1,0 +1,968 @@
+[
+  {
+    "profile": "full-src_nvidia_arch_nvalloc_unix_src_unix_intr.c",
+    "original_ir_sha256": "ba3967cd643b6e4d4393b1a722afad2d7a6f29dc04fc994ad437278a2f6a9c48",
+    "symbols": [
+      {
+        "name": "rm_cleanup_file_private",
+        "function_line": 1333,
+        "function_text": "declare void @rm_cleanup_file_private(ptr noundef, ptr noundef, ptr noundef) #2",
+        "typed_reference_line": 17,
+        "typed_reference_text": "@honor_g1_full_sig_rm_cleanup_file_private = global ptr @rm_cleanup_file_private, align 8"
+      },
+      {
+        "name": "rm_execute_work_item",
+        "function_line": 1336,
+        "function_text": "declare void @rm_execute_work_item(ptr noundef, ptr noundef) #2",
+        "typed_reference_line": 18,
+        "typed_reference_text": "@honor_g1_full_sig_rm_execute_work_item = global ptr @rm_execute_work_item, align 8"
+      },
+      {
+        "name": "rm_free_private_state",
+        "function_line": 1339,
+        "function_text": "declare void @rm_free_private_state(ptr noundef, ptr noundef) #2",
+        "typed_reference_line": 19,
+        "typed_reference_text": "@honor_g1_full_sig_rm_free_private_state = global ptr @rm_free_private_state, align 8"
+      },
+      {
+        "name": "rm_init_adapter",
+        "function_line": 1342,
+        "function_text": "declare zeroext i8 @rm_init_adapter(ptr noundef, ptr noundef) #2",
+        "typed_reference_line": 20,
+        "typed_reference_text": "@honor_g1_full_sig_rm_init_adapter = global ptr @rm_init_adapter, align 8"
+      },
+      {
+        "name": "rm_init_event_locks",
+        "function_line": 1345,
+        "function_text": "declare zeroext i8 @rm_init_event_locks(ptr noundef, ptr noundef) #2",
+        "typed_reference_line": 21,
+        "typed_reference_text": "@honor_g1_full_sig_rm_init_event_locks = global ptr @rm_init_event_locks, align 8"
+      },
+      {
+        "name": "rm_init_private_state",
+        "function_line": 1348,
+        "function_text": "declare zeroext i8 @rm_init_private_state(ptr noundef, ptr noundef) #2",
+        "typed_reference_line": 22,
+        "typed_reference_text": "@honor_g1_full_sig_rm_init_private_state = global ptr @rm_init_private_state, align 8"
+      },
+      {
+        "name": "rm_init_rm",
+        "function_line": 1351,
+        "function_text": "declare zeroext i8 @rm_init_rm(ptr noundef) #2",
+        "typed_reference_line": 23,
+        "typed_reference_text": "@honor_g1_full_sig_rm_init_rm = global ptr @rm_init_rm, align 8"
+      },
+      {
+        "name": "rm_ioctl",
+        "function_line": 1354,
+        "function_text": "declare i32 @rm_ioctl(ptr noundef, ptr noundef, ptr noundef, i32 noundef, ptr noundef, i32 noundef) #2",
+        "typed_reference_line": 24,
+        "typed_reference_text": "@honor_g1_full_sig_rm_ioctl = global ptr @rm_ioctl, align 8"
+      },
+      {
+        "name": "rm_is_supported_device",
+        "function_line": 1357,
+        "function_text": "declare i32 @rm_is_supported_device(ptr noundef, ptr noundef) #2",
+        "typed_reference_line": 25,
+        "typed_reference_text": "@honor_g1_full_sig_rm_is_supported_device = global ptr @rm_is_supported_device, align 8"
+      },
+      {
+        "name": "rm_isr",
+        "function_line": 823,
+        "function_text": "define zeroext range(i8 0, 2) i8 @rm_isr(ptr nocapture readnone %0, ptr noundef readonly %1, ptr nocapture noundef writeonly %2) #0 {",
+        "typed_reference_line": 26,
+        "typed_reference_text": "@honor_g1_full_sig_rm_isr = global ptr @rm_isr, align 8"
+      },
+      {
+        "name": "rm_isr_bh",
+        "function_line": 877,
+        "function_text": "define void @rm_isr_bh(ptr nocapture readnone %0, ptr noundef readonly %1) #0 {",
+        "typed_reference_line": 27,
+        "typed_reference_text": "@honor_g1_full_sig_rm_isr_bh = global ptr @rm_isr_bh, align 8"
+      },
+      {
+        "name": "rm_kernel_rmapi_op",
+        "function_line": 1360,
+        "function_text": "declare void @rm_kernel_rmapi_op(ptr noundef, ptr noundef) #2",
+        "typed_reference_line": 28,
+        "typed_reference_text": "@honor_g1_full_sig_rm_kernel_rmapi_op = global ptr @rm_kernel_rmapi_op, align 8"
+      },
+      {
+        "name": "rm_perform_version_check",
+        "function_line": 1363,
+        "function_text": "declare i32 @rm_perform_version_check(ptr noundef, ptr noundef, i32 noundef) #2",
+        "typed_reference_line": 29,
+        "typed_reference_text": "@honor_g1_full_sig_rm_perform_version_check = global ptr @rm_perform_version_check, align 8"
+      },
+      {
+        "name": "rm_power_management",
+        "function_line": 1366,
+        "function_text": "declare i32 @rm_power_management(ptr noundef, ptr noundef, i32 noundef) #2",
+        "typed_reference_line": 30,
+        "typed_reference_text": "@honor_g1_full_sig_rm_power_management = global ptr @rm_power_management, align 8"
+      },
+      {
+        "name": "rm_restart_user_channels",
+        "function_line": 1369,
+        "function_text": "declare i32 @rm_restart_user_channels(ptr noundef, ptr noundef) #2",
+        "typed_reference_line": 31,
+        "typed_reference_text": "@honor_g1_full_sig_rm_restart_user_channels = global ptr @rm_restart_user_channels, align 8"
+      },
+      {
+        "name": "rm_run_nano_timer_callback",
+        "function_line": 1372,
+        "function_text": "declare i32 @rm_run_nano_timer_callback(ptr noundef, ptr noundef, ptr noundef) #2",
+        "typed_reference_line": 32,
+        "typed_reference_text": "@honor_g1_full_sig_rm_run_nano_timer_callback = global ptr @rm_run_nano_timer_callback, align 8"
+      },
+      {
+        "name": "rm_shutdown_adapter",
+        "function_line": 1375,
+        "function_text": "declare void @rm_shutdown_adapter(ptr noundef, ptr noundef) #2",
+        "typed_reference_line": 33,
+        "typed_reference_text": "@honor_g1_full_sig_rm_shutdown_adapter = global ptr @rm_shutdown_adapter, align 8"
+      },
+      {
+        "name": "rm_stop_user_channels",
+        "function_line": 1378,
+        "function_text": "declare i32 @rm_stop_user_channels(ptr noundef, ptr noundef) #2",
+        "typed_reference_line": 34,
+        "typed_reference_text": "@honor_g1_full_sig_rm_stop_user_channels = global ptr @rm_stop_user_channels, align 8"
+      },
+      {
+        "name": "rm_write_registry_dword",
+        "function_line": 1381,
+        "function_text": "declare i32 @rm_write_registry_dword(ptr noundef, ptr noundef, ptr noundef, i32 noundef) #2",
+        "typed_reference_line": 35,
+        "typed_reference_text": "@honor_g1_full_sig_rm_write_registry_dword = global ptr @rm_write_registry_dword, align 8"
+      },
+      {
+        "name": "rm_write_registry_string",
+        "function_line": 1384,
+        "function_text": "declare i32 @rm_write_registry_string(ptr noundef, ptr noundef, ptr noundef, ptr noundef, i32 noundef) #2",
+        "typed_reference_line": 36,
+        "typed_reference_text": "@honor_g1_full_sig_rm_write_registry_string = global ptr @rm_write_registry_string, align 8"
+      }
+    ],
+    "original_macros_sha256": "c8d4cd99994fb15212458d6b458a651731f0108bc6c04fbc83f6f9e7b3656371",
+    "selected_macro_lines": [
+      "#define NVCPU_X86_64 ",
+      "#define NVRM 1",
+      "#define NV_API_CALL ",
+      "#define NV_ENTER_RM_RUNTIME(sp,fp) { (void)sp; (void)fp; }",
+      "#define NV_EXIT_RM_RUNTIME(sp,fp) ",
+      "#define NV_LINUX 1",
+      "#define NV_MACINTOSH ",
+      "#define NV_MACINTOSH_OSX ",
+      "#define NV_UNIX 1",
+      "#define PORT_ATOMIC _Atomic",
+      "#define __APPLE__ 1",
+      "#define __MACH__ 1"
+    ],
+    "scope": "exact selected lines only; omitted IR and macros remain in original run text artifact"
+  },
+  {
+    "profile": "full-src_nvidia_arch_nvalloc_unix_src_osapi.c",
+    "original_ir_sha256": "21b056be5ce8b94b8433bcd0993d13d5d58eeb6a5d6cb77173ede53944b96b1c",
+    "symbols": [
+      {
+        "name": "rm_cleanup_file_private",
+        "function_line": 4164,
+        "function_text": "define void @rm_cleanup_file_private(ptr nocapture readnone %0, ptr nocapture readnone %1, ptr noundef %2) #0 {",
+        "typed_reference_line": 101,
+        "typed_reference_text": "@honor_g1_full_sig_rm_cleanup_file_private = global ptr @rm_cleanup_file_private, align 8"
+      },
+      {
+        "name": "rm_execute_work_item",
+        "function_line": 5003,
+        "function_text": "define void @rm_execute_work_item(ptr nocapture readnone %0, ptr noundef %1) #0 {",
+        "typed_reference_line": 102,
+        "typed_reference_text": "@honor_g1_full_sig_rm_execute_work_item = global ptr @rm_execute_work_item, align 8"
+      },
+      {
+        "name": "rm_free_private_state",
+        "function_line": 2322,
+        "function_text": "define void @rm_free_private_state(ptr nocapture readnone %0, ptr noundef %1) #0 {",
+        "typed_reference_line": 103,
+        "typed_reference_text": "@honor_g1_full_sig_rm_free_private_state = global ptr @rm_free_private_state, align 8"
+      },
+      {
+        "name": "rm_init_adapter",
+        "function_line": 2331,
+        "function_text": "define zeroext i8 @rm_init_adapter(ptr nocapture readnone %0, ptr noundef %1) #0 {",
+        "typed_reference_line": 104,
+        "typed_reference_text": "@honor_g1_full_sig_rm_init_adapter = global ptr @rm_init_adapter, align 8"
+      },
+      {
+        "name": "rm_init_event_locks",
+        "function_line": 3712,
+        "function_text": "define zeroext range(i8 0, 2) i8 @rm_init_event_locks(ptr nocapture readnone %0, ptr nocapture noundef writeonly %1) #0 {",
+        "typed_reference_line": 105,
+        "typed_reference_text": "@honor_g1_full_sig_rm_init_event_locks = global ptr @rm_init_event_locks, align 8"
+      },
+      {
+        "name": "rm_init_private_state",
+        "function_line": 2313,
+        "function_text": "define zeroext i8 @rm_init_private_state(ptr nocapture readnone %0, ptr noundef %1) #0 {",
+        "typed_reference_line": 106,
+        "typed_reference_text": "@honor_g1_full_sig_rm_init_private_state = global ptr @rm_init_private_state, align 8"
+      },
+      {
+        "name": "rm_init_rm",
+        "function_line": 3693,
+        "function_text": "define zeroext i8 @rm_init_rm(ptr nocapture readnone %0) #0 {",
+        "typed_reference_line": 107,
+        "typed_reference_text": "@honor_g1_full_sig_rm_init_rm = global ptr @rm_init_rm, align 8"
+      },
+      {
+        "name": "rm_ioctl",
+        "function_line": 3923,
+        "function_text": "define i32 @rm_ioctl(ptr nocapture readnone %0, ptr noundef %1, ptr noundef %2, i32 noundef %3, ptr noundef %4, i32 noundef %5) #0 {",
+        "typed_reference_line": 108,
+        "typed_reference_text": "@honor_g1_full_sig_rm_ioctl = global ptr @rm_ioctl, align 8"
+      },
+      {
+        "name": "rm_is_supported_device",
+        "function_line": 5749,
+        "function_text": "define i32 @rm_is_supported_device(ptr nocapture readnone %0, ptr noundef %1) #0 {",
+        "typed_reference_line": 109,
+        "typed_reference_text": "@honor_g1_full_sig_rm_is_supported_device = global ptr @rm_is_supported_device, align 8"
+      },
+      {
+        "name": "rm_isr",
+        "function_line": 10029,
+        "function_text": "declare zeroext i8 @rm_isr(ptr noundef, ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 110,
+        "typed_reference_text": "@honor_g1_full_sig_rm_isr = global ptr @rm_isr, align 8"
+      },
+      {
+        "name": "rm_isr_bh",
+        "function_line": 10032,
+        "function_text": "declare void @rm_isr_bh(ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 111,
+        "typed_reference_text": "@honor_g1_full_sig_rm_isr_bh = global ptr @rm_isr_bh, align 8"
+      },
+      {
+        "name": "rm_kernel_rmapi_op",
+        "function_line": 8061,
+        "function_text": "define void @rm_kernel_rmapi_op(ptr nocapture readnone %0, ptr noundef %1) #0 {",
+        "typed_reference_line": 112,
+        "typed_reference_text": "@honor_g1_full_sig_rm_kernel_rmapi_op = global ptr @rm_kernel_rmapi_op, align 8"
+      },
+      {
+        "name": "rm_perform_version_check",
+        "function_line": 6892,
+        "function_text": "define range(i32 0, 65536) i32 @rm_perform_version_check(ptr nocapture readnone %0, ptr noundef %1, i32 noundef %2) #0 {",
+        "typed_reference_line": 113,
+        "typed_reference_text": "@honor_g1_full_sig_rm_perform_version_check = global ptr @rm_perform_version_check, align 8"
+      },
+      {
+        "name": "rm_power_management",
+        "function_line": 10035,
+        "function_text": "declare i32 @rm_power_management(ptr noundef, ptr noundef, i32 noundef) #1",
+        "typed_reference_line": 114,
+        "typed_reference_text": "@honor_g1_full_sig_rm_power_management = global ptr @rm_power_management, align 8"
+      },
+      {
+        "name": "rm_restart_user_channels",
+        "function_line": 3807,
+        "function_text": "define i32 @rm_restart_user_channels(ptr nocapture readnone %0, ptr noundef %1) #0 {",
+        "typed_reference_line": 115,
+        "typed_reference_text": "@honor_g1_full_sig_rm_restart_user_channels = global ptr @rm_restart_user_channels, align 8"
+      },
+      {
+        "name": "rm_run_nano_timer_callback",
+        "function_line": 4921,
+        "function_text": "define i32 @rm_run_nano_timer_callback(ptr nocapture readnone %0, ptr noundef readonly %1, ptr noundef %2) #0 {",
+        "typed_reference_line": 116,
+        "typed_reference_text": "@honor_g1_full_sig_rm_run_nano_timer_callback = global ptr @rm_run_nano_timer_callback, align 8"
+      },
+      {
+        "name": "rm_shutdown_adapter",
+        "function_line": 2587,
+        "function_text": "define void @rm_shutdown_adapter(ptr nocapture readnone %0, ptr noundef %1) #0 {",
+        "typed_reference_line": 117,
+        "typed_reference_text": "@honor_g1_full_sig_rm_shutdown_adapter = global ptr @rm_shutdown_adapter, align 8"
+      },
+      {
+        "name": "rm_stop_user_channels",
+        "function_line": 3751,
+        "function_text": "define i32 @rm_stop_user_channels(ptr nocapture readnone %0, ptr noundef %1) #0 {",
+        "typed_reference_line": 118,
+        "typed_reference_text": "@honor_g1_full_sig_rm_stop_user_channels = global ptr @rm_stop_user_channels, align 8"
+      },
+      {
+        "name": "rm_write_registry_dword",
+        "function_line": 4433,
+        "function_text": "define i32 @rm_write_registry_dword(ptr nocapture readnone %0, ptr noundef %1, ptr noundef %2, i32 noundef %3) #0 {",
+        "typed_reference_line": 119,
+        "typed_reference_text": "@honor_g1_full_sig_rm_write_registry_dword = global ptr @rm_write_registry_dword, align 8"
+      },
+      {
+        "name": "rm_write_registry_string",
+        "function_line": 4487,
+        "function_text": "define i32 @rm_write_registry_string(ptr nocapture readnone %0, ptr noundef %1, ptr noundef %2, ptr noundef %3, i32 noundef %4) #0 {",
+        "typed_reference_line": 120,
+        "typed_reference_text": "@honor_g1_full_sig_rm_write_registry_string = global ptr @rm_write_registry_string, align 8"
+      }
+    ],
+    "original_macros_sha256": "29b4990f9ffe4af3965c7bb8acafd2e9315a10f34c92f2028e67f7abd80012e4",
+    "selected_macro_lines": [
+      "#define NVCPU_X86_64 ",
+      "#define NVRM 1",
+      "#define NV_API_CALL ",
+      "#define NV_ENTER_RM_RUNTIME(sp,fp) { (void)sp; (void)fp; }",
+      "#define NV_EXIT_RM_RUNTIME(sp,fp) ",
+      "#define NV_LINUX 1",
+      "#define NV_MACINTOSH ",
+      "#define NV_MACINTOSH_OSX ",
+      "#define NV_UNIX 1",
+      "#define PORT_ATOMIC _Atomic",
+      "#define __APPLE__ 1",
+      "#define __MACH__ 1"
+    ],
+    "scope": "exact selected lines only; omitted IR and macros remain in original run text artifact"
+  },
+  {
+    "profile": "full-src_nvidia_arch_nvalloc_unix_src_dynamic-power.c",
+    "original_ir_sha256": "8805529cc08a63d736e4f80dbcce37ea661b97da23e22ffc003216a95d97076c",
+    "symbols": [
+      {
+        "name": "rm_cleanup_file_private",
+        "function_line": 3149,
+        "function_text": "declare void @rm_cleanup_file_private(ptr noundef, ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 69,
+        "typed_reference_text": "@honor_g1_full_sig_rm_cleanup_file_private = global ptr @rm_cleanup_file_private, align 8"
+      },
+      {
+        "name": "rm_execute_work_item",
+        "function_line": 3152,
+        "function_text": "declare void @rm_execute_work_item(ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 70,
+        "typed_reference_text": "@honor_g1_full_sig_rm_execute_work_item = global ptr @rm_execute_work_item, align 8"
+      },
+      {
+        "name": "rm_free_private_state",
+        "function_line": 3155,
+        "function_text": "declare void @rm_free_private_state(ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 71,
+        "typed_reference_text": "@honor_g1_full_sig_rm_free_private_state = global ptr @rm_free_private_state, align 8"
+      },
+      {
+        "name": "rm_init_adapter",
+        "function_line": 3158,
+        "function_text": "declare zeroext i8 @rm_init_adapter(ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 72,
+        "typed_reference_text": "@honor_g1_full_sig_rm_init_adapter = global ptr @rm_init_adapter, align 8"
+      },
+      {
+        "name": "rm_init_event_locks",
+        "function_line": 3161,
+        "function_text": "declare zeroext i8 @rm_init_event_locks(ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 73,
+        "typed_reference_text": "@honor_g1_full_sig_rm_init_event_locks = global ptr @rm_init_event_locks, align 8"
+      },
+      {
+        "name": "rm_init_private_state",
+        "function_line": 3164,
+        "function_text": "declare zeroext i8 @rm_init_private_state(ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 74,
+        "typed_reference_text": "@honor_g1_full_sig_rm_init_private_state = global ptr @rm_init_private_state, align 8"
+      },
+      {
+        "name": "rm_init_rm",
+        "function_line": 3167,
+        "function_text": "declare zeroext i8 @rm_init_rm(ptr noundef) #1",
+        "typed_reference_line": 75,
+        "typed_reference_text": "@honor_g1_full_sig_rm_init_rm = global ptr @rm_init_rm, align 8"
+      },
+      {
+        "name": "rm_ioctl",
+        "function_line": 3170,
+        "function_text": "declare i32 @rm_ioctl(ptr noundef, ptr noundef, ptr noundef, i32 noundef, ptr noundef, i32 noundef) #1",
+        "typed_reference_line": 76,
+        "typed_reference_text": "@honor_g1_full_sig_rm_ioctl = global ptr @rm_ioctl, align 8"
+      },
+      {
+        "name": "rm_is_supported_device",
+        "function_line": 3173,
+        "function_text": "declare i32 @rm_is_supported_device(ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 77,
+        "typed_reference_text": "@honor_g1_full_sig_rm_is_supported_device = global ptr @rm_is_supported_device, align 8"
+      },
+      {
+        "name": "rm_isr",
+        "function_line": 3176,
+        "function_text": "declare zeroext i8 @rm_isr(ptr noundef, ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 78,
+        "typed_reference_text": "@honor_g1_full_sig_rm_isr = global ptr @rm_isr, align 8"
+      },
+      {
+        "name": "rm_isr_bh",
+        "function_line": 3179,
+        "function_text": "declare void @rm_isr_bh(ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 79,
+        "typed_reference_text": "@honor_g1_full_sig_rm_isr_bh = global ptr @rm_isr_bh, align 8"
+      },
+      {
+        "name": "rm_kernel_rmapi_op",
+        "function_line": 3182,
+        "function_text": "declare void @rm_kernel_rmapi_op(ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 80,
+        "typed_reference_text": "@honor_g1_full_sig_rm_kernel_rmapi_op = global ptr @rm_kernel_rmapi_op, align 8"
+      },
+      {
+        "name": "rm_perform_version_check",
+        "function_line": 3185,
+        "function_text": "declare i32 @rm_perform_version_check(ptr noundef, ptr noundef, i32 noundef) #1",
+        "typed_reference_line": 81,
+        "typed_reference_text": "@honor_g1_full_sig_rm_perform_version_check = global ptr @rm_perform_version_check, align 8"
+      },
+      {
+        "name": "rm_power_management",
+        "function_line": 2049,
+        "function_text": "define i32 @rm_power_management(ptr nocapture readnone %0, ptr noundef %1, i32 noundef %2) #0 {",
+        "typed_reference_line": 82,
+        "typed_reference_text": "@honor_g1_full_sig_rm_power_management = global ptr @rm_power_management, align 8"
+      },
+      {
+        "name": "rm_restart_user_channels",
+        "function_line": 3188,
+        "function_text": "declare i32 @rm_restart_user_channels(ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 83,
+        "typed_reference_text": "@honor_g1_full_sig_rm_restart_user_channels = global ptr @rm_restart_user_channels, align 8"
+      },
+      {
+        "name": "rm_run_nano_timer_callback",
+        "function_line": 3191,
+        "function_text": "declare i32 @rm_run_nano_timer_callback(ptr noundef, ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 84,
+        "typed_reference_text": "@honor_g1_full_sig_rm_run_nano_timer_callback = global ptr @rm_run_nano_timer_callback, align 8"
+      },
+      {
+        "name": "rm_shutdown_adapter",
+        "function_line": 3194,
+        "function_text": "declare void @rm_shutdown_adapter(ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 85,
+        "typed_reference_text": "@honor_g1_full_sig_rm_shutdown_adapter = global ptr @rm_shutdown_adapter, align 8"
+      },
+      {
+        "name": "rm_stop_user_channels",
+        "function_line": 3197,
+        "function_text": "declare i32 @rm_stop_user_channels(ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 86,
+        "typed_reference_text": "@honor_g1_full_sig_rm_stop_user_channels = global ptr @rm_stop_user_channels, align 8"
+      },
+      {
+        "name": "rm_write_registry_dword",
+        "function_line": 3200,
+        "function_text": "declare i32 @rm_write_registry_dword(ptr noundef, ptr noundef, ptr noundef, i32 noundef) #1",
+        "typed_reference_line": 87,
+        "typed_reference_text": "@honor_g1_full_sig_rm_write_registry_dword = global ptr @rm_write_registry_dword, align 8"
+      },
+      {
+        "name": "rm_write_registry_string",
+        "function_line": 3203,
+        "function_text": "declare i32 @rm_write_registry_string(ptr noundef, ptr noundef, ptr noundef, ptr noundef, i32 noundef) #1",
+        "typed_reference_line": 88,
+        "typed_reference_text": "@honor_g1_full_sig_rm_write_registry_string = global ptr @rm_write_registry_string, align 8"
+      }
+    ],
+    "original_macros_sha256": "c6fab2ba8d8adee1e1bb8b8358a0bf018be45ccea294281a7fb68485fd3c7088",
+    "selected_macro_lines": [
+      "#define NVCPU_X86_64 ",
+      "#define NVRM 1",
+      "#define NV_API_CALL ",
+      "#define NV_ENTER_RM_RUNTIME(sp,fp) { (void)sp; (void)fp; }",
+      "#define NV_EXIT_RM_RUNTIME(sp,fp) ",
+      "#define NV_LINUX 1",
+      "#define NV_MACINTOSH ",
+      "#define NV_MACINTOSH_OSX ",
+      "#define NV_UNIX 1",
+      "#define PORT_ATOMIC _Atomic",
+      "#define __APPLE__ 1",
+      "#define __MACH__ 1"
+    ],
+    "scope": "exact selected lines only; omitted IR and macros remain in original run text artifact"
+  },
+  {
+    "profile": "uni-NVRM_cpp",
+    "original_ir_sha256": "b829f38ea146c03cdc6d10f413f1b7e837df9e89752e3987348ec765515138e3",
+    "symbols": [
+      {
+        "name": "rm_cleanup_file_private",
+        "function_line": 9902,
+        "function_text": "declare void @rm_cleanup_file_private(ptr noundef, ptr noundef, ptr noundef) #3",
+        "typed_reference_line": 413,
+        "typed_reference_text": "@honor_g1_full_sig_rm_cleanup_file_private = global ptr @rm_cleanup_file_private, align 8"
+      },
+      {
+        "name": "rm_execute_work_item",
+        "function_line": 11144,
+        "function_text": "declare void @rm_execute_work_item(ptr noundef, ptr noundef) #3",
+        "typed_reference_line": 414,
+        "typed_reference_text": "@honor_g1_full_sig_rm_execute_work_item = global ptr @rm_execute_work_item, align 8"
+      },
+      {
+        "name": "rm_free_private_state",
+        "function_line": 6765,
+        "function_text": "declare void @rm_free_private_state(ptr noundef, ptr noundef) #3",
+        "typed_reference_line": 415,
+        "typed_reference_text": "@honor_g1_full_sig_rm_free_private_state = global ptr @rm_free_private_state, align 8"
+      },
+      {
+        "name": "rm_init_adapter",
+        "function_line": 6349,
+        "function_text": "declare zeroext i8 @rm_init_adapter(ptr noundef, ptr noundef) #3",
+        "typed_reference_line": 416,
+        "typed_reference_text": "@honor_g1_full_sig_rm_init_adapter = global ptr @rm_init_adapter, align 8"
+      },
+      {
+        "name": "rm_init_event_locks",
+        "function_line": 6272,
+        "function_text": "declare zeroext i8 @rm_init_event_locks(ptr noundef, ptr noundef) #3",
+        "typed_reference_line": 417,
+        "typed_reference_text": "@honor_g1_full_sig_rm_init_event_locks = global ptr @rm_init_event_locks, align 8"
+      },
+      {
+        "name": "rm_init_private_state",
+        "function_line": 6287,
+        "function_text": "declare zeroext i8 @rm_init_private_state(ptr noundef, ptr noundef) #3",
+        "typed_reference_line": 418,
+        "typed_reference_text": "@honor_g1_full_sig_rm_init_private_state = global ptr @rm_init_private_state, align 8"
+      },
+      {
+        "name": "rm_init_rm",
+        "function_line": 6269,
+        "function_text": "declare zeroext i8 @rm_init_rm(ptr noundef) #3",
+        "typed_reference_line": 419,
+        "typed_reference_text": "@honor_g1_full_sig_rm_init_rm = global ptr @rm_init_rm, align 8"
+      },
+      {
+        "name": "rm_ioctl",
+        "function_line": 11135,
+        "function_text": "declare i32 @rm_ioctl(ptr noundef, ptr noundef, ptr noundef, i32 noundef, ptr noundef, i32 noundef) #3",
+        "typed_reference_line": 420,
+        "typed_reference_text": "@honor_g1_full_sig_rm_ioctl = global ptr @rm_ioctl, align 8"
+      },
+      {
+        "name": "rm_is_supported_device",
+        "function_line": 6284,
+        "function_text": "declare i32 @rm_is_supported_device(ptr noundef, ptr noundef) #3",
+        "typed_reference_line": 421,
+        "typed_reference_text": "@honor_g1_full_sig_rm_is_supported_device = global ptr @rm_is_supported_device, align 8"
+      },
+      {
+        "name": "rm_isr",
+        "function_line": 6664,
+        "function_text": "declare zeroext i8 @rm_isr(ptr noundef, ptr noundef, ptr noundef) #3",
+        "typed_reference_line": 422,
+        "typed_reference_text": "@honor_g1_full_sig_rm_isr = global ptr @rm_isr, align 8"
+      },
+      {
+        "name": "rm_isr_bh",
+        "function_line": 6667,
+        "function_text": "declare void @rm_isr_bh(ptr noundef, ptr noundef) #3",
+        "typed_reference_line": 423,
+        "typed_reference_text": "@honor_g1_full_sig_rm_isr_bh = global ptr @rm_isr_bh, align 8"
+      },
+      {
+        "name": "rm_kernel_rmapi_op",
+        "function_line": 11147,
+        "function_text": "declare void @rm_kernel_rmapi_op(ptr noundef, ptr noundef) #3",
+        "typed_reference_line": 424,
+        "typed_reference_text": "@honor_g1_full_sig_rm_kernel_rmapi_op = global ptr @rm_kernel_rmapi_op, align 8"
+      },
+      {
+        "name": "rm_perform_version_check",
+        "function_line": 11123,
+        "function_text": "declare i32 @rm_perform_version_check(ptr noundef, ptr noundef, i32 noundef) #3",
+        "typed_reference_line": 425,
+        "typed_reference_text": "@honor_g1_full_sig_rm_perform_version_check = global ptr @rm_perform_version_check, align 8"
+      },
+      {
+        "name": "rm_power_management",
+        "function_line": 7457,
+        "function_text": "declare i32 @rm_power_management(ptr noundef, ptr noundef, i32 noundef) #3",
+        "typed_reference_line": 426,
+        "typed_reference_text": "@honor_g1_full_sig_rm_power_management = global ptr @rm_power_management, align 8"
+      },
+      {
+        "name": "rm_restart_user_channels",
+        "function_line": 7970,
+        "function_text": "declare i32 @rm_restart_user_channels(ptr noundef, ptr noundef) #3",
+        "typed_reference_line": 427,
+        "typed_reference_text": "@honor_g1_full_sig_rm_restart_user_channels = global ptr @rm_restart_user_channels, align 8"
+      },
+      {
+        "name": "rm_run_nano_timer_callback",
+        "function_line": 11150,
+        "function_text": "declare i32 @rm_run_nano_timer_callback(ptr noundef, ptr noundef, ptr noundef) #3",
+        "typed_reference_line": 428,
+        "typed_reference_text": "@honor_g1_full_sig_rm_run_nano_timer_callback = global ptr @rm_run_nano_timer_callback, align 8"
+      },
+      {
+        "name": "rm_shutdown_adapter",
+        "function_line": 6762,
+        "function_text": "declare void @rm_shutdown_adapter(ptr noundef, ptr noundef) #3",
+        "typed_reference_line": 429,
+        "typed_reference_text": "@honor_g1_full_sig_rm_shutdown_adapter = global ptr @rm_shutdown_adapter, align 8"
+      },
+      {
+        "name": "rm_stop_user_channels",
+        "function_line": 7246,
+        "function_text": "declare i32 @rm_stop_user_channels(ptr noundef, ptr noundef) #3",
+        "typed_reference_line": 430,
+        "typed_reference_text": "@honor_g1_full_sig_rm_stop_user_channels = global ptr @rm_stop_user_channels, align 8"
+      },
+      {
+        "name": "rm_write_registry_dword",
+        "function_line": 6281,
+        "function_text": "declare i32 @rm_write_registry_dword(ptr noundef, ptr noundef, ptr noundef, i32 noundef) #3",
+        "typed_reference_line": 431,
+        "typed_reference_text": "@honor_g1_full_sig_rm_write_registry_dword = global ptr @rm_write_registry_dword, align 8"
+      },
+      {
+        "name": "rm_write_registry_string",
+        "function_line": 6278,
+        "function_text": "declare i32 @rm_write_registry_string(ptr noundef, ptr noundef, ptr noundef, ptr noundef, i32 noundef) #3",
+        "typed_reference_line": 432,
+        "typed_reference_text": "@honor_g1_full_sig_rm_write_registry_string = global ptr @rm_write_registry_string, align 8"
+      }
+    ],
+    "original_macros_sha256": "50666a3026513c9cd10d358842c564d9f5f3440c334488a078d071774a20acf0",
+    "selected_macro_lines": [
+      "#define NVCPU_X86_64 ",
+      "#define NV_API_CALL ",
+      "#define NV_LINUX 1",
+      "#define NV_MACINTOSH ",
+      "#define NV_MACINTOSH_OSX ",
+      "#define NV_UNIX 1",
+      "#define PORT_ATOMIC volatile",
+      "#define __APPLE__ 1",
+      "#define __MACH__ 1",
+      "#define __cplusplus 201703L"
+    ],
+    "scope": "exact selected lines only; omitted IR and macros remain in original run text artifact"
+  },
+  {
+    "profile": "uni-os-nvkms-xnu_cpp",
+    "original_ir_sha256": "2af54951ff91185224dbadb9289427ba75a8846a11168a54364cc8a30c68b201",
+    "symbols": [
+      {
+        "name": "rm_cleanup_file_private",
+        "function_line": 2131,
+        "function_text": "declare void @rm_cleanup_file_private(ptr noundef, ptr noundef, ptr noundef) #0",
+        "typed_reference_line": 75,
+        "typed_reference_text": "@honor_g1_full_sig_rm_cleanup_file_private = global ptr @rm_cleanup_file_private, align 8"
+      },
+      {
+        "name": "rm_execute_work_item",
+        "function_line": 2134,
+        "function_text": "declare void @rm_execute_work_item(ptr noundef, ptr noundef) #0",
+        "typed_reference_line": 76,
+        "typed_reference_text": "@honor_g1_full_sig_rm_execute_work_item = global ptr @rm_execute_work_item, align 8"
+      },
+      {
+        "name": "rm_free_private_state",
+        "function_line": 2137,
+        "function_text": "declare void @rm_free_private_state(ptr noundef, ptr noundef) #0",
+        "typed_reference_line": 77,
+        "typed_reference_text": "@honor_g1_full_sig_rm_free_private_state = global ptr @rm_free_private_state, align 8"
+      },
+      {
+        "name": "rm_init_adapter",
+        "function_line": 2140,
+        "function_text": "declare zeroext i8 @rm_init_adapter(ptr noundef, ptr noundef) #0",
+        "typed_reference_line": 78,
+        "typed_reference_text": "@honor_g1_full_sig_rm_init_adapter = global ptr @rm_init_adapter, align 8"
+      },
+      {
+        "name": "rm_init_event_locks",
+        "function_line": 2143,
+        "function_text": "declare zeroext i8 @rm_init_event_locks(ptr noundef, ptr noundef) #0",
+        "typed_reference_line": 79,
+        "typed_reference_text": "@honor_g1_full_sig_rm_init_event_locks = global ptr @rm_init_event_locks, align 8"
+      },
+      {
+        "name": "rm_init_private_state",
+        "function_line": 2146,
+        "function_text": "declare zeroext i8 @rm_init_private_state(ptr noundef, ptr noundef) #0",
+        "typed_reference_line": 80,
+        "typed_reference_text": "@honor_g1_full_sig_rm_init_private_state = global ptr @rm_init_private_state, align 8"
+      },
+      {
+        "name": "rm_init_rm",
+        "function_line": 2149,
+        "function_text": "declare zeroext i8 @rm_init_rm(ptr noundef) #0",
+        "typed_reference_line": 81,
+        "typed_reference_text": "@honor_g1_full_sig_rm_init_rm = global ptr @rm_init_rm, align 8"
+      },
+      {
+        "name": "rm_ioctl",
+        "function_line": 2152,
+        "function_text": "declare i32 @rm_ioctl(ptr noundef, ptr noundef, ptr noundef, i32 noundef, ptr noundef, i32 noundef) #0",
+        "typed_reference_line": 82,
+        "typed_reference_text": "@honor_g1_full_sig_rm_ioctl = global ptr @rm_ioctl, align 8"
+      },
+      {
+        "name": "rm_is_supported_device",
+        "function_line": 2155,
+        "function_text": "declare i32 @rm_is_supported_device(ptr noundef, ptr noundef) #0",
+        "typed_reference_line": 83,
+        "typed_reference_text": "@honor_g1_full_sig_rm_is_supported_device = global ptr @rm_is_supported_device, align 8"
+      },
+      {
+        "name": "rm_isr",
+        "function_line": 2158,
+        "function_text": "declare zeroext i8 @rm_isr(ptr noundef, ptr noundef, ptr noundef) #0",
+        "typed_reference_line": 84,
+        "typed_reference_text": "@honor_g1_full_sig_rm_isr = global ptr @rm_isr, align 8"
+      },
+      {
+        "name": "rm_isr_bh",
+        "function_line": 2161,
+        "function_text": "declare void @rm_isr_bh(ptr noundef, ptr noundef) #0",
+        "typed_reference_line": 85,
+        "typed_reference_text": "@honor_g1_full_sig_rm_isr_bh = global ptr @rm_isr_bh, align 8"
+      },
+      {
+        "name": "rm_kernel_rmapi_op",
+        "function_line": 1457,
+        "function_text": "declare void @rm_kernel_rmapi_op(ptr noundef, ptr noundef) #0",
+        "typed_reference_line": 86,
+        "typed_reference_text": "@honor_g1_full_sig_rm_kernel_rmapi_op = global ptr @rm_kernel_rmapi_op, align 8"
+      },
+      {
+        "name": "rm_perform_version_check",
+        "function_line": 2164,
+        "function_text": "declare i32 @rm_perform_version_check(ptr noundef, ptr noundef, i32 noundef) #0",
+        "typed_reference_line": 87,
+        "typed_reference_text": "@honor_g1_full_sig_rm_perform_version_check = global ptr @rm_perform_version_check, align 8"
+      },
+      {
+        "name": "rm_power_management",
+        "function_line": 2167,
+        "function_text": "declare i32 @rm_power_management(ptr noundef, ptr noundef, i32 noundef) #0",
+        "typed_reference_line": 88,
+        "typed_reference_text": "@honor_g1_full_sig_rm_power_management = global ptr @rm_power_management, align 8"
+      },
+      {
+        "name": "rm_restart_user_channels",
+        "function_line": 2170,
+        "function_text": "declare i32 @rm_restart_user_channels(ptr noundef, ptr noundef) #0",
+        "typed_reference_line": 89,
+        "typed_reference_text": "@honor_g1_full_sig_rm_restart_user_channels = global ptr @rm_restart_user_channels, align 8"
+      },
+      {
+        "name": "rm_run_nano_timer_callback",
+        "function_line": 2173,
+        "function_text": "declare i32 @rm_run_nano_timer_callback(ptr noundef, ptr noundef, ptr noundef) #0",
+        "typed_reference_line": 90,
+        "typed_reference_text": "@honor_g1_full_sig_rm_run_nano_timer_callback = global ptr @rm_run_nano_timer_callback, align 8"
+      },
+      {
+        "name": "rm_shutdown_adapter",
+        "function_line": 2176,
+        "function_text": "declare void @rm_shutdown_adapter(ptr noundef, ptr noundef) #0",
+        "typed_reference_line": 91,
+        "typed_reference_text": "@honor_g1_full_sig_rm_shutdown_adapter = global ptr @rm_shutdown_adapter, align 8"
+      },
+      {
+        "name": "rm_stop_user_channels",
+        "function_line": 2179,
+        "function_text": "declare i32 @rm_stop_user_channels(ptr noundef, ptr noundef) #0",
+        "typed_reference_line": 92,
+        "typed_reference_text": "@honor_g1_full_sig_rm_stop_user_channels = global ptr @rm_stop_user_channels, align 8"
+      },
+      {
+        "name": "rm_write_registry_dword",
+        "function_line": 2182,
+        "function_text": "declare i32 @rm_write_registry_dword(ptr noundef, ptr noundef, ptr noundef, i32 noundef) #0",
+        "typed_reference_line": 93,
+        "typed_reference_text": "@honor_g1_full_sig_rm_write_registry_dword = global ptr @rm_write_registry_dword, align 8"
+      },
+      {
+        "name": "rm_write_registry_string",
+        "function_line": 2185,
+        "function_text": "declare i32 @rm_write_registry_string(ptr noundef, ptr noundef, ptr noundef, ptr noundef, i32 noundef) #0",
+        "typed_reference_line": 94,
+        "typed_reference_text": "@honor_g1_full_sig_rm_write_registry_string = global ptr @rm_write_registry_string, align 8"
+      }
+    ],
+    "original_macros_sha256": "58c6ba921a076d39f682ff3231eaa5a22874adb7db965a72546223f601404040",
+    "selected_macro_lines": [
+      "#define NVCPU_X86_64 ",
+      "#define NV_API_CALL ",
+      "#define NV_LINUX 1",
+      "#define NV_MACINTOSH ",
+      "#define NV_MACINTOSH_OSX ",
+      "#define NV_UNIX 1",
+      "#define PORT_ATOMIC volatile",
+      "#define __APPLE__ 1",
+      "#define __MACH__ 1",
+      "#define __cplusplus 201703L"
+    ],
+    "scope": "exact selected lines only; omitted IR and macros remain in original run text artifact"
+  },
+  {
+    "profile": "uni-os-xnu2_cpp",
+    "original_ir_sha256": "f05768d98ea1fa2e52c95bd73147f937715380cbccdc8a8e8af8b32f4cd10790",
+    "symbols": [
+      {
+        "name": "rm_cleanup_file_private",
+        "function_line": 6755,
+        "function_text": "declare void @rm_cleanup_file_private(ptr noundef, ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 203,
+        "typed_reference_text": "@honor_g1_full_sig_rm_cleanup_file_private = global ptr @rm_cleanup_file_private, align 8"
+      },
+      {
+        "name": "rm_execute_work_item",
+        "function_line": 6758,
+        "function_text": "declare void @rm_execute_work_item(ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 204,
+        "typed_reference_text": "@honor_g1_full_sig_rm_execute_work_item = global ptr @rm_execute_work_item, align 8"
+      },
+      {
+        "name": "rm_free_private_state",
+        "function_line": 6761,
+        "function_text": "declare void @rm_free_private_state(ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 205,
+        "typed_reference_text": "@honor_g1_full_sig_rm_free_private_state = global ptr @rm_free_private_state, align 8"
+      },
+      {
+        "name": "rm_init_adapter",
+        "function_line": 6764,
+        "function_text": "declare zeroext i8 @rm_init_adapter(ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 206,
+        "typed_reference_text": "@honor_g1_full_sig_rm_init_adapter = global ptr @rm_init_adapter, align 8"
+      },
+      {
+        "name": "rm_init_event_locks",
+        "function_line": 6767,
+        "function_text": "declare zeroext i8 @rm_init_event_locks(ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 207,
+        "typed_reference_text": "@honor_g1_full_sig_rm_init_event_locks = global ptr @rm_init_event_locks, align 8"
+      },
+      {
+        "name": "rm_init_private_state",
+        "function_line": 6770,
+        "function_text": "declare zeroext i8 @rm_init_private_state(ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 208,
+        "typed_reference_text": "@honor_g1_full_sig_rm_init_private_state = global ptr @rm_init_private_state, align 8"
+      },
+      {
+        "name": "rm_init_rm",
+        "function_line": 6773,
+        "function_text": "declare zeroext i8 @rm_init_rm(ptr noundef) #1",
+        "typed_reference_line": 209,
+        "typed_reference_text": "@honor_g1_full_sig_rm_init_rm = global ptr @rm_init_rm, align 8"
+      },
+      {
+        "name": "rm_ioctl",
+        "function_line": 6776,
+        "function_text": "declare i32 @rm_ioctl(ptr noundef, ptr noundef, ptr noundef, i32 noundef, ptr noundef, i32 noundef) #1",
+        "typed_reference_line": 210,
+        "typed_reference_text": "@honor_g1_full_sig_rm_ioctl = global ptr @rm_ioctl, align 8"
+      },
+      {
+        "name": "rm_is_supported_device",
+        "function_line": 6779,
+        "function_text": "declare i32 @rm_is_supported_device(ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 211,
+        "typed_reference_text": "@honor_g1_full_sig_rm_is_supported_device = global ptr @rm_is_supported_device, align 8"
+      },
+      {
+        "name": "rm_isr",
+        "function_line": 6782,
+        "function_text": "declare zeroext i8 @rm_isr(ptr noundef, ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 212,
+        "typed_reference_text": "@honor_g1_full_sig_rm_isr = global ptr @rm_isr, align 8"
+      },
+      {
+        "name": "rm_isr_bh",
+        "function_line": 6785,
+        "function_text": "declare void @rm_isr_bh(ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 213,
+        "typed_reference_text": "@honor_g1_full_sig_rm_isr_bh = global ptr @rm_isr_bh, align 8"
+      },
+      {
+        "name": "rm_kernel_rmapi_op",
+        "function_line": 6788,
+        "function_text": "declare void @rm_kernel_rmapi_op(ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 214,
+        "typed_reference_text": "@honor_g1_full_sig_rm_kernel_rmapi_op = global ptr @rm_kernel_rmapi_op, align 8"
+      },
+      {
+        "name": "rm_perform_version_check",
+        "function_line": 6791,
+        "function_text": "declare i32 @rm_perform_version_check(ptr noundef, ptr noundef, i32 noundef) #1",
+        "typed_reference_line": 215,
+        "typed_reference_text": "@honor_g1_full_sig_rm_perform_version_check = global ptr @rm_perform_version_check, align 8"
+      },
+      {
+        "name": "rm_power_management",
+        "function_line": 6794,
+        "function_text": "declare i32 @rm_power_management(ptr noundef, ptr noundef, i32 noundef) #1",
+        "typed_reference_line": 216,
+        "typed_reference_text": "@honor_g1_full_sig_rm_power_management = global ptr @rm_power_management, align 8"
+      },
+      {
+        "name": "rm_restart_user_channels",
+        "function_line": 6797,
+        "function_text": "declare i32 @rm_restart_user_channels(ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 217,
+        "typed_reference_text": "@honor_g1_full_sig_rm_restart_user_channels = global ptr @rm_restart_user_channels, align 8"
+      },
+      {
+        "name": "rm_run_nano_timer_callback",
+        "function_line": 6800,
+        "function_text": "declare i32 @rm_run_nano_timer_callback(ptr noundef, ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 218,
+        "typed_reference_text": "@honor_g1_full_sig_rm_run_nano_timer_callback = global ptr @rm_run_nano_timer_callback, align 8"
+      },
+      {
+        "name": "rm_shutdown_adapter",
+        "function_line": 6803,
+        "function_text": "declare void @rm_shutdown_adapter(ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 219,
+        "typed_reference_text": "@honor_g1_full_sig_rm_shutdown_adapter = global ptr @rm_shutdown_adapter, align 8"
+      },
+      {
+        "name": "rm_stop_user_channels",
+        "function_line": 6806,
+        "function_text": "declare i32 @rm_stop_user_channels(ptr noundef, ptr noundef) #1",
+        "typed_reference_line": 220,
+        "typed_reference_text": "@honor_g1_full_sig_rm_stop_user_channels = global ptr @rm_stop_user_channels, align 8"
+      },
+      {
+        "name": "rm_write_registry_dword",
+        "function_line": 6809,
+        "function_text": "declare i32 @rm_write_registry_dword(ptr noundef, ptr noundef, ptr noundef, i32 noundef) #1",
+        "typed_reference_line": 221,
+        "typed_reference_text": "@honor_g1_full_sig_rm_write_registry_dword = global ptr @rm_write_registry_dword, align 8"
+      },
+      {
+        "name": "rm_write_registry_string",
+        "function_line": 6812,
+        "function_text": "declare i32 @rm_write_registry_string(ptr noundef, ptr noundef, ptr noundef, ptr noundef, i32 noundef) #1",
+        "typed_reference_line": 222,
+        "typed_reference_text": "@honor_g1_full_sig_rm_write_registry_string = global ptr @rm_write_registry_string, align 8"
+      }
+    ],
+    "original_macros_sha256": "926829570cb0bae25ceb68e59e1f31747b6056a24e26e7e485eb7ab0acb5c2b5",
+    "selected_macro_lines": [
+      "#define NVCPU_X86_64 ",
+      "#define NV_API_CALL ",
+      "#define NV_LINUX 1",
+      "#define NV_MACINTOSH ",
+      "#define NV_MACINTOSH_OSX ",
+      "#define NV_UNIX 1",
+      "#define PORT_ATOMIC volatile",
+      "#define __APPLE__ 1",
+      "#define __MACH__ 1",
+      "#define __cplusplus 201703L"
+    ],
+    "scope": "exact selected lines only; omitted IR and macros remain in original run text artifact"
+  }
+]
