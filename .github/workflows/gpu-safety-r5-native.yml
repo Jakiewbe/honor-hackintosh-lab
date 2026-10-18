@@ -63,7 +63,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for test in test_index_definitions.py test_native_manifest.py test_text_diagnostics.py test_g1_rm_abi.py test_g1_symbol_identity.py test_g1_special_symbol_sources.py test_g1_special_object_providers.py test_g1_full_build.py; do
+          for test in test_index_definitions.py test_native_manifest.py test_text_diagnostics.py test_g1_rm_abi.py test_g1_full_abi.py test_g1_symbol_identity.py test_g1_special_symbol_sources.py test_g1_special_object_providers.py test_g1_full_build.py; do
             python3 -m unittest discover -s tools -p "$test" -v
           done
           python3 tools/index-definitions.py "$RUNNER_TEMP/gpu-safety-r5-nv" \
@@ -145,6 +145,7 @@ jobs:
             --out "$RUNNER_TEMP/gpu-safety-r5-logs/nvlink-host" --cxx clang++
 
       - name: Attempt all official sources and compare links without and with NVLink provider
+        id: full_source
         if: ${{ !cancelled() && steps.native_compile.outcome == 'success' }}
         shell: bash
         run: |
@@ -155,6 +156,19 @@ jobs:
             --native-logs "$RUNNER_TEMP/gpu-safety-r5-logs" \
             --out "$RUNNER_TEMP/gpu-safety-r5-logs/full-source" --jobs 2 \
             2>&1 | tee "$RUNNER_TEMP/gpu-safety-r5-logs/full-source-console.txt"
+
+      - name: Compare selected ABI under actual complete-build RM and linked NVRM flags
+        if: ${{ !cancelled() && steps.full_source.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/g1_full_abi.py \
+            --nv "$RUNNER_TEMP/gpu-safety-r5-nv" \
+            --candidate "$RUNNER_TEMP/nullmoth-v2.3.3-gpu-safety-r5-candidate" \
+            --logs "$RUNNER_TEMP/gpu-safety-r5-logs" \
+            --full-report "$RUNNER_TEMP/gpu-safety-r5-logs/full-source/report.json" \
+            --definitions research/gpu-safety-r5/symbol-definitions.json \
+            --out "$RUNNER_TEMP/gpu-safety-r5-logs/full-flags-abi"
 
       - name: Prepare explicit text publication set
         id: text_publication

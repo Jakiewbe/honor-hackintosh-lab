@@ -116,8 +116,8 @@ def parse_layout(ir):
     return triple.group(1),dict(zip([name for name,_ in specs],values))
 
 
-def compare_layouts(units):
-    expected=['probe-'+rel.replace('/','_') for rel in RM_SOURCES]+[x[0] for x in CPP_PROFILES]
+def compare_layouts(units, rm_prefix='probe-'):
+    expected=[rm_prefix+rel.replace('/','_') for rel in RM_SOURCES]+[x[0] for x in CPP_PROFILES]
     if len(units)!=len(expected) or sorted(x['profile'] for x in units)!=sorted(expected) or any('layout' not in u for u in units):
         return {'status':'INCOMPLETE','differences':[]}
     keys=[k for k,_ in layout_expressions()]
@@ -144,11 +144,11 @@ def first_argument_end(clean, opening, end):
     return end
 
 
-def altstack_conflicts(units,audit):
+def altstack_conflicts(units,audit,rm_prefix='probe-'):
     null_names={x['name'] for x in audit['occurrences'] if x['literal_null']}
     result=[]
     for rel in RM_SOURCES:
-        profile='probe-'+rel.replace('/','_')
+        profile=rm_prefix+rel.replace('/','_')
         matches=[x for x in units if x['profile']==profile]
         if len(matches)!=1 or not matches[0].get('altstack_defined'):
             continue

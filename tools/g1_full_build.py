@@ -308,7 +308,8 @@ def build(args, report):
         component, source, obj, argv, cwd, log, original, key = job
         rc = run(argv, cwd, log)
         row = {'component': component, 'source': key, 'source_sha256': digest(source.read_bytes()),
-               'object': str(obj), 'compile_exit': rc, 'official_argv': original, 'candidate_argv': argv, 'log': log.name}
+               'object': str(obj), 'compile_exit': rc, 'official_argv': original, 'candidate_argv': argv,
+               'compile_cwd': str(cwd), 'log': log.name}
         if rc == 0:
             try:
                 row['object_sha256'] = validate_object(obj)
