@@ -262,8 +262,12 @@ def main():
         if not (probe_root / "src/nvidia").exists():
             probe_root = nvroot
         probe_inc = ["-I" + str(p) for p in includes if Path(p).is_dir()]
-        probe_inc += ["-I" + str(d) for d in (probe_root / "src/nvidia/arch/nvalloc/unix/include",
-                                              probe_root / "src/nvidia") if d.is_dir()]
+        probe_inc += ["-I" + str(d) for d in (
+            probe_root / "src/nvidia/arch/nvalloc/unix/include",
+            probe_root / "src/nvidia",
+            probe_root / "src/common/softfloat/nvidia",      # nv-softfloat.h lives here
+            probe_root / "src/common/softfloat",
+            probe_root / "src/nvidia-modeset/include") if d.is_dir()]
         probe_results = {}
         for rel in ogkm_probe:
             srcp = probe_root / rel
