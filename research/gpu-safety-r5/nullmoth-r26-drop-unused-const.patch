@@ -1,0 +1,12 @@
+diff --git a/kexts/NVRM/os-nvkms-xnu.cpp b/kexts/NVRM/os-nvkms-xnu.cpp
+index 22cf688..8332db5 100644
+--- a/kexts/NVRM/os-nvkms-xnu.cpp
++++ b/kexts/NVRM/os-nvkms-xnu.cpp
+@@ -54,7 +54,6 @@ static const uint32_t kKmsSuspendPinWaitMs = 60000;
+ // with a reason still makes the failure observable after the fact.
+ static volatile uint32_t gKmsCloseDeferred;
+ static volatile uint32_t gKmsCloseDeferredLost;
+-static const uint32_t kKmsPmPinWaitMs = 5000;
+ static const uint32_t kKmsPmWaitMs = 30000;
+ static const char *const kKmsPmName[] = { "running", "suspended", "lost" };
+ 
