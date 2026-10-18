@@ -214,9 +214,11 @@ def main():
             obj = out.parent / ("candidate-NVRM_" + name.replace(".", "_") + ".o")
             flags = [*common_flags, *definitions, *["-I" + str(p) for p in includes]]
             flags += ["-I" + str(candidate / "kexts/NVRM")]
-            cc = "clang" if name.endswith(".c") else "clang++"
-            cflags = ["-x", "c", "-std=gnu11"] if name.endswith(".c") else []
-            rc = execute(["xcrun", cc, *cflags, *flags, "-c", str(src), "-o", str(obj)],
+            is_c = name.endswith(".c")
+            cc = "clang" if is_c else "clang++"
+            cflags = ["-x", "c", "-std=gnu11"] if is_c else []
+            use_flags = [f for f in flags if not (is_c and f.startswith("-std="))]
+            rc = execute(["xcrun", cc, *cflags, *use_flags, "-c", str(src), "-o", str(obj)],
                          candidate, out / ("candidate-NVRM_" + name.replace(".", "_") + "-compile.txt"))
             nvrm_compile[name] = rc
             if rc == 0:
