@@ -934,3 +934,35 @@ GitHub 单个 job 默认超时是 6 小时，因此**整层编译可以在一次
 统计通过/失败，并把通过的对象一起链接，量出**完整未定义集合**。
 
 在此之前不再做增量补文件（上一轮已证明它不收敛）。
+
+## 三十三、KC8 之后的实际 ABI 面：我们只用到 3 项（R80）
+
+独立核对（kexts/ 下全部 .c/.cpp/.h，逐符号计数）：
+
+| KC 符号 | 我们代码中的引用 |
+|---|---|
+| extendedConfigRead32 | **10** |
+| extendedConfigWrite32 | **5** |
+| IOACPIPlatformDevice | **9** |
+| extendedConfigRead8 / Read16 | 0 |
+| extendedConfigWrite8 / Write16 | 0 |
+
+也就是说：KC8 里那 8 个符号，**当前候选代码只依赖其中 3 个**（read32、write32、ACPIPlatformDevice 的 metaClass 家族）。
+
+## 这条事实的作用
+
+1. 先前"8 项全都要拿到 C++ ABI 证据"的要求，对当前代码而言**只有 3 项是必需的**；
+2. 其余 5 项（read8/read16/write8/write16）只在历史 IR 里出现过，当前树里没有调用点——
+   它们不构成当前构建的 ABI 阻塞；
+3. 这也解释了为什么 KC8 报告里 write8 未被观察到：**我们没调用它**。
+
+## 与前序工作的关系
+
+G1-KC-8（8/8 在 runner Boot KC 中定位到精确 Mach-O 符号、节角色、VM 地址与文件偏移）已由
+run 39134085153 完成并记录于 KC8-20261018.md。本轮不重复该采集，只做"这对当前代码意味着什么"的收敛判断。
+
+## 仍未解决
+
+- IOPCIDevice::extendedConfigRead32/Write32 的**返回值宽度与调用约定**虽有 SDK IR 证据，但**未在实际加载时验证**；
+- PM 关闭路径（P0-4）与初始化/渲染/读回/安全结束仍全部 NO-GO；
+- 完整 C++ ABI 与最终用户系统差异未验证。
