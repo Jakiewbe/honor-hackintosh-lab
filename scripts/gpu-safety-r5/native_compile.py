@@ -307,12 +307,34 @@ def main():
                         break
             probe_results[rel] = {"exit": rc, "first_errors": errs,
                                   "status": "COMPILED" if rc == 0 else "COMPILE_FAILED"}
+        # The last gap family is our own: kexts/NVRM/nvrm_pageoff.c defines the seven _nvrm_* symbols. It is a
+        # C file that includes NVIDIA headers, so it gets the same -DNVRM/-x c configuration as the probe.
+        cand_src = candidate / "kexts/NVRM/nvrm_pageoff.c"
+        cand_probe = {}
+        if cand_src.exists():
+            c_flags = [f for f in common_flags if f not in ("-std=c++17", "-fno-rtti", "-fno-exceptions")]
+            cinc = ["-I" + str(candidate / "kexts/NVRM")] + ["-I" + str(p) for p in includes if Path(p).is_dir()]
+            obj = out.parent / "probe-cand-nvrm_pageoff.o"
+            log = out / "probe-cand-nvrm_pageoff.txt"
+            cmd = ["xcrun", "clang", "-x", "c", "-std=gnu11", *c_flags, *definitions, "-DNVRM", *cinc,
+                   "-c", str(cand_src), "-o", str(obj)]
+            rc = execute(cmd, candidate, log)
+            lines = log.read_text(encoding="utf-8", errors="replace").splitlines()
+            errs = []
+            for i, l in enumerate(lines):
+                if "error:" in l:
+                    errs.extend(x.strip() for x in lines[i:i + 4] if x.strip())
+                    if len(errs) >= 8:
+                        break
+            cand_probe["kexts/NVRM/nvrm_pageoff.c"] = {"exit": rc, "first_errors": errs,
+                                                        "status": "COMPILED" if rc == 0 else "COMPILE_FAILED"}
+        probe_results.update(cand_probe)
         report["ogkm_probe"] = probe_results
 
         # Experiment: link the 9 known-good units together with the 5 probe objects and measure how many of
         # the provider-less imports disappear. Report-only; the production artifact above is untouched.
         probe_objs = sorted(out.parent.glob("probe-*.o"))
-        if probe_objs and len(probe_objs) == len(ogkm_probe):
+        if probe_objs:
             mix_out = out.parent / "NVRM-ogkm.kext/Contents/MacOS/NVRM"
             mix_out.parent.mkdir(parents=True, exist_ok=True)
             mix_link = ["xcrun", "clang++", "-arch", "x86_64", "-mmacosx-version-min=15.5", "-fapple-kext",
