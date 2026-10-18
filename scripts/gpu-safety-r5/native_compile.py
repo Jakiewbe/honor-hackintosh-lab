@@ -366,6 +366,37 @@ def main():
                 sample["failed"].append({"file": sf.name, "errors": errs})
         report["rm_sample"] = sample
 
+        # First controlled batch: compile every file that the symbol index says defines a gap symbol.
+        # The list comes from research/gpu-safety-r5/rm-gap-index.json, so it is reproducible outside CI.
+        idx_path = Path(__file__).resolve().parents[2] / "research/gpu-safety-r5/rm-gap-index.json"
+        batch = {"attempted": 0, "compiled": 0, "failed": [], "capped": False}
+        if idx_path.exists():
+            import json as _json
+            idx = _json.loads(idx_path.read_text(encoding="utf-8"))
+            files = [f for f in idx.get("defining_files", []) if not f.startswith("kernel-open/")]
+            CAP = 100
+            if len(files) > CAP:
+                files = files[:CAP]
+                batch["capped"] = True
+            bflags = [f for f in common_flags if f not in ("-std=c++17", "-fno-rtti", "-fno-exceptions")]
+            for rel in files:
+                srcp = probe_root / rel
+                if not srcp.exists():
+                    continue
+                batch["attempted"] += 1
+                obj = out.parent / ("bat-" + srcp.stem + ".o")
+                log = out / ("bat-" + srcp.stem + ".txt")
+                cmd = ["xcrun", "clang", "-x", "c", "-std=gnu11", *bflags, *definitions, "-DNVRM", *probe_inc,
+                       "-I" + str(srcp.parent), "-c", str(srcp), "-o", str(obj)]
+                rc = execute(cmd, probe_root, log)
+                if rc == 0:
+                    batch["compiled"] += 1
+                else:
+                    errs = [l for l in log.read_text(encoding="utf-8", errors="replace").splitlines()
+                            if "error:" in l][:2]
+                    batch["failed"].append({"file": rel, "errors": errs})
+        report["rm_defs_batch"] = batch
+
         # Experiment: link the 9 known-good units together with the 5 probe objects and measure how many of
         # the provider-less imports disappear. Report-only; the production artifact above is untouched.
         probe_objs = sorted(out.parent.glob("probe-*.o"))
