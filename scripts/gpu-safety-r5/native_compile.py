@@ -276,6 +276,7 @@ def main():
             probe_root / "src/common/softfloat/nvidia",      # nv-softfloat.h lives here
             probe_root / "src/common/softfloat",
             probe_root / "src/common/softfloat/source/include",
+            probe_root / "src/common/softfloat/source/8086-SSE",
             probe_root / "src/nvidia/src/libraries/libspdm/nvidia",
             probe_root / "src/nvidia/src/libraries/libspdm/3.5.0/include",
             probe_root / "src/nvidia/src/libraries/libspdm",
@@ -379,6 +380,8 @@ def main():
                 files = files[:CAP]
                 batch["capped"] = True
             bflags = [f for f in common_flags if f not in ("-std=c++17", "-fno-rtti", "-fno-exceptions")]
+            # src/common/src holds user-space helpers (nv_smg.c needs pthread.h); they are not kext code.
+            files = [f for f in files if not f.startswith("src/common/src/")]
             for rel in files:
                 srcp = probe_root / rel
                 if not srcp.exists():
@@ -395,6 +398,25 @@ def main():
                     errs = [l for l in log.read_text(encoding="utf-8", errors="replace").splitlines()
                             if "error:" in l][:2]
                     batch["failed"].append({"file": rel, "errors": errs})
+        batch_objs = sorted(out.parent.glob("bat-*.o"))
+        if batch_objs and probe_objs:
+            b_out = out.parent / "NVRM-rmbatch.kext/Contents/MacOS/NVRM"
+            b_out.parent.mkdir(parents=True, exist_ok=True)
+            b_link = ["xcrun", "clang++", "-arch", "x86_64", "-mmacosx-version-min=15.5", "-fapple-kext",
+                      "-isysroot", sdk, "-nostdlib", "-Xlinker", "-kext", "-lkmodc++", "-lkmod", "-lcc_kext",
+                      *[str(o) for o in batch_objs], *[str(o) for o in probe_objs], "-o", str(b_out)]
+            b_rc = execute(b_link, nm, out / "nvrm-rmbatch-link.txt")
+            entry = {"objects": len(batch_objs) + len(probe_objs), "exit": b_rc}
+            if b_rc == 0:
+                execute(["xcrun", "nm", "-u", str(b_out)], nm, out / "nvrm-rmbatch-undefined.txt")
+                und = [l.strip() for l in (out / "nvrm-rmbatch-undefined.txt").read_text(
+                    encoding="utf-8", errors="replace").splitlines() if l.strip().startswith("_")]
+                entry.update({"status": "LINKED", "size": b_out.stat().st_size, "undefined_symbols": len(und)})
+            else:
+                entry["status"] = "LINK_FAILED"
+                entry["errors"] = [l for l in (out / "nvrm-rmbatch-link.txt").read_text(
+                    encoding="utf-8", errors="replace").splitlines() if "error:" in l][:5]
+            report["kext_link_nvrm_rmbatch"] = entry
         report["rm_defs_batch"] = batch
 
         # Experiment: link the 9 known-good units together with the 5 probe objects and measure how many of
