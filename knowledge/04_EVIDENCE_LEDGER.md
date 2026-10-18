@@ -1,4 +1,4 @@
-> **2026-10-18 新增 SOURCE-LEXICAL 证据：** [35 符号依赖及 RM 栈 ABI 审计](../research/gpu-safety-r5/G1-CLOSURE-ABI-AUDIT-20261018.md)，含全部词法命中、固定输入哈希、71 个 Darwin 源 blob 核验和七项工具回归。旧 run [39090712869](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39090712869) 的五单元编译/混合链接已以 artifact `12123001015` 的 SHA256 绑定复核；不是新的构建通过。新增精确预处理/对象提供者取证尚未运行。无实机证据。
+> **2026-10-18 新增 SOURCE-LEXICAL 证据：** [35 符号依赖及 RM 栈 ABI 审计](../research/gpu-safety-r5/G1-CLOSURE-ABI-AUDIT-20261018.md)，含全部词法命中、固定输入哈希、71 个 Darwin 源 blob 核验和九项工具回归。旧 run [39090712869](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39090712869) 的五单元编译/混合链接已以 artifact `12123001015` 的 SHA256 绑定复核；不是新的构建通过。新增精确预处理/对象提供者取证尚未运行。无实机证据。
 
 | R8–R12 设备生命周期 | HOST-TEST / SOURCE-STRUCTURE | 22/22、36/36（两源文件各自期望值） | `research/gpu-safety-r5/README.md` |
 | R10 生产文件修正 | DARWIN-COMPILE | 16/16 对象（含生产 NVRMFB 与遗留副本），告警零增量 | run 39050580870 |

@@ -14,6 +14,7 @@ import subprocess
 
 OGKM_PIN = "e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb"
 NM_PIN = "ac55984c473e746c2a8ebea7ba0913461aa7c393"
+NM_TREE = "528e804da39cb6c358727455385563d414606a70"
 EXTS = {".c", ".h", ".cc", ".cpp", ".hpp"}
 CONTROL = {"if", "else", "for", "while", "switch", "return", "sizeof", "do", "alignof", "__alignof__", "typeof", "__typeof__"}
 
@@ -107,7 +108,7 @@ def load_sources(root, manifest=None, pin=OGKM_PIN, prefix=None):
         paths = [p for p in git(root, "ls-files", "-z").decode().split("\0") if p]
         expected = None
     else:
-        if manifest.get("truncated") or manifest["sha"] != NM_PIN:
+        if manifest.get("truncated") or manifest["sha"] != NM_TREE:
             raise ValueError("NullMoth tree not complete/fixed")
         expected = {r["path"]: r["sha"] for r in manifest["tree"] if r["type"] == "blob"}
         paths = [p for p in expected if p.startswith("kexts/")]
@@ -185,7 +186,7 @@ def audit(nv, nm, names, manifest):
             call_sites.append({"path": path, "line": line, "symbol": name, "kind": kind,
                 "arguments": arguments, "first_argument_literal_null": bool(re.match(r"^(?:NULL|nullptr|0)\s*(?:,|$)", arguments))})
     return {"schema": "honor.g1.lexical-dependencies.v1", "level": "SOURCE-LEXICAL-NOT-COMPILED-ABI",
-        "pins": {"ogkm": OGKM_PIN, "nullmoth": NM_PIN},
+        "pins": {"ogkm": OGKM_PIN, "nullmoth": NM_PIN, "nullmoth_tree": NM_TREE},
         "scope": {"ogkm_sources": len(ogkm), "ogkm_build_and_source_files": len(build_text), "darwin_kext_sources": len(darwin)},
         "limitations": ["No preprocessing: mutually exclusive definitions and inactive calls retained",
             "Call-like identifiers include macros, casts and indirect calls; not a linker dependency graph",

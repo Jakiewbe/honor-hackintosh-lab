@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Regression cases for prior call/declaration/definition misclassification."""
 import unittest
+import tempfile
 from pathlib import Path
-from g1_dependency_audit import definitions
+from g1_dependency_audit import definitions, load_sources, git_blob, NM_TREE
 from g1_probe_inventory import derive_preprocess
 
 
@@ -48,6 +49,24 @@ int real(void) {
     def test_preprocess_refuses_wrong_source(self):
         with self.assertRaises(ValueError):
             derive_preprocess(["xcrun", "clang", "-c", "wrong.c", "-o", "probe.o"], Path("osapi.c"))
+
+    def test_snapshot_uses_tree_sha_and_verifies_blob(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / "kexts").mkdir()
+            data = b"int f(void) { return 0; }\n"
+            (root / "kexts/a.c").write_bytes(data)
+            manifest = {"sha": NM_TREE, "truncated": False,
+                        "tree": [{"type": "blob", "path": "kexts/a.c", "sha": git_blob(data)}]}
+            sources, _, _ = load_sources(root, manifest)
+            self.assertEqual(set(sources), {"kexts/a.c"})
+            (root / "kexts/a.c").write_bytes(data + b"// changed\n")
+            with self.assertRaises(ValueError):
+                load_sources(root, manifest)
+
+    def test_snapshot_rejects_incomplete_tree(self):
+        with self.assertRaises(ValueError):
+            load_sources(Path("unused"), {"sha": NM_TREE, "truncated": True, "tree": []})
 
 
 if __name__ == "__main__":
