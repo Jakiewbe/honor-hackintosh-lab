@@ -8,8 +8,8 @@ from g1_target_providers import load_imports, match_records, observe_binary, par
 
 class TargetProviderTests(unittest.TestCase):
     def test_exact_spelling_and_data_distinct(self):
-        got = parse_globals('00000001 T ___bzero\n00000002 S __ZTV9IOService\n')
-        self.assertEqual(got, {'___bzero': 'T', '__ZTV9IOService': 'S'})
+        got = parse_globals('00000001 T ___bzero\n00000002 S __ZTV9IOService\nffffff8000c1b204 D .constructors_used\n')
+        self.assertEqual(got, {'___bzero': 'T', '__ZTV9IOService': 'S', '.constructors_used': 'D'})
         self.assertNotIn('_bzero', got)
 
     def test_reject_undefined_indirect_diagnostic_partial_and_duplicate(self):

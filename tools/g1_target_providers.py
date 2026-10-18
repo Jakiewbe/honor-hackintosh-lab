@@ -47,7 +47,7 @@ def parse_globals(text):
     for line in text.splitlines():
         if not line.strip():
             continue
-        m = re.fullmatch(r'\s*([0-9a-fA-F]+) ([ABCDRSTVW]) (_[A-Za-z0-9_.$]+)\s*', line)
+        m = re.fullmatch(r'\s*([0-9a-fA-F]+) ([ABCDRSTVW]) ([A-Za-z_.$][A-Za-z0-9_.$]*)\s*', line)
         if not m:
             raise ValueError('unrecognised or non-definition nm record: '+line[:180])
         _, kind, name = m.groups()
@@ -109,6 +109,8 @@ def observe_binary(path, provider_id, level, names, out, execute=command):
 
 def inspect_bundle(bundle, label, names, out):
     plist_path = bundle/'Contents/Info.plist'
+    if not plist_path.is_file():
+        plist_path = bundle/'Info.plist'
     row = {'path': str(bundle), 'info_path': str(plist_path), 'state': 'NOT_PRESENT'}
     providers = []
     if not plist_path.is_file():
@@ -124,7 +126,10 @@ def inspect_bundle(bundle, label, names, out):
         if executable:
             if not isinstance(executable, str) or '/' in executable or '\\' in executable or executable in ('.', '..'):
                 raise ValueError('unsafe bundle executable basename')
-            p = observe_binary(bundle/'Contents/MacOS'/executable, label,
+            binary = bundle/'Contents/MacOS'/executable
+            if not binary.is_file() and (bundle/executable).is_file():
+                binary = bundle/executable
+            p = observe_binary(binary, label,
                 'RUNNER_KEXT_GLOBAL_DEFINITION_NOT_LOAD_OR_ABI_PROOF', names, out)
             p['bundle_id'], p['bundle_version'] = row['bundle_id'], row['version']
             providers.append(p)
@@ -169,17 +174,23 @@ def collect(args, out):
     bundles = []
     for name in BUNDLES:
         bundle = Path('/System/Library/Extensions')/name
-        candidates = [bundle, *sorted((bundle/'Contents/PlugIns').glob('*.kext'))]
+        candidates = [bundle, *sorted((bundle/'Contents/PlugIns').glob('*.kext')),
+                      *sorted((bundle/'PlugIns').glob('*.kext'))]
         for i, candidate in enumerate(candidates):
             row, observed = inspect_bundle(candidate, name.replace('.', '-')+'-'+str(i), names, out)
             bundles.append(row)
             providers.extend(observed)
     # Inventory SDK libraries/stubs and KC paths separately; do not call SDK
     # declarations, tbd text, allowlists or kernel globals actual target exports.
-    roots = [sdk/'System/Library/Frameworks/Kernel.framework/Versions/A/Libraries',
+    roots = [sdk/'System/Library/Frameworks/Kernel.framework',
+             sdk/'System/Library/Frameworks/Kernel.framework/Versions/A/Libraries',
              sdk/'System/Library/Extensions', Path('/System/Library/Kernels'),
-             Path('/System/Library/KernelCollections'), Path('/Library/Apple/System/Library/KernelCollections')]
+             Path('/System/Library/KernelCollections'), Path('/Library/Apple/System/Library/KernelCollections'),
+             *[Path('/System/Library/Extensions')/name for name in BUNDLES]]
     inventory = [inventory_tree(root) for root in roots]
+    rc, stdout, stderr = command(['/usr/bin/kmutil', 'inspect', '--help'])
+    write(out/'kmutil-inspect-help.json', {'argv': ['/usr/bin/kmutil', 'inspect', '--help'],
+        'exit': rc, 'stdout': stdout.decode('utf-8'), 'stderr': stderr.decode('utf-8')})
     records = match_records(names, providers)
     report = {'schema': 'honor.g1.runner-provider-discovery.v1',
         'status': 'DISCOVERY_COMPLETE_NOT_TARGET_KPI_OR_ABI_ACCEPTANCE',
