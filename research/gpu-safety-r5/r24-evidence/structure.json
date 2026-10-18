@@ -1,0 +1,131 @@
+{
+ "level": "SOURCE-STRUCTURE (R24 begin/commit/abort)",
+ "source_sha256": {
+  "os-nvkms-xnu.cpp": "ee3b7660d6644c7cd0397edd1f63cb1bc9b3861859aa7cb47a263747f9df82a8",
+  "NVRM.cpp": "20d3567263b2393cb2fd789221bd12221892381fac2f120af84a86d41262f557"
+ },
+ "checks": [
+  {
+   "check": "begin refuses unless RUNNING",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "begin refuses a duplicate",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "begin closes admission",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "begin takes a sequence number",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "commit verifies the sequence",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "commit waits on the pin count",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "commit abandons without touching NVKMS",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "commit suspends exactly once",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "the KAPI notice and the state flip are inside the locked region",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "commit takes the lock once and has no out-of-lock KAPI window",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "abort releases only its own request",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "a pin is refused while a request is pending",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "resume cancels a pending request",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "gpuSuspend begins before the framebuffers are told to stop",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "gpuSuspend commits after they were told",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "a failed commit never closes the RM gate",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "a failed commit never stops user channels",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "a failed commit never runs RM standby",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "a failed commit aborts the request",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "a failed commit is recorded as a violation",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "a failed commit re-lights the framebuffers",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "setPowerState does not pretend to refuse the sleep",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "setPowerState records a violation when the suspend failed",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "setPowerState acknowledges exactly once",
+   "ok": true,
+   "detail": ""
+  }
+ ],
+ "result": "PASS",
+ "failures": []
+}

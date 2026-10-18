@@ -99,6 +99,10 @@ def main():
         step("structure-nvidia", [py, str(ws / "work/check_r11_lifetime.py")], ws)
         step("structure-intel", [py, str(ws / "work/check_intel_stop.py")], ws)
         step("structure-pm", [py, str(REPO / "tools/check-pm-exclusion.py")], REPO)
+        if not args.skip_host:
+            step("pm-host", ["wsl", "-e", "bash", "-c",
+                              f"GPU_R24_WORK={wsl_path(ws)} GPU_R24_OUT={wsl_path(ws)}/evidence/r24 "
+                              f"bash {wsl_path(REPO)}/tools/run-r24-test.sh"], ws, 1800)
     root = ""
     r = run("root-commit", ["git", "rev-list", "--max-parents=0", "HEAD"], src)
     if r["exit"] == 0 and r["tail"]:
@@ -108,6 +112,7 @@ def main():
         step("clean-pristine", ["git", "clean", "-fdq"], src)
     step("roundtrip", [py, str(ws / "work/roundtrip_r5.py")], ws, 1800)
     step("publish", [py, str(REPO / "tools/verify-publish.py")], REPO)
+
     if not args.skip_host:
         step("host-asan", ["wsl", "-e", "bash", "-c", f"bash {wsl_path(ws)}/work/run-r11-test.sh"], ws, 1800)
 

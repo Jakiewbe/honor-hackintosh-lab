@@ -1,0 +1,43 @@
+NVRM-xnu: NVKMS suspended (gpu 0x1, was running)
+NVRM-xnu: NVKMS suspend proceeded with 1 teardown pin(s) still held
+NVRM-xnu: NVKMS suspended (gpu 0x1, was running)
+NVRM-xnu: NVKMS suspend proceeded with 1 teardown pin(s) still held
+NVRM-xnu: NVKMS suspended (gpu 0x1, was running)
+NVRM-xnu: NVKMS suspend proceeded with 1 teardown pin(s) still held
+NVRM-xnu: NVKMS suspended (gpu 0x1, was running)
+NVRM-xnu: NVKMS suspend proceeded with 1 teardown pin(s) still held
+NVRM-xnu: NVKMS suspended (gpu 0x1, was not running)
+NVRM-xnu: NVKMS suspend proceeded with 1 teardown pin(s) still held
+NVRM-xnu: NVKMS suspended (gpu 0x1, was running)
+NVRM-xnu: NVKMS resumed (gpu 0x1)
+NVRM-xnu: NVKMS suspended (gpu 0x1, was not running)
+NVRM-xnu: NVKMS suspend proceeded with 1 teardown pin(s) still held
+NVRM-xnu: NVKMS suspended (gpu 0x1, was running)
+NVRM-xnu: NVKMS suspended (gpu 0x1, was running)
+ok   begin without pins
+ok   commit without pins succeeds
+ok   commit suspends exactly once
+ok   state is suspended
+ok   begin with a pin held
+ok   begin closes pin admission
+FAIL commit refuses while the pin is held
+FAIL refused commit never touches NVKMS
+FAIL refused commit keeps NVKMS running
+ok   refused commit was bounded
+FAIL abort reopens admission
+ok   async unpin lets the commit succeed
+ok   async unpin suspends exactly once
+ok   async unpin commits the state
+FAIL duplicate begin refused
+ok   first request still commits
+FAIL resume cancels the request
+FAIL cancelled request never suspends
+FAIL LOST refuses begin
+ok   LOST never suspends
+FAIL commit gives up
+FAIL late unpin does not suspend
+FAIL late commit is refused
+FAIL stale sequence refused
+FAIL stale sequence never suspends
+ok   the live request still works
+RESULT: 13/26 checks - FAIL

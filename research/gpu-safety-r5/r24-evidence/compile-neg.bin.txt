@@ -1,0 +1,3 @@
+/tmp/r24-MYRUjG/neg.cpp:245:1: error: expected unqualified-id before ‘this’
+  245 | this is not C++;
+      | ^~~~

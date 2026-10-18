@@ -1,0 +1,36 @@
+NVRM-xnu: NVKMS suspended (gpu 0x1) with no teardown in flight
+NVRM-xnu: suspend commit failed: 1 teardown pin(s) still held, or cancelled
+NVRM-xnu: NVKMS suspended (gpu 0x1) with no teardown in flight
+NVRM-xnu: suspend begin refused: a request is already pending
+NVRM-xnu: NVKMS suspended (gpu 0x1) with no teardown in flight
+NVRM-xnu: NVKMS resumed (gpu 0x1)
+NVRM-xnu: suspend begin refused: NVKMS is lost
+NVRM-xnu: suspend commit failed: 1 teardown pin(s) still held, or cancelled
+NVRM-xnu: NVKMS suspended (gpu 0x1) with no teardown in flight
+ok   begin without pins
+ok   commit without pins succeeds
+ok   commit suspends exactly once
+ok   state is suspended
+ok   begin with a pin held
+ok   begin closes pin admission
+ok   commit refuses while the pin is held
+ok   refused commit never touches NVKMS
+ok   refused commit keeps NVKMS running
+ok   refused commit was bounded
+ok   abort reopens admission
+ok   async unpin lets the commit succeed
+ok   async unpin suspends exactly once
+ok   async unpin commits the state
+ok   duplicate begin refused
+ok   first request still commits
+ok   resume cancels the request
+ok   cancelled request never suspends
+ok   LOST refuses begin
+ok   LOST never suspends
+ok   commit gives up
+ok   late unpin does not suspend
+ok   late commit is refused
+ok   stale sequence refused
+ok   stale sequence never suspends
+ok   the live request still works
+RESULT: 26/26 checks
