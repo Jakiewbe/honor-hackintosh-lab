@@ -232,3 +232,42 @@ kms.c:5369 是 extern const char *const，值是版本文本串 | **构建期生
 | __nvoc_dynamicCast | 只见调用 __nvoc_dynamicCast(...)，未见定义 | 可能是 header 内联/宏，需扫头文件 |
 
 以上四条都**尚未核实**，不得据此下"缺失"结论。
+
+## 四十五、9 个符号全部核实完毕：**只有 1 个是构建期生成，没有源码缺口**（R94）
+
+逐个核实结果（每条都有行号）：
+
+| 符号 | 结论 | 位置 |
+|---|---|---|
+| g_pSys | ✅ 定义 | src/nvidia/src/kernel/core/system.c:74 |
+| 
+vEvoGlobal | ✅ 定义 | src/nvidia-modeset/src/nvkms-evo.c:148 |
+| __nvoc_class_def_Memory | ✅ 定义 | src/nvidia/generated/g_mem_nvoc.c:84 |
+| __nvoc_class_def_RmResource | ✅ 定义 | src/nvidia/generated/g_resource_nvoc.c:177 |
+| __nvoc_rtti_provider | ✅ 定义 | src/nvidia/src/libraries/nvoc/src/runtime.c:46 |
+| __nvoc_dynamicCast | ✅ 定义 | src/nvidia/src/libraries/nvoc/src/runtime.c:282 |
+| g_resServ | ✅ 定义（无初值的暂定定义） | src/nvidia/src/kernel/rmapi/rmapi.c:55 |
+| PEX_DSM_GUID | ✅ 宏生成的定义 | src/nvidia/src/kernel/platform/guids.c:81（GUID_CONST(...)） |
+| pNV_KMS_ID | ⚙️ **构建期生成** | src/nvidia-modeset/Makefile:247-250（GENERATE_NVIDSTRING） |
+
+## 三条被我的工具漏掉的原因（都是工具缺陷，不是源码缺失）
+
+1. **无初值的暂定定义**：RsServer g_resServ; —— 我把它当"声明"排除了；
+2. **宏生成的定义**：GUID_CONST(PEX_DSM_GUID, ...) —— 名字后面不是 =；
+3. **构建期生成**：pNV_KMS_ID 由 Makefile 的 GENERATE_NVIDSTRING 产出，源码本就没有。
+
+## 这修正了 R91 的核心结论
+
+我之前说"5 个数据符号是真正的源码缺口"。**这个结论是错的**：其中 4 个树内有定义，
+第 5 个（pNV_KMS_ID）是**构建步骤**产物，不是缺失。
+
+因此：
+
+> **从公开源码构建 NVRM 不存在"符号缺口"。** 988 个 TU 全部有源码；
+> 唯一缺的是一个**构建步骤**（生成 NVIDIA ID 字符串）。
+
+## 这条结论的分量与限制
+
+- 它把"路径 A 只能到 983"推翻为"路径 A 可以到 988 + 一个生成步骤"；
+- 但**不证明**整层能编译、能链接、能加载——那些仍未验证；
+- 也不改变"发行版 7.93 MB 不透明载荷"的事实：那部分内容仍未解释。
