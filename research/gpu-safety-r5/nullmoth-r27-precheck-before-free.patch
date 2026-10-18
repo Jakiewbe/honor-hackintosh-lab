@@ -1,0 +1,23 @@
+diff --git a/kexts/NVRMFB/fb/nvrm-fb.cpp b/kexts/NVRMFB/fb/nvrm-fb.cpp
+index f8886c0..bcc8483 100644
+--- a/kexts/NVRMFB/fb/nvrm-fb.cpp
++++ b/kexts/NVRMFB/fb/nvrm-fb.cpp
+@@ -725,6 +725,18 @@ void NVRMNVDAFramebuffer::dropKapiDevice()
+         fDev = nullptr;
+         return;
+     }
++    // A resume can still flip the GPU to LOST while this pin is held (a pin stops suspend, not wake). Freeing
++    // after a close that NVKMS will refuse is the split this path must avoid, so re-check immediately before
++    // the destructive pair and keep the device if the GPU is no longer running.
++    if (!nvkms_xnu_pm_running()) {
++        if (fGrabbedOwnership) { gOrphanGrabs++; fGrabbedOwnership = false; }
++        if (gDevUsers > 0) gDevUsers--;
++        gDevOrphaned = true;
++        FBLOG("device 0x%llx kept: the GPU left RUNNING after the pin was taken", (unsigned long long)(uintptr_t)fDev);
++        fDev = nullptr;
++        nvkms_xnu_pm_unpin();
++        return;
++    }
+     if (fGrabbedOwnership) { fKms->releaseOwnership(fDev); fGrabbedOwnership = false; }
+     const int remaining = --gDevUsers;
+     if (remaining > 0) {
