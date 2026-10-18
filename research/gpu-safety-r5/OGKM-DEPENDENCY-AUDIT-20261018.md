@@ -470,3 +470,44 @@ kexts/NVRM/Info.plist 声明了 com.apple.kpi.iokit/libkern/bsd/mach/unsupported
 
 先量化 RM core 的规模：src/nvidia/src/... 里定义这些符号的 TU 有多少、依赖多少 Linux 设施。
 在拿到这个数字之前，不谈"可加载"。
+
+## 十九、RM 核心的规模量化（R65）
+
+统一产物 823 个未定义符号，按名称与来源粗分：
+
+| 桶 | 数量 | 说明 |
+|---|---|---|
+| IO* / OS*（iokit/libkern） | 404 | 加载期由系统 KPI 解析 |
+| mach/kern | 66 | 同上 |
+| c++ runtime | 2 | 同上 |
+| **RM 内部** | **351**（含 Cli*、gpumgr*、os*、
+v*、kbus*、kdisp*、Nv04*、
+voc_*、Rm*） | 无系统提供者 |
+
+其中按名字细分：
+voc_*/Nv\d\d* 仅 **14**、Rm*/m* **47**，其余 ≈ 280 是
+Cli*（client API）、gpumgr*、kbus*、kdisp*、os* 等 RM 子系统入口。
+
+## 规模：不是"再补几个 TU"
+
+| 目录 | .c 文件数 |
+|---|---|
+| src/nvidia/src（手写 kernel 层） | **720** |
+| src/nvidia/generated（NVOC 生成层） | **268** |
+| 合计 | **988** |
+
+而且我用"逐文件找函数定义"的朴素方法在 src/nvidia/src 只找到 30 个定义——原因是 RM 的函数大量由
+**NVOC 生成器**产出（__nvoc_*、类方法分派），不是手写函数。也就是说：
+
+> 要让 RM core 进入构建，需要的是**运行 NVIDIA 的代码生成器**，而不是把 988 个 .c 逐个编一遍。
+
+## 结论
+
+1. 之前"42 → 0"只覆盖三族被审计符号，RM 核心仍是 351 个无提供者符号；
+2. RM 的构建闭包包含一层**生成代码**，公开树里只提供生成后的 generated/，但生成器本身不在树中；
+3. 因此"自建完整 NVRM"的现实路径是：**整层 RM 一起编译 + 接受 generated 目录的现成产物**，
+   而不是逐符号补齐。
+
+## 未做
+
+未尝试编译 388+ TUs；未评估这层代码的 Linux 依赖；未讨论生成的 gen/ 与 generated/ 的版本一致性。
