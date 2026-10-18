@@ -1,0 +1,1366 @@
+{
+ "symbols": {
+  "strlen": [
+   "kernel-open/nvidia/linux_nvswitch.c:2406",
+   "kernel-open/nvidia/nvlink_linux.c:479",
+   "kernel-open/nvidia/os-interface.c:429",
+   "kernel-open/nvidia-modeset/nvidia-modeset-linux.c:659"
+  ],
+  "strncmp": [
+   "kernel-open/nvidia/linux_nvswitch.c:2417"
+  ],
+  "memcpy": [
+   "kernel-open/nvidia/linux_nvswitch.c:2450",
+   "kernel-open/nvidia/nvlink_linux.c:521",
+   "kernel-open/nvidia/os-interface.c:526",
+   "kernel-open/nvidia-modeset/nvidia-modeset-linux.c:644",
+   "src/nvidia/arch/nvalloc/unix/src/gcc_helper.c:32"
+  ],
+  "memcmp": [
+   "kernel-open/nvidia/linux_nvswitch.c:2461",
+   "kernel-open/nvidia/nvlink_linux.c:526",
+   "kernel-open/nvidia/os-interface.c:578",
+   "kernel-open/nvidia-modeset/nvidia-modeset-linux.c:654",
+   "kernel-open/nvidia-uvm/uvm_hal.c:507"
+  ],
+  "vsnprintf": [
+   "kernel-open/nvidia/linux_nvswitch.c:2530",
+   "kernel-open/nvidia/os-interface.c:918",
+   "kernel-open/nvidia-modeset/nvidia-modeset-linux.c:759"
+  ],
+  "strcmp": [
+   "kernel-open/nvidia/nvlink_linux.c:474",
+   "kernel-open/nvidia/os-interface.c:439",
+   "kernel-open/nvidia-drm/nvidia-drm-drv.c:358",
+   "kernel-open/nvidia-modeset/nvidia-modeset-linux.c:664",
+   "kernel-open/nvidia-uvm/uvm_channel.c:3245"
+  ],
+  "memmove": [
+   "kernel-open/nvidia-modeset/nvidia-modeset-linux.c:649"
+  ],
+  "f16_to_f32": [
+   "src/common/softfloat/source/f16_to_f32.c:44",
+   "src/nvidia-modeset/kapi/src/nvkms-kapi.c:4218"
+  ],
+  "f32_add": [
+   "src/common/softfloat/source/f32_add.c:43",
+   "src/nvidia-modeset/kapi/src/nvkms-kapi.c:4245"
+  ],
+  "f32_div": [
+   "src/common/softfloat/source/f32_div.c:44",
+   "src/nvidia-modeset/kapi/src/nvkms-kapi.c:4238"
+  ],
+  "f32_mul": [
+   "src/common/softfloat/source/f32_mul.c:44",
+   "src/nvidia-modeset/kapi/src/nvkms-kapi.c:4231"
+  ],
+  "f32_to_f16": [
+   "src/common/softfloat/source/f32_to_f16.c:44",
+   "src/nvidia-modeset/kapi/src/nvkms-kapi.c:4224"
+  ],
+  "f32_to_ui32_r_minMag": [
+   "src/common/softfloat/source/f32_to_ui32_r_minMag.c:44",
+   "src/nvidia-modeset/kapi/src/nvkms-kapi.c:4251"
+  ],
+  "ui32_to_f32": [
+   "src/common/softfloat/source/ui32_to_f32.c:42",
+   "src/nvidia-modeset/kapi/src/nvkms-kapi.c:4256"
+  ],
+  "nvSMGSubscribeSubDevToPartition": [
+   "src/common/src/nv_smg.c:129"
+  ],
+  "nvSMGGetDeviceList": [
+   "src/common/src/nv_smg.c:295"
+  ],
+  "nvInitUnixRmHandleAllocator": [
+   "src/common/unix/common/utils/unix_rm_handle.c:145"
+  ],
+  "nvGenerateUnixRmHandleInternal": [
+   "src/common/unix/common/utils/unix_rm_handle.c:187"
+  ],
+  "nvFreeUnixRmHandleInternal": [
+   "src/common/unix/common/utils/unix_rm_handle.c:225"
+  ],
+  "nvTearDownUnixRmHandleAllocator": [
+   "src/common/unix/common/utils/unix_rm_handle.c:246"
+  ],
+  "RmValidateIoctl": [
+   "src/nvidia/arch/nvalloc/unix/src/escape.c:295"
+  ],
+  "RmIoctl": [
+   "src/nvidia/arch/nvalloc/unix/src/escape.c:362"
+  ],
+  "RmReadRegistryDword": [
+   "src/nvidia/arch/nvalloc/unix/src/os.c:2013",
+   "src/nvidia/arch/nvalloc/unix/src/registry.c:239"
+  ],
+  "RmWriteRegistryDword": [
+   "src/nvidia/arch/nvalloc/unix/src/os.c:2023",
+   "src/nvidia/arch/nvalloc/unix/src/registry.c:193"
+  ],
+  "RmWriteRegistryBinary": [
+   "src/nvidia/arch/nvalloc/unix/src/os.c:2049",
+   "src/nvidia/arch/nvalloc/unix/src/registry.c:324"
+  ],
+  "memdescGetFlag": [
+   "src/nvidia/arch/nvalloc/unix/src/os.c:3631",
+   "src/nvidia/src/kernel/gpu/mem_mgr/mem_desc.c:3886"
+  ],
+  "rmapiGetInterface": [
+   "src/nvidia/arch/nvalloc/unix/src/osapi.c:216"
+  ],
+  "RmShutdownRm": [
+   "src/nvidia/arch/nvalloc/unix/src/osinit.c:283"
+  ],
+  "RmInitPrivateState": [
+   "src/nvidia/arch/nvalloc/unix/src/osinit.c:1508"
+  ],
+  "RmFreePrivateState": [
+   "src/nvidia/arch/nvalloc/unix/src/osinit.c:1679"
+  ],
+  "RmPartiallyInitAdapter": [
+   "src/nvidia/arch/nvalloc/unix/src/osinit.c:1700"
+  ],
+  "RmInitAdapter": [
+   "src/nvidia/arch/nvalloc/unix/src/osinit.c:1971"
+  ],
+  "RmShutdownAdapter": [
+   "src/nvidia/arch/nvalloc/unix/src/osinit.c:2381"
+  ],
+  "RmPartiallyDisableAdapter": [
+   "src/nvidia/arch/nvalloc/unix/src/osinit.c:2516"
+  ],
+  "RmDisableAdapter": [
+   "src/nvidia/arch/nvalloc/unix/src/osinit.c:2525"
+  ],
+  "RmGetAdapterStatus": [
+   "src/nvidia/arch/nvalloc/unix/src/osinit.c:2621"
+  ],
+  "RmExcludeAdapter": [
+   "src/nvidia/arch/nvalloc/unix/src/osinit.c:2746"
+  ],
+  "RmWriteRegistryString": [
+   "src/nvidia/arch/nvalloc/unix/src/registry.c:382"
+  ],
+  "RmFreeObjExportHandle": [
+   "src/nvidia/arch/nvalloc/unix/src/rmobjexportimport.c:560"
+  ],
+  "rmIntrMaskLockAcquire": [
+   "src/nvidia/src/kernel/core/locks.c:2551"
+  ],
+  "rmIntrMaskLockRelease": [
+   "src/nvidia/src/kernel/core/locks.c:2558"
+  ],
+  "threadStateInit": [
+   "src/nvidia/src/kernel/core/thread_state.c:600"
+  ],
+  "threadStateAlloc": [
+   "src/nvidia/src/kernel/core/thread_state.c:622"
+  ],
+  "threadStateInitISRAndDeferredIntHandler": [
+   "src/nvidia/src/kernel/core/thread_state.c:660"
+  ],
+  "threadStateInitISRLockless": [
+   "src/nvidia/src/kernel/core/thread_state.c:715"
+  ],
+  "threadStateFreeISRAndDeferredIntHandler": [
+   "src/nvidia/src/kernel/core/thread_state.c:841"
+  ],
+  "threadStateFree": [
+   "src/nvidia/src/kernel/core/thread_state.c:860"
+  ],
+  "threadStateFreeISRLockless": [
+   "src/nvidia/src/kernel/core/thread_state.c:956"
+  ],
+  "threadStateResetTimeout": [
+   "src/nvidia/src/kernel/core/thread_state.c:1182"
+  ],
+  "threadStateSetTimeoutOverride": [
+   "src/nvidia/src/kernel/core/thread_state.c:1294"
+  ],
+  "nvlogDumpToKernelLog": [
+   "src/nvidia/src/kernel/diagnostics/nvlog.c:733"
+  ],
+  "nvDbg_Printf": [
+   "src/nvidia/src/kernel/diagnostics/nvlog_printf.c:177"
+  ],
+  "gpumgrWaitForBarFirewall": [
+   "src/nvidia/src/kernel/gpu/arch/blackwell/kern_gpu_gb100.c:1837",
+   "src/nvidia/src/kernel/gpu_mgr/gpu_mgr.c:4976"
+  ],
+  "memdescGetPhysAddr": [
+   "src/nvidia/src/kernel/gpu/bus/kern_bus.c:334",
+   "src/nvidia/src/kernel/gpu/gsp/arch/turing/kernel_gsp_tu102.c:487",
+   "src/nvidia/src/kernel/gpu/gsp/arch/turing/kernel_gsp_tu102.c:489",
+   "src/nvidia/src/kernel/gpu/gsp/arch/turing/kernel_gsp_tu102.c:639"
+  ],
+  "portMemAllocNonPaged": [
+   "src/nvidia/src/kernel/gpu/bus/kern_bus_vbar2.c:884",
+   "src/nvidia/src/kernel/rmapi/deprecated_context.c:152",
+   "src/nvidia/src/libraries/libspdm/nvidia/nvspdm_malloclib.c:29"
+  ],
+  "RmP2PGetPagesPersistent": [
+   "src/nvidia/src/kernel/gpu/bus/p2p.c:1341"
+  ],
+  "RmP2PGetPagesWithoutCallbackRegistration": [
+   "src/nvidia/src/kernel/gpu/bus/p2p.c:1536"
+  ],
+  "RmP2PGetGpuByAddress": [
+   "src/nvidia/src/kernel/gpu/bus/p2p.c:1556"
+  ],
+  "RmP2PRegisterCallback": [
+   "src/nvidia/src/kernel/gpu/bus/p2p.c:1585"
+  ],
+  "RmP2PPutPagesPersistent": [
+   "src/nvidia/src/kernel/gpu/bus/p2p.c:1632"
+  ],
+  "RmP2PPutPages": [
+   "src/nvidia/src/kernel/gpu/bus/p2p.c:1658"
+  ],
+  "kdispAcquireLowLatencyLock": [
+   "src/nvidia/src/kernel/gpu/disp/kern_disp.c:1080"
+  ],
+  "kdispAcquireLowLatencyLockConditional": [
+   "src/nvidia/src/kernel/gpu/disp/kern_disp.c:1086"
+  ],
+  "kdispReleaseLowLatencyLock": [
+   "src/nvidia/src/kernel/gpu/disp/kern_disp.c:1091"
+  ],
+  "kdispOptimizePerFrameOsCallbacks_IMPL": [
+   "src/nvidia/src/kernel/gpu/disp/kern_disp.c:1161"
+  ],
+  "gpuEnterHibernate_IMPL": [
+   "src/nvidia/src/kernel/gpu/gpu_suspend.c:612"
+  ],
+  "gpuResumeFromHibernate_IMPL": [
+   "src/nvidia/src/kernel/gpu/gpu_suspend.c:647"
+  ],
+  "intrCheckFecsEventbufferPending_IMPL": [
+   "src/nvidia/src/kernel/gpu/intr/intr.c:1197"
+  ],
+  "memdescGetMemData": [
+   "src/nvidia/src/kernel/gpu/mem_mgr/mem_desc.c:3953"
+  ],
+  "memdescGetContiguity": [
+   "src/nvidia/src/kernel/gpu/mem_mgr/mem_desc.c:4021"
+  ],
+  "memdescCheckContiguity": [
+   "src/nvidia/src/kernel/gpu/mem_mgr/mem_desc.c:4034"
+  ],
+  "memdescGetAddressSpace": [
+   "src/nvidia/src/kernel/gpu/mem_mgr/mem_desc.c:4078"
+  ],
+  "memdescGetPageSize": [
+   "src/nvidia/src/kernel/gpu/mem_mgr/mem_desc.c:4092",
+   "src/nvidia/src/kernel/rmapi/mapping.c:48"
+  ],
+  "tmrEventServiceTimer_IMPL": [
+   "src/nvidia/src/kernel/gpu/timer/timer.c:1922"
+  ],
+  "gpumgrGetRmFirmwareLogsEnabled": [
+   "src/nvidia/src/kernel/gpu_mgr/gpu_mgr.c:1023"
+  ],
+  "gpumgrIsVgxRmFirmwareCapableChip": [
+   "src/nvidia/src/kernel/gpu_mgr/gpu_mgr.c:1080",
+   "src/nvidia/src/kernel/gpu_mgr/gpu_mgr.c:1089"
+  ],
+  "gpumgrIsDeviceRmFirmwareCapable": [
+   "src/nvidia/src/kernel/gpu_mgr/gpu_mgr.c:1092"
+  ],
+  "gpumgrGetGpu": [
+   "src/nvidia/src/kernel/gpu_mgr/gpu_mgr.c:2125"
+  ],
+  "gpumgrGetNextGpu": [
+   "src/nvidia/src/kernel/gpu_mgr/gpu_mgr.c:3121"
+  ],
+  "gpumgrSetCurrentGpuInstance": [
+   "src/nvidia/src/kernel/gpu_mgr/gpu_mgr.c:4562"
+  ],
+  "rmapiLockIsOwner": [
+   "src/nvidia/src/kernel/gpu_mgr/gpu_mgr.c:4928"
+  ],
+  "gpumgrIsDeviceMsixAllowed": [
+   "src/nvidia/src/kernel/gpu_mgr/gpu_mgr.c:4942"
+  ],
+  "acpiDsmInit": [
+   "src/nvidia/src/kernel/platform/acpi_common.c:1190"
+  ],
+  "pciPbiReadUuid": [
+   "src/nvidia/src/kernel/platform/chipset/pci_pbi.c:259"
+  ],
+  "Nv01AllocMemoryKernel": [
+   "src/nvidia/src/kernel/rmapi/entry_points.c:119"
+  ],
+  "Nv01FreeKernel": [
+   "src/nvidia/src/kernel/rmapi/entry_points.c:121"
+  ],
+  "Nv04AddVblankCallbackKernel": [
+   "src/nvidia/src/kernel/rmapi/entry_points.c:122"
+  ],
+  "Nv04AllocWithAccessKernel": [
+   "src/nvidia/src/kernel/rmapi/entry_points.c:124"
+  ],
+  "Nv04AllocContextDmaKernel": [
+   "src/nvidia/src/kernel/rmapi/entry_points.c:125"
+  ],
+  "Nv04BindContextDmaKernel": [
+   "src/nvidia/src/kernel/rmapi/entry_points.c:126"
+  ],
+  "Nv04ControlKernel": [
+   "src/nvidia/src/kernel/rmapi/entry_points.c:127"
+  ],
+  "Nv04DupObjectKernel": [
+   "src/nvidia/src/kernel/rmapi/entry_points.c:128"
+  ],
+  "Nv04ShareKernel": [
+   "src/nvidia/src/kernel/rmapi/entry_points.c:129"
+  ],
+  "Nv04MapMemoryKernel": [
+   "src/nvidia/src/kernel/rmapi/entry_points.c:132"
+  ],
+  "Nv04MapMemoryDmaKernel": [
+   "src/nvidia/src/kernel/rmapi/entry_points.c:133"
+  ],
+  "Nv04UnmapMemoryKernel": [
+   "src/nvidia/src/kernel/rmapi/entry_points.c:134"
+  ],
+  "Nv04UnmapMemoryDmaKernel": [
+   "src/nvidia/src/kernel/rmapi/entry_points.c:135"
+  ],
+  "Nv04VidHeapControlKernel": [
+   "src/nvidia/src/kernel/rmapi/entry_points.c:136"
+  ],
+  "rmapiParamsAcquire": [
+   "src/nvidia/src/kernel/rmapi/param_copy.c:31"
+  ],
+  "rmapiParamsRelease": [
+   "src/nvidia/src/kernel/rmapi/param_copy.c:145"
+  ],
+  "tlsEntryGet": [
+   "src/nvidia/src/kernel/rmapi/rmapi.c:762",
+   "src/nvidia/src/libraries/tls/tls.c:432"
+  ],
+  "rmapiEnterRtd3PmPath": [
+   "src/nvidia/src/kernel/rmapi/rmapi.c:789"
+  ],
+  "rmapiLeaveRtd3PmPath": [
+   "src/nvidia/src/kernel/rmapi/rmapi.c:802"
+  ],
+  "rpcConstruct_IMPL": [
+   "src/nvidia/src/kernel/vgpu/rpc.c:998"
+  ],
+  "rpcDestroy_IMPL": [
+   "src/nvidia/src/kernel/vgpu/rpc.c:1007"
+  ],
+  "rpcSendMessage_IMPL": [
+   "src/nvidia/src/kernel/vgpu/rpc.c:1809"
+  ],
+  "rpcRecvPoll_IMPL": [
+   "src/nvidia/src/kernel/vgpu/rpc.c:1815"
+  ],
+  "hypervisorGetHypervisorType_IMPL": [
+   "src/nvidia/src/kernel/virtualization/hypervisor/hypervisor.c:263"
+  ],
+  "kvgpumgrGetAvailableInstances": [
+   "src/nvidia/src/kernel/virtualization/kernel_vgpu_mgr.c:2803"
+  ],
+  "portMemCopy": [
+   "src/nvidia/src/libraries/containers/hashmap.c:362",
+   "src/nvidia/src/libraries/containers/list.c:140",
+   "src/nvidia/src/libraries/containers/map.c:205",
+   "src/nvidia/src/libraries/containers/multimap.c:179",
+   "src/nvidia/src/libraries/nvport/memory/memory_unix_kernel_os.c:116"
+  ],
+  "listHead_IMPL": [
+   "src/nvidia/src/libraries/containers/list.c:279"
+  ],
+  "listNext_IMPL": [
+   "src/nvidia/src/libraries/containers/list.c:297"
+  ],
+  "objDynamicCastById_IMPL": [
+   "src/nvidia/src/libraries/nvoc/src/runtime.c:235"
+  ],
+  "__nvoc_dynamicCast": [
+   "src/nvidia/src/libraries/nvoc/src/runtime.c:282"
+  ],
+  "portSyncSpinlockAcquire": [
+   "src/nvidia/src/libraries/nvport/memory/memory_tracking.c:113"
+  ],
+  "portSyncSpinlockRelease": [
+   "src/nvidia/src/libraries/nvport/memory/memory_tracking.c:117"
+  ],
+  "portSyncSpinlockDestroy": [
+   "src/nvidia/src/libraries/nvport/memory/memory_tracking.c:121"
+  ],
+  "refFindCpuMappingWithFilter": [
+   "src/nvidia/src/libraries/resserv/src/rs_resource.c:396"
+  ],
+  "serverFreeDisabledClients": [
+   "src/nvidia/src/libraries/resserv/src/rs_server.c:1053"
+  ],
+  "tlsIsrInit": [
+   "src/nvidia/src/libraries/tls/tls.c:274"
+  ],
+  "tlsIsrDestroy": [
+   "src/nvidia/src/libraries/tls/tls.c:318"
+  ],
+  "tlsEntryRelease": [
+   "src/nvidia/src/libraries/tls/tls.c:401"
+  ],
+  "nvRmApiControl": [
+   "src/nvidia-modeset/kapi/src/nvkms-kapi.c:195",
+   "src/nvidia-modeset/src/nvkms-evo.c:9372",
+   "src/nvidia-modeset/src/nvkms-push.c:40",
+   "src/nvidia-modeset/src/nvkms-rmapi-dgpu.c:81",
+   "src/nvidia-modeset/src/nvkms.c:6353"
+  ],
+  "nvRmApiAlloc": [
+   "src/nvidia-modeset/kapi/src/nvkms-kapi.c:200",
+   "src/nvidia-modeset/src/nvkms-headsurface.c:141",
+   "src/nvidia-modeset/src/nvkms-headsurface.c:928",
+   "src/nvidia-modeset/src/nvkms-push.c:55",
+   "src/nvidia-modeset/src/nvkms-rm.c:1740",
+   "src/nvidia-modeset/src/nvkms-rmapi-dgpu.c:30",
+   "src/nvidia-modeset/src/nvkms.c:6358"
+  ],
+  "nvRmApiFree": [
+   "src/nvidia-modeset/kapi/src/nvkms-kapi.c:205",
+   "src/nvidia-modeset/src/nvkms-push.c:68",
+   "src/nvidia-modeset/src/nvkms-rmapi-dgpu.c:150",
+   "src/nvidia-modeset/src/nvkms.c:6363"
+  ],
+  "nvSetStereo": [
+   "src/nvidia-modeset/src/nvkms-attributes.c:1014",
+   "src/nvidia-modeset/src/nvkms-stereo.c:27"
+  ],
+  "nvSetDpyAttributeEvo": [
+   "src/nvidia-modeset/src/nvkms-attributes.c:1314",
+   "src/nvidia-modeset/src/nvkms.c:3084"
+  ],
+  "nvGetDpyAttributeEvo": [
+   "src/nvidia-modeset/src/nvkms-attributes.c:1355",
+   "src/nvidia-modeset/src/nvkms.c:3105"
+  ],
+  "nvGetDpyAttributeValidValuesEvo": [
+   "src/nvidia-modeset/src/nvkms-attributes.c:1375",
+   "src/nvidia-modeset/src/nvkms.c:3126"
+  ],
+  "nvEvoRestoreConsole": [
+   "src/nvidia-modeset/src/nvkms-console-restore.c:756"
+  ],
+  "nvClearDpyOverrides": [
+   "src/nvidia-modeset/src/nvkms-dpy-override.c:252"
+  ],
+  "nvGetDpyEvoFromDispEvo": [
+   "src/nvidia-modeset/src/nvkms-dpy.c:2917",
+   "src/nvidia-modeset/src/nvkms.c:374"
+  ],
+  "nvDpyGetDynamicData": [
+   "src/nvidia-modeset/src/nvkms-dpy.c:3056",
+   "src/nvidia-modeset/src/nvkms.c:1871"
+  ],
+  "nvDpyGetPossibleApiHeadsMask": [
+   "src/nvidia-modeset/src/nvkms-dpy.c:3600"
+  ],
+  "nvDpyIsHDRCapable": [
+   "src/nvidia-modeset/src/nvkms-dpy.c:3631"
+  ],
+  "nvFindDevEvoByDeviceId": [
+   "src/nvidia-modeset/src/nvkms-evo.c:197"
+  ],
+  "nvEvoUpdateAndKickOff": [
+   "src/nvidia-modeset/src/nvkms-evo.c:490"
+  ],
+  "nvGetRefreshRate10kHz": [
+   "src/nvidia-modeset/src/nvkms-evo.c:3399",
+   "src/nvidia-modeset/src/nvkms-evo.c:3454"
+  ],
+  "nvInvalidateRasterLockGroupsEvo": [
+   "src/nvidia-modeset/src/nvkms-evo.c:4201"
+  ],
+  "nvAllocCoreChannelEvo": [
+   "src/nvidia-modeset/src/nvkms-evo.c:5177"
+  ],
+  "nvResumeDevEvo": [
+   "src/nvidia-modeset/src/nvkms-evo.c:5545"
+  ],
+  "nvSuspendDevEvo": [
+   "src/nvidia-modeset/src/nvkms-evo.c:5604"
+  ],
+  "nvFreeCoreChannelEvo": [
+   "src/nvidia-modeset/src/nvkms-evo.c:5614"
+  ],
+  "nvLayerSetPositionEvo": [
+   "src/nvidia-modeset/src/nvkms-evo.c:5869",
+   "src/nvidia-modeset/src/nvkms.c:3375"
+  ],
+  "nvEvoIsLUTNotifierComplete": [
+   "src/nvidia-modeset/src/nvkms-evo.c:8291"
+  ],
+  "nvEvoWaitForLUTNotifier": [
+   "src/nvidia-modeset/src/nvkms-evo.c:8310"
+  ],
+  "nvEvoSetLut": [
+   "src/nvidia-modeset/src/nvkms-evo.c:8513"
+  ],
+  "nvValidateSetLutCommonParams": [
+   "src/nvidia-modeset/src/nvkms-evo.c:8616"
+  ],
+  "nvFreeDevEvo": [
+   "src/nvidia-modeset/src/nvkms-evo.c:8778"
+  ],
+  "nvAllocDevEvo": [
+   "src/nvidia-modeset/src/nvkms-evo.c:8946"
+  ],
+  "nvReadCRC32Evo": [
+   "src/nvidia-modeset/src/nvkms-evo.c:9182"
+  ],
+  "nvIsLockGroupFlipLocked": [
+   "src/nvidia-modeset/src/nvkms-evo.c:9879"
+  ],
+  "nvCheckLayerPermissions": [
+   "src/nvidia-modeset/src/nvkms-flip.c:40",
+   "src/nvidia-modeset/src/nvkms-flip.c:99",
+   "src/nvidia-modeset/src/nvkms-flip.c:110"
+  ],
+  "nvIdleMainLayerChannelCheckIdleOneApiHead": [
+   "src/nvidia-modeset/src/nvkms-flip.c:950",
+   "src/nvidia-modeset/src/nvkms.c:2412"
+  ],
+  "nvSetDispAttributeEvo": [
+   "src/nvidia-modeset/src/nvkms-framelock.c:2039",
+   "src/nvidia-modeset/src/nvkms.c:3146"
+  ],
+  "nvGetDispAttributeEvo": [
+   "src/nvidia-modeset/src/nvkms-framelock.c:2060",
+   "src/nvidia-modeset/src/nvkms.c:3166"
+  ],
+  "nvGetDispAttributeValidValuesEvo": [
+   "src/nvidia-modeset/src/nvkms-framelock.c:2081",
+   "src/nvidia-modeset/src/nvkms.c:3187"
+  ],
+  "nvSetFrameLockAttributeEvo": [
+   "src/nvidia-modeset/src/nvkms-framelock.c:2247",
+   "src/nvidia-modeset/src/nvkms.c:3240"
+  ],
+  "nvGetFrameLockAttributeEvo": [
+   "src/nvidia-modeset/src/nvkms-framelock.c:2272",
+   "src/nvidia-modeset/src/nvkms.c:3262"
+  ],
+  "nvGetFrameLockAttributeValidValuesEvo": [
+   "src/nvidia-modeset/src/nvkms-framelock.c:2291",
+   "src/nvidia-modeset/src/nvkms.c:3284"
+  ],
+  "nvHsIoctlMoveCursor": [
+   "src/nvidia-modeset/src/nvkms-headsurface-ioctl.c:106",
+   "src/nvidia-modeset/src/nvkms.c:2282"
+  ],
+  "nvHsIoctlSetCursorImage": [
+   "src/nvidia-modeset/src/nvkms-headsurface-ioctl.c:199",
+   "src/nvidia-modeset/src/nvkms.c:2252"
+  ],
+  "nvHsIoctlFlip": [
+   "src/nvidia-modeset/src/nvkms-headsurface-ioctl.c:472",
+   "src/nvidia-modeset/src/nvkms.c:2693"
+  ],
+  "nvHsAllocSwapGroup": [
+   "src/nvidia-modeset/src/nvkms-headsurface-swapgroup.c:430"
+  ],
+  "nvHsGetSwapGroupStruct": [
+   "src/nvidia-modeset/src/nvkms-headsurface-swapgroup.c:486"
+  ],
+  "nvEvoGetPointerFromApiHandle": [
+   "src/nvidia-modeset/src/nvkms-headsurface-swapgroup.c:490",
+   "src/nvidia-modeset/src/nvkms-utils.c:363",
+   "src/nvidia-modeset/src/nvkms.c:274",
+   "src/nvidia-modeset/src/nvkms.c:329",
+   "src/nvidia-modeset/src/nvkms.c:351",
+   "src/nvidia-modeset/src/nvkms.c:387"
+  ],
+  "nvHsGetSwapGroup": [
+   "src/nvidia-modeset/src/nvkms-headsurface-swapgroup.c:504"
+  ],
+  "nvHsIncrementSwapGroupRefCnt": [
+   "src/nvidia-modeset/src/nvkms-headsurface-swapgroup.c:526"
+  ],
+  "nvHsDecrementSwapGroupRefCnt": [
+   "src/nvidia-modeset/src/nvkms-headsurface-swapgroup.c:542"
+  ],
+  "nvHsFreeSwapGroup": [
+   "src/nvidia-modeset/src/nvkms-headsurface-swapgroup.c:567"
+  ],
+  "nvHsJoinSwapGroup": [
+   "src/nvidia-modeset/src/nvkms-headsurface-swapgroup.c:620"
+  ],
+  "nvHsLeaveSwapGroup": [
+   "src/nvidia-modeset/src/nvkms-headsurface-swapgroup.c:704"
+  ],
+  "nvHsSetSwapGroupClipList": [
+   "src/nvidia-modeset/src/nvkms-headsurface-swapgroup.c:782"
+  ],
+  "nvHsSwapGroupReady": [
+   "src/nvidia-modeset/src/nvkms-headsurface-swapgroup.c:847"
+  ],
+  "nvHsIdleFlipQueue": [
+   "src/nvidia-modeset/src/nvkms-headsurface.c:868",
+   "src/nvidia-modeset/src/nvkms.c:2409"
+  ],
+  "nvHsProcessPendingViewportFlips": [
+   "src/nvidia-modeset/src/nvkms-headsurface.c:1797"
+  ],
+  "nvSetDispModeEvo": [
+   "src/nvidia-modeset/src/nvkms-modeset.c:4197",
+   "src/nvidia-modeset/src/nvkms.c:2221"
+  ],
+  "nvApiHeadUnregisterVBlankCallback": [
+   "src/nvidia-modeset/src/nvkms-modeset.c:4440"
+  ],
+  "nvApiHeadUnregisterRgInterruptCallback": [
+   "src/nvidia-modeset/src/nvkms-modeset.c:4522"
+  ],
+  "nvShutDownApiHeads": [
+   "src/nvidia-modeset/src/nvkms-modeset.c:4568"
+  ],
+  "nvRmApiMapMemory": [
+   "src/nvidia-modeset/src/nvkms-push.c:147",
+   "src/nvidia-modeset/src/nvkms-rmapi-dgpu.c:183"
+  ],
+  "nvRmApiUnmapMemory": [
+   "src/nvidia-modeset/src/nvkms-push.c:164",
+   "src/nvidia-modeset/src/nvkms-rmapi-dgpu.c:210"
+  ],
+  "nvRmUnmapFbConsoleMemory": [
+   "src/nvidia-modeset/src/nvkms-rm.c:4720"
+  ],
+  "nvRmMuxPre": [
+   "src/nvidia-modeset/src/nvkms-rm.c:5562",
+   "src/nvidia-modeset/src/nvkms.c:4300"
+  ],
+  "nvRmMuxSwitch": [
+   "src/nvidia-modeset/src/nvkms-rm.c:5605",
+   "src/nvidia-modeset/src/nvkms.c:4302"
+  ],
+  "nvRmMuxPost": [
+   "src/nvidia-modeset/src/nvkms-rm.c:5660",
+   "src/nvidia-modeset/src/nvkms.c:4304"
+  ],
+  "nvRmMuxState": [
+   "src/nvidia-modeset/src/nvkms-rm.c:5703"
+  ],
+  "nvRmAllocAndBindSurfaceDescriptor": [
+   "src/nvidia-modeset/src/nvkms-rm.c:5795"
+  ],
+  "nvRmApiDupObject2": [
+   "src/nvidia-modeset/src/nvkms-rmapi-dgpu.c:103"
+  ],
+  "nvRmApiDupObject": [
+   "src/nvidia-modeset/src/nvkms-rmapi-dgpu.c:129"
+  ],
+  "nvGetStereo": [
+   "src/nvidia-modeset/src/nvkms-stereo.c:53"
+  ],
+  "nvEvoIncrementSurfaceStructRefCnt": [
+   "src/nvidia-modeset/src/nvkms-surface.c:166"
+  ],
+  "nvEvoDecrementSurfaceStructRefCnt": [
+   "src/nvidia-modeset/src/nvkms-surface.c:173"
+  ],
+  "nvEvoRegisterSurface": [
+   "src/nvidia-modeset/src/nvkms-surface.c:455"
+  ],
+  "nvEvoFreeClientSurfaces": [
+   "src/nvidia-modeset/src/nvkms-surface.c:1041"
+  ],
+  "nvEvoUnregisterSurface": [
+   "src/nvidia-modeset/src/nvkms-surface.c:1087"
+  ],
+  "nvEvoReleaseSurface": [
+   "src/nvidia-modeset/src/nvkms-surface.c:1128"
+  ],
+  "nvEvoSurfaceRefCntsTooLarge": [
+   "src/nvidia-modeset/src/nvkms-surface.c:1194"
+  ],
+  "nvEvoGetSurfaceFromHandleNoHWAccess": [
+   "src/nvidia-modeset/src/nvkms-surface.c:1285"
+  ],
+  "nvEvoRegisterDeferredRequestFifo": [
+   "src/nvidia-modeset/src/nvkms-surface.c:1302"
+  ],
+  "nvEvoUnregisterDeferredRequestFifo": [
+   "src/nvidia-modeset/src/nvkms-surface.c:1350"
+  ],
+  "nvEvoLog": [
+   "src/nvidia-modeset/src/nvkms-utils.c:78"
+  ],
+  "nvInitInfoString": [
+   "src/nvidia-modeset/src/nvkms-utils.c:122"
+  ],
+  "nvEvoLogInfoStringRaw": [
+   "src/nvidia-modeset/src/nvkms-utils.c:172"
+  ],
+  "nvEvoLogInfoString": [
+   "src/nvidia-modeset/src/nvkms-utils.c:186"
+  ],
+  "nvEvoApiHandlePointerIsPresent": [
+   "src/nvidia-modeset/src/nvkms-utils.c:301"
+  ],
+  "nvEvoGetPointerFromApiHandleNext": [
+   "src/nvidia-modeset/src/nvkms-utils.c:394"
+  ],
+  "nvEvoDestroyApiHandle": [
+   "src/nvidia-modeset/src/nvkms-utils.c:415"
+  ],
+  "nvEvoInitApiHandles": [
+   "src/nvidia-modeset/src/nvkms-utils.c:468"
+  ],
+  "nvEvoDestroyApiHandles": [
+   "src/nvidia-modeset/src/nvkms-utils.c:481"
+  ],
+  "nvInternalAlloc": [
+   "src/nvidia-modeset/src/nvkms-utils.c:552",
+   "src/nvidia-modeset/src/nvkms-utils.c:579"
+  ],
+  "nvInternalFree": [
+   "src/nvidia-modeset/src/nvkms-utils.c:602"
+  ],
+  "nvEvoDisableVblankSemControl": [
+   "src/nvidia-modeset/src/nvkms-vblank-sem-control.c:230"
+  ],
+  "nvEvoEnableVblankSemControl": [
+   "src/nvidia-modeset/src/nvkms-vblank-sem-control.c:242"
+  ],
+  "nvEvoAccelVblankSemControls": [
+   "src/nvidia-modeset/src/nvkms-vblank-sem-control.c:300"
+  ],
+  "nvSetFlipLockGroup": [
+   "src/nvidia-modeset/src/nvkms.c:4796"
+  ]
+ },
+ "missing": [
+  "CliSetGpuContext",
+  "PEX_DSM_GUID",
+  "PE_parse_boot_argn",
+  "RmInitRm",
+  "RmPowerManagementTegra",
+  "_ZN10IOWorkLoop8workLoopEv",
+  "_ZN11IOPCIDevice19extendedConfigRead8Ey",
+  "_ZN11IOPCIDevice20extendedConfigRead16Ey",
+  "_ZN11IOPCIDevice20extendedConfigRead32Ey",
+  "_ZN11IOPCIDevice20extendedConfigWrite8Eyh",
+  "_ZN11IOPCIDevice21extendedConfigWrite16Eyt",
+  "_ZN11IOPCIDevice21extendedConfigWrite32Eyj",
+  "_ZN11IOPCIDevice9metaClassE",
+  "_ZN11OSMetaClass21_RESERVEDOSMetaClass0Ev",
+  "_ZN11OSMetaClass21_RESERVEDOSMetaClass1Ev",
+  "_ZN11OSMetaClass21_RESERVEDOSMetaClass2Ev",
+  "_ZN11OSMetaClass21_RESERVEDOSMetaClass3Ev",
+  "_ZN11OSMetaClass21_RESERVEDOSMetaClass4Ev",
+  "_ZN11OSMetaClass21_RESERVEDOSMetaClass5Ev",
+  "_ZN11OSMetaClass21_RESERVEDOSMetaClass6Ev",
+  "_ZN11OSMetaClass21_RESERVEDOSMetaClass7Ev",
+  "_ZN11OSMetaClassC2EPKcPKS_j",
+  "_ZN11OSMetaClassD2Ev",
+  "_ZN12IOUserClient10clientDiedEv",
+  "_ZN12IOUserClient10gMetaClassE",
+  "_ZN12IOUserClient10getServiceEv",
+  "_ZN12IOUserClient12initWithTaskEP4taskPvj",
+  "_ZN12IOUserClient13connectClientEPS_",
+  "_ZN12IOUserClient20exportObjectToClientEP4taskP8OSObjectPS3_",
+  "_ZN12IOUserClient22_RESERVEDIOUserClient0Ev",
+  "_ZN12IOUserClient22_RESERVEDIOUserClient1Ev",
+  "_ZN12IOUserClient22_RESERVEDIOUserClient2Ev",
+  "_ZN12IOUserClient22_RESERVEDIOUserClient3Ev",
+  "_ZN12IOUserClient22_RESERVEDIOUserClient4Ev",
+  "_ZN12IOUserClient22_RESERVEDIOUserClient5Ev",
+  "_ZN12IOUserClient22_RESERVEDIOUserClient6Ev",
+  "_ZN12IOUserClient22_RESERVEDIOUserClient7Ev",
+  "_ZN12IOUserClient22_RESERVEDIOUserClient8Ev",
+  "_ZN12IOUserClient22_RESERVEDIOUserClient9Ev",
+  "_ZN12IOUserClient23_RESERVEDIOUserClient10Ev",
+  "_ZN12IOUserClient23_RESERVEDIOUserClient11Ev",
+  "_ZN12IOUserClient23_RESERVEDIOUserClient12Ev",
+  "_ZN12IOUserClient23_RESERVEDIOUserClient13Ev",
+  "_ZN12IOUserClient23_RESERVEDIOUserClient14Ev",
+  "_ZN12IOUserClient23_RESERVEDIOUserClient15Ev",
+  "_ZN12IOUserClient23getExternalTrapForIndexEj",
+  "_ZN12IOUserClient24getNotificationSemaphoreEjPP9semaphore",
+  "_ZN12IOUserClient24getTargetAndTrapForIndexEPP9IOServicej",
+  "_ZN12IOUserClient24registerNotificationPortEP8ipc_portjj",
+  "_ZN12IOUserClient24registerNotificationPortEP8ipc_portjy",
+  "_ZN12IOUserClient25getExternalMethodForIndexEj",
+  "_ZN12IOUserClient26getTargetAndMethodForIndexEPP9IOServicej",
+  "_ZN12IOUserClient30getExternalAsyncMethodForIndexEj",
+  "_ZN12IOUserClient31getAsyncTargetAndMethodForIndexEPP9IOServicej",
+  "_ZN12IOUserClient4initEP12OSDictionary",
+  "_ZN12IOUserClient4initEv",
+  "_ZN12IOUserClient8DispatchE5IORPC",
+  "_ZN12IOUserClientC2EPK11OSMetaClass",
+  "_ZN12IOUserClientD2Ev",
+  "_ZN12OSDictionary12withCapacityEj",
+  "_ZN14IODeviceMemory9withRangeEyy",
+  "_ZN15IORegistryEntry11detachAboveEPK15IORegistryPlane",
+  "_ZN15IORegistryEntry11setLocationEPK8OSSymbolPK15IORegistryPlane",
+  "_ZN15IORegistryEntry11setLocationEPKcPK15IORegistryPlane",
+  "_ZN15IORegistryEntry11setPropertyEPK8OSStringP8OSObject",
+  "_ZN15IORegistryEntry11setPropertyEPK8OSSymbolP8OSObject",
+  "_ZN15IORegistryEntry11setPropertyEPKcP8OSObject",
+  "_ZN15IORegistryEntry11setPropertyEPKcPvj",
+  "_ZN15IORegistryEntry11setPropertyEPKcS1_",
+  "_ZN15IORegistryEntry11setPropertyEPKcb",
+  "_ZN15IORegistryEntry11setPropertyEPKcyj",
+  "_ZN15IORegistryEntry13attachToChildEPS_PK15IORegistryPlane",
+  "_ZN15IORegistryEntry13childFromPathEPKcPK15IORegistryPlanePcPi",
+  "_ZN15IORegistryEntry13setPropertiesEP8OSObject",
+  "_ZN15IORegistryEntry14attachToParentEPS_PK15IORegistryPlane",
+  "_ZN15IORegistryEntry14removePropertyEPK8OSString",
+  "_ZN15IORegistryEntry14removePropertyEPK8OSSymbol",
+  "_ZN15IORegistryEntry14removePropertyEPKc",
+  "_ZN15IORegistryEntry15detachFromChildEPS_PK15IORegistryPlane",
+  "_ZN15IORegistryEntry16detachFromParentEPS_PK15IORegistryPlane",
+  "_ZN15IORegistryEntry16setPropertyTableEP12OSDictionary",
+  "_ZN15IORegistryEntry17runPropertyActionEPFiP8OSObjectPvS2_S2_S2_ES1_S2_S2_S2_S2_",
+  "_ZN15IORegistryEntry25_RESERVEDIORegistryEntry0Ev",
+  "_ZN15IORegistryEntry25_RESERVEDIORegistryEntry1Ev",
+  "_ZN15IORegistryEntry25_RESERVEDIORegistryEntry2Ev",
+  "_ZN15IORegistryEntry25_RESERVEDIORegistryEntry3Ev",
+  "_ZN15IORegistryEntry25_RESERVEDIORegistryEntry4Ev",
+  "_ZN15IORegistryEntry25_RESERVEDIORegistryEntry5Ev",
+  "_ZN15IORegistryEntry25_RESERVEDIORegistryEntry6Ev",
+  "_ZN15IORegistryEntry25_RESERVEDIORegistryEntry7Ev",
+  "_ZN15IORegistryEntry25_RESERVEDIORegistryEntry8Ev",
+  "_ZN15IORegistryEntry25_RESERVEDIORegistryEntry9Ev",
+  "_ZN15IORegistryEntry26_RESERVEDIORegistryEntry10Ev",
+  "_ZN15IORegistryEntry26_RESERVEDIORegistryEntry11Ev",
+  "_ZN15IORegistryEntry26_RESERVEDIORegistryEntry12Ev",
+  "_ZN15IORegistryEntry26_RESERVEDIORegistryEntry13Ev",
+  "_ZN15IORegistryEntry26_RESERVEDIORegistryEntry14Ev",
+  "_ZN15IORegistryEntry26_RESERVEDIORegistryEntry15Ev",
+  "_ZN15IORegistryEntry26_RESERVEDIORegistryEntry16Ev",
+  "_ZN15IORegistryEntry26_RESERVEDIORegistryEntry17Ev",
+  "_ZN15IORegistryEntry26_RESERVEDIORegistryEntry18Ev",
+  "_ZN15IORegistryEntry26_RESERVEDIORegistryEntry19Ev",
+  "_ZN15IORegistryEntry26_RESERVEDIORegistryEntry20Ev",
+  "_ZN15IORegistryEntry26_RESERVEDIORegistryEntry21Ev",
+  "_ZN15IORegistryEntry26_RESERVEDIORegistryEntry22Ev",
+  "_ZN15IORegistryEntry26_RESERVEDIORegistryEntry23Ev",
+  "_ZN15IORegistryEntry26_RESERVEDIORegistryEntry24Ev",
+  "_ZN15IORegistryEntry26_RESERVEDIORegistryEntry25Ev",
+  "_ZN15IORegistryEntry26_RESERVEDIORegistryEntry26Ev",
+  "_ZN15IORegistryEntry26_RESERVEDIORegistryEntry27Ev",
+  "_ZN15IORegistryEntry26_RESERVEDIORegistryEntry28Ev",
+  "_ZN15IORegistryEntry26_RESERVEDIORegistryEntry29Ev",
+  "_ZN15IORegistryEntry26_RESERVEDIORegistryEntry30Ev",
+  "_ZN15IORegistryEntry26_RESERVEDIORegistryEntry31Ev",
+  "_ZN15IORegistryEntry7setNameEPK8OSSymbolPK15IORegistryPlane",
+  "_ZN15IORegistryEntry7setNameEPKcPK15IORegistryPlane",
+  "_ZN15IORegistryEntry8fromPathEPKcPK15IORegistryPlanePcPiPS_",
+  "_ZN15IORegistryEntry9detachAllEPK15IORegistryPlane",
+  "_ZN15OSMetaClassBase12safeMetaCastEPKS_PK11OSMetaClass",
+  "_ZN15OSMetaClassBase25_RESERVEDOSMetaClassBase4Ev",
+  "_ZN15OSMetaClassBase25_RESERVEDOSMetaClassBase5Ev",
+  "_ZN15OSMetaClassBase25_RESERVEDOSMetaClassBase6Ev",
+  "_ZN15OSMetaClassBase25_RESERVEDOSMetaClassBase7Ev",
+  "_ZN15OSMetaClassBase8DispatchE5IORPC",
+  "_ZN18IOMemoryDescriptor11withOptionsEPvjjP4taskjP8IOMapper",
+  "_ZN18IOMemoryDescriptor16withAddressRangeEyyjP4task",
+  "_ZN18IOMemoryDescriptor18getPhysicalAddressEv",
+  "_ZN18IOMemoryDescriptor19withPhysicalAddressEyyj",
+  "_ZN18IOMemoryDescriptor9metaClassE",
+  "_ZN18IORegistryIterator11iterateOverEPK15IORegistryPlanej",
+  "_ZN20IOACPIPlatformDevice9metaClassE",
+  "_ZN21IOSubMemoryDescriptor12withSubRangeEP18IOMemoryDescriptoryyj",
+  "_ZN24IOBufferMemoryDescriptor17inTaskWithOptionsEP4taskjmm",
+  "_ZN24IOBufferMemoryDescriptor22inTaskWithPhysicalMaskEP4taskjyy",
+  "_ZN28IOFilterInterruptEventSource26filterInterruptEventSourceEP8OSObjectPFvS1_P22IOInterruptEventSourceiEPFbS1_PS_EP9IOServicei",
+  "_ZN6OSData12withCapacityEj",
+  "_ZN6OSData9metaClassE",
+  "_ZN6OSData9withBytesEPKvj",
+  "_ZN7OSArray12withCapacityEj",
+  "_ZN7OSArray9metaClassE",
+  "_ZN8OSNumber10withNumberEyj",
+  "_ZN8OSNumber9metaClassE",
+  "_ZN8OSObject18_RESERVEDOSObject0Ev",
+  "_ZN8OSObject18_RESERVEDOSObject1Ev",
+  "_ZN8OSObject18_RESERVEDOSObject2Ev",
+  "_ZN8OSObject18_RESERVEDOSObject3Ev",
+  "_ZN8OSObject18_RESERVEDOSObject4Ev",
+  "_ZN8OSObject18_RESERVEDOSObject5Ev",
+  "_ZN8OSObject18_RESERVEDOSObject6Ev",
+  "_ZN8OSObject18_RESERVEDOSObject7Ev",
+  "_ZN8OSObject18_RESERVEDOSObject8Ev",
+  "_ZN8OSObject18_RESERVEDOSObject9Ev",
+  "_ZN8OSObject19_RESERVEDOSObject10Ev",
+  "_ZN8OSObject19_RESERVEDOSObject11Ev",
+  "_ZN8OSObject19_RESERVEDOSObject12Ev",
+  "_ZN8OSObject19_RESERVEDOSObject13Ev",
+  "_ZN8OSObject19_RESERVEDOSObject14Ev",
+  "_ZN8OSObject19_RESERVEDOSObject15Ev",
+  "_ZN8OSObject4initEv",
+  "_ZN8OSObjectdlEPvm",
+  "_ZN8OSObjectnwEm",
+  "_ZN8OSString11withCStringEPKc",
+  "_ZN8OSString9metaClassE",
+  "_ZN8OSSymbol11withCStringEPKc",
+  "_ZN8OSSymbol17withCStringNoCopyEPKc",
+  "_ZN9IOService10adjustBusyEi",
+  "_ZN9IOService10gMetaClassE",
+  "_ZN9IOService10handleOpenEPS_jPv",
+  "_ZN9IOService10joinPMtreeEPS_",
+  "_ZN9IOService11getPlatformEv",
+  "_ZN9IOService11handleCloseEPS_j",
+  "_ZN9IOService12didTerminateEPS_jPb",
+  "_ZN9IOService12getBusyStateEv",
+  "_ZN9IOService12getResourcesEv",
+  "_ZN9IOService12requestProbeEj",
+  "_ZN9IOService12tellChangeUpEm",
+  "_ZN9IOService12updateReportEP19IOReportChannelListjPvS2_",
+  "_ZN9IOService13addPowerChildEPS_",
+  "_ZN9IOService13askChangeDownEm",
+  "_ZN9IOService13matchLocationEPS_",
+  "_ZN9IOService13messageClientEjP8OSObjectPvm",
+  "_ZN9IOService13newUserClientEP4taskPvjP12OSDictionaryPP12IOUserClient",
+  "_ZN9IOService13newUserClientEP4taskPvjPP12IOUserClient",
+  "_ZN9IOService13setPowerStateEmPS_",
+  "_ZN9IOService13willTerminateEPS_j",
+  "_ZN9IOService14activityTickleEmm",
+  "_ZN9IOService14applyToClientsEPFvPS_PvES1_",
+  "_ZN9IOService14causeInterruptEi",
+  "_ZN9IOService14messageClientsEjPvm",
+  "_ZN9IOService14tellChangeDownEm",
+  "_ZN9IOService15comparePropertyEP12OSDictionaryPK8OSString",
+  "_ZN9IOService15comparePropertyEP12OSDictionaryPKc",
+  "_ZN9IOService15configureReportEP19IOReportChannelListjPvS2_",
+  "_ZN9IOService15enableInterruptEi",
+  "_ZN9IOService15errnoFromReturnEi",
+  "_ZN9IOService15getDeviceMemoryEv",
+  "_ZN9IOService15nextIdleTimeoutEyyj",
+  "_ZN9IOService15powerChangeDoneEm",
+  "_ZN9IOService15registerServiceEj",
+  "_ZN9IOService15serviceMatchingEPKcP12OSDictionary",
+  "_ZN9IOService15setDeviceMemoryEP7OSArray",
+  "_ZN9IOService15terminateClientEPS_j",
+  "_ZN9IOService16allowPowerChangeEm",
+  "_ZN9IOService16applyToProvidersEPFvPS_PvES1_",
+  "_ZN9IOService16disableInterruptEi",
+  "_ZN9IOService16getInterruptTypeEiPi",
+  "_ZN9IOService16registerInterestEPK8OSSymbolPFiPvS3_jPS_S3_mES3_S3_",
+  "_ZN9IOService16removePowerChildEP17IOPowerConnection",
+  "_ZN9IOService16requestTerminateEPS_j",
+  "_ZN9IOService16stringFromReturnEi",
+  "_ZN9IOService16tellNoChangeDownEm",
+  "_ZN9IOService17addNeededResourceEPKc",
+  "_ZN9IOService17applyToInterestedEPK8OSSymbolPFvP8OSObjectPvES5_",
+  "_ZN9IOService17cancelPowerChangeEm",
+  "_ZN9IOService17comparePropertiesEP12OSDictionaryP12OSCollection",
+  "_ZN9IOService17getAggressivenessEmPm",
+  "_ZN9IOService17registerInterruptEiP8OSObjectPFvS1_PvPS_iES2_",
+  "_ZN9IOService17setAggressivenessEmm",
+  "_ZN9IOService18changePowerStateToEm",
+  "_ZN9IOService18lockForArbitrationEb",
+  "_ZN9IOService18matchPropertyTableEP12OSDictionary",
+  "_ZN9IOService18matchPropertyTableEP12OSDictionaryPi",
+  "_ZN9IOService18setIdleTimerPeriodEm",
+  "_ZN9IOService18systemWillShutdownEj",
+  "_ZN9IOService19_RESERVEDIOService2Ev",
+  "_ZN9IOService19_RESERVEDIOService3Ev",
+  "_ZN9IOService19_RESERVEDIOService4Ev",
+  "_ZN9IOService19_RESERVEDIOService5Ev",
+  "_ZN9IOService19_RESERVEDIOService6Ev",
+  "_ZN9IOService19_RESERVEDIOService7Ev",
+  "_ZN9IOService19_RESERVEDIOService8Ev",
+  "_ZN9IOService19_RESERVEDIOService9Ev",
+  "_ZN9IOService19getMatchingServicesEP12OSDictionary",
+  "_ZN9IOService19registerPowerDriverEPS_P14IOPMPowerStatem",
+  "_ZN9IOService19unregisterInterruptEi",
+  "_ZN9IOService20_RESERVEDIOService10Ev",
+  "_ZN9IOService20_RESERVEDIOService11Ev",
+  "_ZN9IOService20_RESERVEDIOService12Ev",
+  "_ZN9IOService20_RESERVEDIOService13Ev",
+  "_ZN9IOService20_RESERVEDIOService14Ev",
+  "_ZN9IOService20_RESERVEDIOService15Ev",
+  "_ZN9IOService20_RESERVEDIOService16Ev",
+  "_ZN9IOService20_RESERVEDIOService17Ev",
+  "_ZN9IOService20_RESERVEDIOService18Ev",
+  "_ZN9IOService20_RESERVEDIOService19Ev",
+  "_ZN9IOService20_RESERVEDIOService20Ev",
+  "_ZN9IOService20_RESERVEDIOService21Ev",
+  "_ZN9IOService20_RESERVEDIOService22Ev",
+  "_ZN9IOService20_RESERVEDIOService23Ev",
+  "_ZN9IOService20_RESERVEDIOService24Ev",
+  "_ZN9IOService20_RESERVEDIOService25Ev",
+  "_ZN9IOService20_RESERVEDIOService26Ev",
+  "_ZN9IOService20_RESERVEDIOService27Ev",
+  "_ZN9IOService20_RESERVEDIOService28Ev",
+  "_ZN9IOService20_RESERVEDIOService29Ev",
+  "_ZN9IOService20_RESERVEDIOService30Ev",
+  "_ZN9IOService20_RESERVEDIOService31Ev",
+  "_ZN9IOService20_RESERVEDIOService32Ev",
+  "_ZN9IOService20_RESERVEDIOService33Ev",
+  "_ZN9IOService20_RESERVEDIOService34Ev",
+  "_ZN9IOService20_RESERVEDIOService35Ev",
+  "_ZN9IOService20_RESERVEDIOService36Ev",
+  "_ZN9IOService20_RESERVEDIOService37Ev",
+  "_ZN9IOService20_RESERVEDIOService38Ev",
+  "_ZN9IOService20_RESERVEDIOService39Ev",
+  "_ZN9IOService20_RESERVEDIOService40Ev",
+  "_ZN9IOService20_RESERVEDIOService41Ev",
+  "_ZN9IOService20_RESERVEDIOService42Ev",
+  "_ZN9IOService20_RESERVEDIOService43Ev",
+  "_ZN9IOService20_RESERVEDIOService44Ev",
+  "_ZN9IOService20_RESERVEDIOService45Ev",
+  "_ZN9IOService20_RESERVEDIOService46Ev",
+  "_ZN9IOService20_RESERVEDIOService47Ev",
+  "_ZN9IOService20callPlatformFunctionEPK8OSSymbolbPvS3_S3_S3_",
+  "_ZN9IOService20callPlatformFunctionEPKcbPvS2_S2_S2_",
+  "_ZN9IOService20getDeviceMemoryCountEv",
+  "_ZN9IOService20unlockForArbitrationEv",
+  "_ZN9IOService21powerStateDidChangeToEmmPS_",
+  "_ZN9IOService22copyClientWithCategoryEPK8OSSymbol",
+  "_ZN9IOService22powerStateWillChangeToEmmPS_",
+  "_ZN9IOService22waitForMatchingServiceEP12OSDictionaryy",
+  "_ZN9IOService23acknowledgeNotificationEPvj",
+  "_ZN9IOService23requestPowerDomainStateEmP17IOPowerConnectionm",
+  "_ZN9IOService24getDeviceMemoryWithIndexEj",
+  "_ZN9IOService24mapDeviceMemoryWithIndexEjj",
+  "_ZN9IOService24powerStateForDomainStateEm",
+  "_ZN9IOService27maxCapabilityForDomainStateEm",
+  "_ZN9IOService31initialPowerStateForDomainStateEm",
+  "_ZN9IOService4freeEv",
+  "_ZN9IOService4initEP12OSDictionary",
+  "_ZN9IOService4initEP15IORegistryEntryPK15IORegistryPlane",
+  "_ZN9IOService4openEPS_jPv",
+  "_ZN9IOService4stopEPS_",
+  "_ZN9IOService5closeEPS_j",
+  "_ZN9IOService5probeEPS_Pi",
+  "_ZN9IOService5startEPS_",
+  "_ZN9IOService6PMinitEv",
+  "_ZN9IOService6PMstopEv",
+  "_ZN9IOService6attachEPS_",
+  "_ZN9IOService6detachEPS_",
+  "_ZN9IOService7messageEjPS_Pv",
+  "_ZN9IOService8DispatchE5IORPC",
+  "_ZN9IOService8finalizeEj",
+  "_ZN9IOService9metaClassE",
+  "_ZN9IOService9terminateEj",
+  "_ZN9IOService9waitQuietEy",
+  "_ZN9IOServiceC2EPK11OSMetaClass",
+  "_ZN9IOServiceD2Ev",
+  "_ZNK11OSMetaClass12getClassNameEv",
+  "_ZNK11OSMetaClass12getMetaClassEv",
+  "_ZNK11OSMetaClass12taggedRetainEPKv",
+  "_ZNK11OSMetaClass13taggedReleaseEPKv",
+  "_ZNK11OSMetaClass13taggedReleaseEPKvi",
+  "_ZNK11OSMetaClass14getRetainCountEv",
+  "_ZNK11OSMetaClass19instanceConstructedEv",
+  "_ZNK11OSMetaClass6retainEv",
+  "_ZNK11OSMetaClass7releaseEi",
+  "_ZNK11OSMetaClass7releaseEv",
+  "_ZNK11OSMetaClass9serializeEP11OSSerialize",
+  "_ZNK15IORegistryEntry11compareNameEP8OSStringPS1_",
+  "_ZNK15IORegistryEntry11getLocationEPK15IORegistryPlane",
+  "_ZNK15IORegistryEntry11getPropertyEPK8OSString",
+  "_ZNK15IORegistryEntry11getPropertyEPK8OSStringPK15IORegistryPlanej",
+  "_ZNK15IORegistryEntry11getPropertyEPK8OSSymbol",
+  "_ZNK15IORegistryEntry11getPropertyEPK8OSSymbolPK15IORegistryPlanej",
+  "_ZNK15IORegistryEntry11getPropertyEPKc",
+  "_ZNK15IORegistryEntry11getPropertyEPKcPK15IORegistryPlanej",
+  "_ZNK15IORegistryEntry12compareNamesEP8OSObjectPP8OSString",
+  "_ZNK15IORegistryEntry12copyLocationEPK15IORegistryPlane",
+  "_ZNK15IORegistryEntry12copyPropertyEPK8OSString",
+  "_ZNK15IORegistryEntry12copyPropertyEPK8OSStringPK15IORegistryPlanej",
+  "_ZNK15IORegistryEntry12copyPropertyEPK8OSSymbol",
+  "_ZNK15IORegistryEntry12copyPropertyEPK8OSSymbolPK15IORegistryPlanej",
+  "_ZNK15IORegistryEntry12copyPropertyEPKc",
+  "_ZNK15IORegistryEntry12copyPropertyEPKcPK15IORegistryPlanej",
+  "_ZNK15IORegistryEntry13getChildEntryEPK15IORegistryPlane",
+  "_ZNK15IORegistryEntry14applyToParentsEPFvPS_PvES1_PK15IORegistryPlane",
+  "_ZNK15IORegistryEntry14copyChildEntryEPK15IORegistryPlane",
+  "_ZNK15IORegistryEntry14getParentEntryEPK15IORegistryPlane",
+  "_ZNK15IORegistryEntry15applyToChildrenEPFvPS_PvES1_PK15IORegistryPlane",
+  "_ZNK15IORegistryEntry15copyParentEntryEPK15IORegistryPlane",
+  "_ZNK15IORegistryEntry16getChildIteratorEPK15IORegistryPlane",
+  "_ZNK15IORegistryEntry16getPathComponentEPcPiPK15IORegistryPlane",
+  "_ZNK15IORegistryEntry17getParentIteratorEPK15IORegistryPlane",
+  "_ZNK15IORegistryEntry24dictionaryWithPropertiesEv",
+  "_ZNK15IORegistryEntry7getNameEPK15IORegistryPlane",
+  "_ZNK15IORegistryEntry7getPathEPcPiPK15IORegistryPlane",
+  "_ZNK15IORegistryEntry7inPlaneEPK15IORegistryPlane",
+  "_ZNK15IORegistryEntry7isChildEPS_PK15IORegistryPlaneb",
+  "_ZNK15IORegistryEntry8copyNameEPK15IORegistryPlane",
+  "_ZNK15IORegistryEntry8getDepthEPK15IORegistryPlane",
+  "_ZNK15IORegistryEntry8isParentEPS_PK15IORegistryPlaneb",
+  "_ZNK15OSMetaClassBase9isEqualToEPKS_",
+  "_ZNK8OSObject12taggedRetainEPKv",
+  "_ZNK8OSObject13taggedReleaseEPKv",
+  "_ZNK8OSObject13taggedReleaseEPKvi",
+  "_ZNK8OSObject14getRetainCountEv",
+  "_ZNK8OSObject6retainEv",
+  "_ZNK8OSObject7releaseEi",
+  "_ZNK8OSObject7releaseEv",
+  "_ZNK8OSObject9serializeEP11OSSerialize",
+  "_ZNK9IOService11getProviderEv",
+  "_ZNK9IOService11getWorkLoopEv",
+  "_ZNK9IOService12handleIsOpenEPKS_",
+  "_ZNK9IOService17getClientIteratorEv",
+  "_ZNK9IOService19getProviderIteratorEv",
+  "_ZNK9IOService19serializePropertiesEP11OSSerialize",
+  "_ZNK9IOService21getOpenClientIteratorEv",
+  "_ZNK9IOService23getOpenProviderIteratorEv",
+  "_ZNK9IOService6isOpenEPKS_",
+  "_ZNK9IOService8getStateEv",
+  "_ZNK9IOService9getClientEv",
+  "_ZTV12IOUserClient",
+  "_ZTV9IOService",
+  "__bzero",
+  "__iom_rtti_provider",
+  "__nvoc_class_def_Memory",
+  "__nvoc_class_def_RmResource",
+  "__nvoc_rtti_provider",
+  "__stack_chk_fail",
+  "__stack_chk_guard",
+  "absolutetime_to_nanoseconds",
+  "assert_wait_timeout",
+  "bitVectorClrAll_IMPL",
+  "bitVectorClr_IMPL",
+  "bitVectorOr_IMPL",
+  "bitVectorSet_IMPL",
+  "bitVectorTestAllCleared_IMPL",
+  "bitVectorTest_IMPL",
+  "ceutilsMemcopy_IMPL",
+  "ceutilsUpdateProgress_IMPL",
+  "clientGetResourceRef_IMPL",
+  "copyin",
+  "copyout",
+  "current_task",
+  "current_thread",
+  "deviceGetByGpu_IMPL",
+  "deviceGetByHandle_IMPL",
+  "fbsrFreeReservedSysMemoryForPowerMgmt_IMPL",
+  "fbsrReserveSysMemoryForPowerMgmt_IMPL",
+  "gIODTPlane",
+  "gIOServicePlane",
+  "g_pSys",
+  "g_resServ",
+  "get_task_pmap",
+  "gpuCheckSysmemAccess_IMPL",
+  "gpuEnterStandby_IMPL",
+  "gpuGc6Entry_IMPL",
+  "gpuGc6Exit_IMPL",
+  "gpuGetGidInfo_IMPL",
+  "gpuGetKernelFifoShared_IMPL",
+  "gpuGetUserClientCount_IMPL",
+  "gpuIsGpuFullPowerForPmResume_IMPL",
+  "gpuIsGpuFullPower_IMPL",
+  "gpuNotifySubDeviceEvent_IMPL",
+  "gpuResumeFromStandby_IMPL",
+  "gpuSetExternalKernelClientCount_IMPL",
+  "gpumgrGetGpuFromUuid",
+  "gpumgrQueryGpuDrainState",
+  "gpumgrSetUuid",
+  "halmgrGetHalForGpu_IMPL",
+  "intrGetIntrEn_IMPL",
+  "intrGetIntrMaskFlags_IMPL",
+  "intrGetIntrMask_GP100",
+  "intrGetPendingNonStall_TU102",
+  "intrGetVectorFromEngineId_IMPL",
+  "intrServiceNonStallBottomHalf_IMPL",
+  "intrSetIntrEn_IMPL",
+  "kOSBooleanTrue",
+  "kauth_cred_get",
+  "kauth_cred_issuser",
+  "kauth_getuid",
+  "kbifCheckAndRearmMSI_IMPL",
+  "kbusGetGpuFbPhysAddressForRdma_IMPL",
+  "kbusGetPciBarSize_IMPL",
+  "kbusIsStaticBar1Enabled_IMPL",
+  "kbusMapFbAperture_GM107",
+  "kbusUnmapFbAperture_GM107",
+  "kdispHandleAggressiveVblank_IMPL",
+  "kdispServiceLowLatencyIntrs_KERNEL",
+  "kernel_task",
+  "kernel_thread_start",
+  "kmigmgrDecRefCount_IMPL",
+  "kmigmgrGetInstanceRefFromDevice_IMPL",
+  "kmigmgrIncRefCount_IMPL",
+  "kmigmgrIsMIGEnabled_IMPL",
+  "kprintf",
+  "kvgpumgrCreateRequestVgpu",
+  "kvgpumgrDeleteRequestVgpu",
+  "kvgpumgrGetHostVgpuDeviceFromVgpuDevName",
+  "kvgpumgrGetPgpuIndex",
+  "kvgpumgrGetVgpuTypeInfo",
+  "kvgpumgrProcessVfInfo",
+  "kvgpumgrSetGpuInstanceId",
+  "kvgpumgrSetPlacementId",
+  "lck_rw_try_lock",
+  "memGetByHandle_IMPL",
+  "memdescCreate",
+  "memdescDescribe",
+  "memdescDestroy",
+  "memdescFillPages",
+  "memdescGetPteArrayForGpu",
+  "memmgrGetUsedRamSize_IMPL",
+  "memmgrInitCeUtils_IMPL",
+  "ml_set_interrupts_enabled",
+  "nvApiHeadRegisterRgInterruptCallback",
+  "nvApiHeadRegisterVBlankCallback",
+  "nvAssertFailedNoLog",
+  "nvAssertOkFailedNoLog",
+  "nvCheckFailedNoLog",
+  "nvCheckOkFailedNoLog",
+  "nvDPSetAllowMultiStreaming",
+  "nvEvoCreateApiHandle",
+  "nvEvoGlobal",
+  "nvValidateModeEvo",
+  "nvValidateModeIndex",
+  "pNV_KMS_ID",
+  "page_size",
+  "portMemAllocatorCreateOnExistingBlock",
+  "portMemAllocatorGetGlobalNonPaged",
+  "portMemAllocatorRelease",
+  "portMemCmp",
+  "portMemFree",
+  "portMemSet",
+  "portStringCompare",
+  "portStringCopy",
+  "portStringLength",
+  "portSyncMutexAcquire",
+  "portSyncMutexCreate",
+  "portSyncMutexDestroy",
+  "portSyncMutexRelease",
+  "portSyncSpinlockCreate",
+  "proc_name",
+  "proc_selfname",
+  "proc_selfpid",
+  "rcdbAddRmGpuDump",
+  "read_random",
+  "rmDeviceGpuLockIsOwner",
+  "rmDeviceGpuLockSetOwner",
+  "rmDeviceGpuLocksAcquire",
+  "rmDeviceGpuLocksRelease",
+  "rmDeviceGpuLocksReleaseAndThreadStateFreeDeferredIntHandlerOptimized",
+  "rmGpuGroupLockAcquire",
+  "rmGpuGroupLockRelease",
+  "rmGpuLocksAcquire",
+  "rmGpuLocksRelease",
+  "rmapiEpilogue",
+  "rmapiGetClientHandlesFromOSInfo",
+  "rmapiLockAcquire",
+  "rmapiLockRelease",
+  "rmapiPrologue",
+  "semaphore_create",
+  "semaphore_destroy",
+  "semaphore_signal",
+  "semaphore_wait",
+  "semaphore_wait_noblock",
+  "serverAcquireClient",
+  "serverGetClientUnderLock",
+  "serverReleaseClient",
+  "serverutilAcquireClient",
+  "serverutilMappingFilterCurrentUserProc",
+  "serverutilReleaseClient",
+  "snprintf",
+  "strlcpy",
+  "subdeviceGetByHandle_IMPL",
+  "sysctl__debug_children",
+  "sysctl_handle_quad",
+  "sysctl_register_oid",
+  "sysctlbyname",
+  "tmrCtrlCmdEventCancel",
+  "tmrCtrlCmdEventCreate",
+  "tmrCtrlCmdEventDestroy",
+  "tmrCtrlCmdEventSchedule",
+  "transformGidToUserFriendlyString",
+  "vfs_context_current",
+  "vfs_context_proc",
+  "vfs_context_ucred",
+  "vn_rdwr",
+  "vnode_close",
+  "vnode_getattr",
+  "vnode_open",
+  "workItemLocksAcquire",
+  "workItemLocksRelease",
+  "\ufeffCliAddSystemEvent"
+ ],
+ "defining_files": [
+  "kernel-open/nvidia-drm/nvidia-drm-drv.c",
+  "kernel-open/nvidia-modeset/nvidia-modeset-linux.c",
+  "kernel-open/nvidia-uvm/uvm_channel.c",
+  "kernel-open/nvidia-uvm/uvm_hal.c",
+  "kernel-open/nvidia/linux_nvswitch.c",
+  "kernel-open/nvidia/nvlink_linux.c",
+  "kernel-open/nvidia/os-interface.c",
+  "src/common/softfloat/source/f16_to_f32.c",
+  "src/common/softfloat/source/f32_add.c",
+  "src/common/softfloat/source/f32_div.c",
+  "src/common/softfloat/source/f32_mul.c",
+  "src/common/softfloat/source/f32_to_f16.c",
+  "src/common/softfloat/source/f32_to_ui32_r_minMag.c",
+  "src/common/softfloat/source/ui32_to_f32.c",
+  "src/common/src/nv_smg.c",
+  "src/common/unix/common/utils/unix_rm_handle.c",
+  "src/nvidia-modeset/kapi/src/nvkms-kapi.c",
+  "src/nvidia-modeset/src/nvkms-attributes.c",
+  "src/nvidia-modeset/src/nvkms-console-restore.c",
+  "src/nvidia-modeset/src/nvkms-dpy-override.c",
+  "src/nvidia-modeset/src/nvkms-dpy.c",
+  "src/nvidia-modeset/src/nvkms-evo.c",
+  "src/nvidia-modeset/src/nvkms-flip.c",
+  "src/nvidia-modeset/src/nvkms-framelock.c",
+  "src/nvidia-modeset/src/nvkms-headsurface-ioctl.c",
+  "src/nvidia-modeset/src/nvkms-headsurface-swapgroup.c",
+  "src/nvidia-modeset/src/nvkms-headsurface.c",
+  "src/nvidia-modeset/src/nvkms-modeset.c",
+  "src/nvidia-modeset/src/nvkms-push.c",
+  "src/nvidia-modeset/src/nvkms-rm.c",
+  "src/nvidia-modeset/src/nvkms-rmapi-dgpu.c",
+  "src/nvidia-modeset/src/nvkms-stereo.c",
+  "src/nvidia-modeset/src/nvkms-surface.c",
+  "src/nvidia-modeset/src/nvkms-utils.c",
+  "src/nvidia-modeset/src/nvkms-vblank-sem-control.c",
+  "src/nvidia-modeset/src/nvkms.c",
+  "src/nvidia/arch/nvalloc/unix/src/escape.c",
+  "src/nvidia/arch/nvalloc/unix/src/gcc_helper.c",
+  "src/nvidia/arch/nvalloc/unix/src/os.c",
+  "src/nvidia/arch/nvalloc/unix/src/osapi.c",
+  "src/nvidia/arch/nvalloc/unix/src/osinit.c",
+  "src/nvidia/arch/nvalloc/unix/src/registry.c",
+  "src/nvidia/arch/nvalloc/unix/src/rmobjexportimport.c",
+  "src/nvidia/src/kernel/core/locks.c",
+  "src/nvidia/src/kernel/core/thread_state.c",
+  "src/nvidia/src/kernel/diagnostics/nvlog.c",
+  "src/nvidia/src/kernel/diagnostics/nvlog_printf.c",
+  "src/nvidia/src/kernel/gpu/arch/blackwell/kern_gpu_gb100.c",
+  "src/nvidia/src/kernel/gpu/bus/kern_bus.c",
+  "src/nvidia/src/kernel/gpu/bus/kern_bus_vbar2.c",
+  "src/nvidia/src/kernel/gpu/bus/p2p.c",
+  "src/nvidia/src/kernel/gpu/disp/kern_disp.c",
+  "src/nvidia/src/kernel/gpu/gpu_suspend.c",
+  "src/nvidia/src/kernel/gpu/gsp/arch/turing/kernel_gsp_tu102.c",
+  "src/nvidia/src/kernel/gpu/intr/intr.c",
+  "src/nvidia/src/kernel/gpu/mem_mgr/mem_desc.c",
+  "src/nvidia/src/kernel/gpu/timer/timer.c",
+  "src/nvidia/src/kernel/gpu_mgr/gpu_mgr.c",
+  "src/nvidia/src/kernel/platform/acpi_common.c",
+  "src/nvidia/src/kernel/platform/chipset/pci_pbi.c",
+  "src/nvidia/src/kernel/rmapi/deprecated_context.c",
+  "src/nvidia/src/kernel/rmapi/entry_points.c",
+  "src/nvidia/src/kernel/rmapi/mapping.c",
+  "src/nvidia/src/kernel/rmapi/param_copy.c",
+  "src/nvidia/src/kernel/rmapi/rmapi.c",
+  "src/nvidia/src/kernel/vgpu/rpc.c",
+  "src/nvidia/src/kernel/virtualization/hypervisor/hypervisor.c",
+  "src/nvidia/src/kernel/virtualization/kernel_vgpu_mgr.c",
+  "src/nvidia/src/libraries/containers/hashmap.c",
+  "src/nvidia/src/libraries/containers/list.c",
+  "src/nvidia/src/libraries/containers/map.c",
+  "src/nvidia/src/libraries/containers/multimap.c",
+  "src/nvidia/src/libraries/libspdm/nvidia/nvspdm_malloclib.c",
+  "src/nvidia/src/libraries/nvoc/src/runtime.c",
+  "src/nvidia/src/libraries/nvport/memory/memory_tracking.c",
+  "src/nvidia/src/libraries/nvport/memory/memory_unix_kernel_os.c",
+  "src/nvidia/src/libraries/resserv/src/rs_resource.c",
+  "src/nvidia/src/libraries/resserv/src/rs_server.c",
+  "src/nvidia/src/libraries/tls/tls.c"
+ ]
+}
