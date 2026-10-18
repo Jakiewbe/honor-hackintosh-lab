@@ -436,3 +436,37 @@ v_common_utils.h:96 unsigned → unsigned short |
 
 在补丁里把 NVRM.cpp:1229 的窄化显式化（如 (UInt8)(x & 0xFF) 或改用 NvU8），
 再评估 OGKM 那条是否需要同样处理；之后才可能把生产门禁切到统一配置。
+
+## 十八、对"缺口 0"的更正（R64）
+
+统一产物 NVRM-unified.kext 的未定义符号表（823 条）按提供者分类：
+
+| 类别 | 数量 |
+|---|---|
+| iokit/libkern | 404 |
+| **ogkm-rm-core** | **341** |
+| mach/kern | 66 |
+| c++ runtime | 2 |
+| 未归类 | 10（如 _kvgpumgrCreateRequestVgpu） |
+
+**关键：那 341 条 RM core 符号仍然未定义**，而我们只把 nvKms*/rm_*/nvrm_* 这三族统计为"缺口"，
+所以之前的"缺口 0"只对**那三类**成立，不等于整个 kext 无未定义符号。
+
+-kext -nostdlib 链接**允许**未解析导入（加载期才解析），所以链接成功并不表示自足。
+
+## 加载期会发生什么
+
+kexts/NVRM/Info.plist 声明了 com.apple.kpi.iokit/libkern/bsd/mach/unsupported，
+覆盖 404 + 66 的系统符号；但 **341 个 _Nv04*/_Rm*/__nvoc_* 没有提供者**，
+它们既不在系统 KPI 里，也不在我们这 21 个对象里 → **加载会因未解析符号失败**。
+
+## 结论
+
+1. 之前"42 → 0"是正确的，但**范围被我表述得过宽**：它只是被审计的那三个符号族；
+2. 真正的闭环要求是：**RM 核心也要编进来**（或找到提供者），否则 kext 不可能加载；
+3. 这把工作量的量级从"再补几个 TU"改成"把 RM core 纳入构建"，与 R54 的观察一致。
+
+## 下一步
+
+先量化 RM core 的规模：src/nvidia/src/... 里定义这些符号的 TU 有多少、依赖多少 Linux 设施。
+在拿到这个数字之前，不谈"可加载"。
