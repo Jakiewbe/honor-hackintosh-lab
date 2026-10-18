@@ -192,3 +192,43 @@ voc_*** —— **树内有定义**，属于索引漏报 → 不是缺口。
 这是本项目第 N 次同类错误：**"检索零命中"不等于"不存在"**。
 我的索引只认三种函数形态，对变量定义与宏展开无能力。这一步应当写成工具约束，
 而不是每次靠人肉再查一遍。
+
+## 四十四、数据符号索引器：9 个中 5 个有树内定义（R93）
+
+新增 	ools/index-data-defs.py（与函数索引分离，避免再混淆）：识别
+TYPE name = / TYPE name[ 形态（排除 extern）与 #define name，并做**前导下划线归一化**
+（__nvoc_class_def_Memory 这类符号在源码里比 Mach-O 名多一个下划线）。
+
+运行结果（3824 文件）：
+
+| 符号 | 树内定义 |
+|---|---|
+| g_pSys | ✅ src/nvidia/src/kernel/core/system.c:74 |
+| 
+vEvoGlobal | ✅ src/nvidia-modeset/src/nvkms-evo.c:148 |
+| __nvoc_class_def_Memory | ✅ src/nvidia/generated/g_mem_nvoc.c:84 |
+| __nvoc_class_def_RmResource | ✅ src/nvidia/generated/g_resource_nvoc.c:177 |
+| __nvoc_rtti_provider | ✅ src/nvidia/src/libraries/nvoc/src/runtime.c:46 |
+| PEX_DSM_GUID | ❌ |
+| g_resServ | ❌ |
+| pNV_KMS_ID | ❌ |
+| __nvoc_dynamicCast | ❌ |
+
+## 对 R92 的再次更正
+
+R92 我写"4 个 
+voc_* 都有定义"，其中 __nvoc_dynamicCast 那一行是**推断**（"runtime.c 里的 dynamicCast 实现族"），
+不是核实过的定义。本轮工具查证：**3 个确认有定义，__nvoc_dynamicCast 仍未解析**。
+我不该把推断写成表格里的一行。
+
+## 剩余 4 个的性质（初步，未定论）
+
+| 符号 | 线索 | 性质猜测 |
+|---|---|---|
+| pNV_KMS_ID | 
+kms.c:5369 是 extern const char *const，值是版本文本串 | **构建期生成**（版本号），源码本就没有 |
+| PEX_DSM_GUID | 用法 &PEX_DSM_GUID，ACPI DSM GUID 常量 | 可能在 Linux 专有 os_acpi.c 里 → **平台缺口**，可自备 |
+| g_resServ | osapi.c 里 &g_resServ 传给 serverAcquireClient | 需再定位（可能结构体成员或另一 TU） |
+| __nvoc_dynamicCast | 只见调用 __nvoc_dynamicCast(...)，未见定义 | 可能是 header 内联/宏，需扫头文件 |
+
+以上四条都**尚未核实**，不得据此下"缺失"结论。

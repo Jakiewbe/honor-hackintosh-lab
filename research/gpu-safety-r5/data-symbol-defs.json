@@ -1,0 +1,26 @@
+{
+ "definitions": {
+  "nvoc_class_def_Memory": [
+   "src/nvidia/generated/g_mem_nvoc.c:84"
+  ],
+  "nvoc_class_def_RmResource": [
+   "src/nvidia/generated/g_resource_nvoc.c:177"
+  ],
+  "g_pSys": [
+   "src/nvidia/src/kernel/core/system.c:74"
+  ],
+  "nvoc_rtti_provider": [
+   "src/nvidia/src/libraries/nvoc/src/runtime.c:46"
+  ],
+  "nvEvoGlobal": [
+   "src/nvidia-modeset/src/nvkms-evo.c:148"
+  ]
+ },
+ "macros": {},
+ "missing": [
+  "PEX_DSM_GUID",
+  "g_resServ",
+  "nvoc_dynamicCast",
+  "pNV_KMS_ID"
+ ]
+}
