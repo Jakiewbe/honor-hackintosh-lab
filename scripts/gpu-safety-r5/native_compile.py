@@ -215,9 +215,9 @@ def main():
             flags = [*common_flags, *definitions, *["-I" + str(p) for p in includes]]
             flags += ["-I" + str(candidate / "kexts/NVRM")]
             is_c = name.endswith(".c")
-            cc = "clang" if is_c else "clang++"
-            cflags = ["-x", "c", "-std=gnu11"] if is_c else []
-            use_flags = [f for f in flags if not (is_c and f.startswith("-std="))]
+            cc = "clang++"
+            cflags = ["-x", "c++"] if is_c else []
+            use_flags = flags
             rc = execute(["xcrun", cc, *cflags, *use_flags, "-c", str(src), "-o", str(obj)],
                          candidate, out / ("candidate-NVRM_" + name.replace(".", "_") + "-compile.txt"))
             nvrm_compile[name] = rc
