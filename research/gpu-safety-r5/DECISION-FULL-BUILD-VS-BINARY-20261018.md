@@ -487,3 +487,46 @@ vport 的 Darwin inline 实现），否则编译无法越过 135/988。
 - 每次 CI 迭代约 10 分钟，收益已降到 +1 文件；
 - 继续下去只会不断给 PORT_* 打补丁，而这正是**应当由端口层正式实现**的东西；
 - 用宏伪造 PORT_BREAKPOINT 之类会让后续所有测量失真，违反本项目的证据规则。
+
+## 五十一、RM 实际用到的端口原语：460 个标识符，87 个覆盖 90%（R100）
+
+对 988 个 TU 做静态统计（PORT_* / port* / NVPORT_* 三类标识符）：
+
+| 指标 | 值 |
+|---|---|
+| 唯一标识符 | **460** |
+| 总引用次数 | **8,388** |
+| 覆盖 90% 引用所需 | **87 个** |
+| 覆盖 95% 引用所需 | 172 个 |
+| 前 30 个覆盖 | 80.4% |
+
+## 最常用的十个（说明端口层的重心）
+
+| 原语 | 引用 | 涉及文件 |
+|---|---|---|
+| portMemSet | 1,465 | 419 |
+| PORT_UNREFERENCED_VARIABLE | 1,343 | 202 |
+| portMemFree | 1,030 | 366 |
+| portMemAllocNonPaged | 750 | 365 |
+| portMemCopy | 649 | 154 |
+| PORT_MEM_ALLOCATOR | 105 | 24 |
+| portSyncSpinlockRelease | 104 | 20 |
+| portMemGlobals | 104 | 1 |
+| portMemAllocatorGetGlobalNonPaged | 97 | 45 |
+| portSyncRwLockReleaseWrite | 95 | 12 |
+
+**内存分配器是绝对重心**（portMem* 占前五中的四个）。
+
+## 这给出了可写的最小端口层清单
+
+按 90% 覆盖率算，**87 个原语**就是一个"能编过大部分 TU"的目标集合，其中：
+
+- 内存：portMemAllocNonPaged/Paged、portMemFree、portMemSet/Copy、PORT_MEM_ALLOCATOR、portMemGlobals
+- 同步：spinlock / rwlock / mutex 的 acquire/release/destroy（约 15 个）
+- 原子：PORT_ATOMIC 与 portAtomic* 子集（C11 路径可能免实现）
+- 杂项：PORT_UNREFERENCED_VARIABLE、PORT_ASSERT*、portDbgPrintf、portString*
+
+## 边界
+
+这是**静态引用统计**，不是"实现了就能编过"的承诺：原语的**语义**（非分页内存、睡眠上下文、
+锁的可睡眠性）才是移植的真正难点，统计只能给出规模。
