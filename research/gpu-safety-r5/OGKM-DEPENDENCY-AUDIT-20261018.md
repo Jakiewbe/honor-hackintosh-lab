@@ -778,3 +778,41 @@ gpumgrGetGpuFromUuid  gpumgrQueryGpuDrainState  intrGetIntrEn_IMPL  kbusGetPciBa
 
 对 45 个逐个确认"树内只有声明"，产出一张**闭源符号清单**；然后按 98 个文件做第一批受控编译
 （分批、记断点、每批固定上限）。若第一批通过，缺口就从"未知"变成"闭源 45 + 待编译若干"。
+
+## 二十九、第一批受控编译：86/98（R75，run 39100887112）
+
+按 m-gap-index.json 里的 defining_files（已剔除 kernel-open/，共 98 个），逐个用探针配置编译：
+
+| 指标 | 值 |
+|---|---|
+| 尝试 | 98 |
+| 通过 | **86** |
+| 失败 | **12** |
+
+## 12 个失败分两类，都不是"代码不能用"
+
+**① 6 个 softfloat 文件**：specialize.h 未找到。它实际在
+
+`
+src/common/softfloat/source/8086-SSE/specialize.h
+`
+
+—— 又是 include 路径缺失（和 softfloat.h、
+vspdm_rmconfig.h 同类）。
+
+**② src/common/src/nv_smg.c**：'pthread.h' file not found。
+
+这个是**用户态库**（system management），依赖 POSIX 线程，本来就不属于 kext。它出现在清单里，
+是因为索引把所有 .c 都算进去了。**应当从 kext 构建集合中排除**，而不是硬编。
+
+## 结论
+
+- 98 个文件里，**86 个可直接编成 Darwin 对象**；
+- 12 个失败中，6 个是 include 路径（可修），6 个（softfloat 系列其余）同类；
+- 
+v_smg.c 类是**非 kext 代码**，需要按目录排除。
+
+## 下一步
+
+补 8086-SSE 的 include，重跑这批；同时在清单里排除用户态目录（如 src/common/src 里非 kernel 的部分），
+再记录一次通过率。之后才谈"把 98 个对象连同 15 个探针对象一起链接"。
