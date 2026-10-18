@@ -9,7 +9,8 @@ import unittest
 
 from g1_full_build import (BASELINE_C, BASELINE_CPP, COMPONENTS, NM_PIN, OGKM_PIN,
     archive_allowed, baseline_objects, compile_plan, darwin_command, digest,
-    inventory, object_path, shader_assembly, source_list, validate_kext, validate_object)
+    inventory, nvlink_delta, NVLINK_EXPORTS, object_path, read_defined_log,
+    shader_assembly, source_list, validate_kext, validate_object)
 
 
 def header(kind=1):
@@ -17,6 +18,33 @@ def header(kind=1):
 
 
 class FullBuildTests(unittest.TestCase):
+    def test_same_run_nvlink_delta_rejects_missing_provider_or_unexplained_import(self):
+        before = NVLINK_EXPORTS | {'_IOMalloc', '_semaphore_wait'}
+        after = {'_IOMalloc', '_semaphore_wait', '_panic'}
+        result = nvlink_delta(before, after, NVLINK_EXPORTS)
+        self.assertEqual(result['removed_imports'], sorted(NVLINK_EXPORTS))
+        self.assertEqual(result['added_imports'], ['_panic'])
+        for bad_before, bad_after, bad_defined in [
+                (before-{'_nvlink_freeLock'}, after, NVLINK_EXPORTS),
+                (before, after | {'_nvlink_freeLock'}, NVLINK_EXPORTS),
+                (before, after, NVLINK_EXPORTS-{'_nvlink_freeLock'}),
+                (before, after | {'_invented_provider'}, NVLINK_EXPORTS),
+                (before, after-{'_IOMalloc'}, NVLINK_EXPORTS)]:
+            with self.assertRaises(ValueError):
+                nvlink_delta(bad_before, bad_after, bad_defined)
+
+    def test_defined_inventory_rejects_failed_truncated_or_wrong_nm(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder)/'nm.txt'
+            good = 'ARGV=["xcrun", "nm", "-gU", "file"]\n000000 T _nvlink_freeLock\nEXIT=0\n'
+            path.write_text(good)
+            self.assertEqual(read_defined_log(path), {'_nvlink_freeLock'})
+            for text in [good.replace('EXIT=0', 'EXIT=1'), good.replace('EXIT=0', ''),
+                         good.replace('-gU', '-u'), good.replace(' T ', ' U ')]:
+                path.write_text(text)
+                with self.assertRaises(ValueError):
+                    read_defined_log(path)
+
     def test_source_list_rejects_missing_duplicates_or_unknown_make_semantics(self):
         self.assertEqual(source_list('SRCS ?=\nSRCS += a.c\nSRCS_CXX += b.cpp\n'), ['a.c', 'b.cpp'])
         for text in ['', 'SRCS += a.c\nSRCS += a.c', 'SRCS += $(wildcard *.c)',

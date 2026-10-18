@@ -137,7 +137,14 @@ jobs:
             --logs "$RUNNER_TEMP/gpu-safety-r5-logs" \
             --out "$RUNNER_TEMP/gpu-safety-r5-logs/rm-abi"
 
-      - name: Attempt all official RM and modeset sources and complete candidate link
+      - name: Test actual NVLink provider against injected CPU semaphore services
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/g1_nvlink_contract.py --nv "$RUNNER_TEMP/gpu-safety-r5-nv" \
+            --out "$RUNNER_TEMP/gpu-safety-r5-logs/nvlink-host" --cxx clang++
+
+      - name: Attempt all official sources and compare links without and with NVLink provider
         if: ${{ !cancelled() && steps.native_compile.outcome == 'success' }}
         shell: bash
         run: |

@@ -20,9 +20,12 @@ import sys
 
 from g1_dependency_audit import OGKM_PIN, NM_PIN
 from g1_symbol_identity import parse_nm_undefined
+from g1_special_object_providers import defined_symbols
 
 COMPONENTS = ('nvidia', 'nvidia-modeset')
 SHADERS = ('turing', 'ampere', 'hopper', 'blackwell', 'gb20x')
+NVLINK_EXPORTS = {'_nvlink_'+name+'Lock' for name in ('alloc', 'acquire', 'release', 'free')}
+NVLINK_NEW_IMPORTS = {'_panic'}  # Deliberate fatal invariant path; target export/ABI still unverified.
 BASELINE_CPP = {'kexts/NVRM/'+name for name in (
     'NVRM.cpp', 'os-xnu.cpp', 'os-xnu2.cpp', 'os-nvkms-xnu.cpp', 'nv_xnu_stubs.cpp',
     'nvrm_gpuva.cpp', 'nvrm_fbinfo.cpp', 'nvrm_surfshare.cpp', 'nvkms_shaders.cpp')}
@@ -210,6 +213,60 @@ def baseline_objects(native, candidate, object_root):
     return selected
 
 
+def read_defined_log(path):
+    lines = path.read_text(encoding='utf-8').splitlines()
+    if not lines or not lines[0].startswith('ARGV=') or lines[-1] != 'EXIT=0':
+        raise ValueError('incomplete defined-symbol log')
+    argv = json.loads(lines[0][5:])
+    if 'nm' not in argv or '-gU' not in argv:
+        raise ValueError('expected defined nm command')
+    return defined_symbols('\n'.join(lines[1:-1]))
+
+
+def nvlink_delta(before, after, defined):
+    before, after = set(before), set(after)
+    removed, added = before-after, after-before
+    if not NVLINK_EXPORTS <= before or removed != NVLINK_EXPORTS:
+        raise ValueError('same-run baseline must lose exactly the four NVLink imports')
+    if not NVLINK_EXPORTS <= defined or NVLINK_EXPORTS & after:
+        raise ValueError('four NVLink definitions must survive final link')
+    if added - NVLINK_NEW_IMPORTS:
+        raise ValueError('unexpected new imports: '+str(sorted(added-NVLINK_NEW_IMPORTS)))
+    return {'removed_imports': sorted(removed), 'added_imports': sorted(added),
+            'added_import_policy': '_panic is a deliberate fatal invariant path; no target export/ABI acceptance',
+            'remaining_import_count': len(after), 'target_exports_abi': 'NOT_VERIFIED'}
+
+
+def compile_nvlink(nv, out, sdk, headers, report):
+    source = Path(__file__).resolve().parents[1]/'research/gpu-safety-r5/darwin/nvlink_locks.cpp'
+    obj = out/'objects/nvlink-darwin-locks.o'
+    argv = ['xcrun', 'clang++', '-std=c++17', '-O2', '-fno-rtti', '-fno-exceptions',
+            '-arch', 'x86_64', '-mmacosx-version-min=15.5', '-isysroot', str(sdk),
+            '-fapple-kext', '-mkernel', '-nostdinc', '-I'+str(headers),
+            '-DKERNEL', '-DKERNEL_PRIVATE', '-DDRIVER_PRIVATE', '-DAPPLE', '-DNeXT',
+            '-DNV_UNIX', '-DNV_LINUX']
+    for rel in ('src/common/nvlink/interface', 'src/common/inc', 'src/common/sdk/nvidia/inc'):
+        argv.append('-I'+str(nv/rel))
+    argv += ['-c', str(source), '-o', str(obj)]
+    row = {'source': 'research/gpu-safety-r5/darwin/nvlink_locks.cpp',
+           'source_sha256': digest(source.read_bytes()), 'object': str(obj), 'candidate_argv': argv,
+           'role': 'explicit Darwin semaphore provider; OGKM archives unchanged'}
+    report['extra_objects'] = [row]
+    rc = run(argv, out, out/'nvlink-compile.txt')
+    row['compile_exit'] = rc
+    if rc:
+        raise ValueError('NVLink Darwin lock provider compile failed')
+    row['object_sha256'] = validate_object(obj)
+    symbols = out/'nvlink-defined.txt'
+    if run(['xcrun', 'nm', '-gU', str(obj)], out, symbols):
+        raise ValueError('NVLink object nm failed')
+    exports = read_defined_log(symbols)
+    row['defined_symbols'] = sorted(exports)
+    if exports != NVLINK_EXPORTS:
+        raise ValueError('NVLink provider must export exactly four real interfaces')
+    return obj
+
+
 def build(args, report):
     nv, out = args.nv.resolve(), args.out.resolve()
     if platform.system() != 'Darwin' or platform.machine() != 'x86_64':
@@ -323,6 +380,21 @@ def build(args, report):
     argv = ['xcrun', 'clang++', '-arch', 'x86_64', '-mmacosx-version-min=15.5', '-fapple-kext',
             '-isysroot', sdk, '-nostdlib', '-Xlinker', '-kext', '-Wl,-why_load',
             *[r['object'] for r in baseline], *map(str, archives), '-lkmodc++', '-lkmod', '-lcc_kext', '-o', str(dest)]
+    # Observe the no-addon link in the SAME run before adding the real provider.
+    original_dest = dest.with_name('NVRM-without-nvlink-provider')
+    baseline_argv = [*argv[:-1], str(original_dest)]
+    baseline_rc = run(baseline_argv, out, out/'before-nvlink-link.txt')
+    report['before_nvlink'] = {'link_exit': baseline_rc}
+    if baseline_rc:
+        raise ValueError('same-run no-addon baseline link failed')
+    report['before_nvlink']['artifact_sha256'] = validate_kext(original_dest)
+    before_nm = out/'before-nvlink-undefined.txt'
+    if run(['xcrun', 'nm', '-u', str(original_dest)], out, before_nm):
+        raise ValueError('same-run baseline nm failed')
+    before = parse_nm_undefined(before_nm.read_text(encoding='utf-8'))
+    report['before_nvlink']['undefined_symbols'] = before
+    addon = compile_nvlink(nv, out, sdk, headers, report)
+    argv.insert(argv.index('-lkmodc++'), str(addon))
     rc = run(argv, out, out/'full-nvrm-link.txt')
     report['link'] = {'exit': rc, 'baseline_objects': [r['object'] for r in baseline],
                        'archive_order': list(map(str, archives)),
@@ -336,6 +408,9 @@ def build(args, report):
         if run(['xcrun', 'nm', *flags, str(dest)], out, out/('full-nvrm-'+label+'.txt')):
             raise ValueError('linked symbol inventory failed')
     report['link']['undefined_symbols'] = parse_nm_undefined((out/'full-nvrm-undefined.txt').read_text(encoding='utf-8'))
+    report['link']['extra_objects'] = [str(addon)]
+    report['link']['nvlink_delta'] = nvlink_delta(before, report['link']['undefined_symbols'],
+                                                 read_defined_log(out/'full-nvrm-defined.txt'))
     report['link']['artifact_sha256'] = validate_kext(dest)
     fixed_input(nv)
     report['status'] = 'COMPLETE_SOURCE_CANDIDATE_LINKED_NOT_CLOSURE_OR_ABI_ACCEPTED'

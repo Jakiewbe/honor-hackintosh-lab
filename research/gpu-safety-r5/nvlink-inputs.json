@@ -1,0 +1,30 @@
+{
+  "ogkm_commit": "e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb",
+  "ogkm_sources": [
+    {
+      "path": "src/common/nvlink/interface/nvlink_os.h",
+      "sha256": "d4b1d8e3fcf365b39c0b90708ca4465bf3b642b89e9e13f400800989c9418037",
+      "license": "MIT"
+    },
+    {
+      "path": "src/common/nvlink/kernel/nvlink/nvlink_lock.c",
+      "sha256": "510227b8a4a50f8f6edc3aeaf7757ab0576e14049702a7569faf16597b375c3b",
+      "license": "MIT"
+    },
+    {
+      "path": "kernel-open/nvidia/nvlink_linux.c",
+      "sha256": "512da8863974dbada02318d606714c9e090baf88793ef3c5993e94815bb5e987",
+      "license": "MIT"
+    }
+  ],
+  "candidate_license": "MIT",
+  "xnu_reference": {
+    "commit": "a1e26a70f38d1d7daa7b49b258e2f8538ad81650",
+    "path": "osfmk/kern/sync_sema.c",
+    "license": "APSL-2.0",
+    "sha256": "234978afa576e0910234c1b0bf49798540f9324ff9c877c74205e4f25b0d1a37",
+    "scope": "read-only API behavior reference; no XNU source copied into candidate; no target ABI assertion"
+  },
+  "ogkm_patch": "NONE; original archives unchanged; one explicit additional candidate TU",
+  "sdk": "Xcode_16.4 macOS SDK 15.5 requested; actual version to be recorded by CI"
+}
