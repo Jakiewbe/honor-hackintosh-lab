@@ -277,6 +277,8 @@ def main():
             probe_root / "src/common/softfloat",
             probe_root / "src/common/softfloat/source/include",
             probe_root / "src/common/softfloat/source/8086-SSE",
+            probe_root / "src/common/unix/nvidia-headsurface",
+            probe_root / "src/common/softfloat/source",
             probe_root / "src/nvidia/src/libraries/libspdm/nvidia",
             probe_root / "src/nvidia/src/libraries/libspdm/3.5.0/include",
             probe_root / "src/nvidia/src/libraries/libspdm",
@@ -398,7 +400,12 @@ def main():
                     errs = [l for l in log.read_text(encoding="utf-8", errors="replace").splitlines()
                             if "error:" in l][:2]
                     batch["failed"].append({"file": rel, "errors": errs})
-        batch_objs = sorted(out.parent.glob("bat-*.o"))
+        # Files that already contributed a probe object must not also contribute a batch object: the link
+        # failed with duplicate symbols because nvkms-kapi.c and friends appear in both sets.
+        probe_stems = {p.stem.replace("probe-", "").replace("_c", "").replace("_cpp", "") for p in
+                       out.parent.glob("probe-*.o")}
+        batch_objs = [o for o in sorted(out.parent.glob("bat-*.o"))
+                      if o.stem.replace("bat-", "") not in probe_stems]
         # probe_objs is only defined on the mixed-link path; recompute locally so this block cannot
         # depend on which earlier branch ran.
         pb = sorted(out.parent.glob("probe-*.o"))
