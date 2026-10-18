@@ -3,7 +3,10 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from g1_target_providers import load_imports, match_records, observe_allowlist, observe_binary, parse_allowlist, parse_globals
+from g1_target_providers import (load_imports, match_records, observe_allowlist, observe_binary,
+    observe_symbolsets, parse_allowlist, parse_globals, section_bounds)
+import plistlib
+import struct
 
 
 class TargetProviderTests(unittest.TestCase):
@@ -88,6 +91,29 @@ class TargetProviderTests(unittest.TestCase):
             observed = observe_allowlist(p, 'bad-list', ['_x'], root)
             self.assertEqual(observed['observation'], 'OBSERVATION_FAILED')
             self.assertFalse(observed['matches'])
+
+    def test_real_otool_section_shape_duplicate_and_bounds(self):
+        text = 'Load command 11\nSection\n  sectname __symbolsets\n   segname __LINKINFO\n      addr 0xffffff8000fbd000\n      size 0x000000000004c55a\n    offset 15056896\n     align 2^0 (1)\nLoad command 12\n'
+        self.assertEqual(section_bounds(text, '__LINKINFO', '__symbolsets', 18349264), (15056896, 312666))
+        for wrong, length in [(text+text, 18349264), (text, 40), (text.replace('__LINKINFO', '__OTHER'), 18349264)]:
+            with self.assertRaises(ValueError):
+                section_bounds(wrong, '__LINKINFO', '__symbolsets', length)
+
+    def test_symbolset_bytes_bound_to_exact_kernel_not_abi_proof(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            p = root/'synthetic-header-fixture'
+            raw = struct.pack('<IIIIIIII', 0xfeedfacf, 0x01000007, 3, 2, 0, 0, 0, 0)
+            payload = plistlib.dumps({'fixture': ['_x']})
+            p.write_bytes(raw+payload)
+            h = hashlib.sha256(p.read_bytes()).hexdigest()
+            text = 'Section\nsectname __symbolsets\nsegname __LINKINFO\noffset 32\nsize '+hex(len(payload))+'\n'
+            row = observe_symbolsets(p, text, h, root)
+            self.assertEqual(row['observation'], 'PLIST_DECODED')
+            self.assertIn('NOT_ABI', row['level'])
+            self.assertEqual(plistlib.loads((root/'kernel-symbolsets-decoded.txt').read_bytes()), {'fixture': ['_x']})
+            p.write_bytes(raw+payload+b'changed')
+            self.assertEqual(observe_symbolsets(p, text, h, root)['observation'], 'FAILED')
 
 
 if __name__ == '__main__':

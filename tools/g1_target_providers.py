@@ -10,6 +10,7 @@ import platform
 import plistlib
 import re
 import subprocess
+import struct
 
 from g1_symbol_identity import identity, parse_nm_undefined
 
@@ -91,6 +92,9 @@ def observe_binary(path, provider_id, level, names, out, execute=command):
         # not describe per-entry KPI visibility, so do not try to flatten them.
         argv = ['xcrun', 'nm', '-arch', 'x86_64', '-gU', str(path)]
         rc, stdout, stderr = execute(argv)
+        (out/(provider_id+'-nm-raw.txt')).write_text(
+            'ARGV='+json.dumps(argv)+'\n'+stdout.decode('utf-8', errors='strict')+
+            '\nEXIT='+str(rc)+'\n', encoding='utf-8')
         row.update(argv=argv, exit=rc, stdout_sha256=sha(stdout), stderr_sha256=sha(stderr))
         diagnostic = stderr.decode('utf-8', errors='strict')
         row['diagnostic'] = diagnostic[:4000]
@@ -191,6 +195,52 @@ def inventory_tree(root, depth=4):
     return result
 
 
+def section_bounds(otool_text, segment, section, length):
+    candidates = []
+    for block in re.findall(r'^Section\n([\s\S]*?)(?=^Section\n|^Load command|\Z)', otool_text, re.M):
+        fields = dict(line.strip().split(None, 1) for line in block.splitlines() if len(line.strip().split(None, 1)) == 2)
+        if fields.get('sectname') == section and fields.get('segname') == segment:
+            offset, size = int(fields['offset']), int(fields['size'], 16)
+            if offset < 32 or size <= 0 or offset+size > length:
+                raise ValueError('section bounds outside kernel input')
+            candidates.append((offset, size))
+    if len(candidates) != 1:
+        raise ValueError('expected exactly one requested kernel section')
+    return candidates[0]
+
+
+def observe_symbolsets(kernel, otool_text, expected_hash, out):
+    row = {'path': str(kernel), 'section': '__LINKINFO,__symbolsets',
+        'level': 'RUNNER_KERNEL_SYMBOLSET_METADATA_NOT_ABI_OR_USER_TARGET_PROOF', 'observation': 'FAILED'}
+    try:
+        raw = kernel.read_bytes()
+        if sha(raw) != expected_hash:
+            raise ValueError('kernel hash differs from nm input')
+        if len(raw) < 32:
+            raise ValueError('truncated kernel header')
+        magic, cpu, _, filetype = struct.unpack_from('<IIII', raw)
+        if (magic, cpu, filetype) != (0xfeedfacf, 0x01000007, 2):
+            raise ValueError('expected thin x86_64 kernel')
+        offset, size = section_bounds(otool_text, '__LINKINFO', '__symbolsets', len(raw))
+        section = raw[offset:offset+size]
+        payload = section.rstrip(b'\0')
+        value = plistlib.loads(payload)
+        # XML reserialization is text evidence even when the source is bplist.
+        # Its hash is deliberately separate from the exact source section hash.
+        xml = plistlib.dumps(value, fmt=plistlib.FMT_XML, sort_keys=False)
+        (out/'kernel-symbolsets-decoded.txt').write_text(xml.decode('utf-8'), encoding='utf-8')
+        if sha(kernel.read_bytes()) != expected_hash:
+            raise ValueError('kernel changed during symbolset observation')
+        row.update(observation='PLIST_DECODED', kernel_sha256=expected_hash,
+            offset=offset, bytes=size, section_sha256=sha(section),
+            removed_trailing_nuls=size-len(payload), decoded_xml_sha256=sha(xml),
+            top_level_type=type(value).__name__, top_level_keys=list(value) if isinstance(value, dict) else None)
+    except (OSError, ValueError, TypeError, plistlib.InvalidFileException) as error:
+        row['error'] = str(error)
+    write(out/'kernel-symbolsets-binding.json', row)
+    return row
+
+
 def collect(args, out):
     if platform.system() != 'Darwin' or platform.machine() != 'x86_64':
         raise ValueError('read-only Intel Darwin runner required')
@@ -232,20 +282,20 @@ def collect(args, out):
             bundle.replace('.', '-')+'-allowlist', names, out))
     # Native system tools only: no extraction, patching, loading or permission
     # bypass. Preserve a failed query as a failed query, not an absent export.
-    for bundle_id in ['com.apple.iokit.IOPCIFamily', 'com.apple.iokit.IOACPIFamily',
-                      'com.apple.kpi.iokit', 'com.apple.kpi.libkern', 'com.apple.kpi.mach',
-                      'com.apple.kpi.bsd', 'com.apple.kpi.unsupported']:
-        argv = ['/usr/bin/kmutil', 'inspect', '-a', 'x86_64',
-            '-B', '/System/Library/KernelCollections/BootKernelExtensions.kc',
-            '-S', '/System/Library/KernelCollections/SystemKernelExtensions.kc',
-            '--bundle-identifier', bundle_id, '--show-prelink-info']
-        rc, stdout, stderr = command(argv)
-        write(out/('kc-'+bundle_id+'.json'), {'argv': argv, 'exit': rc,
-            'stdout': stdout.decode('utf-8'), 'stderr': stderr.decode('utf-8'),
-            'level': 'RAW_KC_METADATA_NOT_YET_PARSED_OR_ACCEPTED'})
+    # --show-prelink-info ignores the bundle filter in this runner's kmutil.
+    # Query once rather than retaining seven copies of the whole metadata.
+    argv = ['/usr/bin/kmutil', 'inspect', '-a', 'x86_64',
+        '-B', '/System/Library/KernelCollections/BootKernelExtensions.kc',
+        '-S', '/System/Library/KernelCollections/SystemKernelExtensions.kc', '--show-prelink-info']
+    rc, stdout, stderr = command(argv)
+    write(out/'kc-prelink-raw.json', {'argv': argv, 'exit': rc,
+        'stdout': stdout.decode('utf-8'), 'stderr': stderr.decode('utf-8'),
+        'level': 'RAW_KC_METADATA_NOT_YET_PARSED_OR_ACCEPTED'})
     rc, stdout, stderr = command(['xcrun', 'otool', '-l', '/System/Library/Kernels/kernel'])
     write(out/'kernel-load-commands.json', {'argv': ['xcrun', 'otool', '-l', '/System/Library/Kernels/kernel'],
         'exit': rc, 'stdout': stdout.decode('utf-8'), 'stderr': stderr.decode('utf-8')})
+    symbolsets = observe_symbolsets(Path('/System/Library/Kernels/kernel'), stdout.decode('utf-8'),
+        providers[0]['sha256'], out) if rc == 0 else {'observation': 'OTOOL_FAILED'}
     records = match_records(names, providers)
     report = {'schema': 'honor.g1.runner-provider-discovery.v1',
         'status': 'DISCOVERY_COMPLETE_NOT_TARGET_KPI_OR_ABI_ACCEPTANCE',
@@ -255,6 +305,7 @@ def collect(args, out):
             'rebuild_in_this_run': False},
         'scope': 'RUNNER_OS_ONLY_NOT_USER_TARGET_SYSTEM', 'providers': providers,
         'bundle_metadata': bundles, 'inventory': inventory, 'records': records,
+        'kernel_symbolsets': symbolsets,
         'counts': dict(Counter(r['status'] for r in records)),
         'target_export_abi_acceptance': 'NOT_VERIFIED', 'kext_load': 'NO-GO', 'gpu_execution': False}
     write(out/'report.json', report)
