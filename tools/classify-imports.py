@@ -29,7 +29,9 @@ LIBKERN_CLASSES = {
 CPP_RUNTIME = ("__cxa_", "__gxx_", "__Unwind", "_Znwm", "_ZdlPv", "_Znam", "_ZdaPv", "_ZSt")
 
 
-GAPS = {"nvKms": "ogkm-nvkms", "nvKmsKapi": "ogkm-nvkms", "rm_": "ogkm-rm", "nvrm_": "nullmoth-internal"}
+GAPS = {"nvKms": "ogkm-nvkms", "nvKmsKapi": "ogkm-nvkms", "rm_": "ogkm-rm", "nvrm_": "nullmoth-internal",
+        "Rm": "ogkm-rm-core", "Nv01": "ogkm-rm-core", "Nv04": "ogkm-rm-core", "os_": "ogkm-os"}
+# Nv\d\d* are RM API entry points (Nv04AllocContextDmaKernel ...); they come from the RM core, not the Unix layer.
 
 
 def classify(sym: str) -> str:
