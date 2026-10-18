@@ -304,6 +304,31 @@ def main():
                                   "status": "COMPILED" if rc == 0 else "COMPILE_FAILED"}
         report["ogkm_probe"] = probe_results
 
+        # Experiment: link the 9 known-good units together with the 5 probe objects and measure how many of
+        # the provider-less imports disappear. Report-only; the production artifact above is untouched.
+        probe_objs = sorted(out.parent.glob("probe-*.o"))
+        if probe_objs and len(probe_objs) == len(ogkm_probe):
+            mix_out = out.parent / "NVRM-ogkm.kext/Contents/MacOS/NVRM"
+            mix_out.parent.mkdir(parents=True, exist_ok=True)
+            mix_link = ["xcrun", "clang++", "-arch", "x86_64", "-mmacosx-version-min=15.5", "-fapple-kext",
+                        "-isysroot", sdk, "-nostdlib", "-Xlinker", "-kext", "-lkmodc++", "-lkmod", "-lcc_kext",
+                        *[str(o) for o in nvrm_objects], *[str(o) for o in probe_objs], "-o", str(mix_out)]
+            mix_rc = execute(mix_link, nm, out / "nvrm-ogkm-link.txt")
+            mix = {"exit": mix_rc, "objects": len(nvrm_objects) + len(probe_objs)}
+            if mix_rc == 0:
+                execute(["xcrun", "nm", "-u", str(mix_out)], nm, out / "nvrm-ogkm-undefined.txt")
+                undef = [l.strip() for l in (out / "nvrm-ogkm-undefined.txt").read_text(
+                    encoding="utf-8", errors="replace").splitlines() if l.strip().startswith("_")]
+                gap = [s for s in undef if s.startswith(("_nvKms", "_rm_", "_nvrm_"))]
+                mix.update({"status": "LINKED", "size": mix_out.stat().st_size,
+                            "undefined_symbols": len(undef), "gap_symbols_left": len(gap),
+                            "gap_sample": gap[:10]})
+            else:
+                mix["status"] = "LINK_FAILED"
+                mix["errors"] = [l for l in (out / "nvrm-ogkm-link.txt").read_text(
+                    encoding="utf-8", errors="replace").splitlines() if "error:" in l][:5]
+            report["kext_link_nvrm_ogkm"] = mix
+
         # Intel side: NMIntelFB is a single TU compiled twice (real / virtual), each with its own
         # bundle. Linking both reports what the Intel kext actually becomes; it is not a GPU test.
         intel_links = {}
