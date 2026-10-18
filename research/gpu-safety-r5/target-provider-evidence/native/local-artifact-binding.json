@@ -1,0 +1,72 @@
+{
+  "run_id": 39130439405,
+  "artifact_id": 12138280225,
+  "artifact_sha256": "ae5d224625284086bdb03ab81e3d098739082d5e3940e6f1d11b1fbb937ae4aa",
+  "members": [
+    {
+      "path": "IOPCIFamily-kext-allowlist-raw.txt",
+      "sha256": "97a9f76d102f57a297a252e3d29f6e7abccd233e3f3e7681d2a78799ffc07fbe",
+      "bytes": 17470
+    },
+    {
+      "path": "IOACPIFamily-kext-allowlist.json",
+      "sha256": "580df63f6c869a70b953fb1b8b05715be36680c925203237c049292dcd7b8870",
+      "bytes": 559
+    },
+    {
+      "path": "IOPCIFamily-kext-allowlist.json",
+      "sha256": "e776e7bd9ca994dade53f10e8709c0b3fc049e9c76fed9a12e80e808de0fbf9c",
+      "bytes": 973
+    },
+    {
+      "path": "IOACPIFamily-kext-allowlist-raw.txt",
+      "sha256": "c7552a9cc6b3448a4a3bb0e7625206289486dd3adc8b3443a7ae960c3a02a93b",
+      "bytes": 5091
+    },
+    {
+      "path": "diagnostic-publication.json",
+      "sha256": "d861c34410792fa6161040fa3955624d49c224d877e322767322f5e867ad3342",
+      "bytes": 1867
+    },
+    {
+      "path": "kc-prelink-raw.json",
+      "sha256": "e1fb5e69aaa28e6f69d5957fdecdc4feec90c9793801bec25b429741f884dca3",
+      "bytes": 7074186
+    },
+    {
+      "path": "kernel-load-commands.json",
+      "sha256": "2725b869efa983a79f5f897b9d6eed6d018360db2eba7a7f9274fb652da5aba7",
+      "bytes": 17624
+    },
+    {
+      "path": "kernel-symbolsets-binding.json",
+      "sha256": "ad5bd2777bb7cd810be0ed38ef13674d1d94f8cdf3a18020f731d359357f46bf",
+      "bytes": 637
+    },
+    {
+      "path": "kernel-symbolsets-decoded.txt",
+      "sha256": "f06cea5dce3c808fa5363a11b03b6174c0d02fbbcc2e7e9059b53402273db18f",
+      "bytes": 674625
+    },
+    {
+      "path": "kmutil-inspect-help.json",
+      "sha256": "0abad5acc2c06097d5466cf688fb2bd6b0fe9c84436f5964f1ec9a5956cd970c",
+      "bytes": 3971
+    },
+    {
+      "path": "runner-kernel-nm-raw.txt",
+      "sha256": "90ca2a0c8303013546db35636185fa32ab1c4fec830f7b04380f91dc4532ba2b",
+      "bytes": 1085988
+    },
+    {
+      "path": "report.json",
+      "sha256": "bc411f53fb00687d630f363975f64cc7911ef0115a18121eb8ca0496bba2777d",
+      "bytes": 380201
+    },
+    {
+      "path": "runner-kernel.json",
+      "sha256": "0526abe9fa4e6470cabf46e16aae75f877c470a34d188e298f5c9fb460759250",
+      "bytes": 23610
+    }
+  ]
+}

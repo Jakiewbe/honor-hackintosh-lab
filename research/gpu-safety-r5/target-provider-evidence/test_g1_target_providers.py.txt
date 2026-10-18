@@ -1,0 +1,31 @@
+ARGV=["C:\\Users\\19082\\AppData\\Local\\Programs\\Python\\Python312\\python.exe", "-m", "unittest", "discover", "-s", "tools", "-p", "test_g1_target_providers.py", "-v"]
+test_empty_missing_malformed_and_success (test_g1_target_providers.TargetProviderTests.test_empty_missing_malformed_and_success) ... ok
+
+test_exact_spelling_and_data_distinct (test_g1_target_providers.TargetProviderTests.test_exact_spelling_and_data_distinct) ... ok
+
+test_failed_nm_and_provider_mutation_cannot_reuse_symbols (test_g1_target_providers.TargetProviderTests.test_failed_nm_and_provider_mutation_cannot_reuse_symbols) ... ok
+
+test_family_allowlist_is_not_implementation_or_target_acceptance (test_g1_target_providers.TargetProviderTests.test_family_allowlist_is_not_implementation_or_target_acceptance) ... ok
+
+test_frozen_real_472_inventory_and_byte_mutation (test_g1_target_providers.TargetProviderTests.test_frozen_real_472_inventory_and_byte_mutation) ... ok
+
+test_observation_never_establishes_target_export_or_abi (test_g1_target_providers.TargetProviderTests.test_observation_never_establishes_target_export_or_abi) ... ok
+
+test_real_otool_section_shape_duplicate_and_bounds (test_g1_target_providers.TargetProviderTests.test_real_otool_section_shape_duplicate_and_bounds) ... ok
+
+test_reject_undefined_indirect_diagnostic_partial_and_duplicate (test_g1_target_providers.TargetProviderTests.test_reject_undefined_indirect_diagnostic_partial_and_duplicate) ... ok
+
+test_symbolset_bytes_bound_to_exact_kernel_not_abi_proof (test_g1_target_providers.TargetProviderTests.test_symbolset_bytes_bound_to_exact_kernel_not_abi_proof) ... ok
+
+
+
+----------------------------------------------------------------------
+
+Ran 9 tests in 0.044s
+
+
+
+OK
+
+
+EXIT=0

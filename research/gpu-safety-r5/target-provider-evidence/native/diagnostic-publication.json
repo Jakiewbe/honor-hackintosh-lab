@@ -1,0 +1,66 @@
+{
+ "schema": "honor.g1.text-publication.v1",
+ "included": [
+  {
+   "path": "IOACPIFamily-kext-allowlist-raw.txt",
+   "bytes": 5091,
+   "sha256": "c7552a9cc6b3448a4a3bb0e7625206289486dd3adc8b3443a7ae960c3a02a93b"
+  },
+  {
+   "path": "IOACPIFamily-kext-allowlist.json",
+   "bytes": 559,
+   "sha256": "580df63f6c869a70b953fb1b8b05715be36680c925203237c049292dcd7b8870"
+  },
+  {
+   "path": "IOPCIFamily-kext-allowlist-raw.txt",
+   "bytes": 17470,
+   "sha256": "97a9f76d102f57a297a252e3d29f6e7abccd233e3f3e7681d2a78799ffc07fbe"
+  },
+  {
+   "path": "IOPCIFamily-kext-allowlist.json",
+   "bytes": 973,
+   "sha256": "e776e7bd9ca994dade53f10e8709c0b3fc049e9c76fed9a12e80e808de0fbf9c"
+  },
+  {
+   "path": "kc-prelink-raw.json",
+   "bytes": 7074186,
+   "sha256": "e1fb5e69aaa28e6f69d5957fdecdc4feec90c9793801bec25b429741f884dca3"
+  },
+  {
+   "path": "kernel-load-commands.json",
+   "bytes": 17624,
+   "sha256": "2725b869efa983a79f5f897b9d6eed6d018360db2eba7a7f9274fb652da5aba7"
+  },
+  {
+   "path": "kernel-symbolsets-binding.json",
+   "bytes": 637,
+   "sha256": "ad5bd2777bb7cd810be0ed38ef13674d1d94f8cdf3a18020f731d359357f46bf"
+  },
+  {
+   "path": "kernel-symbolsets-decoded.txt",
+   "bytes": 674625,
+   "sha256": "f06cea5dce3c808fa5363a11b03b6174c0d02fbbcc2e7e9059b53402273db18f"
+  },
+  {
+   "path": "kmutil-inspect-help.json",
+   "bytes": 3971,
+   "sha256": "0abad5acc2c06097d5466cf688fb2bd6b0fe9c84436f5964f1ec9a5956cd970c"
+  },
+  {
+   "path": "report.json",
+   "bytes": 380201,
+   "sha256": "bc411f53fb00687d630f363975f64cc7911ef0115a18121eb8ca0496bba2777d"
+  },
+  {
+   "path": "runner-kernel-nm-raw.txt",
+   "bytes": 1085988,
+   "sha256": "90ca2a0c8303013546db35636185fa32ab1c4fec830f7b04380f91dc4532ba2b"
+  },
+  {
+   "path": "runner-kernel.json",
+   "bytes": 23610,
+   "sha256": "0526abe9fa4e6470cabf46e16aae75f877c470a34d188e298f5c9fb460759250"
+  }
+ ],
+ "excluded": []
+}

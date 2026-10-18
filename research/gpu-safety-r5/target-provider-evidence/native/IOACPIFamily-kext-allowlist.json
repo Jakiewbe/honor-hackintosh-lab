@@ -1,0 +1,13 @@
+{
+  "id": "IOACPIFamily-kext-allowlist",
+  "path": "/System/Library/Extensions/IOACPIFamily.kext/Contents/Resources/IOACPIFamily.exports",
+  "matches": {
+    "__ZN20IOACPIPlatformDevice9metaClassE": "ALLOWLIST_ENTRY"
+  },
+  "observation": "PARSED",
+  "level": "RUNNER_FAMILY_EXPORT_ALLOWLIST_NOT_BINARY_DEFINITION_OR_ABI_PROOF",
+  "sha256": "c7552a9cc6b3448a4a3bb0e7625206289486dd3adc8b3443a7ae960c3a02a93b",
+  "bytes": 5091,
+  "real_path": "/System/Library/Extensions/IOACPIFamily.kext/Contents/Resources/IOACPIFamily.exports",
+  "exported_name_count": 92
+}

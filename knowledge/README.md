@@ -1,3 +1,5 @@
+> **2026-10-18 目标提供者新证据：** [run 39130439405](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39130439405) 只读取证成功；在runner macOS15.7.9/24G830内核中，464项有精确KPI条目且实际目标全局存在，14个别名目标已核对；其余8项仅有IOPCIFamily/IOACPIFamily随系统导出名单。完整候选仍是上轮固定字节，本轮未重新编译驱动。**8项实际二进制/C++ABI、完整ABI、最终用户系统、GPU初始化/渲染/读回/关闭仍未验收；设备NO-GO。** 下一步只读检查KC中的这8项，不重复1280TU构建。[报告](../research/gpu-safety-r5/TARGET-PROVIDERS-20261018.md)｜[网页端prompt](../research/gpu-safety-r5/TARGET-PROVIDERS-WEB-PROMPT.md)。
+
 # HONOR Hackintosh Lab｜Codex 接管知识库
 
 **2026-10-17 主线复位**：先读 [H1–H4 防偏移门禁](12_MAINLINE_ALIGNMENT.md)。知识库本索引下方 2026-10-12 的「当前一句话」是历史建立时的摘要；以 2026-10-15 进入外接 SSD 桌面的实机事实为准。H4 Nvidia DMA 目前为冻结技术储备，不是下一工作包。
@@ -40,3 +42,4 @@
 - 如果没有新的可证伪假设/源码输入/外部证据，明确报告阻塞，不制造无效 CI。
 
 最新交付：[R1.4-C0.1 PCI/电源接口合同](../docs/R1.4-C0.1_PCI与电源井接口合同.md)，21通过0失败，真实接口/构建语义增量；完整闭包仍BLOCKED。下一项见[交接](10_CODEX_HANDOFF.md)。
+

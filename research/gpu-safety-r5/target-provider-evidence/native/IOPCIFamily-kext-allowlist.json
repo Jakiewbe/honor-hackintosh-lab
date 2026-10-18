@@ -1,0 +1,19 @@
+{
+  "id": "IOPCIFamily-kext-allowlist",
+  "path": "/System/Library/Extensions/IOPCIFamily.kext/Contents/Resources/config/IOPCIFamily.exports",
+  "matches": {
+    "__ZN11IOPCIDevice19extendedConfigRead8Ey": "ALLOWLIST_ENTRY",
+    "__ZN11IOPCIDevice20extendedConfigRead16Ey": "ALLOWLIST_ENTRY",
+    "__ZN11IOPCIDevice20extendedConfigRead32Ey": "ALLOWLIST_ENTRY",
+    "__ZN11IOPCIDevice20extendedConfigWrite8Eyh": "ALLOWLIST_ENTRY",
+    "__ZN11IOPCIDevice21extendedConfigWrite16Eyt": "ALLOWLIST_ENTRY",
+    "__ZN11IOPCIDevice21extendedConfigWrite32Eyj": "ALLOWLIST_ENTRY",
+    "__ZN11IOPCIDevice9metaClassE": "ALLOWLIST_ENTRY"
+  },
+  "observation": "PARSED",
+  "level": "RUNNER_FAMILY_EXPORT_ALLOWLIST_NOT_BINARY_DEFINITION_OR_ABI_PROOF",
+  "sha256": "97a9f76d102f57a297a252e3d29f6e7abccd233e3f3e7681d2a78799ffc07fbe",
+  "bytes": 17470,
+  "real_path": "/System/Library/Extensions/IOPCIFamily.kext/Contents/Resources/config/IOPCIFamily.exports",
+  "exported_name_count": 388
+}

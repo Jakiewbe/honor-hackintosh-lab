@@ -1,0 +1,106 @@
+{
+  "argv": [
+    "/usr/bin/kmutil",
+    "inspect",
+    "-a",
+    "x86_64",
+    "-B",
+    "/System/Library/KernelCollections/BootKernelExtensions.kc",
+    "-S",
+    "/System/Library/KernelCollections/SystemKernelExtensions.kc",
+    "--show-prelink-info"
+  ],
+  "exit": 0,
+  "stderr": "No variant specified, falling back to release\n",
+  "original_json_sha256": "e1fb5e69aaa28e6f69d5957fdecdc4feec90c9793801bec25b429741f884dca3",
+  "stdout_sha256": "23b21b432e393b979f3d0fde5ed0e08bb43c0365f0dabfa5a9218330c0ac1e8e",
+  "selected": [
+    {
+      "collection_ordinal_in_raw_output": 0,
+      "CFBundleIdentifier": "com.apple.iokit.IOACPIFamily",
+      "CFBundleVersion": "1.4",
+      "OSBundleCompatibleVersion": "1.0.0d1",
+      "OSBundleLibraries": {
+        "com.apple.kpi.iokit": "7.0",
+        "com.apple.kpi.libkern": "8.0.0d0",
+        "com.apple.kpi.private": "8.0.0b1",
+        "com.apple.kpi.unsupported": "8.0.0b1"
+      },
+      "OSBundleUUID": "50d529b0a9293533839b6ce41fc937f2",
+      "_PrelinkBundlePath": "/System/Library/Extensions/IOACPIFamily.kext",
+      "_PrelinkExecutableLoadAddr": -549718036480,
+      "_PrelinkExecutableSize": 8192,
+      "_PrelinkExecutableSourceAddr": -549718036480
+    },
+    {
+      "collection_ordinal_in_raw_output": 0,
+      "CFBundleIdentifier": "com.apple.iokit.IOPCIFamily",
+      "CFBundleVersion": "2.9",
+      "OSBundleCompatibleVersion": "1.0.0b1",
+      "OSBundleLibraries": {
+        "com.apple.kpi.iokit": "8.0",
+        "com.apple.kpi.libkern": "8.0",
+        "com.apple.kpi.mach": "8.0",
+        "com.apple.kpi.private": "8.0",
+        "com.apple.kpi.unsupported": "8.0"
+      },
+      "OSBundleUUID": "1224b03e2295392c9019bf418d27f860",
+      "_PrelinkBundlePath": "/System/Library/Extensions/IOPCIFamily.kext",
+      "_PrelinkExecutableLoadAddr": -549713321984,
+      "_PrelinkExecutableSize": 217088,
+      "_PrelinkExecutableSourceAddr": -549713321984
+    },
+    {
+      "collection_ordinal_in_raw_output": 0,
+      "CFBundleIdentifier": "com.apple.kpi.bsd",
+      "CFBundleVersion": "24.6.0",
+      "OSBundleCompatibleVersion": "8.0.0b1",
+      "OSBundleUUID": "05c7d52ed53b4fa1a5178217e950a0b0",
+      "_PrelinkBundlePath": "/System/Library/Extensions/System.kext/PlugIns/BSDKernel.kext",
+      "_PrelinkExecutableLoadAddr": 9223372036854775807,
+      "_PrelinkExecutableSourceAddr": 9223372036854775807
+    },
+    {
+      "collection_ordinal_in_raw_output": 0,
+      "CFBundleIdentifier": "com.apple.kpi.iokit",
+      "CFBundleVersion": "24.6.0",
+      "OSBundleCompatibleVersion": "7.0",
+      "OSBundleUUID": "826ec5095c394289a5c6645a55c39b2c",
+      "_PrelinkBundlePath": "/System/Library/Extensions/System.kext/PlugIns/IOKit.kext",
+      "_PrelinkExecutableLoadAddr": 9223372036854775807,
+      "_PrelinkExecutableSourceAddr": 9223372036854775807
+    },
+    {
+      "collection_ordinal_in_raw_output": 0,
+      "CFBundleIdentifier": "com.apple.kpi.libkern",
+      "CFBundleVersion": "24.6.0",
+      "OSBundleCompatibleVersion": "8.0.0d0",
+      "OSBundleUUID": "531249ade43a43b5a967dcf734513104",
+      "_PrelinkBundlePath": "/System/Library/Extensions/System.kext/PlugIns/Libkern.kext",
+      "_PrelinkExecutableLoadAddr": 9223372036854775807,
+      "_PrelinkExecutableSourceAddr": 9223372036854775807
+    },
+    {
+      "collection_ordinal_in_raw_output": 0,
+      "CFBundleIdentifier": "com.apple.kpi.mach",
+      "CFBundleVersion": "24.6.0",
+      "OSBundleCompatibleVersion": "8.0.0d0",
+      "OSBundleUUID": "c59734597ab84c829ebd195b4fc83032",
+      "_PrelinkBundlePath": "/System/Library/Extensions/System.kext/PlugIns/Mach.kext",
+      "_PrelinkExecutableLoadAddr": 9223372036854775807,
+      "_PrelinkExecutableSourceAddr": 9223372036854775807
+    },
+    {
+      "collection_ordinal_in_raw_output": 0,
+      "CFBundleIdentifier": "com.apple.kpi.unsupported",
+      "CFBundleVersion": "24.6.0",
+      "OSBundleCompatibleVersion": "8.0.0b1",
+      "OSBundleUUID": "3422837940864204ad08899c6db1cb8e",
+      "_PrelinkBundlePath": "/System/Library/Extensions/System.kext/PlugIns/Unsupported.kext",
+      "_PrelinkExecutableLoadAddr": 9223372036854775807,
+      "_PrelinkExecutableSourceAddr": 9223372036854775807
+    }
+  ],
+  "level": "BUNDLE_METADATA_ONLY_NOT_BINARY_SYMBOL_DEFINITIONS",
+  "original_full_metadata": "run 39130439405 text artifact; unconsumed by name analysis; not copied to Git to avoid 7 MB of unrelated metadata"
+}

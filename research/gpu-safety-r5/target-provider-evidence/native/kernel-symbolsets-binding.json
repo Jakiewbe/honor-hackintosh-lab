@@ -1,0 +1,17 @@
+{
+  "path": "/System/Library/Kernels/kernel",
+  "section": "__LINKINFO,__symbolsets",
+  "level": "RUNNER_KERNEL_SYMBOLSET_METADATA_NOT_ABI_OR_USER_TARGET_PROOF",
+  "observation": "PLIST_DECODED",
+  "kernel_sha256": "04a501246caf768356f4090a8fd662daf5bbc949993353526c66771f5ba1d8e4",
+  "offset": 15056896,
+  "bytes": 312666,
+  "section_sha256": "0cee84f8619a19348cbdb380ffe265252ce0450b4385fa4023f2298f79d22939",
+  "removed_trailing_nuls": 0,
+  "decoded_xml_sha256": "f06cea5dce3c808fa5363a11b03b6174c0d02fbbcc2e7e9059b53402273db18f",
+  "top_level_type": "dict",
+  "top_level_keys": [
+    "WeakRefFallbackSymbol",
+    "SymbolsSets"
+  ]
+}

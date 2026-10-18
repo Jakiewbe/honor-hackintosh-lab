@@ -1,0 +1,34 @@
+{
+  "run_id": 39130439405,
+  "source_commit": "1a481ba2d5a57ada56648eb7a1ae25868fc90861",
+  "conclusion": "success",
+  "artifact_id": 12138280225,
+  "artifact_zip_sha256": "ae5d224625284086bdb03ab81e3d098739082d5e3940e6f1d11b1fbb937ae4aa",
+  "native_report_sha256": "bc411f53fb00687d630f363975f64cc7911ef0115a18121eb8ca0496bba2777d",
+  "analysis_sha256": "e5fee62d7af499f47738abc9043ab5e71ee7e2c0d1d481a4ddd3a7679da66e18",
+  "counts": {
+    "RUNNER_KPI_EXACT_ENTRY_AND_TARGET_GLOBAL": 464,
+    "FAMILY_ALLOWLIST_ONLY_BINARY_UNVERIFIED": 8
+  },
+  "verified_aliases": 14,
+  "tests": [
+    {
+      "pattern": "test_g1_target_providers.py",
+      "exit": 0
+    },
+    {
+      "pattern": "test_g1_provider_evidence.py",
+      "exit": 0
+    }
+  ],
+  "tampered_consumed_inputs_rejected": [
+    "kernel-symbolsets-decoded.txt",
+    "report.json"
+  ],
+  "native_collector_tests": "9/9 (workflow source and successful test step; no skips in test code)",
+  "offline_analyser_tests": "6/6 Windows",
+  "driver_rebuild_this_round": false,
+  "new_darwin_abi_tests_this_round": false,
+  "kext_load": "NO-GO",
+  "gpu_execution": false
+}

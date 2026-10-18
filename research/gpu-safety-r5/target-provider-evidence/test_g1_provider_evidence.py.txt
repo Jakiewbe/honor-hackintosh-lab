@@ -1,0 +1,25 @@
+ARGV=["C:\\Users\\19082\\AppData\\Local\\Programs\\Python\\Python312\\python.exe", "-m", "unittest", "discover", "-s", "tools", "-p", "test_g1_provider_evidence.py", "-v"]
+test_alias_checks_target_not_only_exported_name (test_g1_provider_evidence.ProviderEvidenceTests.test_alias_checks_target_not_only_exported_name) ... ok
+
+test_ambiguous_or_unknown_syntax_rejected (test_g1_provider_evidence.ProviderEvidenceTests.test_ambiguous_or_unknown_syntax_rejected) ... ok
+
+test_prefixes_not_fabricated_exact_entries_and_one_underscore (test_g1_provider_evidence.ProviderEvidenceTests.test_prefixes_not_fabricated_exact_entries_and_one_underscore) ... ok
+
+test_raw_nm_hash_argv_and_exit_are_all_required (test_g1_provider_evidence.ProviderEvidenceTests.test_raw_nm_hash_argv_and_exit_are_all_required) ... ok
+
+test_real_trailing_space_metadata_does_not_become_a_trimmed_hit (test_g1_provider_evidence.ProviderEvidenceTests.test_real_trailing_space_metadata_does_not_become_a_trimmed_hit) ... ok
+
+test_undeclared_private_provider_not_implicitly_allowed (test_g1_provider_evidence.ProviderEvidenceTests.test_undeclared_private_provider_not_implicitly_allowed) ... ok
+
+
+
+----------------------------------------------------------------------
+
+Ran 6 tests in 0.001s
+
+
+
+OK
+
+
+EXIT=0

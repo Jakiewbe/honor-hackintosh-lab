@@ -1,0 +1,100 @@
+[
+  {
+    "run_id": 39129690581,
+    "source_commit": "5e8331eac3565a672a8382cd7f007425375b6af3",
+    "artifact_id": 12137870932,
+    "zip_sha256": "f648aa715c41297f4ae53b30bbdb375d8e574bfa4886cfd45bc43f70055502d8",
+    "report_sha256": "998d3216ea5d51bcaf186c32a60c8928e9deb43a99343fa310b8230ffffb9750",
+    "counts": {
+      "NOT_OBSERVED_IN_SCANNED_INPUTS": 472
+    },
+    "kernel_observation": {
+      "id": "runner-kernel",
+      "path": "/System/Library/Kernels/kernel",
+      "level": "RUNNER_KERNEL_GLOBAL_DEFINITION_NOT_KPI_EXPORT_PROOF",
+      "observation": "OBSERVATION_FAILED",
+      "bytes": 18349264,
+      "sha256": "04a501246caf768356f4090a8fd662daf5bbc949993353526c66771f5ba1d8e4",
+      "real_path": "/System/Library/Kernels/kernel",
+      "argv": [
+        "xcrun",
+        "nm",
+        "-arch",
+        "x86_64",
+        "-gU",
+        "/System/Library/Kernels/kernel"
+      ],
+      "exit": 0,
+      "stdout_sha256": "fd6c818eadc83c318d186f8e6f23754d91651bae1ed5ea07ca57d5988ab00c43",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "diagnostic": "",
+      "error": "unrecognised or non-definition nm record: ffffff8000c1b204 D .constructors_used"
+    }
+  },
+  {
+    "run_id": 39129864765,
+    "source_commit": "9647352791e15e7fa00327973796be2188704647",
+    "artifact_id": 12137826309,
+    "zip_sha256": "cb399e6323ef59c50ae3f6a9494daecad77ff1b032b431edd1ae55a9ab4f458f",
+    "report_sha256": "f2d64c1776a8f788824146f8e69a3f2bccf1bad4e868f9fd92ed92d4ef2444c7",
+    "counts": {
+      "GLOBAL_DEFINITION_OBSERVED_ONLY": 464,
+      "NOT_OBSERVED_IN_SCANNED_INPUTS": 8
+    },
+    "kernel_observation": {
+      "id": "runner-kernel",
+      "path": "/System/Library/Kernels/kernel",
+      "level": "RUNNER_KERNEL_GLOBAL_DEFINITION_NOT_KPI_EXPORT_PROOF",
+      "observation": "PARSED",
+      "bytes": 18349264,
+      "sha256": "04a501246caf768356f4090a8fd662daf5bbc949993353526c66771f5ba1d8e4",
+      "real_path": "/System/Library/Kernels/kernel",
+      "argv": [
+        "xcrun",
+        "nm",
+        "-arch",
+        "x86_64",
+        "-gU",
+        "/System/Library/Kernels/kernel"
+      ],
+      "exit": 0,
+      "stdout_sha256": "fd6c818eadc83c318d186f8e6f23754d91651bae1ed5ea07ca57d5988ab00c43",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "diagnostic": "",
+      "global_symbol_count": 23424
+    }
+  },
+  {
+    "run_id": 39130108301,
+    "source_commit": "47f3644c5dfeeb5a1d64cd6e5fd559603a791b01",
+    "artifact_id": 12137966309,
+    "zip_sha256": "85a977803e159650bcf123119237752838f8d296ca520fc6f4069a27ae833745",
+    "report_sha256": "baefa481537a78c7f0ac93ee2e4634f30971a0b93e1c8db6dd7a04094458718d",
+    "counts": {
+      "GLOBAL_DEFINITION_OBSERVED_ONLY": 464,
+      "FAMILY_EXPORT_ALLOWLIST_ONLY": 8
+    },
+    "kernel_observation": {
+      "id": "runner-kernel",
+      "path": "/System/Library/Kernels/kernel",
+      "level": "RUNNER_KERNEL_GLOBAL_DEFINITION_NOT_KPI_EXPORT_PROOF",
+      "observation": "PARSED",
+      "bytes": 18349264,
+      "sha256": "04a501246caf768356f4090a8fd662daf5bbc949993353526c66771f5ba1d8e4",
+      "real_path": "/System/Library/Kernels/kernel",
+      "argv": [
+        "xcrun",
+        "nm",
+        "-arch",
+        "x86_64",
+        "-gU",
+        "/System/Library/Kernels/kernel"
+      ],
+      "exit": 0,
+      "stdout_sha256": "fd6c818eadc83c318d186f8e6f23754d91651bae1ed5ea07ca57d5988ab00c43",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "diagnostic": "",
+      "global_symbol_count": 23424
+    }
+  }
+]
