@@ -1,0 +1,103 @@
+{
+  "schema": "honor.g1.full-source-result.v1",
+  "head": "30485ae65d580eb63b4b60a78c50390fad50c757",
+  "run_id": 39116405484,
+  "job_id": 117642983660,
+  "workflow_conclusion": "success",
+  "artifact_id": 12131884817,
+  "artifact_zip_sha256": "34f58929daf9bedb854a021dd10fb60e474af729f42f4e19e76f238de3673f4e",
+  "source_report_sha256": "13ca702613f1f800befb32cb2e46ef0de03696458eb8ae71c8d491db3e5c97a8",
+  "local_verification": "1278 fixed-source hashes + two generated C hashes + five fixed shader source hashes match; all 1285 unique object records successful with hashes",
+  "component_results": {
+    "nvidia": {
+      "required": 1055,
+      "attempted": 1055,
+      "failed": 0
+    },
+    "nvidia-modeset": {
+      "required": 225,
+      "attempted": 225,
+      "failed": 0
+    }
+  },
+  "shader_objects": 5,
+  "shader_final_export_names_verified": 15,
+  "archive_objects": {
+    "nvidia": 1055,
+    "nvidia-modeset": 230
+  },
+  "archive_sha256": {
+    "nvidia": "3a6962337cc4152ec430230e1d764accb096cf6b1b7881c578c638044c8b6e43",
+    "nvidia-modeset": "d2790046e0b20a534e75d1a4d74e51f72a91eaf9b22a12e0ba2638a3475687f5"
+  },
+  "candidate_macho_type": "x86_64 MH_KEXT_BUNDLE (validated on runner)",
+  "candidate_sha256": "f2ae48aed1ad2690bf6c97ff23054e48de3cdf7e3bb721059248d8f83c813dde",
+  "archive_members_observed_in_why_load": {
+    "nvidia": 954,
+    "nvidia-modeset": 188
+  },
+  "why_load_count_scope": "current roots/profile only; no required equality with v1.15.0",
+  "link_exit": 0,
+  "remaining_import_count": 475,
+  "known_internal_missing": [
+    "_nvlink_acquireLock",
+    "_nvlink_allocLock",
+    "_nvlink_freeLock",
+    "_nvlink_releaseLock"
+  ],
+  "other_imports": {
+    "count": 471,
+    "export_abi_acceptance": "UNKNOWN_NOT_VERIFIED"
+  },
+  "nine_prior_unknown_symbols": [
+    {
+      "macho_symbol": "_PEX_DSM_GUID",
+      "export_observed": true
+    },
+    {
+      "macho_symbol": "_g_pSys",
+      "export_observed": true
+    },
+    {
+      "macho_symbol": "_g_resServ",
+      "export_observed": true
+    },
+    {
+      "macho_symbol": "_nvEvoGlobal",
+      "export_observed": true
+    },
+    {
+      "macho_symbol": "___nvoc_class_def_Memory",
+      "export_observed": true
+    },
+    {
+      "macho_symbol": "___nvoc_class_def_RmResource",
+      "export_observed": true
+    },
+    {
+      "macho_symbol": "___nvoc_dynamicCast",
+      "export_observed": true
+    },
+    {
+      "macho_symbol": "___nvoc_rtti_provider",
+      "export_observed": true
+    },
+    {
+      "macho_symbol": "_pNV_KMS_ID",
+      "export_observed": true
+    }
+  ],
+  "selected_abi": {
+    "result": "OBSERVED_NO_SELECTED_MISMATCH",
+    "comparison": "SELECTED_LAYOUT_MATCH",
+    "profiles": 6,
+    "altstack_conflicts": [],
+    "scope": "existing selected probe/unified flags; not full official per-TU ABI acceptance"
+  },
+  "full_official_ogkm": "fixed unmodified source; separate probe-only KAPI fixes are not claimed integrated",
+  "dependency_closure": "NOT_ACCEPTED",
+  "kext_load": "NO-GO",
+  "gpu_runtime": "NOT_RUN",
+  "pixel_readback": "NOT_RUN",
+  "safety_close_runtime": "NOT_RUN"
+}

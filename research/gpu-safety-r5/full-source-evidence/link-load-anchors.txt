@@ -1,0 +1,6 @@
+_g_resServ forced load of /Users/runner/work/_temp/gpu-safety-r5-logs/full-source/libnvidia.a(nvidia-rmapi-c99f59b6e3d18da9.o)
+___nvoc_class_def_Memory forced load of /Users/runner/work/_temp/gpu-safety-r5-logs/full-source/libnvidia.a(nvidia-g_mem_nvoc-ab12411971581a99.o)
+___nvoc_class_def_RmResource forced load of /Users/runner/work/_temp/gpu-safety-r5-logs/full-source/libnvidia.a(nvidia-g_resource_nvoc-db04da3b948c1fe6.o)
+___nvoc_dynamicCast forced load of /Users/runner/work/_temp/gpu-safety-r5-logs/full-source/libnvidia.a(nvidia-runtime-e7e1bad75ff59a37.o)
+_pNV_KMS_ID forced load of /Users/runner/work/_temp/gpu-safety-r5-logs/full-source/libnvidia-modeset.a(nvidia-modeset-g_nvid_string-f39e8422a16b984e.o)
+_nvlink_lib_link_locks_acquire forced load of /Users/runner/work/_temp/gpu-safety-r5-logs/full-source/libnvidia.a(nvidia-nvlink_lock-819ec5f81b8a454b.o)

@@ -1,4 +1,4 @@
-> **2026-10-18 完整源码构建：** 实际驱动仍未完成。已定位 [run 39115546785](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39115546785) 的 macOS 路径测试断言错误，尚未进入驱动编译；本轮修正断言，并新增官方完整 1,280 个 C 编译单元与 5 个着色器嵌入对象的原生构建尝试，替代旧抽样成功率。任何必需项失败均禁止归档/链接；全部成功仍须另验内核导出和 ABI。当前新完整构建尚未运行，实机 NO-GO。[计划与实现](../research/gpu-safety-r5/FULL-SOURCE-BUILD-20261018.md)。
+> **2026-10-18 实际构建进展：** [run 39116405484](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39116405484) 已成功执行源码提交 `30485ae`：全部1,280个C TU和5个shader对象通过，RM/modeset完整归档及NVRM重建候选已链接。先前九项UNKNOWN均在最终nm中观察到定义；仍有四个已知NVLink锁内部导入，其余471个目标导出/ABI未验收。六个旧profile选定布局一致不覆盖本轮完整逐TU参数。**初始化、GPU渲染、像素读回均未执行，驱动尚不可交付，设备NO-GO。** 下一步是四个真实Darwin锁接口、完整参数ABI与目标导出核验。[结果与证据](../research/gpu-safety-r5/FULL-SOURCE-BUILD-20261018.md)｜[网页端只读复核prompt](../research/gpu-safety-r5/FULL-SOURCE-WEB-REVIEW-PROMPT.md)。
 
 > **2026-10-18 R80 符号身份与来源：** 修正 Mach-O 转 C 名称时删光下划线的问题；九项 UNKNOWN 已逐项定位为六项数据、一项函数、一项宏数据及一项生成配方候选。已接入本轮显式对象哈希/精确导出取证，47项工具测试及三组历史回归通过。新 Darwin/对象提供者/链接/ABI 尚未运行，完整闭包与设备仍 NO-GO。[报告](../research/gpu-safety-r5/R80-SYMBOL-IDENTITY-AND-SOURCES-20261018.md)｜[网页端复核 prompt](../research/gpu-safety-r5/R80-WEB-REVIEW-PROMPT.md)。
 
