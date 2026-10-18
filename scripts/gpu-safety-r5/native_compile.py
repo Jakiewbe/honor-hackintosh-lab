@@ -261,8 +261,9 @@ def main():
         probe_root = nvroot.parent.parent
         if not (probe_root / "src/nvidia").exists():
             probe_root = nvroot
-        probe_inc = [str(p) for p in includes] + ["-I" + str(probe_root / "src/nvidia/arch/nvalloc/unix/include"),
-                                                 "-I" + str(probe_root / "src/nvidia")]
+        probe_inc = ["-I" + str(p) for p in includes if Path(p).is_dir()]
+        probe_inc += ["-I" + str(d) for d in (probe_root / "src/nvidia/arch/nvalloc/unix/include",
+                                              probe_root / "src/nvidia") if d.is_dir()]
         probe_results = {}
         for rel in ogkm_probe:
             srcp = probe_root / rel
