@@ -31,3 +31,13 @@
 
 - 结构合同不能证明并发正确性；"唯一归还"目前靠代码形态与串行化前提，缺少可控交错的引用计数测试。
 - P0-1（挂起/pin）仍 **BLOCKED**（见 R24）。
+
+## CI 结果
+
+- R25 首次门禁 [39083549619](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39083549619) **失败**：
+  `NVKMSOS-new-warnings` —— R24 把 `kKmsPmPinWaitMs` 的唯一使用者改掉后，该常量变成未使用，
+  新增 `-Wunused-const-variable` 告警。门禁把"新增告警"判为失败是对的。
+- **R26**（`nullmoth-r26-drop-unused-const.patch`，573 B）删除该常量；
+  门禁 [39083710862](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39083710862) **通过**：
+  `patches: 26`、16/16 对象、告警零增量、NVRMFB 315,848 B、NVAccel 248,768 B。
+- 完整序列现为 **26 个补丁**，`ea9467f4…` → `0909aa6b…` → `ea9467f4…`。
