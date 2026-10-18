@@ -1002,3 +1002,41 @@ vKmsClose | PASS |
 
 这是**源码结构契约**，不是运行时测试：它证明"代码分支的写法满足不变式"，不证明 30 秒等待在真实
 电源事件下真的能触发、也不证明延迟期间 NVKMS 不会访问已释放内存。后者必须实机。
+
+## 三十九、延迟关闭没有"补完"路径：一个必须记录的开放问题（R86）
+
+对 os-nvkms-xnu.cpp 全文件检索 gKmsCloseDeferred / closing：
+
+- gKmsCloseDeferred++ 只出现在 kms_close_common 的超时分支（L145）；
+- gKmsCloseDeferredLost++ 在其后（L146）；
+- 两个计数器只被 
+vkms_xnu_kms_close_deferred_count()（L303-306）**读出**，供 teardown 记录；
+- **没有任何代码在 resume 之后重试这些关闭**，也没有释放被保留的 per-open / wrapper / event call。
+
+也就是说：
+
+> 一次超时的 close 会把 per-open、wrapper 与 event worker **永久保留**（直到 kext 卸载），
+> 系统只能通过计数器"知道"发生过，无法回收。
+
+## 这是不是缺陷？我的判断：**是开放性风险，不是已证实的 bug**
+
+支持"可接受"的理由：
+- 保留是为避免 NVKMS 仍持有指针时访问已释放内存（L136-141 的注释写明了这一点）；
+- 每次超时只泄漏固定的少量对象，关闭次数受用户态打开次数约束。
+
+不能判定"可接受"的理由：
+- 没有上限检查，没有在 resume 后重试，也没有在 kext 卸载路径上回收；
+- 
+vkms_xnu_pm_close 的打开路径（L357-359）失败时返回 NV_FALSE 并**保留**两者，
+  但调用方是否会重试，本轮未核实。
+
+## 与目标第 (4) 项的关系
+
+目标要求"freeDevice 关闭失败后的资源保留"必须明确。现状是：**保留是对的，但保留之后没有回收策略**。
+这条已作为 OPEN QUESTION 记录，不写成"已关闭"。
+
+## 下一步
+
+先核实 
+vkms_xnu_pm_close 的调用方（NVRM.cpp 的 teardown）在收到 NV_FALSE 后是否重试；
+若没有，就把"延迟关闭的回收策略"列为需要在实机前解决的加载前风险。
