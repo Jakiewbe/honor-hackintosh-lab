@@ -289,8 +289,13 @@ def main():
                    *compat_flags, "-I" + str(srcp.parent), "-c", str(srcp), "-o", str(obj)]
             log = out / ("probe-" + rel.replace("/", "_") + ".txt")
             rc = execute(cmd, probe_root, log)
-            errs = [l for l in log.read_text(encoding="utf-8", errors="replace").splitlines()
-                    if "error:" in l][:3]
+            lines = log.read_text(encoding="utf-8", errors="replace").splitlines()
+            errs = []
+            for i, l in enumerate(lines):
+                if "error:" in l:
+                    errs.extend(x.strip() for x in lines[i:i + 6] if x.strip())
+                    if len(errs) >= 12:
+                        break
             probe_results[rel] = {"exit": rc, "first_errors": errs,
                                   "status": "COMPILED" if rc == 0 else "COMPILE_FAILED"}
         report["ogkm_probe"] = probe_results
