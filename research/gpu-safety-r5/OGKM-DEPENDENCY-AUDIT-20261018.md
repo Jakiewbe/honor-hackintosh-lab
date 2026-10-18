@@ -966,3 +966,39 @@ run 39134085153 完成并记录于 KC8-20261018.md。本轮不重复该采集，
 - IOPCIDevice::extendedConfigRead32/Write32 的**返回值宽度与调用约定**虽有 SDK IR 证据，但**未在实际加载时验证**；
 - PM 关闭路径（P0-4）与初始化/渲染/读回/安全结束仍全部 NO-GO；
 - 完整 C++ ABI 与最终用户系统差异未验证。
+
+## 三十八、PM 关闭超时路径：补了 5 条结构契约（R85）
+
+核对 kms_close_common（os-nvkms-xnu.cpp:132-166）的实际语义：
+
+`cpp
+if (!kms_pm_wait_locked(false, kKmsPmWaitMs)) {   // 30 s 有界等待
+    popen->closing = true;
+    popen->eventWanted = false;
+    gKmsCloseDeferred++;
+    if (gKmsPmState == kKmsPmLost) gKmsCloseDeferredLost++;
+    IOLockUnlock(gKmsLock);
+    kprintf("... close deferred ...");
+    return;                       // 不调用 nvKmsClose，不释放 wrapper
+}
+`
+
+即：**超时不是"关闭完成"**，而是"延迟关闭 + 资源保留 + 拒绝新工作"。这正是 R24 的设计。
+
+	ools/check-pm-exclusion.py 之前只检查 commit 失败分支，**没有检查这条超时分支**。本轮新增 5 条：
+
+| 检查 | 结果 |
+|---|---|
+| close 在接触 NVKMS 前必须先等 PM | PASS |
+| 超时的 close 绝不调用 
+vKmsClose | PASS |
+| 超时的 close 不释放 wrapper | PASS |
+| 超时的 close 拒绝新工作（closing = true） | PASS |
+| 超时的 close 被计数 | PASS |
+
+工具从 24 条增到 **29/29 PASS**。
+
+## 这条测试的性质
+
+这是**源码结构契约**，不是运行时测试：它证明"代码分支的写法满足不变式"，不证明 30 秒等待在真实
+电源事件下真的能触发、也不证明延迟期间 NVKMS 不会访问已释放内存。后者必须实机。

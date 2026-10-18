@@ -73,6 +73,19 @@ def main():
     check("a failed commit is recorded as a violation", "nvrm-pm-violation" in fail_block)
     check("a failed commit re-lights the framebuffers", "notifyFramebuffers(1)" in fail_block)
 
+    # R24 close-timeout contract: a wait that does not complete is not a completed close. The per-open,
+    # its wrapper and its event worker must stay allocated, and nvKmsClose() must not run.
+    close_fn = braces(osf, osf.index("static void kms_close_common(struct nvkms_per_open *popen)"))
+    wait_at = close_fn.index("kms_pm_wait_locked(false, kKmsPmWaitMs)")
+    check("close waits for PM before touching NVKMS",
+          wait_at < close_fn.index("nvKmsClose(popen->data)"),
+          "wait must precede nvKmsClose")
+    deferred = close_fn[wait_at:close_fn.index("return;", wait_at)]
+    check("a timed-out close never calls nvKmsClose", "nvKmsClose" not in deferred)
+    check("a timed-out close retains the wrapper", "nvkms_free" not in deferred)
+    check("a timed-out close refuses new work", "popen->closing = true" in deferred)
+    check("a timed-out close is counted", "gKmsCloseDeferred++" in deferred)
+
     sp = braces(nv, nv.index("IOReturn NVRM::setPowerState(unsigned long ordinal, IOService *device)"))
     check("setPowerState does not pretend to refuse the sleep", "kIOReturnBusy" not in sp)
     check("setPowerState records a violation when the suspend failed", "nvrm-pm-violation" in sp)
