@@ -1,0 +1,13 @@
+diff --git a/kexts/NVRM/NVRM.cpp b/kexts/NVRM/NVRM.cpp
+index ea632dd..e41b168 100644
+--- a/kexts/NVRM/NVRM.cpp
++++ b/kexts/NVRM/NVRM.cpp
+@@ -1226,7 +1226,7 @@ void NVRM::readBARs()
+             bool is64 = ((lo >> 1) & 3) == 2;
+             UInt64 a = lo & ~0xFULL;
+             if (is64 && bar < 5) a |= (UInt64)fPCI->configRead32(0x14 + bar * 4) << 32;
+-            if (a == (phys & ~0xFULL)) { off = 0x10 + bar * 4; break; }
++            if (a == (phys & ~0xFULL)) { off = (UInt8)(0x10 + bar * 4); break; }   // 0x10..0x24: fits, cast is explicit
+             if (is64) bar++;
+         }
+         if (off == 0 || size == 0) { kprintf("NVRM-xnu: aperture idx %u phys 0x%llx size 0x%llx: %s — skipped\n", idx, phys, size, off == 0 ? "no BAR register matches" : "zero length"); continue; }
