@@ -72,3 +72,44 @@
 如果确实缺失，就先解决"这 45 个从哪来"，再谈整层。
 
 这一步不需要 CI、不需要实机、不改变任何代码。
+
+## 四十一、45 个"只有声明"符号的树内形态（R90）
+
+### 检索方法
+
+- 对 OGKM 全树 3836 个文本文件（任意扩展名）搜这些名字：**639 处命中**；
+- 再用"定义形态"正则（^\s*TYPE name(）过滤：**17 处**，且**全部是头文件里的声明**（以 ; 结尾），
+  没有一处是函数体。
+
+样本：
+
+`
+src/common/inc/rmosxfac.h          extern NvS32 RmInitRm(void);
+src/nvidia/.../osapi.h             NV_STATUS RmPowerManagementTegra(OBJGPU *, nv_pm_action_t);
+src/nvidia/generated/g_gpu_nvoc.h  NV_STATUS gpuEnterStandby_IMPL(struct OBJGPU *pGpu);
+src/nvidia/generated/g_intr_nvoc.h NvU32 intrGetIntrMaskFlags_IMPL(struct Intr *pIntr);
+`
+
+### 关键发现：*_IMPL 是 NVOC 生成的，而生成源不在树里
+
+- 树内 .nvoc 文件数：**0**（没有任何 NVOC 类定义源）；
+- generated/*.c 里确实存在 _IMPL **定义** 1261 处 —— 说明部分类的生成结果随树发布；
+- 但 RmInitRm 这类**不在** generated/*.c 里，只有 mosxfac.h 的声明，
+  而发行版二进制里它是 **DEFINED**。
+
+### 因此结论分两类
+
+| 类 | 例子 | 树内状态 | 发行版状态 |
+|---|---|---|---|
+| A. 生成结果随树发布 | 多数 *_IMPL（1261 处定义） | ✅ 有定义 | DEFINED |
+| B. 生成源不在树里 | RmInitRm、RmPowerManagementTegra、部分 gpumgr* | ❌ 只有声明 | **DEFINED** |
+
+B 类是我们**无法从公开源码闭合**的部分：不是"我没找到"，而是树里确实没有 .nvoc 生成源，
+也没有它们的生成结果。
+
+### 这修正了上一轮决策页的一个前提
+
+决策页写"45 个若都在，A 值得投入；若确实缺，先解决来源"。现在答案是**两者都有**：
+一部分（生成结果随树发布的）在，另一部分（B 类）确实只有声明。
+
+所以路径 A 的**上限不是 988/988**，而是"988 减去 B 类"。B 类具体多少个，需要把 45 个逐个归类后才能给出，本轮尚未逐个核完。
