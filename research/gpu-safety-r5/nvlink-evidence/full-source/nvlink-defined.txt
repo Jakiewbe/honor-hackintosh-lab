@@ -1,0 +1,7 @@
+ARGV=["xcrun", "nm", "-gU", "/Users/runner/work/_temp/gpu-safety-r5-logs/full-source/objects/nvlink-darwin-locks.o"]
+0000000000000060 T _nvlink_acquireLock
+0000000000000000 T _nvlink_allocLock
+0000000000000110 T _nvlink_freeLock
+00000000000000d0 T _nvlink_releaseLock
+
+EXIT=0

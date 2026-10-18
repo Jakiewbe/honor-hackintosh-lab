@@ -1,0 +1,21 @@
+ARGV=["/Users/runner/work/_temp/gpu-safety-r5-logs/nvlink-host/nvlink-contract"]
+PASS allocation failure returns null without resources
+PASS create failure frees wrapper
+PASS create one real permit
+PASS initial permit acquired
+PASS contender blocks before release
+PASS cross-thread signal wakes waiter and preserves permit
+PASS 12000 contended critical sections exclude peers
+PASS aborted waits retried until permit actually acquired
+PASS unrecoverable wait never returns to caller
+PASS unrecoverable wait never returns to caller
+PASS unrecoverable wait never returns to caller
+PASS failed signal never reports success
+PASS failed destroy does not free live wrapper
+PASS quiescent destroy frees semaphore and wrapper once
+PASS null acquire cannot succeed
+PASS null release cannot succeed
+PASS null free matches upstream no-op
+RESULT passed=17 failed=0 CPU_CONTRACT_ONLY
+
+EXIT=0

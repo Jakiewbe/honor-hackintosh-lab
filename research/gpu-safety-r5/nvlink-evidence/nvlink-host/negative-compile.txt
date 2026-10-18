@@ -1,0 +1,7 @@
+ARGV=["clang++", "-std=c++17", "-pthread", "-Wall", "-Wextra", "-Werror", "-I/Users/runner/work/_temp/gpu-safety-r5-logs/nvlink-host/headers", "-I/Users/runner/work/honor-hackintosh-lab/honor-hackintosh-lab/research/gpu-safety-r5/darwin/tests", "-isystem", "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/nvlink/interface", "-isystem", "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc", "-isystem", "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc", "/Users/runner/work/_temp/gpu-safety-r5-logs/nvlink-host/negative.cpp", "/Users/runner/work/honor-hackintosh-lab/honor-hackintosh-lab/research/gpu-safety-r5/darwin/tests/nvlink_locks_contract.cpp", "-o", "/Users/runner/work/_temp/gpu-safety-r5-logs/nvlink-host/negative-contract"]
+/Users/runner/work/_temp/gpu-safety-r5-logs/nvlink-host/negative.cpp:76:1: error: expected unqualified-id
+   76 | this is deliberately invalid C++;
+      | ^
+1 error generated.
+
+EXIT=1

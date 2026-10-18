@@ -1,3 +1,5 @@
+> **后续结果：** NVLink四个内部导入已由真实Darwin信号量候选消除，见[run 39118504329](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39118504329)与[NVLink报告](NVLINK-DARWIN-LOCKS-20261018.md)。剩余472个目标导出/ABI未知，设备NO-GO。下文475/四缺口是前次run的历史实测。
+
 # 完整 NVIDIA 核心源码构建（2026-10-18）
 
 实际状态：完整官方输入已经在 Darwin 编译并链接出 NVRM 重建候选；还剩四个已知内部导入，闭包和完整 ABI 未验收。RTX 2050 驱动适配尚未完成，没有设备初始化、GPU 渲染或像素读回证据。

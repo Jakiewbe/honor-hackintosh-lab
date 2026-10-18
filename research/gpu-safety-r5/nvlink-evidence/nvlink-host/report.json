@@ -1,0 +1,14 @@
+{
+  "level": "CPU_MOCKED_SYSTEM_BOUNDARY_NOT_XNU_RUNTIME",
+  "source_sha256": "cb063c81030cc7616f1a55e259865fbbab2a24f3c60e63a88b89d40922d638cc",
+  "test_sha256": "a270a37ebb9d24128fc3be996303c497c4347ee4e8cee3817abb362a9040e18a",
+  "compile_exit": 0,
+  "run_exit": 0,
+  "summary": "RESULT passed=17 failed=0 CPU_CONTRACT_ONLY",
+  "negative_compile": {
+    "exit": 1,
+    "binary_exists": false,
+    "run": "NOT_RUN"
+  },
+  "status": "PASS_CPU_ONLY"
+}

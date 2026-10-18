@@ -22,7 +22,8 @@
     "commit": "a1e26a70f38d1d7daa7b49b258e2f8538ad81650",
     "path": "osfmk/kern/sync_sema.c",
     "license": "APSL-2.0",
-    "sha256": "234978afa576e0910234c1b0bf49798540f9324ff9c877c74205e4f25b0d1a37",
+    "git_blob": "585f0d00c282bcf89f6fef5eee01c8f0360236c7",
+    "sha256": "2612387c70f4daff6e65215f5141969eba0fc8c99343485555f1e2aee4962db5",
     "scope": "read-only API behavior reference; no XNU source copied into candidate; no target ABI assertion"
   },
   "ogkm_patch": "NONE; original archives unchanged; one explicit additional candidate TU",
