@@ -45,3 +45,30 @@ if (!rm_init_rm(*sp))
 在**隔离构建**（不污染现有 9 单元门禁）中逐个尝试这 5 个 TU 的 Darwin 对象编译，
 记录首个真实错误、所需的最小 include 路径与宏，产出一张"可编译 / 需适配 / 不可编译"的三分表。
 每次只加一个文件，失败即记录，不做参数试错。
+
+## 六、隔离编译探针的首批真实结果（R49，run 39089285626）
+
+门禁新增 ogkm_probe：把 5 个 TU 各自编译成 Darwin 对象，**不加入链接**，失败只记录不判失败。
+
+| 文件 | 结果 | 首个错误 |
+|---|---|---|
+| unix_intr.c | COMPILE_FAILED | 
+voc/prelude.h:249: anonymous bit-field cannot have qualifiers |
+| osapi.c | COMPILE_FAILED | 同上 |
+| dynamic-power.c | COMPILE_FAILED | 同上 |
+| 
+vkms.c | COMPILE_FAILED | 
+vkms-types.h:1645: expected ';' after struct |
+| 
+vkms-kapi.c | COMPILE_FAILED | 同上 |
+
+两类错误都指向**编译语言选择**：这些文件是 C，而门禁的 common_flags 带着 -std=c++17 -fno-rtti
+-fno-exceptions（C++ 专用）。"anonymous bit-field cannot have qualifiers" 与 "expected ';' after struct"
+在 C 语义下通常不出现。
+
+**下一轮的唯一动作**：把探针改为 C 编译（-x c，去掉 C++ 专用 flag），重跑，记录首批真实错误。
+不调其它参数，不试 -D。
+
+探针实现过程中的两次错误也记录在此，避免重复：probe_root 曾取成 
+vroot.parent（应为两级上），
+导致全部 MISSING；随后又把不存在的 include 目录传给 -I，clang 直接报 "no such file"。两处已修。
