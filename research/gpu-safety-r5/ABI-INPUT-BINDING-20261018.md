@@ -17,7 +17,7 @@
 
 ## 验收条件与已知边界
 
-1. 本地工具78项中77通过、符号链接反例因Windows权限跳过；历史WP1 10/10、FBClaim5/5、B2 7/7通过。Darwin必须执行该符号链接反例及真实clang复现。
+1. 本地修正后工具80项中78通过、两个符号链接反例因Windows权限跳过；历史WP1 10/10、FBClaim5/5、B2 7/7通过。Darwin必须执行该符号链接反例及真实clang复现。
 2. 完整源构建/归档/候选链接、六profile布局/接口/altstack检查重新实际通过；快照原始JSON、depfiles及诊断depfiles均可追溯。
 3. 对象真实输入变化或真实链接ARGV篡改必须拒绝；不会用旧run填补新快照。
 
@@ -25,10 +25,27 @@
 
 三份RM C编译日志中的 `-fapple-kext` 被clang提示对C无效并忽略；本轮如实保留警告与其他内核参数，不把该旗标说成C侧生效，也不为清零告警删除诊断。
 
-## 当前结果
+## 原生实测结果
 
-首次[run 39127050191](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39127050191)在工具fixture阶段失败，未进入真实clang复现或驱动构建。macOS临时目录逻辑路径与真实路径别名暴露了快照source/object身份未规范化的问题；现改为身份字段存实际路径、依赖项同时保留逻辑路径及实际路径，原符号链接重定向拒绝检查保留，并新增目录别名反例。不删除测试或改成跳过来通过CI。
+源码 `c670c559cc4bd507f5efcb951dd428de250ba90c`；[run 39127772586](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39127772586) success，job `117676413403`。原始文本artifact `12136159692`，ZIP SHA256 `cd1f6a8e27a0eb6353ec1e3e71e3f463f6ce16c5dbb8d5e2569dc3bec23799b1` 已下载校验。ABI report SHA256 `7444e9f66a702755e19c975014fb0e49de5a7c6d0b852704fc08be7a7b5eb22c`，完整构建report SHA256 `33550293c9cf7fbd42d42601f2ad48b786ba9b9a196d6d002143430917791aaf`。
 
-修正后本地工具79项中77通过、两个符号链接场景因Windows权限跳过；须由Darwin实际执行。真实clang复现、新依赖快照与新Darwin结果仍待重跑；不得借上轮成功宣称P1/P2原生门禁已闭环。
+| 验证 | 实测 | 边界 |
+|---|---|---|
+| Darwin工具 | 80/80；两个符号链接场景实际执行，无skip | 包含模拟编译服务的工具合同 |
+| 真实clang反例 | 原对象i64，改传递头后的wrapper/提供侧i32；源码/旧对象不变，快照拒绝 | CPU小工程，非驱动运行 |
+| 编译失败负控 | 非零退出、无对象/快照、未执行 | 未复用旧对象 |
+| 输入绑定 | 14对象；979个不同逻辑依赖路径；六profile在诊断前后重核 | 含系统头与主源文件；非所有1280 TU |
+| 真实最终链接 | 当前10基线+两归档顺序+独立后端+输出逐参数一致 | 未把报告清单当实际命令 |
+| 完整重建 | 1280 C TU+5 shader+独立后端；归档1055/230；候选kext链接成功 | 重建候选 |
+| 选定ABI | 六profile136布局值/20接口形状一致；20个RM最终全局文本定义各一次；altstack未启用 | 完整ABI未知 |
+| GPU初始化/渲染/读回 | 未执行 | 设备NO-GO |
 
-第二次[run 39127276703](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39127276703)工具79/79与真实clang反例已通过；实际NVRM C探针依赖扫描失败。下载并校验artifact后确认：`nvrm_kapi_fields`的68条依赖包含`modeset/timing/nvtiming.h`与`modeset/hdmipacket/../timing/nvtiming.h`两种逻辑拼写，提前消去`..`造成误判。现保留编译器逻辑拼写，另外保存规范化实际路径/hash；避免有符号链接的父路径被错误折叠。新增该真实clang格式回归，内容变化仍拒绝。当前本地80项中78通过/2个权限跳过，等待第三次原生门禁。
+候选SHA256 `bbde79f1601ee7bc89bcef04f48dc45276d39f9dec9e3f8bbed456f157c1e1d3`；与前轮候选摘要一致，依赖取证没有改变最终产物。原始IR、宏、全量报告在同run文本artifact（14天）；入库保存14份快照、对应depfiles、六profile诊断depfiles、ABI报告、真实链接/定义表、编译日志与CPU反例IR。SDK内容由CI重哈希，本机无SDK，本地独立复核的是ZIP/快照/depfile绑定、原始IR、真实命令与最终定义；未声称本机再次核对SDK文件内容。
+
+## 首次失败、复盘与下一步
+
+[首轮39127050191](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39127050191)在工具fixture阶段失败，尚未执行CPU复现或驱动构建；路径别名导致身份字段未规范化。修正后source/object身份使用实际路径，依赖项同时保留逻辑与实际路径；新增目录别名测试，没有删除原符号链接换指向拒绝测试。第二轮[39127276703](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39127276703)工具79/79和真实clang反例已通过，但NVRM C探针的依赖扫描误判了nvtiming.h的两种拼写。artifact 12136462395（ZIP SHA256 1d6a074c38664cf208276b8cc26b20404bb0738ec69e7b2fd28498d114298338）确认68条依赖中有直接路径与hdmipacket/../timing路径；修复为保留逻辑拼写，并分别核对规范化实际路径/hash。Make重复的同一逻辑依赖按集合去重，不丢掉不同逻辑路径的实际身份。新增真实格式回归。前两轮都不是完整构建成功证据，本节第三轮才重新覆盖全部原生合同。
+
+P1/P2在本轮已定义的文件内容/链接命令合同内闭环；前后哈希不抵抗恶意改还原，不捕获编译器二进制、环境与缺失include路径负查询。选定ABI原有限制、目标系统导出与私有ABI、PM/资源关闭阻塞仍开放。下一最小动作回到472个导入的真实目标提供者/ABI核对，不再重复本轮快照缺口。
+
+本轮复盘：主源码/对象hash不能替代完整传递输入；编译器实际-MD集合与前置扫描必须同时绑定，诊断读取头文件后也要重核。逻辑路径与实际路径承担不同验证职责，不能简单丢掉其中一项。

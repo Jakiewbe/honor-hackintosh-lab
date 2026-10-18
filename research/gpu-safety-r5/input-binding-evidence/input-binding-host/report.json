@@ -1,0 +1,51 @@
+{
+  "level": "CPU_COMPILER_FIXTURE_NOT_DRIVER",
+  "result": "CPU_INPUT_BINDING_CONTRACT_PASS",
+  "gpu_execution": "NOT_RUN",
+  "kext_load": "NO-GO",
+  "captured_input_files": 3,
+  "original_caller_abi": {
+    "return_type": "i64",
+    "return_attributes": [],
+    "calling_convention": "ccc",
+    "parameters": [
+      {
+        "type": "i32",
+        "abi_attributes": []
+      }
+    ],
+    "variadic": false
+  },
+  "changed_wrapper_abi": {
+    "return_type": "i32",
+    "return_attributes": [],
+    "calling_convention": "ccc",
+    "parameters": [
+      {
+        "type": "i32",
+        "abi_attributes": []
+      }
+    ],
+    "variadic": false
+  },
+  "provider_abi": {
+    "return_type": "i32",
+    "return_attributes": [],
+    "calling_convention": "ccc",
+    "parameters": [
+      {
+        "type": "i32",
+        "abi_attributes": []
+      }
+    ],
+    "variadic": false
+  },
+  "source_object_unchanged": true,
+  "header_only_drift_rejected": "transitive input changed: /Users/runner/work/_temp/gpu-safety-r5-logs/input-binding-host/indirect.h",
+  "negative_compile": {
+    "exit": 1,
+    "object_exists": false,
+    "snapshot_exists": false,
+    "run": "NOT_RUN"
+  }
+}

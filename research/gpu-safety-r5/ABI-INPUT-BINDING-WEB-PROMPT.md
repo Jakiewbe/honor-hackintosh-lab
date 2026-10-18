@@ -13,3 +13,5 @@
 确认完整1280 C TU+5shader+独立后端、候选链接和六profile136布局/20接口仍成立，20个RM提供者实际进入最终候选。记录C侧-fapple-kext被忽略的警告。472个导入为目标导出/ABI未验收，不是472缺实现。完整ABI、GPU初始化/渲染/读回与PM关闭仍分层；实机NO-GO。
 
 输出固定源码文件/行、真实触发条件与证据、最小建议。区分复现问题、未验证疑点和既有限制，不以单条PASS或作者报告验收。
+
+本轮实际证据入口：源码 `c670c559cc4bd507f5efcb951dd428de250ba90c`，[run 39127772586](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39127772586) success；input-binding-evidence/native-result.json及原始快照/depfiles已入库。80/80、14快照、真实clang反例和P1/P2闭环均请独立验证，保留其范围限制。前两轮39127050191/39127276703失败也要读取，不可隐藏。

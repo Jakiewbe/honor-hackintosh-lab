@@ -1,0 +1,55 @@
+In file included from /Users/runner/work/_temp/gpu-safety-r5-logs/full-flags-abi/uni-os-xnu2_cpp.cpp:2:
+In file included from /Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM/os-xnu2.cpp:7:
+In file included from /Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM/nv-xnu.h:18:
+In file included from /Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv.h:50:
+In file included from /Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/nvport.h:217:
+In file included from /Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/util.h:270:
+In file included from /Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/util_generic.h:184:
+/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/util_gcc_clang.h:111:12: warning: implicit conversion changes signedness: 'int' to 'NvU32' (aka 'unsigned int') [-Wsign-conversion]
+  111 |     return __builtin_clzll(n);
+      |     ~~~~~~ ^~~~~~~~~~~~~~~~~~
+/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/util_gcc_clang.h:118:12: warning: implicit conversion changes signedness: 'int' to 'NvU32' (aka 'unsigned int') [-Wsign-conversion]
+  118 |     return __builtin_clz(n);
+      |     ~~~~~~ ^~~~~~~~~~~~~~~~
+/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/util_gcc_clang.h:127:12: warning: implicit conversion changes signedness: 'int' to 'NvU32' (aka 'unsigned int') [-Wsign-conversion]
+  127 |     return __builtin_ctzll(n);
+      |     ~~~~~~ ^~~~~~~~~~~~~~~~~~
+/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/util_gcc_clang.h:134:12: warning: implicit conversion changes signedness: 'int' to 'NvU32' (aka 'unsigned int') [-Wsign-conversion]
+  134 |     return __builtin_ctz(n);
+      |     ~~~~~~ ^~~~~~~~~~~~~~~~
+In file included from /Users/runner/work/_temp/gpu-safety-r5-logs/full-flags-abi/uni-os-xnu2_cpp.cpp:2:
+In file included from /Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM/os-xnu2.cpp:7:
+/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM/nv-xnu.h:27:5: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+   27 |     IOPCIDevice *pci;
+      |     ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+In file included from /Users/runner/work/_temp/gpu-safety-r5-logs/full-flags-abi/uni-os-xnu2_cpp.cpp:2:
+In file included from /Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM/os-xnu2.cpp:7:
+/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM/nv-xnu.h:31:26: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+   31 | void nv_xnu_register_pci(IOPCIDevice *pci, NvU32 domain, NvU8 bus, NvU8 slot, NvU8 function);
+      |                          ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+In file included from /Users/runner/work/_temp/gpu-safety-r5-logs/full-flags-abi/uni-os-xnu2_cpp.cpp:2:
+/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM/os-xnu2.cpp:1075:78: warning: declaration shadows a variable in the global namespace [-Wshadow]
+ 1075 | NV_STATUS NV_API_CALL nv_alloc_pages(nv_state_t *nv, NvU32 page_count, NvU64 page_size, NvBool contiguous, NvU32 cache_type,
+      |                                                                              ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/vm_param.h:273:25: note: previous declaration is here
+  273 | extern vm_size_t        page_size;
+      |                         ^
+7 warnings generated.

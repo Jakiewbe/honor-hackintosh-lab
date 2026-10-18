@@ -1,0 +1,13 @@
+warning: ignoring -fapple-kext which is valid for C++ and Objective-C++ only
+In file included from /Users/runner/work/_temp/gpu-safety-r5-logs/full-flags-abi/full-src_nvidia_arch_nvalloc_unix_src_osapi.c.c:2:
+In file included from /Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/src/osapi.c:28:
+In file included from arch/nvalloc/unix/include/nv.h:44:
+In file included from arch/nvalloc/unix/include/nv-ioctl.h:29:
+In file included from arch/nvalloc/unix/include/nv-ioctl-numa.h:36:
+In file included from /Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/stdint.h:19:
+In file included from /Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/machine/types.h:35:
+In file included from /Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/i386/types.h:74:
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:967:16: warning: 'BOUND_CHECKS' is not defined, evaluates to 0 [-Wundef]
+  967 | #if KERNEL && !BOUND_CHECKS && !__has_ptrcheck
+      |                ^
+2 warnings generated.

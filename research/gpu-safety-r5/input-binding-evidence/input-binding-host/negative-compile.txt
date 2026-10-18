@@ -1,0 +1,11 @@
+ARGV=["xcrun", "clang", "-MD", "-MF", "/Users/runner/work/_temp/gpu-safety-r5-logs/input-binding-host/negative-inputs/broken.d", "-MT", "honor_g1_inputs", "-c", "/Users/runner/work/_temp/gpu-safety-r5-logs/input-binding-host/broken.c", "-o", "/Users/runner/work/_temp/gpu-safety-r5-logs/input-binding-host/broken.o"]
+/Users/runner/work/_temp/gpu-safety-r5-logs/input-binding-host/broken.c:1:1: error: unknown type name 'this'
+    1 | this is deliberately invalid C syntax;
+      | ^
+/Users/runner/work/_temp/gpu-safety-r5-logs/input-binding-host/broken.c:1:8: error: expected ';' after top level declarator
+    1 | this is deliberately invalid C syntax;
+      |        ^
+      |        ;
+2 errors generated.
+
+EXIT=1

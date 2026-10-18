@@ -1,0 +1,489 @@
+{
+  "schema": "honor.g1.input-binding-native-result.v1",
+  "source_head": "c670c559cc4bd507f5efcb951dd428de250ba90c",
+  "run_id": 39127772586,
+  "job_id": 117676413403,
+  "workflow_conclusion": "success",
+  "artifact_id": 12136159692,
+  "artifact_zip_sha256": "cd1f6a8e27a0eb6353ec1e3e71e3f463f6ce16c5dbb8d5e2569dc3bec23799b1",
+  "abi_report_sha256": "7444e9f66a702755e19c975014fb0e49de5a7c6d0b852704fc08be7a7b5eb22c",
+  "full_report_sha256": "33550293c9cf7fbd42d42601f2ad48b786ba9b9a196d6d002143430917791aaf",
+  "snapshot_objects": 14,
+  "snapshots": [
+    {
+      "object": "/Users/runner/work/_temp/probe-cand-nvrm_pageoff.o",
+      "files": 375,
+      "snapshot_sha256": "f9f148c9028580350bb2fc382c2c8ef42ecff8e5d7f246c7c2d33aa0b6d3ed32"
+    },
+    {
+      "object": "/Users/runner/work/_temp/probe-cand-nvrm_kapi_fields.o",
+      "files": 68,
+      "snapshot_sha256": "64ad78e982679ddb5b53b1891556fb3cd4389847ed9470d43a4d50752192f1c2"
+    },
+    {
+      "object": "/Users/runner/work/_temp/uni-NVRM_cpp.o",
+      "files": 388,
+      "snapshot_sha256": "ab487b8e9c191c6d0558da4689b9286deac56b5142b7889bc316b5bb66262d8c"
+    },
+    {
+      "object": "/Users/runner/work/_temp/uni-os-xnu_cpp.o",
+      "files": 385,
+      "snapshot_sha256": "db4c7b8ef054be8b6e24892231d6d9d6b1c5f4f474782e0837b1b458e4a4a98a"
+    },
+    {
+      "object": "/Users/runner/work/_temp/uni-os-xnu2_cpp.o",
+      "files": 386,
+      "snapshot_sha256": "43c4ff529aa48f6101b3dbb5c822b8086eec8c2951ecb1dee76239aa914e200c"
+    },
+    {
+      "object": "/Users/runner/work/_temp/uni-os-nvkms-xnu_cpp.o",
+      "files": 379,
+      "snapshot_sha256": "cec704952ba7fb89e99c3ee9773395aa3e38bb34ca0f5e13d3da10a065873efb"
+    },
+    {
+      "object": "/Users/runner/work/_temp/uni-nv_xnu_stubs_cpp.o",
+      "files": 327,
+      "snapshot_sha256": "282cb5a4e0088820d2edb1263afac41a3c45aae3e1496c69978cb713ad6d2248"
+    },
+    {
+      "object": "/Users/runner/work/_temp/uni-nvrm_gpuva_cpp.o",
+      "files": 324,
+      "snapshot_sha256": "a29b0af012d8fe7a72fa853892d3201998aa4246d7aa46a1c9f7e50f5c32b6ad"
+    },
+    {
+      "object": "/Users/runner/work/_temp/uni-nvrm_fbinfo_cpp.o",
+      "files": 327,
+      "snapshot_sha256": "839a0ff53bab67984fb0eebb166fbb780508af9762518e525001410bc7d71e7e"
+    },
+    {
+      "object": "/Users/runner/work/_temp/uni-nvrm_surfshare_cpp.o",
+      "files": 370,
+      "snapshot_sha256": "b23c592771876eafb5135826c002f64a1b1b823bce08db1590a75b5b407df286"
+    },
+    {
+      "object": "/Users/runner/work/_temp/uni-nvkms_shaders_cpp.o",
+      "files": 1,
+      "snapshot_sha256": "9e154b4f04502d097043e57a803e84542f4038c0d8c8fea816521c5ff4ef638a"
+    },
+    {
+      "object": "/Users/runner/work/_temp/gpu-safety-r5-logs/full-source/objects/nvidia-dynamic-power-2aca2a16d99aa8c8.o",
+      "files": 377,
+      "snapshot_sha256": "39b8923d95a4e7807892f752509e8dcdaa642dd3f0a28fcf78b6979e0a917162"
+    },
+    {
+      "object": "/Users/runner/work/_temp/gpu-safety-r5-logs/full-source/objects/nvidia-osapi-f217437223c54c37.o",
+      "files": 416,
+      "snapshot_sha256": "9af268e6498d5ee768952ae27923882c4a58ee6f4864f42b6b98d5152dd2693d"
+    },
+    {
+      "object": "/Users/runner/work/_temp/gpu-safety-r5-logs/full-source/objects/nvidia-unix_intr-4ef6a89328d65362.o",
+      "files": 308,
+      "snapshot_sha256": "0dbd5094e3a1f3a406a87823da2eb53ca6dcf49cf96495202582cb3d965926a6"
+    }
+  ],
+  "unique_dependency_paths": 979,
+  "selected_abi_profiles": 6,
+  "selected_layout_values": 136,
+  "selected_interface_shapes": 20,
+  "selected_final_rm_text_definitions": 20,
+  "actual_link_argv": "MATCH",
+  "host_contract": {
+    "level": "CPU_COMPILER_FIXTURE_NOT_DRIVER",
+    "result": "CPU_INPUT_BINDING_CONTRACT_PASS",
+    "gpu_execution": "NOT_RUN",
+    "kext_load": "NO-GO",
+    "captured_input_files": 3,
+    "original_caller_abi": {
+      "return_type": "i64",
+      "return_attributes": [],
+      "calling_convention": "ccc",
+      "parameters": [
+        {
+          "type": "i32",
+          "abi_attributes": []
+        }
+      ],
+      "variadic": false
+    },
+    "changed_wrapper_abi": {
+      "return_type": "i32",
+      "return_attributes": [],
+      "calling_convention": "ccc",
+      "parameters": [
+        {
+          "type": "i32",
+          "abi_attributes": []
+        }
+      ],
+      "variadic": false
+    },
+    "provider_abi": {
+      "return_type": "i32",
+      "return_attributes": [],
+      "calling_convention": "ccc",
+      "parameters": [
+        {
+          "type": "i32",
+          "abi_attributes": []
+        }
+      ],
+      "variadic": false
+    },
+    "source_object_unchanged": true,
+    "header_only_drift_rejected": "transitive input changed: /Users/runner/work/_temp/gpu-safety-r5-logs/input-binding-host/indirect.h",
+    "negative_compile": {
+      "exit": 1,
+      "object_exists": false,
+      "snapshot_exists": false,
+      "run": "NOT_RUN"
+    }
+  },
+  "complete_source_objects": 1285,
+  "candidate_sha256": "bbde79f1601ee7bc89bcef04f48dc45276d39f9dec9e3f8bbed456f157c1e1d3",
+  "remaining_imports": 472,
+  "target_export_abi": "UNKNOWN_NOT_VERIFIED",
+  "local_verification": "text ZIP, manifest/depfile hashes, logs, raw IR and selected final definitions; SDK input contents rehashed on CI only",
+  "failed_runs": [
+    39127050191,
+    39127276703
+  ],
+  "preserved_second_failure_depfile_sha256": "2d5e61c766a9dbae2f2d1b6ccc4865b664b635d127965fc9ec0283882e33e3ec",
+  "preserved_text": [
+    {
+      "path": "full-flags-abi/full-abi-report.json",
+      "sha256": "7444e9f66a702755e19c975014fb0e49de5a7c6d0b852704fc08be7a7b5eb22c"
+    },
+    {
+      "path": "full-flags-abi/full-src_nvidia_arch_nvalloc_unix_src_dynamic-power.c-ir.d",
+      "sha256": "d997346fa05ca631bfa446b4fa8cd71b618e13510a381c0f54649304fe74a05e"
+    },
+    {
+      "path": "full-flags-abi/full-src_nvidia_arch_nvalloc_unix_src_dynamic-power.c-ir.stderr.txt",
+      "sha256": "93c3ccf711d6d10e61bd7fbec57aad0e4b9b7eeacb547bfe7434bc46e92fd7c1"
+    },
+    {
+      "path": "full-flags-abi/full-src_nvidia_arch_nvalloc_unix_src_dynamic-power.c-macros.d",
+      "sha256": "d997346fa05ca631bfa446b4fa8cd71b618e13510a381c0f54649304fe74a05e"
+    },
+    {
+      "path": "full-flags-abi/full-src_nvidia_arch_nvalloc_unix_src_dynamic-power.c-macros.stderr.txt",
+      "sha256": "f386260174d4f7333c4d707acd336c2ceb66c7ec63576c24ae6ad4524152d549"
+    },
+    {
+      "path": "full-flags-abi/full-src_nvidia_arch_nvalloc_unix_src_osapi.c-ir.d",
+      "sha256": "de2b8b3ea6827ffef95e34aa5e86ece30443408c749a0f60175bf75e125615a7"
+    },
+    {
+      "path": "full-flags-abi/full-src_nvidia_arch_nvalloc_unix_src_osapi.c-ir.stderr.txt",
+      "sha256": "bff75b1ea2dd8f99ed6aa5a9679b7317def0153eb2039de051baa35109566fb3"
+    },
+    {
+      "path": "full-flags-abi/full-src_nvidia_arch_nvalloc_unix_src_osapi.c-macros.d",
+      "sha256": "de2b8b3ea6827ffef95e34aa5e86ece30443408c749a0f60175bf75e125615a7"
+    },
+    {
+      "path": "full-flags-abi/full-src_nvidia_arch_nvalloc_unix_src_osapi.c-macros.stderr.txt",
+      "sha256": "7867fa4000e70b1b0fb49840338b617e913fb8757f101348055f781c71af26ff"
+    },
+    {
+      "path": "full-flags-abi/full-src_nvidia_arch_nvalloc_unix_src_unix_intr.c-ir.d",
+      "sha256": "9915d1f986102250c8f7fb806998698979d5d1d23ef635ea9f56a7c8bedfe1fc"
+    },
+    {
+      "path": "full-flags-abi/full-src_nvidia_arch_nvalloc_unix_src_unix_intr.c-ir.stderr.txt",
+      "sha256": "a250c9f91dd21dbd4f699b8b718b0fbcc8fb283e9b9eeeac3de80f6b0c58bb5d"
+    },
+    {
+      "path": "full-flags-abi/full-src_nvidia_arch_nvalloc_unix_src_unix_intr.c-macros.d",
+      "sha256": "9915d1f986102250c8f7fb806998698979d5d1d23ef635ea9f56a7c8bedfe1fc"
+    },
+    {
+      "path": "full-flags-abi/full-src_nvidia_arch_nvalloc_unix_src_unix_intr.c-macros.stderr.txt",
+      "sha256": "0201e02f98d51a8c3cd0cdf215e39ff21b8b7a366adb14d507f32927e3116736"
+    },
+    {
+      "path": "full-flags-abi/source-inputs.json",
+      "sha256": "bedb352220cb43d29fa40e40114e910af0abfe003cd646df3e53c9f48dc6cfe2"
+    },
+    {
+      "path": "full-flags-abi/uni-NVRM_cpp-ir.d",
+      "sha256": "8d3078418c72e623372985cee4b3a02400f9678ab337f53edc664a5dc7e552ca"
+    },
+    {
+      "path": "full-flags-abi/uni-NVRM_cpp-ir.stderr.txt",
+      "sha256": "052bbfbfd55574c2ee99264b686a55dcd6b5b1c225251c1bd9c19fb418e34ea2"
+    },
+    {
+      "path": "full-flags-abi/uni-NVRM_cpp-macros.d",
+      "sha256": "8d3078418c72e623372985cee4b3a02400f9678ab337f53edc664a5dc7e552ca"
+    },
+    {
+      "path": "full-flags-abi/uni-NVRM_cpp-macros.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "full-flags-abi/uni-os-nvkms-xnu_cpp-ir.d",
+      "sha256": "0a2e2e2cf7f7316d8f43270fa56ff8e96c6d6ca35d3c557cba4278bb991f93e1"
+    },
+    {
+      "path": "full-flags-abi/uni-os-nvkms-xnu_cpp-ir.stderr.txt",
+      "sha256": "dce0cfed6fef2942fed61d1fcf793d00197585e73bff033e2f575789fff576d1"
+    },
+    {
+      "path": "full-flags-abi/uni-os-nvkms-xnu_cpp-macros.d",
+      "sha256": "0a2e2e2cf7f7316d8f43270fa56ff8e96c6d6ca35d3c557cba4278bb991f93e1"
+    },
+    {
+      "path": "full-flags-abi/uni-os-nvkms-xnu_cpp-macros.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "full-flags-abi/uni-os-xnu2_cpp-ir.d",
+      "sha256": "3ab937c88beab7b2cbfcaf075a0685e5c98e353ac4eb8deb180c92ac072f192c"
+    },
+    {
+      "path": "full-flags-abi/uni-os-xnu2_cpp-ir.stderr.txt",
+      "sha256": "0a8f0c679a9fcd75c9174bf26a2cc64bfc6146565be76cea1598896a41902fce"
+    },
+    {
+      "path": "full-flags-abi/uni-os-xnu2_cpp-macros.d",
+      "sha256": "3ab937c88beab7b2cbfcaf075a0685e5c98e353ac4eb8deb180c92ac072f192c"
+    },
+    {
+      "path": "full-flags-abi/uni-os-xnu2_cpp-macros.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "full-source/full-nvrm-defined.txt",
+      "sha256": "97c3e196c8709c9e5e7275d269eae18a704834e9a7e5f84a2dd1533755180e07"
+    },
+    {
+      "path": "full-source/full-nvrm-link.txt",
+      "sha256": "e6d1b142da5a3e5146cb695e63f3716dbe483e205e50301eb47a2d299e5c46da"
+    },
+    {
+      "path": "full-source/full-nvrm-undefined.txt",
+      "sha256": "0691e92bc5ef4ce537668c89a0c7b0c71238990aaeafc1c60125293e59fb9dc8"
+    },
+    {
+      "path": "full-source/input-snapshots/nvidia-dynamic-power-2aca2a16d99aa8c8-before.d",
+      "sha256": "a3d230316eebea53d4af3f348cbfa2a6a953bf31ac2580b6f4151d0a446b4914"
+    },
+    {
+      "path": "full-source/input-snapshots/nvidia-dynamic-power-2aca2a16d99aa8c8.d",
+      "sha256": "a3d230316eebea53d4af3f348cbfa2a6a953bf31ac2580b6f4151d0a446b4914"
+    },
+    {
+      "path": "full-source/input-snapshots/nvidia-dynamic-power-2aca2a16d99aa8c8.json",
+      "sha256": "39b8923d95a4e7807892f752509e8dcdaa642dd3f0a28fcf78b6979e0a917162"
+    },
+    {
+      "path": "full-source/input-snapshots/nvidia-osapi-f217437223c54c37-before.d",
+      "sha256": "8d5700dae6ced40619b4dfd813a8f2e2a6e698b37674c8e8c477b4d9a1430e2d"
+    },
+    {
+      "path": "full-source/input-snapshots/nvidia-osapi-f217437223c54c37.d",
+      "sha256": "8d5700dae6ced40619b4dfd813a8f2e2a6e698b37674c8e8c477b4d9a1430e2d"
+    },
+    {
+      "path": "full-source/input-snapshots/nvidia-osapi-f217437223c54c37.json",
+      "sha256": "9af268e6498d5ee768952ae27923882c4a58ee6f4864f42b6b98d5152dd2693d"
+    },
+    {
+      "path": "full-source/input-snapshots/nvidia-unix_intr-4ef6a89328d65362-before.d",
+      "sha256": "e65fdf80d54ba94cd21aeee6f83451604be026da29e66c8f31ce37ab35824853"
+    },
+    {
+      "path": "full-source/input-snapshots/nvidia-unix_intr-4ef6a89328d65362.d",
+      "sha256": "e65fdf80d54ba94cd21aeee6f83451604be026da29e66c8f31ce37ab35824853"
+    },
+    {
+      "path": "full-source/input-snapshots/nvidia-unix_intr-4ef6a89328d65362.json",
+      "sha256": "0dbd5094e3a1f3a406a87823da2eb53ca6dcf49cf96495202582cb3d965926a6"
+    },
+    {
+      "path": "full-source/nvidia-dynamic-power-2aca2a16d99aa8c8.txt",
+      "sha256": "cd24130c67b61426a575119d534f1542bdf3faa0e7e44b6fea85a6a595bc36bd"
+    },
+    {
+      "path": "full-source/nvidia-osapi-f217437223c54c37.txt",
+      "sha256": "c253b95b480572f5574172c5027b1f461bf7879a59c23434327a969de06f4a2a"
+    },
+    {
+      "path": "full-source/nvidia-unix_intr-4ef6a89328d65362.txt",
+      "sha256": "e860d4a3000a7c4ac5f8cdf4772fda91fdea3a08637221877451cbbe77f4eccd"
+    },
+    {
+      "path": "input-binding-host/changed-wrapper.ll",
+      "sha256": "2b1680cf478a89f2db3a9a52a0a8b9e560fc93628c9462ed48ecf23264b79a70"
+    },
+    {
+      "path": "input-binding-host/negative-compile.txt",
+      "sha256": "308f11fe23b47e42108abedd5a922f8b94f1de0808f6b4fbc0875eb378d9804c"
+    },
+    {
+      "path": "input-binding-host/original.ll",
+      "sha256": "73c849c231735a6f17c17f3c2faff89c4d47b4b76cc3ab82b90ed0be68f3dd93"
+    },
+    {
+      "path": "input-binding-host/provider.ll",
+      "sha256": "3048e3668af7ff13d0bd39ae4bb97777c56cbc63b32358aac0943aae9f0a563b"
+    },
+    {
+      "path": "input-binding-host/report.json",
+      "sha256": "74acd94c4a0daf0b33a5865b28742a9f3583436616b0651385ef8f38a3637a1f"
+    },
+    {
+      "path": "input-snapshots/probe-cand-nvrm_kapi_fields-before.d",
+      "sha256": "2d5e61c766a9dbae2f2d1b6ccc4865b664b635d127965fc9ec0283882e33e3ec"
+    },
+    {
+      "path": "input-snapshots/probe-cand-nvrm_kapi_fields.d",
+      "sha256": "2d5e61c766a9dbae2f2d1b6ccc4865b664b635d127965fc9ec0283882e33e3ec"
+    },
+    {
+      "path": "input-snapshots/probe-cand-nvrm_kapi_fields.json",
+      "sha256": "64ad78e982679ddb5b53b1891556fb3cd4389847ed9470d43a4d50752192f1c2"
+    },
+    {
+      "path": "input-snapshots/probe-cand-nvrm_pageoff-before.d",
+      "sha256": "e96328706396142bf9e0a608abacaaaa79f30ccdaf440600ee49b9702f532ffa"
+    },
+    {
+      "path": "input-snapshots/probe-cand-nvrm_pageoff.d",
+      "sha256": "e96328706396142bf9e0a608abacaaaa79f30ccdaf440600ee49b9702f532ffa"
+    },
+    {
+      "path": "input-snapshots/probe-cand-nvrm_pageoff.json",
+      "sha256": "f9f148c9028580350bb2fc382c2c8ef42ecff8e5d7f246c7c2d33aa0b6d3ed32"
+    },
+    {
+      "path": "input-snapshots/uni-NVRM_cpp-before.d",
+      "sha256": "d271924e9391884eee851bbf3ea35a20134a0549a1230023aed8e6ed84766da9"
+    },
+    {
+      "path": "input-snapshots/uni-NVRM_cpp.d",
+      "sha256": "d271924e9391884eee851bbf3ea35a20134a0549a1230023aed8e6ed84766da9"
+    },
+    {
+      "path": "input-snapshots/uni-NVRM_cpp.json",
+      "sha256": "ab487b8e9c191c6d0558da4689b9286deac56b5142b7889bc316b5bb66262d8c"
+    },
+    {
+      "path": "input-snapshots/uni-nv_xnu_stubs_cpp-before.d",
+      "sha256": "4c7475c07907fec31eb83a76fbee953e3ae98016a30e712bdd9cc94f7871f560"
+    },
+    {
+      "path": "input-snapshots/uni-nv_xnu_stubs_cpp.d",
+      "sha256": "4c7475c07907fec31eb83a76fbee953e3ae98016a30e712bdd9cc94f7871f560"
+    },
+    {
+      "path": "input-snapshots/uni-nv_xnu_stubs_cpp.json",
+      "sha256": "282cb5a4e0088820d2edb1263afac41a3c45aae3e1496c69978cb713ad6d2248"
+    },
+    {
+      "path": "input-snapshots/uni-nvkms_shaders_cpp-before.d",
+      "sha256": "c9c50d42b73faeee930ad409b5747c7b5be2b7a3d919faf829a58b078c226805"
+    },
+    {
+      "path": "input-snapshots/uni-nvkms_shaders_cpp.d",
+      "sha256": "c9c50d42b73faeee930ad409b5747c7b5be2b7a3d919faf829a58b078c226805"
+    },
+    {
+      "path": "input-snapshots/uni-nvkms_shaders_cpp.json",
+      "sha256": "9e154b4f04502d097043e57a803e84542f4038c0d8c8fea816521c5ff4ef638a"
+    },
+    {
+      "path": "input-snapshots/uni-nvrm_fbinfo_cpp-before.d",
+      "sha256": "0116db078b627b75048204aa3c8926f03a7f6153aff588f73b5c33efaad1524e"
+    },
+    {
+      "path": "input-snapshots/uni-nvrm_fbinfo_cpp.d",
+      "sha256": "0116db078b627b75048204aa3c8926f03a7f6153aff588f73b5c33efaad1524e"
+    },
+    {
+      "path": "input-snapshots/uni-nvrm_fbinfo_cpp.json",
+      "sha256": "839a0ff53bab67984fb0eebb166fbb780508af9762518e525001410bc7d71e7e"
+    },
+    {
+      "path": "input-snapshots/uni-nvrm_gpuva_cpp-before.d",
+      "sha256": "a83d2908f8185e2326b781b57dcd98d8bbf098db2c4835c81646f0d3ca297177"
+    },
+    {
+      "path": "input-snapshots/uni-nvrm_gpuva_cpp.d",
+      "sha256": "a83d2908f8185e2326b781b57dcd98d8bbf098db2c4835c81646f0d3ca297177"
+    },
+    {
+      "path": "input-snapshots/uni-nvrm_gpuva_cpp.json",
+      "sha256": "a29b0af012d8fe7a72fa853892d3201998aa4246d7aa46a1c9f7e50f5c32b6ad"
+    },
+    {
+      "path": "input-snapshots/uni-nvrm_surfshare_cpp-before.d",
+      "sha256": "8579cf1722d06cfd64b1caec3e1ee7dfa4c1b22fdfef42e4c406183e7dbd4d79"
+    },
+    {
+      "path": "input-snapshots/uni-nvrm_surfshare_cpp.d",
+      "sha256": "8579cf1722d06cfd64b1caec3e1ee7dfa4c1b22fdfef42e4c406183e7dbd4d79"
+    },
+    {
+      "path": "input-snapshots/uni-nvrm_surfshare_cpp.json",
+      "sha256": "b23c592771876eafb5135826c002f64a1b1b823bce08db1590a75b5b407df286"
+    },
+    {
+      "path": "input-snapshots/uni-os-nvkms-xnu_cpp-before.d",
+      "sha256": "733449cdb4a1841e51012a023d2abdb477b235641e9cbb4fc4d39e976ca1a929"
+    },
+    {
+      "path": "input-snapshots/uni-os-nvkms-xnu_cpp.d",
+      "sha256": "733449cdb4a1841e51012a023d2abdb477b235641e9cbb4fc4d39e976ca1a929"
+    },
+    {
+      "path": "input-snapshots/uni-os-nvkms-xnu_cpp.json",
+      "sha256": "cec704952ba7fb89e99c3ee9773395aa3e38bb34ca0f5e13d3da10a065873efb"
+    },
+    {
+      "path": "input-snapshots/uni-os-xnu2_cpp-before.d",
+      "sha256": "784e9c1eb60906acafd8f2baf808817ef197f608fbc08df42ae0f56c58f64c2e"
+    },
+    {
+      "path": "input-snapshots/uni-os-xnu2_cpp.d",
+      "sha256": "784e9c1eb60906acafd8f2baf808817ef197f608fbc08df42ae0f56c58f64c2e"
+    },
+    {
+      "path": "input-snapshots/uni-os-xnu2_cpp.json",
+      "sha256": "43c4ff529aa48f6101b3dbb5c822b8086eec8c2951ecb1dee76239aa914e200c"
+    },
+    {
+      "path": "input-snapshots/uni-os-xnu_cpp-before.d",
+      "sha256": "d4853f891a7883cc77623de88a5b61f6a8cf4c10c3e33aca93411a2b6141cf93"
+    },
+    {
+      "path": "input-snapshots/uni-os-xnu_cpp.d",
+      "sha256": "d4853f891a7883cc77623de88a5b61f6a8cf4c10c3e33aca93411a2b6141cf93"
+    },
+    {
+      "path": "input-snapshots/uni-os-xnu_cpp.json",
+      "sha256": "db4c7b8ef054be8b6e24892231d6d9d6b1c5f4f474782e0837b1b458e4a4a98a"
+    },
+    {
+      "path": "toolchain.txt",
+      "sha256": "aff4193a2f0b029c8c6f412fcfb2db84f72922ac99a94311a05671c17b1d5143"
+    },
+    {
+      "path": "uni-NVRM_cpp.txt",
+      "sha256": "b9ed46cefaa999f269c1337d46470fae5c3b5accacd59fa40f54de4ccb9d5fc4"
+    },
+    {
+      "path": "uni-os-nvkms-xnu_cpp.txt",
+      "sha256": "172b731fc10123fa09509d93273f2cbc461950c45ff03ff955523ebdec6c612f"
+    },
+    {
+      "path": "uni-os-xnu2_cpp.txt",
+      "sha256": "ebd83ba9e6ff82b4042b0558f60332f4fbd064831c10b8e20e406127b3c0a515"
+    }
+  ],
+  "kext_load": "NO-GO",
+  "gpu_initialization": "NOT_RUN",
+  "gpu_render": "NOT_RUN",
+  "pixel_readback": "NOT_RUN"
+}

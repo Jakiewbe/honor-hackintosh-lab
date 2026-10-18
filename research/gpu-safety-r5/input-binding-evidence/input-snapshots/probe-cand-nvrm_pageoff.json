@@ -1,0 +1,1999 @@
+{
+  "schema": "honor.g1.compile-inputs.v1",
+  "source": "/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM/nvrm_pageoff.c",
+  "object": "/Users/runner/work/_temp/probe-cand-nvrm_pageoff.o",
+  "object_sha256": "4ec16f2aae6271ca3820571cfaf4f8d38080db8d86ccc939dfcd465316c41d98",
+  "cwd": "/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate",
+  "compile_argv": [
+    "xcrun",
+    "clang",
+    "-x",
+    "c",
+    "-std=gnu11",
+    "-arch",
+    "x86_64",
+    "-mmacosx-version-min=15.5",
+    "-isysroot",
+    "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+    "-fapple-kext",
+    "-mkernel",
+    "-nostdinc",
+    "-I/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers",
+    "-DKERNEL",
+    "-DKERNEL_PRIVATE",
+    "-DDRIVER_PRIVATE",
+    "-DAPPLE",
+    "-DNeXT",
+    "-fno-builtin",
+    "-fno-common",
+    "-O2",
+    "-Wall",
+    "-Wno-unused-parameter",
+    "-Wno-inconsistent-missing-override",
+    "-Wno-unused-function",
+    "-DNV_UNIX",
+    "-DNV_LINUX",
+    "-DNV_X86_64",
+    "-DNV_ARCH_BITS=64",
+    "-DMBEDTLS_USER_CONFIG_FILE=<nvrm_mbedtls_config.h>",
+    "-D__NO_CTYPE",
+    "-DLOCK_VAL_ENABLED=0",
+    "-DPORT_ATOMIC_64_BIT_SUPPORTED=1",
+    "-DPORT_IS_KERNEL_BUILD=1",
+    "-DPORT_IS_CHECKED_BUILD=0",
+    "-DPORT_MODULE_atomic=1",
+    "-DPORT_MODULE_core=1",
+    "-DPORT_MODULE_cpu=1",
+    "-DPORT_MODULE_crypto=1",
+    "-DPORT_MODULE_debug=1",
+    "-DPORT_MODULE_memory=1",
+    "-DPORT_MODULE_safe=1",
+    "-DPORT_MODULE_string=1",
+    "-DPORT_MODULE_sync=1",
+    "-DPORT_MODULE_thread=1",
+    "-DPORT_MODULE_time=1",
+    "-DPORT_MODULE_util=1",
+    "-DPORT_MODULE_example=0",
+    "-DPORT_MODULE_mmio=0",
+    "-DRS_STANDALONE=0",
+    "-DRS_STANDALONE_TEST=0",
+    "-DRS_COMPATABILITY_MODE=1",
+    "-DRS_PROVIDES_API_STATE=0",
+    "-DNV_CONTAINERS_NO_TEMPLATES",
+    "-DINCLUDE_NVLINK_LIB",
+    "-DINCLUDE_NVSWITCH_LIB",
+    "-DNV_PRINTF_STRINGS_ALLOWED=1",
+    "-DNV_ASSERT_FAILED_USES_STRINGS=1",
+    "-DPORT_ASSERT_FAILED_USES_STRINGS=1",
+    "-DNVRM",
+    "-I/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/common/inc",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/common/inc/gsp",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/os",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/interface",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/src/libraries",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/shared/inc",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/nvlink/interface",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc/swref",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc/swref/published",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/uproc/os/common/include",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc/displayport",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/nvlink/inband/interface",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/unix/nvidia-push/interface",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/unix/common/inc",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/modeset",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/unix/common/utils/interface",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/os-interface/include",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/kapi/interface",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/kapi/include",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/interface",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/include",
+    "-MD",
+    "-MF",
+    "/Users/runner/work/_temp/gpu-safety-r5-logs/input-snapshots/probe-cand-nvrm_pageoff.d",
+    "-MT",
+    "honor_g1_inputs",
+    "-c",
+    "/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM/nvrm_pageoff.c",
+    "-o",
+    "/Users/runner/work/_temp/probe-cand-nvrm_pageoff.o"
+  ],
+  "inputs": [
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/i386/_types.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/i386/_types.h",
+      "sha256": "45bc32e2120f0391be97f62e309136d825be2383e4e7c43af7344f68d8c4a3e0"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/i386/types.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/i386/types.h",
+      "sha256": "1463e3c1b8d097ea0e8df30d893fb893ea7c75434c5b40d3ecde85fe6546f251"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/machine/_types.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/machine/_types.h",
+      "sha256": "f27264f8fdec9f164b4fc2b556f666ed7c5c0e5b88fd9f23db0b731ffa6cf864"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/machine/types.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/machine/types.h",
+      "sha256": "76e7c59451d996fe674a6fc7e518366609a95875c9b9aec9fd590a3ac138dddd"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/stdarg.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/stdarg.h",
+      "sha256": "8da8c90ede2c3d8690230f69aacc7e7f03daca2d9ca9498ceddd10b2132e7acb"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/stddef.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/stddef.h",
+      "sha256": "a9bf26094aa1fc7493589a94776047cde29bfe6917cdb41c605c7d1cddc73939"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/stdint.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/stdint.h",
+      "sha256": "078c015573934614d2b721275b59f6aea476ba4f75760cc86a1ddc705a0dc0e4"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_int16_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_int16_t.h",
+      "sha256": "e40d40ad59c6dc98577b2c7cfdba1121ebfee17b29e093cbd10b7936df496d8e"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_int32_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_int32_t.h",
+      "sha256": "77127195e57f1690402377ddd72e3dcda684ddf591346f08ef4772dddcbbc281"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_int64_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_int64_t.h",
+      "sha256": "a2427b34e5e83996bd28d83cec920cf3b82a366af90e767234557bd11fa33a18"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_int8_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_int8_t.h",
+      "sha256": "607f6beede0251eb801e763493df26fd45d46eb951e4ff9cac17f1ac951b8cc0"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_intptr_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_intptr_t.h",
+      "sha256": "b2a7ba9b9b2d357d75e59114874658f893b23ea6d1357815b027d8189075daba"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_u_int16_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_u_int16_t.h",
+      "sha256": "9dabbd8280c28416a5ba115355678d2540588df1a7251bd9b4a13e30c309a71b"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_u_int32_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_u_int32_t.h",
+      "sha256": "196cba7a865c086bba457758d3b2605a4c1299c54a758366b7d420a585895f1d"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_u_int64_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_u_int64_t.h",
+      "sha256": "d096eee54a5acc2c3cd5cf71256d69198ada8f8d82cdb0a717bc8ed65650ad93"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_u_int8_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_u_int8_t.h",
+      "sha256": "7505dbbdf3ecca2b8e585871ad81c0e67a3cb63c97c47abe73fe262e071a3ebb"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_uintptr_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_uintptr_t.h",
+      "sha256": "e435f739013a22883da08b7d8b8819d6fd421756d025b369fecdee90ff40eb39"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/cdefs.h",
+      "sha256": "87a8eb356daebe702d13092959d7240ded77e37c61b786dd6f17a25fcc612fd4"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc/nvCpuUuid.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc/nvCpuUuid.h",
+      "sha256": "a228c1ac5b26b9e4d7d1efa7dd69bf111bd0bbadddd65bb016e610e13871a234"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc/nvctassert.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc/nvctassert.h",
+      "sha256": "d5ab688eb078b2bd2ad0ffaf21c851ce520450a4eb8bc758ae77cf330ad495ce"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc/nvlog_defs.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc/nvlog_defs.h",
+      "sha256": "19657e98eadc74fae329e75a8796b13f564eb48a7bbd51c54a1420b6e6843c55"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc/swref/published/nv_arch.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc/swref/published/nv_arch.h",
+      "sha256": "073a44f1aa1e0fe3967512b7d5c15790067a2dc5bb72a196cd94607469219bf6"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/nvlink/inband/interface/nvlink_inband_msg.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/nvlink/inband/interface/nvlink_inband_msg.h",
+      "sha256": "38e298af825520a37bcdd6d72e2d7cbe1399755c12deb30789e486c00389f7e3"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/cc_drv.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/cc_drv.h",
+      "sha256": "bacd6692eb1049c4df162109081a9039b4ffa38636b120224e9a8dcb17f1fbd8"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl0000.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl0000.h",
+      "sha256": "2f8c158b1e0d55fb425497054539e9dcb24002ec5e4949dd56b9b2b8e17d0208"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl0000_notification.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl0000_notification.h",
+      "sha256": "e468580fb8b3ebeed6dd57fef2e4360e105cd9c9f5bf388f4d030c2da66e3f93"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl0050.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl0050.h",
+      "sha256": "7a94f2db4c6fb97ae9f38f5f12e7c27b0de67eb581943d2244aac29cd4a80e56"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl008f.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl008f.h",
+      "sha256": "73706b434135f493d7022b250c5016c07843eb7a89bb74ebde2de8d95909dae4"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl00de.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl00de.h",
+      "sha256": "35670d98dc93e7ceb70d58ded910328cf9b275d40ed53b014fcd9cab323dd091"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl2080.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl2080.h",
+      "sha256": "6f0c32970e6ba7e56dec28c44594b41570237bf74b1ea33ab5e8bcd139805351"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl2080_notification.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl2080_notification.h",
+      "sha256": "d14a931373d99c68b5efb70cb5b8ec60573812828cabd6b8f861a54f09ea0b1a"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl9010.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl9010.h",
+      "sha256": "f388882c995687540d7515e25f68613e3f8a67a35add99d761afd005656a49c7"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl9010_callback.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl9010_callback.h",
+      "sha256": "2571a29472ad80a60c60f2bcaedc8354179b45c6248c98792503349dae419ba8"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl906f.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl906f.h",
+      "sha256": "d3cf0a8eb1c03bd66299e959ec0c67456905468be768ff25dab81fd88cf6adaf"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl906fsw.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl906fsw.h",
+      "sha256": "24e2b9f51e589a7e1fe8d4c5791e4d5a704bc07944068da6854f38ee279f16dd"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl90cd.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl90cd.h",
+      "sha256": "6899d744ba30e024571d4c9e61b56380264f24a666ead38a2d31e1506778d69e"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl90cdtrace.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl90cdtrace.h",
+      "sha256": "f76815079469b6900bcff6ff2db9c93be1a3c6c5f30502272e671083b95b6ce7"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl90cdvideo.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl90cdvideo.h",
+      "sha256": "cdf1b12166b8e590be80ff01d950bda1a1064054cf0e8dd6c4032c1e077fbd87"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl90f1.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl90f1.h",
+      "sha256": "c1bd28c0a38f74b3e92c6a0b52b2e76bd6782ca6b112593dc69eda88913600b9"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cla0bc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cla0bc.h",
+      "sha256": "1525da6e6356e078ebe7a4accc5c8bf54e9449d162e9f4da1bc3b58d15d5349c"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cla0bd.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cla0bd.h",
+      "sha256": "d2126882ac8fdad2ff4d95ae4b6f6ea4bc070c1d9f33f9addae0a1599603761b"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/clb0b5.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/clb0b5.h",
+      "sha256": "169d958bfa379bfdf24c4656f02265ff5bcf22a2866724ee4299138d29df5332"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/clc0b5.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/clc0b5.h",
+      "sha256": "595388a2bcf9bf7d9ae90aa013a562872fa37246f24c7c6ac151a77b3e9b8fe9"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/clc1b5.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/clc1b5.h",
+      "sha256": "143539dfb521b04e5fc3548fc899211e2772ffddfbf55e5d999df0a98085567a"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/clc369.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/clc369.h",
+      "sha256": "755c9258db3cbce8f0cc4b1fb76c7ddda8a65c7f184470282edc1b88ed53aa77"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/clc3b5.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/clc3b5.h",
+      "sha256": "c6321efb3a6581d384495ac735bb80e8c0b1472d73e9043fefc973e25f2d5744"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/clc5b5.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/clc5b5.h",
+      "sha256": "bcbd67c4b80643d138d51c36394be47d09366882fb6abd9bee746b2f3351c09c"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/clc6b5.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/clc6b5.h",
+      "sha256": "38caaf7efa2c9a58849ebf688c042eb43a4e6b1c670155df412e1e82ea580b71"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/clc7b5.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/clc7b5.h",
+      "sha256": "9e8dbda2d6741abeb2d2c81bb92cb621445aac7facf8c8113f3cb3d12f1c7660"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/clc86f.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/clc86f.h",
+      "sha256": "698b3533cdeb95ab030428b6f7712a0870868ccc0e8f02f9137d78e5e1dfd297"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/clc8b5.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/clc8b5.h",
+      "sha256": "382b569afc976ab60f8f548c3f31a749c66b27e1964cd29bfac73a03abac45d8"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/clc9b5.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/clc9b5.h",
+      "sha256": "46142ca2eb284b6c2197cc6b780957557ee1a7a86d0d2a0a3263ba22226725d6"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/clcab5.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/clcab5.h",
+      "sha256": "646bedfc6688240fcf5bca642ca63c8a0bae56cb15fde32a756161e7a0413e7a"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/cpuopsys.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/cpuopsys.h",
+      "sha256": "80d4c081e47473763f8e5fd3a21af1713a8f73a8896167cb375e082c248d8f9c"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0000/ctrl0000base.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0000/ctrl0000base.h",
+      "sha256": "971aeb17a78a9eda00a20555063e7e37355e1a4acf917ad377aea07385c287a0"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0000/ctrl0000event.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0000/ctrl0000event.h",
+      "sha256": "bf9ab76a11ed2287d5aaa053ae63032424e8ff775a1cab2be9facb71a4d44e8e"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0000/ctrl0000gpu.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0000/ctrl0000gpu.h",
+      "sha256": "f15933b53aa9d4ee9ff83e49839b4f4b1e50e78d4802b01d267d28ac74341276"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0000/ctrl0000proc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0000/ctrl0000proc.h",
+      "sha256": "71c34abe605b70955364ac763962e56f6bdda6c3356d6c92c4d5af2a1e5013fe"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0000/ctrl0000syncgpuboost.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0000/ctrl0000syncgpuboost.h",
+      "sha256": "173c0ccbc907c1fe8e3acf2f996c60bac873ece2e510587e7114613cb371102d"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0000/ctrl0000system.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0000/ctrl0000system.h",
+      "sha256": "936421a664f6c45b7162eef06c3fdda0c0b9118b7ef1ba0ca97db78c0403e7f3"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0004.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0004.h",
+      "sha256": "6cb39fe6945b5cb26ef15e61e91369dbd57c88c52348f96066b1d2dd63a5abc1"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0041.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0041.h",
+      "sha256": "42834ef3d6f4f265acf4572a138b8f6b40edd6e431de961f1e503ed4cca71f6f"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0050.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0050.h",
+      "sha256": "7cbef0ca89fd4bcb79cb029b9a1e58917c7a5785dc2ae51c46f5e3c622fe2896"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0073/ctrl0073base.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0073/ctrl0073base.h",
+      "sha256": "246e8fd22a023ee9acc4dd4d74cc8232a295faa0fd7709d3bdd58c4a079073c0"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0073/ctrl0073common.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0073/ctrl0073common.h",
+      "sha256": "f033659e6a8fc5506d2ede6e8266f470eaab21f5a4ba48c65aac6e41b35610f2"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0073/ctrl0073dfp.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0073/ctrl0073dfp.h",
+      "sha256": "5b4b7617fe60a88ce52bcd2aeac581a76a94e0edce948067ac99c7fee7534949"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0073/ctrl0073system.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0073/ctrl0073system.h",
+      "sha256": "48c2d8c4d40de3d927a071d8412225e7fceceb7fbbbdf1978e89fbb21ec1ee3f"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0080/ctrl0080base.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0080/ctrl0080base.h",
+      "sha256": "c3b6ef34d6b73aa9aba0bd17dbc9d92ce60cc42fbe5f6ff8176e44c894d7cfc8"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0080/ctrl0080dma.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0080/ctrl0080dma.h",
+      "sha256": "4fcf8bd68a465d8ff89e61aa8fb5eb581aacc89768cb4c7a1f8bdfb7e374e876"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0080/ctrl0080gr.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0080/ctrl0080gr.h",
+      "sha256": "d5e4c50d04cdb155a91976947995565bcc8a34ea366604975bf38029b29354c9"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0080/ctrl0080nvdec.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0080/ctrl0080nvdec.h",
+      "sha256": "42417f6d3742c5b8fbb2cef5dbb3a701ac64e976db52a583d0e62ed087f65e3f"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0080/ctrl0080nvenc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0080/ctrl0080nvenc.h",
+      "sha256": "3c3f1b6c2c7b33afb420ac5f15dd23d46249f5991b061e13c29b37e227ed44b3"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0090.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl0090.h",
+      "sha256": "1bf97d4583945cdae1b4b5013ceef49d0741ee7609ff33645d12974962e9b574"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080base.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080base.h",
+      "sha256": "2bccabed1b30cf39f0e2668003f42057ee7c213de6630bb23aed2453dfa65d86"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080bios.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080bios.h",
+      "sha256": "48870c0f62a819c1e1fd1a7f9ceb9e4a687b9da194e2b1667433e6f94d01463a"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080bus.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080bus.h",
+      "sha256": "6512f65524b16d0ad94a0d41fcd1e706dd8862d9451acc7344f54a6f205bc93f"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080ce.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080ce.h",
+      "sha256": "2f54642411ced03c5400f3ed75adde211885d21543682613e016a6b436c3e4a0"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080ecc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080ecc.h",
+      "sha256": "aa46554582a8e5c3e7797062d95c9e6d7e91495fdbc9669f7531371b49ebd40d"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080event.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080event.h",
+      "sha256": "f25094db64803a46733b2a32c55711743e1fa189529e53dd2a1505ad5667c582"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080fb.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080fb.h",
+      "sha256": "49e77fb788bafd360a6c2dc82338c1e0ce340aa029801e748eaad842fbffa5b8"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080fifo.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080fifo.h",
+      "sha256": "11228344ef57ddb8e648b95b774eb3aaf6da3675c918f0d0dd1353fc12faf6da"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080gpu.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080gpu.h",
+      "sha256": "12e95d0a1b52523341074a78ae87aaa72a423cea72e6968d95517d906f28fafb"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080gr.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080gr.h",
+      "sha256": "6fb12cdf54d64e4416df3868707c8d71e4f7098b6dcf07b2236fb05f0fa9e691"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080internal.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080internal.h",
+      "sha256": "51934f16000c9e8da79b8a1b4747e1889d8b0ffeafd16d69b58b21d14caccd6a"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080mc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080mc.h",
+      "sha256": "2a7bb69078596702f941f02e639ca2e3ad4fd6cba6b2f51ef5a6b885dd985345"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080nvlink.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080nvlink.h",
+      "sha256": "a8427f20611cb274ffd320e7b07b55babd231764eefeaf800f939b696f110fdd"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080nvlink_common.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080nvlink_common.h",
+      "sha256": "25c2515169bf0e2e4fcc2fcd38d43a8e45760bc4a24490940f117f0c43b439da"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080power.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080power.h",
+      "sha256": "c6d9ac6419d0b912696f93f40044929b4b3c3e6f8dd56696f29d5098d4ccb6d3"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080spdm.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl2080/ctrl2080spdm.h",
+      "sha256": "d3116e25ef5f4eb053e9d14124b521f16151814ea1f958f12f768b383c490899"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl208f/ctrl208fbase.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl208f/ctrl208fbase.h",
+      "sha256": "8fd38dda759b421e0cf70bd2b561cf4d8c60509bad0a6743db1a69c4b228ffd3"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl208f/ctrl208ffifo.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl208f/ctrl208ffifo.h",
+      "sha256": "21f6645e038fa5f8863c3bf8b2fbd7b20d2f215a5129fc9f8c54a0082a0c4c10"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl30f1.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl30f1.h",
+      "sha256": "84b54590be99e7898fe33303b4b13138804c76234e050f7f5c469e9e7fe42f09"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl402c.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl402c.h",
+      "sha256": "a07a60265cb1b7d98636773b03f43c46fc8f673c76de991ebb9d8af4e6edca0b"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl506f.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl506f.h",
+      "sha256": "a6573863b6320bd72c2affe87a4eb499bddd59ded314f8c6d777e4c97b514515"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl83de.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl83de.h",
+      "sha256": "2cfc9a51376340dfc646f261848cf66d5c73118121acdabc2305488c6761d2a5"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl83de/ctrl83debase.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl83de/ctrl83debase.h",
+      "sha256": "72813de930b89808a4a0687a08383369247572425eea95ec19e859539bdf62a5"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl83de/ctrl83dedebug.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl83de/ctrl83dedebug.h",
+      "sha256": "6000b8006748ecdac270dcf8043983e9eb8d4403c59ade2d5f70be60a08e932f"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl9067.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl9067.h",
+      "sha256": "a1435f3755ab66061ded3aefe2fdeccbff0c93e7bdb2708fb508840b50713e86"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl906f.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl906f.h",
+      "sha256": "e91381729da17649af09ff357c0f2ca5e85d2f825a2e045debc1690746e7c90b"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl90cd.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl90cd.h",
+      "sha256": "337a645272692632a52bd6a4a626d558ba9afebec1eb512c9749f76086931779"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl90f1.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrl90f1.h",
+      "sha256": "ed30642e8648456affe5923c9c6284d7c61964b56bab67ccb0d7f4dc595967a9"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrla06c.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrla06c.h",
+      "sha256": "e3a92aa6db7774e5cbf1f672089532e5e3ce05d22dc54e330c8132889171a11f"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrla06f.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrla06f.h",
+      "sha256": "a29cc15aa67af2439fbb35ca3ba981f40b9726a063e6278c7490e9135adbfd68"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrla06f/ctrla06fbase.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrla06f/ctrla06fbase.h",
+      "sha256": "34da8c298fb57213ee604fa04b335f9b5baecc558c40295455cefc28aaa98796"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrla06f/ctrla06fgpfifo.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrla06f/ctrla06fgpfifo.h",
+      "sha256": "0364c6aa445dec859c8889017e91351de66345d82f09e2dfcef9892b0ed3f63d"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrla06f/ctrla06finternal.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrla06f/ctrla06finternal.h",
+      "sha256": "0523f215c183370a64a7ffd0fedbcad720f0a428e03ac203b85cbf4b5603aa2b"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrla0bc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrla0bc.h",
+      "sha256": "f5501965c1fa6732d8b1ce8e5a1291b447d6857dde130838bfe4b247b315a19d"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrla0bd.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrla0bd.h",
+      "sha256": "9885d7818b47f096e86750b1a41a23cbff61f6ca34d494c8b9a5600b67e3c122"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrlb06f.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrlb06f.h",
+      "sha256": "5ce997145cb8c12cc5cf9c20c4fd063105b352104b37df78b5b2b138fdd655d2"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrlc36f.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrlc36f.h",
+      "sha256": "43c9b91089a609e76f68965d6516bae20bcf7d41a2c7a9e7b744e9baa2462141"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrlc56f.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrlc56f.h",
+      "sha256": "d9ccc3bdb040d3a2eeaca1638c88e005d9d099cf14499a91779b66570b0129bf"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrlc637.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrlc637.h",
+      "sha256": "bbc7409567e78ac037e5207a07e639c48b6759723cf3a7eb2d20cedbe5259998"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrlxxxx.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/ctrl/ctrlxxxx.h",
+      "sha256": "3c34cab9ddee358b3480a96795ec5068eae1c3f2328921a8d0a83d0d3f751db7"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/mmu_fmt_types.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/mmu_fmt_types.h",
+      "sha256": "31fa483495839465611e6dc45001196c3b01082dae7c78d0724910b90c2c3a77"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nv-kernel-interface-api.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nv-kernel-interface-api.h",
+      "sha256": "1cf34c1dcd1abf535fb27387145374972a43ec9cd6f6c9ef927777431bda3cc4"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nv_stdarg.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nv_stdarg.h",
+      "sha256": "bd61b81589cfff85ac7af809d792af63f1e48f5648038e27576983a7ecf5ce4d"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nv_vgpu_types.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nv_vgpu_types.h",
+      "sha256": "694a284ff77291dd5b1d8305704f69a66eb14ffd75893522d20ffbaa61d5e09e"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvcd.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvcd.h",
+      "sha256": "9114283f205f41634b04bbeabbd1ddf6c6d6c35e0225e0d0a66187022b077c12"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvcfg_sdk.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvcfg_sdk.h",
+      "sha256": "cb9b9ddf1d9d55527e182c1864fb45dcc7331e6de1498a71814cfc5bbe0c62c8"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nverror.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nverror.h",
+      "sha256": "444b49d53bdc99e3d2e2acff330d2eb382b48a93cc41218730b72e11094aabba"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvfixedtypes.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvfixedtypes.h",
+      "sha256": "4682ac614a8e3c598fb481139de0e5ed1923314f361db9aad0c0749da6dbd5b9"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvgputypes.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvgputypes.h",
+      "sha256": "dcb4bf6a0eae9883ef36438dac4765a47a90555a01e887c380caf0690c7be08d"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvi2c.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvi2c.h",
+      "sha256": "1f80c3c54d3556f8baf1f61e1ec5a9953e02d5447bea8b4d6c4aaf2e37eeaeee"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvimpshared.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvimpshared.h",
+      "sha256": "77a54cb2e5afa4d1d0d7ad579609bb00c63a90113216962f9db0c6b6eb957726"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvlimits.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvlimits.h",
+      "sha256": "7c7bf27c5360464b459f6069d2e72f6070bb3fdd0862baccf6c7aa71da67c593"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvmisc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvmisc.h",
+      "sha256": "8f4cf58c2ff99c01a1ab6e8841beb4cb057c75a14c2875013a988014d502618d"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvos.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvos.h",
+      "sha256": "c218e5e250040409e7fc492fb52f0cc2c0ee579c412963236a3d44fca548c16d"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvsecurityinfo.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvsecurityinfo.h",
+      "sha256": "f186f67390e2698fb7bebe50f07f582c47d0e812ed76030162bbabc879ee6fa4"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvstatus.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvstatus.h",
+      "sha256": "e8267172a1f7a56420d612c6734b3554b9ff6a3d33fdda21b1371ff4ce4b8675"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvstatuscodes.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvstatuscodes.h",
+      "sha256": "09c3cacf0ecbb97644a86fa629a51f64919282aeabf51f609542e2421a170746"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvtypes.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvtypes.h",
+      "sha256": "b6a5ea0183053cfa3d5596215abbd93a3a04f5afac4a41ac5ea832658bab5d02"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/rmcd.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/rmcd.h",
+      "sha256": "328a651205bb6f5e6b0a58e56e44151a1cb1713a4ceee40fa926901db72581e1"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/rs_access.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/rs_access.h",
+      "sha256": "ee3174aa565a08594f66c325b06d24bd8e798d933bf74ff12c803cf3614bb117"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/shared/inc/compat.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/shared/inc/compat.h",
+      "sha256": "fde7884ade93d917e6c1eea5a77753aad4b286b67864c3f29574207b07154712"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/common/inc/conf_compute/cc_keyrotation.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/common/inc/conf_compute/cc_keyrotation.h",
+      "sha256": "460e86bb691e441ff4d8f5a05a84d5a033983fa48ed1e294a947e0f2303c4d31"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/common/inc/conf_compute/cc_keystore.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/common/inc/conf_compute/cc_keystore.h",
+      "sha256": "7494454ab733a89eeb15065c382eebe3594a7b0229a1d54cbd728ee06dfb2942"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/common/inc/nv-firmware.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/common/inc/nv-firmware.h",
+      "sha256": "377e737e101085ef2acdba4998fb128b2e40bf2d256a69418bd34484877de5a3"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/common/inc/nvpcie.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/common/inc/nvpcie.h",
+      "sha256": "6394eb7c90ad02c8f3b76db158c26641278853cfa921c09da7f2aa58fab68765"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/common/inc/nvrangetypes.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/common/inc/nvrangetypes.h",
+      "sha256": "84e8f17a5e82d9ce86c350aec7df95d7d711e7dfae7b2670a464f3b88fc017ac"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv-caps.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv-caps.h",
+      "sha256": "b36a1d6cb9a66bf2716e15e6f25de87f691cea930c2763ff5effcd3e8a7742c3"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv-ioctl-numa.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv-ioctl-numa.h",
+      "sha256": "73b8d70a2b02f0c80d7b6d1dc2b5c12104f5010b4ea403cd4a599ef2e5a234de"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv-ioctl-numbers.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv-ioctl-numbers.h",
+      "sha256": "7a9d2670092496aca00b5109b61e41c90c9f66ace404965a728d692b77191352"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv-ioctl.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv-ioctl.h",
+      "sha256": "c2aa6dad513c8dd1ae9bd412b649ccf1928c45dccf32adbbce8a3bed28420f48"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv-priv.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv-priv.h",
+      "sha256": "6d1978f87474a13f1bf3c4836aeca6855dff03f04e9f5fa18897e440acd84b50"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv.h",
+      "sha256": "87f9a06577430d3602d9644c7ea6b40d471b22d5a5742561eac6cf818f556635"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/os-interface.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/os-interface.h",
+      "sha256": "03ac42e41c4ddaba043eae2c4691cc350c6b5e9981754a19d67891a2dabad302"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/os_custom.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/os_custom.h",
+      "sha256": "9dc8ddb9bc5415d3ae31ee5a3f0420401190d4990639a8d77816f8b4f1e90c98"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/osapi.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/osapi.h",
+      "sha256": "27c5f4ab520163121adaa3a6fa0755467b9d734144f367f37e44042f962e7e33"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_ccsl_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_ccsl_nvoc.h",
+      "sha256": "48fef6bfdbe431721db484145f941fb34ce2b3ae924b1c75cad02e0eb0719bea"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_ce_utils_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_ce_utils_nvoc.h",
+      "sha256": "50d91d0fe3a2c75f037001b8e70ad9343ff1af9eb2d0a49fa01e9f1ad43436d8"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_channel_descendant_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_channel_descendant_nvoc.h",
+      "sha256": "4f69752f619367a48c0812821577c4f8cd0a41786ebf45e91fd003aa96124b69"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_chips2halspec.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_chips2halspec.h",
+      "sha256": "8d13dd97e359f034eec250aaccba3db5594d4b54cfebd16a4cfbee3346b2d610"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_chips2halspec_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_chips2halspec_nvoc.h",
+      "sha256": "e81af3db4a5b966cbf7d3f33d8ba1adff51e26a775ab1e2a3a1432cd9ecd1f45"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_client_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_client_nvoc.h",
+      "sha256": "1cc654687a59b1635672761670f6521579fb24cb361661329996f3d463e02243"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_conf_compute_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_conf_compute_nvoc.h",
+      "sha256": "dab3df543caf4d52bdcfefe9c23953b4b10c834634575b097882588ed33fbbf8"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_eng_desc_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_eng_desc_nvoc.h",
+      "sha256": "68768516fde64e7042ae80bbe28fdce5225011cef2327b2b5996acae06d9344e"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_eng_state_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_eng_state_nvoc.h",
+      "sha256": "6062593ed6b488946e3cf18d6a8a0ebc46d54fe2d9301e8376dcbc5c1efdc3db"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_event_api_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_event_api_nvoc.h",
+      "sha256": "8ec2a71eced1794085b61f732732369a986abbb9e13ae353899d663e05192de6"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_event_buffer_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_event_buffer_nvoc.h",
+      "sha256": "61e168295e6643516959bc9f058ea20f44878fd501b661bf207b8035fdcf55d2"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_fbsr_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_fbsr_nvoc.h",
+      "sha256": "cf4b8617b08529d3e6e725da3283f5429fc28abb6368b4ac75045640938314d6"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_gpu_access_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_gpu_access_nvoc.h",
+      "sha256": "d6f0ad90ba9cd2ca71cd1bb573c19780014c0ceb681584c4d6d4e923ad93c6be"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_gpu_arch_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_gpu_arch_nvoc.h",
+      "sha256": "ac71352d30188c1c040a3488ac7ccb0ffaea8e585c2bcce793b4242d030c55ba"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_gpu_boost_mgr_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_gpu_boost_mgr_nvoc.h",
+      "sha256": "294d955c6942c5627d29119719b8e2233816d11fea3a4686cd29291cede004b9"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_gpu_group_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_gpu_group_nvoc.h",
+      "sha256": "bfb933d7d5e0bd9badb76722910eb40f8fa4087782004b18cb6cc03405d94686"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_gpu_halspec_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_gpu_halspec_nvoc.h",
+      "sha256": "8a0ae8b0d2509a9fa31e90e51ece9294935271bc6a3adcc1fdf70b3521a92f0e"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_gpu_mgr_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_gpu_mgr_nvoc.h",
+      "sha256": "6b4246b82b263ec9ea7b148eb6adf29729610b9377c8c48be59613569a68e94b"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_gpu_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_gpu_nvoc.h",
+      "sha256": "d02458fb1cc81dc304acde35b8156f1660f02dc3d4541152dc31c6c87f8500cb"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_gpu_resource_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_gpu_resource_nvoc.h",
+      "sha256": "a205213feac7bea9f43fec413e4b13e3f93cd64b286bc8cf42e94c1e4a4d1bd8"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_hal.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_hal.h",
+      "sha256": "f45597c00864431cdcd7ce0fecdc2c893bf1844841ee008cd4345efeb23c7cab"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_hal_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_hal_nvoc.h",
+      "sha256": "7c492e4ad62f79d2dce6067aa11f73e08397f6ae63dc3824a6189bfa86d01c24"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_intr_service_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_intr_service_nvoc.h",
+      "sha256": "d835588d190fdf9dd008a7fd015ef3c6bbfd88539d08eca568a2299cdbf67790"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_ioaccess_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_ioaccess_nvoc.h",
+      "sha256": "9ebc81f6777e9f118fb57c61ad864016a222c7ed1c28be733cc5549a32e0c9cb"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_kern_bus_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_kern_bus_nvoc.h",
+      "sha256": "96fbfde5e7b8bc189f54e663a7a80330b4ede8dd8c3c576c9a54c56a0ddf1ead"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_kern_gmmu_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_kern_gmmu_nvoc.h",
+      "sha256": "dd2ce2673d4d6f6a91a1f93ebc26cbd1607c16c737a6d6447fb02a246e3a2a0b"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_kernel_ce_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_kernel_ce_nvoc.h",
+      "sha256": "2ba62e917c5506058c198056c39fcfb2428a064e037e930e38b739570f045560"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_kernel_channel_group_api_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_kernel_channel_group_api_nvoc.h",
+      "sha256": "ed82cf3f073e781e9e289c2ec29a6eb114ff85628f8156b76161e6c941762b6f"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_kernel_channel_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_kernel_channel_nvoc.h",
+      "sha256": "27fce4c012f7242c270fe5585721f61d48192dc18780854e6b446015a81443d3"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_kernel_ctxshare_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_kernel_ctxshare_nvoc.h",
+      "sha256": "6a796534a370ba28d1b0bd39ece53336ae6f7871871b847f254b8fd906417a08"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_kernel_fifo_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_kernel_fifo_nvoc.h",
+      "sha256": "d989a4c6040ea9975a748e416ccf13d2c2247c369ac8f25629bbfde415a7a8a8"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_kernel_graphics_context_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_kernel_graphics_context_nvoc.h",
+      "sha256": "2732d7e3dc5dc185db9939855849b981af30848d093251b32e3f833a5b6d4cbb"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_kernel_graphics_manager_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_kernel_graphics_manager_nvoc.h",
+      "sha256": "c820d0f47254a9f860ceaeafc9d3d4fb703df9488b2a5d6005d7e71b0d96fe26"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_kernel_mig_manager_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_kernel_mig_manager_nvoc.h",
+      "sha256": "bfd74d91da489b80919d3d8822a5a6b15868b5929f2a80d2619d383bd1798ffd"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_kernel_watchdog_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_kernel_watchdog_nvoc.h",
+      "sha256": "d00c9e8fcfcc47a05c7daf5c82c10fe4c272ddf54661329a09d1daacaae94d94"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_mem_desc_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_mem_desc_nvoc.h",
+      "sha256": "b54adb9d0e4d97c221d3d78c7c3fd4dfdd87613b383ae9090ce604305f2ef425"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_mem_list_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_mem_list_nvoc.h",
+      "sha256": "9511873569eea04cf3b5aa5630badba57d9ee0a1be1cf7c1f9b82304046bfa70"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_mem_mgr_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_mem_mgr_nvoc.h",
+      "sha256": "b7d3319e4f7ff1be4514de289268b6d98cbe98ccd2f7ece4fb38ef7db52ecc00"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_mem_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_mem_nvoc.h",
+      "sha256": "8b23a2c4b37bdeafc4097d14dbd4ab29918fdfe224b453553f321a235ab65577"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_nvencsession_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_nvencsession_nvoc.h",
+      "sha256": "afcb26087315cc281fa11633d9647cc931bd820e99a91e158c5de605e2860c08"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_nvfbc_session_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_nvfbc_session_nvoc.h",
+      "sha256": "edc9d9832658900624bd435695e815a33fcdc3d6143fa01888ef9534838b60b0"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_nvh_state.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_nvh_state.h",
+      "sha256": "b6cd19c8ef5d9a168628a9bf7a0908ef49969823b787c594e366c20f4c76283f"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_object_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_object_nvoc.h",
+      "sha256": "3a38e0281a875dc9ce88dd945e165009636534df1548510c435420179da212a3"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_objtmr_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_objtmr_nvoc.h",
+      "sha256": "351106e3d0cb18150dcb162b765a29bbc0a3b37bbea0433b79994fbc0c1b580f"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_odb.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_odb.h",
+      "sha256": "b8b16744a7f55c7ac7b35702504d41c79cbcbfb854e41b3ccf15b224cb4ae7ef"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_os_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_os_nvoc.h",
+      "sha256": "5cdfc00fd5293b360706c4f066220c979b85b6054dd7f052d6eeb611c3eb3cc8"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_ref_count_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_ref_count_nvoc.h",
+      "sha256": "802c49af1745deaba6daf313cfcf31558e6fe5ec91594c8f18760c74e9e05558"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_resource_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_resource_nvoc.h",
+      "sha256": "b7dff8e617fc68469d4fc6af20f800993b0b344fdfe4f57d283d04f6526e7607"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_resserv_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_resserv_nvoc.h",
+      "sha256": "c4b62ac9349f1b0ee1dd8ae44781cd09bef937e224a7b0ba93122dc0c05a71fc"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_rmconfig_private.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_rmconfig_private.h",
+      "sha256": "78fbbf17a773b6a78f5f1581b0914b28866dc17bfb9d76d1de2a5ff1bcb9a1f3"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_rmconfig_util.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_rmconfig_util.h",
+      "sha256": "938c2fc052aa0dfa8b80844882fe83d32b1837ba84a8ff3b3e70b3f46f5919bd"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_rs_client_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_rs_client_nvoc.h",
+      "sha256": "8b8901e937dc2264eede28b3dc96e75505160d8b86f26d12c2a30a68ff29752a"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_rs_resource_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_rs_resource_nvoc.h",
+      "sha256": "da5382d35f932fa408a7e19263162ce9260c7669141b901c10a6655795849ae2"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_rs_server_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_rs_server_nvoc.h",
+      "sha256": "bc15e1357f5480b2184a65c98153d3a67c650a1bea896ee3fecf401023988810"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_spdm_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_spdm_nvoc.h",
+      "sha256": "466773fe800c427a122eaf1a7a965738701ee033ad8fc27583cfaa550430fbab"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_system_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_system_nvoc.h",
+      "sha256": "040945584360b8e554b2cc49dc0023cc70e886bd4e905b081c9fc9bd9741e827"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_tmr_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_tmr_nvoc.h",
+      "sha256": "892524224198296d9c8ae7dce6870027dc7d5b6206f00b41603e8102d7f7812a"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_traceable_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_traceable_nvoc.h",
+      "sha256": "eaa1e1bd3c166f48f81007111447530c4814e730b02bede746c275728212a9b5"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_vaspace_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_vaspace_nvoc.h",
+      "sha256": "63981421e8314c99ad8ac0aa65506824d26c8bc32f4b400f17cdf3d7f74a72b1"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_videoeventlist_nvoc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/g_videoeventlist_nvoc.h",
+      "sha256": "a4a09054c0becdc3ef67fefd97c99d35b9f051f171895e1ff76a42331a66c507"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/rmconfig.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated/rmconfig.h",
+      "sha256": "993424e65d5a00abba8c0c7bf64e4eb66694364b918c05a8aa5d43d5dd6b0e8a"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/core/bin_data.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/core/bin_data.h",
+      "sha256": "9103cb8ab21ed3906eac3b1248409f4392a8d968b4fc15631be3854b24c4a50e"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/core/core.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/core/core.h",
+      "sha256": "d5a5015f0b56af9a90e8ada8a3627d2a1c9456faea6773f51e1053b5f10acc23"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/core/hal.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/core/hal.h",
+      "sha256": "da867b3f98bdd778f0876959aa56fc0df922fba3d51bfceb7d68c146eb81b13d"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/core/locks.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/core/locks.h",
+      "sha256": "01d41aafbef0b2607c52771ee5b74ca33ae088c57061ca4a805d4e3150d98658"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/core/prelude.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/core/prelude.h",
+      "sha256": "4822623cf1b2a6173be0acebee27eca8bb18fe517cfe60cc863d9710d59ab510"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/core/printf.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/core/printf.h",
+      "sha256": "50c2117372d7f07c79ca3aa3d3458bb85ade0646eb37c41f84d8fcd203c08ae3"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/core/strict.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/core/strict.h",
+      "sha256": "dfa0847a3c06f9a186698265c9c6226a384624c14e9a77bc1dab1510e7796026"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/core/system.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/core/system.h",
+      "sha256": "68361da47b4a3b9dbbd2520ee98f6f971ad2c4bcf7d6e39561d564d084ff96c0"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/core/thread_state.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/core/thread_state.h",
+      "sha256": "f53c235fb50f681d54e8bd90b39fffd044757156f8ee163af9d022faa87c1ca0"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/diagnostics/profiler.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/diagnostics/profiler.h",
+      "sha256": "c4786473da1a818c7dba61abb1c3e464e9121b736c8c185fe4f34dca6ec49e7d"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/diagnostics/traceable.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/diagnostics/traceable.h",
+      "sha256": "9b99f4838a2e460a0a18106f2e3857934abe7e2b96510a1bdc9182d096fca3cb"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/diagnostics/xid_context.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/diagnostics/xid_context.h",
+      "sha256": "d43278cd7f354e5ac17363afc7d65c5d7f49b55b546238327f4a3ed9a09ec40f"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/disp/nvfbc_session.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/disp/nvfbc_session.h",
+      "sha256": "bab32330c2514ef167b102283e56476ab8a7dd9cba8663ea20509488ea80f795"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/bus/kern_bus.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/bus/kern_bus.h",
+      "sha256": "10fe3c95ff8e165250dff13ea8bfa61a9a14ad6c432455b7c4c78004c0134c6d"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/ce/kernel_ce.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/ce/kernel_ce.h",
+      "sha256": "39d56bad28fb836016d418a8a74bc92c4b943e444dfeb853775632270bd50479"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/ce/kernel_ce_shared.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/ce/kernel_ce_shared.h",
+      "sha256": "d2fae5a75568c77ee7de48f57bab90600aa1ae9f388b5e11703327171584d5e9"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/conf_compute/ccsl.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/conf_compute/ccsl.h",
+      "sha256": "7870ae4fca4bbf9a58b2f34f415c0f588d830c19ef62e4bf79c8f9d6a4515097"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/conf_compute/ccsl_context.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/conf_compute/ccsl_context.h",
+      "sha256": "fb3c3d15226e185bdbe1ebbffc3907045fd9077b03e6ff0a300ac3c84f203820"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/conf_compute/conf_compute.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/conf_compute/conf_compute.h",
+      "sha256": "2702022f29aa93b44268d61573b0afcdf3dc058378129258603f9289bc6a651f"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/disp/kern_disp_max.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/disp/kern_disp_max.h",
+      "sha256": "a2a48e5367a3113ba7f55bfc55ecd29453b4b9940cac44034f803bcf8ce99870"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/disp/kern_disp_type.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/disp/kern_disp_type.h",
+      "sha256": "a6688b5c0c6afe0eba2bbba1ada8dee9c4cfceae84ea47296f814764f8cb883b"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/eng_desc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/eng_desc.h",
+      "sha256": "94c9fbd6cc5b4cd25fb0b28290d4c264b5ce8f854714e3f09809110349a6e096"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/eng_state.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/eng_state.h",
+      "sha256": "24f96e8bff44be5b86b8690068e7174876b1e935d610d22ec90d2f6f1b568318"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/error_cont.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/error_cont.h",
+      "sha256": "d6ee5f56667ec371a6ec78e1c0990be21e360a22131902881141a49dadb3e3e6"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/fifo/channel_descendant.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/fifo/channel_descendant.h",
+      "sha256": "e4c186a03a9b4ce74aeacda0c8b7baa271e9e9542888489c1cf1d154c93e92c9"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/fifo/engine_info.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/fifo/engine_info.h",
+      "sha256": "d0f19ca31933590d701e57b050e129fdf10440ac2e3e380a6681b2b245e8c0fd"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/fifo/kernel_channel.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/fifo/kernel_channel.h",
+      "sha256": "7f9b145644892aaba294a1d3237731f2c0e0cf38c60328eb14193f2c80db6471"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/fifo/kernel_channel_group_api.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/fifo/kernel_channel_group_api.h",
+      "sha256": "1f88e5976013a66daf6511a8f058557ab98e03b21ad8772ae4288a685445279e"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/fifo/kernel_ctxshare.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/fifo/kernel_ctxshare.h",
+      "sha256": "c4a55955d2701e43981a2f3cea9fc4573b7f48dbb62d684f0e599268eed24741"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/fifo/kernel_fifo.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/fifo/kernel_fifo.h",
+      "sha256": "b975b7687eea764c78d516f118f19dee1f7df27191778cf4fa797949f7df7cf6"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu.h",
+      "sha256": "a6708d7819eb190b6b59447d6b2af26065804ddf6e6482e10f140770d64b77e6"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_access.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_access.h",
+      "sha256": "6b318d2845b7d0e12baf2a5ed14673489bb8c5ef833dfb68f93da33a5817a659"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_acpi_data.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_acpi_data.h",
+      "sha256": "1303a8cbcc2b85d49405a11011ca2685d895e30775d7bac6608ac311ccf56315"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_arch.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_arch.h",
+      "sha256": "8ecdc4c7c2d7b3ef78a7bbde4791589e2ed3d7eeae87cd8bdd40d28ee7836923"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_child_list.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_child_list.h",
+      "sha256": "a5059e221aff06dec5e0d1708f7645f5063991ff7aa249b3ad717f7cf42ea497"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_device_mapping.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_device_mapping.h",
+      "sha256": "c9d6b28339d76bd1b52ec790a5d0f33f971274ba85be92786942e7f07f91e97a"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_engine_type.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_engine_type.h",
+      "sha256": "407bf43c1d555bc67b431726f383929a9662fe7cc1a55f05f53832e6d2dc1997"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_fabric_probe.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_fabric_probe.h",
+      "sha256": "cb87532573599733a4dbc7a538b14186db841adbc7ea14bc89bffb60d8098b1f"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_halspec.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_halspec.h",
+      "sha256": "ed4f4b571bfec54cd0492417231931d5afbd9e05d5a1b336341c944bdfaad48d"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_resource.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_resource.h",
+      "sha256": "7331a28c4c8ecf665ad7ac7037aec82bb4c0fc287380728ff02e42af463d1cb6"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_resource_desc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_resource_desc.h",
+      "sha256": "783ce8ee944ccb4581259305aebb9397c7f4d03ebadc76d9ba0214f60172d483"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_shared_data_map.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_shared_data_map.h",
+      "sha256": "72923f4f88592df8831b4ef04ea19d33ae0e2f704b40d40cede5bd695ef9120f"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_timeout.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_timeout.h",
+      "sha256": "40751377aa7b6ec7d92b57137c6b4ca9abe3aea12043e29486cc4ee93f16eddd"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_uuid.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gpu_uuid.h",
+      "sha256": "4988eed0f71f7ba1d722ad024ef9208ad70b236bb5803b511524c261c993fe90"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gr/kernel_graphics_context.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gr/kernel_graphics_context.h",
+      "sha256": "c45e47f39c67566ac496f69e4ff7d4efec0972d99fac453cbb824a8e58e29626"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gr/kernel_graphics_context_buffers.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gr/kernel_graphics_context_buffers.h",
+      "sha256": "9d769771700c4d8c7196c4b79dbcd7be5c10db4c71625c01c354f258ac6a7a7f"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gr/kernel_graphics_manager.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gr/kernel_graphics_manager.h",
+      "sha256": "6c15832f0bd9b65c8982c05601dff953427647a7af33a58ba4cb6c8d99af1579"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gr/kernel_watchdog.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gr/kernel_watchdog.h",
+      "sha256": "89d6149251e6c882bcae1f29652eb6f6d282de5e401b76df4c53eecc5f975655"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gsp/kernel_gsp_trace_rats.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/gsp/kernel_gsp_trace_rats.h",
+      "sha256": "6cf9743fbe18465b2e6a49fd0dd87c659f38248eb7ee51957b3dfdab9c44d4cb"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/intr/engine_idx.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/intr/engine_idx.h",
+      "sha256": "a3f59727a990457218e53b52a1fb094a73b38270c8b2edc6822e28e8a378bf04"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/intr/intr_service.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/intr/intr_service.h",
+      "sha256": "8b0fe6424959ae3f1d3dedc099bd80a5e6d87b9f9921161ac9edc0f463701678"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/kern_gpu_power.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/kern_gpu_power.h",
+      "sha256": "bc1d1fb15d06db88ef960265fb8173182f86604ac5ebf2c5b5000104af039277"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/mem_mgr/ce_utils.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/mem_mgr/ce_utils.h",
+      "sha256": "60eab8a628c9a45ecef26e0d2abc2a8da420f243bbb7ff097923433e9bddc766"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/mem_mgr/channel_utils.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/mem_mgr/channel_utils.h",
+      "sha256": "9073c808294bf51cf761345ad6249173fdb45ea17552d56bf78f7ef47be59493"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/mem_mgr/fbsr.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/mem_mgr/fbsr.h",
+      "sha256": "cc2307165d766d40c37829dce6cf0bdd770ca8de15fd0c12d2bbb98c367fbfe5"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/mem_mgr/heap_base.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/mem_mgr/heap_base.h",
+      "sha256": "dbb65374faa6f8753b9d3fd9fab0b4ec891caaa545a05601bde061907ad28ef3"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/mem_mgr/mem_desc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/mem_mgr/mem_desc.h",
+      "sha256": "1aab4cdf60541e0e75fb9b7c20bbf98e395e41315fc1932ce6d2a93180532e80"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/mem_mgr/mem_mgr.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/mem_mgr/mem_mgr.h",
+      "sha256": "8fa33c884e87621b2288b1334c9d28ee46a4c6effa01eb6169153a21622426e5"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/mem_mgr/rm_page_size.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/mem_mgr/rm_page_size.h",
+      "sha256": "fba4e284a6c94995d0291d8f677b49aeb844c1d9b1751afc5191648d0518de4c"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/mem_mgr/virt_mem_allocator_common.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/mem_mgr/virt_mem_allocator_common.h",
+      "sha256": "32c3f9cbe4a65a5ec7b6708047cf946b7bec8e3e23c9d9b729eafb3433a75339"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/mig_mgr/kernel_mig_manager.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/mig_mgr/kernel_mig_manager.h",
+      "sha256": "fce2f166d63ddb7b6d51d5a2cbfb4318ae97cca08bafdf466c5a115842dac66a"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/mmu/kern_gmmu.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/mmu/kern_gmmu.h",
+      "sha256": "5dedbc2ff13c1f513252421f4367a959229bd9f056d78621a0cb3fc1964de3ea"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/mmu/mmu_trace.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/mmu/mmu_trace.h",
+      "sha256": "1b5680fd6b88edb5337347d74b501699942ab638e019d79c570ed381910b81c9"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/nvbitmask.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/nvbitmask.h",
+      "sha256": "b64978189fe70d8b259784f06b848be57c3fadd9ef7bdf3230bf7ba4cf7a0c2a"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/nvenc/nvencsession.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/nvenc/nvencsession.h",
+      "sha256": "8b31c6a80be1e41264428ebfe5fbb8ce038f397c2d97c79efd8ab7600a18b7b8"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/nvlink/bitvector_nvlink.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/nvlink/bitvector_nvlink.h",
+      "sha256": "1f2f1023b4ea071525da055a508a6b47e55cd654c24397ab917f00d2c31a5560"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/perf/kern_perf_gpuboostsync.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/perf/kern_perf_gpuboostsync.h",
+      "sha256": "1362953f1d77a2640f7adbfd65e692fdacb55730f0390674a24dc63ea1b87ee4"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/rc/kernel_rc_watchdog_private.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/rc/kernel_rc_watchdog_private.h",
+      "sha256": "81a7a158193f1292223ccc4e117980bf69ec2e7219b117d11defa3d1a0a62d00"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/spdm/spdm.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/spdm/spdm.h",
+      "sha256": "805638adb87dd3551f2e4f508c12b50492d8c44937e789383ada0525888e476d"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/timer/objtmr.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/timer/objtmr.h",
+      "sha256": "00a90e72f1a0462f63db375d0fb4e7d00c5e7aab42ad8ed9ac4f18b05bc1fc30"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/timer/tmr.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu/timer/tmr.h",
+      "sha256": "9db3ab995b56aff8605cd7c9d258331790bd5634c6b057a69b4b187a0d943882"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu_mgr/gpu_group.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu_mgr/gpu_group.h",
+      "sha256": "6b20a144ca83d3d76ba902e2dec3b3d81fd130106edb4f7ed7d1a0f77544103f"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu_mgr/gpu_mgr.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu_mgr/gpu_mgr.h",
+      "sha256": "a3aa2b9e0b884db9458ed97e15e509b800c0fa58a3f6ce9d265a697668a0452d"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu_mgr/gpu_mgr_sli.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpu_mgr/gpu_mgr_sli.h",
+      "sha256": "56bfb93271dc63fc1abd39f19c4df541b767ba2668ae162ef67dd25e8ea297b3"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpuvideo/videoeventlist.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/gpuvideo/videoeventlist.h",
+      "sha256": "11f1e6a1bc7e747d92d816c0bc4921ce516c1d582a1003bbff300796d30fd217"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/mem_mgr/ctx_buf_pool.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/mem_mgr/ctx_buf_pool.h",
+      "sha256": "7e321cb8833934c9db4befd369a4366cdbc55e33a55062a15f4641e092a82311"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/mem_mgr/mem.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/mem_mgr/mem.h",
+      "sha256": "1d1c669524c88b1e33c4b1e8ead9794e8fd245b425f79cb993197bfc80033b56"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/mem_mgr/mem_list.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/mem_mgr/mem_list.h",
+      "sha256": "acc651103d1a62c58a7c8440a88b94a1465a1a897bd2f0c61abc7e575a12542e"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/mem_mgr/memacct.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/mem_mgr/memacct.h",
+      "sha256": "abaca9976a331358b65854d3118b62db7d57537ceb55ec085fb4edb669971bd2"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/mem_mgr/pool_alloc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/mem_mgr/pool_alloc.h",
+      "sha256": "a063790610b6ec38cae381d69809181781f1fab5281e815e4b6f30b518f2018a"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/mem_mgr/vaddr_list.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/mem_mgr/vaddr_list.h",
+      "sha256": "09dcdacf9fedee243da73a0ed10bd4843e0fe57839133ae5d4991514531f40b4"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/mem_mgr/vaspace.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/mem_mgr/vaspace.h",
+      "sha256": "fec6b7d1f13cf883e9fdf83097b39124ed9a2eca4b6665853ab73d22142757d9"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/os/capability.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/os/capability.h",
+      "sha256": "993ad1b15d3b17042f0abec883903a582e7deaa89ac2977fa437a259a563b356"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/os/nv_memory_area.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/os/nv_memory_area.h",
+      "sha256": "4fc1fdb861047e6cca8224e22a225c30a57f3d6fcb874a528793a7b85edc9d55"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/os/nv_memory_iterator.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/os/nv_memory_iterator.h",
+      "sha256": "1fe04338b38655bda30175c465773d44405c2859d8fd3c9140179876773c83ec"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/os/nv_memory_type.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/os/nv_memory_type.h",
+      "sha256": "c6472e939ac912d5df5e2e17dab35f8444269b964e2b1536f05df874990354cb"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/os/os.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/os/os.h",
+      "sha256": "bd6c4c327a7e3640ef4bda947db88cc14abf162a6ea776fe5ddde8c5621d9e9b"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/os/workitem.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/os/workitem.h",
+      "sha256": "57352e45c493adbf64f04672e5807924d35b4702c3cdae5a5d225700362a62e8"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/platform/acpi_common.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/platform/acpi_common.h",
+      "sha256": "caa3efa1da4416ca0a200299be381444b4e1e2652d1324f3312cae946582f2b2"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/platform/nbsi/nbsi_read.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/platform/nbsi/nbsi_read.h",
+      "sha256": "5cbd32699eb318012acc4eeaf2b6004679cc167019a4641206781e695f1acbb6"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/platform/nbsi/nbsi_table.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/platform/nbsi/nbsi_table.h",
+      "sha256": "743f6d25fdd67cecf2fd95f284e1c1ddfb0738e93c97f04c3735a080f7d78168"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/platform/pci_exp_table.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/platform/pci_exp_table.h",
+      "sha256": "9f4a53209e7ea22e1104d77333e18e34e1cfad3bcd082cefec4664748d7522f7"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/power/gpu_boost_mgr.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/power/gpu_boost_mgr.h",
+      "sha256": "9be4821cf94c3144033bce8106ab2c7e46f6b7383699acd3a925709164aa578a"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/rmapi/client.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/rmapi/client.h",
+      "sha256": "a89daaa3ec5972af8cb8a602ad3d648bf01a17cc9f7d98ebe7b96dea1cd4f690"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/rmapi/control.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/rmapi/control.h",
+      "sha256": "97ad0672655e41a8599c5f7ca74dc90b6fbac7df809507239f0d180cc0684bfa"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/rmapi/event_api.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/rmapi/event_api.h",
+      "sha256": "9ca88776e1ac1e309ac483d71ac24030b14ad0e22169c5eb0047eabab4b5d2c1"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/rmapi/event_buffer.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/rmapi/event_buffer.h",
+      "sha256": "f175018e1fd0fa8042b14cb8d4c20b676b8cc480ec1623ce9aa9131d6710d90d"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/rmapi/param_copy.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/rmapi/param_copy.h",
+      "sha256": "a58d2d0c746a3a007f8709165c3100276b3be744df6ea64e6cda56278172c135"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/rmapi/resource.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/rmapi/resource.h",
+      "sha256": "257187b3d8b87312e05b089a5b7f09fcb742fac72714ce62ed70fdca3a91847e"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/rmapi/rmapi.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/rmapi/rmapi.h",
+      "sha256": "052dd05795e6b7392031cac1f06d0ee872d2d212e1b7829c852cbcc8d0596447"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/rmapi/rs_utils.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/rmapi/rs_utils.h",
+      "sha256": "5819a8cb477c91c168a16d37881a4c51f1ee96ea09c78dfd6fed27cabc52ebb4"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/vgpu/vgpu_guest_pma_scrubber.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/vgpu/vgpu_guest_pma_scrubber.h",
+      "sha256": "68bfb22f176fbf3041e17a45455446682b00febb416ae1bed5588604ded095b3"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/lib/ref_count.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/lib/ref_count.h",
+      "sha256": "cde06703e074a43c2c80753b63963fd1db85542445c0ee64f0d3b6ee93514e5f"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/containers/btree.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/containers/btree.h",
+      "sha256": "e789ef3f5d2ef802a1081f70a66623c29683074da2b906c468ae0111c4f7dd20"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/containers/list.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/containers/list.h",
+      "sha256": "1a9d50463b9356fd4e90feda7412e02b9577b07c9e232c8f218da0c037bc58d2"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/containers/map.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/containers/map.h",
+      "sha256": "a558fd93b36e8dfbd64d8ec6d54643b762cb499ff92aeb7de646cd6daebfc4a2"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/containers/multimap.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/containers/multimap.h",
+      "sha256": "9425b606882c48d145652a99ba83cdc2e1155f49979eea08b05a028d4df1502e"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/containers/queue.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/containers/queue.h",
+      "sha256": "46d0427b16406d00fb2db30d5f67c31d3f14ce49ad0ac272fd334cb7065be4ff"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/containers/type_safety.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/containers/type_safety.h",
+      "sha256": "d40049a95769128933be549bfbd3b8270014970c7533624c093aac6434e4644f"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/containers/vector.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/containers/vector.h",
+      "sha256": "4a20ed322012804fe0a714ea2a63e2c881af1af1e6fafe65f2f1d9e78ab1098f"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/eventbufferproducer.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/eventbufferproducer.h",
+      "sha256": "cb595d37df191d730cb0bd25f600b108dd7e0ae31ce322046e8e64b69667a9c4"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/field_desc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/field_desc.h",
+      "sha256": "3b37011435fc3a47852799e7260dc12d8914ef978670beb5ba1d43b35c5ee9c4"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/ioaccess/ioaccess.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/ioaccess/ioaccess.h",
+      "sha256": "2e4451d801d77b4fc3512765be7477837345ddf96a4b7027f0d216fce76eb9dc"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/mapping_reuse/mapping_reuse.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/mapping_reuse/mapping_reuse.h",
+      "sha256": "828f3ad67c7dc5bc2e883082d701d90cc28cd42ccaacf3dd724fb4f88077ca1b"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/mmu/gmmu_fmt.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/mmu/gmmu_fmt.h",
+      "sha256": "98cb8f700fd63a4e27e5945a8df183d8b56be691d3f03a310abb4512356e63bf"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/mmu/mmu_fmt.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/mmu/mmu_fmt.h",
+      "sha256": "c4507f36ebb514f9e4f50597d2b1d0768829d14607b2a8e14f6adcc6c77a6f85"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/mmu/mmu_walk.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/mmu/mmu_walk.h",
+      "sha256": "7a5adbc3f309a0392e56e405e3265605062ca510f79a674e6533bcf945afd418"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvlog/internal/nvlog_printf_internal.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvlog/internal/nvlog_printf_internal.h",
+      "sha256": "f6cb1cf707cc52ede61ea8d399a2fad15af05d4ec526bbd1ec0c0b4878f23e93"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvlog/nvlog.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvlog/nvlog.h",
+      "sha256": "c1646a10fc1ba59c08fbf4403fa4199c7ed4f76e590ef7a1b3d30274427daa82"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvlog/nvlog_printf.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvlog/nvlog_printf.h",
+      "sha256": "1f0124e1abc74e2178298f20f10c14ea0b19e182dc64f052310b76618913ef61"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvoc/object.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvoc/object.h",
+      "sha256": "6913d5ad3259a37bb9184dc55b15a7fe0c5a424e1c6b83aeda1d2b1fb678be3e"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvoc/prelude.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvoc/prelude.h",
+      "sha256": "1791b00581a7fcaa98657fe22fb687a0cdd7cfa7d3e3378619e176b3f8949a73"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvoc/rtti.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvoc/rtti.h",
+      "sha256": "28f8c2b2fda36785aad3b83fd97bb464d6aee4744cf7fd2c40db064f01f3d9cf"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvoc/runtime.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvoc/runtime.h",
+      "sha256": "f066bdc669638264974430b1570ee9be2969f660488fd0087547fd40d38177c6"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvoc/utility.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvoc/utility.h",
+      "sha256": "01265d3556e549b7eccd0e05a6846fbadbbc2d311c53bf31d095006d540df34a"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/atomic.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/atomic.h",
+      "sha256": "b4df4d845bc4c912a575f173a88fe0a57ec37f952a01e6a00edb0fd4eee00523"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/clang/stdatomic.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/clang/stdatomic.h",
+      "sha256": "728b690f127fc85faa32b9031e3a0019da92f77db92ca91b749571e45617a9ea"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/core.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/core.h",
+      "sha256": "f4a2c178a681264300c307ea0a18d3b9df22c14bd34d71d8a74115ae73c09137"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/cpu.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/cpu.h",
+      "sha256": "56176e8f6ee5ee29a47de10a494493af05a1926d1fcb3ef96548893251d97a72"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/crypto.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/crypto.h",
+      "sha256": "cfc33b7347157c532611b5484b69263a018011d4fcbf682ae802275e2fa8be21"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/debug.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/debug.h",
+      "sha256": "ac5b2e1c191c09b38ba90d40913b470bbc04f0a519f44935448437866200d849"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/atomic_c11.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/atomic_c11.h",
+      "sha256": "a83671660b5e8a8783a35d9dd6f3ca6910c65fb6cdef19c080a3bfbca83554c2"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/debug_unix_kernel_os.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/debug_unix_kernel_os.h",
+      "sha256": "23714ddddb8c8dc04ced274c5f80bca866680196ae94bd05a1685a8f4e5a5ead"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/memory_tracking.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/memory_tracking.h",
+      "sha256": "9732d626c2387c84dc6832ae640a986baac40361e018881b577db646e9cbb2eb"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/safe_generic.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/safe_generic.h",
+      "sha256": "8e8ca640cade42f204d2afd699c3fe399d0fca82507e0c4adb869c768e51d85e"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/sync_tracking.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/sync_tracking.h",
+      "sha256": "d8b0d2d656bec191746f2f3de736aebd994e39b1a0c7a694659924d98afbca86"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/time_timer.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/time_timer.h",
+      "sha256": "67efba1c1c0040d1c422dcfe06cd2fd45a171c467f7e318133fb1aded2300048"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/util_gcc_clang.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/util_gcc_clang.h",
+      "sha256": "19fd080750e3bbc07dba2030658ed3ed68adf81a114d670dca5bdc3d1ea71f8e"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/util_generic.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/util_generic.h",
+      "sha256": "d76fd0f11f329bcbcdab9f3e390b945c405be51fa1efb611454be67b5ff0c611"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/util_valist.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/util_valist.h",
+      "sha256": "c36b3c60e271a1acfe01fea9c55c1f8dfa1290e634980041631f514e8d4cdf75"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/memory.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/memory.h",
+      "sha256": "4757a1ac36a40ef7b13e753c9d2ffa717d63799b3e8efb57b7b35841c2c86280"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/nvport.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/nvport.h",
+      "sha256": "7e4fa997b9a3835b96e48f081460b7be4f0d52e0c5d3c7414470ee7a8904e3d4"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/safe.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/safe.h",
+      "sha256": "5c0ab8a43edd1eba3e7e7d7903bd8c17222320452608efce82e0f3ad00db4e67"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/string.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/string.h",
+      "sha256": "e39544b30acc096963b09453254f7335a9e8f4276aee055edf93aeba386aeb10"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/sync.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/sync.h",
+      "sha256": "e5fb2dba02d14f3e8a3ca73c56dcf9c5da3c8ca8815c2aee3118134d13801694"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/thread.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/thread.h",
+      "sha256": "a80e19d397a25a09d047becf7639ebc51edad1266f32afd0a25e3f055b542087"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/time.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/time.h",
+      "sha256": "4e4235041b9a3d5b52550dd5c0a2081df8353bec79465033093b30686e797061"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/util.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/util.h",
+      "sha256": "c52b4f630b81686e33dc898ce237667859eef692e8e4408627660ce432cade4b"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/poolalloc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/poolalloc.h",
+      "sha256": "463c06df792f147dc10d1550ba0b1286f7365985350a012bd5525def17e542b0"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/resserv/resserv.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/resserv/resserv.h",
+      "sha256": "5ea9fee6f9414fe8f7e49895fd51d16d8baf7bdb60f742c3436f7e0c36d0429c"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/resserv/rs_access_map.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/resserv/rs_access_map.h",
+      "sha256": "1681b342102485cfbe4b08fed11997ca23ca73489cd2519061f0313735dccc1f"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/resserv/rs_access_rights.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/resserv/rs_access_rights.h",
+      "sha256": "2c0225b20b215862db43639c51c0b48d02d48e6ebe970215375fa252c48567f0"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/resserv/rs_client.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/resserv/rs_client.h",
+      "sha256": "7319e8dd98e88fa7b9e50d2dda1afe7636fe88a931574e53ca4b9729bcbd64e7"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/resserv/rs_resource.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/resserv/rs_resource.h",
+      "sha256": "7956fbcf78d7cf7ade46f560241949cf3225d0e570ca65291d5fa2907999f4f1"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/resserv/rs_server.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/resserv/rs_server.h",
+      "sha256": "0d9304e9a54948b880fa94f8196e8cac55bad2df9e354bef117b5e3380b522f5"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/tls/tls.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/tls/tls.h",
+      "sha256": "1b9b99aa03f4cc5165d7af431da354cb37054d5d7a8c54179aa28e32694fe457"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/utils/nv_enum.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/utils/nv_enum.h",
+      "sha256": "5cf272296534a5e165d7b4fd79c8a2de0150210f16aa7b24a034e9e8a5dbc67a"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/utils/nvassert.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/utils/nvassert.h",
+      "sha256": "817c434764c12fcb3340aeb53e8c595a2d1818ef3b76473639bf15d303ac41fc"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/utils/nvbitvector.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/utils/nvbitvector.h",
+      "sha256": "2c41324df94a0eaa5d7332598ff4011162f991262e1bf563bf071bcb37af1029"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/utils/nvmacro.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/utils/nvmacro.h",
+      "sha256": "e0a1cc9c8be20cf3708f4d0fc8791e733c22baf159f881f9b91ed0354c7ae524"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/utils/nvprintf.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/utils/nvprintf.h",
+      "sha256": "3d30449c22fc30233ba32ddcc2f3776e59886ad3f049d1b5bb972d9980a6f342"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/utils/nvprintf_level.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/utils/nvprintf_level.h",
+      "sha256": "2df1afaf435178e7182b8298f2f9fef25a4667e5910d33fc1740529f92668b79"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/utils/nvrange.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/utils/nvrange.h",
+      "sha256": "8d15a602d5a949499eef2842867049d70de0708bb27783edff114ac13bce9914"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/interface/acpigenfuncs.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/interface/acpigenfuncs.h",
+      "sha256": "e558f7936d0886f1ee7686a0561c31ca055414c5ebfec335cef8546a9f42635b"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/interface/nvacpitypes.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/interface/nvacpitypes.h",
+      "sha256": "05d3023c8ea7dc41326f1324491880df70802d953faca19219f181d284a5e352"
+    },
+    {
+      "path": "/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM/nvrm_pageoff.c",
+      "resolved_path": "/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM/nvrm_pageoff.c",
+      "sha256": "09097452da2d5b0eeed086f2fea50c90f7b31b756666dc19f4b9bda9993a7f9d"
+    }
+  ],
+  "depfiles": [
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-logs/input-snapshots/probe-cand-nvrm_pageoff-before.d",
+      "sha256": "e96328706396142bf9e0a608abacaaaa79f30ccdaf440600ee49b9702f532ffa"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-logs/input-snapshots/probe-cand-nvrm_pageoff.d",
+      "sha256": "e96328706396142bf9e0a608abacaaaa79f30ccdaf440600ee49b9702f532ffa"
+    }
+  ],
+  "limitations": [
+    "pre/post content equality does not detect adversarial mutate-and-restore",
+    "compiler binaries, environment and negative include lookups not captured"
+  ]
+}
