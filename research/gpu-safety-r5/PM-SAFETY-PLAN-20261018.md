@@ -139,3 +139,59 @@ vlink_locks_contract.cpp 的夹具不覆盖这些符号，需要新夹具；
 
 合入前应先补夹具测试三例：drain 成功释放、	hread_call_free 失败保留、PM 非 running 时不执行。
 这三例通过后，再把补丁加入序列并加一条结构检查（断言 drain 存在于 resume 路径）。
+
+## 六十六、为什么 drain 还没有主机测试，以及可行的替代结构（R116）
+
+### 实测：这个 TU 的宿主化成本
+
+kexts/NVRM/os-nvkms-xnu.cpp（633 行）的直接依赖：
+
+| 项 | 数量 | 内容 |
+|---|---|---|
+| 直接 include | 9 | 
+v-xnu.h、kern/thread_call.h、sys/sysctl.h、mach/semaphore.h、mach/task.h、sys/proc.h、modeset-os-interface.h、
+v-gpu-info.h、
+vUnixVersion.h |
+| 经由 
+v-xnu.h 的 IOKit 依赖 | 4+ | IOKit/IOLib.h、IOKit/IOLocks.h、IOKit/pci/IOPCIDevice.h、libkern/libkern.h |
+| 需打桩的外部符号 | **35** | IOLock*(6)、IOSimpleLock*(3)、	hread_call_*(7)、kprintf/IOLog/IOSleep、
+vKms*(10)、
+vkms_alloc/free、clock_interval_to_deadline 等 |
+
+对比：
+vlink_locks.cpp 能轻易宿主化，是因为**它是我们自己写的**、只 include 了 5 个头。
+os-nvkms-xnu.cpp 直接吃 IOKit 内核头，编一个桩头文件集不是小工作量。
+
+### 因此下一步不是"硬编夹具"，而是先改结构
+
+把"延迟关闭链表 + drain"抽成一个**不依赖 IOKit 的小单元**：
+
+`cpp
+// kms_deferred.h
+struct kms_deferred_ops {
+    void (*close)(void *data);
+    bool (*cancel)(void *call);
+    void (*freeNode)(void *node);
+};
+void kms_deferred_push(void *node, void *data);
+unsigned kms_deferred_drain(const struct kms_deferred_ops *ops, bool pm_running);
+unsigned kms_deferred_count(void);
+`
+
+- 生产代码在 resume 时用真实实现（
+vKmsClose/	hread_call_cancel/
+vkms_free）调用；
+- 单元本身零 IOKit 依赖，可以用与 
+vlink_locks_contract.cpp 相同的方式做**真行为测试**：
+  成功释放、cancel 失败保留、pm_running == false 时不执行；
+- 这样测试的是**真实被调用的代码**，不是模型复制品。
+
+### 本轮没做的
+
+- 没有写这个单元（结构改动需谨慎，且要同步更新 R30 草案）；
+- 没有把任何测试标为通过。
+
+## 结论
+
+drain 目前只有"可应用的补丁"，**没有行为证据**。下一步必须先做结构拆分（kms_deferred 单元），
+才能在不伪造夹具的前提下测到真实代码。
