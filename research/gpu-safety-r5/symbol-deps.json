@@ -1,0 +1,102 @@
+{
+ "root": "D:\\Hactk\\g1-dev-20261015\\upstream\\open-gpu-kernel-modules",
+ "rows": [
+  {
+   "file": "src/nvidia-modeset/kapi/src/nvkms-kapi.c",
+   "symbols": [
+    "nvKmsKapiProbe",
+    "nvKmsKapiSuspendResume",
+    "nvKmsKapiGetFunctionsTableInternal",
+    "nvKmsKapiHandleEventQueueChange"
+   ],
+   "lines": 4258,
+   "includes": 30,
+   "linuxish_includes": [
+    "nvidia-modeset-os-interface.h"
+   ],
+   "uses_rm_runtime": false,
+   "mentions_altstack": false
+  },
+  {
+   "file": "src/nvidia-modeset/src/nvkms.c",
+   "symbols": [
+    "nvKmsOpen",
+    "nvKmsClose",
+    "nvKmsIoctl",
+    "nvKmsSuspend",
+    "nvKmsResume",
+    "nvKmsSetBacklight",
+    "nvKmsGetBacklight",
+    "nvKmsModuleLoad"
+   ],
+   "lines": 7100,
+   "includes": 30,
+   "linuxish_includes": [],
+   "uses_rm_runtime": false,
+   "mentions_altstack": false
+  },
+  {
+   "file": "src/nvidia/arch/nvalloc/unix/src/dynamic-power.c",
+   "symbols": [
+    "rm_power_management"
+   ],
+   "lines": 3186,
+   "includes": 19,
+   "linuxish_includes": [
+    "gpu/mem_sys/kern_mem_sys.h"
+   ],
+   "uses_rm_runtime": true,
+   "mentions_altstack": false
+  },
+  {
+   "file": "src/nvidia/arch/nvalloc/unix/src/osapi.c",
+   "symbols": [
+    "rm_init_rm",
+    "rm_ioctl",
+    "rm_stop_user_channels",
+    "rm_restart_user_channels",
+    "rm_shutdown_adapter",
+    "rm_init_adapter",
+    "rm_is_supported_device",
+    "rm_is_supported_pci_device",
+    "rm_get_device_name",
+    "rm_kernel_rmapi_op",
+    "rm_execute_work_item",
+    "rm_run_nano_timer_callback",
+    "rm_set_rm_firmware_requested",
+    "rm_write_registry_dword",
+    "rm_write_registry_string",
+    "rm_perform_version_check",
+    "rm_cleanup_file_private",
+    "rm_free_private_state",
+    "rm_init_private_state",
+    "rm_init_event_locks"
+   ],
+   "lines": 6285,
+   "includes": 52,
+   "linuxish_includes": [
+    "gpu/mem_sys/kern_mem_sys.h"
+   ],
+   "uses_rm_runtime": true,
+   "mentions_altstack": true
+  },
+  {
+   "file": "src/nvidia/arch/nvalloc/unix/src/unix_intr.c",
+   "symbols": [
+    "rm_isr",
+    "rm_isr_bh"
+   ],
+   "lines": 1051,
+   "includes": 14,
+   "linuxish_includes": [],
+   "uses_rm_runtime": true,
+   "mentions_altstack": false
+  }
+ ],
+ "aggregate": {
+  "files": 5,
+  "with_linuxish_includes": 3,
+  "using_NV_ENTER_RM_RUNTIME": 3,
+  "mentioning_altstack": 1
+ }
+}

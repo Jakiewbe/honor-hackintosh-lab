@@ -33,6 +33,11 @@ def defs_for(text, name):
     for m in re.finditer(r"\b" + re.escape(name) + r"\b", text):
         window = text[m.start(): m.start() + 600]
         # a definition: name, optionally newline, parameter list, then a brace before any semicolon
+        line_start = text.rfind("\n", 0, m.start()) + 1
+        prefix = text[line_start:m.start()]
+        # reject call sites: the text before the name must be empty (name starts the line) or a type only
+        if prefix.strip() and not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_ \t\*]*", prefix.strip()):
+            continue
         if re.match(re.escape(name) + r"\s*\([^;{}]*\)\s*\{", window, re.S):
             out.append(m.start())
     return out

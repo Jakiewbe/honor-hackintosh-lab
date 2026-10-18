@@ -2,7 +2,6 @@
  "root": "D:\\Hactk\\g1-dev-20261015\\upstream\\open-gpu-kernel-modules",
  "found": {
   "rm_init_rm": [
-   "kernel-open/nvidia/nv.c:721",
    "src/nvidia/arch/nvalloc/unix/src/osapi.c:2754"
   ],
   "rm_ioctl": [
@@ -27,16 +26,12 @@
    "src/nvidia/arch/nvalloc/unix/src/osapi.c:1876"
   ],
   "rm_init_adapter": [
-   "kernel-open/nvidia/nv.c:1519",
    "src/nvidia/arch/nvalloc/unix/src/osapi.c:1773"
   ],
   "rm_is_supported_device": [
    "src/nvidia/arch/nvalloc/unix/src/osapi.c:3693"
   ],
   "rm_is_supported_pci_device": [
-   "kernel-open/nvidia/nv-pci.c:1971",
-   "kernel-open/nvidia/nv-pci.c:2848",
-   "kernel-open/nvidia/nv-pci.c:2866",
    "src/nvidia/arch/nvalloc/unix/src/osapi.c:3840"
   ],
   "rm_get_device_name": [
@@ -49,7 +44,6 @@
    "src/nvidia/arch/nvalloc/unix/src/osapi.c:3550"
   ],
   "rm_run_nano_timer_callback": [
-   "kernel-open/nvidia/nv-nano-timer.c:69",
    "src/nvidia/arch/nvalloc/unix/src/osapi.c:3518"
   ],
   "rm_set_rm_firmware_requested": [
@@ -71,8 +65,6 @@
    "src/nvidia/arch/nvalloc/unix/src/osapi.c:1759"
   ],
   "rm_init_private_state": [
-   "kernel-open/nvidia/nv-pci.c:2079",
-   "kernel-open/nvidia/nv-platform.c:1104",
    "src/nvidia/arch/nvalloc/unix/src/osapi.c:1742"
   ],
   "rm_init_event_locks": [
@@ -91,15 +83,12 @@
    "src/nvidia-modeset/kapi/src/nvkms-kapi.c:3827"
   ],
   "nvKmsOpen": [
-   "src/nvidia-modeset/src/nvkms.c:5252",
    "src/nvidia-modeset/src/nvkms.c:5344"
   ],
   "nvKmsClose": [
-   "src/nvidia-modeset/src/nvkms.c:2940",
    "src/nvidia-modeset/src/nvkms.c:5254"
   ],
   "nvKmsIoctl": [
-   "src/nvidia-modeset/src/nvkms.c:4225",
    "src/nvidia-modeset/src/nvkms.c:5049"
   ],
   "nvKmsSuspend": [
@@ -115,7 +104,6 @@
    "src/nvidia-modeset/src/nvkms.c:7053"
   ],
   "nvKmsModuleLoad": [
-   "kernel-open/nvidia-modeset/nvidia-modeset-linux.c:2150",
    "src/nvidia-modeset/src/nvkms.c:6366"
   ]
  },
