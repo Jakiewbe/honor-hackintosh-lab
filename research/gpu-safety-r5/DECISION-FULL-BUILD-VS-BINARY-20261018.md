@@ -315,3 +315,45 @@ DEF / MACRO / GENERATED / DECL / NONE，并且 extern 单独成类，
 
 生成规则的具体产出格式（GENERATE_NVIDSTRING 展开后生成什么文件、什么符号名）**没有实跑过**，
 只是读了 Makefile。要让路径 A 成立，这一步必须实际生成一次并比对符号名。
+
+## 四十七、GENERATE_NVIDSTRING 的实际产出已确认（R96）
+
+读 utils.mk:555-567，该宏生成 g_nvid_string.c，**只有两行**：
+
+`c
+const char NV_KMS_ID[] = "nvidia id: NVIDIA UNIX Open Kernel Mode Setting Driver for x86_64  610.57.04  Release Build  (<date>)";
+const char *const pNV_KMS_ID = NV_KMS_ID + 11;
+`
+
+关键点：
+
+1. pNV_KMS_ID 不是外部依赖，是**指向 NV_KMS_ID + 11 的指针**（+11 跳过 "nvidia id: " 这 11 个字符）；
+2. 版本号来自 ersion.mk 的 NVIDIA_NVID_VERSION，固定树里是 **610.57.04**；
+3. 生成文件里 pNV_KMS_ID 的类型是 const char *const，与 
+vkms.c:5369 的
+   extern const char *const pNV_KMS_ID; **声明一致**。
+
+## 已提供可复现的生成器
+
+	ools/gen-nvid-string.py，本地实跑输出：
+
+`
+const char NV_KMS_ID[] = "nvidia id: NVIDIA UNIX Open Kernel Mode Setting Driver for x86_64  610.57.04  Release Build  (Mon Oct 18 12:00:00 CST 2026)";
+const char *const pNV_KMS_ID = NV_KMS_ID + 11;
+`
+
+## 因此路径 A 的构建输入已完整
+
+| 输入 | 状态 |
+|---|---|
+| 988 个 TU 的源码 | ✅ 全部在树里 |
+| 唯一非源码符号 pNV_KMS_ID | ✅ 由两行生成文件提供，生成规则已复现 |
+| 版本号 | ✅ ersion.mk = 610.57.04 |
+
+**但注意**：这只证明"构建输入齐全"，不证明"988 个 TU 能编译成可链接可加载的 kext"。
+后者仍未验证——175/175 抽样与 87/94 批编译只是抽样与批次，不是全量。
+
+## 未做
+
+- 未实跑 make（需要 Linux 工具链，本机没有）；
+- 未把生成文件接入现有门禁（避免在未验证时改动构建）。
