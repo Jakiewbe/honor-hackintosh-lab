@@ -260,3 +260,36 @@ grep -rn 'altstack' → 无任何命中
 1dc3567 已完成逐符号依赖清单（dependency-audit/dependencies.json，3824 文件、tree SHA 绑定），
 252775 已处理 owner-copy 的真实错误传播。本轮不重复这两项，只补它们未覆盖的编译侧实测：
 5/5 TU 编译通过、混合链接 42→23、以及本条 altstack 配置判定。
+
+## 十三、加入三个 modeset TU 后：缺口 42 → 11（R58，run 39095068216）
+
+新增探针单元：
+vkms-kapi-sync.c、
+vkms-kapi-notifiers.c、
+vkms/lib/nvkms-format.c。
+
+| 指标 | R54（5 TU） | R58（8 TU） |
+|---|---|---|
+| 探针编译 | 5/5 | **8/8** |
+| 混合链接 | exit 0 | **exit 0** |
+| 产物大小 | 591,624 B | **600,840 B** |
+| 导入总数 | 821 | **810** |
+| **缺口符号** | 23 | **11** |
+
+## 剩余 11 个，分成两类
+
+**a) 3 个 modeset 符号**：_nvKmsParseSemaphore、_nvKmsResetNotifier、_nvKmsResetSemaphore
+—— 仍属 nvidia-modeset，尚未纳入探针（继续加文件即可）。
+
+**b) 8 个本站符号**：7 个 _nvrm_*（定义在 kexts/NVRM/nvrm_pageoff.c）+
+_rm_is_vgpu_supported_device（OGKM 里应有定义，需再定位）。
+
+## 一个此前失败的线索现在有解
+
+
+vrm_pageoff.c 早先三种方式都编不过，其中一版失败原因正是 unknown type name 'nv_dynamic_power_mode_t'
+与 
+v_state_t 缺 typedef——**那和探针最初遇到的错误是同一类**。而探针后来靠 **-DNVRM** 解决了。
+所以下一轮应当用探针现在的配置（-x c + -DNVRM + OGKM include）重新尝试 
+vrm_pageoff.c，
+而不是继续把它当成"编不了"。
