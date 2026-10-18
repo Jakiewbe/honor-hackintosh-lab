@@ -206,19 +206,14 @@ def main():
         # NVRM itself: no published recipe, so build it from every root C++ TU and report what the
         # link says. The sibling kexts (accel/, agdc/, fb/) are separate bundles and are excluded.
         nvrm_units = ["NVRM.cpp", "os-xnu.cpp", "os-xnu2.cpp", "os-nvkms-xnu.cpp", "nv_xnu_stubs.cpp",
-                      "nvrm_gpuva.cpp", "nvrm_fbinfo.cpp", "nvrm_surfshare.cpp", "nvkms_shaders.cpp",
-                      "nvrm_pageoff.c"]
+                      "nvrm_gpuva.cpp", "nvrm_fbinfo.cpp", "nvrm_surfshare.cpp", "nvkms_shaders.cpp"]
         nvrm_objects, nvrm_compile = [], {}
         for name in nvrm_units:
             src = candidate / "kexts/NVRM" / name
             obj = out.parent / ("candidate-NVRM_" + name.replace(".", "_") + ".o")
             flags = [*common_flags, *definitions, *["-I" + str(p) for p in includes]]
             flags += ["-I" + str(candidate / "kexts/NVRM")]
-            is_c = name.endswith(".c")
-            cc = "clang++"
-            cflags = ["-x", "c++"] if is_c else []
-            use_flags = flags
-            rc = execute(["xcrun", cc, *cflags, *use_flags, "-c", str(src), "-o", str(obj)],
+            rc = execute(["xcrun", "clang++", *flags, "-c", str(src), "-o", str(obj)],
                          candidate, out / ("candidate-NVRM_" + name.replace(".", "_") + "-compile.txt"))
             nvrm_compile[name] = rc
             if rc == 0:
