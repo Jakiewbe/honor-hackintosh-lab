@@ -259,7 +259,9 @@ def main():
                       "src/nvidia-modeset/kapi/src/nvkms-kapi.c",
                       "src/nvidia-modeset/kapi/src/nvkms-kapi-sync.c",
                       "src/nvidia-modeset/kapi/src/nvkms-kapi-notifiers.c",
-                      "src/nvidia-modeset/lib/nvkms-format.c"]
+                      "src/nvidia-modeset/lib/nvkms-format.c",
+                      "src/nvidia-modeset/lib/nvkms-sync.c",
+                      "src/nvidia/arch/nvalloc/unix/src/os-hypervisor.c"]
         # nvroot is <ogkm>/src/nvidia; the tree root is two levels up
         probe_root = nvroot.parent.parent
         if not (probe_root / "src/nvidia").exists():
