@@ -402,3 +402,37 @@ vkms_shaders.cpp | 0 |
 
 把 94 条告警按文件归类、抽样判定性质，产出一张"统一配置代价表"。只有这张表证明新增告警全部无害，
 才谈得上把生产门禁切到统一配置。
+
+## 十七、统一配置的代价表（R62）
+
+94 条告警按类型归类（取自 run 39096103191 的 uni-*.txt）：
+
+| 类型 | 数量 | 位置/性质 |
+|---|---|---|
+| -Wdeprecated-declarations | **40** | 绝大多数是 IOPCIDevice 一类 Apple 弃用 API（NVRM 24 条），与 ABI 无关 |
+| -Wsign-conversion | **44** | 抽样均为 
+vport/inline/util_gcc_clang.h 的 int → NvU32，即 OGKM 自身的宏/内联层 |
+| -Wimplicit-int-conversion | **2** | ①NVRM.cpp:1229 unsigned int → UInt8；②
+v_common_utils.h:96 unsigned → unsigned short |
+| -Wunused-variable | **1** | os-xnu2.cpp |
+| 其他 | 7 | 归入上面各类统计余量 |
+
+### 需要单独处理的两条
+
+-Wimplicit-int-conversion 是唯一可能丢精度的类别：
+
+1. kexts/NVRM/NVRM.cpp:1229 —— **我们的代码**，unsigned int 收窄到 UInt8；
+2. src/common/unix/common/inc/nv_common_utils.h:96 —— OGKM 头文件。
+
+两条都指向"值域受控的枚举/索引"，但**未逐行核对值域**，所以不能判定无害。
+
+### 结论
+
+- 94 条里 **84 条属于弃用警告与符号性问题**，不改变对象布局，不构成 ABI 风险；
+- **2 条窄化转换需要人工确认值域**（一条在我们代码里，可以在补丁里显式转换消除）；
+- 因此"统一切到 -DNVRM"的代价是**可控的**，但不是一个可以静默接受的动作。
+
+### 下一步
+
+在补丁里把 NVRM.cpp:1229 的窄化显式化（如 (UInt8)(x & 0xFF) 或改用 NvU8），
+再评估 OGKM 那条是否需要同样处理；之后才可能把生产门禁切到统一配置。
