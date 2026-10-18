@@ -1,5 +1,9 @@
 # R23：teardown pin 与系统挂起严格互斥（2026-10-18）
 
+> **撤回（R24，2026-10-18）**：本文第 2 节"返回 `kIOReturnBusy` 拒绝挂起"的前提**错误** ——
+> XNU `IOServicePM.cpp:4525` 规定负返回值与 `IOPMAckImplied` 等价，挂起继续。本文保留作记录，
+> 现行合同见 [R24](R24-SUSPEND-CONTRACT-20261018.md)；P0-1 仍为 **BLOCKED**。
+
 本轮唯一实现目标：P0-1。不夹带 owner-copy、VBL、P0-4 或其它修改。
 
 ## 1. 真实调用链与设计依据

@@ -17,7 +17,7 @@
 | 隔离态可回收 | 主机测试 + 调用点合同 | ✅ 9/9、12/12 | `evidence/r6/` | — |
 | 共享 Device 生命周期 | 计数/孤儿/创建者 retain | ✅ 34/34、45/45（R14） | `evidence/r11/` | — |
 | PM 竞态关闭 | pin 语义 + suspend 等待 | ✅ 38/38、50/50（R15） | `evidence/r11/` | — |
-| **PM pin 与挂起严格互斥** | 有界等待 + 明确拒绝 + 调用者不 ack | ✅ 主机 23/23、结构 25/25、R22 基线失败 11 项（R23） | `research/gpu-safety-r5/r23-evidence/` | Darwin/链接需用户手动门禁 |
+| **PM pin 与挂起严格互斥** | 有界等待 + 消除争用 | ⛔ **BLOCKED**：R23 的 Busy 拒绝前提已撤回（XNU 4525）；R24 用 begin/commit/abort 消除争用，但 commit 超时后 IOPM 仍会断电，驱动无法阻止；主机 26/26、结构 24/24、R22 基线失败 13 项 | `research/gpu-safety-r5/R24-SUSPEND-CONTRACT-20261018.md` | 需要架构级方案 |
 | 关闭失败可上报 | OGKM `void` 接口改造 | ❌ **不可关闭**（已记录） | `README.md` R15 段 | 上游 |
 | 原生编译 | 真实 Xcode 工具链 | ✅ 16/16 对象、告警零增量 | run 39058264569 | — |
 | Kext 链接 | NVAccel + 生产 NVRMFB 链成 | ✅ 248,584 B / 315,744 B | 同上 | — |
