@@ -1,3 +1,4 @@
+import hashlib
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """R24 PM-exclusion host test generator (begin / commit / abort).
@@ -102,7 +103,7 @@ static void   nvkms_xnu_suspend_abort(std::uint32_t) {}
             parts.append(fn + "\n")
 
     parts.append(TESTS)
-    out.write_text("".join(parts), encoding="utf-8", newline="\n")
+    out.write_text(_provenance(src) + "".join(parts), encoding="utf-8", newline="\n")
 
 
 TESTS = r"""
@@ -188,6 +189,11 @@ int main() {
     return failures ? 1 : 0;
 }
 """
+
+def _provenance(path):
+    """Fingerprint of the source the test was generated from, written into the test itself."""
+    return "// source: %s\n// source_sha256: %s\n" % (
+        path.as_posix(), hashlib.sha256(Path(path).read_bytes()).hexdigest())
 
 if __name__ == "__main__":
     main()

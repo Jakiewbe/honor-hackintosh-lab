@@ -1,3 +1,4 @@
+import hashlib
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """Generate the R23 PM-exclusion host test from the real functions in the tree.
@@ -110,7 +111,7 @@ static bool nvkms_xnu_suspend_bool(NvU32 gpuId, std::uint32_t) { nvkms_xnu_suspe
         adapter = "nvkms_xnu_suspend"
 
     parts.append(TESTS.replace("SUSPEND_CALL", adapter))
-    out.write_text("".join(parts), encoding="utf-8", newline="\n")
+    out.write_text(_provenance(src) + "".join(parts), encoding="utf-8", newline="\n")
 
 
 TESTS = r"""
@@ -205,6 +206,11 @@ int main() {
 }
 """
 
+
+def _provenance(path):
+    """Fingerprint of the source the test was generated from, written into the test itself."""
+    return "// source: %s\n// source_sha256: %s\n" % (
+        path.as_posix(), hashlib.sha256(Path(path).read_bytes()).hexdigest())
 
 if __name__ == "__main__":
     main()

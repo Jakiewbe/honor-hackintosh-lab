@@ -1,3 +1,4 @@
+import hashlib
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """R27: deterministic interleaving test for the VBL reference (audit item B).
@@ -150,8 +151,13 @@ def main():
         raise SystemExit("could not extract the three functions")
     stop = stop.replace("void NMIntelFB::stop(IOService *provider)", "void stop(IOService *provider)")
     body = PRELUDE + arm + "\n" + vbl + "\n" + stop + "\n" + EPILOGUE
-    out.write_text(body, encoding="utf-8", newline="\n")
+    out.write_text(_provenance(src) + body, encoding="utf-8", newline="\n")
 
+
+def _provenance(path):
+    """Fingerprint of the source the test was generated from, written into the test itself."""
+    return "// source: %s\n// source_sha256: %s\n" % (
+        path.as_posix(), hashlib.sha256(Path(path).read_bytes()).hexdigest())
 
 if __name__ == "__main__":
     main()
