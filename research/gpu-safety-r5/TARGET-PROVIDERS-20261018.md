@@ -1,0 +1,13 @@
+# 472导入的目标提供者：原生只读取证
+
+本轮目标是把完整NVRM重建候选的472项导入，推进到有实际提供侧文件可查的状态。不是重新做1280个TU编译，也不加载驱动。用户已授权相关main快进与仅源码/编译/链接/文本诊断Actions；设备持续NO-GO，不改.agent或固定上游。
+
+输入固定为源码c670c559cc4bd507f5efcb951dd428de250ba90c、run 39127772586的实际完整候选，SHA256 bbde79f1601ee7bc89bcef04f48dc45276d39f9dec9e3f8bbed456f157c1e1d3；已入库nm清单SHA256 0691e92bc5ef4ce537668c89a0c7b0c71238990aaeafc1c60125293e59fb9dc8。新任务不重新构建该候选，明确采用历史固定证据。
+
+方法：只读Intel macOS runner的kernel、System.kext各插件、IOPCIFamily、IOACPIFamily；保存bundle ID/version、文件hash、精确nm命令、完整输出hash、匹配导入及诊断；另列SDK Kernel.framework Libraries/Extensions和KernelCollections元数据，为下一步选择实际导出资料。所有匹配保留Mach-O原名，只删一个ABI下划线得到源码拼写。
+
+可证伪点：原生nm可能无符号、文件不存在或不可解析，均必须明确保留；任何局部解析失败不能转为匹配。全局定义不是内核KPI许可导出，不证明类布局、vtable、返回类型或语义ABI。未观察到也不证明目标系统缺实现。runner系统不是用户最终系统，不把SDK声明或stub当成真实目标导出。
+
+验收：472行逐项记录、提供者文件绑定、观察失败保留、纯文本产物。目标导出/ABI验收维持NOT_VERIFIED。风险为只读CI时间与文本记录；回退只撤销本轮工具/工作流，无设备或系统修改。
+
+当前：工具与工作流候选已写，原生发现尚未执行。执行后追加真实结果与下一断点。
