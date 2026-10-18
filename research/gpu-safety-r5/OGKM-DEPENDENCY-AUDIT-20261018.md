@@ -816,3 +816,47 @@ v_smg.c 类是**非 kext 代码**，需要按目录排除。
 
 补 8086-SSE 的 include，重跑这批；同时在清单里排除用户态目录（如 src/common/src 里非 kernel 的部分），
 再记录一次通过率。之后才谈"把 98 个对象连同 15 个探针对象一起链接"。
+
+## 三十、批编译 90/97，链接仍因重复符号失败（R76）
+
+| 指标 | R75 | **R76** |
+|---|---|---|
+| 批编译 | 86/98 | **90/97**（排除 src/common/src 后 97 个） |
+| 失败 | 12 | **7** |
+| 批量链接 | 未尝试 | **LINK_FAILED：duplicate symbol** |
+
+### 7 个失败的具体原因（两条，同类）
+
+1. 32_div.c:136: call to undeclared function 'softfloat_approxRecip32_1'
+   —— 该函数定义在同目录的 s_approxRecip32_1.c，声明在 softfloat 的 primitives 头；
+   单文件编译缺声明，属于**编译单元拆分问题**（需要把该头加入 include 或整组编译）。
+2. 
+vkms-headsurface-{ioctl,swapgroup}.c 与 
+vkms-headsurface.c
+   —— 
+vidia-headsurface-types.h 找不到（它在 src/common/unix/nvidia-headsurface/，
+   已加入 include，但**头内部还引用了别的相对路径头**，需要继续补）。
+
+### 链接失败的原因是"重复符号"，不是缺符号
+
+`
+duplicate symbol '_nvKmsKapiAllocateVideoMemory'
+duplicate symbol '_nvKmsKapiGetFunctionsTableInternal'
+...
+`
+
+因为批编译清单里包含已经在探针里编过的同一批源文件（
+vkms-kapi.c 等）。
+我尝试用"对象名 stem 去重"修，但探针对象名是 probe-<路径下划线化>，与 at-<stem> 对不上，
+所以**去重没有生效**（对象数仍是 105）。
+
+### 正确的修法
+
+按**源文件路径**去重，而不是按对象名：批编译前，先排除掉探针清单里已有的相对路径
+（ogkm_probe 是静态列表，可直接做集合差）。
+
+## 结论
+
+- 批编译层面已到 90/97，剩余 7 个都是 include/单元拆分问题，**不是不可编译**；
+- 链接阶段的失败是**我们自己的对象集合重复**，与缺符号无关；
+- 这一轮没有取得"新产物未定义符号数"这个目标数字，原因已定位。
