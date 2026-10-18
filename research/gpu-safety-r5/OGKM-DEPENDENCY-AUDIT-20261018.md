@@ -703,3 +703,41 @@ vlink_linux.c 等。Darwin 构建**不应**用这些文件，它们正是"Linux 
 
 "把 RM 整层编进来"并不能简单等价于"编译 988 个 .c"：其中一部分符号由生成头/宏产生，
 另一部分文件属于 Linux 专用层。这两类都要先分拣，否则批量编译的结果会被误读。
+
+## 二十七、修正口径后的真实缺口画像（R73b）
+
+上一轮把 760 个"非系统"符号当缺口，其中混进了 C++ 名字（_ZN…）与内核函数（PE_parse_boot_argn）。
+用 classify-imports.py 只保留 ogkm-rm-core/ogkm-rm/ogkm-nvkms/
+ullmoth-internal 后：
+
+| 指标 | 值 |
+|---|---|
+| 真实缺口符号 | **346** |
+| 已解析到定义文件 | **223** |
+| 未解析 | **123** |
+| 定义文件数 | **74** |
+| 分层 | src/nvidia **45**、other（src/common 等）**29**、kernel-open **0** |
+
+**注意 kernel-open 变成 0**：上一轮那 7 个 Linux 层文件全部是误报（它们定义的是同名但不同平台的函数，
+或我的过滤没生效）。现在文件集合里没有 Linux 专用层，这对 Darwin 构建是好消息。
+
+## 123 个未解析是什么
+
+样本几乎全是宏生成族：
+
+`
+bitVectorClr_IMPL  bitVectorSet_IMPL  bitVectorOr_IMPL  bitVectorTest_IMPL
+RmInitRm  CliSetGpuContext  PEX_DSM_GUID  RmPowerManagementTegra
+`
+
+*_IMPL 这类在 OGKM 里通常由 VALGRIND/NV_DEFINE_BITVECTOR 一类宏在 **.h** 中展开生成，
+而我的索引只扫 .c。所以它们大概率不是"缺失"，而是**索引覆盖面不足**。
+
+## 结论
+
+- Darwin 相关的待编译文件集合是 **74 个**（45 个在 src/nvidia），不是一个上千 TU 的工程；
+- 123 个未解析需要把索引扩展到头文件才能定性，现在不能算缺口。
+
+## 下一步
+
+把索引扩展到 .h（含宏定义行），重跑 346 个符号；若未解析降到接近 0，就可以按这 74 个文件做第一批受控编译。
