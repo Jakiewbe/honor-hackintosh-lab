@@ -104,7 +104,7 @@ def bound_compile(argv, cwd, log, directory, execute):
     after_paths = dep_paths(actual_dep.read_text(encoding='utf-8'), cwd)
     if after_paths != paths or file_inputs(after_paths) != before:
         raise ValueError('compiler input set/content changed during object compilation')
-    record = {'schema':'honor.g1.compile-inputs.v1', 'source':str(source), 'object':str(obj),
+    record = {'schema':'honor.g1.compile-inputs.v1', 'source':str(source.resolve()), 'object':str(obj.resolve()),
         'object_sha256':sha(obj), 'cwd':str(cwd), 'compile_argv':actual, 'inputs':before,
         'depfiles':[{'path':str(p), 'sha256':sha(p)} for p in [before_dep,actual_dep]],
         'limitations':['pre/post content equality does not detect adversarial mutate-and-restore',
@@ -136,7 +136,7 @@ def verify_snapshot(descriptor, directory, source, obj, object_sha256, argv=None
             raise ValueError('dependency rule changed')
         if list(map(str, dep_paths(dep.read_text(encoding='utf-8'), cwd))) != [r['path'] for r in record['inputs']]:
             raise ValueError('dependency file/snapshot set mismatch')
-    if str(source.resolve()) not in [r['path'] for r in record['inputs']]:
+    if str(source.resolve()) not in [r['resolved_path'] for r in record['inputs']]:
         raise ValueError('source missing from input snapshot')
     check_inputs(record['inputs'])
     return record

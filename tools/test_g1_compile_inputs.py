@@ -127,5 +127,19 @@ class CompileInputTests(unittest.TestCase):
             link.unlink();link.symlink_to(two)
             with self.assertRaises(ValueError): check_inputs(records)
 
+    def test_compile_source_and_object_through_directory_alias_are_canonical(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp).resolve()
+            actual,alias = root/'actual',root/'alias'
+            actual.mkdir()
+            try: alias.symlink_to(actual,target_is_directory=True)
+            except OSError: self.skipTest('host has no directory symlink privilege; Darwin CI executes this control')
+            source, header, obj, directory, argv = self.fixture(alias)
+            _,descriptor,command = bound_compile(argv,alias,actual/'compile.txt',directory,fixture_compiler([source,header]))
+            from g1_compile_inputs import sha
+            record=verify_snapshot(descriptor,directory,source,obj,sha(obj),command)
+            self.assertEqual(record['source'],str(source.resolve()))
+            self.assertEqual(record['object'],str(obj.resolve()))
+
 
 if __name__ == '__main__': unittest.main()
