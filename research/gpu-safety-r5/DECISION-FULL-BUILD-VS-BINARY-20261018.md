@@ -444,3 +444,46 @@ v.h 的条件分支上。
 - 没有写任何端口层代码；
 - 没有声称 392 就是工作量；
 - 没有用宏去伪造端口层。
+
+## 五十、全量编译的五个配置与平台停滞点（R99）
+
+| run | 配置变化 | 编译通过 | 链接产物 |
+|---|---|---|---|
+| 39136676414 | 基线（PORT 开关全缺） | 119 | 177,672 B |
+| 39137051867 | PORT_IS_CHECKED_BUILD=0 等 | 122 | 178,032 B |
+| 39137523901 | PORT_IS_KERNEL_BUILD=0（usermode 分支） | 129 | — |
+| 39138242233 | 全部头目录加入 -I | 134 | 8,508,032 B |
+| 39138580661 | 强制 -include nvport/nvport.h | **135** | 8,508,032 B |
+
+趋势：**119 → 135，然后停滞**。最后两次配置只换来 +1。
+
+## 停滞点的错误分布（40 条已记录失败）
+
+| 首错 | 数量 |
+|---|---|
+| call to undeclared function 'PORT_BREAKPOINT' | **37** |
+| unknown type name 'PORT_MEM_ALLOCATOR' | 2 |
+| call to undeclared function 'portMemAllocNonPaged' | 1 |
+
+也就是说：**几乎所有失败都指向同一个根因**——PORT_* 原语没有定义。而这些原语本应由
+**平台头**（
+v.h + 
+vport 的平台 inline 层）提供；公开树只给 Linux/FreeBSD 版本。
+
+-include nvport/nvport.h 没能解决，说明 
+vport.h 内部选择了某个平台分支（NVOS_IS_*）
+而其 inline 实现又依赖平台头——这正是"端口层"本身。
+
+## 结论（这条线到此为止）
+
+> 要在 Darwin 上编译完整 RM，必须先写**平台层**（等价于 kernel-open/common/inc/nv.h +
+> 
+vport 的 Darwin inline 实现），否则编译无法越过 135/988。
+
+这不是"再调几个 -D"能解决的：37/40 的失败都是同一个未定义原语家族。
+
+## 我停止继续试的原因
+
+- 每次 CI 迭代约 10 分钟，收益已降到 +1 文件；
+- 继续下去只会不断给 PORT_* 打补丁，而这正是**应当由端口层正式实现**的东西；
+- 用宏伪造 PORT_BREAKPOINT 之类会让后续所有测量失真，违反本项目的证据规则。
