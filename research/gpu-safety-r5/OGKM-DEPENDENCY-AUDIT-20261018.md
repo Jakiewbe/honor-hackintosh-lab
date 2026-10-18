@@ -293,3 +293,35 @@ v_state_t 缺 typedef——**那和探针最初遇到的错误是同一类**。�
 所以下一轮应当用探针现在的配置（-x c + -DNVRM + OGKM include）重新尝试 
 vrm_pageoff.c，
 而不是继续把它当成"编不了"。
+
+## 十四、缺口 11 → **2**（R59，run 39095634270 / 39095755616）
+
+两步：
+
+1. 加 
+vkms-sync.c 与 os-hypervisor.c → 10/10 编译，缺口 11 → 7；
+2. 把**我们自己的** kexts/NVRM/nvrm_pageoff.c 按探针配置（-x c -std=gnu11 -DNVRM + 候选树 include）编译
+   → **编译通过**，缺口 7 → **2**。
+
+| 阶段 | 探针 TU | 缺口 |
+|---|---|---|
+| R54 | 5 | 23 |
+| R58 | 8 | 11 |
+| R59a | 10 | 7 |
+| **R59b** | **11（含本站 1 个）** | **2** |
+
+混合链接产物 615,856 B，exit 0。
+
+## 剩余 2 个
+
+_nvrm_kapi_dev_handles、_nvrm_kapi_mem_handle —— 在 
+vrm_surfshare.cpp:18 与
+
+vrm_gpuva.cpp:41 都只以 extern "C" **声明**形式出现，真正的定义文件尚未定位（不在 9 单元里）。
+
+## 需要强调的口径
+
+这**不是**"NVRM 可构建了"。混合链接里的 11 个 TU 使用了两种宏配置（探针带 -DNVRM，原 9 单元不带），
+ABI/ODR 一致性未验证；
+vrm_pageoff.c 能编译只说明它在该配置下语法与依赖成立。
+产物仍只是统计工具，**不可加载**。
