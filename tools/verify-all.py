@@ -99,6 +99,8 @@ def main():
         step("structure-nvidia", [py, str(ws / "work/check_r11_lifetime.py")], ws)
         step("structure-intel", [py, str(ws / "work/check_intel_stop.py")], ws)
         step("structure-pm", [py, str(REPO / "tools/check-pm-exclusion.py")], REPO)
+        # regenerate the lifetime test from the patched tree: never run a previously generated file
+        step("gen-lifetime", [py, str(ws / "work/r11_fixture.py")], ws)
         if not args.skip_host:
             step("vbl-host", ["wsl", "-e", "bash", "-c",
                               f"GPU_R27_WORK={wsl_path(ws)} GPU_R27_OUT={wsl_path(ws)}/evidence/r27 "
