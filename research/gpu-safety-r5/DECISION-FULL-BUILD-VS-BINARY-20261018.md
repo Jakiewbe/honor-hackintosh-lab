@@ -271,3 +271,47 @@ vEvoGlobal | ✅ 定义 | src/nvidia-modeset/src/nvkms-evo.c:148 |
 - 它把"路径 A 只能到 983"推翻为"路径 A 可以到 988 + 一个生成步骤"；
 - 但**不证明**整层能编译、能链接、能加载——那些仍未验证；
 - 也不改变"发行版 7.93 MB 不透明载荷"的事实：那部分内容仍未解释。
+
+## 四十六、数据符号索引器修好后的最终分类（R95）
+
+修了三处（都是我自己工具的错误）：无初值暂定定义、宏生成的定义（GUID_CONST(...)）、
+以及把 extern 声明单独归类。重跑 9 个符号：
+
+| 符号 | 类别 | 位置 |
+|---|---|---|
+| g_pSys | DEF | src/nvidia/src/kernel/core/system.c:74 |
+| g_resServ | DEF | src/nvidia/src/kernel/rmapi/rmapi.c:55 |
+| 
+vEvoGlobal | DEF | src/nvidia-modeset/src/nvkms-evo.c:148 |
+| 
+voc_class_def_Memory | DEF | src/nvidia/generated/g_mem_nvoc.c:84 |
+| 
+voc_class_def_RmResource | DEF | src/nvidia/generated/g_resource_nvoc.c:177 |
+| 
+voc_rtti_provider | DEF | src/nvidia/src/libraries/nvoc/src/runtime.c:46 |
+| PEX_DSM_GUID | **MACRO** | src/nvidia/src/kernel/platform/guids.c:81（GUID_CONST） |
+| pNV_KMS_ID | **DECL + 构建生成** | 声明 
+vkms.c:5369；生成规则 
+vkms/Makefile:248-250（GENERATE_NVIDSTRING(NV_KMS_ID, …) 产出 pNV_KMS_ID） |
+| 
+voc_dynamicCast | **函数，不是数据** | 
+voc/src/runtime.c:282（Dynamic *__nvoc_dynamicCast(...)） |
+
+## 因此 9 个全部有下落
+
+- 7 个是数据符号，树内有定义（其中 1 个由宏生成）；
+- 1 个（pNV_KMS_ID）由 Makefile 生成，源码只有声明——**是构建步骤，不是缺口**；
+- 1 个（
+voc_dynamicCast）根本不是数据符号，是函数，定义在 untime.c:282。
+
+**结论：不存在"无源码定义的符号"。** 之前 R91 的"5 个真缺"是工具误报，已撤回。
+
+## 工具现在能区分四类
+
+DEF / MACRO / GENERATED / DECL / NONE，并且 extern 单独成类，
+不会再被当成定义。9 个符号作为回归用例留在 esearch/gpu-safety-r5/data-symbol-defs.json。
+
+## 仍未验证
+
+生成规则的具体产出格式（GENERATE_NVIDSTRING 展开后生成什么文件、什么符号名）**没有实跑过**，
+只是读了 Makefile。要让路径 A 成立，这一步必须实际生成一次并比对符号名。

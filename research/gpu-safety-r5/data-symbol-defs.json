@@ -7,7 +7,13 @@
    "src/nvidia/generated/g_resource_nvoc.c:177"
   ],
   "g_pSys": [
-   "src/nvidia/src/kernel/core/system.c:74"
+   "src/nvidia/src/kernel/core/system.c:74",
+   "src/nvidia/src/kernel/core/system.c:189",
+   "src/nvidia/src/kernel/core/system.c:260",
+   "src/nvidia/src/kernel/core/system.c:299"
+  ],
+  "g_resServ": [
+   "src/nvidia/src/kernel/rmapi/rmapi.c:55"
   ],
   "nvoc_rtti_provider": [
    "src/nvidia/src/libraries/nvoc/src/runtime.c:46"
@@ -16,11 +22,163 @@
    "src/nvidia-modeset/src/nvkms-evo.c:148"
   ]
  },
- "macros": {},
+ "macros": {
+  "PEX_DSM_GUID": [
+   "src/nvidia/src/kernel/platform/guids.c:81"
+  ]
+ },
+ "generated": {},
+ "declarations": {
+  "nvoc_class_def_RmResource": [
+   "src/nvidia/generated/g_access_cntr_buffer_nvoc.c:26",
+   "src/nvidia/generated/g_binary_api_nvoc.c:26",
+   "src/nvidia/generated/g_binary_api_nvoc.c:551",
+   "src/nvidia/generated/g_ce_utils_nvoc.c:243",
+   "src/nvidia/generated/g_channel_descendant_nvoc.c:26",
+   "src/nvidia/generated/g_compute_instance_subscription_nvoc.c:26",
+   "src/nvidia/generated/g_conf_compute_api_nvoc.c:26",
+   "src/nvidia/generated/g_console_mem_nvoc.c:26",
+   "src/nvidia/generated/g_context_dma_nvoc.c:26",
+   "src/nvidia/generated/g_dbgbuffer_nvoc.c:26",
+   "src/nvidia/generated/g_deferred_api_nvoc.c:26",
+   "src/nvidia/generated/g_device_nvoc.c:26",
+   "src/nvidia/generated/g_disp_capabilities_nvoc.c:26",
+   "src/nvidia/generated/g_disp_channel_nvoc.c:26",
+   "src/nvidia/generated/g_disp_channel_nvoc.c:629",
+   "src/nvidia/generated/g_disp_channel_nvoc.c:1282",
+   "src/nvidia/generated/g_disp_objs_nvoc.c:26",
+   "src/nvidia/generated/g_disp_objs_nvoc.c:566",
+   "src/nvidia/generated/g_disp_objs_nvoc.c:1727",
+   "src/nvidia/generated/g_disp_objs_nvoc.c:2374",
+   "src/nvidia/generated/g_disp_sf_user_nvoc.c:26",
+   "src/nvidia/generated/g_dispsw_nvoc.c:26",
+   "src/nvidia/generated/g_event_api_nvoc.c:247",
+   "src/nvidia/generated/g_event_buffer_nvoc.c:26",
+   "src/nvidia/generated/g_fm_session_api_nvoc.c:26",
+   "src/nvidia/generated/g_generic_engine_nvoc.c:26",
+   "src/nvidia/generated/g_gpu_instance_subscription_nvoc.c:26",
+   "src/nvidia/generated/g_gpu_mgmt_api_nvoc.c:26",
+   "src/nvidia/generated/g_gpu_resource_nvoc.c:26",
+   "src/nvidia/generated/g_gpu_user_shared_data_nvoc.c:26",
+   "src/nvidia/generated/g_griddisplayless_nvoc.c:26",
+   "src/nvidia/generated/g_gsync_api_nvoc.c:26",
+   "src/nvidia/generated/g_hda_codec_api_nvoc.c:26",
+   "src/nvidia/generated/g_hw_resources_nvoc.c:26",
+   "src/nvidia/generated/g_i2c_api_nvoc.c:26",
+   "src/nvidia/generated/g_imex_session_api_nvoc.c:26",
+   "src/nvidia/generated/g_kern_perfbuffer_nvoc.c:26",
+   "src/nvidia/generated/g_kernel_ccu_api_nvoc.c:26",
+   "src/nvidia/generated/g_kernel_ce_context_nvoc.c:26",
+   "src/nvidia/generated/g_kernel_channel_group_api_nvoc.c:26",
+   "src/nvidia/generated/g_kernel_channel_nvoc.c:26",
+   "src/nvidia/generated/g_kernel_ctxshare_nvoc.c:266",
+   "src/nvidia/generated/g_kernel_graphics_context_nvoc.c:26",
+   "src/nvidia/generated/g_kernel_graphics_object_nvoc.c:26",
+   "src/nvidia/generated/g_kernel_hostvgpudeviceapi_nvoc.c:247",
+   "src/nvidia/generated/g_kernel_nvdec_ctx_nvoc.c:26",
+   "src/nvidia/generated/g_kernel_nvenc_ctx_nvoc.c:26",
+   "src/nvidia/generated/g_kernel_nvjpg_ctx_nvoc.c:26",
+   "src/nvidia/generated/g_kernel_ofa_ctx_nvoc.c:26",
+   "src/nvidia/generated/g_kernel_sm_debugger_session_nvoc.c:264",
+   "src/nvidia/generated/g_kernel_watchdog_nvoc.c:26",
+   "src/nvidia/generated/g_lock_stress_nvoc.c:26",
+   "src/nvidia/generated/g_lock_test_nvoc.c:26",
+   "src/nvidia/generated/g_mem_export_nvoc.c:26",
+   "src/nvidia/generated/g_mem_fabric_import_ref_nvoc.c:26",
+   "src/nvidia/generated/g_mem_fabric_import_v2_nvoc.c:26",
+   "src/nvidia/generated/g_mem_fabric_nvoc.c:26",
+   "src/nvidia/generated/g_mem_list_nvoc.c:26",
+   "src/nvidia/generated/g_mem_mapper_nvoc.c:26",
+   "src/nvidia/generated/g_mem_multicast_fabric_nvoc.c:26",
+   "src/nvidia/generated/g_mem_nvoc.c:26",
+   "src/nvidia/generated/g_mig_config_session_nvoc.c:26",
+   "src/nvidia/generated/g_mig_monitor_session_nvoc.c:26",
+   "src/nvidia/generated/g_mmu_fault_buffer_nvoc.c:26",
+   "src/nvidia/generated/g_mps_api_nvoc.c:26",
+   "src/nvidia/generated/g_no_device_mem_nvoc.c:26",
+   "src/nvidia/generated/g_nvencsession_nvoc.c:26",
+   "src/nvidia/generated/g_nvfbc_session_nvoc.c:26",
+   "src/nvidia/generated/g_os_desc_mem_nvoc.c:26",
+   "src/nvidia/generated/g_p2p_api_nvoc.c:26",
+   "src/nvidia/generated/g_phys_mem_nvoc.c:26",
+   "src/nvidia/generated/g_profiler_context_event_nvoc.c:26",
+   "src/nvidia/generated/g_profiler_device_event_nvoc.c:26",
+   "src/nvidia/generated/g_profiler_v1_nvoc.c:26",
+   "src/nvidia/generated/g_profiler_v2_nvoc.c:26",
+   "src/nvidia/generated/g_profiler_v2_nvoc.c:1388",
+   "src/nvidia/generated/g_profiler_v2_nvoc.c:2042",
+   "src/nvidia/generated/g_reg_mem_nvoc.c:26",
+   "src/nvidia/generated/g_resource_nvoc.c:136",
+   "src/nvidia/generated/g_resource_nvoc.h:301",
+   "src/nvidia/generated/g_rg_line_callback_nvoc.c:26",
+   "src/nvidia/generated/g_sec2_context_nvoc.c:26",
+   "src/nvidia/generated/g_sem_surf_nvoc.c:26",
+   "src/nvidia/generated/g_standard_mem_nvoc.c:26",
+   "src/nvidia/generated/g_subdevice_diag_nvoc.c:26",
+   "src/nvidia/generated/g_subdevice_nvoc.c:26",
+   "src/nvidia/generated/g_sw_test_nvoc.c:26",
+   "src/nvidia/generated/g_syncgpuboost_nvoc.c:26",
+   "src/nvidia/generated/g_syncpoint_mem_nvoc.c:26",
+   "src/nvidia/generated/g_system_mem_nvoc.c:26",
+   "src/nvidia/generated/g_third_party_p2p_nvoc.c:247",
+   "src/nvidia/generated/g_timed_sema_nvoc.c:26",
+   "src/nvidia/generated/g_tmr_nvoc.c:26",
+   "src/nvidia/generated/g_trace_device_event_nvoc.c:26",
+   "src/nvidia/generated/g_usermode_api_nvoc.c:26",
+   "src/nvidia/generated/g_uvm_channel_retainer_nvoc.c:26",
+   "src/nvidia/generated/g_uvm_sw_nvoc.c:26",
+   "src/nvidia/generated/g_vaspace_api_nvoc.c:26",
+   "src/nvidia/generated/g_vblank_callback_nvoc.c:26",
+   "src/nvidia/generated/g_vgpuapi_nvoc.c:26",
+   "src/nvidia/generated/g_vgpuconfigapi_nvoc.c:26",
+   "src/nvidia/generated/g_video_mem_nvoc.c:26",
+   "src/nvidia/generated/g_vidmem_access_bit_buffer_nvoc.c:26",
+   "src/nvidia/generated/g_virt_mem_range_nvoc.c:26",
+   "src/nvidia/generated/g_virtual_mem_nvoc.c:26",
+   "src/nvidia/generated/g_zbc_api_nvoc.c:26"
+  ],
+  "nvoc_class_def_Memory": [
+   "src/nvidia/generated/g_console_mem_nvoc.c:27",
+   "src/nvidia/generated/g_gpu_user_shared_data_nvoc.c:27",
+   "src/nvidia/generated/g_hw_resources_nvoc.c:27",
+   "src/nvidia/generated/g_mem_fabric_import_v2_nvoc.c:27",
+   "src/nvidia/generated/g_mem_fabric_nvoc.c:27",
+   "src/nvidia/generated/g_mem_list_nvoc.c:27",
+   "src/nvidia/generated/g_mem_multicast_fabric_nvoc.c:27",
+   "src/nvidia/generated/g_mem_nvoc.c:22",
+   "src/nvidia/generated/g_mem_nvoc.h:239",
+   "src/nvidia/generated/g_no_device_mem_nvoc.c:27",
+   "src/nvidia/generated/g_os_desc_mem_nvoc.c:27",
+   "src/nvidia/generated/g_phys_mem_nvoc.c:27",
+   "src/nvidia/generated/g_reg_mem_nvoc.c:27",
+   "src/nvidia/generated/g_standard_mem_nvoc.c:27",
+   "src/nvidia/generated/g_syncpoint_mem_nvoc.c:27",
+   "src/nvidia/generated/g_system_mem_nvoc.c:27",
+   "src/nvidia/generated/g_usermode_api_nvoc.c:27",
+   "src/nvidia/generated/g_video_mem_nvoc.c:27",
+   "src/nvidia/generated/g_virt_mem_range_nvoc.c:27",
+   "src/nvidia/generated/g_virtual_mem_nvoc.c:27"
+  ],
+  "g_pSys": [
+   "src/nvidia/generated/g_system_nvoc.h:663"
+  ],
+  "g_resServ": [
+   "src/nvidia/inc/kernel/rmapi/rmapi.h:45"
+  ],
+  "nvoc_rtti_provider": [
+   "src/nvidia/inc/libraries/nvoc/runtime.h:61"
+  ],
+  "PEX_DSM_GUID": [
+   "src/nvidia/interface/acpidsmguids.h:86"
+  ],
+  "nvEvoGlobal": [
+   "src/nvidia-modeset/include/nvkms-types.h:2913"
+  ],
+  "pNV_KMS_ID": [
+   "src/nvidia-modeset/src/nvkms.c:5369"
+  ]
+ },
  "missing": [
-  "PEX_DSM_GUID",
-  "g_resServ",
-  "nvoc_dynamicCast",
-  "pNV_KMS_ID"
+  "nvoc_dynamicCast"
  ]
 }
