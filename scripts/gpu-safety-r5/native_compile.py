@@ -399,14 +399,17 @@ def main():
                             if "error:" in l][:2]
                     batch["failed"].append({"file": rel, "errors": errs})
         batch_objs = sorted(out.parent.glob("bat-*.o"))
-        if batch_objs and probe_objs:
+        # probe_objs is only defined on the mixed-link path; recompute locally so this block cannot
+        # depend on which earlier branch ran.
+        pb = sorted(out.parent.glob("probe-*.o"))
+        if batch_objs and pb:
             b_out = out.parent / "NVRM-rmbatch.kext/Contents/MacOS/NVRM"
             b_out.parent.mkdir(parents=True, exist_ok=True)
             b_link = ["xcrun", "clang++", "-arch", "x86_64", "-mmacosx-version-min=15.5", "-fapple-kext",
                       "-isysroot", sdk, "-nostdlib", "-Xlinker", "-kext", "-lkmodc++", "-lkmod", "-lcc_kext",
-                      *[str(o) for o in batch_objs], *[str(o) for o in probe_objs], "-o", str(b_out)]
+                      *[str(o) for o in batch_objs], *[str(o) for o in pb], "-o", str(b_out)]
             b_rc = execute(b_link, nm, out / "nvrm-rmbatch-link.txt")
-            entry = {"objects": len(batch_objs) + len(probe_objs), "exit": b_rc}
+            entry = {"objects": len(batch_objs) + len(pb), "exit": b_rc}
             if b_rc == 0:
                 execute(["xcrun", "nm", "-u", str(b_out)], nm, out / "nvrm-rmbatch-undefined.txt")
                 und = [l.strip() for l in (out / "nvrm-rmbatch-undefined.txt").read_text(
