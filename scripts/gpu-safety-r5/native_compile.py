@@ -249,6 +249,34 @@ def main():
                               "undefined_symbols": len(undefined), "status": "KEXT-LINK_INCOMPLETE_UNIT_SET"})
             report["kext_link_nvrm"] = entry
 
+        # Isolated probe: can the cross-OS translation units that define the missing NVKMS/RM symbols be
+        # compiled as Darwin objects? Report only - they are NOT added to the link, and a failure here does
+        # not fail the gate. The point is to record the first real error instead of guessing at -D flags.
+        ogkm_probe = ["src/nvidia/arch/nvalloc/unix/src/unix_intr.c",
+                      "src/nvidia/arch/nvalloc/unix/src/osapi.c",
+                      "src/nvidia/arch/nvalloc/unix/src/dynamic-power.c",
+                      "src/nvidia-modeset/src/nvkms.c",
+                      "src/nvidia-modeset/kapi/src/nvkms-kapi.c"]
+        probe_root = nvroot.parent if (nvroot.parent / "src/nvidia").exists() else nvroot
+        probe_inc = [str(p) for p in includes] + ["-I" + str(probe_root / "src/nvidia/arch/nvalloc/unix/include"),
+                                                 "-I" + str(probe_root / "src/nvidia")]
+        probe_results = {}
+        for rel in ogkm_probe:
+            srcp = probe_root / rel
+            if not srcp.exists():
+                probe_results[rel] = {"status": "MISSING"}
+                continue
+            obj = out.parent / ("probe-" + rel.replace("/", "_") + ".o")
+            cmd = ["xcrun", "clang++", *common_flags, *definitions, *probe_inc,
+                   "-I" + str(srcp.parent), "-c", str(srcp), "-o", str(obj)]
+            log = out / ("probe-" + rel.replace("/", "_") + ".txt")
+            rc = execute(cmd, probe_root, log)
+            errs = [l for l in log.read_text(encoding="utf-8", errors="replace").splitlines()
+                    if "error:" in l][:3]
+            probe_results[rel] = {"exit": rc, "first_errors": errs,
+                                  "status": "COMPILED" if rc == 0 else "COMPILE_FAILED"}
+        report["ogkm_probe"] = probe_results
+
         # Intel side: NMIntelFB is a single TU compiled twice (real / virtual), each with its own
         # bundle. Linking both reports what the Intel kext actually becomes; it is not a GPU test.
         intel_links = {}
