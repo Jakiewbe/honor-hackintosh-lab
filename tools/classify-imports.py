@@ -66,8 +66,14 @@ def classify(sym: str) -> str:
         return "ogkm-rm-core"
     # Remaining RM/NVOC internals seen in the mixed link: __nvoc_*, _nv*, kbus*, kdisp*, _f16/_f32 softfloat,
     # global RM services (g_pSys, g_resServ), ACPI helpers, *_KERNEL entry points.
-    if s.startswith(("__nvoc_", "_nv", "kbus", "kdisp", "kfifo", "kgsp", "f16_", "f32_", "_f16", "_f32",
-                     "_g_", "_kbus", "_kdisp", "_acpiDsm", "_gpuDbg", "_gpuNotify")) or s.endswith("_KERNEL"):
+    # Names are already stripped of every leading underscore, so match the bare forms.
+    if (s.startswith(("nvoc_", "kbus", "kdisp", "kfifo", "kgsp", "g_", "acpiDsm"))
+            or s.endswith("_KERNEL")
+            or (len(s) > 2 and s.startswith("nv") and s[2].isupper())
+            or (len(s) > 3 and s.startswith("f32") or s.startswith("f16"))
+            or s.startswith(("osC", "osG", "osHandle", "osIs", "osMap", "osModify", "osQueue", "osRead",
+                              "osRun", "osSanity", "osUnmap", "osWrite", "rmDevice", "rmGpu", "pNV", "pciPbi",
+                              "rcdb", "refFind", "nvlog"))):
         return "ogkm-rm-core"
     if re.match(r"Z(TV|TI|TS)\\d", s):
         return "iokit/libkern"
