@@ -156,3 +156,52 @@ v_pm_action_level_t 等），
 
 在探针里加一个最小的 Darwin 兼容头（只放 typedef，不含任何 Linux include），
 看三个 RM 文件能推进到哪一步。每次只补一个类型，缺什么记什么，不做整体搬运。
+
+## 九、平台宏实验（R52）
+
+两个实验，结论都很具体：
+
+### 实验 A：强制加最小 Darwin 兼容头
+
+esearch/gpu-safety-r5/darwin-compat/nv-darwin-compat.h 只放 
+v_dynamic_power_mode_t（纯 typedef，
+无任何 Linux include），用 -include 强制引入。结果：三个 RM 文件的错误从
+
+v_dynamic_power_mode_t 推进到 osapi.h:108: must use 'struct' tag to refer to type 'nv_state_t'。
+
+→ 说明 compat 头方向正确，下一个缺的是 
+v_state_t 的 typedef 归属。
+
+### 实验 B：去掉 -DNV_LINUX
+
+门禁的宏来自 Linux 干跑，天然带 -DNV_LINUX。去掉后：
+
+| 文件 | 结果 |
+|---|---|
+| 
+vkms.c / 
+vkms-kapi.c | **失败**：
+vUnixVersion.h:12: "should only be included in UNIX builds" |
+| 三个 RM 文件 | 仍是 must use 'struct' tag ... nv_state_t |
+
+→ **平台宏是必需的**，不能靠"不声明平台"绕过。没有 NV_LINUX/NV_FREEBSD 之一，modeset 头直接拒绝编译。
+
+## 因此真正的结论
+
+
+v_state_t 在 src/nvidia/arch/nvalloc/unix/include/nv.h:646 有 } nv_state_t;，但那个定义在
+-DNV_LINUX 下并不生效（否则不会报"必须用 struct 标签"）。也就是说：
+
+> 这三个 RM 文件的类型定义按平台分支：Linux 走 kernel-open/common/inc/nv.h，
+> FreeBSD 走 
+v-freebsd.h，**Darwin 需要自己的那一份**。
+
+而 NullMoth 的 kexts/NVRM/nv-xnu.h 正是为 Darwin 写的那一层。所以下一步不应继续在探针里
+逐个补 typedef，而应把探针的 include 路径换成"OGKM 交叉层 + NullMoth 的 Darwin 平台头"，
+看能否形成一次真实编译。这才是移植层该做的事，也解释了为什么单补 typedef 走不通。
+
+## 本轮未做
+
+- 未修改任何 OGKM 源码；
+- 未把探针加入链接；
+- 未把 compat 头接进生产构建（它只用于探针实验）。
