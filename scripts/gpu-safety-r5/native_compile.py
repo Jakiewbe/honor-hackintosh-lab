@@ -344,7 +344,7 @@ def main():
         for d in (probe_root / "src/nvidia/generated", probe_root / "src/nvidia/src/kernel",
                   probe_root / "src/nvidia/src/core"):
             if d.is_dir():
-                sample_files.extend(sorted(d.rglob("*.c"))[::40])
+                sample_files.extend(sorted(d.rglob("*.c"))[::9])
         sample = {"attempted": 0, "compiled": 0, "failed": []}
         sflags = [f for f in common_flags if f not in ("-std=c++17", "-fno-rtti", "-fno-exceptions")]
         for sf in sample_files:
