@@ -14,10 +14,10 @@ if ! g++ -std=c++17 -Wall -Wextra -Werror -Wno-unused-parameter -O1 -g \
     head -20 "$o/compile.txt"
     exit 2
 fi
-if ! head -2 "\/device-lifetime-actual.cpp" | grep -q "^// source_sha256: "; then
+if ! head -2 "$o/device-lifetime-actual.cpp" | grep -q "^// source_sha256: "; then
     echo "PROVENANCE_MISSING: the generated test has no source fingerprint"; exit 2
 fi
-head -2 "\/device-lifetime-actual.cpp" > "\/provenance.txt"
+head -2 "$o/device-lifetime-actual.cpp" > "$o/provenance.txt"
 echo "COMPILE=0"
 "$b/r11-lifetime" > "$o/results.txt" 2>&1
 rc=$?
