@@ -1,0 +1,265 @@
+{
+ "files": 988,
+ "compiled": 135,
+ "failed": [
+  {
+   "file": "src/nvidia/src/kernel/compute/fabric.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/compute/fm_session_api.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/compute/imex_session_api.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/compute/mps_api.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/core/bin_data.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/core/hal/hal.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/core/hal/hals_all.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/core/hal/hals_stub.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/core/hal/info_block.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/src/kernel/core/hal/info_block.c:81:15: error: call to undeclared function 'portMemAllocNonPaged'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/core/locks.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/tls/tls.h:182:52: error: unknown type name 'PORT_MEM_ALLOCATOR'"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/core/locks_common.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/core/system.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/core/thread_state.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/tls/tls.h:182:52: error: unknown type name 'PORT_MEM_ALLOCATOR'"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/diagnostics/gpu_acct.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/diagnostics/instrumentation_manager.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/diagnostics/journal.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/diagnostics/nocat_event_list.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/diagnostics/nv_debug_dump.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/diagnostics/nvlog.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/diagnostics/nvlog_printf.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/diagnostics/op_event_log.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/diagnostics/ucode_instrumentation_ctrl.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/disp/disp_sw.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/disp/nvfbc_session.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/gpu/arch/ada/kern_gpu_ad102.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/gpu/arch/ampere/kern_gpu_error_cont_ga100.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/gpu/arch/ampere/kern_gpu_ga100.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/gpu/arch/blackwell/kern_gpu_error_cont_gb100.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/gpu/arch/blackwell/kern_gpu_gb100.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/gpu/arch/blackwell/kern_gpu_gb10b.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/gpu/arch/blackwell/kern_gpu_gb202.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/gpu/arch/blackwell/kern_gpu_gb20b.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/gpu/arch/blackwell/kern_gpu_gb20c.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/gpu/arch/hopper/gpu_gsp_fmc_error_reporting_gh100.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/gpu/arch/hopper/kern_gpu_gh100.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/gpu/arch/maxwell/kern_gpu_gm107.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/gpu/arch/pascal/kern_gpu_gp100.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/gpu/arch/rubin/kern_gpu_gr100.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/gpu/arch/rubin/kern_gpu_gr102.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  },
+  {
+   "file": "src/nvidia/src/kernel/gpu/arch/t23x/kern_gpu_t234d.c",
+   "error": [
+    "/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/containers/type_safety.h:280:5: error: call to undeclared function 'PORT_BREAKPOINT'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]"
+   ]
+  }
+ ],
+ "skipped": 0,
+ "objects": 135,
+ "generated_object": true,
+ "link_exit": 0,
+ "size": 8508032,
+ "undefined": 186,
+ "classes": {
+  "unclassified": 179,
+  "ogkm-rm": 7
+ },
+ "ogkm_rm_sample": [
+  "___nvoc_objCreate_OBJHAL",
+  "___nvoc_objDelete",
+  "___nvoc_rtti_provider",
+  "_nvAssertFailedNoLog",
+  "_osGetPerformanceCounter",
+  "_osGetRandomBytes",
+  "_os_is_isr"
+ ]
+}

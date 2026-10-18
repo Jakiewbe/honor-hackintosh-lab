@@ -1,3 +1,5 @@
+> **独立审计纠正（优先于下方R85–R101的推断）：** 1280官方C TU完整构建及完整重建候选链接早已成功，不能用不同输入/宏的988目录探针失败撤回。R101的“必须重写端口层”“IOMalloc可能分页”“近半引用零风险”“真正难点仅11项”均缺足够源码/上下文证据，撤回其工程决策效力。词法引用数量不是预处理启用路径、对象闭包或适配工作量。无需据此新写PORT宏/内存/锁层。原始统计保留作历史。 见[审计](HARNESS-AUDIT-20261018.md)。
+
 # 决策页：整层构建 vs 接受闭源（2026-10-18，R89）
 
 ## 结论先行
@@ -94,7 +96,8 @@ src/nvidia/generated/g_intr_nvoc.h NvU32 intrGetIntrMaskFlags_IMPL(struct Intr *
 
 - 树内 .nvoc 文件数：**0**（没有任何 NVOC 类定义源）；
 - generated/*.c 里确实存在 _IMPL **定义** 1261 处 —— 说明部分类的生成结果随树发布；
-- 但 RmInitRm 这类**不在** generated/*.c 里，只有 mosxfac.h 的声明，
+- 但 RmInitRm 这类**不在** generated/*.c 里，只有 
+mosxfac.h 的声明，
   而发行版二进制里它是 **DEFINED**。
 
 ### 因此结论分两类
@@ -116,7 +119,8 @@ B 类是我们**无法从公开源码闭合**的部分：不是"我没找到"，
 
 ## 四十二、剩余符号最终归类：5 个真缺、4 个连发行版都没有（R91）
 
-m-gap-index.json 当前的 missing 是 **9 个数据符号**（不是 45——45 是 R74 之前的旧数字，函数类的已被补上）。
+
+m-gap-index.json 当前的 missing 是 **9 个数据符号**（不是 45——45 是 R74 之前的旧数字，函数类的已被补上）。
 逐个核对"树内定义"与"发行版二进制定义"：
 
 | 符号 | 树内定义 | 发行版 NVRM |
@@ -139,7 +143,8 @@ voc_rtti_provider | ❌ 零命中 | **absent** |
 ## 分成两类，意义完全不同
 
 **B 类（5 个）：源码里确实没有，但发行版有定义**
-→ 这是真正的"公开源码无法闭合"部分。它们只能来自 NVIDIA 未随树发布的源（NVOC 运行时代码 / mosxfac）。
+→ 这是真正的"公开源码无法闭合"部分。它们只能来自 NVIDIA 未随树发布的源（NVOC 运行时代码 / 
+mosxfac）。
 
 **C 类（4 个 
 voc_*）：源码没有、发行版也没有**
@@ -166,7 +171,8 @@ voc_* 源码零命中、发行版也没有"。**树内零命中这一半是错�
 | __nvoc_class_def_Memory | src/nvidia/generated/g_mem_nvoc.c:84 |
 | __nvoc_class_def_RmResource | src/nvidia/generated/g_resource_nvoc.c:177 |
 | __nvoc_rtti_provider | src/nvidia/src/libraries/nvoc/src/runtime.c:46 |
-| __nvoc_dynamicCast | NVOC 运行时 untime.c（dynamicCast 的实现族，见 L62/166/235/281） |
+| __nvoc_dynamicCast | NVOC 运行时 
+untime.c（dynamicCast 的实现族，见 L62/166/235/281） |
 
 也就是说 **NVOC 运行时源码随树发布**（src/nvidia/src/libraries/nvoc/src/runtime.c），
 两个类描述符也在 generated/*.c 里。索引漏报的原因：这些定义不符合我索引的三种函数形态
@@ -302,14 +308,16 @@ voc/src/runtime.c:282（Dynamic *__nvoc_dynamicCast(...)） |
 - 7 个是数据符号，树内有定义（其中 1 个由宏生成）；
 - 1 个（pNV_KMS_ID）由 Makefile 生成，源码只有声明——**是构建步骤，不是缺口**；
 - 1 个（
-voc_dynamicCast）根本不是数据符号，是函数，定义在 untime.c:282。
+voc_dynamicCast）根本不是数据符号，是函数，定义在 
+untime.c:282。
 
 **结论：不存在"无源码定义的符号"。** 之前 R91 的"5 个真缺"是工具误报，已撤回。
 
 ## 工具现在能区分四类
 
 DEF / MACRO / GENERATED / DECL / NONE，并且 extern 单独成类，
-不会再被当成定义。9 个符号作为回归用例留在 esearch/gpu-safety-r5/data-symbol-defs.json。
+不会再被当成定义。9 个符号作为回归用例留在 
+esearch/gpu-safety-r5/data-symbol-defs.json。
 
 ## 仍未验证
 
@@ -583,3 +591,4 @@ PORT_SPINLOCK、PORT_RWLOCK 等。
 
 分档基于名称与常见语义判断，**未逐个核对每个原语在 RM 中的调用上下文**；
 portMemFree 归入 B 档而非 A，是因为它必须与 A 档的分配器配对，不能各自映射。
+

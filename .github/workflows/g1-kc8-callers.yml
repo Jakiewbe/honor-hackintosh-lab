@@ -1,0 +1,57 @@
+name: HONOR G1 actual NVRM PCI caller ABI shapes (no link or load)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  actual-callers:
+    runs-on: macos-15-intel
+    timeout-minutes: 15
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Test parsers and real failure controls
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s tools -p test_macho_imports.py -v
+          python3 -m unittest discover -s tools -p test_g1_kc8_callers.py -v
+          python3 -m unittest discover -s tools -p test_g1_compile_inputs.py -v
+      - name: Fetch fixed inputs and record toolchain
+        run: |
+          set -euo pipefail
+          mkdir "$RUNNER_TEMP/gpu-safety-r5-logs"
+          [[ "$(uname -m)" == x86_64 ]]
+          command -v gmake >/dev/null || brew install make >/dev/null
+          { sw_vers; xcodebuild -version; xcrun clang++ --version; xcrun --show-sdk-version; gmake --version; } > "$RUNNER_TEMP/gpu-safety-r5-logs/toolchain.txt"
+          for spec in "nm https://github.com/nullmoth/nvidia-macos-driver.git ac55984c473e746c2a8ebea7ba0913461aa7c393" \
+                      "nv https://github.com/NVIDIA/open-gpu-kernel-modules.git e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb"; do
+            set -- $spec
+            d="$RUNNER_TEMP/gpu-safety-r5-$1"
+            git init -q "$d"
+            git -C "$d" remote add origin "$2"
+            git -C "$d" fetch --no-tags --depth 1 origin "$3"
+            git -C "$d" checkout --detach -q FETCH_HEAD
+            [[ "$(git -C "$d" rev-parse HEAD)" == "$3" ]]
+          done
+      - name: Compile nine actual caller TUs and diagnostic IR using shared linked-TU profile
+        run: |
+          set -euo pipefail
+          python3 scripts/gpu-safety-r5/native_compile.py --caller-only \
+            --nm "$RUNNER_TEMP/gpu-safety-r5-nm" --nv "$RUNNER_TEMP/gpu-safety-r5-nv" \
+            --assets research/gpu-safety-r5 --out "$RUNNER_TEMP/gpu-safety-r5-logs"
+      - name: Prepare strictly text diagnostics
+        id: text
+        if: ${{ always() }}
+        run: |
+          python3 tools/g1_text_diagnostics.py --source "$RUNNER_TEMP/gpu-safety-r5-logs" \
+            --out "$RUNNER_TEMP/g1-callers-text"
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && steps.text.outcome == 'success' }}
+        with:
+          name: honor-g1-pci-callers-text
+          path: ${{ runner.temp }}/g1-callers-text/
+          if-no-files-found: error
+          retention-days: 14

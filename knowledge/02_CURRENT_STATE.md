@@ -1,3 +1,5 @@
+> **2026-10-18 Harness 独立审计更新：** 已否定“988 探针证明源码构建到顶”的推断：最新 run39138580661 只编过135/988，部分链接后仍exit0。此前 run39127772586 的1280官方C TU、5 shader及完整NVRM重建候选链接证据保持有效。错误探针已退休并非零退出；Mach-O解析器修正后发布版472/候选交集471复算成立。PM结构合同不再把“RM门忙仍STANDBY”当PASS，真实候选现为31/32、exit1；风险未修。新增九个实际NVRM TU的PCI调用侧原生诊断，待本轮CI。完整ABI、loader/版本、初始化、GPU渲染/读回/安全结束仍未验收，设备NO-GO。 [审计与真实断点](../research/gpu-safety-r5/HARNESS-AUDIT-20261018.md)。
+
 > **2026-10-18 KC8实际进展：** P1/P2门禁修复已在[run39133232412](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39133232412)通过，真实失败注入exit2且报告保留、外部身份跨run替换被拒。[KC最终run39134085153](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39134085153)观察到余下8项runner真实外部节定义（6函数+2数据），58项文本交叉核对；SDK六方法真实编译，5项与历史调用IR形状一致，write8调用侧仍未知。**未重新编完整驱动；472名称已有实际定义观察，不等于loader导出/完整ABI/最终用户系统通过；GPU初始化/渲染/读回/安全结束未执行，设备NO-GO。** 下一步定位write8实际TU/对象做单TU诊断，再补family loader/版本/提供侧ABI与PM关闭集成；不重复1280TU或本轮八符号首次取证。[结果](../research/gpu-safety-r5/KC8-20261018.md)｜[网页端审查prompt](../research/gpu-safety-r5/KC8-WEB-PROMPT.md)。
 
 > **2026-10-18 目标提供者新证据：** [run 39130439405](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39130439405) 只读取证成功；在runner macOS15.7.9/24G830内核中，464项有精确KPI条目且实际目标全局存在，14个别名目标已核对；其余8项仅有IOPCIFamily/IOACPIFamily随系统导出名单。完整候选仍是上轮固定字节，本轮未重新编译驱动。**8项实际二进制/C++ABI、完整ABI、最终用户系统、GPU初始化/渲染/读回/关闭仍未验收；设备NO-GO。** 下一步只读检查KC中的这8项，不重复1280TU构建。[报告](../research/gpu-safety-r5/TARGET-PROVIDERS-20261018.md)｜[网页端prompt](../research/gpu-safety-r5/TARGET-PROVIDERS-WEB-PROMPT.md)。
@@ -232,5 +234,6 @@ R4 为 NVRMUserClient 外部方法分发、映射和关闭增加串行会话门�
 
 ## R1.4-C0-pre（SOURCE-STATIC）
 [原表静态证据](../research/acpi-static-20261012/README.md)：36表校验通过；同一iasl20250404选择外部代表逐表16通过0失败；历史失败日志保留。38项findings有定位；两组重复对应空闲PEG1和蓝牙HS10，与MUX/内屏/OpRegion无关。DSDT外部方法警告与EDMX UnknownObj仍保留；NVS/OpRegion内容未取得，RUNTIME_NO_GO。
+
 
 

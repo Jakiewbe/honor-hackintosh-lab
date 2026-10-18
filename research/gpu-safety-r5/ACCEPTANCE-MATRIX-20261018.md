@@ -1,78 +1,21 @@
-# 双轨验收矩阵（2026-10-18）
+# G1 当前验收矩阵（独立审计修正）
 
-一页看清：每个门禁**需要什么证据**、**现在到哪**、**还差谁**。所有数字取自 `evidence/ci-r5/verification.json`、
-`evidence/roundtrip.json` 与最近一次门禁报告，不手写估算。
+本表替代旧矩阵的“源码到顶/不可重建/只剩加载”判断。历史矩阵保留于Git历史；不得混用不同对象集合。RTX2050 10DE:25A9目标仍为初始化→GPU执行→正确像素读回→错误传播→安全结束，Intel基础显示所有权保持。
 
-门禁定义：`SOURCE-REVIEW` → `HOST-TEST` → `PATCH-APPLIED` → `DARWIN-COMPILE` → `KEXT-LINK` → `KEXT-LOAD` →
-`GPU-RUNTIME` → `DISPLAY-RUNTIME` → `ACCELERATED-DESKTOP`。**上一级不能替代下一级。**
+| 层级/合同 | 当前事实 | 证据/缺口 |
+|---|---|---|
+| 完整源码重建候选 | 已完成1280官方C TU、5shader、独立NVLink后端、完整归档与NVRM链接 | run39127772586；不是复现上游发布物 |
+| 988目录探针 | 135/988成功、853失败；部分链接后脚本exit0，不能作验收 | run39138580661；入口已退休、exit2 |
+| 选定RM ABI | 六profile136布局值/20接口形状已通过 | 完整ABI未验收 |
+| 472提供者名称 | 464精确KPI+实际全局、其余8项runner KC实际外部节定义 | loader导出/依赖版本/用户系统/完整ABI未验收 |
+| 发布物导入对照 | 修正有界解析器后472项、与候选交集471 | 候选独有panic；发行独有IOUserClient::free，后者精确调用链未知 |
+| PCI调用侧 | 历史NVRM.cpp IR已观察5方法，write8仍待查 | 新九TU caller-only门禁：当前参数/源码/依赖+对象导入+直接调用；未执行 |
+| NVLink四锁 | 真实后端与17项CPU合同及原生链接已验证 | 不能据此关闭freeDevice/PM问题 |
+| P0-4 freeDevice关闭拒绝 | OPEN | 旧void边界与所有权/返回传播需继续改造；不是“项目无能力修改” |
+| RM门忙仍STANDBY | OPEN，当前结构审计31/32，exit1 | nv_xnu_pm_close超时后仍继续；不能以IOPM ack要求证明其安全 |
+| 延迟KMS close回收 | OPEN | 保留不等于最终可回收，需要绑定真实路径的合同 |
+| Kext加载 | 未执行、NO-GO | 未签名/安装/加载/卸载 |
+| GPU初始化/渲染/正确像素/安全结束 | 未执行 | 编译/链接/CPU检查都不替代这四层证据 |
+| Intel基础显示 | 保持现状，不扩大显示所有权 | 不进入G2/G3/WindowServer/Intel Metal |
 
----
-
-## A. NVIDIA RTX 2050（10DE:25A9）
-
-| 验收点 | 需要的证据 | 当前 | 证据位置 | 谁能推进 |
-|---|---|---|---|---|
-| 补丁序列可回退 | 完整源码正反向、树哈希复原 | ✅ PASS（**29 补丁**；含 R29 显式窄化） | `evidence/roundtrip.json` | — |
-| 关闭路径无 UAF | 真实函数体 + ASan，含改前对照 | ✅ 40/40，对照报 UAF | `evidence/r5/` | — |
-| 隔离态可回收 | 主机测试 + 调用点合同 | ✅ 9/9、12/12 | `evidence/r6/` | — |
-| 共享 Device 生命周期 | 计数/孤儿/创建者 retain | ✅ 34/34、45/45（R14） | `evidence/r11/` | — |
-| PM 竞态关闭 | pin 语义 + suspend 等待 | ✅ 38/38、50/50（R15） | `evidence/r11/` | — |
-| **PM pin 与挂起严格互斥** | 有界等待 + 消除争用 | ⛔ **BLOCKED**：R23 的 Busy 拒绝前提已撤回（XNU 4525）；R24 用 begin/commit/abort 消除争用，但 commit 超时后 IOPM 仍会断电，驱动无法阻止；主机 26/26、结构 **32/32**（R85 加 5 条关闭超时、R87 加 3 条门忙行为）、R22 基线失败 13 项 | `research/gpu-safety-r5/R24-SUSPEND-CONTRACT-20261018.md` | 需要架构级方案 |
-| Intel KC 八符号 | 目标二进制定义 + 导入名一致性 | ✅ runner 上 8/8 定位（节角色/VM 地址/文件偏移）；导入名与定义名逐字节相同；发行版 NVRM 亦导入全部 8 个 | `KC8-20261018.md`；`kc8-evidence/`；`shipped-nvrm-imports.json` | 最终用户系统仍 NOT VERIFIED |
-| 472 项导入面独立复算 | 与真实二进制逐项比对 | ✅ 发行版 Mach-O `LC_SYMTAB` 解析得 472 项导入，与审计清单交集 **471/472**；差异 `_panic`（我方 NVLink 锁）与 `IOUserClient::free`（发行版 IOAccel 用户客户端）已归因 | `tools/macho_imports.py`；`KC8-20261018.md` §36 | — |
-| 关闭失败可上报 | OGKM `void` 接口改造 | ❌ **不可关闭**（已记录） | `README.md` R15 段 | 上游 |
-| 原生编译 | 真实 Xcode 工具链 | ✅ 16/16 对象、告警零增量 | run 39058264569 | — |
-| Kext 链接 | NVAccel + 生产 NVRMFB 链成 | ✅ 248,584 B / 315,744 B | 同上 | — |
-| NVRM 可重建 | 与发行版符号/体积可比 | ❌ **BLOCKED**：361,936 B / 650 符号 vs 16,787,920 B / 17,679；REA 发现 7.93 MB 不透明载荷 | `REA-NVRM-BINARY-20261018.md` | 上游 |
-| NVRM 可重建 | 与发行版符号/体积可比 | ⚠️ **部分推进**：42 个原"无提供者"导入已全部定位并编译（15 TU 后缺口 0）；RM 树抽样 175/175 编译；但批链接后 RM 内部仍有 667 个无提供者符号（稠密调用图，增量不收敛） | `OGKM-DEPENDENCY-AUDIT-20261018.md` | 需整层构建决策 |
-| 加载前一致性 | Info.plist 与链接产物、标识符、provider 类 | ✅ 30/30（`tools/check-bundles.py`） | `evidence/preload/bundle-consistency.json` | — |
-| **延迟的 KMS close 永不补完** | 超时后是否有回收路径 | ⛔ **BLOCKED**：`gKmsCloseDeferred++` 只计数，`nvkms_xnu_kms_close_deferred_count()` 只读出，全文件无重试/回收；per-open+wrapper+event call 保留到卸载 | `os-nvkms-xnu.cpp:143-150,303-306`；检查 "a timed-out close retains the wrapper" | 需要回收策略（resume 后重试或卸载时清理） |
-| **RM 门未关干净仍 STANDBY** | 门关闭被拒后的行为 | ⛔ **BLOCKED**：`nv_xnu_pm_close(10000)` 只调一次，失败仅 `LOG(... still running ...)` 后继续 `rm_stop_user_channels` + STANDBY；"standby 期间无 RM 调用"是尽力保证而非强制保证 | `NVRM.cpp:1441-1447`；检查 "a busy RM gate is logged, not silently ignored" | 架构级（P0-1 的下游后果） |
-| 加载 | 实机加载并采集 RM/GSP 日志 | ⛔ **NO-GO** | `LOAD-EXPERIMENT-20261018.md`（脚本默认禁用） | **用户**（需重新授权） |
-| GPU 执行 / Metal / 内屏 | 运行证据 | ⛔ NO-GO | — | 用户 |
-
-**结论**：2050 轨在源码与构建层面已到顶；再往前只有"实机加载（需用户授权）"或"接受上游二进制"两条路。
-
----
-
-## B. Intel 8086:46A6
-
-| 验收点 | 需要的证据 | 当前 | 证据位置 | 谁能推进 |
-|---|---|---|---|---|
-| Intel kext 编译 | 真实工具链 | ✅ 两变体均 exit 0 | run 39056413162 | — |
-| Intel kext 链接 | 链成 Mach-O | ✅ 44,824 B / 34 符号（真实）；58,752 B / 56 符号（虚拟） | 同上 | — |
-| 停机不挂死 | 无界循环消除 | ✅ 8/8 结构合同（R16） | `evidence/intel/stop-contract.json` | — |
-| 扫描缓冲不外借 | owner-copy + stop 排空 | ✅ 20/20（R17） | 同上 | — |
-| 重启安全 | `fStopping` 复位等四项 | ✅ 25/25（R18） | 同上 | — |
-| 拷贝不依赖 kva | owner-copy 优先、kva 仅回退 | ✅（R19） | 同上 | — |
-| **内屏由谁驱动** | 实机只读：`IOFramebuffer` 树 + kextstat | ❓ **未知** | `collect.sh` 的 50–54 项 | **用户**（只读采集） |
-| 发行物是否含 Intel kext | 发行包内容 | ❌ 不含（只有 NVAccel/NVRM/NVRMAGDC/NVRMFB） | `INTEL-TRACK-20261018.md` | — |
-| 加载前一致性 | plist 与链接产物一致、provider 类存在 | ✅ 30/30（同一脚本） | `tools/check-bundles.py` | — |
-| 加载 / 持续刷新 / 2160×1440 | 运行证据 | ⛔ NO-GO | — | 用户 |
-| i915/eDP 自研闭包 | FreeBSD base/LinuxKPI 固定 commit | ⛔ **BLOCKED_FREEBSD_BASE_SELECTION**（未变） | `knowledge/02` | 需要新证据 |
-
-**结论**：Intel 轨源码侧已清完；下一步是"只读确认内屏现状"（用户几分钟即可），而不是继续改代码。
-
----
-
-## C. 冻结判断（本轮复核）
-
-- **i915/eDP 自研线**：R16–R19 只碰了 `kexts/NMIntelFB/intelfb.cpp` 与 VRAM ABI，**没有**触及
-  FreeBSD base/LinuxKPI 闭包，因此 `BLOCKED_FREEBSD_BASE_SELECTION` 的前提未变，**不重开**。
-- **2050 加载实验**：脚本默认禁用；恢复条件 = 用户重新授权 + 接受"验证的是上游预编译件"这一事实。
-
----
-
-## C2. 一条命令复现全部离线证据
-
-```bash
-python tools/verify-all.py --workspace <工作区>
-```
-
-11 步：bundle、apply（复用已验路径）、两个 structure、reset、roundtrip、publish、ASan。
-末尾固定声明未覆盖 `KEXT-LOAD` 及以上。
-
-## D. 本矩阵的维护规则
-
-任何一格从 ❓/⛔ 变成 ✅，必须同时给出：run id 或日志路径、证据等级、以及"这一级**没有**证明什么"。
-只有数字上升而没有被证明边界的变化，不算进展。
+当前动作是补真实PCI调用侧证据，然后补family loader/版本和PM关闭合同；无需重复完整构建、无需新写占位PORT层，也不转设备部署。详见[审计](HARNESS-AUDIT-20261018.md)。

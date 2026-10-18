@@ -79,12 +79,32 @@ def macros_from_make(text):
     raise ValueError("fixed Makefile did not emit the real osapi.c command")
 
 
+
+def unified_includes(includes, probe_root):
+    probe_inc = ["-I" + str(p) for p in includes if Path(p).is_dir()]
+    probe_inc += ["-I" + str(d) for d in (
+        probe_root / "src/nvidia/arch/nvalloc/unix/include",
+        probe_root / "src/nvidia",
+        probe_root / "src/common/softfloat/nvidia",      # nv-softfloat.h lives here
+        probe_root / "src/common/softfloat",
+        probe_root / "src/common/softfloat/source/include",
+        probe_root / "src/common/softfloat/source/8086-SSE",
+        probe_root / "src/common/unix/nvidia-headsurface",
+        probe_root / "src/common/softfloat/source",
+        probe_root / "src/nvidia/src/libraries/libspdm/nvidia",
+        probe_root / "src/nvidia/src/libraries/libspdm/3.5.0/include",
+        probe_root / "src/nvidia/src/libraries/libspdm",
+        probe_root / "src/nvidia-modeset/include") if d.is_dir()]
+    return probe_inc
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--nm", required=True)
     parser.add_argument("--nv", required=True)
     parser.add_argument("--assets", required=True)
     parser.add_argument("--out", required=True)
+    parser.add_argument("--caller-only", action="store_true", help="Nine real caller objects and IR only; no links or RM build")
     args = parser.parse_args()
     nm, nv, assets, out = [Path(getattr(args, key)).resolve() for key in ("nm", "nv", "assets", "out")]
     out.mkdir(parents=True, exist_ok=True)
@@ -140,6 +160,13 @@ def main():
                         "-I" + str(khdr), "-DKERNEL", "-DKERNEL_PRIVATE", "-DDRIVER_PRIVATE", "-DAPPLE", "-DNeXT",
                         "-std=c++17", "-fno-rtti", "-fno-exceptions", "-fno-builtin", "-fno-common", "-O2",
                         "-Wall", "-Wno-unused-parameter", "-Wno-inconsistent-missing-override", "-Wno-unused-function"]
+        if args.caller_only:
+            # Reuse the exact ordered unified profile, without entering any link/probe path.
+            from g1_kc8_callers import run as observe_callers
+            flags = [*common_flags, *definitions, "-DNVRM", *unified_includes(includes, nv),
+                     "-I" + str(candidate / "kexts/NVRM")]
+            observe_callers(nv, candidate, out, flags, report, execute)
+            return
         # Same selected compiler/profile for original and candidate; no use of published binary objects.
         # NVRMFB is included because R7/R8 change kexts/NVRM/fb/nvrm-fb.cpp: a gate that skips that
         # translation unit would report a green build for code it never compiled.
@@ -312,20 +339,7 @@ def main():
         probe_root = nvroot.parent.parent
         if not (probe_root / "src/nvidia").exists():
             probe_root = nvroot
-        probe_inc = ["-I" + str(p) for p in includes if Path(p).is_dir()]
-        probe_inc += ["-I" + str(d) for d in (
-            probe_root / "src/nvidia/arch/nvalloc/unix/include",
-            probe_root / "src/nvidia",
-            probe_root / "src/common/softfloat/nvidia",      # nv-softfloat.h lives here
-            probe_root / "src/common/softfloat",
-            probe_root / "src/common/softfloat/source/include",
-            probe_root / "src/common/softfloat/source/8086-SSE",
-            probe_root / "src/common/unix/nvidia-headsurface",
-            probe_root / "src/common/softfloat/source",
-            probe_root / "src/nvidia/src/libraries/libspdm/nvidia",
-            probe_root / "src/nvidia/src/libraries/libspdm/3.5.0/include",
-            probe_root / "src/nvidia/src/libraries/libspdm",
-            probe_root / "src/nvidia-modeset/include") if d.is_dir()]
+        probe_inc = unified_includes(includes, probe_root)
         probe_results, probe_objs = {}, []
         for rel in ogkm_probe:
             srcp = probe_root / rel

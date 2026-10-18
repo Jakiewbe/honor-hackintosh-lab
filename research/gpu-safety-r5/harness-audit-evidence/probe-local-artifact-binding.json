@@ -1,0 +1,22 @@
+{
+  "run_id": 39138580661,
+  "artifact_id": 12140693157,
+  "artifact_sha256": "9904f3a47b23408cd0964acfe37322313de175a982f174a19b675b241a6b0b00",
+  "members": [
+    {
+      "path": "undefined.txt",
+      "sha256": "8ba0173e4fd51b97a20564aaad8c4538d1e2ef4826dd9599680bf1015d68d8f4",
+      "bytes": 4977
+    },
+    {
+      "path": "report.json",
+      "sha256": "39f079c4abb3cbd84091b9d3b5a91e5e20365f195bca4512b73fb0e0f5a63595",
+      "bytes": 13580
+    },
+    {
+      "path": "link.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ]
+}

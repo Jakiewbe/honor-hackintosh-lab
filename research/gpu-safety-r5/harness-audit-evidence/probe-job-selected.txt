@@ -1,0 +1,15 @@
+2026-10-18T15:01:25.1515990Z macOS
+2026-10-18T15:01:25.1516830Z 15.7.9
+2026-10-18T15:01:25.1517700Z 24G830
+2026-10-18T15:01:25.1521120Z Image: macos-15-arm64
+2026-10-18T15:01:25.1522110Z Version: 20260907.0337.1
+2026-10-18T15:04:20.6129700Z  "files": 988,
+2026-10-18T15:04:20.6130020Z  "compiled": 135,
+2026-10-18T15:04:20.6130580Z  "objects": 135,
+2026-10-18T15:04:20.6130880Z  "generated_object": true,
+2026-10-18T15:04:20.6131150Z  "link_exit": 0,
+2026-10-18T15:04:20.6131650Z  "undefined": 186,
+2026-10-18T15:04:20.6135220Z failed sample: ['src/nvidia/src/kernel/compute/fabric.c', 'src/nvidia/src/kernel/compute/fm_session_api.c', 'src/nvidia/src/kernel/compute/imex_session_api.c', 'src/nvidia/src/kernel/compute/mps_api.c', 'src/nvidia/src/kernel/core/bin_data.c', 'src/nvidia/src/kernel/core/hal/hal.c', 'src/nvidia/src/kernel/core/hal/hals_all.c', 'src/nvidia/src/kernel/core/hal/hals_stub.c']
+2026-10-18T15:04:21.2532270Z SHA256 digest of uploaded artifact zip is 9904f3a47b23408cd0964acfe37322313de175a982f174a19b675b241a6b0b00
+2026-10-18T15:04:21.4278750Z Artifact g1-full-rm.zip successfully finalized. Artifact ID 12140693157
+2026-10-18T15:04:21.4279600Z Artifact g1-full-rm has been successfully uploaded! Final size is 2247 bytes. Artifact ID is 12140693157

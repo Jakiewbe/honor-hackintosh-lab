@@ -1,90 +1,88 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""List undefined (imported) symbols of a Mach-O or kext binary, without external tools.
-
-A byte search for a symbol name proves nothing about whether it is an import: the name could live in
-the string table, in debug data, or in a comment. This script walks the Mach-O load commands, reads
-LC_SYMTAB and reports the nlist entries with N_UNDF set, which is what the loader must resolve.
-
-Usage:
-    python tools/macho_imports.py <binary> [--grep NAME] [--json out.json]
-"""
+"""Bounded thin little-endian Mach-O external undefined-symbol inventory."""
+import argparse
 import json
-import struct
-import sys
 from pathlib import Path
+import struct
 
-MH_MAGIC_64 = 0xFEEDFACF
-MH_MAGIC_32 = 0xFEEDFACE
-N_UNDF = 0x0
-N_STAB = 0xE0
+
+def parse_bytes(data):
+    def unpack(fmt, offset):
+        size = struct.calcsize(fmt)
+        if offset < 0 or offset + size > len(data):
+            raise ValueError('truncated Mach-O structure')
+        return struct.unpack_from(fmt, data, offset)
+
+    magic, = unpack('<I', 0)
+    if magic not in (0xfeedfacf, 0xfeedface):
+        raise ValueError('only thin little-endian Mach-O supported')
+    is64 = magic == 0xfeedfacf
+    header_size, entry_size, alignment = (32, 16, 8) if is64 else (28, 12, 4)
+    header = unpack('<8I' if is64 else '<7I', 0)
+    ncmds, sizeofcmds = header[4:6]
+    end = header_size + sizeofcmds
+    if end > len(data) or ncmds > sizeofcmds // 8:
+        raise ValueError('invalid load command region')
+    offset, symtab = header_size, None
+    for _ in range(ncmds):
+        if offset + 8 > end:
+            raise ValueError('command header outside declared region')
+        cmd, size = unpack('<II', offset)
+        if size < 8 or size % alignment or offset + size > end:
+            raise ValueError('invalid command size')
+        if cmd == 2:
+            if symtab is not None or size != 24:
+                raise ValueError('duplicate/invalid LC_SYMTAB')
+            symtab = unpack('<4I', offset + 8)
+        offset += size
+    if offset != end or symtab is None:
+        raise ValueError('command count/size mismatch or missing LC_SYMTAB')
+    symoff, count, stroff, strsize = symtab
+    symend, strend = symoff + count * entry_size, stroff + strsize
+    if (symoff < end or stroff < end or symend > len(data) or strend > len(data)
+            or (count and strsize and symoff < strend and stroff < symend)):
+        raise ValueError('symbol/string table outside file or overlapping')
+    if not strsize or data[stroff] != 0:
+        raise ValueError('invalid string table sentinel')
+    imports = []
+    for i in range(count):
+        index, kind, sect, desc, value = unpack('<IBBHQ' if is64 else '<IBBHI', symoff+i*entry_size)
+        if index >= strsize:
+            raise ValueError('symbol name outside string table')
+        start = stroff + index
+        stop = data.find(b'\0', start, strend)
+        if stop < 0:
+            raise ValueError('unterminated symbol name')
+        name = data[start:stop].decode('utf-8', errors='strict')
+        # N_STAB debug, non-N_UNDF, non-N_EXT and common definitions are not imports.
+        if kind & 0xe0 or kind & 0x0e or not kind & 1 or value:
+            continue
+        if sect != 0 or not name:
+            raise ValueError('invalid external undefined entry')
+        if name in imports:
+            raise ValueError('duplicate external undefined symbol')
+        imports.append(name)
+    return imports
 
 
 def parse(path):
-    data = Path(path).read_bytes()
-    if len(data) < 32:
-        raise SystemExit("file too small to be Mach-O")
-    magic = struct.unpack_from("<I", data, 0)[0]
-    if magic == MH_MAGIC_64:
-        is64 = True
-        header_size = 32
-        _, _, _, ncmds, _, _ = struct.unpack_from("<IiiIIi", data, 0)
-    elif magic == MH_MAGIC_32:
-        is64 = False
-        header_size = 28
-        _, _, _, ncmds, _, _ = struct.unpack_from("<IiiIIi", data, 0)
-    else:
-        raise SystemExit(f"not a thin Mach-O (magic 0x{magic:08x}); fat binaries need splitting first")
-
-    off = header_size
-    symtab = None
-    for _ in range(ncmds):
-        cmd, cmdsize = struct.unpack_from("<II", data, off)
-        if cmd == 0x2:  # LC_SYMTAB
-            symtab = struct.unpack_from("<IIII", data, off + 8)
-        off += cmdsize
-        if cmdsize <= 0:
-            break
-    if symtab is None:
-        raise SystemExit("no LC_SYMTAB")
-
-    symoff, nsyms, stroff, strsize = symtab
-    entry = 16 if is64 else 12
-    undef = []
-    for i in range(nsyms):
-        p = symoff + i * entry
-        if is64:
-            n_strx, n_type, n_sect, n_desc, n_value = struct.unpack_from("<IBBHQ", data, p)
-        else:
-            n_strx, n_type, n_sect, n_desc, n_value = struct.unpack_from("<IBBHI", data, p)
-        if n_type & N_STAB:
-            continue
-        if (n_type & 0x0E) != N_UNDF:
-            continue
-        start = stroff + n_strx
-        end = data.find(b"\x00", start)
-        name = data[start:end].decode("utf-8", "replace")
-        if name:
-            undef.append(name)
-    return undef
+    return parse_bytes(Path(path).read_bytes())
 
 
 def main():
-    path = sys.argv[1]
-    undef = parse(path)
-    needle = None
-    if "--grep" in sys.argv:
-        needle = sys.argv[sys.argv.index("--grep") + 1]
-    hits = [s for s in undef if needle in s] if needle else undef
-    print(f"{path}: {len(undef)} undefined symbols, {len(hits)} shown")
-    for s in hits[:40]:
-        print("  ", s)
-    if "--json" in sys.argv:
-        out = Path(sys.argv[sys.argv.index("--json") + 1])
-        out.write_text(json.dumps({"binary": path, "undefined": undef}, indent=1), encoding="utf-8")
-        print("written:", out)
-    return 0
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('binary', type=Path)
+    parser.add_argument('--grep')
+    parser.add_argument('--json', type=Path)
+    args = parser.parse_args()
+    names = parse(args.binary)
+    shown = [n for n in names if not args.grep or args.grep in n]
+    print(f'{args.binary}: {len(names)} undefined symbols, {len(shown)} shown')
+    for name in shown[:40]:
+        print('  '+name)
+    if args.json:
+        args.json.write_text(json.dumps({'binary': str(args.binary), 'undefined': names}, indent=1)+'\n', encoding='utf-8')
 
 
-if __name__ == "__main__":
-    sys.exit(main())
+if __name__ == '__main__':
+    main()

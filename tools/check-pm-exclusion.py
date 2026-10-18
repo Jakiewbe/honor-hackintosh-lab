@@ -1,16 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """R24 structure contract: begin/commit/abort, with no reliance on a "refusal" return value."""
+import argparse
 import hashlib
 import json
 import sys
 from pathlib import Path
 
-W = Path(r"D:\Hactk\gpu-r5-20261017")
-OS = W / "src/kexts/NVRM/os-nvkms-xnu.cpp"
-NVRM = W / "src/kexts/NVRM/NVRM.cpp"
-OUT = W / "evidence/r24"
-OUT.mkdir(parents=True, exist_ok=True)
 
 
 def braces(text, start):
@@ -27,6 +23,14 @@ def braces(text, start):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--source', type=Path, required=True, help='Explicit fully patched NullMoth source tree; read only')
+    parser.add_argument('--out', type=Path, required=True)
+    args = parser.parse_args()
+    OS = args.source / 'kexts/NVRM/os-nvkms-xnu.cpp'
+    NVRM = args.source / 'kexts/NVRM/NVRM.cpp'
+    OUT = args.out
+    OUT.mkdir(parents=True, exist_ok=False)
     osf = OS.read_text(encoding="utf-8")
     nv = NVRM.read_text(encoding="utf-8")
     checks, fails = [], []
@@ -73,15 +77,18 @@ def main():
     check("a failed commit is recorded as a violation", "nvrm-pm-violation" in fail_block)
     check("a failed commit re-lights the framebuffers", "notifyFramebuffers(1)" in fail_block)
 
-    # The RM gate close cannot refuse a sleep (XNU ack semantics), so a busy gate must be logged and the
-    # sleep must continue. Lock that behaviour so it can never silently become a false "gate closed".
+    # IOPM acknowledgement is separate from quiescence. A busy gate must never
+    # be accepted as permission to power down while RM users remain active.
+    # The current candidate fails this requirement; record the defect as FAIL.
     gs_full = braces(nv, nv.index("bool NVRM::gpuSuspend()"))
     close_calls = gs_full.count("nv_xnu_pm_close(")
     check("the RM gate close is attempted exactly once per sleep", close_calls == 1, f"calls={close_calls}")
     busy_block = gs_full[gs_full.index("const int busy = nv_xnu_pm_close"):]
     busy_block = busy_block[:busy_block.index("rm_stop_user_channels")]
     check("a busy RM gate is logged, not silently ignored", "LOG(" in busy_block and "still running" in busy_block)
-    check("a busy RM gate does not abort the sleep", "return false" not in busy_block)
+    check("RM busy gate prevents unsafe user-channel stop and STANDBY",
+          "return false" in busy_block,
+          "Known unsafe current path: log then continue. This structural check alone cannot validate PM recovery/ack semantics.")
 
     # R24 close-timeout contract: a wait that does not complete is not a completed close. The per-open,
     # its wrapper and its event worker must stay allocated, and nvKmsClose() must not run.
@@ -101,7 +108,9 @@ def main():
     check("setPowerState records a violation when the suspend failed", "nvrm-pm-violation" in sp)
     check("setPowerState acknowledges exactly once", sp.count("return kIOPMAckImplied;") == 1)
 
-    rec = {"level": "SOURCE-STRUCTURE (R24 begin/commit/abort)",
+    rec = {"level": "SOURCE-STRUCTURE-ONLY; PM-SAFETY-NOT-ACCEPTED",
+           "source_root": str(args.source.resolve()),
+           "limitations": ["string/ordering checks are not concurrency or XNU PM proof", "ack correctness does not establish hardware quiescence"],
            "source_sha256": {"os-nvkms-xnu.cpp": hashlib.sha256(OS.read_bytes()).hexdigest(),
                              "NVRM.cpp": hashlib.sha256(NVRM.read_bytes()).hexdigest()},
            "checks": checks, "result": "PASS" if not fails else "FAIL", "failures": fails}
@@ -114,3 +123,4 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
+

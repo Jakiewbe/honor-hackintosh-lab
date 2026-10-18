@@ -98,7 +98,9 @@ def main():
     if applied["exit"] == 0:
         step("structure-nvidia", [py, str(ws / "work/check_r11_lifetime.py")], ws)
         step("structure-intel", [py, str(ws / "work/check_intel_stop.py")], ws)
-        step("structure-pm", [py, str(REPO / "tools/check-pm-exclusion.py")], REPO)
+        step("structure-pm", [py, str(REPO / "tools/check-pm-exclusion.py"),
+                             "--source", str(src), "--out",
+                             str(ws / "evidence" / ("pm-structure-" + str(time.time_ns())))], REPO)
         # regenerate the lifetime test from the patched tree: never run a previously generated file
         step("gen-lifetime", [py, str(ws / "work/r11_fixture.py")], ws)
         if not args.skip_host:
@@ -142,3 +144,4 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
+

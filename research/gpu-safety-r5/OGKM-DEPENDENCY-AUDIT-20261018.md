@@ -1,3 +1,5 @@
+> **独立审计纠正：** 本文历史“45闭源→9缺失→135/988→需新写端口层”不能作为当前构建状态。官方1280C TU/完整归档/候选链接已在run39127772586验收。988探针不是同输入同参数对照且编译失败仍exit0，已退休。词法索引中的DECL不等于提供者定义；未定位不等于源码不存在。下一步只补真实调用ABI/loader/PM，不重复此前完整构建。 见[审计](HARNESS-AUDIT-20261018.md)。
+
 > **R79 纠错优先：** 本文中的“45符号闭源依赖”和“351→667证明不收敛”已撤回，见 [R79审计纠错](R79-AUDIT-CLOSURE-GATE-20261018.md)。历史数字仅限各自记录的对象集合；不可直接当作当前构建闭包。新扫描337个词法候选、9个UNKNOWN，新同基线链接及ABI尚待原生执行。
 
 # 35 个符号的定义与依赖审计（R50 第二单元）
@@ -165,7 +167,8 @@ v_pm_action_level_t 等），
 
 ### 实验 A：强制加最小 Darwin 兼容头
 
-esearch/gpu-safety-r5/darwin-compat/nv-darwin-compat.h 只放 
+
+esearch/gpu-safety-r5/darwin-compat/nv-darwin-compat.h 只放 
 v_dynamic_power_mode_t（纯 typedef，
 无任何 Linux include），用 -include 强制引入。结果：三个 RM 文件的错误从
 
@@ -487,7 +490,8 @@ v*、kbus*、kdisp*、Nv04*、
 voc_*、Rm*） | 无系统提供者 |
 
 其中按名字细分：
-voc_*/Nv\d\d* 仅 **14**、Rm*/m* **47**，其余 ≈ 280 是
+voc_*/Nv\d\d* 仅 **14**、Rm*/
+m* **47**，其余 ≈ 280 是
 Cli*（client API）、gpumgr*、kbus*、kdisp*、os* 等 RM 子系统入口。
 
 ## 规模：不是"再补几个 TU"
@@ -767,7 +771,8 @@ gpumgrGetGpuFromUuid  gpumgrQueryGpuDrainState  intrGetIntrEn_IMPL  kbusGetPciBa
 对 RmInitRm 做了全树、**不限扩展名**的检索：**没有任何定义**，只有 src/common/inc/rmosxfac.h:36
 的 extern NvS32 RmInitRm(void);。
 
-这说明它属于 **RM 的闭源部分**（mosxfac = RM OS facility），公开树只给声明。
+这说明它属于 **RM 的闭源部分**（
+mosxfac = RM OS facility），公开树只给声明。
 
 ## 因此"缺口"现在是两段
 
@@ -783,7 +788,8 @@ gpumgrGetGpuFromUuid  gpumgrQueryGpuDrainState  intrGetIntrEn_IMPL  kbusGetPciBa
 
 ## 二十九、第一批受控编译：86/98（R75，run 39100887112）
 
-按 m-gap-index.json 里的 defining_files（已剔除 kernel-open/，共 98 个），逐个用探针配置编译：
+按 
+m-gap-index.json 里的 defining_files（已剔除 kernel-open/，共 98 个），逐个用探针配置编译：
 
 | 指标 | 值 |
 |---|---|
@@ -1057,7 +1063,8 @@ NV_STATUS st = rm_power_management(NULL, &fNv, NV_PM_ACTION_STANDBY);
 
 1. 
 v_xnu_pm_close **每次睡眠只调用一次**，没有重试；
-2. 失败（仍有 RM 调用在跑）时**只记一条日志，然后继续** m_stop_user_channels 与 STANDBY；
+2. 失败（仍有 RM 调用在跑）时**只记一条日志，然后继续** 
+m_stop_user_channels 与 STANDBY；
 3. 注释本身就写着 "suspending anyway"。
 
 ## 这与 P0-1 的关系
@@ -1078,3 +1085,4 @@ v_xnu_pm_close **每次睡眠只调用一次**，没有重试；
 - **延迟的 KMS close 永不补完**：per-open/wrapper 保留到卸载；
 - **RM 门未关干净也照样 STANDBY**：这会让"standby 期间无 RM 调用"成为**尽力保证**而非强制保证；
 - 两者都是加载前风险，应进验收矩阵的 BLOCKED 项，而不是留在注释与日志里。
+

@@ -1,0 +1,51 @@
+{
+  "historical_run": 39127772586,
+  "all_nine_source_hashes_match": true,
+  "source_files": [
+    {
+      "source": "kexts/NVRM/NVRM.cpp",
+      "source_sha256": "206c277f15c36d78d02d2e4c823c54991a3e92f3a6f6ae53d299d614695bd6a2"
+    },
+    {
+      "source": "kexts/NVRM/os-xnu.cpp",
+      "source_sha256": "cca41f6325c144172a411df68ac2c335bc51269fadcb5721db12d72994fc05d0"
+    },
+    {
+      "source": "kexts/NVRM/os-xnu2.cpp",
+      "source_sha256": "b02c75a364a1a88302c786339f02ad6cc017b7599fd10fcd790394a65f5ee7a9"
+    },
+    {
+      "source": "kexts/NVRM/os-nvkms-xnu.cpp",
+      "source_sha256": "9949ddbc0d259fec4003e16acd77c735efd3469575ea6b2f2fb6dc560bde26fa"
+    },
+    {
+      "source": "kexts/NVRM/nv_xnu_stubs.cpp",
+      "source_sha256": "dbd3a51011e7bebe3e197614fd9873fb03c075ca019f60b442a3fddd0a3fd52a"
+    },
+    {
+      "source": "kexts/NVRM/nvrm_gpuva.cpp",
+      "source_sha256": "57957e2476f4ba5c473cdc07a8ff9926306956dc32b1d57a9bf069a543ef65e3"
+    },
+    {
+      "source": "kexts/NVRM/nvrm_fbinfo.cpp",
+      "source_sha256": "71b41a15be38281f3b834c944559f462194e48201b30a4a7a799c0718e03be7c"
+    },
+    {
+      "source": "kexts/NVRM/nvrm_surfshare.cpp",
+      "source_sha256": "8565047e29ae72acf5855a39e697ca04cf7d55dc1008944460ca376d2aa6079e"
+    },
+    {
+      "source": "kexts/NVRM/nvkms_shaders.cpp",
+      "source_sha256": "fe9c7632069abd3085e2f9468fb4a4e6cb46e8b01f135a0411e0cf1016c80e8b"
+    }
+  ],
+  "copy_origin": "D:\\Hactk\\g1-closure-20261018\\candidate-r28-owner-copy",
+  "additional_patch": {
+    "path": "research\\gpu-safety-r5\\nullmoth-r29-explicit-aperture-offset-cast.patch",
+    "sha256": "d722aa4c26a907909b28b686bfe91e9fe848fddf0818eecb2e92bc35915d6aad"
+  },
+  "git_apply_initial_attempt": "skipped due to parent repository prefix; not accepted; corrected with explicit candidate --directory and all nine source hashes verified",
+  "pm_audit_exit": 1,
+  "pm_result": "FAIL_KNOWN_UNSAFE_CONTINUATION",
+  "full_verify_all": "NOT_RUN: legacy orchestrator contains checkout -f and clean; only explicit read-only structure audit executed"
+}

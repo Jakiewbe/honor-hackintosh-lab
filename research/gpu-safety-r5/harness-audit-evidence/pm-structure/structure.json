@@ -1,0 +1,178 @@
+{
+ "level": "SOURCE-STRUCTURE-ONLY; PM-SAFETY-NOT-ACCEPTED",
+ "source_root": "D:\\Hactk\\g1-audit-fix-20261018\\candidate-audit-r29-r28",
+ "limitations": [
+  "string/ordering checks are not concurrency or XNU PM proof",
+  "ack correctness does not establish hardware quiescence"
+ ],
+ "source_sha256": {
+  "os-nvkms-xnu.cpp": "9949ddbc0d259fec4003e16acd77c735efd3469575ea6b2f2fb6dc560bde26fa",
+  "NVRM.cpp": "206c277f15c36d78d02d2e4c823c54991a3e92f3a6f6ae53d299d614695bd6a2"
+ },
+ "checks": [
+  {
+   "check": "begin refuses unless RUNNING",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "begin refuses a duplicate",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "begin closes admission",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "begin takes a sequence number",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "commit verifies the sequence",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "commit waits on the pin count",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "commit abandons without touching NVKMS",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "commit suspends exactly once",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "the KAPI notice and the state flip are inside the locked region",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "commit takes the lock once and has no out-of-lock KAPI window",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "abort releases only its own request",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "a pin is refused while a request is pending",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "resume cancels a pending request",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "gpuSuspend begins before the framebuffers are told to stop",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "gpuSuspend commits after they were told",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "a failed commit never closes the RM gate",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "a failed commit never stops user channels",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "a failed commit never runs RM standby",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "a failed commit aborts the request",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "a failed commit is recorded as a violation",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "a failed commit re-lights the framebuffers",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "the RM gate close is attempted exactly once per sleep",
+   "ok": true,
+   "detail": "calls=1"
+  },
+  {
+   "check": "a busy RM gate is logged, not silently ignored",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "RM busy gate prevents unsafe user-channel stop and STANDBY",
+   "ok": false,
+   "detail": "Known unsafe current path: log then continue. This structural check alone cannot validate PM recovery/ack semantics."
+  },
+  {
+   "check": "close waits for PM before touching NVKMS",
+   "ok": true,
+   "detail": "wait must precede nvKmsClose"
+  },
+  {
+   "check": "a timed-out close never calls nvKmsClose",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "a timed-out close retains the wrapper",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "a timed-out close refuses new work",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "a timed-out close is counted",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "setPowerState does not pretend to refuse the sleep",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "setPowerState records a violation when the suspend failed",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "setPowerState acknowledges exactly once",
+   "ok": true,
+   "detail": ""
+  }
+ ],
+ "result": "FAIL",
+ "failures": [
+  "RM busy gate prevents unsafe user-channel stop and STANDBY"
+ ]
+}
