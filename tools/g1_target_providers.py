@@ -63,8 +63,10 @@ def match_records(names, providers):
         found = [dict(provider_id=p['id'], kind=p['matches'][name],
                       level=p['level']) for p in providers
                  if p.get('observation') == 'PARSED' and name in p.get('matches', {})]
+        globals_found = any(p['kind'] != 'ALLOWLIST_ENTRY' for p in found)
         records.append(dict(identity(name), observations=found,
-            status='GLOBAL_DEFINITION_OBSERVED_ONLY' if found else 'NOT_OBSERVED_IN_SCANNED_INPUTS',
+            status=('GLOBAL_DEFINITION_OBSERVED_ONLY' if globals_found else
+                    'FAMILY_EXPORT_ALLOWLIST_ONLY' if found else 'NOT_OBSERVED_IN_SCANNED_INPUTS'),
             target_kpi_export='NOT_VERIFIED', abi='NOT_VERIFIED'))
     return records
 
@@ -138,6 +140,39 @@ def inspect_bundle(bundle, label, names, out):
     return row, providers
 
 
+def parse_allowlist(text):
+    names = set()
+    for line in text.splitlines():
+        line = line.split('#', 1)[0].strip()
+        if not line:
+            continue
+        if not re.fullmatch(r'_[A-Za-z0-9_.$]+', line):
+            raise ValueError('unrecognised export-list syntax: '+line[:180])
+        names.add(line)
+    return names
+
+
+def observe_allowlist(path, provider_id, names, out):
+    row = {'id': provider_id, 'path': str(path), 'matches': {}, 'observation': 'NOT_PRESENT',
+        'level': 'RUNNER_FAMILY_EXPORT_ALLOWLIST_NOT_BINARY_DEFINITION_OR_ABI_PROOF'}
+    if not path.is_file():
+        return row
+    raw = path.read_bytes()
+    row.update(sha256=sha(raw), bytes=len(raw), real_path=str(path.resolve()))
+    text = raw.decode('utf-8', errors='strict')
+    (out/(provider_id+'-raw.txt')).write_text(text, encoding='utf-8')
+    try:
+        symbols = parse_allowlist(text)
+        if sha(path.read_bytes()) != row['sha256']:
+            raise ValueError('allowlist changed during observation')
+        row.update(observation='PARSED', exported_name_count=len(symbols),
+                   matches={n: 'ALLOWLIST_ENTRY' for n in names if n in symbols})
+    except ValueError as error:
+        row.update(observation='OBSERVATION_FAILED', error=str(error), matches={})
+    write(out/(provider_id+'.json'), row)
+    return row
+
+
 def inventory_tree(root, depth=4):
     """Bounded metadata discovery, never read executable contents into output."""
     result = {'root': str(root), 'present': root.exists(), 'files': []}
@@ -190,6 +225,26 @@ def collect(args, out):
     inventory = [inventory_tree(root) for root in roots]
     rc, stdout, stderr = command(['/usr/bin/kmutil', 'inspect', '--help'])
     write(out/'kmutil-inspect-help.json', {'argv': ['/usr/bin/kmutil', 'inspect', '--help'],
+        'exit': rc, 'stdout': stdout.decode('utf-8'), 'stderr': stderr.decode('utf-8')})
+    for bundle, rel in [('IOPCIFamily.kext', 'Contents/Resources/config/IOPCIFamily.exports'),
+                        ('IOACPIFamily.kext', 'Contents/Resources/IOACPIFamily.exports')]:
+        providers.append(observe_allowlist(Path('/System/Library/Extensions')/bundle/rel,
+            bundle.replace('.', '-')+'-allowlist', names, out))
+    # Native system tools only: no extraction, patching, loading or permission
+    # bypass. Preserve a failed query as a failed query, not an absent export.
+    for bundle_id in ['com.apple.iokit.IOPCIFamily', 'com.apple.iokit.IOACPIFamily',
+                      'com.apple.kpi.iokit', 'com.apple.kpi.libkern', 'com.apple.kpi.mach',
+                      'com.apple.kpi.bsd', 'com.apple.kpi.unsupported']:
+        argv = ['/usr/bin/kmutil', 'inspect', '-a', 'x86_64',
+            '-B', '/System/Library/KernelCollections/BootKernelExtensions.kc',
+            '-S', '/System/Library/KernelCollections/SystemKernelExtensions.kc',
+            '--bundle-identifier', bundle_id, '--show-prelink-info']
+        rc, stdout, stderr = command(argv)
+        write(out/('kc-'+bundle_id+'.json'), {'argv': argv, 'exit': rc,
+            'stdout': stdout.decode('utf-8'), 'stderr': stderr.decode('utf-8'),
+            'level': 'RAW_KC_METADATA_NOT_YET_PARSED_OR_ACCEPTED'})
+    rc, stdout, stderr = command(['xcrun', 'otool', '-l', '/System/Library/Kernels/kernel'])
+    write(out/'kernel-load-commands.json', {'argv': ['xcrun', 'otool', '-l', '/System/Library/Kernels/kernel'],
         'exit': rc, 'stdout': stdout.decode('utf-8'), 'stderr': stderr.decode('utf-8')})
     records = match_records(names, providers)
     report = {'schema': 'honor.g1.runner-provider-discovery.v1',

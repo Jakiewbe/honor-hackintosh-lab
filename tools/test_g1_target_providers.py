@@ -3,7 +3,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from g1_target_providers import load_imports, match_records, observe_binary, parse_globals
+from g1_target_providers import load_imports, match_records, observe_allowlist, observe_binary, parse_allowlist, parse_globals
 
 
 class TargetProviderTests(unittest.TestCase):
@@ -69,6 +69,25 @@ class TargetProviderTests(unittest.TestCase):
                 self.assertEqual(row['observation'], state)
                 self.assertEqual(row['matches'], {'_x': 'T'} if state == 'PARSED' else {})
                 self.assertEqual(row['sha256'], hashlib.sha256(b'fixture').hexdigest())
+
+    def test_family_allowlist_is_not_implementation_or_target_acceptance(self):
+        self.assertEqual(parse_allowlist('# comment\n__ZN3Foo\n_x # note\n'), {'__ZN3Foo', '_x'})
+        for malformed in ['_x*', '_x _y', '_x:_y']:
+            with self.subTest(malformed=malformed), self.assertRaises(ValueError):
+                parse_allowlist(malformed)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            p = root/'family.exports'
+            p.write_text('_x\n_xy\n')
+            observed = observe_allowlist(p, 'family', ['_x'], root)
+            records = match_records(['_x', '_xy'], [observed])
+            self.assertEqual(records[0]['status'], 'FAMILY_EXPORT_ALLOWLIST_ONLY')
+            self.assertEqual(records[0]['target_kpi_export'], 'NOT_VERIFIED')
+            self.assertEqual(records[1]['status'], 'NOT_OBSERVED_IN_SCANNED_INPUTS')
+            p.write_text('_x\n_bad*\n')
+            observed = observe_allowlist(p, 'bad-list', ['_x'], root)
+            self.assertEqual(observed['observation'], 'OBSERVATION_FAILED')
+            self.assertFalse(observed['matches'])
 
 
 if __name__ == '__main__':
