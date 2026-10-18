@@ -153,3 +153,42 @@ voc_*）：源码没有、发行版也没有**
 voc_* 需要**查明是谁引用的**，而不是补实现。
 
 这比上一轮"988 减 B 类"更精确：B 类是 5，且 C 类不该算进损失。
+
+## 四十三、更正 R91 的 C 类结论：4 个 
+voc_* **在树里都有定义**（R92）
+
+R91 我写"
+voc_* 源码零命中、发行版也没有"。**树内零命中这一半是错的**——那是我的索引漏了，
+不是代码缺失。逐个核实：
+
+| 符号 | 树内定义位置 |
+|---|---|
+| __nvoc_class_def_Memory | src/nvidia/generated/g_mem_nvoc.c:84 |
+| __nvoc_class_def_RmResource | src/nvidia/generated/g_resource_nvoc.c:177 |
+| __nvoc_rtti_provider | src/nvidia/src/libraries/nvoc/src/runtime.c:46 |
+| __nvoc_dynamicCast | NVOC 运行时 untime.c（dynamicCast 的实现族，见 L62/166/235/281） |
+
+也就是说 **NVOC 运行时源码随树发布**（src/nvidia/src/libraries/nvoc/src/runtime.c），
+两个类描述符也在 generated/*.c 里。索引漏报的原因：这些定义不符合我索引的三种函数形态
+（它们是变量定义或宏展开）。
+
+## 因此 C 类不存在
+
+原来的 9 个"未解析"里：
+
+- **5 个数据符号**（PEX_DSM_GUID/g_pSys/g_resServ/
+vEvoGlobal/pNV_KMS_ID）——
+  树内确实只有引用，发行版有定义 → **真正的源码缺口**；
+- **4 个 
+voc_*** —— **树内有定义**，属于索引漏报 → 不是缺口。
+
+## 修正后的路径 A 上限
+
+> 从公开源码可闭合 = 988 − 5 = **983 个 TU**，且那 5 个是数据符号（全局表/状态对象），
+> 不是函数逻辑。它们的替代（初始化代码）可能需要我们自己在 Darwin 层提供。
+
+## 教训
+
+这是本项目第 N 次同类错误：**"检索零命中"不等于"不存在"**。
+我的索引只认三种函数形态，对变量定义与宏展开无能力。这一步应当写成工具约束，
+而不是每次靠人肉再查一遍。
