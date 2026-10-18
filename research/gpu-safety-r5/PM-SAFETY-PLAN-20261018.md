@@ -366,3 +366,37 @@ ullmoth-r28-owner-copy-errors.patch 在我的 R27 树上 git apply --check **失
 ## 下一步
 
 等/触发一次官方门禁，确认三件事：R30 应用成功、kms_deferred.cpp 编译成功、链接后未定义符号集仍为 472。
+
+## 七十一、R30 合入后门禁全绿（R121）
+
+run **39143508201**（gpu-safety-r5-native.yml）：**success**，19 个步骤全部 success，其中关键三项：
+
+| 步骤 | 结论 | 对 R30 的意义 |
+|---|---|---|
+| Verify complete NullMoth patch series in a disposable copy | success | **R30 在完整序列（r1…r29 + r30）里应用成功** |
+| Compile original and candidate full translation units (objects only) | success | **kms_deferred.cpp 在真实候选构建里编译通过** |
+| Preserve exact Mach-O names in the current unified import inventory | success | 统一导入清单校验未因 R30 改变而失败 |
+
+前一轮（39143316631）在同一序列上失败于 Test audit tools ...，原因是我把 kms_deferred.cpp
+加进 BASELINE_CPP 后，g1_full_build.py 与测试里的**硬编码 11** 变成了错误期望。
+已改为 len(BASELINE_CPP) + len(BASELINE_C) / len(BASELINE_CPP | BASELINE_C)，本轮因此转绿。
+
+### 未独立验证的一项
+
+链接后未定义符号是否仍为 **472**：本轮的 artifact 下载返回 **401**（token 失效），
+我没有拿到 
+ative-report.json，因此**不声称**该数字本轮被复核。它依赖三个间接信号：
+序列校验通过、全量编译通过、导入清单步骤通过——但都不是同一个数。
+
+### 已知的本地差异（不是仓库问题）
+
+	est_g1_target_providers 在我这台 Windows 检出上失败，原因是 core.autocrlf=true 把冻结文件
+LF 换成 CRLF；HEAD blob 按 LF 计算的 SHA-256 与常量一致（ 691e9…）。CI 上该测试通过。
+**没有**修改冻结哈希来迁就本地环境。
+
+## 结论
+
+- R30 已进入序列，且经过一次完整门禁验证（应用 + 编译）；
+- 单元的行为证据来自 run 39142651778 的四例契约；
+- 两者合起来支持一句话：**延迟关闭的回收逻辑现在是"已编译、已测过"的代码，而不是注释里的意图**。
+- 仍缺：真实 PM 状态下它是否被调用（需加载）、以及门忙风险（未解决，检查仍 31/32 FAIL）。
