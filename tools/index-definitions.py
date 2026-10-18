@@ -1,80 +1,116 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""Build a "symbol -> defining file" index for a source tree, then look up a list of names.
-
-Single pass per file, two accepted definition shapes:
-    TYPE  name(args)            - same line
-    TYPE  name                  - name alone on its line, "(" on the next
-Call sites are rejected because the text before the name must be a type-ish prefix that does not
-contain '(' or '=' or '!' or ','.
-
-Usage:
-    python tools/index-definitions.py <tree> <names-file> [--json out.json]
-"""
+"""Lexical function-definition candidates; never infer missing/closed source."""
+import argparse
+import hashlib
 import json
-import re
-import sys
-from collections import defaultdict
 from pathlib import Path
+import re
+import subprocess
 
-DEF_LINE = re.compile(r"^\s*[A-Za-z_][\w \t\*]*\b([A-Za-z_]\w{2,})\s*\(")
-DEF_NAME_THEN_PAREN = re.compile(r"^\s*[A-Za-z_][\w \t\*]*\b([A-Za-z_]\w{2,})\s*$")
-# A third shape: the type sits on the previous line and only the name is on this one.
-NAME_ONLY = re.compile(r"^\s*([A-Za-z_]\w{2,})\s*$")
+from g1_dependency_audit import balanced, mask, no_directives, OGKM_PIN
+
+IDENT = re.compile(r'\b([A-Za-z_]\w*)\s*\(')
+FORBIDDEN = {'return', 'if', 'else', 'for', 'while', 'switch', 'case', 'sizeof',
+             'alignof', '__alignof__', 'typeof', '__typeof__', 'typedef', 'do'}
+EXTS = {'.c', '.h', '.cpp', '.cc', '.hpp'}
+
+
+def function_candidates(text, names):
+    clean = no_directives(mask(text))
+    hits, skip_until = [], 0
+    for match in IDENT.finditer(clean):
+        if match.start() < skip_until:
+            continue
+        start = max(clean.rfind(c, 0, match.start()) for c in ';{}') + 1
+        prefix = clean[start:match.start()].strip()
+        if not prefix or not re.fullmatch(r'[A-Za-z_][\w\s*]*', prefix):
+            continue
+        if set(prefix.split()) & FORBIDDEN:
+            continue
+        opening = clean.index('(', match.start())
+        try:
+            end = balanced(clean, opening)
+            brace = end + 1
+            while brace < len(clean) and clean[brace].isspace():
+                brace += 1
+            if brace == len(clean) or clean[brace] != '{':
+                continue
+            tail = balanced(clean, brace, '{', '}')
+        except ValueError:
+            continue
+        skip_until = tail + 1
+        if match.group(1) in names:
+            hits.append({'name': match.group(1), 'line': text.count('\n', 0, match.start()) + 1,
+                         'end_line': text.count('\n', 0, tail) + 1,
+                         'storage': 'static' if 'static' in prefix.split() else 'external-candidate',
+                         'kind': 'lexical-function-definition-candidate'})
+    return hits
+
+
+def build_index(tree, names):
+    found, occurrences, manifest = {}, {}, []
+    for path in sorted(tree.rglob('*'), key=lambda p: p.relative_to(tree).as_posix()):
+        if not path.is_file() or path.suffix not in EXTS or '.git' in path.parts:
+            continue
+        raw = path.read_bytes()
+        text = raw.decode('utf-8', errors='replace')
+        rel = path.relative_to(tree).as_posix()
+        manifest.append({'path': rel, 'sha256': hashlib.sha256(raw).hexdigest()})
+        for hit in function_candidates(text, names):
+            found.setdefault(hit['name'], []).append(dict(hit, path=rel))
+        clean = mask(text)
+        for match in re.finditer(r'\b[A-Za-z_]\w*\b', clean):
+            if match.group() in names:
+                occurrences.setdefault(match.group(), []).append({
+                    'path': rel, 'line': text.count('\n', 0, match.start()) + 1})
+    unknown = sorted(names - set(found))
+    return {'schema': 'honor.g1.definition-candidates.v2',
+            'level': 'SOURCE-LEXICAL-NOT-PREPROCESSED-NOT-OBJECT-PROVIDERS',
+            'limitations': ['Inactive branches and header definitions are retained.',
+                           'Data/macro/unsupported definitions remain UNKNOWN, never closed-source.',
+                           'Only actual object symbols establish compiled providers.'],
+            'source_manifest': manifest, 'definitions': dict(sorted(found.items())),
+            'symbols': {name: [f"{h['path']}:{h['line']}" for h in hits]
+                        for name, hits in sorted(found.items())},
+            'occurrences': dict(sorted(occurrences.items())),
+            'missing': unknown, 'unresolved_status': 'UNKNOWN',
+            'defining_files': sorted({h['path'] for hits in found.values() for h in hits
+                                     if h['path'].endswith('.c') and h['storage'] == 'external-candidate'})}
 
 
 def main():
-    tree = Path(sys.argv[1])
-    names = {l.strip() for l in Path(sys.argv[2]).read_text(encoding="utf-8").splitlines() if l.strip()}
-    out = Path(sys.argv[sys.argv.index("--json") + 1]) if "--json" in sys.argv else None
-
-    index = defaultdict(list)
-    files = 0
-    for p in sorted(tree.rglob("*.c")):
-        if ".git" in p.parts:
-            continue
-        files += 1
-        try:
-            lines = p.read_text(encoding="utf-8", errors="replace").splitlines()
-        except OSError:
-            continue
-        rel = p.relative_to(tree).as_posix()
-        for i, line in enumerate(lines):
-            m = DEF_LINE.match(line) or DEF_NAME_THEN_PAREN.match(line)
-            name = m.group(1) if m else None
-            if name is None:
-                mo = NAME_ONLY.match(line)
-                # name alone: accept only when the next line opens the parameter list and the previous
-                # line is not a statement (a call site would not be followed by a fresh "(" line)
-                if mo and i + 1 < len(lines) and lines[i + 1].lstrip().startswith("("):
-                    prev = lines[i - 1].rstrip() if i else ""
-                    if not prev.endswith((";", "{", ",", "=")):
-                        name = mo.group(1)
-            if name is None:
-                continue
-            # a name-then-paren signature must be followed by a line that starts with "("
-            if m and DEF_NAME_THEN_PAREN.match(line) and not (i + 1 < len(lines) and lines[i + 1].lstrip().startswith("(")):
-                continue
-            if name in names:
-                index[name].append(f"{rel}:{i + 1}")
-
-    found = {k: v for k, v in index.items() if v}
-    missing = sorted(names - set(found))
-    defining_files = sorted({loc.rsplit(":", 1)[0] for v in found.values() for loc in v})
-
-    print(f"scanned {files} .c files")
-    print(f"{len(found)}/{len(names)} names resolved; {len(missing)} unresolved")
-    print(f"distinct defining files: {len(defining_files)}")
-    for f in defining_files[:20]:
-        print("   ", f)
-    if missing:
-        print("unresolved sample:", missing[:10])
-    if out:
-        out.write_text(json.dumps({"symbols": found, "missing": missing,
-                                   "defining_files": defining_files}, indent=1), encoding="utf-8")
-        print("written:", out)
-    return 0
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('tree', type=Path)
+    parser.add_argument('names_file', type=Path)
+    parser.add_argument('--json', type=Path)
+    parser.add_argument('--summary', type=Path, help='small checked-in build input; full hits remain in --json')
+    args = parser.parse_args()
+    tree = args.tree.resolve()
+    pin = subprocess.check_output(['git', '-C', str(tree), 'rev-parse', 'HEAD'], text=True).strip()
+    dirty = subprocess.check_output(['git', '-C', str(tree), 'status', '--porcelain',
+                                     '--untracked-files=no'], text=True).strip()
+    if pin != OGKM_PIN or dirty:
+        raise SystemExit('fixed clean OGKM input required')
+    names = {s.strip() for s in args.names_file.read_text(encoding='utf-8').splitlines() if s.strip()}
+    if not names or any(not re.fullmatch(r'[A-Za-z_]\w*', s) for s in names):
+        raise SystemExit('nonempty C identifier list required')
+    report = build_index(tree, names)
+    report['ogkm_pin'] = pin
+    report['requested_symbols'] = sorted(names)
+    if args.json:
+        args.json.write_text(json.dumps(report, indent=1) + '\n', encoding='utf-8')
+    if args.summary:
+        summary = {key: report[key] for key in ['schema', 'ogkm_pin', 'level', 'limitations',
+                   'requested_symbols', 'symbols', 'missing', 'unresolved_status', 'defining_files']}
+        summary['full_evidence'] = {'command': 'tools/index-definitions.py <fixed-ogkm> research/gpu-safety-r5/rm-gap-symbols.txt --json <diagnostics>/rm-gap-index-full.json',
+                                    'source_files': len(report['source_manifest']),
+                                    'sha256': hashlib.sha256(json.dumps(report, sort_keys=True).encode()).hexdigest()}
+        args.summary.write_text(json.dumps(summary, indent=1) + '\n', encoding='utf-8')
+    print(json.dumps({'requested': len(names), 'lexical_candidates': len(report['symbols']),
+                      'unknown': len(report['missing']), 'defining_c_files': len(report['defining_files']),
+                      'closed_source_inferences': 'NOT_PERFORMED'}))
 
 
-if __name__ == "__main__":
-    sys.exit(main())
+if __name__ == '__main__':
+    main()
+

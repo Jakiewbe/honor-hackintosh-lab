@@ -1,0 +1,13 @@
+test_all_conditional_definitions_retained (test_index_definitions.DefinitionIndexTests.test_all_conditional_definitions_retained) ... ok
+test_control_statement_and_nested_call_rejected (test_index_definitions.DefinitionIndexTests.test_control_statement_and_nested_call_rejected) ... ok
+test_declarations_comments_strings_and_macros_rejected (test_index_definitions.DefinitionIndexTests.test_declarations_comments_strings_and_macros_rejected) ... ok
+test_real_multiline_arguments (test_index_definitions.DefinitionIndexTests.test_real_multiline_arguments) ... ok
+test_real_multiline_return_types (test_index_definitions.DefinitionIndexTests.test_real_multiline_return_types) ... ok
+test_return_call_is_never_definition (test_index_definitions.DefinitionIndexTests.test_return_call_is_never_definition) ... ok
+test_static_header_is_not_compilable_provider (test_index_definitions.DefinitionIndexTests.test_static_header_is_not_compilable_provider) ... ok
+test_unbalanced_syntax_never_provider (test_index_definitions.DefinitionIndexTests.test_unbalanced_syntax_never_provider) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.006s
+
+OK

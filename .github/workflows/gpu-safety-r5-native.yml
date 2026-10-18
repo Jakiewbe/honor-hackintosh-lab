@@ -59,6 +59,19 @@ jobs:
             [[ "$(git -C "$d" rev-parse HEAD)" == "$3" ]]
           done
 
+      - name: Test audit tools and reproduce fixed-source definition inventory
+        shell: bash
+        run: |
+          set -euo pipefail
+          for test in test_index_definitions.py test_native_manifest.py test_text_diagnostics.py test_g1_rm_abi.py; do
+            python3 -m unittest discover -s tools -p "$test" -v
+          done
+          python3 tools/index-definitions.py "$RUNNER_TEMP/gpu-safety-r5-nv" \
+            research/gpu-safety-r5/rm-gap-symbols.txt \
+            --json "$RUNNER_TEMP/gpu-safety-r5-logs/rm-gap-index-full.json" \
+            --summary "$RUNNER_TEMP/gpu-safety-r5-logs/rm-gap-index-summary.json"
+          cmp research/gpu-safety-r5/rm-gap-index.json "$RUNNER_TEMP/gpu-safety-r5-logs/rm-gap-index-summary.json"
+
       - name: Verify complete NullMoth patch series in a disposable copy
         shell: bash
         run: |
@@ -95,12 +108,33 @@ jobs:
             --logs "$RUNNER_TEMP/gpu-safety-r5-logs" \
             --definitions research/gpu-safety-r5/symbol-definitions.json
 
-      - name: Upload text diagnostics only
+      - name: Observe selected RM record layouts under actual unified TU flags
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/g1_rm_abi.py \
+            --nv "$RUNNER_TEMP/gpu-safety-r5-nv" \
+            --candidate "$RUNNER_TEMP/nullmoth-v2.3.3-gpu-safety-r5-candidate" \
+            --definitions research/gpu-safety-r5/symbol-definitions.json \
+            --logs "$RUNNER_TEMP/gpu-safety-r5-logs" \
+            --out "$RUNNER_TEMP/gpu-safety-r5-logs/rm-abi"
+
+      - name: Prepare explicit text publication set
+        id: text_publication
         if: ${{ always() }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/g1_text_diagnostics.py \
+            --source "$RUNNER_TEMP/gpu-safety-r5-logs" \
+            --out "$RUNNER_TEMP/gpu-safety-r5-text"
+
+      - name: Upload text diagnostics only
+        if: ${{ always() && steps.text_publication.outcome == 'success' }}
         uses: actions/upload-artifact@v4
         with:
           name: honor-gpu-safety-r5-native-${{ inputs.xcode }}
-          path: ${{ runner.temp }}/gpu-safety-r5-logs/
+          path: ${{ runner.temp }}/gpu-safety-r5-text/
           if-no-files-found: warn
           retention-days: 14
 
@@ -114,4 +148,5 @@ jobs:
             echo '- Objects and candidate kext links only; no signing, installation, loading, device access or binary upload.'
             echo '- Kernel/private family ABI, headless memory owner, mapping lifetime and GPU runtime remain BLOCKED.'
           } >> "$GITHUB_STEP_SUMMARY"
+
 

@@ -1,0 +1,34 @@
+{
+  "schema": "honor.g1.definition-candidates.v2",
+  "ogkm_pin": "e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb",
+  "requested": 346,
+  "candidates": 337,
+  "unknown": [
+    "PEX_DSM_GUID",
+    "g_pSys",
+    "g_resServ",
+    "nvEvoGlobal",
+    "nvoc_class_def_Memory",
+    "nvoc_class_def_RmResource",
+    "nvoc_dynamicCast",
+    "nvoc_rtti_provider",
+    "pNV_KMS_ID"
+  ],
+  "external_c_candidates": 88,
+  "full_evidence_sha256": "1ce1b770ab87967ecf044e4561c1502de8eb919a7059be836d11505b030db9c1",
+  "examples": {
+    "RmInitRm": [
+      "src/nvidia/src/kernel/core/system.c:609"
+    ],
+    "RmPowerManagementTegra": [
+      "src/nvidia/arch/nvalloc/unix/src/power-management-tegra.c:31"
+    ],
+    "gpumgrGetGpuFromUuid": [
+      "src/nvidia/src/kernel/gpu_mgr/gpu_mgr.c:2431"
+    ],
+    "f16_to_f32": [
+      "src/common/softfloat/source/f16_to_f32.c:44"
+    ]
+  },
+  "level": "SOURCE-LEXICAL-NOT-PREPROCESSED-NOT-OBJECT-PROVIDERS"
+}

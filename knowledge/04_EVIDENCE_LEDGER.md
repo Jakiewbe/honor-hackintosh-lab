@@ -1,3 +1,5 @@
+> **2026-10-18 R79 审计纠错：** 已撤回“45个符号闭源”与“351→667证明增量闭包不收敛”；索引及同基线显式链接清单已修。固定346符号新扫描为337个词法候选、9个UNKNOWN，尚非对象闭包。27项工具测试和三组历史回归通过；加入六TU选定ABI布局诊断与严格文本发布。新Darwin/链接/ABI尚未执行。见 [本轮报告](../research/gpu-safety-r5/R79-AUDIT-CLOSURE-GATE-20261018.md)。完整闭包与实机继续NO-GO。
+
 > **R28 SOURCE / CPU-CONTRACT / PATCH-APPLIED：** [报告与完整文本证据](../research/gpu-safety-r5/R28-OWNER-COPY-ERRORS-20261018.md)。g++ 13.3 / ASan+UBSan，完整真实事务候选 15/15，R27 基线预期失败 6 项，编译失败负控无产物/未执行；27 个 NullMoth 补丁完整正反向恢复，另有既有 OGKM 补丁。Darwin/链接未执行，无 GPU 或设备证据。
 
 > **2026-10-18 新增 SOURCE-LEXICAL 证据：** [35 符号依赖及 RM 栈 ABI 审计](../research/gpu-safety-r5/G1-CLOSURE-ABI-AUDIT-20261018.md)，含全部词法命中、固定输入哈希、71 个 Darwin 源 blob 核验和九项工具回归。旧 run [39090712869](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39090712869) 的五单元编译/混合链接已以 artifact `12123001015` 的 SHA256 绑定复核；不是新的构建通过。新增精确预处理/对象提供者取证尚未运行。无实机证据。

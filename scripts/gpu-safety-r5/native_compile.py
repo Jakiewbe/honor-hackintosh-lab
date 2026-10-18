@@ -24,6 +24,43 @@ def execute(argv, cwd, log):
     return result.returncode
 
 
+
+def object_destination(directory, role, source_relative):
+    # Include the complete source path, not just its basename.
+    rel = Path(source_relative).as_posix()
+    if Path(rel).is_absolute() or '..' in Path(rel).parts:
+        raise ValueError("source key must be relative")
+    key = hashlib.sha256(rel.encode()).hexdigest()[:16]
+    return directory / (role + "-" + Path(rel).stem + "-" + key + ".o")
+
+
+def link_object_list(baseline, additions):
+    objects = [*baseline, *additions]
+    resolved = [p.resolve() for p in objects]
+    if len(set(resolved)) != len(resolved):
+        raise ValueError("duplicate link object")
+    if any(not p.is_file() for p in objects):
+        raise ValueError("missing link object")
+    return objects
+
+
+def object_record(role, tree, source, obj, rc):
+    entry = {"role": role, "source": str(source.relative_to(tree)),
+             "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+             "object": str(obj), "compile_exit": rc}
+    if rc == 0:
+        data = obj.read_bytes()
+        if len(data) < 32 or struct.unpack_from("<III", data)[:2] != (0xfeedfacf, 0x01000007) or struct.unpack_from("<I", data, 12)[0] != 1:
+            raise ValueError("successful compile did not produce x86_64 MH_OBJECT")
+        entry["object_sha256"] = hashlib.sha256(data).hexdigest()
+    return entry
+
+
+def import_set(path):
+    return sorted({line.strip() for line in path.read_text(
+        encoding="utf-8", errors="strict").splitlines() if line.strip().startswith("_")})
+
+
 def macros_from_make(text):
     for line in text.splitlines():
         try:
@@ -49,7 +86,8 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
     report = {"level": "DARWIN-COMPILE_CANDIDATE_NOT_YET_PASSED", "pins": PINS, "objects": [],
               "kext_link": "BLOCKED_NOT_ATTEMPTED_PRIVATE_FAMILY_ABI_AND_TARGET_KERNEL_EXPORTS_UNVERIFIED",
-              "kext_load": "NO-GO", "gpu_runtime": "NOT_RUN", "display_runtime": "NOT_RUN"}
+              "kext_load": "NO-GO", "gpu_runtime": "NOT_RUN", "display_runtime": "NOT_RUN", "build_manifest": [],
+              "closure_acceptance": {"status": "NOT_ESTABLISHED", "target_kernel_exports": "NOT_VERIFIED"}}
     failures = []
     try:
         for key, tree in (("nm", nm), ("nv", nv)):
@@ -215,6 +253,7 @@ def main():
             flags += ["-I" + str(candidate / "kexts/NVRM")]
             rc = execute(["xcrun", "clang++", *flags, "-c", str(src), "-o", str(obj)],
                          candidate, out / ("candidate-NVRM_" + name.replace(".", "_") + "-compile.txt"))
+            report["build_manifest"].append(object_record("nvrm-baseline", candidate, src, obj, rc))
             nvrm_compile[name] = rc
             if rc == 0:
                 nvrm_objects.append(obj)
@@ -250,8 +289,8 @@ def main():
             report["kext_link_nvrm"] = entry
 
         # Isolated probe: can the cross-OS translation units that define the missing NVKMS/RM symbols be
-        # compiled as Darwin objects? Report only - they are NOT added to the link, and a failure here does
-        # not fail the gate. The point is to record the first real error instead of guessing at -D flags.
+        # compiled as Darwin objects? They feed separate diagnostic links; failures do not pass
+        # complete-closure acceptance. The selected native gate remains a separate result.
         ogkm_probe = ["src/nvidia/arch/nvalloc/unix/src/unix_intr.c",
                       "src/nvidia/arch/nvalloc/unix/src/osapi.c",
                       "src/nvidia/arch/nvalloc/unix/src/dynamic-power.c",
@@ -283,7 +322,7 @@ def main():
             probe_root / "src/nvidia/src/libraries/libspdm/3.5.0/include",
             probe_root / "src/nvidia/src/libraries/libspdm",
             probe_root / "src/nvidia-modeset/include") if d.is_dir()]
-        probe_results = {}
+        probe_results, probe_objs = {}, []
         for rel in ogkm_probe:
             srcp = probe_root / rel
             if not srcp.exists():
@@ -298,8 +337,8 @@ def main():
             # only collide with it (redefinition of enumerator). Keep the shim out of this configuration.
             if False and (compat / "nv-darwin-compat.h").exists():
                 compat_flags = ["-I" + str(compat), "-include", str(compat / "nv-darwin-compat.h")]
-            # The gate takes its macros from the LINUX dry-run, so -DNV_LINUX is in there. A Darwin probe
-            # must not claim to be Linux: drop it and keep the neutral NV_UNIX.
+            # Reconstructed profile retains NV_LINUX plus the compiler's Apple selectors.
+            # This is recorded evidence, not a verified platform/ABI configuration.
             # nv_state_t lives inside #ifdef NVRM (src/.../unix/include/nv.h:266), and the gate strips
             # -DNVRM from its own macro list. The probe puts it back and keeps the platform selector.
             probe_defs = list(definitions) + ["-DNVRM"]
@@ -307,6 +346,9 @@ def main():
                    *compat_flags, "-I" + str(srcp.parent), "-c", str(srcp), "-o", str(obj)]
             log = out / ("probe-" + rel.replace("/", "_") + ".txt")
             rc = execute(cmd, probe_root, log)
+            report["build_manifest"].append(object_record("ogkm-probe", probe_root, srcp, obj, rc))
+            if rc == 0:
+                probe_objs.append(obj)
             lines = log.read_text(encoding="utf-8", errors="replace").splitlines()
             errs = []
             for i, l in enumerate(lines):
@@ -326,12 +368,16 @@ def main():
         for cf in cand_files:
             csrc = candidate / cf
             if not csrc.exists():
+                cand_probe[cf] = {"status": "MISSING"}
                 continue
             obj = out.parent / ("probe-cand-" + csrc.stem + ".o")
             log = out / ("probe-cand-" + csrc.stem + ".txt")
             cmd = ["xcrun", "clang", "-x", "c", "-std=gnu11", *c_flags, *definitions, "-DNVRM", *cinc,
                    "-c", str(csrc), "-o", str(obj)]
             rc = execute(cmd, candidate, log)
+            report["build_manifest"].append(object_record("candidate-c-probe", candidate, csrc, obj, rc))
+            if rc == 0:
+                probe_objs.append(obj)
             lines = log.read_text(encoding="utf-8", errors="replace").splitlines()
             errs = []
             for i, l in enumerate(lines):
@@ -344,7 +390,7 @@ def main():
         probe_results.update(cand_probe)
         report["ogkm_probe"] = probe_results
 
-        # Failure-rate sample over the RM tree: every 40th .c under generated/ and kernel|core, compiled with
+        # Failure-rate sample over the RM tree: every fifth .c under generated/ and kernel|core, compiled with
         # the same configuration. Report-only; it answers "how much of RM can this toolchain even parse".
         sample_files = []
         for d in (probe_root / "src/nvidia/generated", probe_root / "src/nvidia/src/kernel",
@@ -355,8 +401,8 @@ def main():
         sflags = [f for f in common_flags if f not in ("-std=c++17", "-fno-rtti", "-fno-exceptions")]
         for sf in sample_files:
             sample["attempted"] += 1
-            obj = out.parent / ("samp-" + sf.stem + ".o")
-            log = out / ("samp-" + sf.stem + ".txt")
+            obj = object_destination(out.parent, "samp", sf.relative_to(probe_root))
+            log = out / (obj.stem + ".txt")
             cmd = ["xcrun", "clang", "-x", "c", "-std=gnu11", *sflags, *definitions, "-DNVRM", *probe_inc,
                    "-I" + str(sf.parent), "-I" + str(probe_root / "src/nvidia/generated"),
                    "-c", str(sf), "-o", str(obj)]
@@ -369,72 +415,9 @@ def main():
                 sample["failed"].append({"file": sf.name, "errors": errs})
         report["rm_sample"] = sample
 
-        # First controlled batch: compile every file that the symbol index says defines a gap symbol.
-        # The list comes from research/gpu-safety-r5/rm-gap-index.json, so it is reproducible outside CI.
-        idx_path = Path(__file__).resolve().parents[2] / "research/gpu-safety-r5/rm-gap-index.json"
-        batch = {"attempted": 0, "compiled": 0, "failed": [], "capped": False}
-        if idx_path.exists():
-            import json as _json
-            idx = _json.loads(idx_path.read_text(encoding="utf-8"))
-            files = [f for f in idx.get("defining_files", []) if not f.startswith("kernel-open/")]
-            CAP = 100
-            if len(files) > CAP:
-                files = files[:CAP]
-                batch["capped"] = True
-            bflags = [f for f in common_flags if f not in ("-std=c++17", "-fno-rtti", "-fno-exceptions")]
-            # src/common/src holds user-space helpers (nv_smg.c needs pthread.h); they are not kext code.
-            # Also drop any file that already contributed a probe object: linking both copies produced
-            # duplicate symbols (_nvKmsKapiAllocateVideoMemory ...), and object names cannot be matched
-            # back to sources, so the exclusion has to happen on paths.
-            files = [f for f in files if not f.startswith("src/common/src/") and f not in set(ogkm_probe)]
-            for rel in files:
-                srcp = probe_root / rel
-                if not srcp.exists():
-                    continue
-                batch["attempted"] += 1
-                obj = out.parent / ("bat-" + srcp.stem + ".o")
-                log = out / ("bat-" + srcp.stem + ".txt")
-                cmd = ["xcrun", "clang", "-x", "c", "-std=gnu11", *bflags, *definitions, "-DNVRM", *probe_inc,
-                       "-I" + str(srcp.parent), "-c", str(srcp), "-o", str(obj)]
-                rc = execute(cmd, probe_root, log)
-                if rc == 0:
-                    batch["compiled"] += 1
-                else:
-                    errs = [l for l in log.read_text(encoding="utf-8", errors="replace").splitlines()
-                            if "error:" in l][:2]
-                    batch["failed"].append({"file": rel, "errors": errs})
-        # Files that already contributed a probe object must not also contribute a batch object: the link
-        # failed with duplicate symbols because nvkms-kapi.c and friends appear in both sets.
-        probe_stems = {p.stem.replace("probe-", "").replace("_c", "").replace("_cpp", "") for p in
-                       out.parent.glob("probe-*.o")}
-        batch_objs = [o for o in sorted(out.parent.glob("bat-*.o"))
-                      if o.stem.replace("bat-", "") not in probe_stems]
-        # probe_objs is only defined on the mixed-link path; recompute locally so this block cannot
-        # depend on which earlier branch ran.
-        pb = sorted(out.parent.glob("probe-*.o"))
-        if batch_objs and pb:
-            b_out = out.parent / "NVRM-rmbatch.kext/Contents/MacOS/NVRM"
-            b_out.parent.mkdir(parents=True, exist_ok=True)
-            b_link = ["xcrun", "clang++", "-arch", "x86_64", "-mmacosx-version-min=15.5", "-fapple-kext",
-                      "-isysroot", sdk, "-nostdlib", "-Xlinker", "-kext", "-lkmodc++", "-lkmod", "-lcc_kext",
-                      *[str(o) for o in batch_objs], *[str(o) for o in pb], "-o", str(b_out)]
-            b_rc = execute(b_link, nm, out / "nvrm-rmbatch-link.txt")
-            entry = {"objects": len(batch_objs) + len(pb), "exit": b_rc}
-            if b_rc == 0:
-                execute(["xcrun", "nm", "-u", str(b_out)], nm, out / "nvrm-rmbatch-undefined.txt")
-                und = [l.strip() for l in (out / "nvrm-rmbatch-undefined.txt").read_text(
-                    encoding="utf-8", errors="replace").splitlines() if l.strip().startswith("_")]
-                entry.update({"status": "LINKED", "size": b_out.stat().st_size, "undefined_symbols": len(und)})
-            else:
-                entry["status"] = "LINK_FAILED"
-                entry["errors"] = [l for l in (out / "nvrm-rmbatch-link.txt").read_text(
-                    encoding="utf-8", errors="replace").splitlines() if "error:" in l][:5]
-            report["kext_link_nvrm_rmbatch"] = entry
-        report["rm_defs_batch"] = batch
-
-        # Experiment: link the 9 known-good units together with the 5 probe objects and measure how many of
+        # Experiment: link the nine baseline units together with successful probe objects and measure how many of
         # the provider-less imports disappear. Report-only; the production artifact above is untouched.
-        probe_objs = sorted(out.parent.glob("probe-*.o"))
+        # Explicit successful objects only; no filesystem glob can inherit old outputs.
         if probe_objs:
             mix_out = out.parent / "NVRM-ogkm.kext/Contents/MacOS/NVRM"
             mix_out.parent.mkdir(parents=True, exist_ok=True)
@@ -449,7 +432,7 @@ def main():
                     encoding="utf-8", errors="replace").splitlines() if l.strip().startswith("_")]
                 gap = [s for s in undef if s.startswith(("_nvKms", "_rm_", "_nvrm_"))]
                 mix.update({"status": "LINKED", "size": mix_out.stat().st_size,
-                            "undefined_symbols": len(undef), "gap_symbols_left": len(gap),
+                            "undefined_symbols": len(undef), "selected_prefix_gap_symbols_left": len(gap),
                             "gap_sample": gap[:10]})
             else:
                 mix["status"] = "LINK_FAILED"
@@ -471,6 +454,7 @@ def main():
             uni[name] = {"exit": rc, "warnings": text.count("warning:")}
             if rc == 0:
                 uni_objs.append(obj)
+            report["build_manifest"].append(object_record("nvrm-unified", candidate, srcp, obj, rc))
         if len(uni_objs) == len(nvrm_units) and probe_objs:
             u_out = out.parent / "NVRM-unified.kext/Contents/MacOS/NVRM"
             u_out.parent.mkdir(parents=True, exist_ok=True)
@@ -480,15 +464,97 @@ def main():
             u_rc = execute(u_link, nm, out / "nvrm-unified-link.txt")
             entry = {"units": uni, "exit": u_rc, "objects": len(uni_objs) + len(probe_objs)}
             if u_rc == 0:
-                execute(["xcrun", "nm", "-u", str(u_out)], nm, out / "nvrm-unified-undefined.txt")
+                if execute(["xcrun", "nm", "-u", str(u_out)], nm, out / "nvrm-unified-undefined.txt"):
+                    raise ValueError("unified import inventory failed")
                 und = [l.strip() for l in (out / "nvrm-unified-undefined.txt").read_text(
                     encoding="utf-8", errors="replace").splitlines() if l.strip().startswith("_")]
                 gap = [s for s in und if s.startswith(("_nvKms", "_rm_", "_nvrm_"))]
                 entry.update({"status": "LINKED", "size": u_out.stat().st_size,
-                              "undefined_symbols": len(und), "gap_symbols_left": len(gap)})
+                              "undefined_symbols": len(und), "selected_prefix_gap_symbols_left": len(gap)})
             else:
                 entry["status"] = "LINK_FAILED"
             report["kext_link_nvrm_unified"] = entry
+
+        # First controlled batch: compile every file that the symbol index says defines a gap symbol.
+        # The list comes from research/gpu-safety-r5/rm-gap-index.json, so it is reproducible outside CI.
+        idx_path = Path(__file__).resolve().parents[2] / "research/gpu-safety-r5/rm-gap-index.json"
+        batch = {"attempted": 0, "compiled": 0, "failed": [], "missing": [], "excluded": [], "capped": False}
+        batch_objs = []
+        if idx_path.exists():
+            import json as _json
+            idx = _json.loads(idx_path.read_text(encoding="utf-8"))
+            files = [f for f in idx.get("defining_files", []) if not f.startswith("kernel-open/")]
+            CAP = 100
+            if len(files) > CAP:
+                files = files[:CAP]
+                batch["capped"] = True
+            bflags = [f for f in common_flags if f not in ("-std=c++17", "-fno-rtti", "-fno-exceptions")]
+            # src/common/src holds user-space helpers (nv_smg.c needs pthread.h); they are not kext code.
+            # Also drop any file that already contributed a probe object: linking both copies produced
+            # duplicate symbols (_nvKmsKapiAllocateVideoMemory ...), and object names cannot be matched
+            # back to sources, so the exclusion has to happen on paths.
+            batch["excluded"] = [{"source": f, "reason": "user-space directory" if f.startswith("src/common/src/") else "already in probe"} for f in files if f.startswith("src/common/src/") or f in set(ogkm_probe)]
+            files = [f for f in files if not f.startswith("src/common/src/") and f not in set(ogkm_probe)]
+            for rel in files:
+                srcp = probe_root / rel
+                if not srcp.exists():
+                    batch["missing"].append(rel)
+                    continue
+                batch["attempted"] += 1
+                obj = object_destination(out.parent, "bat", rel)
+                log = out / (obj.stem + ".txt")
+                cmd = ["xcrun", "clang", "-x", "c", "-std=gnu11", *bflags, *definitions, "-DNVRM", *probe_inc,
+                       "-I" + str(srcp.parent), "-c", str(srcp), "-o", str(obj)]
+                rc = execute(cmd, probe_root, log)
+                report["build_manifest"].append(object_record("rm-batch", probe_root, srcp, obj, rc))
+                if rc == 0:
+                    batch["compiled"] += 1
+                    batch_objs.append(obj)
+                else:
+                    errs = [l for l in log.read_text(encoding="utf-8", errors="replace").splitlines()
+                            if "error:" in l][:2]
+                    batch["failed"].append({"file": rel, "errors": errs})
+        else:
+            batch["missing"].append(str(idx_path))
+        report["rm_defs_batch"] = batch
+        report["closure_acceptance"].update({
+            "batch_compiler_failures": len(batch["failed"]),
+            "batch_missing_sources": len(batch["missing"]),
+            "batch_capped": batch["capped"],
+            "probe_failures_or_missing": sum(v.get("status") != "COMPILED" for v in probe_results.values()),
+            "reason": "selected batch is not a complete RM/modeset object inventory; external exports and full ABI remain unverified"})
+        baseline_inputs = [*uni_objs, *probe_objs]
+        if len(uni_objs) == len(nvrm_units) and probe_objs and batch_objs:
+            inputs = link_object_list(baseline_inputs, batch_objs)
+            b_out = out.parent / "NVRM-rmbatch.kext/Contents/MacOS/NVRM"
+            b_out.parent.mkdir(parents=True, exist_ok=True)
+            b_link = ["xcrun", "clang++", "-arch", "x86_64", "-mmacosx-version-min=15.5", "-fapple-kext",
+                      "-isysroot", sdk, "-nostdlib", "-Xlinker", "-kext", "-lkmodc++", "-lkmod", "-lcc_kext",
+                      *[str(o) for o in inputs], "-o", str(b_out)]
+            b_rc = execute(b_link, nm, out / "nvrm-rmbatch-link.txt")
+            entry = {"objects": len(inputs), "exit": b_rc,
+                     "baseline_objects": [str(o) for o in baseline_inputs],
+                     "added_objects": [str(o) for o in batch_objs],
+                     "input_completeness": "INCOMPLETE" if batch["failed"] or batch["missing"] or batch["capped"] else "SELECTED_BATCH_COMPLETE"}
+            if b_rc == 0:
+                nm_rc = execute(["xcrun", "nm", "-u", str(b_out)], nm, out / "nvrm-rmbatch-undefined.txt")
+                if nm_rc:
+                    raise ValueError("batch import inventory failed")
+                after = import_set(out / "nvrm-rmbatch-undefined.txt")
+                entry.update({"status": "LINKED_PARTIAL_CLOSURE", "size": b_out.stat().st_size,
+                              "undefined_symbols": len(after)})
+                if report.get("kext_link_nvrm_unified", {}).get("exit") == 0:
+                    before = import_set(out / "nvrm-unified-undefined.txt")
+                    entry["comparison"] = {"basis": "same nine unified NVRM and explicit probe objects retained",
+                                           "baseline_count": len(before), "candidate_count": len(after),
+                                           "added_imports": sorted(set(after)-set(before)),
+                                           "removed_imports": sorted(set(before)-set(after)),
+                                           "convergence": "NOT_DETERMINED_BY_ONE_ITERATION"}
+            else:
+                entry["status"] = "LINK_FAILED"
+                entry["errors"] = [l for l in (out / "nvrm-rmbatch-link.txt").read_text(
+                    encoding="utf-8", errors="replace").splitlines() if "error:" in l][:5]
+            report["kext_link_nvrm_rmbatch"] = entry
 
         # Intel side: NMIntelFB is a single TU compiled twice (real / virtual), each with its own
         # bundle. Linking both reports what the Intel kext actually becomes; it is not a GPU test.
@@ -576,7 +642,7 @@ def main():
         if failures:
             report["failures"] = failures
             raise ValueError("one or more original/candidate native object checks failed")
-        report["level"] = "DARWIN-COMPILE + KEXT-LINK (original and candidate); NOT KEXT-LOAD or GPU-RUNTIME"
+        report["level"] = "SELECTED-DARWIN-OBJECTS-AND-CANDIDATE-LINK-FORMAT; COMPLETE-CLOSURE-NOT-ESTABLISHED"
     except Exception as error:
         report["error"] = str(error)
         raise
@@ -587,4 +653,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 

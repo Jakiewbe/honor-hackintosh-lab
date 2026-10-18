@@ -1,0 +1,52 @@
+{
+  "source_baseline": "8a82d8851015809ec168542815b6e828e8684b77",
+  "checks": [
+    {
+      "test": "test_index_definitions.py",
+      "exit": 0
+    },
+    {
+      "test": "test_native_manifest.py",
+      "exit": 0
+    },
+    {
+      "test": "test_text_diagnostics.py",
+      "exit": 0
+    },
+    {
+      "test": "test_g1_rm_abi.py",
+      "exit": 0
+    },
+    {
+      "test": "test_g1_wp1.py",
+      "exit": 0
+    },
+    {
+      "test": "test_g1_fbclaim.py",
+      "exit": 0
+    },
+    {
+      "test": "test_g1_b2.py",
+      "exit": 0
+    },
+    {
+      "test": "Python syntax and 17 manual-only workflow YAML files",
+      "exit": 0
+    },
+    {
+      "test": "real previous diagnostics publication",
+      "exit": 0
+    }
+  ],
+  "new_darwin_run": "NOT_RUN",
+  "abi_native": "NOT_RUN",
+  "publication_exclusions": [
+    "r28-host/baseline.bin.dSYM/Contents/Info.plist",
+    "r28-host/baseline.bin.dSYM/Contents/Resources/DWARF/baseline.bin",
+    "r28-host/baseline.bin.dSYM/Contents/Resources/Relocations/x86_64/baseline.bin.yml",
+    "r28-host/candidate.bin.dSYM/Contents/Info.plist",
+    "r28-host/candidate.bin.dSYM/Contents/Resources/DWARF/candidate.bin",
+    "r28-host/candidate.bin.dSYM/Contents/Resources/Relocations/x86_64/candidate.bin.yml"
+  ],
+  "device_access": false
+}

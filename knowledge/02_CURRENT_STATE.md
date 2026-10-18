@@ -1,3 +1,5 @@
+> **2026-10-18 R79 审计纠错：** 已撤回“45个符号闭源”与“351→667证明增量闭包不收敛”；索引及同基线显式链接清单已修。固定346符号新扫描为337个词法候选、9个UNKNOWN，尚非对象闭包。27项工具测试和三组历史回归通过；加入六TU选定ABI布局诊断与严格文本发布。新Darwin/链接/ABI尚未执行。见 [本轮报告](../research/gpu-safety-r5/R79-AUDIT-CLOSURE-GATE-20261018.md)。完整闭包与实机继续NO-GO。
+
 > **2026-10-18 R28 增量：** 真实事务 owner-copy 的错误传播已做候选修复与 CPU 完整函数合同，15/15；R27 同测 6 个预期失败。Unsupported 之外不回退，symbol 分配失败返回 NoMemory。原生门禁已追加 R28、补丁往返与合同测试，尚未执行。[报告](../research/gpu-safety-r5/R28-OWNER-COPY-ERRORS-20261018.md)。不改变 P0-1/P0-4 或运行 NO-GO；下一主线仍为精确宏/对象 inventory、构建闭包和 ABI。
 
 > **2026-10-18 当前 GPU 断点更新：构建闭包与跨平台 ABI。** 42 个原“无提供者导入”均已有候选公开定义，不能再按 R13/R48 旧文称源码缺失或静态研发到顶。新逐符号审计确认 35 个 OGKM 目标位于 5 个 TU，20 个 runtime 宏使用者跨 3 个 TU；固定 NullMoth 基线对其有 31 处 NULL 栈调用。是否启用 altstack 待精确预处理取证。详见 [当前审计与下一断点](../research/gpu-safety-r5/G1-CLOSURE-ABI-AUDIT-20261018.md)。五单元旧编译已用实际 artifact digest 复核；新增宏/对象提供者采集尚未运行。P0-1/P0-4 仍 BLOCKED/OPEN，KEXT-LOAD NO-GO。下方历史“不可重建/源码已到顶/风险只在一个文件”等表述不作为当前结论。
