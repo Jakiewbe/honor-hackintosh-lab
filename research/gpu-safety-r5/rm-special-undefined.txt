@@ -1,0 +1,9 @@
+_PEX_DSM_GUID
+_g_pSys
+_g_resServ
+_nvEvoGlobal
+___nvoc_class_def_Memory
+___nvoc_class_def_RmResource
+___nvoc_dynamicCast
+___nvoc_rtti_provider
+_pNV_KMS_ID

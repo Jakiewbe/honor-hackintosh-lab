@@ -1,0 +1,11 @@
+test_ambiguous_anchor_rejected (test_g1_special_symbol_sources.SpecialSourceTests.test_ambiguous_anchor_rejected) ... ok
+test_comment_only_anchor_rejected (test_g1_special_symbol_sources.SpecialSourceTests.test_comment_only_anchor_rejected) ... ok
+test_data_and_tentative_definitions (test_g1_special_symbol_sources.SpecialSourceTests.test_data_and_tentative_definitions) ... ok
+test_exact_spelling_required (test_g1_special_symbol_sources.SpecialSourceTests.test_exact_spelling_required) ... ok
+test_extern_is_not_definition (test_g1_special_symbol_sources.SpecialSourceTests.test_extern_is_not_definition) ... ok
+test_summary_hash_covers_all_hits_and_manifest (test_g1_special_symbol_sources.SpecialSourceTests.test_summary_hash_covers_all_hits_and_manifest) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.001s
+
+OK

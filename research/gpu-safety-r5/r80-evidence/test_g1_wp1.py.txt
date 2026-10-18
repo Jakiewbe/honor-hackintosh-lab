@@ -1,0 +1,15 @@
+test_nullmoth_only_consumes_generated_inputs (__main__.B1BuildInputs.test_nullmoth_only_consumes_generated_inputs) ... ok
+test_ogkm_has_no_compile_cmds_generator_or_darwin_config (__main__.B1BuildInputs.test_ogkm_has_no_compile_cmds_generator_or_darwin_config) ... ok
+test_go_failure_releases_interrupts (__main__.CandidatePatch.test_go_failure_releases_interrupts) ... ok
+test_patch_applies_to_pinned_tree_and_matches_candidate (__main__.CandidatePatch.test_patch_applies_to_pinned_tree_and_matches_candidate) ... ok
+test_stub_semantics (__main__.CandidatePatch.test_stub_semantics) ... ok
+test_proxy_objects_match_recorded_hashes (__main__.Pins.test_proxy_objects_match_recorded_hashes) ... ok
+test_upstream_trees_pinned_and_untouched (__main__.Pins.test_upstream_trees_pinned_and_untouched) ... ok
+test_modeset_os_layer_fully_strong (__main__.SymbolContract.test_modeset_os_layer_fully_strong) ... ok
+test_nvlink_os_locks_required_but_unprovided (__main__.SymbolContract.test_nvlink_os_locks_required_but_unprovided) ... ok
+test_upstream_zero_success_stubs_are_recorded (__main__.SymbolContract.test_upstream_zero_success_stubs_are_recorded) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.974s
+
+OK

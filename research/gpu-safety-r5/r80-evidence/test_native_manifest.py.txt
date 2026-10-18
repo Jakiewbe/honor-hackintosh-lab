@@ -1,0 +1,10 @@
+test_baseline_kept_and_stale_file_excluded (test_native_manifest.ManifestTests.test_baseline_kept_and_stale_file_excluded) ... ok
+test_duplicate_or_missing_object_rejected (test_native_manifest.ManifestTests.test_duplicate_or_missing_object_rejected) ... ok
+test_parent_escape_rejected (test_native_manifest.ManifestTests.test_parent_escape_rejected) ... ok
+test_same_basename_never_aliases (test_native_manifest.ManifestTests.test_same_basename_never_aliases) ... ok
+test_success_without_native_object_rejected (test_native_manifest.ManifestTests.test_success_without_native_object_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.012s
+
+OK

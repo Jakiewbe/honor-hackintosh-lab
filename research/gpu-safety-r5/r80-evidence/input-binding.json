@@ -1,0 +1,33 @@
+{
+  "historical_run_id": 39102081484,
+  "historical_head": "ec6f92e0af2f3bbbc64250b9f5be2012e7aad780",
+  "artifact_id": 12127047055,
+  "artifact_digest_from_GitHub_API": "sha256:10f07bda0a80625471e7e195da7e0a1a33b2a46a77e15dcef512908da2a8b6f0",
+  "member": "nvrm-unified-undefined.txt",
+  "member_sha256": "0cd769475aeef7f69e70888d5861ab89536d4686871c7171316fe3e242735bb4",
+  "member_symbols": 829,
+  "selected_input_sha256": "85e03231e19a3c7101783292af2264b031a8ef07b3cbc049ed81955aec4146f1",
+  "selected_symbols": [
+    "_PEX_DSM_GUID",
+    "_g_pSys",
+    "_g_resServ",
+    "_nvEvoGlobal",
+    "___nvoc_class_def_Memory",
+    "___nvoc_class_def_RmResource",
+    "___nvoc_dynamicCast",
+    "___nvoc_rtti_provider",
+    "_pNV_KMS_ID"
+  ],
+  "provider_sources_already_in_R79_lexical_batch": [
+    "src/nvidia-modeset/src/nvkms-evo.c",
+    "src/nvidia/src/kernel/core/system.c",
+    "src/nvidia/src/kernel/rmapi/rmapi.c",
+    "src/nvidia/src/libraries/nvoc/src/runtime.c"
+  ],
+  "provider_sources_not_in_R79_lexical_batch": [
+    "src/nvidia/generated/g_mem_nvoc.c",
+    "src/nvidia/generated/g_resource_nvoc.c",
+    "src/nvidia/src/kernel/platform/guids.c"
+  ],
+  "new_native_provider_observation": "NOT_RUN"
+}

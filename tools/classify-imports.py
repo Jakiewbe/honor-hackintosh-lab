@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 """Classify the undefined (imported) symbols of a linked kext by who is expected to provide them.
 
-Usage: python tools/classify-imports.py <nm -gU undefined file> [--json out.json]
+Usage: python tools/classify-imports.py <nm -u text file> [--json out.json]
+
+Categories are naming heuristics, not evidence of a kernel export or provider.
 
 Categories:
   mach/kern      exported by kernel (com.apple.kpi.mach, kern.*)
@@ -15,6 +17,7 @@ import re
 import sys
 from collections import Counter
 from pathlib import Path
+from g1_symbol_identity import identity, parse_nm_undefined, source_spelling
 
 KERNEL_PREFIXES = (
     "kern_", "mach_", "thread_", "clock_", "absolutetime", "nanoseconds", "vm_", "kmem_", "ml_",
@@ -26,7 +29,7 @@ LIBKERN_CLASSES = {
     "OSString", "OSNumber", "OSBoolean", "OSSet", "OSIterator", "OSCollection", "OSSerialize",
     "OSOrderedSet", "OSData", "IOLock", "IORecursiveLock", "IOSimpleLock",
 }
-CPP_RUNTIME = ("__cxa_", "__gxx_", "__Unwind", "_Znwm", "_ZdlPv", "_Znam", "_ZdaPv", "_ZSt")
+CPP_RUNTIME = ("__cxa_", "__gxx_", "_Unwind", "_Znwm", "_ZdlPv", "_Znam", "_ZdaPv", "_ZSt")
 
 
 GAPS = {"nvKms": "ogkm-nvkms", "nvKmsKapi": "ogkm-nvkms", "rm_": "ogkm-rm", "nvrm_": "nullmoth-internal",
@@ -35,7 +38,7 @@ GAPS = {"nvKms": "ogkm-nvkms", "nvKmsKapi": "ogkm-nvkms", "rm_": "ogkm-rm", "nvr
 
 
 def classify(sym: str) -> str:
-    s = sym.lstrip("_")
+    s = source_spelling(sym)
     for prefix, gap in GAPS.items():
         if s.startswith(prefix):
             return gap
@@ -43,7 +46,7 @@ def classify(sym: str) -> str:
         return "mach/kern"
     if s.startswith(CPP_RUNTIME):
         return "c++ runtime"
-    m = re.match(r"ZN[KV]?(\d+)(\w+)", s)
+    m = re.match(r"_ZN[KV]?(\d+)(\w+)", s)
     if m:
         n = int(m.group(1))
         cls = m.group(2)[:n]
@@ -59,14 +62,14 @@ def classify(sym: str) -> str:
     # RM / NVOC internals: nvEvo*, nvHs*, nvGe*, nvRm*, gpumgr*, rmap*, port*, memdesc*, serv*, intr*,
     # Cli*/PEX_*, __nvoc_*, *_IMPL helpers. The shipping NVRM contains all of these.
     RM_PREFIXES = ("nvEvo", "nvHs", "nvGe", "nvRm", "nvGp", "nv_", "gpumgr", "rmap", "port", "memdesc",
-                   "serv", "intr", "Cli", "PEX_", "__nvoc_", "__rm", "_IMPL", "kai", "gpu")
+                   "serv", "intr", "Cli", "PEX_", "__nvoc_", "__rm", "_IMPL", "kai", "gpu", "_f16", "_f32")
     if s.startswith(RM_PREFIXES) or s.endswith("_IMPL"):
         return "ogkm-rm-core"
     if s.startswith(("bitV", "thre", "os_")):
         return "ogkm-rm-core"
     # Remaining RM/NVOC internals seen in the mixed link: __nvoc_*, _nv*, kbus*, kdisp*, _f16/_f32 softfloat,
     # global RM services (g_pSys, g_resServ), ACPI helpers, *_KERNEL entry points.
-    # Names are already stripped of every leading underscore, so match the bare forms.
+    # Preserve the C identifier's own underscores. These remain naming heuristics.
     if (s.startswith(("nvoc_", "kbus", "kdisp", "kfifo", "kgsp", "g_", "acpiDsm"))
             or s.endswith("_KERNEL")
             or (len(s) > 2 and s.startswith("nv") and s[2].isupper())
@@ -76,9 +79,7 @@ def classify(sym: str) -> str:
                               "rcdb", "refFind", "nvlog", "rmIntr", "tls", "tmrCtrl", "transformGid",
                               "workItem", "ui32_"))):
         return "ogkm-rm-core"
-    if re.match(r"Z(TV|TI|TS)\\d", s):
-        return "iokit/libkern"
-    if s.startswith("Z") or s.startswith("std"):
+    if s.startswith("_Z") or s.startswith("std"):
         return "c++ runtime"
     return "unclassified"
 
@@ -88,12 +89,14 @@ def main():
     out = None
     if "--json" in sys.argv:
         out = Path(sys.argv[sys.argv.index("--json") + 1])
-    syms = [l.strip() for l in path.read_text(encoding="utf-8", errors="replace").splitlines()
-            if l.strip().startswith("_")]
+    syms = parse_nm_undefined(path.read_text(encoding="utf-8"))
     cats = Counter(classify(s) for s in syms)
     unknown = [s for s in syms if classify(s) == "unclassified"]
-    rec = {"file": str(path), "symbols": len(syms), "categories": dict(cats),
-           "unclassified": unknown[:50], "unclassified_count": len(unknown)}
+    rec = {"schema": "honor.g1.import-classification.v2", "file": str(path),
+           "level": "NAME_HEURISTICS_NOT_PROVIDER_OR_EXPORT_PROOF",
+           "symbols": len(syms), "categories": dict(cats),
+           "records": [dict(identity(s), category=classify(s)) for s in syms],
+           "unclassified": unknown, "unclassified_count": len(unknown)}
     for k, v in cats.most_common():
         print(f"{v:6}  {k}")
     print(f"{len(syms):6}  TOTAL")
@@ -109,3 +112,4 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
+

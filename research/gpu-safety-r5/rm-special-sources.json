@@ -1,0 +1,161 @@
+{
+  "schema": "honor.g1.special-symbol-sources.v1",
+  "ogkm_pin": "e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb",
+  "level": "SOURCE_CANDIDATES_AND_GENERATION_RECIPE_ONLY",
+  "scope": "all tracked .c/.h/.cc/.cpp/.hpp/.mk and Makefile files",
+  "input_nm_sha256": "85e03231e19a3c7101783292af2264b031a8ef07b3cbc049ed81955aec4146f1",
+  "support": {
+    "guid_macro": {
+      "path": "src/nvidia/src/kernel/platform/guids.c",
+      "kind": "reviewed-macro-or-generator",
+      "line": 35,
+      "end_line": 37,
+      "excerpt": "#define GUID_CONST(name, l, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8) \\\n        const GUID DECLSPEC_SELECTANY name \\\n                = { l, w1, w2, { b1, b2,  b3,  b4,  b5,  b6,  b7,  b8 } }",
+      "source_sha256": "9cb411ba2dff4f31c9c71418ca24610b64b9afd1c441e8e9e37019290091bdbb"
+    },
+    "id_generator": {
+      "path": "utils.mk",
+      "kind": "reviewed-macro-or-generator",
+      "line": 555,
+      "end_line": 567,
+      "excerpt": "define GENERATE_NVIDSTRING\n  $(1)_BUILD_NVID := NVIDIA $$(strip $(2)) for $$(TARGET_ARCH)  $$(NVIDIA_NVID_VERSION)\n  $(1)_BUILD_NVID := $$($$(strip $(1))_BUILD_NVID)  $$(NVIDSTRING_BUILD_TYPE_STRING)\n  ifneq ($$(NVIDIA_NVID_EXTRA),)\n    $(1)_BUILD_NVID := $$($$(strip $(1))_BUILD_NVID)  $$(NVIDIA_NVID_EXTRA)\n  endif\n  $(1)_BUILD_NVID := $$($$(strip $(1))_BUILD_NVID)  ($$(NV_BUILD_USER)@$$(NV_BUILD_HOST))\n  # g_nvid_string.c depends on all objects except g_nvid_string.o, and version.mk\n  $(NVIDSTRING): $$(filter-out $$(call BUILD_OBJECT_LIST,$$(NVIDSTRING)), $(3)) $$(VERSION_MK)\n\t$(at_if_quiet)$$(MKDIR) $$(dir $$@)\n\t$(at_if_quiet)$$(ECHO) \"const char $(1)[] = \\\"nvidia id: $$($$(strip $(1))_BUILD_NVID)  `$$(DATE)`\\\";\" > $$@\n\t$(at_if_quiet)$$(ECHO) \"const char *const p$$(strip $(1)) = $(1) + 11;\" >> $$@;\nendef",
+      "source_sha256": "d1371cf992e486b6863e1d6200727a6f5591e2ff298db08cf79981b90dfdd047"
+    }
+  },
+  "limitations": [
+    "Raw token hits include comments and inactive code; none alone establish definitions.",
+    "Exact anchors nominate reviewed source candidates; preprocessor and actual object symbols are still required.",
+    "pNV_KMS_ID has a public generation recipe, but no generated Darwin object is established.",
+    "This nine-symbol set is not the full undefined inventory or closure."
+  ],
+  "records": [
+    {
+      "macho_symbol": "_PEX_DSM_GUID",
+      "source_spelling": "PEX_DSM_GUID",
+      "name_kind": "c-or-assembler",
+      "source_candidate": {
+        "path": "src/nvidia/src/kernel/platform/guids.c",
+        "kind": "macro-data-definition-candidate",
+        "line": 81,
+        "end_line": 82,
+        "excerpt": "GUID_CONST (PEX_DSM_GUID,\n        0xE5C937D0L, 0x3553, 0x4D7A, 0x91, 0x17, 0xEA, 0x4D, 0x19, 0xC3, 0x43, 0x4D);",
+        "source_sha256": "9cb411ba2dff4f31c9c71418ca24610b64b9afd1c441e8e9e37019290091bdbb"
+      },
+      "object_provider": "NOT_OBSERVED"
+    },
+    {
+      "macho_symbol": "_g_pSys",
+      "source_spelling": "g_pSys",
+      "name_kind": "c-or-assembler",
+      "source_candidate": {
+        "path": "src/nvidia/src/kernel/core/system.c",
+        "kind": "initialized-data-definition-candidate",
+        "line": 74,
+        "end_line": 74,
+        "excerpt": "OBJSYS *g_pSys = NULL;",
+        "source_sha256": "3b126a17813a5c4289a2822036fb28f2caeb2d105457535f6372d884b4b1b502"
+      },
+      "object_provider": "NOT_OBSERVED"
+    },
+    {
+      "macho_symbol": "_g_resServ",
+      "source_spelling": "g_resServ",
+      "name_kind": "c-or-assembler",
+      "source_candidate": {
+        "path": "src/nvidia/src/kernel/rmapi/rmapi.c",
+        "kind": "tentative-data-definition-candidate",
+        "line": 55,
+        "end_line": 55,
+        "excerpt": "RsServer          g_resServ;",
+        "source_sha256": "cf0f6f8df903b9e39061ffa7cde0c528122c2aec7f10ba6ccbee82bcef6a6fe5"
+      },
+      "object_provider": "NOT_OBSERVED"
+    },
+    {
+      "macho_symbol": "_nvEvoGlobal",
+      "source_spelling": "nvEvoGlobal",
+      "name_kind": "c-or-assembler",
+      "source_candidate": {
+        "path": "src/nvidia-modeset/src/nvkms-evo.c",
+        "kind": "initialized-data-definition-candidate",
+        "line": 148,
+        "end_line": 148,
+        "excerpt": "NVEvoGlobal nvEvoGlobal = {",
+        "source_sha256": "bb9b8d648f9d4a79cea4c67df1cdd9a048fa8f8a15c46effc4a50a9d02595510"
+      },
+      "object_provider": "NOT_OBSERVED"
+    },
+    {
+      "macho_symbol": "___nvoc_class_def_Memory",
+      "source_spelling": "__nvoc_class_def_Memory",
+      "name_kind": "c-or-assembler",
+      "source_candidate": {
+        "path": "src/nvidia/generated/g_mem_nvoc.c",
+        "kind": "initialized-data-definition-candidate",
+        "line": 84,
+        "end_line": 84,
+        "excerpt": "const struct NVOC_CLASS_DEF __nvoc_class_def_Memory =",
+        "source_sha256": "797d4ef7823bd807f8d3e6c3186cbd39f520a2bfe89181f0f8fa490d3b511931"
+      },
+      "object_provider": "NOT_OBSERVED"
+    },
+    {
+      "macho_symbol": "___nvoc_class_def_RmResource",
+      "source_spelling": "__nvoc_class_def_RmResource",
+      "name_kind": "c-or-assembler",
+      "source_candidate": {
+        "path": "src/nvidia/generated/g_resource_nvoc.c",
+        "kind": "initialized-data-definition-candidate",
+        "line": 177,
+        "end_line": 177,
+        "excerpt": "const struct NVOC_CLASS_DEF __nvoc_class_def_RmResource =",
+        "source_sha256": "b49055d26cc0b75f7faf5938363e0fe9ea5879460b528e4c87bcb3807e324220"
+      },
+      "object_provider": "NOT_OBSERVED"
+    },
+    {
+      "macho_symbol": "___nvoc_dynamicCast",
+      "source_spelling": "__nvoc_dynamicCast",
+      "name_kind": "c-or-assembler",
+      "source_candidate": {
+        "path": "src/nvidia/src/libraries/nvoc/src/runtime.c",
+        "kind": "function-definition-candidate",
+        "line": 282,
+        "end_line": 283,
+        "excerpt": "Dynamic *__nvoc_dynamicCast(Dynamic *pFromObj, const NVOC_CLASS_INFO *pClassInfo)\n{",
+        "source_sha256": "baab7fd811a558c4ccdf49569980982267258c0053693f8426ba34bcec5103ba"
+      },
+      "object_provider": "NOT_OBSERVED"
+    },
+    {
+      "macho_symbol": "___nvoc_rtti_provider",
+      "source_spelling": "__nvoc_rtti_provider",
+      "name_kind": "c-or-assembler",
+      "source_candidate": {
+        "path": "src/nvidia/src/libraries/nvoc/src/runtime.c",
+        "kind": "initialized-data-definition-candidate",
+        "line": 46,
+        "end_line": 46,
+        "excerpt": "const struct NVOC_RTTI_PROVIDER __nvoc_rtti_provider = { 0 };",
+        "source_sha256": "baab7fd811a558c4ccdf49569980982267258c0053693f8426ba34bcec5103ba"
+      },
+      "object_provider": "NOT_OBSERVED"
+    },
+    {
+      "macho_symbol": "_pNV_KMS_ID",
+      "source_spelling": "pNV_KMS_ID",
+      "name_kind": "c-or-assembler",
+      "source_candidate": {
+        "path": "src/nvidia-modeset/Makefile",
+        "kind": "generated-data-recipe-only",
+        "line": 248,
+        "end_line": 250,
+        "excerpt": "$(eval $(call GENERATE_NVIDSTRING, \\\n  NV_KMS_ID, \\\n  UNIX Open Kernel Mode Setting Driver, $(OBJS)))",
+        "source_sha256": "53c348ba9664239e6edc262226a85c7a6c10b7567ccf3bd8d0eda31a7363d796"
+      },
+      "object_provider": "NOT_OBSERVED"
+    }
+  ],
+  "scanned_files": 3836,
+  "full_canonical_sha256": "435abbedf04591c7cbc13883c35ff037c1a71c2d9580df3aa0bb55fe63a82a92"
+}

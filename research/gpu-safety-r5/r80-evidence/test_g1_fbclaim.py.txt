@@ -1,0 +1,10 @@
+test_bootfb_does_not_match_honor_intel (__main__.FBClaimHonor.test_bootfb_does_not_match_honor_intel) ... ok
+test_candidate_claim_nvidia_only (__main__.FBClaimHonor.test_candidate_claim_nvidia_only) ... ok
+test_fb_copies_differ_only_outside_the_claim (__main__.FBClaimHonor.test_fb_copies_differ_only_outside_the_claim) ... ok
+test_patch_scope (__main__.FBClaimHonor.test_patch_scope) ... ok
+test_upstream_claim_takes_honor_intel (__main__.FBClaimHonor.test_upstream_claim_takes_honor_intel) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.088s
+
+OK

@@ -1,0 +1,16 @@
+test_altstack_conflict_requires_matching_provider_and_null_caller (test_g1_rm_abi.AbiTests.test_altstack_conflict_requires_matching_provider_and_null_caller) ... ok
+test_compare_reports_specific_field_differences (test_g1_rm_abi.AbiTests.test_compare_reports_specific_field_differences) ... ok
+test_exact_numeric_table (test_g1_rm_abi.AbiTests.test_exact_numeric_table) ... ok
+test_flags_preserved_and_dependency_outputs_removed (test_g1_rm_abi.AbiTests.test_flags_preserved_and_dependency_outputs_removed) ... ok
+test_missing_duplicate_and_short_tables_rejected (test_g1_rm_abi.AbiTests.test_missing_duplicate_and_short_tables_rejected) ... ok
+test_missing_or_duplicate_profiles_never_match (test_g1_rm_abi.AbiTests.test_missing_or_duplicate_profiles_never_match) ... ok
+test_nested_commas_do_not_split_first_argument (test_g1_rm_abi.AbiTests.test_nested_commas_do_not_split_first_argument) ... ok
+test_source_audit_retains_all_hits_and_ignores_comments (test_g1_rm_abi.AbiTests.test_source_audit_retains_all_hits_and_ignores_comments) ... ok
+test_wrapper_includes_unchanged_complete_source_without_macros (test_g1_rm_abi.AbiTests.test_wrapper_includes_unchanged_complete_source_without_macros) ... ok
+test_wrong_source_response_file_and_existing_action_rejected (test_g1_rm_abi.AbiTests.test_wrong_source_response_file_and_existing_action_rejected) ... ok
+test_wrong_target_and_unresolved_values_rejected (test_g1_rm_abi.AbiTests.test_wrong_target_and_unresolved_values_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.029s
+
+OK

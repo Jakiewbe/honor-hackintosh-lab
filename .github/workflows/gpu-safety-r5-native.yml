@@ -63,7 +63,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for test in test_index_definitions.py test_native_manifest.py test_text_diagnostics.py test_g1_rm_abi.py; do
+          for test in test_index_definitions.py test_native_manifest.py test_text_diagnostics.py test_g1_rm_abi.py test_g1_symbol_identity.py test_g1_special_symbol_sources.py test_g1_special_object_providers.py; do
             python3 -m unittest discover -s tools -p "$test" -v
           done
           python3 tools/index-definitions.py "$RUNNER_TEMP/gpu-safety-r5-nv" \
@@ -71,6 +71,11 @@ jobs:
             --json "$RUNNER_TEMP/gpu-safety-r5-logs/rm-gap-index-full.json" \
             --summary "$RUNNER_TEMP/gpu-safety-r5-logs/rm-gap-index-summary.json"
           cmp research/gpu-safety-r5/rm-gap-index.json "$RUNNER_TEMP/gpu-safety-r5-logs/rm-gap-index-summary.json"
+          python3 tools/g1_special_symbol_sources.py --nv "$RUNNER_TEMP/gpu-safety-r5-nv" \
+            --nm research/gpu-safety-r5/rm-special-undefined.txt \
+            --out "$RUNNER_TEMP/gpu-safety-r5-logs/rm-special-sources-full.json" \
+            --summary "$RUNNER_TEMP/gpu-safety-r5-logs/rm-special-sources-summary.json"
+          cmp research/gpu-safety-r5/rm-special-sources.json "$RUNNER_TEMP/gpu-safety-r5-logs/rm-special-sources-summary.json"
 
       - name: Verify complete NullMoth patch series in a disposable copy
         shell: bash
@@ -98,6 +103,18 @@ jobs:
             --candidate "$RUNNER_TEMP/nullmoth-v2.3.3-gpu-safety-r5-candidate" \
             --patch research/gpu-safety-r5/nullmoth-r28-owner-copy-errors.patch \
             --out "$RUNNER_TEMP/gpu-safety-r5-logs/r28-host" --cxx clang++
+
+      - name: Preserve exact Mach-O names in the current unified import inventory
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/classify-imports.py "$RUNNER_TEMP/gpu-safety-r5-logs/nvrm-unified-undefined.txt" \
+            --json "$RUNNER_TEMP/gpu-safety-r5-logs/nvrm-unified-import-identities.json"
+          python3 tools/g1_special_object_providers.py \
+            --sources research/gpu-safety-r5/rm-special-sources.json \
+            --native-report "$RUNNER_TEMP/gpu-safety-r5-logs/native-report.json" \
+            --object-root "$RUNNER_TEMP" \
+            --out "$RUNNER_TEMP/gpu-safety-r5-logs/special-object-providers"
 
       - name: Audit probe preprocessor configuration and actual object providers
         shell: bash

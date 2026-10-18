@@ -1,3 +1,5 @@
+> **2026-10-18 R80 符号身份与来源：** 修正 Mach-O 转 C 名称时删光下划线的问题；九项 UNKNOWN 已逐项定位为六项数据、一项函数、一项宏数据及一项生成配方候选。已接入本轮显式对象哈希/精确导出取证，47项工具测试及三组历史回归通过。新 Darwin/对象提供者/链接/ABI 尚未运行，完整闭包与设备仍 NO-GO。[报告](../research/gpu-safety-r5/R80-SYMBOL-IDENTITY-AND-SOURCES-20261018.md)｜[网页端复核 prompt](../research/gpu-safety-r5/R80-WEB-REVIEW-PROMPT.md)。
+
 > **2026-10-18 R79 审计纠错：** 已撤回“45个符号闭源”与“351→667证明增量闭包不收敛”；索引及同基线显式链接清单已修。固定346符号新扫描为337个词法候选、9个UNKNOWN，尚非对象闭包。27项工具测试和三组历史回归通过；加入六TU选定ABI布局诊断与严格文本发布。新Darwin/链接/ABI尚未执行。见 [本轮报告](../research/gpu-safety-r5/R79-AUDIT-CLOSURE-GATE-20261018.md)。完整闭包与实机继续NO-GO。
 
 > **R28 SOURCE / CPU-CONTRACT / PATCH-APPLIED：** [报告与完整文本证据](../research/gpu-safety-r5/R28-OWNER-COPY-ERRORS-20261018.md)。g++ 13.3 / ASan+UBSan，完整真实事务候选 15/15，R27 基线预期失败 6 项，编译失败负控无产物/未执行；27 个 NullMoth 补丁完整正反向恢复，另有既有 OGKM 补丁。Darwin/链接未执行，无 GPU 或设备证据。

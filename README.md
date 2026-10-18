@@ -1,3 +1,5 @@
+> **2026-10-18 R80 符号身份与来源：** 修正 Mach-O 转 C 名称时删光下划线的问题；九项 UNKNOWN 已逐项定位为六项数据、一项函数、一项宏数据及一项生成配方候选。已接入本轮显式对象哈希/精确导出取证，47项工具测试及三组历史回归通过。新 Darwin/对象提供者/链接/ABI 尚未运行，完整闭包与设备仍 NO-GO。[报告](research/gpu-safety-r5/R80-SYMBOL-IDENTITY-AND-SOURCES-20261018.md)｜[网页端复核 prompt](research/gpu-safety-r5/R80-WEB-REVIEW-PROMPT.md)。
+
 > **2026-10-18 R79 审计纠错：** 已撤回“45个符号闭源”与“351→667证明增量闭包不收敛”；索引及同基线显式链接清单已修。固定346符号新扫描为337个词法候选、9个UNKNOWN，尚非对象闭包。27项工具测试和三组历史回归通过；加入六TU选定ABI布局诊断与严格文本发布。新Darwin/链接/ABI尚未执行。见 [本轮报告](research/gpu-safety-r5/R79-AUDIT-CLOSURE-GATE-20261018.md)。完整闭包与实机继续NO-GO。
 
 > **2026-10-18 R28 候选：** 真实 `performTransaction()` 仅在 owner-copy 返回 Unsupported 时回退，其他错误原样传播；CPU 真实函数合同 15/15，旧基线 6 项预期失败，编译失败负控通过。完整补丁序列可在临时副本正反向恢复。已接入原生门禁，Darwin/链接尚未运行；[实现与证据](research/gpu-safety-r5/R28-OWNER-COPY-ERRORS-20261018.md)。完整构建闭包/ABI 仍是主线，实机 NO-GO。

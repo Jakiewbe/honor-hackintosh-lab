@@ -1,0 +1,69 @@
+{
+  "source_baseline": "4dcd1554e08209d2e0a02cc71e04832f4f7efb9d",
+  "checks": [
+    {
+      "test": "test_index_definitions.py",
+      "exit": 0
+    },
+    {
+      "test": "test_native_manifest.py",
+      "exit": 0
+    },
+    {
+      "test": "test_text_diagnostics.py",
+      "exit": 0
+    },
+    {
+      "test": "test_g1_rm_abi.py",
+      "exit": 0
+    },
+    {
+      "test": "test_g1_symbol_identity.py",
+      "exit": 0
+    },
+    {
+      "test": "test_g1_special_symbol_sources.py",
+      "exit": 0
+    },
+    {
+      "test": "test_g1_special_object_providers.py",
+      "exit": 0
+    },
+    {
+      "test": "test_g1_wp1.py",
+      "exit": 0
+    },
+    {
+      "test": "test_g1_fbclaim.py",
+      "exit": 0
+    },
+    {
+      "test": "test_g1_b2.py",
+      "exit": 0
+    },
+    {
+      "test": "Python syntax and 17 manual-only workflows",
+      "exit": 0
+    },
+    {
+      "test": "all nine exact Mach-O names occur in historical 829-symbol nm inventory",
+      "exit": 0
+    },
+    {
+      "test": "repeat complete tracked-scope source inventory reproduces canonical digest and summary",
+      "exit": 0
+    }
+  ],
+  "tool_tests": 47,
+  "new_tool_tests": 20,
+  "historical_regressions": {
+    "wp1": 10,
+    "fbclaim": 5,
+    "b2": 7
+  },
+  "scanned_files": 3836,
+  "new_darwin_run": "NOT_RUN",
+  "device_execution": false,
+  "full_closure": "NOT_ESTABLISHED",
+  "kext_load": "NO-GO"
+}
