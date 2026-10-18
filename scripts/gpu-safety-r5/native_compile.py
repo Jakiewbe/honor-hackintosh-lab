@@ -257,7 +257,10 @@ def main():
                       "src/nvidia/arch/nvalloc/unix/src/dynamic-power.c",
                       "src/nvidia-modeset/src/nvkms.c",
                       "src/nvidia-modeset/kapi/src/nvkms-kapi.c"]
-        probe_root = nvroot.parent if (nvroot.parent / "src/nvidia").exists() else nvroot
+        # nvroot is <ogkm>/src/nvidia; the tree root is two levels up
+        probe_root = nvroot.parent.parent
+        if not (probe_root / "src/nvidia").exists():
+            probe_root = nvroot
         probe_inc = [str(p) for p in includes] + ["-I" + str(probe_root / "src/nvidia/arch/nvalloc/unix/include"),
                                                  "-I" + str(probe_root / "src/nvidia")]
         probe_results = {}
