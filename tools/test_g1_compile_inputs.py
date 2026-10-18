@@ -41,8 +41,9 @@ class CompileInputTests(unittest.TestCase):
             paths = [root/'main.cpp', root/'SDK path'/'sys#name$.h']
             self.assertEqual(dep_paths(dependency_text(paths), root), sorted(paths,key=str))
             for text in [TARGET+':', 'other: a.h', TARGET+': a.h\nother: b.h',
-                         TARGET+': $(HEADERS)', TARGET+': a.h a.h', TARGET+': a#b.h']:
+                         TARGET+': $(HEADERS)', TARGET+': a#b.h']:
                 with self.assertRaises(ValueError): dep_paths(text, root)
+            self.assertEqual(dep_paths(TARGET+': a.h ./a.h a.h',root),[root/'a.h'])
 
     def test_md_keeps_system_headers_and_preserves_original_arguments(self):
         argv = ['xcrun','clang','-I','same','-c','src.c','-o','obj.o']
@@ -52,6 +53,21 @@ class CompileInputTests(unittest.TestCase):
         self.assertEqual(actual[-4:], argv[-4:])
         for extra in ['-MMD','-MFold','@old.rsp','-Wp,-MD,old.d']:
             with self.assertRaises(ValueError): command_with_dependencies(argv[:2]+[extra]+argv[2:], Path('/x'))
+
+    def test_real_clang_parent_spelling_aliases_preserve_physical_identity(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp).resolve()
+            child=root/'headers/child';child.mkdir(parents=True)
+            direct=root/'headers/nvtiming.h';direct.write_text('same real input')
+            spelled=child/'../nvtiming.h'
+            paths=dep_paths(dependency_text([direct,spelled]),root)
+            self.assertEqual(len(paths),2)
+            records=file_inputs(paths)
+            self.assertEqual(len({r['resolved_path'] for r in records}),1)
+            self.assertEqual(len({r['sha256'] for r in records}),1)
+            check_inputs(records)
+            direct.write_text('changed')
+            with self.assertRaises(ValueError): check_inputs(records)
 
     def test_header_only_change_is_rejected_with_source_and_object_unchanged(self):
         with tempfile.TemporaryDirectory() as temp:

@@ -6,7 +6,6 @@ lookups are outside this file-content contract. No input files are modified.
 """
 import hashlib
 import json
-import os
 from pathlib import Path
 
 BOUND_RM = {
@@ -22,7 +21,10 @@ def sha(path):
 
 
 def absolute(path, cwd):
-    return Path(os.path.abspath(cwd/path))
+    # Keep the compiler's logical spelling (including ..). Collapsing .. before
+    # resolving symlink parents can change which actual file a path denotes.
+    # file_inputs records the separately canonicalized physical identity.
+    return path if path.is_absolute() else cwd/path
 
 
 def dep_paths(text, cwd):
@@ -49,9 +51,11 @@ def dep_paths(text, cwd):
         i += 1
     if current: tokens.append(current)
     paths = [absolute(Path(x), cwd) for x in tokens]
-    if not paths or len(set(paths)) != len(paths):
-        raise ValueError('empty/duplicate dependency paths')
-    return sorted(paths, key=str)
+    if not paths:
+        raise ValueError('empty dependency paths')
+    # Make prerequisites are a set. Identical logical paths may repeat; retain
+    # distinct spellings (especially .. through symlink parents) separately.
+    return sorted(set(paths), key=str)
 
 
 def file_inputs(paths):

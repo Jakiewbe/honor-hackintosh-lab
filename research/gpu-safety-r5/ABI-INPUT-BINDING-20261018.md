@@ -30,3 +30,5 @@
 首次[run 39127050191](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39127050191)在工具fixture阶段失败，未进入真实clang复现或驱动构建。macOS临时目录逻辑路径与真实路径别名暴露了快照source/object身份未规范化的问题；现改为身份字段存实际路径、依赖项同时保留逻辑路径及实际路径，原符号链接重定向拒绝检查保留，并新增目录别名反例。不删除测试或改成跳过来通过CI。
 
 修正后本地工具79项中77通过、两个符号链接场景因Windows权限跳过；须由Darwin实际执行。真实clang复现、新依赖快照与新Darwin结果仍待重跑；不得借上轮成功宣称P1/P2原生门禁已闭环。
+
+第二次[run 39127276703](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39127276703)工具79/79与真实clang反例已通过；实际NVRM C探针依赖扫描失败。下载并校验artifact后确认：`nvrm_kapi_fields`的68条依赖包含`modeset/timing/nvtiming.h`与`modeset/hdmipacket/../timing/nvtiming.h`两种逻辑拼写，提前消去`..`造成误判。现保留编译器逻辑拼写，另外保存规范化实际路径/hash；避免有符号链接的父路径被错误折叠。新增该真实clang格式回归，内容变化仍拒绝。当前本地80项中78通过/2个权限跳过，等待第三次原生门禁。
