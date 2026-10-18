@@ -110,3 +110,49 @@ v-softfloat.h），看
 vkms-kapi.c 能否也编过；RM 那三个文件另算，
 需要评估 Darwin 层要提供哪些 typedef，而不是把 kernel-open/common/inc/nv.h 整个拖进来
 （那会把 Linux 依赖一起带进来）。
+
+## 八、include 修正后的结果（R51）
+
+| 文件 | 结果 |
+|---|---|
+| 
+vkms.c | **COMPILED** |
+| 
+vkms-kapi.c | **COMPILED**（修好 softfloat.h 路径后） |
+| osapi.c / unix_intr.c / dynamic-power.c | 失败：
+v-priv.h:233: unknown type name 'nv_dynamic_power_mode_t' |
+
+两处 include 修正都是**构建配置遗漏**，不是移植性问题：
+
+v-softfloat.h 在 src/common/softfloat/nvidia/，它又 include 的 softfloat.h 在
+src/common/softfloat/source/include/。
+
+## 剩下的唯一阻塞：一个平台 typedef
+
+
+v_dynamic_power_mode_t 定义在 kernel-open/common/inc/nv.h:757：
+
+`c
+typedef enum { NV_DYNAMIC_PM_NEVER, NV_DYNAMIC_PM_COARSE, NV_DYNAMIC_PM_FINE } nv_dynamic_power_mode_t;
+`
+
+那是 Linux/FreeBSD 的 kernel-open 层。**本站 kexts/NVRM 里完全没有这个类型**（已检索，零命中）。
+
+因此三个 RM 文件的失败原因可以精确表述为：
+
+> Darwin 移植层缺少 kernel-open/common/inc/nv.h 中的平台公共类型，而不是缺少函数实现。
+
+## 为什么不能直接 include 那个头
+
+kernel-open/common/inc/nv.h 会连带引入 Linux 内核设施（linux/…、
+v-linux.h），
+把它整个拖进 Darwin 构建等于把 Linux 依赖带进来。正确做法是提供一个**最小的 Darwin 等价头**，
+只定义 RM 通用层需要的类型（
+v_dynamic_power_mode_t、
+v_pm_action_level_t 等），
+再逐步看还缺什么。
+
+## 下一轮
+
+在探针里加一个最小的 Darwin 兼容头（只放 typedef，不含任何 Linux include），
+看三个 RM 文件能推进到哪一步。每次只补一个类型，缺什么记什么，不做整体搬运。
