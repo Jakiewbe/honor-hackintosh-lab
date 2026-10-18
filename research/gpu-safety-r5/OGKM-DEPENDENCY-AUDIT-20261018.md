@@ -585,3 +585,33 @@ Cli*（client API）、gpumgr*、kbus*、kdisp*、os* 等 RM 子系统入口。
 
 把抽样推进到**全量编译尝试**（988 个 TU），记录：总编译时间、失败清单、告警总数。
 这是"整层 RM 是否可构建"的最终判据；在此之前任何"可构建"表述都不成立。
+
+## 二十三、抽样扩到 175 个：失败率 1.1%，两例都来自 SPDM（R69，run 39097307849）
+
+| 指标 | 值 |
+|---|---|
+| 抽样 | **175**（步长 5，约 17.7% 覆盖率） |
+| 编译通过 | 173 |
+| 失败 | **2**（1.1%） |
+| 失败文件 | spdm/conf_compute_keystore_gh100.c、spdm/kernel_spdm.c |
+| 首错 | kernel_spdm.c:36: fatal error: 'nvspdm_rmconfig.h' file not found |
+
+## 这两例的性质：include 路径缺失，不是源码不可用
+
+
+vspdm_rmconfig.h 在树里**有两份**：
+
+- src/nvidia/src/libraries/libspdm/nvidia/vspdm_rmconfig.h
+- kernel-open/nvidia/nvspdm_rmconfig.h
+
+探针没有把 libspdm/nvidia 加进 -I。也就是说，这两例与之前的 softfloat.h 同类——**构建配置遗漏**，
+不是 Linux 依赖，也不是代码不可编译。
+
+## 因此抽样结论
+
+在 175 个样本中，**没有任何一例因 Linux 设施缺失而失败**；唯一的失败来自我们探针的 include 列表不全。
+加上修好的 include，失败率预计归零，但**这是预测，不是结果**——要下一轮实跑才算。
+
+## 下一步
+
+把 src/nvidia/src/libraries/libspdm/nvidia 加进探针 include，重跑 175 样本；若归零，再推进到更大步长。
