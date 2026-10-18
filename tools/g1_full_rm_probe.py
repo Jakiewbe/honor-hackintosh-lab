@@ -113,7 +113,10 @@ def main():
     for i, src in enumerate(files):
         obj = out / ("o-" + src.stem + "-" + str(i) + ".o")
         log = out / ("c-" + src.stem + "-" + str(i) + ".txt")
-        cmd = ["xcrun", "clang", *CFLAGS, *DEFINES, *inc, "-I" + str(src.parent),
+        # Upstream TUs see the platform header first (it pulls in nvport). Our TUs start elsewhere, so a
+        # header that uses PORT_BREAKPOINT never sees the definition. Force the port header in.
+        cmd = ["xcrun", "clang", *CFLAGS, *DEFINES, *inc, "-include", "nvport/nvport.h",
+               "-I" + str(src.parent),
                "-c", str(src), "-o", str(obj)]
         rc = run(cmd, nv, log)
         if rc == 0:
