@@ -73,6 +73,16 @@ def main():
     check("a failed commit is recorded as a violation", "nvrm-pm-violation" in fail_block)
     check("a failed commit re-lights the framebuffers", "notifyFramebuffers(1)" in fail_block)
 
+    # The RM gate close cannot refuse a sleep (XNU ack semantics), so a busy gate must be logged and the
+    # sleep must continue. Lock that behaviour so it can never silently become a false "gate closed".
+    gs_full = braces(nv, nv.index("bool NVRM::gpuSuspend()"))
+    close_calls = gs_full.count("nv_xnu_pm_close(")
+    check("the RM gate close is attempted exactly once per sleep", close_calls == 1, f"calls={close_calls}")
+    busy_block = gs_full[gs_full.index("const int busy = nv_xnu_pm_close"):]
+    busy_block = busy_block[:busy_block.index("rm_stop_user_channels")]
+    check("a busy RM gate is logged, not silently ignored", "LOG(" in busy_block and "still running" in busy_block)
+    check("a busy RM gate does not abort the sleep", "return false" not in busy_block)
+
     # R24 close-timeout contract: a wait that does not complete is not a completed close. The per-open,
     # its wrapper and its event worker must stay allocated, and nvKmsClose() must not run.
     close_fn = braces(osf, osf.index("static void kms_close_common(struct nvkms_per_open *popen)"))

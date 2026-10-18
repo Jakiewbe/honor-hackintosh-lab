@@ -1040,3 +1040,41 @@ vkms_xnu_pm_close 的打开路径（L357-359）失败时返回 NV_FALSE 并**保
 先核实 
 vkms_xnu_pm_close 的调用方（NVRM.cpp 的 teardown）在收到 NV_FALSE 后是否重试；
 若没有，就把"延迟关闭的回收策略"列为需要在实机前解决的加载前风险。
+
+## 四十、RM 门关闭被拒后的实际行为：记日志、继续睡眠（R87）
+
+核实 NVRM.cpp 的唯一调用点（L1441-1447）：
+
+`cpp
+const int busy = nv_xnu_pm_close(10000);
+if (busy) LOG("sleep #%u: %d RM call(s) still running after 10 s - suspending anyway", fPmCycles, busy);
+NV_STATUS cst = rm_stop_user_channels(NULL, &fNv);
+pciSaveForSleep();
+NV_STATUS st = rm_power_management(NULL, &fNv, NV_PM_ACTION_STANDBY);
+`
+
+事实：
+
+1. 
+v_xnu_pm_close **每次睡眠只调用一次**，没有重试；
+2. 失败（仍有 RM 调用在跑）时**只记一条日志，然后继续** m_stop_user_channels 与 STANDBY；
+3. 注释本身就写着 "suspending anyway"。
+
+## 这与 P0-1 的关系
+
+这是 P0-1（XNU IOServicePM.cpp:4525 语义：负数返回值等同 implied ack、驱动无法拒绝睡眠）在代码层的直接后果：
+既然拒绝不了睡眠，唯一负责的做法就是**记录"门没关干净"这一事实，然后尽力停**，而不是假装门关上了。
+
+## 新增 3 条结构契约（工具 29 → **32/32 PASS**）
+
+| 检查 | 结果 |
+|---|---|
+| RM 门关闭每次睡眠只尝试一次 | PASS |
+| 门忙时必须有日志、不得静默 | PASS |
+| 门忙时不得中止睡眠（因为中止也无效） | PASS |
+
+## 仍未解决（与 R86 合并）
+
+- **延迟的 KMS close 永不补完**：per-open/wrapper 保留到卸载；
+- **RM 门未关干净也照样 STANDBY**：这会让"standby 期间无 RM 调用"成为**尽力保证**而非强制保证；
+- 两者都是加载前风险，应进验收矩阵的 BLOCKED 项，而不是留在注释与日志里。
