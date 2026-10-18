@@ -360,6 +360,39 @@ def main():
                     encoding="utf-8", errors="replace").splitlines() if "error:" in l][:5]
             report["kext_link_nvrm_ogkm"] = mix
 
+        # Unification experiment: compile the original units with the same -DNVRM the probe uses, so the
+        # whole set shares one platform configuration. Report-only; the production artifact is untouched.
+        uni_objs, uni = [], {}
+        for name in nvrm_units:
+            srcp = candidate / "kexts/NVRM" / name
+            obj = out.parent / ("uni-" + name.replace(".", "_") + ".o")
+            log = out / ("uni-" + name.replace(".", "_") + ".txt")
+            cmd = ["xcrun", "clang++", *common_flags, *definitions, "-DNVRM", *probe_inc,
+                   "-I" + str(candidate / "kexts/NVRM"), "-c", str(srcp), "-o", str(obj)]
+            rc = execute(cmd, candidate, log)
+            text = log.read_text(encoding="utf-8", errors="replace")
+            uni[name] = {"exit": rc, "warnings": text.count("warning:")}
+            if rc == 0:
+                uni_objs.append(obj)
+        if len(uni_objs) == len(nvrm_units) and probe_objs:
+            u_out = out.parent / "NVRM-unified.kext/Contents/MacOS/NVRM"
+            u_out.parent.mkdir(parents=True, exist_ok=True)
+            u_link = ["xcrun", "clang++", "-arch", "x86_64", "-mmacosx-version-min=15.5", "-fapple-kext",
+                      "-isysroot", sdk, "-nostdlib", "-Xlinker", "-kext", "-lkmodc++", "-lkmod", "-lcc_kext",
+                      *[str(o) for o in uni_objs], *[str(o) for o in probe_objs], "-o", str(u_out)]
+            u_rc = execute(u_link, nm, out / "nvrm-unified-link.txt")
+            entry = {"units": uni, "exit": u_rc, "objects": len(uni_objs) + len(probe_objs)}
+            if u_rc == 0:
+                execute(["xcrun", "nm", "-u", str(u_out)], nm, out / "nvrm-unified-undefined.txt")
+                und = [l.strip() for l in (out / "nvrm-unified-undefined.txt").read_text(
+                    encoding="utf-8", errors="replace").splitlines() if l.strip().startswith("_")]
+                gap = [s for s in und if s.startswith(("_nvKms", "_rm_", "_nvrm_"))]
+                entry.update({"status": "LINKED", "size": u_out.stat().st_size,
+                              "undefined_symbols": len(und), "gap_symbols_left": len(gap)})
+            else:
+                entry["status"] = "LINK_FAILED"
+            report["kext_link_nvrm_unified"] = entry
+
         # Intel side: NMIntelFB is a single TU compiled twice (real / virtual), each with its own
         # bundle. Linking both reports what the Intel kext actually becomes; it is not a GPU test.
         intel_links = {}
