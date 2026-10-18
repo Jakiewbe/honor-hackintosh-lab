@@ -12,17 +12,22 @@
 
 | 验收点 | 需要的证据 | 当前 | 证据位置 | 谁能推进 |
 |---|---|---|---|---|
-| 补丁序列可回退 | 完整源码正反向、树哈希复原 | ✅ PASS（18 补丁） | `evidence/roundtrip.json` | — |
+| 补丁序列可回退 | 完整源码正反向、树哈希复原 | ✅ PASS（**29 补丁**；含 R29 显式窄化） | `evidence/roundtrip.json` | — |
 | 关闭路径无 UAF | 真实函数体 + ASan，含改前对照 | ✅ 40/40，对照报 UAF | `evidence/r5/` | — |
 | 隔离态可回收 | 主机测试 + 调用点合同 | ✅ 9/9、12/12 | `evidence/r6/` | — |
 | 共享 Device 生命周期 | 计数/孤儿/创建者 retain | ✅ 34/34、45/45（R14） | `evidence/r11/` | — |
 | PM 竞态关闭 | pin 语义 + suspend 等待 | ✅ 38/38、50/50（R15） | `evidence/r11/` | — |
-| **PM pin 与挂起严格互斥** | 有界等待 + 消除争用 | ⛔ **BLOCKED**：R23 的 Busy 拒绝前提已撤回（XNU 4525）；R24 用 begin/commit/abort 消除争用，但 commit 超时后 IOPM 仍会断电，驱动无法阻止；主机 26/26、结构 24/24、R22 基线失败 13 项 | `research/gpu-safety-r5/R24-SUSPEND-CONTRACT-20261018.md` | 需要架构级方案 |
+| **PM pin 与挂起严格互斥** | 有界等待 + 消除争用 | ⛔ **BLOCKED**：R23 的 Busy 拒绝前提已撤回（XNU 4525）；R24 用 begin/commit/abort 消除争用，但 commit 超时后 IOPM 仍会断电，驱动无法阻止；主机 26/26、结构 **32/32**（R85 加 5 条关闭超时、R87 加 3 条门忙行为）、R22 基线失败 13 项 | `research/gpu-safety-r5/R24-SUSPEND-CONTRACT-20261018.md` | 需要架构级方案 |
+| Intel KC 八符号 | 目标二进制定义 + 导入名一致性 | ✅ runner 上 8/8 定位（节角色/VM 地址/文件偏移）；导入名与定义名逐字节相同；发行版 NVRM 亦导入全部 8 个 | `KC8-20261018.md`；`kc8-evidence/`；`shipped-nvrm-imports.json` | 最终用户系统仍 NOT VERIFIED |
+| 472 项导入面独立复算 | 与真实二进制逐项比对 | ✅ 发行版 Mach-O `LC_SYMTAB` 解析得 472 项导入，与审计清单交集 **471/472**；差异 `_panic`（我方 NVLink 锁）与 `IOUserClient::free`（发行版 IOAccel 用户客户端）已归因 | `tools/macho_imports.py`；`KC8-20261018.md` §36 | — |
 | 关闭失败可上报 | OGKM `void` 接口改造 | ❌ **不可关闭**（已记录） | `README.md` R15 段 | 上游 |
 | 原生编译 | 真实 Xcode 工具链 | ✅ 16/16 对象、告警零增量 | run 39058264569 | — |
 | Kext 链接 | NVAccel + 生产 NVRMFB 链成 | ✅ 248,584 B / 315,744 B | 同上 | — |
 | NVRM 可重建 | 与发行版符号/体积可比 | ❌ **BLOCKED**：361,936 B / 650 符号 vs 16,787,920 B / 17,679；REA 发现 7.93 MB 不透明载荷 | `REA-NVRM-BINARY-20261018.md` | 上游 |
+| NVRM 可重建 | 与发行版符号/体积可比 | ⚠️ **部分推进**：42 个原"无提供者"导入已全部定位并编译（15 TU 后缺口 0）；RM 树抽样 175/175 编译；但批链接后 RM 内部仍有 667 个无提供者符号（稠密调用图，增量不收敛） | `OGKM-DEPENDENCY-AUDIT-20261018.md` | 需整层构建决策 |
 | 加载前一致性 | Info.plist 与链接产物、标识符、provider 类 | ✅ 30/30（`tools/check-bundles.py`） | `evidence/preload/bundle-consistency.json` | — |
+| **延迟的 KMS close 永不补完** | 超时后是否有回收路径 | ⛔ **BLOCKED**：`gKmsCloseDeferred++` 只计数，`nvkms_xnu_kms_close_deferred_count()` 只读出，全文件无重试/回收；per-open+wrapper+event call 保留到卸载 | `os-nvkms-xnu.cpp:143-150,303-306`；检查 "a timed-out close retains the wrapper" | 需要回收策略（resume 后重试或卸载时清理） |
+| **RM 门未关干净仍 STANDBY** | 门关闭被拒后的行为 | ⛔ **BLOCKED**：`nv_xnu_pm_close(10000)` 只调一次，失败仅 `LOG(... still running ...)` 后继续 `rm_stop_user_channels` + STANDBY；"standby 期间无 RM 调用"是尽力保证而非强制保证 | `NVRM.cpp:1441-1447`；检查 "a busy RM gate is logged, not silently ignored" | 架构级（P0-1 的下游后果） |
 | 加载 | 实机加载并采集 RM/GSP 日志 | ⛔ **NO-GO** | `LOAD-EXPERIMENT-20261018.md`（脚本默认禁用） | **用户**（需重新授权） |
 | GPU 执行 / Metal / 内屏 | 运行证据 | ⛔ NO-GO | — | 用户 |
 
