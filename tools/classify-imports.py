@@ -29,9 +29,15 @@ LIBKERN_CLASSES = {
 CPP_RUNTIME = ("__cxa_", "__gxx_", "__Unwind", "_Znwm", "_ZdlPv", "_Znam", "_ZdaPv", "_ZSt")
 
 
+GAPS = {"nvKms": "ogkm-nvkms", "nvKmsKapi": "ogkm-nvkms", "rm_": "ogkm-rm", "nvrm_": "nullmoth-internal"}
+
+
 def classify(sym: str) -> str:
     s = sym.lstrip("_")
-    if any(s.startswith(p) for p in KERNEL_PREFIXES):
+    for prefix, gap in GAPS.items():
+        if s.startswith(prefix):
+            return gap
+    if any(s.startswith(p) for p in KERNEL_PREFIXES) or s.startswith(("kOS", "kernel_", "semaphore_", "vfs_", "vnode_", "vn_", "sysctl", "snprintf", "vsnprintf", "strcmp", "strlen", "strncmp", "memcmp", "memmove", "read_random", "page_size")):
         return "mach/kern"
     if s.startswith(CPP_RUNTIME):
         return "c++ runtime"
