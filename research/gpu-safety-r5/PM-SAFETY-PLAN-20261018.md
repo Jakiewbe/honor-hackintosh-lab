@@ -272,3 +272,57 @@ CI run 39142651778 测的单元，与草案里新增的两个文件**同源**（
 vrm_units 是静态列表，新增 TU 必须显式加入——
 否则合入后 kms_deferred.cpp 不会被编译，kms_deferred_push 将变成未定义符号。
 这一点必须在合入前写进清单。
+
+## 六十九、把"新增 TU 必须登记"变成可执行的检查（R119）
+
+### 问题
+
+官方构建与门禁都用**硬编码单元列表**：
+
+- 	ools/g1_full_build.py:30-33：BASELINE_CPP（9 个 .cpp）+ BASELINE_C（2 个 .c）
+- scripts/gpu-safety-r5/native_compile.py:277：
+vrm_units（9 个 .cpp），
+  另在 :381 用 cand_files 列出 2 个 .c
+
+所以合入 R30 时若只加文件不改列表，kms_deferred.cpp **不会被编译**，
+kms_deferred_push / kms_deferred_drain 会变成未定义符号——而且是在很后面才暴露。
+
+### 新增检查
+
+	ools/check-candidate-units.py：
+
+1. 扫描候选树 kexts/NVRM/*.c|*.cpp（顶层）；
+2. 从 g1_full_build.py 解析基线列表；
+3. 从 
+ative_compile.py 解析 
+vrm_units + cand_files；
+4. 三方比对：**磁盘有但未登记**、**登记了但磁盘没有**、**两个列表不一致**；任一情况非零退出。
+
+### 实测
+
+| 场景 | 结果 |
+|---|---|
+| 当前候选树（R27，未合入） | on disk 11 / full 11 / native 11 → **PASS** |
+| 应用 R30 草案后（多了 kms_deferred.cpp） | **FAIL**：present but not in the baseline list: ['kexts/NVRM/kms_deferred.cpp'] |
+
+（第一次跑出过一次假失败：
+ative_compile 的 C 文件单独放在 cand_files，我的解析只读了 
+vrm_units，
+导致"两个列表不一致"。已修正为合并两个列表，现为 PASS。）
+
+### 这条检查的作用
+
+合入 R30 的步骤变成可执行的顺序：
+
+1. 应用补丁；
+2. 把 kms_deferred.cpp 加进 BASELINE_CPP 与 
+vrm_units；
+3. check-candidate-units.py 必须 PASS；
+4. 再让官方构建线编译。
+
+任一步漏掉都会被第 3 步挡住，而不是等到链接阶段才发现未定义符号。
+
+## 边界
+
+检查只覆盖**顶层** kexts/NVRM/ 的 .c/.cpp；子目录（ccel/、kbas/ 等）里的文件不在候选单元列表内，
+本就不参与链接，故不纳入。
