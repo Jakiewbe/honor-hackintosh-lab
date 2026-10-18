@@ -278,8 +278,12 @@ def main():
             obj = out.parent / ("probe-" + rel.replace("/", "_") + ".o")
             # These are C sources; drop the C++-only flags and compile as C.
             c_flags = [f for f in common_flags if f not in ("-std=c++17", "-fno-rtti", "-fno-exceptions")]
+            compat = Path(__file__).resolve().parents[2] / "research/gpu-safety-r5/darwin-compat"
+            compat_flags = []
+            if (compat / "nv-darwin-compat.h").exists():
+                compat_flags = ["-I" + str(compat), "-include", str(compat / "nv-darwin-compat.h")]
             cmd = ["xcrun", "clang", "-x", "c", "-std=gnu11", *c_flags, *definitions, *probe_inc,
-                   "-I" + str(srcp.parent), "-c", str(srcp), "-o", str(obj)]
+                   *compat_flags, "-I" + str(srcp.parent), "-c", str(srcp), "-o", str(obj)]
             log = out / ("probe-" + rel.replace("/", "_") + ".txt")
             rc = execute(cmd, probe_root, log)
             errs = [l for l in log.read_text(encoding="utf-8", errors="replace").splitlines()
