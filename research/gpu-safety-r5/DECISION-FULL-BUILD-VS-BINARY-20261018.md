@@ -403,3 +403,44 @@ v.h 的条件分支上。
 
 - 未尝试用 -DPORT_ATOMIC=volatile 之类的宏"糊过去"——那只会把端口层问题掩盖成未定义行为；
 - 未评估 nvport 的接口规模（下一轮可量化）。
+
+## 四十九、Darwin 端口层的真实规模：392 个原语（R98）
+
+对 src/nvidia/inc/libraries/nvport/*.h（12 个头 + inline 实现）统计公开 API 名（port* 前缀，唯一）：
+
+| 类别 | 原语数 |
+|---|---|
+| portSafe | 106 |
+| portMem | 67 |
+| portAtomic | 59 |
+| portSync | 47 |
+| portCpu | 34 |
+| portThread | 25 |
+| portUtil | 25 |
+| portTime | 17 |
+| portString | 12 |
+| **合计** | **392** |
+
+## 这 392 个里，哪些真的需要在 Darwin 上重写
+
+不能直接说"392 个都要写"，因为：
+
+- portSafe（106）里大量是**断言/安全检查宏**，在 PORT_IS_CHECKED_BUILD=0 时多数会折叠为空；
+- portAtomic 有 **C11 原子分支**（tomic.h:75-83：内核构建 + clang/gcc 时启用）
+  —— Darwin kext 用 clang，若 PORT_IS_KERNEL_BUILD=1 且非 C++，会走 C11 路径，
+  于是大部分原子原语可能**不需要手写实现**；
+- portMem 的分配器需要在 Darwin 上映射到 IOMalloc/IOMallocContiguous 一类；
+- portThread/portSync 需要映射到 	hread_call/lck_mtx/IOLock。
+
+因此这 392 是**上界**，真实工作量取决于 C11 原子分支能不能用、以及 portSafe 的折叠程度。
+
+## 一个必须先验证的假设
+
+上一轮全量编译只到 122/988，失败早于端口层实现——**说明连"端口层需要什么"都还没走到**。
+在写任何端口代码之前，需要先让编译推进到"只缺端口层实现"这一步，否则 392 这个数字只是纸面。
+
+## 本轮没做的
+
+- 没有写任何端口层代码；
+- 没有声称 392 就是工作量；
+- 没有用宏去伪造端口层。
