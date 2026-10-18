@@ -271,7 +271,9 @@ def main():
                 probe_results[rel] = {"status": "MISSING"}
                 continue
             obj = out.parent / ("probe-" + rel.replace("/", "_") + ".o")
-            cmd = ["xcrun", "clang++", *common_flags, *definitions, *probe_inc,
+            # These are C sources; drop the C++-only flags and compile as C.
+            c_flags = [f for f in common_flags if f not in ("-std=c++17", "-fno-rtti", "-fno-exceptions")]
+            cmd = ["xcrun", "clang", "-x", "c", "-std=gnu11", *c_flags, *definitions, *probe_inc,
                    "-I" + str(srcp.parent), "-c", str(srcp), "-o", str(obj)]
             log = out / ("probe-" + rel.replace("/", "_") + ".txt")
             rc = execute(cmd, probe_root, log)
