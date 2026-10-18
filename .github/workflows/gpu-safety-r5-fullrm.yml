@@ -1,0 +1,40 @@
+name: gpu-safety-r5 full RM probe
+
+# Manual-only. Compiles the whole OGKM RM layer under the Darwin toolchain and measures the undefined
+# set. Report-only: it never produces anything that could be installed, and the link tolerates
+# unresolved imports by design so that the undefined list is the measurement.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  full-rm:
+    runs-on: macos-15
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch the pinned OGKM tree
+        run: |
+          set -euo pipefail
+          git clone --filter=blob:none https://github.com/NVIDIA/open-gpu-kernel-modules.git "$RUNNER_TEMP/nv"
+          git -C "$RUNNER_TEMP/nv" checkout e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb
+          git -C "$RUNNER_TEMP/nv" rev-parse HEAD
+
+      - name: Compile and link the RM layer
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/out"
+          python3 tools/g1_full_rm_probe.py --nv "$RUNNER_TEMP/nv" --out "$RUNNER_TEMP/out"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: g1-full-rm
+          path: |
+            ${{ runner.temp }}/out/report.json
+            ${{ runner.temp }}/out/undefined.txt
+            ${{ runner.temp }}/out/link.txt
+          if-no-files-found: warn
