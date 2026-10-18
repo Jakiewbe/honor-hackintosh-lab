@@ -17,12 +17,20 @@ jobs:
         with:
           persist-credentials: false
       - name: Test exact names and fail-closed observations
-        run: python3 -m unittest discover -s tools -p test_g1_target_providers.py -v
+        run: |
+          python3 -m unittest discover -s tools -p test_g1_target_providers.py -v
+          python3 -m unittest discover -s tools -p test_g1_provider_evidence.py -v
       - name: Read runner kernel and family files without loading or device access
         run: |
           python3 tools/g1_target_providers.py \
             --imports research/gpu-safety-r5/input-binding-evidence/full-source/full-nvrm-undefined.txt \
             --out "$RUNNER_TEMP/g1-provider-observation"
+      - name: Prove failed kernel observation returns nonzero and keeps evidence
+        run: |
+          python3 tools/g1_provider_negative_control.py \
+            --imports research/gpu-safety-r5/input-binding-evidence/full-source/full-nvrm-undefined.txt \
+            --out "$RUNNER_TEMP/g1-provider-negative" \
+            --summary "$RUNNER_TEMP/g1-provider-observation/native-negative-control.json"
       - name: Prepare text only
         if: ${{ always() }}
         run: |

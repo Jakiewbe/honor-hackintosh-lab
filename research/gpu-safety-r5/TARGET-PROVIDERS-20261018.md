@@ -31,7 +31,7 @@ kernel文件SHA256 `04a501246caf768356f4090a8fd662daf5bbc949993353526c66771f5ba1
 ## 可复算入口
 
 ```bash
-python tools/g1_provider_evidence.py --native-text research/gpu-safety-r5/target-provider-evidence/native --imports research/gpu-safety-r5/input-binding-evidence/full-source/full-nvrm-undefined.txt --source-info-plist research/gpu-safety-r5/target-provider-evidence/fixed-source-NVRM-Info.plist.txt --out provider-name-analysis.json
+python tools/g1_provider_evidence.py --native-text research/gpu-safety-r5/target-provider-evidence/native --imports research/gpu-safety-r5/input-binding-evidence/full-source/full-nvrm-undefined.txt --source-info-plist research/gpu-safety-r5/target-provider-evidence/fixed-source-NVRM-Info.plist.txt --expected-run-id 39130439405 --expected-source-commit 1a481ba2d5a57ada56648eb7a1ae25868fc90861 --expected-artifact-id 12138280225 --expected-artifact-sha256 ae5d224625284086bdb03ab81e3d098739082d5e3940e6f1d11b1fbb937ae4aa --out provider-name-analysis.json
 ```
 
 实际在Windows执行该等价命令，结果为464项KPI精确条目/目标全局、8项family allowlist、14项别名目标均存在。结果、每项记录和消费文件绑定见provider-name-analysis.json；native-result.json记录本轮身份与原始摘要。

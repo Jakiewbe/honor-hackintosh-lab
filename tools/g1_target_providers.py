@@ -241,6 +241,30 @@ def observe_symbolsets(kernel, otool_text, expected_hash, out):
     return row
 
 
+def required_evidence_gate(report):
+    """Only the four mandatory observations gate collection, never ABI/load.
+
+    Family executables embedded in KC may be absent as standalone files.
+    Their absence is an explicit unknown, not a failed mandatory observation.
+    """
+    required = {'runner-kernel': ('PARSED', 'global_symbol_count'),
+        'IOPCIFamily-kext-allowlist': ('PARSED', 'exported_name_count'),
+        'IOACPIFamily-kext-allowlist': ('PARSED', 'exported_name_count')}
+    failures = []
+    for ident, (state, count) in required.items():
+        rows = [p for p in report['providers'] if p['id'] == ident]
+        if len(rows) != 1:
+            failures.append({'id': ident, 'reason': 'MISSING_OR_DUPLICATE_REQUIRED_PROVIDER'})
+        elif rows[0].get('observation') != state or rows[0].get(count, 0) <= 0:
+            failures.append({'id': ident, 'reason': 'REQUIRED_OBSERVATION_FAILED',
+                             'observation': rows[0].get('observation')})
+    if report['kernel_symbolsets'].get('observation') != 'PLIST_DECODED':
+        failures.append({'id': 'kernel-symbolsets', 'reason': 'REQUIRED_OBSERVATION_FAILED',
+                         'observation': report['kernel_symbolsets'].get('observation')})
+    return {'status': 'FAILED' if failures else 'PASSED', 'failures': failures,
+        'level': 'COLLECTION_COMPLETENESS_ONLY_NOT_KPI_ABI_OR_LOAD_ACCEPTANCE'}
+
+
 def collect(args, out):
     if platform.system() != 'Darwin' or platform.machine() != 'x86_64':
         raise ValueError('read-only Intel Darwin runner required')
@@ -295,11 +319,12 @@ def collect(args, out):
     write(out/'kernel-load-commands.json', {'argv': ['xcrun', 'otool', '-l', '/System/Library/Kernels/kernel'],
         'exit': rc, 'stdout': stdout.decode('utf-8'), 'stderr': stderr.decode('utf-8')})
     symbolsets = observe_symbolsets(Path('/System/Library/Kernels/kernel'), stdout.decode('utf-8'),
-        providers[0]['sha256'], out) if rc == 0 else {'observation': 'OTOOL_FAILED'}
+        providers[0].get('sha256'), out) if rc == 0 else {'observation': 'OTOOL_FAILED'}
     records = match_records(names, providers)
     report = {'schema': 'honor.g1.runner-provider-discovery.v1',
         'status': 'DISCOVERY_COMPLETE_NOT_TARGET_KPI_OR_ABI_ACCEPTANCE',
-        'source_commit': os.environ.get('GITHUB_SHA'), 'environment': env,
+        'source_commit': os.environ.get('GITHUB_SHA'), 'source_run_id': os.environ.get('GITHUB_RUN_ID'),
+        'environment': env,
         'frozen_candidate': {'source_commit': SOURCE_COMMIT, 'run_id': 39127772586,
             'candidate_sha256': CANDIDATE_SHA256, 'imports_sha256': IMPORTS_SHA256,
             'rebuild_in_this_run': False},
@@ -308,8 +333,31 @@ def collect(args, out):
         'kernel_symbolsets': symbolsets,
         'counts': dict(Counter(r['status'] for r in records)),
         'target_export_abi_acceptance': 'NOT_VERIFIED', 'kext_load': 'NO-GO', 'gpu_execution': False}
+    report['required_evidence_gate'] = required_evidence_gate(report)
+    if report['required_evidence_gate']['status'] != 'PASSED':
+        report['status'] = 'DISCOVERY_INCOMPLETE_REQUIRED_EVIDENCE_FAILED'
     write(out/'report.json', report)
     return report
+
+
+def run_collection(args):
+    """Keep partial evidence on failure and return a failing process status."""
+    args.out.mkdir(parents=True, exist_ok=False)
+    try:
+        report = collect(args, args.out)
+        # Recompute here so a future collect() refactor cannot bypass the gate.
+        gate = required_evidence_gate(report)
+        report['required_evidence_gate'] = gate
+        if gate['status'] != 'PASSED':
+            report['status'] = 'DISCOVERY_INCOMPLETE_REQUIRED_EVIDENCE_FAILED'
+        write(args.out/'report.json', report)
+        print(json.dumps({'status': report['status'], 'counts': report['counts'],
+                          'required_evidence_gate': gate}))
+        return 0 if gate['status'] == 'PASSED' else 2
+    except Exception as error:
+        write(args.out/'failure.json', {'status': 'DISCOVERY_FAILED', 'error': str(error),
+            'kext_load': 'NO-GO', 'target_export_abi_acceptance': 'NOT_VERIFIED'})
+        raise
 
 
 def main():
@@ -317,15 +365,7 @@ def main():
     parser.add_argument('--imports', required=True, type=Path)
     parser.add_argument('--out', required=True, type=Path)
     args = parser.parse_args()
-    args.out.mkdir(parents=True, exist_ok=False)
-    try:
-        report = collect(args, args.out)
-        print(json.dumps({'status': report['status'], 'counts': report['counts']}))
-        return 0
-    except Exception as error:
-        write(args.out/'failure.json', {'status': 'DISCOVERY_FAILED', 'error': str(error),
-            'kext_load': 'NO-GO', 'target_export_abi_acceptance': 'NOT_VERIFIED'})
-        raise
+    return run_collection(args)
 
 
 if __name__ == '__main__':

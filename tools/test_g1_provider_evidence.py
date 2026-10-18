@@ -1,10 +1,75 @@
 import hashlib
 import json
 import unittest
-from g1_provider_evidence import read_nm_log, symbolset_entries
+from pathlib import Path
+import tempfile
+from g1_provider_evidence import read_nm_log, symbolset_entries, verify_expected_identity
 
 
 class ProviderEvidenceTests(unittest.TestCase):
+    def expected(self):
+        return dict(expected_run_id=101, expected_source_commit='a'*40,
+                    expected_artifact_id=202, expected_artifact_sha256='b'*64)
+
+    def bind_fixture(self, root, source='a'*40, run=101, artifact=202, digest='b'*64):
+        files = {'report.json': json.dumps({'source_commit': source, 'source_run_id': str(run)}).encode(),
+                 'diagnostic-publication.json': b'{"included": []}'}
+        for path, raw in files.items():
+            (root/path).write_bytes(raw)
+        binding = {'run_id': run, 'artifact_id': artifact, 'artifact_sha256': digest,
+            'members': [{'path': path, 'bytes': len(raw), 'sha256': hashlib.sha256(raw).hexdigest()}
+                        for path, raw in files.items()]}
+        (root/'local-artifact-binding.json').write_text(json.dumps(binding))
+
+    def test_external_identity_accepts_matching_download_attestation(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.bind_fixture(root)
+            got = verify_expected_identity(root, **self.expected())
+            self.assertEqual(got['run_id'], 101)
+            self.assertEqual(set(got['verified_members']), {'report.json', 'diagnostic-publication.json'})
+
+    def test_internally_consistent_other_run_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.bind_fixture(root, source='c'*40, run=303, artifact=404, digest='d'*64)
+            with self.assertRaisesRegex(ValueError, 'external artifact identity mismatch'):
+                verify_expected_identity(root, **self.expected())
+            # This data is internally consistent and valid for its own identity.
+            verify_expected_identity(root, expected_run_id=303, expected_source_commit='c'*40,
+                                     expected_artifact_id=404, expected_artifact_sha256='d'*64)
+
+    def test_each_external_identity_field_is_enforced(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.bind_fixture(root)
+            for key, value in [('expected_run_id', 999), ('expected_artifact_id', 999),
+                ('expected_source_commit', 'e'*40), ('expected_artifact_sha256', 'e'*64)]:
+                expected = dict(self.expected(), **{key: value})
+                with self.subTest(key=key), self.assertRaises(ValueError):
+                    verify_expected_identity(root, **expected)
+
+    def test_binding_member_corruption_and_native_run_mismatch_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.bind_fixture(root)
+            (root/'report.json').write_text('{}')
+            with self.assertRaisesRegex(ValueError, 'member mismatch'):
+                verify_expected_identity(root, **self.expected())
+            self.bind_fixture(root, run=303)
+            binding = json.loads((root/'local-artifact-binding.json').read_text())
+            binding['run_id'] = 101
+            (root/'local-artifact-binding.json').write_text(json.dumps(binding))
+            with self.assertRaisesRegex(ValueError, 'native source run ID mismatch'):
+                verify_expected_identity(root, **self.expected())
+
+    def test_missing_external_expectations_cannot_default_from_directory(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.bind_fixture(root)
+            with self.assertRaises(TypeError):
+                verify_expected_identity(root)
+
     def group(self, symbols, provider='com.apple.kpi.iokit'):
         return {'CFBundleIdentifier': provider, 'CFBundleVersion': '24.6.0',
                 'OSBundleCompatibleVersion': '8.0.0b1', 'Symbols': symbols}

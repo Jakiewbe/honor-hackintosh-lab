@@ -2,14 +2,85 @@ import hashlib
 from pathlib import Path
 import tempfile
 import unittest
+import copy
+import contextlib
+import io
+import json
+from types import SimpleNamespace
+from unittest.mock import patch
 
 from g1_target_providers import (load_imports, match_records, observe_allowlist, observe_binary,
-    observe_symbolsets, parse_allowlist, parse_globals, section_bounds)
+    observe_symbolsets, parse_allowlist, parse_globals, section_bounds,
+    required_evidence_gate, run_collection)
 import plistlib
 import struct
 
 
 class TargetProviderTests(unittest.TestCase):
+    def gate_report(self):
+        return {'status': 'DISCOVERY_COMPLETE_NOT_TARGET_KPI_OR_ABI_ACCEPTANCE', 'counts': {},
+            'kernel_symbolsets': {'observation': 'PLIST_DECODED'},
+            'providers': [
+                {'id': 'runner-kernel', 'observation': 'PARSED', 'global_symbol_count': 1},
+                {'id': 'IOPCIFamily-kext-allowlist', 'observation': 'PARSED', 'exported_name_count': 1},
+                {'id': 'IOACPIFamily-kext-allowlist', 'observation': 'PARSED', 'exported_name_count': 1},
+                {'id': 'family-standalone-binary', 'observation': 'NOT_PRESENT'}]}
+
+    def test_gate_does_not_require_standalone_family_binary(self):
+        self.assertEqual(required_evidence_gate(self.gate_report())['status'], 'PASSED')
+
+    def test_each_required_failure_returns_nonzero_and_preserves_report(self):
+        cases = []
+        for i in range(3):
+            for state in ['NOT_PRESENT', 'NM_FAILED', 'OBSERVATION_FAILED', 'NO_GLOBAL_SYMBOLS']:
+                r = self.gate_report()
+                r['providers'][i]['observation'] = state
+                cases.append(r)
+        for state in ['FAILED', 'OTOOL_FAILED']:
+            r = self.gate_report()
+            r['kernel_symbolsets']['observation'] = state
+            cases.append(r)
+        # Exercise the production run_collection entry, not just a model of it.
+        for report in cases:
+            with self.subTest(report=report), tempfile.TemporaryDirectory() as tmp:
+                args = SimpleNamespace(out=Path(tmp)/'observations')
+                with patch('g1_target_providers.collect', return_value=report), contextlib.redirect_stdout(io.StringIO()):
+                    self.assertEqual(run_collection(args), 2)
+                saved = json.loads((args.out/'report.json').read_text())
+                self.assertEqual(saved['required_evidence_gate']['status'], 'FAILED')
+                self.assertEqual(saved['status'], 'DISCOVERY_INCOMPLETE_REQUIRED_EVIDENCE_FAILED')
+                self.assertEqual(saved['providers'], report['providers'])
+
+    def test_missing_duplicate_or_empty_required_provider_rejected(self):
+        r = self.gate_report()
+        for alteration in ['missing', 'duplicate', 'empty']:
+            bad = copy.deepcopy(r)
+            if alteration == 'missing':
+                bad['providers'].pop(0)
+            elif alteration == 'duplicate':
+                bad['providers'].append(bad['providers'][0])
+            else:
+                bad['providers'][0]['global_symbol_count'] = 0
+            self.assertEqual(required_evidence_gate(bad)['status'], 'FAILED')
+
+    def test_success_entry_and_exception_do_not_erase_evidence(self):
+        for failed in [False, True]:
+            with tempfile.TemporaryDirectory() as tmp:
+                args = SimpleNamespace(out=Path(tmp)/'observations')
+                def collect_fixture(args, out):
+                    (out/'partial.txt').write_text('retained')
+                    if failed:
+                        raise ValueError('injected collection failure')
+                    return self.gate_report()
+                with patch('g1_target_providers.collect', side_effect=collect_fixture), contextlib.redirect_stdout(io.StringIO()):
+                    if failed:
+                        with self.assertRaisesRegex(ValueError, 'injected'):
+                            run_collection(args)
+                        self.assertTrue((args.out/'failure.json').is_file())
+                    else:
+                        self.assertEqual(run_collection(args), 0)
+                self.assertEqual((args.out/'partial.txt').read_text(), 'retained')
+
     def test_exact_spelling_and_data_distinct(self):
         got = parse_globals('00000001 T ___bzero\n00000002 S __ZTV9IOService\nffffff8000c1b204 D .constructors_used\n')
         self.assertEqual(got, {'___bzero': 'T', '__ZTV9IOService': 'S', '.constructors_used': 'D'})

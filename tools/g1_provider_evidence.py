@@ -104,7 +104,59 @@ def verify_publication(root):
         'level': 'CONSUMED_FILES_VERIFIED_NOT_CLAIMING_COMPLETE_ARTIFACT_COPY'}
 
 
-def analyse(root, imports, info_path):
+def verify_expected_identity(root, *, expected_run_id, expected_source_commit,
+                             expected_artifact_id, expected_artifact_sha256):
+    """Compare caller-supplied trusted identity with the download attestation.
+
+    The downloader verifies the ZIP digest before extracting. This offline
+    check binds consumed files to that attestation; it does not rehash a ZIP
+    which is absent here or independently authenticate a forged attestation.
+    """
+    if (type(expected_run_id) is not int or expected_run_id <= 0 or
+            type(expected_artifact_id) is not int or expected_artifact_id <= 0 or
+            not re.fullmatch('[0-9a-f]{40}', expected_source_commit) or
+            not re.fullmatch('[0-9a-f]{64}', expected_artifact_sha256)):
+        raise ValueError('invalid externally expected evidence identity')
+    binding = read_json(root/'local-artifact-binding.json')
+    for key, value in [('run_id', expected_run_id), ('artifact_id', expected_artifact_id),
+                       ('artifact_sha256', expected_artifact_sha256)]:
+        if type(binding.get(key)) is not type(value) or binding[key] != value:
+            raise ValueError('external artifact identity mismatch: '+key)
+    seen, verified = set(), []
+    for entry in binding['members']:
+        rel = Path(entry['path'])
+        if (rel.is_absolute() or '..' in rel.parts or ':' in entry['path'] or
+                '\\' in entry['path'] or entry['path'] in seen):
+            raise ValueError('unsafe artifact member identity')
+        seen.add(entry['path'])
+        path = root/rel
+        if path.is_file():
+            raw = path.read_bytes()
+            if len(raw) != entry['bytes'] or sha(raw) != entry['sha256']:
+                raise ValueError('downloaded artifact member mismatch: '+entry['path'])
+            verified.append(entry['path'])
+    # The manifest subsequently binds every consumed observation; both it and
+    # the report must themselves be attested members of the downloaded ZIP.
+    if not {'report.json', 'diagnostic-publication.json'} <= set(verified):
+        raise ValueError('report or publication manifest absent from artifact binding')
+    report = read_json(root/'report.json')
+    if report.get('source_commit') != expected_source_commit:
+        raise ValueError('external source commit mismatch')
+    # Historical reports predate source_run_id. Their run is attested by the
+    # verified downloader; new reports additionally carry the runner's run ID.
+    if 'source_run_id' in report and str(report['source_run_id']) != str(expected_run_id):
+        raise ValueError('native source run ID mismatch')
+    return {'run_id': expected_run_id, 'source_commit': expected_source_commit,
+        'artifact_id': expected_artifact_id, 'artifact_sha256': expected_artifact_sha256,
+        'verified_members': verified,
+        'level': 'EXTERNAL_EXPECTATIONS_MATCH_VERIFIED_DOWNLOADER_ATTESTATION_NOT_ZIP_REHASH'}
+
+
+def analyse(root, imports, info_path, *, expected_run_id, expected_source_commit,
+            expected_artifact_id, expected_artifact_sha256):
+    external_identity = verify_expected_identity(root,
+        expected_run_id=expected_run_id, expected_source_commit=expected_source_commit,
+        expected_artifact_id=expected_artifact_id, expected_artifact_sha256=expected_artifact_sha256)
     publication = verify_publication(root)
     report = read_json(root/'report.json')
     names = load_imports(imports)
@@ -161,7 +213,7 @@ def analyse(root, imports, info_path):
     return {'schema': 'honor.g1.runner-provider-evidence.v1',
         'level': 'OFFLINE_RECOMPUTATION_OF_NATIVE_TEXT_NOT_DRIVER_EXECUTION',
         'environment': report['environment'], 'native_source_commit': report['source_commit'],
-        'publication_verification': publication,
+        'publication_verification': publication, 'external_identity_verification': external_identity,
         'frozen_candidate': report['frozen_candidate'], 'counts': counts,
         'fixed_source_plist': {'nullmoth_pin': 'ac55984c473e746c2a8ebea7ba0913461aa7c393',
             'path': 'kexts/NVRM/Info.plist', 'sha256': PLIST_SHA256,
@@ -179,8 +231,14 @@ def main():
     p.add_argument('--imports', type=Path, required=True)
     p.add_argument('--source-info-plist', type=Path, required=True)
     p.add_argument('--out', type=Path, required=True)
+    p.add_argument('--expected-run-id', type=int, required=True)
+    p.add_argument('--expected-source-commit', required=True)
+    p.add_argument('--expected-artifact-id', type=int, required=True)
+    p.add_argument('--expected-artifact-sha256', required=True)
     args = p.parse_args()
-    result = analyse(args.native_text, args.imports, args.source_info_plist)
+    result = analyse(args.native_text, args.imports, args.source_info_plist,
+        expected_run_id=args.expected_run_id, expected_source_commit=args.expected_source_commit,
+        expected_artifact_id=args.expected_artifact_id, expected_artifact_sha256=args.expected_artifact_sha256)
     write(args.out, result)
     print(json.dumps({'counts': result['counts'], 'aliases': len(result['aliases']),
         'kernel_globals': result['kernel_global_count'], 'target_export_abi_acceptance': result['target_export_abi_acceptance']}))
