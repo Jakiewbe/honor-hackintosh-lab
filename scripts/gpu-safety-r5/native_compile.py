@@ -276,6 +276,8 @@ def main():
             probe_root / "src/common/softfloat/nvidia",      # nv-softfloat.h lives here
             probe_root / "src/common/softfloat",
             probe_root / "src/common/softfloat/source/include",
+            probe_root / "src/nvidia/src/libraries/libspdm/nvidia",
+            probe_root / "src/nvidia/src/libraries/libspdm",
             probe_root / "src/nvidia-modeset/include") if d.is_dir()]
         probe_results = {}
         for rel in ogkm_probe:
