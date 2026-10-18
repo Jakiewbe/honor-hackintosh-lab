@@ -383,7 +383,10 @@ def main():
                 batch["capped"] = True
             bflags = [f for f in common_flags if f not in ("-std=c++17", "-fno-rtti", "-fno-exceptions")]
             # src/common/src holds user-space helpers (nv_smg.c needs pthread.h); they are not kext code.
-            files = [f for f in files if not f.startswith("src/common/src/")]
+            # Also drop any file that already contributed a probe object: linking both copies produced
+            # duplicate symbols (_nvKmsKapiAllocateVideoMemory ...), and object names cannot be matched
+            # back to sources, so the exclusion has to happen on paths.
+            files = [f for f in files if not f.startswith("src/common/src/") and f not in set(ogkm_probe)]
             for rel in files:
                 srcp = probe_root / rel
                 if not srcp.exists():
