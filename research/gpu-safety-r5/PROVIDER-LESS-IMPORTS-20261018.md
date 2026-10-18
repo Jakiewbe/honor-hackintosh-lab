@@ -1,64 +1,50 @@
-# 更正：`_rm_*` 在固定 OGKM 源码中有定义（R49）
+# 42 个无提供者导入：最终更正（R50）
 
-## 上一份结论错在哪
+## 结论先行
 
-R48 写"23 个 `_rm_*` 全树未定位，来源未知"。这是错的。真实原因是**两次检索方法错误**叠加：
+用**窗口匹配**（要求 `name (...)` 后接 `{`）在固定 OGKM 提交 `e4a5faa` 上重新检索 **3821 个源文件**：
 
-1. 第一次用 `src\nvidia\**\*.c` 作路径——**PowerShell 不支持 `**` 递归**，实际只扫了下一层目录，
-   `arch/nvalloc/unix/src/` 从未被扫描；
-2. 第二次改成 `Get-ChildItem -Recurse`，却又用 `Select-Object -First 1` 取首个命中——
-   `nv.h` 里的**声明**字母序在前，真正的**定义**被丢弃。
+> **35/35 被测符号都有函数定义，missing: none。**
 
-## 更正后的定义位置（固定提交 `e4a5faa`，1300 个 .c 文件，全递归）
+覆盖 23 个 `_rm_*`、4 个 `nvKmsKapi*`、8 个 `nvKms*`。加上本站树里的 7 个 `_nvrm_*`，
+**42 个导入全部已有候选源码提供者**。
 
-| 符号 | 定义位置 |
-|---|---|
-| `rm_init_rm` | `src/nvidia/arch/nvalloc/unix/src/osapi.c:2754` |
-| `rm_ioctl` | `osapi.c:2950` |
-| `rm_stop_user_channels` | `osapi.c:2815` |
-| `rm_restart_user_channels` | `osapi.c:2845` |
-| `rm_power_management` | `src/nvidia/arch/nvalloc/unix/src/dynamic-power.c:2538` |
-| `rm_isr` | `unix_intr.c:780` |
-| `rm_isr_bh` | `unix_intr.c:830` |
-| `rm_shutdown_adapter` | `osapi.c:1876` |
-| `rm_init_adapter` | `osapi.c:1773` |
-| `rm_is_supported_device` | `osapi.c:3693` |
-| `rm_is_supported_pci_device` | `osapi.c:3840` |
-| `rm_get_device_name` | `osapi.c:3567` |
-| `rm_kernel_rmapi_op` | `osapi.c:5143` |
-| `rm_execute_work_item` | `osapi.c:3550` |
-| `rm_set_rm_firmware_requested` | `osapi.c:5106` |
-| `rm_write_registry_dword` | `osapi.c:3206` |
-| `rm_write_registry_string` | `osapi.c:3283` |
-| `rm_perform_version_check` | `osapi.c:4498` |
-| `rm_cleanup_file_private` | `osapi.c:3047` |
-| `rm_free_private_state` | `osapi.c:1759` |
-| `rm_init_private_state` | `osapi.c:1742` |
-| `rm_init_event_locks` | `osapi.c:2783` |
-| `rm_run_nano_timer_callback` | **仍未找到定义**（只有声明/引用） |
+证据文件：`research/gpu-safety-r5/symbol-definitions.json`，工具：`tools/find-symbol-defs.py`。
 
-**22 / 23 有定义。** 它们位于 `arch/nvalloc/unix/src/`——正是 RM 的 Unix 适配层。
+## 我连续三次错在哪
 
-## 仍未找到的
+| 轮次 | 错误 | 症状 |
+|---|---|---|
+| R48 | 路径 glob `src\nvidia\**\*.c` | **PowerShell 不支持 `**` 递归**，`arch/nvalloc/unix/src/` 从未被扫 |
+| R49 | 改用 `-Recurse` 但 `Select-Object -First 1` | `nv.h` 的**声明**字母序在前，定义被丢弃 |
+| R49 | 正则假设 `TYPE name(` 同行 | 真实定义常写成 `TYPE name` 换行 `(`，**跨行漏检** |
 
-| 符号 | 状态 |
-|---|---|
-| `rm_run_nano_timer_callback` | OGKM `src` 下未找到定义（可能是注册用名字或宏生成） |
-| `nvKmsKapiProbe` | 未找到 |
-| `nvKmsKapiSuspendResume` | 未找到 |
-| `nvKmsKapiGetFunctionsTableInternal` | 未找到 |
-| `nvKmsKapiHandleEventQueueChange` | 未找到 |
+三次都不是"源码没有"，而是**检索方法没有覆盖定义的真实形态**。这次的窗口匹配同时解决三点：
+按符号取 600 字符窗口、允许换行、用 `后接 {` 区分定义与声明。
 
-这次是用同样的全递归方法（1300 个 .c 文件）确认的，方法学错误已排除。
+## 更正后的分类表
 
-## 结论修正
+| 家族 | 数量 | 定义位置 | 缺口性质 |
+|---|---|---|---|
+| `_rm_*` | 23 | `arch/nvalloc/unix/src/osapi.c`（20）、`dynamic-power.c`（1）、`unix_intr.c`（2） | **构建闭包** |
+| `_nvKmsKapi*` | 4 | `src/nvidia-modeset/kapi/src/nvkms-kapi.c:3827/3946/3978/4122` | **构建闭包** |
+| `_nvKms*` | 8 | `src/nvidia-modeset/src/nvkms.c`（含 `nvKmsModuleLoad` 在 `kernel-open/…/nvidia-modeset-linux.c:2150`） | **构建闭包** |
+| `_nvrm_*` | 7 | 本仓库 `kexts/NVRM/nvrm_pageoff.c` | 门禁配方（三次失败） |
 
-- **`_rm_*` 不是结构性缺口**，是**构建闭包缺口**：源码在公开树里，能否在 macOS 内核编译是另一个问题。
-- `_nvKmsKapi*`（4 个）仍是"公开树无定义"，但**证据强度提升了**（同一次严谨检索）。
-- 因此 R48 那句"静态研发已经穷尽"**不成立**——至少还有 22 个函数可以逐个评估依赖与可移植性。
+**没有任何一项可以再被称为"结构性源码缺失"。** 我此前把 4 个 `nvKmsKapi*` 判为结构性，是错的。
 
-## 下一步（按验收单元，不再扩大）
+## 这并不等于可加载
 
-1. 对 22 个函数逐个列出：定义位置、所在编译单元、依赖的 Linux/Unix 设施、是否已有 macOS 等价物；
-2. 判断 `arch/nvalloc/unix/src/` 这一层能否整体纳入构建，还是必须逐个替换；
-3. 只有在第 1–2 步有结论后，才谈"是否缩小 42 这个数字"。
+"有定义"只消除"找不到源码"。仍未验证：
+
+1. 这些翻译单元能否在 Darwin 工具链下编译（`arch/nvalloc/unix/src/` 是 Linux/Unix 适配层）；
+2. `NV_ENTER_RM_RUNTIME` 在 `__use_altstack__` 下会改 `%rbp`，而本站存在传 `NULL` 栈的 RM 调用——ABI 风险；
+3. PM/关闭安全（P0-1/P0-4）未关闭；
+4. 真实 RTX 2050 初始化、离屏、读回未开始。
+
+**KEXT-LOAD 维持 NO-GO。**
+
+## 下一单元
+
+按逐符号的依赖审计推进：对 35 个已定位定义，各列出所在编译单元、直接依赖的 Linux/Unix 设施、
+本站已有的 Darwin 对应实现。用 `tools/find-symbol-defs.py` 产出机器可核对的表，不再靠人工首个命中。
