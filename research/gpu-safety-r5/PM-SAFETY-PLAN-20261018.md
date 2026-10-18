@@ -95,3 +95,47 @@ B1 依赖"GPU 在系统断电时被强行断电也不损坏/可在唤醒时重�
 - 不修改候选源码（上述方案未实现，避免未经验证就改变行为）；
 - 不把任何一项标为已解决；
 - 不做设备操作。
+
+## 六十五、延迟关闭的回收补丁（草案 R30）已实现并验证可应用（R115）
+
+按 PM-SAFETY-PLAN 的方案 A 写出补丁，**未合入序列**，仅作为可核对的草案：
+
+esearch/gpu-safety-r5/draft-r30-deferred-close-drain.patch（3,271 B，+32 行，单文件）
+
+### 补丁内容
+
+1. struct nvkms_per_open 增加 deferredNext 字段；
+2. 新增文件级链表头 gKmsDeferred；
+3. 超时分支从"只计数"改为"挂入链表 + 计数"；
+4. 新增 kms_deferred_drain_locked()：
+   - 仅在 gKmsLock 持有、且 PM 已回到 running 时调用；
+   - 对每项执行 
+vKmsClose(popen->data)、取消并释放 event call；
+   - 	hread_call_free 失败则**保留在链表中**，等下次 resume 再试；
+   - 成功则摘链、gKmsCloseDeferred--、释放 wrapper；
+5. 
+vkms_xnu_resume() 在 gKmsPmState 已更新为 running 之后调用 drain。
+
+### 验证
+
+`
+git apply --check  -> exit=0
+git apply          -> exit=0
+应用后：L288 定义、L323 在 resume 中调用
+`
+
+补丁应用后我已把工作树恢复到 2b6828b（git status 零修改）。
+
+### 仍缺的部分
+
+- **没有**主机测试：这类测试需要模拟 
+vKmsClose/	hread_call_free/IOLockSleep，
+  现有 
+vlink_locks_contract.cpp 的夹具不覆盖这些符号，需要新夹具；
+- **没有**合入补丁序列，因此 check-pm-exclusion.py 目前仍不检查 drain（避免"检查一项尚未合入的能力"）；
+- **没有**在官方构建线里编译过这个改动。
+
+### 下一步
+
+合入前应先补夹具测试三例：drain 成功释放、	hread_call_free 失败保留、PM 非 running 时不执行。
+这三例通过后，再把补丁加入序列并加一条结构检查（断言 drain 存在于 resume 路径）。

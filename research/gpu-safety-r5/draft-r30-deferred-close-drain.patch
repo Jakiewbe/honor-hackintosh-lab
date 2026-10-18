@@ -1,0 +1,71 @@
+diff --git a/kexts/NVRM/os-nvkms-xnu.cpp b/kexts/NVRM/os-nvkms-xnu.cpp
+index 8332db5..e342e72 100644
+--- a/kexts/NVRM/os-nvkms-xnu.cpp
++++ b/kexts/NVRM/os-nvkms-xnu.cpp
+@@ -53,6 +53,9 @@ static const uint32_t kKmsSuspendPinWaitMs = 60000;
+ // nvKmsClose()/FreeDevice() are void: a refused close cannot be propagated upward. Counting it
+ // with a reason still makes the failure observable after the fact.
+ static volatile uint32_t gKmsCloseDeferred;
++// Deferred closes are kept on a list so a later resume can finish them. Without this list a
++// timed-out close leaked its per-open, wrapper and event call until unload.
++static struct nvkms_per_open *gKmsDeferred;
+ static volatile uint32_t gKmsCloseDeferredLost;
+ static const uint32_t kKmsPmWaitMs = 30000;
+ static const char *const kKmsPmName[] = { "running", "suspended", "lost" };
+@@ -79,6 +82,7 @@ struct nvkms_per_open {
+     struct NvKmsKapiDevice *device;
+     thread_call_t eventCall;
+     bool eventBusy, eventWanted, closing;
++    struct nvkms_per_open *deferredNext;   // set only while on gKmsDeferred
+     volatile int eventsAvailable;
+ };
+ 
+@@ -142,6 +146,8 @@ static void kms_close_common(struct nvkms_per_open *popen)
+     if (!kms_pm_wait_locked(false, kKmsPmWaitMs)) {
+         popen->closing = true;
+         popen->eventWanted = false;
++        popen->deferredNext = gKmsDeferred;
++        gKmsDeferred = popen;
+         gKmsCloseDeferred++;
+         if (gKmsPmState == kKmsPmLost) gKmsCloseDeferredLost++;
+         IOLockUnlock(gKmsLock);
+@@ -277,6 +283,31 @@ void nvkms_xnu_suspend_abort(uint32_t seq)
+     IOLockUnlock(gKmsLock);
+ }
+ 
++// Finish closes that were deferred while the GPU was suspended. Called with gKmsLock held and only
++// once PM is running again: nvKmsClose() must not touch the display engine in any other state.
++static void kms_deferred_drain_locked(void)
++{
++    struct nvkms_per_open **pp = &gKmsDeferred;
++    while (*pp) {
++        struct nvkms_per_open *popen = *pp;
++        if (popen->data) nvKmsClose(popen->data);
++        popen->data = NULL;
++        if (popen->eventCall && popen->eventBusy) {
++            if (thread_call_cancel(popen->eventCall)) popen->eventBusy = false;
++            while (popen->eventBusy) IOLockSleep(gKmsLock, popen, THREAD_UNINT);
++        }
++        if (popen->eventCall && !thread_call_free(popen->eventCall)) {
++            // A pending or rearmed call keeps the argument alive; leave it queued for the next resume.
++            pp = &popen->deferredNext;
++            continue;
++        }
++        popen->eventCall = NULL;
++        *pp = popen->deferredNext;
++        if (gKmsCloseDeferred) gKmsCloseDeferred--;
++        nvkms_free(popen, sizeof *popen);
++    }
++}
++
+ void nvkms_xnu_resume(NvU32 gpuId, NvBool gpuOk)
+ {
+     if (!gKmsLoaded) return;
+@@ -289,6 +320,7 @@ void nvkms_xnu_resume(NvU32 gpuId, NvBool gpuOk)
+     if (gpuOk && gKmsPmState == kKmsPmSuspended) nvKmsResume(gpuId);
+     gKmsPmState = gpuOk ? kKmsPmRunning : kKmsPmLost;
+     IOLockWakeup(gKmsLock, &gKmsPmState, false);
++    if (gpuOk) kms_deferred_drain_locked();
+     IOLockUnlock(gKmsLock);
+     if (gpuOk) nvKmsKapiSuspendResume(NV_FALSE);
+     kprintf("NVRM-xnu: NVKMS %s (gpu 0x%x)\n", gpuOk ? "resumed" : "left LOST: the GPU did not resume", gpuId);
