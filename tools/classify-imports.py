@@ -56,6 +56,19 @@ def classify(sym: str) -> str:
         return "unclassified"
     if s.startswith("IO") or s.startswith("OS") or s.startswith("gIO"):
         return "iokit/libkern"
+    # RM / NVOC internals: nvEvo*, nvHs*, nvGe*, nvRm*, gpumgr*, rmap*, port*, memdesc*, serv*, intr*,
+    # Cli*/PEX_*, __nvoc_*, *_IMPL helpers. The shipping NVRM contains all of these.
+    RM_PREFIXES = ("nvEvo", "nvHs", "nvGe", "nvRm", "nvGp", "nv_", "gpumgr", "rmap", "port", "memdesc",
+                   "serv", "intr", "Cli", "PEX_", "__nvoc_", "__rm", "_IMPL", "kai", "gpu")
+    if s.startswith(RM_PREFIXES) or s.endswith("_IMPL"):
+        return "ogkm-rm-core"
+    if s.startswith(("bitV", "thre", "os_")):
+        return "ogkm-rm-core"
+    # Remaining RM/NVOC internals seen in the mixed link: __nvoc_*, _nv*, kbus*, kdisp*, _f16/_f32 softfloat,
+    # global RM services (g_pSys, g_resServ), ACPI helpers, *_KERNEL entry points.
+    if s.startswith(("__nvoc_", "_nv", "kbus", "kdisp", "kfifo", "kgsp", "f16_", "f32_", "_f16", "_f32",
+                     "_g_", "_kbus", "_kdisp", "_acpiDsm", "_gpuDbg", "_gpuNotify")) or s.endswith("_KERNEL"):
+        return "ogkm-rm-core"
     if re.match(r"Z(TV|TI|TS)\\d", s):
         return "iokit/libkern"
     if s.startswith("Z") or s.startswith("std"):
