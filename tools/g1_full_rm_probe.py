@@ -33,7 +33,7 @@ from pathlib import Path
 # PORT_* are makefile switches, not source: nvport.h/nvassert.h refuse to compile without them and the
 # tree never defines them. Release build == checked build off. Recorded here so the value is visible.
 DEFINES = ["-DNV_UNIX", "-DNV_LINUX", "-DNVRM", "-D_LANGUAGE_C",
-           "-DPORT_IS_CHECKED_BUILD=0", "-DPORT_IS_KERNEL_BUILD=0",
+           "-DPORT_IS_CHECKED_BUILD=0", "-DPORT_IS_KERNEL_BUILD=1", "-DPORT_ATOMIC=",
            "-DPORT_BREAKPOINT_CHECKED(x)=((void)0)", "-DPORT_COVERAGE_PUSH_OFF()", "-DPORT_COVERAGE_POP()"]
 CFLAGS = ["-x", "c", "-std=gnu11", "-arch", "x86_64", "-mmacosx-version-min=15.5", "-fapple-kext",
           "-mkernel", "-nostdinc", "-DKERNEL", "-DKERNEL_PRIVATE", "-DDRIVER_PRIVATE", "-DAPPLE",
