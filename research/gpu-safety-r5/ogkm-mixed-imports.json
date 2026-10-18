@@ -2,30 +2,14 @@
  "file": "D:\\Hactk\\gpu-r5-20261017\\evidence\\ci-r5\\honor-gpu-safety-r5-native-Xcode_16.4\\nvrm-ogkm-undefined.txt",
  "symbols": 821,
  "categories": {
-  "ogkm-rm-core": 312,
+  "ogkm-rm-core": 326,
   "iokit/libkern": 404,
   "mach/kern": 66,
   "c++ runtime": 2,
   "ogkm-nvkms": 15,
   "nullmoth-internal": 7,
-  "unclassified": 14,
   "ogkm-rm": 1
  },
- "unclassified": [
-  "_rmIntrMaskLockAcquire",
-  "_rmIntrMaskLockRelease",
-  "_tlsEntryGet",
-  "_tlsEntryRelease",
-  "_tlsIsrDestroy",
-  "_tlsIsrInit",
-  "_tmrCtrlCmdEventCancel",
-  "_tmrCtrlCmdEventCreate",
-  "_tmrCtrlCmdEventDestroy",
-  "_tmrCtrlCmdEventSchedule",
-  "_transformGidToUserFriendlyString",
-  "_ui32_to_f32",
-  "_workItemLocksAcquire",
-  "_workItemLocksRelease"
- ],
- "unclassified_count": 14
+ "unclassified": [],
+ "unclassified_count": 0
 }

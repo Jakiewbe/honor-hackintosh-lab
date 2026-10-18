@@ -73,7 +73,8 @@ def classify(sym: str) -> str:
             or (len(s) > 3 and s.startswith("f32") or s.startswith("f16"))
             or s.startswith(("osC", "osG", "osHandle", "osIs", "osMap", "osModify", "osQueue", "osRead",
                               "osRun", "osSanity", "osUnmap", "osWrite", "rmDevice", "rmGpu", "pNV", "pciPbi",
-                              "rcdb", "refFind", "nvlog"))):
+                              "rcdb", "refFind", "nvlog", "rmIntr", "tls", "tmrCtrl", "transformGid",
+                              "workItem", "ui32_"))):
         return "ogkm-rm-core"
     if re.match(r"Z(TV|TI|TS)\\d", s):
         return "iokit/libkern"
