@@ -7,7 +7,7 @@ import unittest
 from unittest.mock import patch
 import hashlib
 
-from g1_kc8_callers import calls, method_observation, METHODS, historic_check
+from g1_kc8_callers import calls, method_observation, METHODS, historic_check, object_imports
 
 NAME = METHODS[3]
 LLVM = NAME[1:]
@@ -18,6 +18,17 @@ IR = ('define void @actual_os_write(ptr %p, i64 %off, i8 %val) {\n'
 
 
 class CallerContract(unittest.TestCase):
+    def test_real_empty_nm_still_requires_exact_object_and_success(self):
+        with tempfile.TemporaryDirectory() as folder:
+            obj, log = Path(folder)/'actual.o', Path(folder)/'nm.txt'
+            good = 'ARGV='+json.dumps(['xcrun','nm','-u',str(obj)])+'\n\nEXIT=0\n'
+            log.write_text(good)
+            self.assertEqual(object_imports(log,obj),set())
+            for bad in [good.replace('EXIT=0','EXIT=1'),good.replace('actual.o','other.o'),
+                        good.replace('EXIT=0\n',''),good+'EXIT=0\n', '\n']:
+                log.write_text(bad)
+                with self.assertRaises(ValueError): object_imports(log,obj)
+
     def historical_fixture(self, folder):
         root = Path(folder).resolve()
         candidate, nv, sdk = [root/x for x in ['candidate','nv','sdk']]

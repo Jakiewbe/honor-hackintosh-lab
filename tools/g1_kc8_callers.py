@@ -13,7 +13,7 @@ import re
 import subprocess
 
 from g1_compile_inputs import bound_compile, check_inputs, dep_paths, TARGET, verify_snapshot
-from g1_full_abi import function_record, split_parameters, parameter_abi
+from g1_full_abi import function_record, split_parameters, parameter_abi, successful_argv
 from g1_full_build import BASELINE_CPP, validate_object
 from g1_kc8 import TARGETS
 from g1_kc8_sdk import source as sdk_source
@@ -30,6 +30,17 @@ def sha(path):
 
 def write(path, value):
     path.write_text(json.dumps(value, indent=2)+'\n', encoding='utf-8')
+
+
+def object_imports(log, obj):
+    # Some real TUs legitimately import nothing. Accept empty only with this
+    # exact object's recorded nm invocation and a unique final EXIT=0.
+    if successful_argv(log) != ['xcrun','nm','-u',str(obj)]:
+        raise ValueError('wrong object import inventory command')
+    text = log.read_text(encoding='utf-8')
+    if not any(line.strip() for line in text.splitlines()[1:-1]):
+        return set()
+    return set(parse_nm_undefined(text))
 
 
 def calls(ir, name):
@@ -152,7 +163,7 @@ def run(nv, candidate, out, flags, native_report, execute):
             row['ir_sha256'], row['ir_dependency_sha256'] = sha(ir), sha(dep)
             undef = out/(stem+'-undefined.txt')
             if execute(['xcrun','nm','-u',str(obj)], candidate, undef): raise ValueError('object nm failed')
-            imports = set(parse_nm_undefined(undef.read_text(encoding='utf-8')))
+            imports = object_imports(undef, obj)
             row['object_undefined_sha256'] = sha(undef)
             text = ir.read_text(encoding='utf-8')
             if not re.search(r'^target triple = "x86_64-apple-',text,re.M): raise ValueError('unexpected IR target')

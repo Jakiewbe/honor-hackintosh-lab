@@ -1,0 +1,32 @@
+{
+  "run_id": 39140641398,
+  "source_head": "25196b6c3793fa7b649abb4d3e27f6a0863b5c47",
+  "artifact_id": 12141133950,
+  "artifact_sha256": "a4f97bf1cf2cf9266b67640a6ccc9e30bd80100f9b9f439505577390c24d01de",
+  "status": "FAILED_NOT_ACCEPTED",
+  "failures": [
+    "ValueError: empty undefined inventory needs independent nm exit evidence"
+  ],
+  "units_before_failure": [
+    {
+      "source": "kexts/NVRM/NVRM.cpp",
+      "compile_exit": 0,
+      "status": "OBSERVED"
+    },
+    {
+      "source": "kexts/NVRM/nv_xnu_stubs.cpp",
+      "compile_exit": 0,
+      "status": "OBSERVED"
+    },
+    {
+      "source": "kexts/NVRM/nvkms_shaders.cpp",
+      "compile_exit": 0,
+      "status": "INCOMPLETE"
+    }
+  ],
+  "cause": "nvkms_shaders.cpp successfully compiles but has no external undefined imports; strict shared inventory parser rejects an empty set",
+  "fix": "accept empty only after exact per-object nm -u invocation and unique final EXIT=0; direct PCI calls still require matching object imports",
+  "regression": "test_real_empty_nm_still_requires_exact_object_and_success; 12/12 local caller tests",
+  "full_abi": "NOT_VERIFIED",
+  "kext_load": "NO-GO"
+}
