@@ -6,6 +6,8 @@ from pathlib import Path, PurePosixPath
 import struct
 import tempfile
 import unittest
+from g1_compile_inputs import bound_compile
+from test_g1_compile_inputs import fixture_compiler
 
 from g1_full_build import (BASELINE_C, BASELINE_CPP, COMPONENTS, NM_PIN, OGKM_PIN,
     archive_allowed, baseline_objects, compile_plan, darwin_command, digest,
@@ -144,12 +146,15 @@ class FullBuildTests(unittest.TestCase):
                 source.parent.mkdir(parents=True, exist_ok=True)
                 source.write_text('int source_'+str(index)+';\n')
                 obj = objroot/(str(index)+'.o')
-                obj.write_bytes(header())
+                argv = ['xcrun','clang','-c',str(source),'-o',str(obj)]
+                rc, snapshot, actual = bound_compile(argv,candidate,objroot/(str(index)+'.txt'),
+                    objroot/'gpu-safety-r5-logs/input-snapshots',fixture_compiler([source],header()))
                 report['build_manifest'].append({'role': 'nvrm-unified' if rel in BASELINE_CPP else 'candidate-c-probe',
                     'source': rel, 'source_sha256': digest(source.read_bytes()), 'object': str(obj),
-                    'object_sha256': digest(obj.read_bytes()), 'compile_exit': 0})
+                    'object_sha256': digest(obj.read_bytes()), 'compile_exit': rc,
+                    'compile_cwd':str(candidate.resolve()), 'dependency_snapshot':snapshot})
             self.assertEqual(len(baseline_objects(report, candidate, objroot)), 11)
-            for kind in ['wrong-source', 'duplicate', 'wrong-pin', 'failed', 'source-hash', 'object-hash', 'outside']:
+            for kind in ['wrong-source', 'duplicate', 'wrong-pin', 'failed', 'source-hash', 'object-hash', 'outside','no-inputs']:
                 bad = copy.deepcopy(report)
                 row = bad['build_manifest'][0]
                 if kind == 'wrong-source': row['source'] = 'kexts/NVRM/other.cpp'
@@ -159,6 +164,7 @@ class FullBuildTests(unittest.TestCase):
                 if kind == 'source-hash': row['source_sha256'] = 'old'
                 if kind == 'object-hash': row['object_sha256'] = 'old'
                 if kind == 'outside': row['object'] = str(root/'outside.o')
+                if kind == 'no-inputs': row.pop('dependency_snapshot')
                 with self.subTest(kind=kind), self.assertRaises((ValueError, OSError)):
                     baseline_objects(bad, candidate, objroot)
 

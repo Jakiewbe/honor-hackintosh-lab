@@ -11,6 +11,10 @@ import shlex
 import shutil
 import struct
 import subprocess
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]/'tools'))
+from g1_compile_inputs import bound_compile
 
 PINS = {"nm": "ac55984c473e746c2a8ebea7ba0913461aa7c393", "nv": "e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb"}
 
@@ -374,8 +378,10 @@ def main():
             log = out / ("probe-cand-" + csrc.stem + ".txt")
             cmd = ["xcrun", "clang", "-x", "c", "-std=gnu11", *c_flags, *definitions, "-DNVRM", *cinc,
                    "-c", str(csrc), "-o", str(obj)]
-            rc = execute(cmd, candidate, log)
-            report["build_manifest"].append(object_record("candidate-c-probe", candidate, csrc, obj, rc))
+            rc, inputs, cmd = bound_compile(cmd, candidate, log, out/'input-snapshots', execute)
+            row = object_record("candidate-c-probe", candidate, csrc, obj, rc)
+            row.update({'compile_cwd':str(candidate), 'dependency_snapshot':inputs})
+            report["build_manifest"].append(row)
             if rc == 0:
                 probe_objs.append(obj)
             lines = log.read_text(encoding="utf-8", errors="replace").splitlines()
@@ -430,12 +436,14 @@ def main():
             log = out / ("uni-" + name.replace(".", "_") + ".txt")
             cmd = ["xcrun", "clang++", *common_flags, *definitions, "-DNVRM", *probe_inc,
                    "-I" + str(candidate / "kexts/NVRM"), "-c", str(srcp), "-o", str(obj)]
-            rc = execute(cmd, candidate, log)
+            rc, inputs, cmd = bound_compile(cmd, candidate, log, out/'input-snapshots', execute)
             text = log.read_text(encoding="utf-8", errors="replace")
             uni[name] = {"exit": rc, "warnings": text.count("warning:")}
             if rc == 0:
                 uni_objs.append(obj)
-            report["build_manifest"].append(object_record("nvrm-unified", candidate, srcp, obj, rc))
+            row = object_record("nvrm-unified", candidate, srcp, obj, rc)
+            row.update({'compile_cwd':str(candidate), 'dependency_snapshot':inputs})
+            report["build_manifest"].append(row)
         if len(uni_objs) == len(nvrm_units) and probe_objs:
             u_out = out.parent / "NVRM-unified.kext/Contents/MacOS/NVRM"
             u_out.parent.mkdir(parents=True, exist_ok=True)

@@ -13,6 +13,8 @@ from g1_full_build import (NM_PIN, OGKM_PIN, archive_allowed, baseline_objects,
     darwin_command, fixed_input, validate_kext, validate_object)
 from g1_rm_abi import (CPP_PROFILES, RM_SOURCES, SELECTORS, altstack_conflicts,
     compare_layouts, diagnostic_base, execute, parse_layout, sha, source_audit, wrapper)
+from g1_compile_inputs import (TARGET, command_with_dependencies, verify_snapshot,
+    verify_diagnostic_dependencies)
 
 PREFIX = 'full-'
 RETAIN = 'honor_g1_full_sig_'
@@ -53,16 +55,43 @@ def rm_profile(row, nv, full_dir, sdk):
     if official.count('-c') != 1 or (cwd/official[official.index('-c')+1]).resolve() != source:
         raise ValueError('official source does not match selected TU')
     headers = Path(sdk)/'System/Library/Frameworks/Kernel.framework/Headers'
-    expected = darwin_command(official, source, obj, sdk, headers)
+    expected = command_with_dependencies(darwin_command(official, source, obj, sdk, headers),
+        full_dir/'input-snapshots'/(obj.stem+'.d'))
     if expected != row.get('candidate_argv'):
         raise ValueError('candidate argv differs from recorded official transformation')
     log = full_dir/row['log']
     if log.resolve().parent != full_dir.resolve() or successful_argv(log) != expected:
         raise ValueError('full compile log differs from manifest')
+    snapshot = verify_snapshot(row.get('dependency_snapshot'), full_dir/'input-snapshots',
+        source, obj, row['object_sha256'], expected)
+    if snapshot['cwd'] != str(cwd): raise ValueError('RM snapshot cwd mismatch')
     return {'profile': PREFIX+rel.replace('/', '_'), 'source': source, 'cwd': cwd,
             'argv': expected, 'object': str(obj), 'object_sha256': row['object_sha256'],
             'source_sha256': row['source_sha256'], 'compile_log_sha256': sha(log),
+            'dependency_snapshot':row['dependency_snapshot'], 'snapshot_root':full_dir/'input-snapshots',
             'origin': 'full-source/report.json candidate_argv; exact official transformation'}
+
+
+def validate_link_argv(full, full_dir):
+    link = full['link']
+    dest = full_dir/'NVRM-complete-source-candidate.kext/Contents/MacOS/NVRM'
+    addon = full_dir/'objects/nvlink-darwin-locks.o'
+    rows = full.get('extra_objects', [])
+    if (len(rows) != 1 or rows[0].get('object') != str(addon)
+            or link.get('extra_objects') != [str(addon)]
+            or validate_object(addon) != rows[0].get('object_sha256')):
+        raise ValueError('current actual Darwin addon required')
+    expected = ['xcrun','clang++','-arch','x86_64','-mmacosx-version-min=15.5','-fapple-kext',
+        '-isysroot',full['sdk'],'-nostdlib','-Xlinker','-kext','-Wl,-why_load',
+        *link['baseline_objects'], *link['archive_order'], str(addon),
+        '-lkmodc++','-lkmod','-lcc_kext','-o',str(dest)]
+    actual = successful_argv(full_dir/'full-nvrm-link.txt')
+    if actual != expected:
+        raise ValueError('actual final link ARGV differs from declared inputs/flags/order')
+    if len(link['baseline_objects']) != len(set(link['baseline_objects'])):
+        raise ValueError('duplicate baseline link object')
+    return {'status':'ACTUAL_LINK_ARGV_MATCH', 'argv':actual,
+        'log_sha256':sha(full_dir/'full-nvrm-link.txt')}
 
 
 def profiles(nv, nm, logs, full_path):
@@ -87,6 +116,7 @@ def profiles(nv, nm, logs, full_path):
         rows = [r for r in full['archives'] if r['component'] == component]
         if len(rows) != 1 or rows[0]['objects'] != count or sha(full_dir/('lib'+component+'.a')) != rows[0]['sha256']:
             raise ValueError('archive inventory or current bytes mismatch')
+    full['verified_actual_link'] = validate_link_argv(full, full_dir)
     result = []
     for rel in RM_SOURCES:
         found = [r for r in full['objects'] if r['source'] == rel]
@@ -94,7 +124,10 @@ def profiles(nv, nm, logs, full_path):
             raise ValueError('missing/duplicate official RM profile: '+rel)
         result.append(rm_profile(found[0], nv, full_dir, full['sdk']))
     native = json.loads((logs/'native-report.json').read_text(encoding='utf-8'))
-    baseline = baseline_objects(native, nm, logs.parent)
+    baseline = baseline_objects(native, nm, logs.parent, logs/'input-snapshots')
+    expected_baseline = [r['object'] for r in baseline if r['source'] != 'kexts/NVRM/nvkms_shaders.cpp']
+    if full['link']['baseline_objects'] != expected_baseline:
+        raise ValueError('full link baseline differs from exact current native inputs minus replaced shader')
     for profile, rel in CPP_PROFILES:
         row, = [r for r in baseline if r['source'] == rel]
         if full['link']['baseline_objects'].count(row['object']) != 1:
@@ -104,9 +137,12 @@ def profiles(nv, nm, logs, full_path):
         diagnostic_base(argv, nm/rel)
         if argv[-1] != row['object']:
             raise ValueError('C++ compile object/log mismatch')
+        verify_snapshot(row.get('dependency_snapshot'), logs/'input-snapshots', nm/rel,
+            Path(row['object']), row['object_sha256'], argv)
         result.append({'profile': profile, 'source': (nm/rel).resolve(), 'cwd': nm,
             'argv': argv, 'object': row['object'], 'object_sha256': row['object_sha256'],
             'source_sha256': row['source_sha256'], 'compile_log_sha256': sha(log),
+            'dependency_snapshot':row['dependency_snapshot'], 'snapshot_root':logs/'input-snapshots',
             'origin': 'native-report manifest + actual unified TU compile log + full link input'})
     return full, result
 
@@ -256,22 +292,29 @@ def main():
             raise ValueError('fixed 20 runtime boundary definitions required')
         (out/'source-inputs.json').write_text(json.dumps(audit, indent=2)+'\n', encoding='utf-8')
         report['candidate_sha256'] = full['link']['artifact_sha256']
+        report['actual_link'] = full['verified_actual_link']
         for item in plan:
             entry = {key: str(value) if isinstance(value, Path) else value for key, value in item.items()}
             report['units'].append(entry)
             profile, source, cwd = item['profile'], item['source'], item['cwd']
             try:
+                input_record = verify_snapshot(item['dependency_snapshot'], item['snapshot_root'], source,
+                    Path(item['object']), item['object_sha256'], item['argv'])
                 base, removed = diagnostic_base(item['argv'], source)
                 entry['removed_action_arguments'] = removed
                 generated = out/(profile+source.suffix)
                 generated.write_text(full_wrapper(source, targets), encoding='utf-8')
                 entry['wrapper_sha256'] = sha(generated)
                 ir = out/(profile+'.ll')
-                command = [*base, '-S', '-emit-llvm', str(generated), '-o', str(ir)]
+                ir_deps = out/(profile+'-ir.d')
+                command = [*base, '-MD','-MF',str(ir_deps),'-MT',TARGET,
+                    '-S', '-emit-llvm', str(generated), '-o', str(ir)]
                 entry['llvm_command'] = command
                 entry['llvm_exit'] = execute(command, cwd, out/(profile+'-ir.stdout.txt'), out/(profile+'-ir.stderr.txt'))
                 if entry['llvm_exit']:
                     raise ValueError('full command LLVM diagnostic compile failed')
+                verify_diagnostic_dependencies(ir_deps, cwd, input_record, generated)
+                entry['llvm_dependency_sha256'] = sha(ir_deps)
                 entry['llvm_sha256'] = sha(ir)
                 ir_text = ir.read_text(encoding='utf-8')
                 entry['target_triple'], entry['layout'] = parse_layout(ir_text)
@@ -280,10 +323,14 @@ def main():
                 entry['target_datalayout'] = layouts[0]
                 entry['signatures'] = signatures(ir_text, targets)
                 macros_path = out/(profile+'-macros.txt')
-                command = [*base, '-E', '-dM', str(generated)]
+                macro_deps = out/(profile+'-macros.d')
+                command = [*base, '-MD','-MF',str(macro_deps),'-MT',TARGET,'-E','-dM',str(generated)]
                 entry['macro_command'] = command
                 entry['macro_exit'] = execute(command, cwd, macros_path, out/(profile+'-macros.stderr.txt'))
                 if entry['macro_exit']: raise ValueError('full command macro observation failed')
+                verify_diagnostic_dependencies(macro_deps, cwd, input_record, generated)
+                entry['macro_dependency_sha256'] = sha(macro_deps)
+                entry['dependency_files_verified'] = len(input_record['inputs'])
                 entry['macro_sha256'] = sha(macros_path)
                 macros = dict(re.findall(r'^#define[ \t]+(\w+)[ \t]*([^\n]*)$', macros_path.read_text(encoding='utf-8'), re.M))
                 entry['selectors'] = {key: macros.get(key) for key in SELECTORS}

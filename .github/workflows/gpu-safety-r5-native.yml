@@ -63,7 +63,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for test in test_index_definitions.py test_native_manifest.py test_text_diagnostics.py test_g1_rm_abi.py test_g1_full_abi.py test_g1_symbol_identity.py test_g1_special_symbol_sources.py test_g1_special_object_providers.py test_g1_full_build.py; do
+          for test in test_index_definitions.py test_native_manifest.py test_text_diagnostics.py test_g1_compile_inputs.py test_g1_rm_abi.py test_g1_full_abi.py test_g1_symbol_identity.py test_g1_special_symbol_sources.py test_g1_special_object_providers.py test_g1_full_build.py; do
             python3 -m unittest discover -s tools -p "$test" -v
           done
           python3 tools/index-definitions.py "$RUNNER_TEMP/gpu-safety-r5-nv" \
@@ -76,6 +76,12 @@ jobs:
             --out "$RUNNER_TEMP/gpu-safety-r5-logs/rm-special-sources-full.json" \
             --summary "$RUNNER_TEMP/gpu-safety-r5-logs/rm-special-sources-summary.json"
           cmp research/gpu-safety-r5/rm-special-sources.json "$RUNNER_TEMP/gpu-safety-r5-logs/rm-special-sources-summary.json"
+
+      - name: Reproduce and reject transitive header ABI drift (CPU compiler only)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/g1_input_binding_contract.py --out "$RUNNER_TEMP/gpu-safety-r5-logs/input-binding-host"
 
       - name: Verify complete NullMoth patch series in a disposable copy
         shell: bash

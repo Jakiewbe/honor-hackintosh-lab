@@ -1,3 +1,5 @@
+> **2026-10-18 ABI输入绑定候选：** 接受独立审查P1/P2，新增编译前后传递依赖快照、诊断前后重核及真实链接ARGV交叉校验；本地77通过/1跳过、历史22项通过。新真实clang复现与原生门禁尚未执行，旧run不能补新快照。设备NO-GO。[本轮方案](ABI-INPUT-BINDING-20261018.md)｜[网页端prompt](ABI-INPUT-BINDING-WEB-PROMPT.md)。
+
 > **2026-10-18 完整参数 ABI 实测：** [run 39122635883](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39122635883) 在源码 `0308ed4` 上成功。三个完整官方RM逐TU命令与三个已链接NVRM C++ TU的 136 项选定布局值、20个接口LLVM ABI形状一致，六profile均未定义altstack，20个提供侧定义未观察到直接栈寄存器内联汇编。1280 C TU、5 shader与独立Darwin后端、完整候选链接再次通过。**只关闭这组选定合同，完整ABI及472个目标导出未验收；初始化/渲染/像素读回未执行，设备NO-GO。** [报告](FULL-FLAGS-ABI-20261018.md)｜[网页端prompt](FULL-FLAGS-ABI-WEB-PROMPT.md)。
 
 > **2026-10-18 NVLink 实际结果：** [run 39118504329](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39118504329) 在源码 `0dcc527` 上真实通过。四个真实 Darwin semaphore 接口已编译并进入完整 NVRM 重建候选，同 run 无/有后端对照精确消除四个 NVLink 导入，新增 `_panic` 已登记；仍有 472 个目标导出/ABI 未验收导入。CPU 合同17/17及编译失败负控通过；1280 C TU、5 shader 与独立后端对象、完整归档及候选链接通过。**GPU初始化、渲染、像素读回未执行，设备NO-GO。** 下一步用完整官方逐TU参数核对共享ABI与目标导出，不再重复解决这四个链接缺口。[报告](NVLINK-DARWIN-LOCKS-20261018.md)｜[网页端审查prompt](NVLINK-WEB-REVIEW-PROMPT.md)。

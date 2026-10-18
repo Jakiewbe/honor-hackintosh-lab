@@ -21,6 +21,7 @@ import sys
 from g1_dependency_audit import OGKM_PIN, NM_PIN
 from g1_symbol_identity import parse_nm_undefined
 from g1_special_object_providers import defined_symbols
+from g1_compile_inputs import BOUND_RM, bound_compile, verify_snapshot
 
 COMPONENTS = ('nvidia', 'nvidia-modeset')
 SHADERS = ('turing', 'ampere', 'hopper', 'blackwell', 'gb20x')
@@ -195,7 +196,7 @@ def archive_allowed(rows, expected):
         raise ValueError('duplicate object input')
 
 
-def baseline_objects(native, candidate, object_root):
+def baseline_objects(native, candidate, object_root, input_root=None):
     if native.get('pins') != {'nm': NM_PIN, 'nv': OGKM_PIN}:
         raise ValueError('native baseline pins differ')
     selected = [r for r in native.get('build_manifest', []) if r['role'] in ('nvrm-unified', 'candidate-c-probe')]
@@ -203,6 +204,7 @@ def baseline_objects(native, candidate, object_root):
             {r['source'] for r in selected if r['role']=='candidate-c-probe'} != BASELINE_C):
         raise ValueError('exact nine NVRM plus two local C baseline sources required')
     archive_allowed(selected, 11)
+    input_root = input_root or object_root/'gpu-safety-r5-logs/input-snapshots'
     for row in selected:
         source = (candidate/row['source']).resolve()
         obj = Path(row['object'])
@@ -210,6 +212,10 @@ def baseline_objects(native, candidate, object_root):
             raise ValueError('baseline candidate source changed')
         if obj.is_symlink() or obj.resolve().parent != object_root.resolve() or validate_object(obj) != row['object_sha256']:
             raise ValueError('baseline object changed or outside current run')
+        snapshot = verify_snapshot(row.get('dependency_snapshot'),
+            input_root, source, obj, row['object_sha256'])
+        if snapshot['cwd'] != str(candidate.resolve()) or row.get('compile_cwd') != snapshot['cwd']:
+            raise ValueError('baseline dependency compile cwd mismatch')
     return selected
 
 
@@ -306,10 +312,16 @@ def build(args, report):
 
     def compile_one(job):
         component, source, obj, argv, cwd, log, original, key = job
-        rc = run(argv, cwd, log)
+        inputs = None
+        if key in BOUND_RM:
+            rc, inputs, argv = bound_compile(argv, cwd, log, out/'input-snapshots', run)
+        else:
+            rc = run(argv, cwd, log)
         row = {'component': component, 'source': key, 'source_sha256': digest(source.read_bytes()),
                'object': str(obj), 'compile_exit': rc, 'official_argv': original, 'candidate_argv': argv,
                'compile_cwd': str(cwd), 'log': log.name}
+        if key in BOUND_RM:
+            row['dependency_snapshot'] = inputs
         if rc == 0:
             try:
                 row['object_sha256'] = validate_object(obj)
@@ -371,7 +383,8 @@ def build(args, report):
         report['archives'].append({'component': component, 'objects': len(rows), 'sha256': digest(archive.read_bytes())})
         archives.append(archive)
     native = json.loads((args.native_logs/'native-report.json').read_text(encoding='utf-8'))
-    baseline = baseline_objects(native, args.candidate.resolve(), args.native_logs.resolve().parent)
+    baseline = baseline_objects(native, args.candidate.resolve(), args.native_logs.resolve().parent,
+        args.native_logs/'input-snapshots')
     # The public NullMoth shader TU embeds the same ten start/end labels. Replace
     # that input explicitly with all five fixed OGKM payload objects, never both.
     replaced = [r for r in baseline if r['source']=='kexts/NVRM/nvkms_shaders.cpp']

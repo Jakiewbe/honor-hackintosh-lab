@@ -8,7 +8,10 @@ import unittest
 
 from g1_full_abi import (PREFIX, RETAIN, compare_signatures, full_wrapper, function_record,
     parameter_abi, profiles, rm_profile, signatures, split_parameters, successful_argv)
+from g1_full_abi import validate_link_argv
 from g1_full_build import darwin_command
+from g1_compile_inputs import bound_compile
+from test_g1_compile_inputs import fixture_compiler
 from g1_rm_abi import (CPP_PROFILES, RM_SOURCES, altstack_conflicts, compare_layouts,
     layout_expressions, sha)
 
@@ -111,12 +114,15 @@ class FullAbiTests(unittest.TestCase):
             source.write_text('int real_input;\n')
             obj = full/'objects/current.o'
             obj.parent.mkdir(parents=True)
-            obj.write_bytes(struct.pack('<8I', 0xfeedfacf, 0x01000007, 3, 1, 0, 0, 0, 0))
             cwd = (nv/'src/nvidia').resolve()
             official = ['clang', '-I', 'relative/include', '-DKEEP=1', '-c', 'arch/nvalloc/unix/src/unix_intr.c', '-o', 'ignored.o']
-            argv = darwin_command(official, source, obj, sdk, sdk/'System/Library/Frameworks/Kernel.framework/Headers')
+            base = darwin_command(official, source, obj, sdk, sdk/'System/Library/Frameworks/Kernel.framework/Headers')
+            header = source.parent/'nested.h'; header.write_text('int fixture;\n')
+            rc, snapshot, argv = bound_compile(base,cwd,full/'compile.txt',full/'input-snapshots',
+                fixture_compiler([source,header],struct.pack('<8I',0xfeedfacf,0x01000007,3,1,0,0,0,0)))
             row = {'source': RM_SOURCES[0], 'source_sha256': sha(source), 'component': 'nvidia',
                 'object': str(obj), 'object_sha256': sha(obj), 'compile_exit': 0,
+                'dependency_snapshot':snapshot,
                 'compile_cwd': str(cwd), 'official_argv': official, 'candidate_argv': argv, 'log': 'compile.txt'}
             log = full/'compile.txt'
             log.write_text('ARGV='+json.dumps(argv)+'\nEXIT=0\n')
@@ -125,12 +131,40 @@ class FullAbiTests(unittest.TestCase):
             self.assertEqual(item['argv'], argv)
             for key, value in [('compile_cwd', str(nv)), ('compile_exit', 1),
                     ('source_sha256', 'old'), ('object_sha256', 'old'), ('object', str(root/'old.o')),
-                    ('log', '../old.txt'), ('candidate_argv', argv[:-2]+['different.o'])]:
+                    ('log', '../old.txt'), ('dependency_snapshot', None), ('candidate_argv', argv[:-2]+['different.o'])]:
                 bad = copy.deepcopy(row); bad[key] = value
                 with self.subTest(key=key), self.assertRaises((ValueError, OSError)):
                     rm_profile(bad, nv, full, sdk)
             log.write_text('ARGV='+json.dumps(argv+['-DOTHER=1'])+'\nEXIT=0\n')
             with self.assertRaises(ValueError): rm_profile(row, nv, full, sdk)
+            log.write_text('ARGV='+json.dumps(argv)+'\nEXIT=0\n')
+            header.write_text('changed header without changing source or object')
+            with self.assertRaisesRegex(ValueError,'transitive input changed'):
+                rm_profile(row,nv,full,sdk)
+
+    def test_actual_final_link_command_rejects_swapped_missing_extra_or_failed_inputs(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp).resolve()
+            addon = root/'objects/nvlink-darwin-locks.o'
+            addon.parent.mkdir();addon.write_bytes(struct.pack('<8I',0xfeedfacf,0x01000007,3,1,0,0,0,0))
+            dest = root/'NVRM-complete-source-candidate.kext/Contents/MacOS/NVRM'
+            report = {'sdk':'/sdk','extra_objects':[{'object':str(addon),'object_sha256':sha(addon)}],
+                'link':{'baseline_objects':['/one.o','/two.o'],'archive_order':['/rm.a','/kms.a'],
+                    'extra_objects':[str(addon)]}}
+            argv = ['xcrun','clang++','-arch','x86_64','-mmacosx-version-min=15.5','-fapple-kext',
+                '-isysroot','/sdk','-nostdlib','-Xlinker','-kext','-Wl,-why_load',
+                '/one.o','/two.o','/rm.a','/kms.a',str(addon),'-lkmodc++','-lkmod','-lcc_kext','-o',str(dest)]
+            path = root/'full-nvrm-link.txt'
+            def write(args,exit=0): path.write_text('ARGV='+json.dumps(args)+'\nEXIT='+str(exit)+'\n')
+            write(argv)
+            self.assertEqual(validate_link_argv(report,root)['status'],'ACTUAL_LINK_ARGV_MATCH')
+            for bad in [argv[:12]+argv[13:],argv[:-2]+['/old.o']+argv[-2:],
+                        [v.replace('/rm.a','/wrong.a') for v in argv],
+                        [*argv[:13],'/kms.a','/rm.a',*argv[15:]],argv[:-1]+['/other']]:
+                write(bad)
+                with self.assertRaises(ValueError): validate_link_argv(report,root)
+            write(argv,1)
+            with self.assertRaises(ValueError): validate_link_argv(report,root)
 
     def test_report_from_other_run_directory_is_rejected_before_read(self):
         with self.assertRaises(ValueError):
