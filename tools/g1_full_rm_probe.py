@@ -94,6 +94,13 @@ def main():
     inc = ["-I" + sdk + "/System/Library/Frameworks/Kernel.framework/Headers",
            "-I" + sdk + "/System/Library/Frameworks/Kernel.framework/Headers/IOKit"]
     inc += ["-I" + str(nv / d) for d in INCLUDES if (nv / d).is_dir()]
+    # Hand-maintaining the include list kept failing (os/os.h lives under src/nvidia/src/kernel, not inc/os).
+    # Every directory that contains a header is a legitimate include root for this tree, so add them all.
+    roots = set()
+    for base in ("src/nvidia", "src/common"):
+        for h in (nv / base).rglob("*.h"):
+            roots.add(h.parent)
+    inc += ["-I" + str(d) for d in sorted(roots)][:600]
 
     files = []
     for d in ("src/nvidia/src", "src/nvidia/generated"):
