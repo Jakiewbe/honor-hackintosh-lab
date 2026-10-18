@@ -121,7 +121,7 @@ def main():
         candidate = out.parent / "nullmoth-v2.3.3-gpu-safety-r5-candidate"
         shutil.copytree(nm, candidate, ignore=shutil.ignore_patterns(".git"))
         report["patches"] = []
-        for number, name in enumerate(("gpu-safety-r1.patch", "gpu-safety-r2-kms-open.patch", "nullmoth-r3-thread-call-comment.patch", "nullmoth-r4-bridge-owner.patch", "nullmoth-r5-kms-close-deferred.patch", "nullmoth-r6-kms-close-reclaim.patch", "nullmoth-r7-kapi-device-rollback.patch", "nullmoth-r8-shared-device-lifetime.patch", "nullmoth-r9-pm-gated-device-teardown.patch", "nullmoth-r10-nvrmfb-production-lifetime.patch", "nullmoth-r11-orphan-device-recovery.patch", "nullmoth-r12-serialize-device-state.patch", "nullmoth-r14-orphan-ownership-fix.patch", "nullmoth-r15-pm-pin-teardown.patch", "nullmoth-r16-intel-bounded-vbl-teardown.patch", "nullmoth-r17-intel-owner-copy.patch", "nullmoth-r18-intel-restart-safety.patch", "nullmoth-r19-owner-copy-without-kva.patch", "nullmoth-r20-intel-register-dump.patch", "nullmoth-r21-deferred-close-instrumentation.patch", "nullmoth-r22-safety-convergence.patch", "nullmoth-r23-pm-pin-exclusion.patch", "nullmoth-r24-suspend-begin-commit.patch", "nullmoth-r25-vbl-single-owner.patch", "nullmoth-r26-drop-unused-const.patch", "nullmoth-r27-precheck-before-free.patch", "nullmoth-r29-explicit-aperture-offset-cast.patch", "nullmoth-r28-owner-copy-errors.patch"), 1):
+        for number, name in enumerate(("gpu-safety-r1.patch", "gpu-safety-r2-kms-open.patch", "nullmoth-r3-thread-call-comment.patch", "nullmoth-r4-bridge-owner.patch", "nullmoth-r5-kms-close-deferred.patch", "nullmoth-r6-kms-close-reclaim.patch", "nullmoth-r7-kapi-device-rollback.patch", "nullmoth-r8-shared-device-lifetime.patch", "nullmoth-r9-pm-gated-device-teardown.patch", "nullmoth-r10-nvrmfb-production-lifetime.patch", "nullmoth-r11-orphan-device-recovery.patch", "nullmoth-r12-serialize-device-state.patch", "nullmoth-r14-orphan-ownership-fix.patch", "nullmoth-r15-pm-pin-teardown.patch", "nullmoth-r16-intel-bounded-vbl-teardown.patch", "nullmoth-r17-intel-owner-copy.patch", "nullmoth-r18-intel-restart-safety.patch", "nullmoth-r19-owner-copy-without-kva.patch", "nullmoth-r20-intel-register-dump.patch", "nullmoth-r21-deferred-close-instrumentation.patch", "nullmoth-r22-safety-convergence.patch", "nullmoth-r23-pm-pin-exclusion.patch", "nullmoth-r24-suspend-begin-commit.patch", "nullmoth-r25-vbl-single-owner.patch", "nullmoth-r26-drop-unused-const.patch", "nullmoth-r27-precheck-before-free.patch", "nullmoth-r29-explicit-aperture-offset-cast.patch", "nullmoth-r28-owner-copy-errors.patch", "nullmoth-r30-deferred-close-drain.patch"), 1):
             patch = assets / name
             for suffix in (["--check"], []):
                 if execute(["git", "-c", "core.autocrlf=false", "apply", *suffix, "--whitespace=error-all", str(patch)], candidate,
@@ -275,7 +275,8 @@ def main():
         # NVRM itself: no published recipe, so build it from every root C++ TU and report what the
         # link says. The sibling kexts (accel/, agdc/, fb/) are separate bundles and are excluded.
         nvrm_units = ["NVRM.cpp", "os-xnu.cpp", "os-xnu2.cpp", "os-nvkms-xnu.cpp", "nv_xnu_stubs.cpp",
-                      "nvrm_gpuva.cpp", "nvrm_fbinfo.cpp", "nvrm_surfshare.cpp", "nvkms_shaders.cpp"]
+                      "nvrm_gpuva.cpp", "nvrm_fbinfo.cpp", "nvrm_surfshare.cpp", "nvkms_shaders.cpp",
+                      "kms_deferred.cpp"]
         nvrm_objects, nvrm_compile = [], {}
         for name in nvrm_units:
             src = candidate / "kexts/NVRM" / name

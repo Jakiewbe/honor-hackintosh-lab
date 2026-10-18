@@ -29,7 +29,8 @@ NVLINK_EXPORTS = {'_nvlink_'+name+'Lock' for name in ('alloc', 'acquire', 'relea
 NVLINK_NEW_IMPORTS = {'_panic'}  # Deliberate fatal invariant path; target export/ABI still unverified.
 BASELINE_CPP = {'kexts/NVRM/'+name for name in (
     'NVRM.cpp', 'os-xnu.cpp', 'os-xnu2.cpp', 'os-nvkms-xnu.cpp', 'nv_xnu_stubs.cpp',
-    'nvrm_gpuva.cpp', 'nvrm_fbinfo.cpp', 'nvrm_surfshare.cpp', 'nvkms_shaders.cpp')}
+    'nvrm_gpuva.cpp', 'nvrm_fbinfo.cpp', 'nvrm_surfshare.cpp', 'nvkms_shaders.cpp',
+                                            'kms_deferred.cpp')}
 BASELINE_C = {'kexts/NVRM/nvrm_pageoff.c', 'kexts/NVRM/nvrm_kapi_fields.c'}
 
 

@@ -326,3 +326,43 @@ vrm_units；
 
 检查只覆盖**顶层** kexts/NVRM/ 的 .c/.cpp；子目录（ccel/、kbas/ 等）里的文件不在候选单元列表内，
 本就不参与链接，故不纳入。
+
+## 七十、R30 已合入序列与单元清单（R120）
+
+### 变更
+
+| 文件 | 变更 |
+|---|---|
+| esearch/gpu-safety-r5/nullmoth-r30-deferred-close-drain.patch | 新增（6,810 B，即草案原件） |
+| scripts/gpu-safety-r5/native_compile.py | 序列元组末尾追加 
+ullmoth-r30-deferred-close-drain.patch；
+vrm_units 增加 kms_deferred.cpp |
+| 	ools/g1_full_build.py | BASELINE_CPP 增加 'kms_deferred.cpp' |
+
+### 验证（本地，不动 CI）
+
+| 树状态 | check-candidate-units.py |
+|---|---|
+| R27 + R29 + R30 已应用 | on disk 12 / full 12 / native 12 → **PASS** |
+| 干净 R27（未应用 R30） | **FAIL**：listed but missing on disk: ['kexts/NVRM/kms_deferred.cpp'] |
+
+第二种 FAIL 是**预期的**：清单已声明该文件，而树里还没有它。这说明检查在两个方向都有效
+（有文件没登记 → FAIL；登记了没文件 → 也 FAIL）。
+
+### 组合性风险（已确认存在，但不是 R30 引入的）
+
+
+ullmoth-r28-owner-copy-errors.patch 在我的 R27 树上 git apply --check **失败**
+（kexts/NVRM/accel/nvrm-accel.cpp:1042 上下文不匹配）。它需要 R22 等更早补丁先改动同一区域。
+这不是 R30 造成的：R30 只碰 os-nvkms-xnu.cpp 与两个新文件，与 R28 的文件不重叠。
+但**意味着我无法在本地把 r1..r30 全序列跑一遍**——那需要一份与门禁相同的候选树。
+
+### 因此
+
+- 序列与清单已改，但**尚未在官方构建线验证**（下次门禁运行会首次应用 R30）；
+- 若 R30 在官方序列里应用失败，门禁会 fail-closed（complete-source sequential patch application failed），不会静默跳过；
+- 单元 kms_deferred.cpp 在该次运行中才会第一次被真实编译。
+
+## 下一步
+
+等/触发一次官方门禁，确认三件事：R30 应用成功、kms_deferred.cpp 编译成功、链接后未定义符号集仍为 472。
