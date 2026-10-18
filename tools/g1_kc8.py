@@ -184,12 +184,18 @@ def main():
     paths = [Path('/System/Library/KernelCollections')/name for name in
              ['BootKernelExtensions.kc', 'SystemKernelExtensions.kc']]
     observations = [observe_collection(path) for path in paths]
-    argv = ['/usr/bin/kmutil', 'inspect', '-a', 'x86_64', '-B', str(paths[0]), '-S', str(paths[1]),
-        '--show-fileset-entries', '--show-kext-uuids', '--show-kext-load-addresses']
-    rc, stdout, stderr = command(argv)
-    write(args.out/'kmutil-fileset-raw.json', {'argv': argv, 'exit': rc,
-        'stdout': stdout.decode('utf-8'), 'stderr': stderr.decode('utf-8')})
-    failed = (rc != 0 or not any(r['observation'] == 'FILESET_PARSED' for r in observations) or
+    queries = []
+    # kmutil prioritises fileset output when these display flags are combined.
+    # Query separately; supplied flags alone are not proof of emitted evidence.
+    for flag in ['--show-fileset-entries', '--show-kext-uuids', '--show-kext-load-addresses']:
+        argv = ['/usr/bin/kmutil', 'inspect', '-a', 'x86_64', '-B', str(paths[0]), '-S', str(paths[1]), flag]
+        rc, stdout, stderr = command(argv)
+        row = {'argv': argv, 'exit': rc, 'stdout': stdout.decode('utf-8'), 'stderr': stderr.decode('utf-8')}
+        filename = 'kmutil-'+flag.removeprefix('--show-')+'.json'
+        write(args.out/filename, row)
+        queries.append({'flag': flag, 'exit': rc, 'file': filename,
+                        'stdout_sha256': hashlib.sha256(stdout).hexdigest()})
+    failed = (any(q['exit'] != 0 for q in queries) or not any(r['observation'] == 'FILESET_PARSED' for r in observations) or
               any(r['observation'] == 'KC_OBSERVATION_FAILED' for r in observations))
     target_records = []
     for bundle, names in TARGETS.items():
@@ -204,7 +210,7 @@ def main():
                 'status': 'KC_EXTERNAL_SECTION_DEFINITION_OBSERVED_NOT_EXPORT_OR_ABI' if found else
                     'KC_BINARY_SYMBOL_NOT_OBSERVABLE'})
     report = {'schema': 'honor.g1.kc8.v1', 'source_commit': os.environ.get('GITHUB_SHA'),
-        'source_run_id': os.environ.get('GITHUB_RUN_ID'), 'collections': observations,
+        'source_run_id': os.environ.get('GITHUB_RUN_ID'), 'collections': observations, 'kmutil_queries': queries,
         'status': 'OBSERVATION_FAILED' if failed else 'COLLECTION_OBSERVED_NOT_EXPORT_OR_ABI_ACCEPTANCE',
         'target_symbols': TARGETS, 'records': target_records, 'scope': 'RUNNER_NOT_USER_TARGET_SYSTEM',
         'target_export': 'NOT_VERIFIED', 'full_abi': 'NOT_VERIFIED', 'kext_load': 'NO-GO', 'gpu_execution': False}
