@@ -615,3 +615,36 @@ vspdm_rmconfig.h 在树里**有两份**：
 ## 下一步
 
 把 src/nvidia/src/libraries/libspdm/nvidia 加进探针 include，重跑 175 样本；若归零，再推进到更大步长。
+
+## 二十四、SPDM 的失败是 include 路径问题，不是外部依赖缺失（R70，run 39097535478）
+
+补了 libspdm/nvidia 之后失败数仍是 2，但**首错已经推进**：
+
+`
+kernel_spdm.c:37: fatal error: 'internal/libspdm_common_lib.h' file not found
+`
+
+查树：该头真实存在——
+
+`
+src/nvidia/src/libraries/libspdm/3.5.0/include/internal/libspdm_common_lib.h
+`
+
+libspdm 目录下就是 3.5.0/（第三方库源码，随树发布）与 
+vidia/（适配层）。
+
+所以：**SPDM 既不缺源码，也不缺第三方库**，只缺 -I .../libspdm/3.5.0/include。
+
+## 当前抽样结论（175 个）
+
+| 项 | 值 |
+|---|---|
+| 通过 | 173 |
+| 失败 | 2（同一子系统 SPDM） |
+| 失败性质 | 探针 include 列表不全（已定位到确切缺失路径） |
+
+也就是说：在 17.7% 的抽样覆盖里，**没有任何一例是"源码不含 Linux 支持"或"代码不可编译"**。
+
+## 下一步
+
+加 libspdm/3.5.0/include 后重跑；若归零，SPDM 这一族的结论就完整了：可编译，只是路径多。
