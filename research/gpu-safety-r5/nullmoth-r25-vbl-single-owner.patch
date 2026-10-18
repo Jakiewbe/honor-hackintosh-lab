@@ -1,0 +1,59 @@
+diff --git a/kexts/NMIntelFB/intelfb.cpp b/kexts/NMIntelFB/intelfb.cpp
+index cad9f9d..175ec94 100644
+--- a/kexts/NMIntelFB/intelfb.cpp
++++ b/kexts/NMIntelFB/intelfb.cpp
+@@ -88,11 +88,19 @@ class NMIntelFB : public IOFramebuffer {
+     struct Irq { IOFBInterruptProc proc = nullptr; OSObject *target = nullptr; void *ref = nullptr; };
+     Irq fVbl, fConnect;
+     thread_call_t fVblTimer = nullptr;
++    // True while the thread call owns a reference on this object; exactly one path clears it and
++    // releases, so the retain taken in armVbl() is returned exactly once.
++    bool fVblRefOwned = false;
+     uint64_t fVblNext = 0, fVblCalls = 0;
+     volatile bool fStopping = false;
+     static void vblFire(thread_call_param_t p0, thread_call_param_t) {
+         NMIntelFB *me = (NMIntelFB *)p0;
+-        if (me->fStopping) { me->release(); return; }   // stop() could not free the call: we own the ref
++        if (me->fStopping) {
++            // stop() could not free the call, so the reference is still ours; clear before releasing so a
++            // second entry (or a racing stop) cannot release it again.
++            if (me->fVblRefOwned) { me->fVblRefOwned = false; me->release(); }
++            return;
++        }
+         if (me->fVbl.proc) { me->fVbl.proc(me->fVbl.target, me->fVbl.ref); me->fVblCalls++; }
+         uint64_t period; nanoseconds_to_absolutetime(me->fFrameNs, &period);
+         uint64_t now = mach_absolute_time();
+@@ -100,13 +108,17 @@ class NMIntelFB : public IOFramebuffer {
+         thread_call_enter_delayed(me->fVblTimer, me->fVblNext);
+     }
+     void armVbl() {
+-        // The call holds a reference on this object: a callback may still run (and dereference `me`)
+-        // after stop() gives up freeing it, so the object must outlive the call. Whichever finishes
+-        // last releases: a successful thread_call_free in stop(), or the callback on its way out.
+-        retain();
++        if (fVblTimer) return;                 // already armed: the reference is already owned
+         fVblTimer = thread_call_allocate(vblFire, this);
+-        if (fVblTimer) { uint64_t d; clock_interval_to_deadline((uint32_t)(fFrameNs / 1000), kMicrosecondScale, &d); fVblNext = d; thread_call_enter_delayed(fVblTimer, d); }
+-        IFBLOG("vbl timer %s", fVblTimer ? "armed (60 Hz)" : "ALLOCATE FAILED");
++        if (fVblTimer) {
++            // The call owns one reference on this object: a callback may still run (and dereference `me`)
++            // after stop() gives up freeing it. Nobody else may release it (see fVblRefOwned).
++            retain();
++            fVblRefOwned = true;
++            uint64_t d; clock_interval_to_deadline((uint32_t)(fFrameNs / 1000), kMicrosecondScale, &d);
++            fVblNext = d; thread_call_enter_delayed(fVblTimer, d);
++        }
++        IFBLOG("vbl timer %s", fVblTimer ? "armed (60 Hz)" : "ALLOCATE FAILED (no reference taken)");
+     }
+ #ifdef NMINTELFB_VIRTUAL
+     IOBufferMemoryDescriptor *fVBuf = nullptr;
+@@ -405,7 +417,8 @@ void NMIntelFB::stop(IOService *provider)
+             // The callback may still be running and will release the reference itself.
+             IFBLOG("vbl thread call still in flight after 100 ms: kept allocated, reference passed to it");
+         } else {
+-            this->release();   // no callback can fire any more: drop the reference taken in armVbl()
++            // No callback can fire any more: return the reference taken in armVbl(), once.
++            if (fVblRefOwned) { fVblRefOwned = false; this->release(); }
+             IFBLOG("vbl thread call released");
+         }
+     }
