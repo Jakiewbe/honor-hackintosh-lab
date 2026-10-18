@@ -1,0 +1,25 @@
+{
+ "A": {},
+ "B": [
+  "PEX_DSM_GUID",
+  "g_pSys",
+  "g_resServ",
+  "nvEvoGlobal",
+  "nvoc_class_def_Memory",
+  "nvoc_class_def_RmResource",
+  "nvoc_dynamicCast",
+  "nvoc_rtti_provider",
+  "pNV_KMS_ID"
+ ],
+ "decl": {
+  "PEX_DSM_GUID": [],
+  "g_pSys": [],
+  "g_resServ": [],
+  "nvEvoGlobal": [],
+  "nvoc_class_def_Memory": [],
+  "nvoc_class_def_RmResource": [],
+  "nvoc_dynamicCast": [],
+  "nvoc_rtti_provider": [],
+  "pNV_KMS_ID": []
+ }
+}
