@@ -1,0 +1,29 @@
+name: g1 deferred-close host contract
+
+# Manual-only. Compiles the portable deferred-close unit with the host C++ compiler and runs its
+# contract. No Darwin headers, no IOKit, no device: a failure exits non-zero.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build and run the contract
+        run: |
+          set -euo pipefail
+          python3 tools/g1_kms_deferred_contract.py --out "$RUNNER_TEMP/kms-deferred" --cxx g++
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: g1-kms-deferred
+          path: |
+            ${{ runner.temp }}/kms-deferred/**
+          if-no-files-found: warn
