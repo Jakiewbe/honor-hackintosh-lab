@@ -231,3 +231,44 @@ drain 目前只有"可应用的补丁"，**没有行为证据**。下一步必�
 
 这四例测的是**真实会被驱动调用的同一份代码**（单元被链接进 kext），不是模型复制品。
 但它们只证明单元自身的逻辑，**不证明**驱动在真实 PM 状态下调用了它——后者要等 R30 合入并有结构检查。
+
+## 六十八、R30 草案改为调用可测试单元（R118）
+
+草案已重写：esearch/gpu-safety-r5/draft-r30-deferred-close-drain.patch（6,810 B，3 文件，+147 行）
+
+### 内容
+
+| 文件 | 变更 |
+|---|---|
+| kexts/NVRM/kms_deferred.h / .cpp | **新增**：与 esearch/gpu-safety-r5/darwin/ 下被测单元同源 |
+| kexts/NVRM/os-nvkms-xnu.cpp | **+37 行**：#include "kms_deferred.h"；超时分支改为 kms_deferred_push()（表满时打印并保留计数）；新增 kms_deferred_close_impl / kms_deferred_try_free_impl 与 kKmsDeferredOps；
+vkms_xnu_resume 在状态置为 running 后调用 kms_deferred_drain(&kKmsDeferredOps, gpuOk, NULL) |
+
+### 验证
+
+`
+git apply --check  -> exit=0
+git apply          -> exit=0
+应用后：L148 push、L287/L292 实现、L328 drain 调用
+新增文件：kms_deferred.cpp / kms_deferred.h
+`
+
+工作树随后恢复到 2b6828b 并清理未跟踪文件。
+
+### 与已跑通测试的关系
+
+CI run 39142651778 测的单元，与草案里新增的两个文件**同源**（同一份 kms_deferred.{h,cpp}）。
+因此单元的行为证据可以直接适用于合入后的代码——前提是合入时确实使用这份文件而不是再写一遍。
+
+### 仍缺
+
+1. **未合入序列**：草案不在 patches/ 的应用序列里，官方构建不会编译它；
+2. **未在官方构建线编译**：kms_deferred.cpp 是 C++，需要确认它被加入 kexts/NVRM 的编译单元列表（当前 9 个 TU 是硬编码在门禁里，**新文件不会自动被编译**）；
+3. **同源风险**：lab 目录与 kexts 目录各一份，将来可能漂移；合入时应只保留一份并把另一份改成引用。
+
+## 因此下一步不是继续写代码
+
+而是确认第 2 点：门禁的 
+vrm_units 是静态列表，新增 TU 必须显式加入——
+否则合入后 kms_deferred.cpp 不会被编译，kms_deferred_push 将变成未定义符号。
+这一点必须在合入前写进清单。

@@ -1,71 +1,191 @@
+diff --git a/kexts/NVRM/kms_deferred.cpp b/kexts/NVRM/kms_deferred.cpp
+new file mode 100644
+index 0000000..165f8a6
+--- /dev/null
++++ b/kexts/NVRM/kms_deferred.cpp
+@@ -0,0 +1,65 @@
++/* SPDX-License-Identifier: MIT */
++#include "kms_deferred.h"
++
++namespace {
++struct Entry {
++    void *node;
++    void *data;      /* NULL once closed */
++    int closed;
++};
++Entry gEntries[KMS_DEFERRED_CAPACITY];
++unsigned gCount;
++}  // namespace
++
++extern "C" void kms_deferred_reset(void)
++{
++    for (unsigned i = 0; i < KMS_DEFERRED_CAPACITY; i++) {
++        gEntries[i].node = nullptr;
++        gEntries[i].data = nullptr;
++        gEntries[i].closed = 0;
++    }
++    gCount = 0;
++}
++
++extern "C" int kms_deferred_push(void *node, void *data)
++{
++    if (!node) return -1;
++    for (unsigned i = 0; i < KMS_DEFERRED_CAPACITY; i++) {
++        if (gEntries[i].node == nullptr) {
++            gEntries[i].node = node;
++            gEntries[i].data = data;
++            gEntries[i].closed = 0;
++            gCount++;
++            return 0;
++        }
++    }
++    return -1;  /* full: caller keeps the resources and must report the loss */
++}
++
++extern "C" unsigned kms_deferred_drain(const struct kms_deferred_ops *ops, int pm_running, void *arg)
++{
++    if (!ops || !pm_running) return 0;
++    unsigned freed = 0;
++    for (unsigned i = 0; i < KMS_DEFERRED_CAPACITY; i++) {
++        Entry &e = gEntries[i];
++        if (!e.node) continue;
++        if (!e.closed && e.data) {
++            ops->close(e.data, arg);
++            e.data = nullptr;
++            e.closed = 1;
++        }
++        if (ops->try_free(e.node, arg)) {
++            e.node = nullptr;
++            e.data = nullptr;
++            e.closed = 0;
++            if (gCount) gCount--;
++            freed++;
++        }
++    }
++    return freed;
++}
++
++extern "C" unsigned kms_deferred_count(void)
++{
++    return gCount;
++}
+diff --git a/kexts/NVRM/kms_deferred.h b/kexts/NVRM/kms_deferred.h
+new file mode 100644
+index 0000000..6595f57
+--- /dev/null
++++ b/kexts/NVRM/kms_deferred.h
+@@ -0,0 +1,45 @@
++/* SPDX-License-Identifier: MIT
++ * Deferred NVKMS close bookkeeping, kept free of IOKit so it can be tested on a plain CPU.
++ *
++ * Why this unit exists: a close that cannot run while the GPU is suspended must be remembered and
++ * finished after the resume. The original code only counted such closes, so the per-open, its wrapper
++ * and its event call leaked until unload. Putting the list here means the drain logic is the same code
++ * the driver runs, and it can be exercised by a host test without mocking IOKit.
++ *
++ * The unit never allocates: capacity is fixed and an overflow is reported, not hidden.
++ */
++#ifndef KMS_DEFERRED_H
++#define KMS_DEFERRED_H
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++#define KMS_DEFERRED_CAPACITY 64
++
++struct kms_deferred_ops {
++    /* Close the NVKMS per-open. Called at most once per entry. */
++    void (*close)(void *data, void *arg);
++    /* Try to release the wrapper. Nonzero means the node was freed and can leave the list. */
++    int (*try_free)(void *node, void *arg);
++};
++
++/* Drop every entry without calling anything. */
++void kms_deferred_reset(void);
++
++/* Remember one node. Returns 0 on success, -1 when the table is full (the caller must then keep the
++ * resources and refuse further deferred closes loudly rather than silently forgetting one). */
++int kms_deferred_push(void *node, void *data);
++
++/* Finish remembered closes. Does nothing unless pm_running is nonzero, because NVKMS must not touch the
++ * display engine in any other state. Returns the number of entries freed by this call. */
++unsigned kms_deferred_drain(const struct kms_deferred_ops *ops, int pm_running, void *arg);
++
++/* Entries still remembered (closed-but-not-freed entries included). */
++unsigned kms_deferred_count(void);
++
++#ifdef __cplusplus
++}
++#endif
++
++#endif
 diff --git a/kexts/NVRM/os-nvkms-xnu.cpp b/kexts/NVRM/os-nvkms-xnu.cpp
-index 8332db5..e342e72 100644
+index 8332db5..e279be6 100644
 --- a/kexts/NVRM/os-nvkms-xnu.cpp
 +++ b/kexts/NVRM/os-nvkms-xnu.cpp
-@@ -53,6 +53,9 @@ static const uint32_t kKmsSuspendPinWaitMs = 60000;
- // nvKmsClose()/FreeDevice() are void: a refused close cannot be propagated upward. Counting it
- // with a reason still makes the failure observable after the fact.
- static volatile uint32_t gKmsCloseDeferred;
-+// Deferred closes are kept on a list so a later resume can finish them. Without this list a
-+// timed-out close leaked its per-open, wrapper and event call until unload.
-+static struct nvkms_per_open *gKmsDeferred;
- static volatile uint32_t gKmsCloseDeferredLost;
- static const uint32_t kKmsPmWaitMs = 30000;
- static const char *const kKmsPmName[] = { "running", "suspended", "lost" };
-@@ -79,6 +82,7 @@ struct nvkms_per_open {
-     struct NvKmsKapiDevice *device;
-     thread_call_t eventCall;
-     bool eventBusy, eventWanted, closing;
-+    struct nvkms_per_open *deferredNext;   // set only while on gKmsDeferred
-     volatile int eventsAvailable;
- };
+@@ -14,6 +14,7 @@ extern "C" {
+ #include "nvidia-modeset-os-interface.h"
+ #include "nv-gpu-info.h"
+ #include "nvUnixVersion.h"
++#include "kms_deferred.h"
+ }
  
-@@ -142,6 +146,8 @@ static void kms_close_common(struct nvkms_per_open *popen)
+ static inline void nvu_memset(void *p, int c, size_t n) { __asm__ __volatile__("rep stosb" : "+D"(p), "+c"(n) : "a"(c) : "memory"); }
+@@ -142,6 +143,11 @@ static void kms_close_common(struct nvkms_per_open *popen)
      if (!kms_pm_wait_locked(false, kKmsPmWaitMs)) {
          popen->closing = true;
          popen->eventWanted = false;
-+        popen->deferredNext = gKmsDeferred;
-+        gKmsDeferred = popen;
++        // Remember the node so a later resume can finish the close. A full table is reported, not hidden:
++        // the per-open stays alive either way, and the counter below shows the backlog.
++        if (kms_deferred_push(popen, popen->data) != 0) {
++            kprintf("NVRM-xnu: deferred-close table is full; wrapper kept and tracked by the counter only\n");
++        }
          gKmsCloseDeferred++;
          if (gKmsPmState == kKmsPmLost) gKmsCloseDeferredLost++;
          IOLockUnlock(gKmsLock);
-@@ -277,6 +283,31 @@ void nvkms_xnu_suspend_abort(uint32_t seq)
+@@ -277,6 +283,35 @@ void nvkms_xnu_suspend_abort(uint32_t seq)
      IOLockUnlock(gKmsLock);
  }
  
-+// Finish closes that were deferred while the GPU was suspended. Called with gKmsLock held and only
-+// once PM is running again: nvKmsClose() must not touch the display engine in any other state.
-+static void kms_deferred_drain_locked(void)
++// Real implementations for the portable bookkeeping unit. Kept out of the unit so it stays testable.
++static void kms_deferred_close_impl(void *data, void *)
 +{
-+    struct nvkms_per_open **pp = &gKmsDeferred;
-+    while (*pp) {
-+        struct nvkms_per_open *popen = *pp;
-+        if (popen->data) nvKmsClose(popen->data);
-+        popen->data = NULL;
-+        if (popen->eventCall && popen->eventBusy) {
-+            if (thread_call_cancel(popen->eventCall)) popen->eventBusy = false;
-+            while (popen->eventBusy) IOLockSleep(gKmsLock, popen, THREAD_UNINT);
-+        }
-+        if (popen->eventCall && !thread_call_free(popen->eventCall)) {
-+            // A pending or rearmed call keeps the argument alive; leave it queued for the next resume.
-+            pp = &popen->deferredNext;
-+            continue;
-+        }
-+        popen->eventCall = NULL;
-+        *pp = popen->deferredNext;
-+        if (gKmsCloseDeferred) gKmsCloseDeferred--;
-+        nvkms_free(popen, sizeof *popen);
-+    }
++    nvKmsClose(data);
 +}
++
++static int kms_deferred_try_free_impl(void *node, void *)
++{
++    struct nvkms_per_open *popen = (struct nvkms_per_open *)node;
++    if (popen->eventCall && popen->eventBusy) {
++        if (thread_call_cancel(popen->eventCall)) popen->eventBusy = false;
++        while (popen->eventBusy) IOLockSleep(gKmsLock, popen, THREAD_UNINT);
++    }
++    if (popen->eventCall && !thread_call_free(popen->eventCall)) {
++        // A pending or rearmed call keeps the argument alive; leave it queued for the next resume.
++        return 0;
++    }
++    popen->eventCall = NULL;
++    popen->data = NULL;
++    if (gKmsCloseDeferred) gKmsCloseDeferred--;
++    nvkms_free(popen, sizeof *popen);
++    return 1;
++}
++
++static const struct kms_deferred_ops kKmsDeferredOps = {
++    kms_deferred_close_impl,
++    kms_deferred_try_free_impl,
++};
 +
  void nvkms_xnu_resume(NvU32 gpuId, NvBool gpuOk)
  {
      if (!gKmsLoaded) return;
-@@ -289,6 +320,7 @@ void nvkms_xnu_resume(NvU32 gpuId, NvBool gpuOk)
+@@ -289,6 +324,8 @@ void nvkms_xnu_resume(NvU32 gpuId, NvBool gpuOk)
      if (gpuOk && gKmsPmState == kKmsPmSuspended) nvKmsResume(gpuId);
      gKmsPmState = gpuOk ? kKmsPmRunning : kKmsPmLost;
      IOLockWakeup(gKmsLock, &gKmsPmState, false);
-+    if (gpuOk) kms_deferred_drain_locked();
++    // Only a running GPU may touch the display engine, so the drain is gated on gpuOk.
++    kms_deferred_drain(&kKmsDeferredOps, gpuOk, NULL);
      IOLockUnlock(gKmsLock);
      if (gpuOk) nvKmsKapiSuspendResume(NV_FALSE);
      kprintf("NVRM-xnu: NVKMS %s (gpu 0x%x)\n", gpuOk ? "resumed" : "left LOST: the GPU did not resume", gpuId);
