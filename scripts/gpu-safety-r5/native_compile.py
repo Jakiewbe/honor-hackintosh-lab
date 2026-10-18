@@ -277,6 +277,7 @@ def main():
             probe_root / "src/common/softfloat",
             probe_root / "src/common/softfloat/source/include",
             probe_root / "src/nvidia/src/libraries/libspdm/nvidia",
+            probe_root / "src/nvidia/src/libraries/libspdm/3.5.0/include",
             probe_root / "src/nvidia/src/libraries/libspdm",
             probe_root / "src/nvidia-modeset/include") if d.is_dir()]
         probe_results = {}
