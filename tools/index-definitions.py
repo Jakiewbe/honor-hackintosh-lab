@@ -19,6 +19,8 @@ from pathlib import Path
 
 DEF_LINE = re.compile(r"^\s*[A-Za-z_][\w \t\*]*\b([A-Za-z_]\w{2,})\s*\(")
 DEF_NAME_THEN_PAREN = re.compile(r"^\s*[A-Za-z_][\w \t\*]*\b([A-Za-z_]\w{2,})\s*$")
+# A third shape: the type sits on the previous line and only the name is on this one.
+NAME_ONLY = re.compile(r"^\s*([A-Za-z_]\w{2,})\s*$")
 
 
 def main():
@@ -39,11 +41,19 @@ def main():
         rel = p.relative_to(tree).as_posix()
         for i, line in enumerate(lines):
             m = DEF_LINE.match(line) or DEF_NAME_THEN_PAREN.match(line)
-            if not m:
+            name = m.group(1) if m else None
+            if name is None:
+                mo = NAME_ONLY.match(line)
+                # name alone: accept only when the next line opens the parameter list and the previous
+                # line is not a statement (a call site would not be followed by a fresh "(" line)
+                if mo and i + 1 < len(lines) and lines[i + 1].lstrip().startswith("("):
+                    prev = lines[i - 1].rstrip() if i else ""
+                    if not prev.endswith((";", "{", ",", "=")):
+                        name = mo.group(1)
+            if name is None:
                 continue
-            name = m.group(1)
-            # a two-line signature must be followed by a line that starts with "("
-            if DEF_NAME_THEN_PAREN.match(line) and not (i + 1 < len(lines) and lines[i + 1].lstrip().startswith("(")):
+            # a name-then-paren signature must be followed by a line that starts with "("
+            if m and DEF_NAME_THEN_PAREN.match(line) and not (i + 1 < len(lines) and lines[i + 1].lstrip().startswith("(")):
                 continue
             if name in names:
                 index[name].append(f"{rel}:{i + 1}")

@@ -741,3 +741,40 @@ RmInitRm  CliSetGpuContext  PEX_DSM_GUID  RmPowerManagementTegra
 ## 下一步
 
 把索引扩展到 .h（含宏定义行），重跑 346 个符号；若未解析降到接近 0，就可以按这 74 个文件做第一批受控编译。
+
+## 二十八、索引扩展到"类型在上一行"的形态后：301/346（R74）
+
+修 	ools/index-definitions.py：新增第三种定义形态——**类型在前一行、函数名单独成行**。
+这解决了 itVectorClr_IMPL（src/nvidia/src/libraries/nvbitvector/nvbitvector.c:72）一类之前漏掉的定义。
+
+| 指标 | R73 | **R74** |
+|---|---|---|
+| 解析 | 223 | **301** |
+| 未解析 | 123 | **45** |
+| 文件数 | 74 | **98** |
+
+## 剩下 45 个的性质
+
+样本：
+
+`
+RmInitRm  RmPowerManagementTegra  nvEvoGlobal  PEX_DSM_GUID  g_pSys  g_resServ
+gpumgrGetGpuFromUuid  gpumgrQueryGpuDrainState  intrGetIntrEn_IMPL  kbusGetPciBarSize_IMPL
+`
+
+对 RmInitRm 做了全树、**不限扩展名**的检索：**没有任何定义**，只有 src/common/inc/rmosxfac.h:36
+的 extern NvS32 RmInitRm(void);。
+
+这说明它属于 **RM 的闭源部分**（mosxfac = RM OS facility），公开树只给声明。
+
+## 因此"缺口"现在是两段
+
+| 段 | 数量 | 性质 |
+|---|---|---|
+| 有定义、需纳入构建 | 301 | 工程问题（98 个文件） |
+| 只有声明、树内无定义 | **45** | **闭源依赖**，与 7.93 MB 不透明载荷同类 |
+
+## 下一步
+
+对 45 个逐个确认"树内只有声明"，产出一张**闭源符号清单**；然后按 98 个文件做第一批受控编译
+（分批、记断点、每批固定上限）。若第一批通过，缺口就从"未知"变成"闭源 45 + 待编译若干"。

@@ -109,10 +109,14 @@
    "src/nvidia/src/kernel/gpu/mem_mgr/mem_desc.c:3886"
   ],
   "rmapiGetInterface": [
-   "src/nvidia/arch/nvalloc/unix/src/osapi.c:216"
+   "src/nvidia/arch/nvalloc/unix/src/osapi.c:216",
+   "src/nvidia/src/kernel/rmapi/rmapi.c:218"
   ],
   "RmShutdownRm": [
    "src/nvidia/arch/nvalloc/unix/src/osinit.c:283"
+  ],
+  "osHandleGpuLost": [
+   "src/nvidia/arch/nvalloc/unix/src/osinit.c:341"
   ],
   "RmInitPrivateState": [
    "src/nvidia/arch/nvalloc/unix/src/osinit.c:1508"
@@ -147,6 +151,12 @@
   "RmFreeObjExportHandle": [
    "src/nvidia/arch/nvalloc/unix/src/rmobjexportimport.c:560"
   ],
+  "halmgrGetHalForGpu_IMPL": [
+   "src/nvidia/src/kernel/core/hal_mgr.c:157"
+  ],
+  "rmGpuGroupLockAcquire": [
+   "src/nvidia/src/kernel/core/locks.c:1276"
+  ],
   "rmIntrMaskLockAcquire": [
    "src/nvidia/src/kernel/core/locks.c:2551"
   ],
@@ -180,6 +190,9 @@
   "threadStateSetTimeoutOverride": [
    "src/nvidia/src/kernel/core/thread_state.c:1294"
   ],
+  "rcdbAddRmGpuDump": [
+   "src/nvidia/src/kernel/diagnostics/journal.c:2898"
+  ],
   "nvlogDumpToKernelLog": [
    "src/nvidia/src/kernel/diagnostics/nvlog.c:733"
   ],
@@ -190,16 +203,33 @@
    "src/nvidia/src/kernel/gpu/arch/blackwell/kern_gpu_gb100.c:1837",
    "src/nvidia/src/kernel/gpu_mgr/gpu_mgr.c:4976"
   ],
+  "kbifCheckAndRearmMSI_IMPL": [
+   "src/nvidia/src/kernel/gpu/bif/kernel_bif.c:876"
+  ],
+  "kbusMapFbAperture_GM107": [
+   "src/nvidia/src/kernel/gpu/bus/arch/maxwell/kern_bus_gm107.c:2984"
+  ],
+  "kbusUnmapFbAperture_GM107": [
+   "src/nvidia/src/kernel/gpu/bus/arch/maxwell/kern_bus_gm107.c:3179"
+  ],
   "memdescGetPhysAddr": [
    "src/nvidia/src/kernel/gpu/bus/kern_bus.c:334",
    "src/nvidia/src/kernel/gpu/gsp/arch/turing/kernel_gsp_tu102.c:487",
    "src/nvidia/src/kernel/gpu/gsp/arch/turing/kernel_gsp_tu102.c:489",
-   "src/nvidia/src/kernel/gpu/gsp/arch/turing/kernel_gsp_tu102.c:639"
+   "src/nvidia/src/kernel/gpu/gsp/arch/turing/kernel_gsp_tu102.c:639",
+   "src/nvidia/src/kernel/gpu/mem_mgr/mem_desc.c:2969"
+  ],
+  "kbusIsStaticBar1Enabled_IMPL": [
+   "src/nvidia/src/kernel/gpu/bus/kern_bus.c:1189"
+  ],
+  "kbusGetGpuFbPhysAddressForRdma_IMPL": [
+   "src/nvidia/src/kernel/gpu/bus/kern_bus.c:1307"
   ],
   "portMemAllocNonPaged": [
    "src/nvidia/src/kernel/gpu/bus/kern_bus_vbar2.c:884",
    "src/nvidia/src/kernel/rmapi/deprecated_context.c:152",
-   "src/nvidia/src/libraries/libspdm/nvidia/nvspdm_malloclib.c:29"
+   "src/nvidia/src/libraries/libspdm/nvidia/nvspdm_malloclib.c:29",
+   "src/nvidia/src/libraries/nvport/memory/memory_tracking.c:938"
   ],
   "RmP2PGetPagesPersistent": [
    "src/nvidia/src/kernel/gpu/bus/p2p.c:1341"
@@ -219,6 +249,15 @@
   "RmP2PPutPages": [
    "src/nvidia/src/kernel/gpu/bus/p2p.c:1658"
   ],
+  "deviceGetByHandle_IMPL": [
+   "src/nvidia/src/kernel/gpu/device.c:548"
+  ],
+  "deviceGetByGpu_IMPL": [
+   "src/nvidia/src/kernel/gpu/device.c:599"
+  ],
+  "CliSetGpuContext": [
+   "src/nvidia/src/kernel/gpu/device.c:652"
+  ],
   "kdispAcquireLowLatencyLock": [
    "src/nvidia/src/kernel/gpu/disp/kern_disp.c:1080"
   ],
@@ -231,14 +270,80 @@
   "kdispOptimizePerFrameOsCallbacks_IMPL": [
    "src/nvidia/src/kernel/gpu/disp/kern_disp.c:1161"
   ],
+  "kdispHandleAggressiveVblank_IMPL": [
+   "src/nvidia/src/kernel/gpu/disp/kern_disp.c:1302"
+  ],
+  "kdispServiceLowLatencyIntrs_KERNEL": [
+   "src/nvidia/src/kernel/gpu/disp/kern_disp.c:1494"
+  ],
+  "gpuIsGpuFullPower_IMPL": [
+   "src/nvidia/src/kernel/gpu/gpu.c:4444"
+  ],
+  "gpuIsGpuFullPowerForPmResume_IMPL": [
+   "src/nvidia/src/kernel/gpu/gpu.c:4466"
+  ],
+  "gpuGetGidInfo_IMPL": [
+   "src/nvidia/src/kernel/gpu/gpu.c:5332"
+  ],
+  "gpuGetUserClientCount_IMPL": [
+   "src/nvidia/src/kernel/gpu/gpu_rmapi.c:112"
+  ],
+  "gpuNotifySubDeviceEvent_IMPL": [
+   "src/nvidia/src/kernel/gpu/gpu_rmapi.c:624"
+  ],
   "gpuEnterHibernate_IMPL": [
    "src/nvidia/src/kernel/gpu/gpu_suspend.c:612"
   ],
   "gpuResumeFromHibernate_IMPL": [
    "src/nvidia/src/kernel/gpu/gpu_suspend.c:647"
   ],
+  "transformGidToUserFriendlyString": [
+   "src/nvidia/src/kernel/gpu/gpu_uuid.c:44"
+  ],
+  "intrGetIntrMask_GP100": [
+   "src/nvidia/src/kernel/gpu/intr/arch/pascal/intr_gp100.c:155"
+  ],
+  "intrGetPendingNonStall_TU102": [
+   "src/nvidia/src/kernel/gpu/intr/arch/turing/intr_nonstall_tu102.c:194"
+  ],
+  "intrGetVectorFromEngineId_IMPL": [
+   "src/nvidia/src/kernel/gpu/intr/intr.c:610"
+  ],
+  "intrServiceNonStallBottomHalf_IMPL": [
+   "src/nvidia/src/kernel/gpu/intr/intr.c:917"
+  ],
   "intrCheckFecsEventbufferPending_IMPL": [
    "src/nvidia/src/kernel/gpu/intr/intr.c:1197"
+  ],
+  "gpuGc6Exit_IMPL": [
+   "src/nvidia/src/kernel/gpu/kern_gpu_power.c:65"
+  ],
+  "gpuGc6Entry_IMPL": [
+   "src/nvidia/src/kernel/gpu/kern_gpu_power.c:132"
+  ],
+  "ceutilsMemcopy_IMPL": [
+   "src/nvidia/src/kernel/gpu/mem_mgr/ce_utils.c:685"
+  ],
+  "ceutilsUpdateProgress_IMPL": [
+   "src/nvidia/src/kernel/gpu/mem_mgr/ce_utils.c:824"
+  ],
+  "fbsrReserveSysMemoryForPowerMgmt_IMPL": [
+   "src/nvidia/src/kernel/gpu/mem_mgr/fbsr.c:58"
+  ],
+  "memdescCreate": [
+   "src/nvidia/src/kernel/gpu/mem_mgr/mem_desc.c:281"
+  ],
+  "memdescDestroy": [
+   "src/nvidia/src/kernel/gpu/mem_mgr/mem_desc.c:579"
+  ],
+  "memdescDescribe": [
+   "src/nvidia/src/kernel/gpu/mem_mgr/mem_desc.c:2250"
+  ],
+  "memdescFillPages": [
+   "src/nvidia/src/kernel/gpu/mem_mgr/mem_desc.c:2367"
+  ],
+  "memdescGetPteArrayForGpu": [
+   "src/nvidia/src/kernel/gpu/mem_mgr/mem_desc.c:3129"
   ],
   "memdescGetMemData": [
    "src/nvidia/src/kernel/gpu/mem_mgr/mem_desc.c:3953"
@@ -255,6 +360,39 @@
   "memdescGetPageSize": [
    "src/nvidia/src/kernel/gpu/mem_mgr/mem_desc.c:4092",
    "src/nvidia/src/kernel/rmapi/mapping.c:48"
+  ],
+  "memmgrGetUsedRamSize_IMPL": [
+   "src/nvidia/src/kernel/gpu/mem_mgr/mem_mgr.c:1316"
+  ],
+  "memmgrInitCeUtils_IMPL": [
+   "src/nvidia/src/kernel/gpu/mem_mgr/mem_mgr.c:4114"
+  ],
+  "kmigmgrIncRefCount_IMPL": [
+   "src/nvidia/src/kernel/gpu/mig_mgr/kernel_mig_manager.c:96"
+  ],
+  "kmigmgrDecRefCount_IMPL": [
+   "src/nvidia/src/kernel/gpu/mig_mgr/kernel_mig_manager.c:117"
+  ],
+  "kmigmgrIsMIGEnabled_IMPL": [
+   "src/nvidia/src/kernel/gpu/mig_mgr/kernel_mig_manager.c:1315"
+  ],
+  "kmigmgrGetInstanceRefFromDevice_IMPL": [
+   "src/nvidia/src/kernel/gpu/mig_mgr/kernel_mig_manager.c:3149"
+  ],
+  "subdeviceGetByHandle_IMPL": [
+   "src/nvidia/src/kernel/gpu/subdevice/subdevice.c:280"
+  ],
+  "tmrCtrlCmdEventCreate": [
+   "src/nvidia/src/kernel/gpu/timer/timer.c:1818"
+  ],
+  "tmrCtrlCmdEventSchedule": [
+   "src/nvidia/src/kernel/gpu/timer/timer.c:1857"
+  ],
+  "tmrCtrlCmdEventCancel": [
+   "src/nvidia/src/kernel/gpu/timer/timer.c:1885"
+  ],
+  "tmrCtrlCmdEventDestroy": [
+   "src/nvidia/src/kernel/gpu/timer/timer.c:1905"
   ],
   "tmrEventServiceTimer_IMPL": [
    "src/nvidia/src/kernel/gpu/timer/timer.c:1922"
@@ -284,11 +422,17 @@
   "gpumgrIsDeviceMsixAllowed": [
    "src/nvidia/src/kernel/gpu_mgr/gpu_mgr.c:4942"
   ],
+  "memGetByHandle_IMPL": [
+   "src/nvidia/src/kernel/mem_mgr/mem.c:816"
+  ],
   "osReadRegistryDword": [
    "src/nvidia/src/kernel/os/os_init.c:459"
   ],
   "osSanityTestIsr": [
    "src/nvidia/src/kernel/os/os_sanity.c:103"
+  ],
+  "osRun1HzCallbacksNow": [
+   "src/nvidia/src/kernel/os/os_timer.c:299"
   ],
   "acpiDsmInit": [
    "src/nvidia/src/kernel/platform/acpi_common.c:1190"
@@ -347,6 +491,12 @@
   "rmapiParamsRelease": [
    "src/nvidia/src/kernel/rmapi/param_copy.c:145"
   ],
+  "rmapiPrologue": [
+   "src/nvidia/src/kernel/rmapi/rmapi.c:286"
+  ],
+  "rmapiEpilogue": [
+   "src/nvidia/src/kernel/rmapi/rmapi.c:340"
+  ],
   "tlsEntryGet": [
    "src/nvidia/src/kernel/rmapi/rmapi.c:762",
    "src/nvidia/src/libraries/tls/tls.c:432"
@@ -356,6 +506,18 @@
   ],
   "rmapiLeaveRtd3PmPath": [
    "src/nvidia/src/kernel/rmapi/rmapi.c:802"
+  ],
+  "rmapiGetClientHandlesFromOSInfo": [
+   "src/nvidia/src/kernel/rmapi/rmapi.c:1036"
+  ],
+  "serverutilMappingFilterCurrentUserProc": [
+   "src/nvidia/src/kernel/rmapi/rs_utils.c:325"
+  ],
+  "serverutilAcquireClient": [
+   "src/nvidia/src/kernel/rmapi/rs_utils.c:345"
+  ],
+  "serverutilReleaseClient": [
+   "src/nvidia/src/kernel/rmapi/rs_utils.c:375"
   ],
   "rpcConstruct_IMPL": [
    "src/nvidia/src/kernel/vgpu/rpc.c:998"
@@ -377,6 +539,7 @@
    "src/nvidia/src/libraries/containers/list.c:140",
    "src/nvidia/src/libraries/containers/map.c:205",
    "src/nvidia/src/libraries/containers/multimap.c:179",
+   "src/nvidia/src/libraries/nvport/memory/memory_unix_kernel_os.c:80",
    "src/nvidia/src/libraries/nvport/memory/memory_unix_kernel_os.c:116"
   ],
   "listHead_IMPL": [
@@ -385,23 +548,90 @@
   "listNext_IMPL": [
    "src/nvidia/src/libraries/containers/list.c:297"
   ],
+  "bitVectorClrAll_IMPL": [
+   "src/nvidia/src/libraries/nvbitvector/nvbitvector.c:55"
+  ],
+  "bitVectorClr_IMPL": [
+   "src/nvidia/src/libraries/nvbitvector/nvbitvector.c:72"
+  ],
+  "bitVectorSet_IMPL": [
+   "src/nvidia/src/libraries/nvbitvector/nvbitvector.c:159"
+  ],
+  "bitVectorTestAllCleared_IMPL": [
+   "src/nvidia/src/libraries/nvbitvector/nvbitvector.c:358"
+  ],
+  "bitVectorTest_IMPL": [
+   "src/nvidia/src/libraries/nvbitvector/nvbitvector.c:470"
+  ],
+  "bitVectorOr_IMPL": [
+   "src/nvidia/src/libraries/nvbitvector/nvbitvector.c:550"
+  ],
   "objDynamicCastById_IMPL": [
    "src/nvidia/src/libraries/nvoc/src/runtime.c:235"
   ],
   "portSyncSpinlockAcquire": [
-   "src/nvidia/src/libraries/nvport/memory/memory_tracking.c:113"
+   "src/nvidia/src/libraries/nvport/memory/memory_tracking.c:113",
+   "src/nvidia/src/libraries/nvport/sync/sync_unix_kernel_os.c:74"
   ],
   "portSyncSpinlockRelease": [
-   "src/nvidia/src/libraries/nvport/memory/memory_tracking.c:117"
+   "src/nvidia/src/libraries/nvport/memory/memory_tracking.c:117",
+   "src/nvidia/src/libraries/nvport/sync/sync_unix_kernel_os.c:84"
   ],
   "portSyncSpinlockDestroy": [
-   "src/nvidia/src/libraries/nvport/memory/memory_tracking.c:121"
+   "src/nvidia/src/libraries/nvport/memory/memory_tracking.c:121",
+   "src/nvidia/src/libraries/nvport/sync/sync_unix_kernel_os.c:60"
+  ],
+  "portMemFree": [
+   "src/nvidia/src/libraries/nvport/memory/memory_tracking.c:952"
+  ],
+  "portMemAllocatorCreateOnExistingBlock": [
+   "src/nvidia/src/libraries/nvport/memory/memory_tracking.c:1020"
+  ],
+  "portMemAllocatorRelease": [
+   "src/nvidia/src/libraries/nvport/memory/memory_tracking.c:1045"
+  ],
+  "portMemSet": [
+   "src/nvidia/src/libraries/nvport/memory/memory_unix_kernel_os.c:120"
+  ],
+  "portMemCmp": [
+   "src/nvidia/src/libraries/nvport/memory/memory_unix_kernel_os.c:139"
+  ],
+  "portStringLength": [
+   "src/nvidia/src/libraries/nvport/string/string_generic.c:35"
+  ],
+  "portStringCompare": [
+   "src/nvidia/src/libraries/nvport/string/string_generic.c:72"
+  ],
+  "portStringCopy": [
+   "src/nvidia/src/libraries/nvport/string/string_generic.c:162"
+  ],
+  "portSyncMutexDestroy": [
+   "src/nvidia/src/libraries/nvport/sync/sync_unix_kernel_os.c:110"
+  ],
+  "portSyncMutexAcquire": [
+   "src/nvidia/src/libraries/nvport/sync/sync_unix_kernel_os.c:124"
+  ],
+  "portSyncMutexRelease": [
+   "src/nvidia/src/libraries/nvport/sync/sync_unix_kernel_os.c:148"
+  ],
+  "clientGetResourceRef_IMPL": [
+   "src/nvidia/src/libraries/resserv/src/rs_client.c:381"
   ],
   "refFindCpuMappingWithFilter": [
-   "src/nvidia/src/libraries/resserv/src/rs_resource.c:396"
+   "src/nvidia/src/libraries/resserv/src/rs_resource.c:396",
+   "src/nvidia/src/libraries/resserv/src/rs_resource.c:400"
   ],
   "serverFreeDisabledClients": [
    "src/nvidia/src/libraries/resserv/src/rs_server.c:1053"
+  ],
+  "serverAcquireClient": [
+   "src/nvidia/src/libraries/resserv/src/rs_server.c:2702"
+  ],
+  "serverGetClientUnderLock": [
+   "src/nvidia/src/libraries/resserv/src/rs_server.c:2728"
+  ],
+  "serverReleaseClient": [
+   "src/nvidia/src/libraries/resserv/src/rs_server.c:2752"
   ],
   "tlsIsrInit": [
    "src/nvidia/src/libraries/tls/tls.c:274"
@@ -411,6 +641,18 @@
   ],
   "tlsEntryRelease": [
    "src/nvidia/src/libraries/tls/tls.c:401"
+  ],
+  "nvAssertFailedNoLog": [
+   "src/nvidia/src/libraries/utils/nvassert.c:185"
+  ],
+  "nvAssertOkFailedNoLog": [
+   "src/nvidia/src/libraries/utils/nvassert.c:203"
+  ],
+  "nvCheckFailedNoLog": [
+   "src/nvidia/src/libraries/utils/nvassert.c:223"
+  ],
+  "nvCheckOkFailedNoLog": [
+   "src/nvidia/src/libraries/utils/nvassert.c:240"
   ],
   "nvRmApiControl": [
    "src/nvidia-modeset/kapi/src/nvkms-kapi.c:195",
@@ -742,74 +984,26 @@
   ]
  },
  "missing": [
-  "CliSetGpuContext",
   "PEX_DSM_GUID",
   "RmInitRm",
   "RmPowerManagementTegra",
-  "bitVectorClrAll_IMPL",
-  "bitVectorClr_IMPL",
-  "bitVectorOr_IMPL",
-  "bitVectorSet_IMPL",
-  "bitVectorTestAllCleared_IMPL",
-  "bitVectorTest_IMPL",
-  "ceutilsMemcopy_IMPL",
-  "ceutilsUpdateProgress_IMPL",
-  "clientGetResourceRef_IMPL",
-  "deviceGetByGpu_IMPL",
-  "deviceGetByHandle_IMPL",
   "fbsrFreeReservedSysMemoryForPowerMgmt_IMPL",
-  "fbsrReserveSysMemoryForPowerMgmt_IMPL",
   "g_pSys",
   "g_resServ",
   "gpuCheckSysmemAccess_IMPL",
   "gpuEnterStandby_IMPL",
-  "gpuGc6Entry_IMPL",
-  "gpuGc6Exit_IMPL",
-  "gpuGetGidInfo_IMPL",
   "gpuGetKernelFifoShared_IMPL",
-  "gpuGetUserClientCount_IMPL",
-  "gpuIsGpuFullPowerForPmResume_IMPL",
-  "gpuIsGpuFullPower_IMPL",
-  "gpuNotifySubDeviceEvent_IMPL",
   "gpuResumeFromStandby_IMPL",
   "gpuSetExternalKernelClientCount_IMPL",
   "gpumgrGetGpuFromUuid",
   "gpumgrQueryGpuDrainState",
   "gpumgrSetUuid",
-  "halmgrGetHalForGpu_IMPL",
   "intrGetIntrEn_IMPL",
   "intrGetIntrMaskFlags_IMPL",
-  "intrGetIntrMask_GP100",
-  "intrGetPendingNonStall_TU102",
-  "intrGetVectorFromEngineId_IMPL",
-  "intrServiceNonStallBottomHalf_IMPL",
   "intrSetIntrEn_IMPL",
-  "kbifCheckAndRearmMSI_IMPL",
-  "kbusGetGpuFbPhysAddressForRdma_IMPL",
   "kbusGetPciBarSize_IMPL",
-  "kbusIsStaticBar1Enabled_IMPL",
-  "kbusMapFbAperture_GM107",
-  "kbusUnmapFbAperture_GM107",
-  "kdispHandleAggressiveVblank_IMPL",
-  "kdispServiceLowLatencyIntrs_KERNEL",
-  "kmigmgrDecRefCount_IMPL",
-  "kmigmgrGetInstanceRefFromDevice_IMPL",
-  "kmigmgrIncRefCount_IMPL",
-  "kmigmgrIsMIGEnabled_IMPL",
-  "memGetByHandle_IMPL",
-  "memdescCreate",
-  "memdescDescribe",
-  "memdescDestroy",
-  "memdescFillPages",
-  "memdescGetPteArrayForGpu",
-  "memmgrGetUsedRamSize_IMPL",
-  "memmgrInitCeUtils_IMPL",
   "nvApiHeadRegisterRgInterruptCallback",
   "nvApiHeadRegisterVBlankCallback",
-  "nvAssertFailedNoLog",
-  "nvAssertOkFailedNoLog",
-  "nvCheckFailedNoLog",
-  "nvCheckOkFailedNoLog",
   "nvDPSetAllowMultiStreaming",
   "nvEvoCreateApiHandle",
   "nvEvoGlobal",
@@ -819,50 +1013,20 @@
   "nvoc_class_def_RmResource",
   "nvoc_dynamicCast",
   "nvoc_rtti_provider",
-  "osHandleGpuLost",
-  "osRun1HzCallbacksNow",
   "pNV_KMS_ID",
-  "portMemAllocatorCreateOnExistingBlock",
   "portMemAllocatorGetGlobalNonPaged",
-  "portMemAllocatorRelease",
-  "portMemCmp",
-  "portMemFree",
-  "portMemSet",
-  "portStringCompare",
-  "portStringCopy",
-  "portStringLength",
-  "portSyncMutexAcquire",
   "portSyncMutexCreate",
-  "portSyncMutexDestroy",
-  "portSyncMutexRelease",
   "portSyncSpinlockCreate",
-  "rcdbAddRmGpuDump",
   "rmDeviceGpuLockIsOwner",
   "rmDeviceGpuLockSetOwner",
   "rmDeviceGpuLocksAcquire",
   "rmDeviceGpuLocksRelease",
   "rmDeviceGpuLocksReleaseAndThreadStateFreeDeferredIntHandlerOptimized",
-  "rmGpuGroupLockAcquire",
   "rmGpuGroupLockRelease",
   "rmGpuLocksAcquire",
   "rmGpuLocksRelease",
-  "rmapiEpilogue",
-  "rmapiGetClientHandlesFromOSInfo",
   "rmapiLockAcquire",
   "rmapiLockRelease",
-  "rmapiPrologue",
-  "serverAcquireClient",
-  "serverGetClientUnderLock",
-  "serverReleaseClient",
-  "serverutilAcquireClient",
-  "serverutilMappingFilterCurrentUserProc",
-  "serverutilReleaseClient",
-  "subdeviceGetByHandle_IMPL",
-  "tmrCtrlCmdEventCancel",
-  "tmrCtrlCmdEventCreate",
-  "tmrCtrlCmdEventDestroy",
-  "tmrCtrlCmdEventSchedule",
-  "transformGidToUserFriendlyString",
   "workItemLocksAcquire",
   "workItemLocksRelease"
  ],
@@ -902,23 +1066,41 @@
   "src/nvidia/arch/nvalloc/unix/src/osinit.c",
   "src/nvidia/arch/nvalloc/unix/src/registry.c",
   "src/nvidia/arch/nvalloc/unix/src/rmobjexportimport.c",
+  "src/nvidia/src/kernel/core/hal_mgr.c",
   "src/nvidia/src/kernel/core/locks.c",
   "src/nvidia/src/kernel/core/thread_state.c",
+  "src/nvidia/src/kernel/diagnostics/journal.c",
   "src/nvidia/src/kernel/diagnostics/nvlog.c",
   "src/nvidia/src/kernel/diagnostics/nvlog_printf.c",
   "src/nvidia/src/kernel/gpu/arch/blackwell/kern_gpu_gb100.c",
+  "src/nvidia/src/kernel/gpu/bif/kernel_bif.c",
+  "src/nvidia/src/kernel/gpu/bus/arch/maxwell/kern_bus_gm107.c",
   "src/nvidia/src/kernel/gpu/bus/kern_bus.c",
   "src/nvidia/src/kernel/gpu/bus/kern_bus_vbar2.c",
   "src/nvidia/src/kernel/gpu/bus/p2p.c",
+  "src/nvidia/src/kernel/gpu/device.c",
   "src/nvidia/src/kernel/gpu/disp/kern_disp.c",
+  "src/nvidia/src/kernel/gpu/gpu.c",
+  "src/nvidia/src/kernel/gpu/gpu_rmapi.c",
   "src/nvidia/src/kernel/gpu/gpu_suspend.c",
+  "src/nvidia/src/kernel/gpu/gpu_uuid.c",
   "src/nvidia/src/kernel/gpu/gsp/arch/turing/kernel_gsp_tu102.c",
+  "src/nvidia/src/kernel/gpu/intr/arch/pascal/intr_gp100.c",
+  "src/nvidia/src/kernel/gpu/intr/arch/turing/intr_nonstall_tu102.c",
   "src/nvidia/src/kernel/gpu/intr/intr.c",
+  "src/nvidia/src/kernel/gpu/kern_gpu_power.c",
+  "src/nvidia/src/kernel/gpu/mem_mgr/ce_utils.c",
+  "src/nvidia/src/kernel/gpu/mem_mgr/fbsr.c",
   "src/nvidia/src/kernel/gpu/mem_mgr/mem_desc.c",
+  "src/nvidia/src/kernel/gpu/mem_mgr/mem_mgr.c",
+  "src/nvidia/src/kernel/gpu/mig_mgr/kernel_mig_manager.c",
+  "src/nvidia/src/kernel/gpu/subdevice/subdevice.c",
   "src/nvidia/src/kernel/gpu/timer/timer.c",
   "src/nvidia/src/kernel/gpu_mgr/gpu_mgr.c",
+  "src/nvidia/src/kernel/mem_mgr/mem.c",
   "src/nvidia/src/kernel/os/os_init.c",
   "src/nvidia/src/kernel/os/os_sanity.c",
+  "src/nvidia/src/kernel/os/os_timer.c",
   "src/nvidia/src/kernel/platform/acpi_common.c",
   "src/nvidia/src/kernel/platform/chipset/chipset_pcie.c",
   "src/nvidia/src/kernel/platform/chipset/pci_pbi.c",
@@ -928,6 +1110,7 @@
   "src/nvidia/src/kernel/rmapi/mapping.c",
   "src/nvidia/src/kernel/rmapi/param_copy.c",
   "src/nvidia/src/kernel/rmapi/rmapi.c",
+  "src/nvidia/src/kernel/rmapi/rs_utils.c",
   "src/nvidia/src/kernel/vgpu/rpc.c",
   "src/nvidia/src/kernel/virtualization/hypervisor/hypervisor.c",
   "src/nvidia/src/libraries/containers/hashmap.c",
@@ -935,11 +1118,16 @@
   "src/nvidia/src/libraries/containers/map.c",
   "src/nvidia/src/libraries/containers/multimap.c",
   "src/nvidia/src/libraries/libspdm/nvidia/nvspdm_malloclib.c",
+  "src/nvidia/src/libraries/nvbitvector/nvbitvector.c",
   "src/nvidia/src/libraries/nvoc/src/runtime.c",
   "src/nvidia/src/libraries/nvport/memory/memory_tracking.c",
   "src/nvidia/src/libraries/nvport/memory/memory_unix_kernel_os.c",
+  "src/nvidia/src/libraries/nvport/string/string_generic.c",
+  "src/nvidia/src/libraries/nvport/sync/sync_unix_kernel_os.c",
+  "src/nvidia/src/libraries/resserv/src/rs_client.c",
   "src/nvidia/src/libraries/resserv/src/rs_resource.c",
   "src/nvidia/src/libraries/resserv/src/rs_server.c",
-  "src/nvidia/src/libraries/tls/tls.c"
+  "src/nvidia/src/libraries/tls/tls.c",
+  "src/nvidia/src/libraries/utils/nvassert.c"
  ]
 }
