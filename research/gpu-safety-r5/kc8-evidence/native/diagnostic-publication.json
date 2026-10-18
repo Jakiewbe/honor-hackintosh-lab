@@ -1,0 +1,51 @@
+{
+ "schema": "honor.g1.text-publication.v1",
+ "included": [
+  {
+   "path": "kc/kc8-report.json",
+   "bytes": 527951,
+   "sha256": "965b8514bf75559b9d218e8241b0a7a7494693d55901b5cb080887346ee23fd7"
+  },
+  {
+   "path": "kc/kmutil-fileset-entries.json",
+   "bytes": 1193234,
+   "sha256": "c4f69e8a73703e3a374ff5d9d64c1de6822a00316a609e6ad49c8c6c8fb9f24f"
+  },
+  {
+   "path": "kc/kmutil-kext-load-addresses.json",
+   "bytes": 48674,
+   "sha256": "ec2ab398e3b93c18a4421f4cf41386eb4231be311e4ce6b6bad96c58690132a9"
+  },
+  {
+   "path": "kc/kmutil-kext-uuids.json",
+   "bytes": 64169,
+   "sha256": "0beac473fe613cfad33863c17ccebb482a6d7101a611c3f0e19333433542247f"
+  },
+  {
+   "path": "sdk/sdk-compile.json",
+   "bytes": 18702,
+   "sha256": "65942588d7cf9eef759f315b9a9a9f5b023ebe1039438099fa5b9c26792bee1b"
+  },
+  {
+   "path": "sdk/sdk-methods.cpp",
+   "bytes": 831,
+   "sha256": "5aabdbfc8286a4d210d6e2f121f9ec7b2ed8ced0055b3fad0f68b26ab4488ebe"
+  },
+  {
+   "path": "sdk/sdk-methods.d",
+   "bytes": 48592,
+   "sha256": "7895070bd7a97914450908c832a4dc5f4c356bf834c61498a914b2fa8914fc85"
+  },
+  {
+   "path": "sdk/sdk-methods.ll",
+   "bytes": 4965,
+   "sha256": "5fdf3dcaf1400c4912c2ba4e13cc3045d1daa117b593fb9af6f78705d0f43273"
+  },
+  {
+   "path": "sdk/sdk-report.json",
+   "bytes": 16812,
+   "sha256": "a538d35e0739d5b590d29f2afd7f0cd86f14bc304d40505dc92da34f4f42f64a"
+  }
+ ],
+ "excluded": []
+}

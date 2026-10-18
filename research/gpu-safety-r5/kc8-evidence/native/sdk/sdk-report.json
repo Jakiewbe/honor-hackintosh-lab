@@ -1,0 +1,506 @@
+{
+  "status": "SELECTED_SDK_CALL_SHAPES_OBSERVED",
+  "records": [
+    {
+      "macho_symbol": "__ZN11IOPCIDevice19extendedConfigRead8Ey",
+      "sdk_declaration": {
+        "kind": "declare",
+        "abi": {
+          "return_type": "i8",
+          "return_attributes": [
+            "zeroext"
+          ],
+          "calling_convention": "ccc",
+          "parameters": [
+            {
+              "type": "ptr",
+              "abi_attributes": []
+            },
+            {
+              "type": "i64",
+              "abi_attributes": []
+            }
+          ],
+          "variadic": false
+        },
+        "inline_asm": [],
+        "direct_stack_register_asm": []
+      },
+      "historical_caller_declaration": {
+        "kind": "declare",
+        "abi": {
+          "return_type": "i8",
+          "return_attributes": [
+            "zeroext"
+          ],
+          "calling_convention": "ccc",
+          "parameters": [
+            {
+              "type": "ptr",
+              "abi_attributes": []
+            },
+            {
+              "type": "i64",
+              "abi_attributes": []
+            }
+          ],
+          "variadic": false
+        },
+        "inline_asm": [],
+        "direct_stack_register_asm": []
+      },
+      "status": "SDK_CALLER_TYPE_MATCH",
+      "level": "COMPILER_CALL_ABI_SHAPE_ONLY_NOT_PROVIDER_IMPLEMENTATION_ABI"
+    },
+    {
+      "macho_symbol": "__ZN11IOPCIDevice20extendedConfigRead16Ey",
+      "sdk_declaration": {
+        "kind": "declare",
+        "abi": {
+          "return_type": "i16",
+          "return_attributes": [
+            "zeroext"
+          ],
+          "calling_convention": "ccc",
+          "parameters": [
+            {
+              "type": "ptr",
+              "abi_attributes": []
+            },
+            {
+              "type": "i64",
+              "abi_attributes": []
+            }
+          ],
+          "variadic": false
+        },
+        "inline_asm": [],
+        "direct_stack_register_asm": []
+      },
+      "historical_caller_declaration": {
+        "kind": "declare",
+        "abi": {
+          "return_type": "i16",
+          "return_attributes": [
+            "zeroext"
+          ],
+          "calling_convention": "ccc",
+          "parameters": [
+            {
+              "type": "ptr",
+              "abi_attributes": []
+            },
+            {
+              "type": "i64",
+              "abi_attributes": []
+            }
+          ],
+          "variadic": false
+        },
+        "inline_asm": [],
+        "direct_stack_register_asm": []
+      },
+      "status": "SDK_CALLER_TYPE_MATCH",
+      "level": "COMPILER_CALL_ABI_SHAPE_ONLY_NOT_PROVIDER_IMPLEMENTATION_ABI"
+    },
+    {
+      "macho_symbol": "__ZN11IOPCIDevice20extendedConfigRead32Ey",
+      "sdk_declaration": {
+        "kind": "declare",
+        "abi": {
+          "return_type": "i32",
+          "return_attributes": [],
+          "calling_convention": "ccc",
+          "parameters": [
+            {
+              "type": "ptr",
+              "abi_attributes": []
+            },
+            {
+              "type": "i64",
+              "abi_attributes": []
+            }
+          ],
+          "variadic": false
+        },
+        "inline_asm": [],
+        "direct_stack_register_asm": []
+      },
+      "historical_caller_declaration": {
+        "kind": "declare",
+        "abi": {
+          "return_type": "i32",
+          "return_attributes": [],
+          "calling_convention": "ccc",
+          "parameters": [
+            {
+              "type": "ptr",
+              "abi_attributes": []
+            },
+            {
+              "type": "i64",
+              "abi_attributes": []
+            }
+          ],
+          "variadic": false
+        },
+        "inline_asm": [],
+        "direct_stack_register_asm": []
+      },
+      "status": "SDK_CALLER_TYPE_MATCH",
+      "level": "COMPILER_CALL_ABI_SHAPE_ONLY_NOT_PROVIDER_IMPLEMENTATION_ABI"
+    },
+    {
+      "macho_symbol": "__ZN11IOPCIDevice20extendedConfigWrite8Eyh",
+      "sdk_declaration": {
+        "kind": "declare",
+        "abi": {
+          "return_type": "void",
+          "return_attributes": [],
+          "calling_convention": "ccc",
+          "parameters": [
+            {
+              "type": "ptr",
+              "abi_attributes": []
+            },
+            {
+              "type": "i64",
+              "abi_attributes": []
+            },
+            {
+              "type": "i8",
+              "abi_attributes": [
+                "zeroext"
+              ]
+            }
+          ],
+          "variadic": false
+        },
+        "inline_asm": [],
+        "direct_stack_register_asm": []
+      },
+      "historical_caller_declaration": null,
+      "status": "HISTORICAL_CALLER_IR_NOT_OBSERVED",
+      "level": "COMPILER_CALL_ABI_SHAPE_ONLY_NOT_PROVIDER_IMPLEMENTATION_ABI"
+    },
+    {
+      "macho_symbol": "__ZN11IOPCIDevice21extendedConfigWrite16Eyt",
+      "sdk_declaration": {
+        "kind": "declare",
+        "abi": {
+          "return_type": "void",
+          "return_attributes": [],
+          "calling_convention": "ccc",
+          "parameters": [
+            {
+              "type": "ptr",
+              "abi_attributes": []
+            },
+            {
+              "type": "i64",
+              "abi_attributes": []
+            },
+            {
+              "type": "i16",
+              "abi_attributes": [
+                "zeroext"
+              ]
+            }
+          ],
+          "variadic": false
+        },
+        "inline_asm": [],
+        "direct_stack_register_asm": []
+      },
+      "historical_caller_declaration": {
+        "kind": "declare",
+        "abi": {
+          "return_type": "void",
+          "return_attributes": [],
+          "calling_convention": "ccc",
+          "parameters": [
+            {
+              "type": "ptr",
+              "abi_attributes": []
+            },
+            {
+              "type": "i64",
+              "abi_attributes": []
+            },
+            {
+              "type": "i16",
+              "abi_attributes": [
+                "zeroext"
+              ]
+            }
+          ],
+          "variadic": false
+        },
+        "inline_asm": [],
+        "direct_stack_register_asm": []
+      },
+      "status": "SDK_CALLER_TYPE_MATCH",
+      "level": "COMPILER_CALL_ABI_SHAPE_ONLY_NOT_PROVIDER_IMPLEMENTATION_ABI"
+    },
+    {
+      "macho_symbol": "__ZN11IOPCIDevice21extendedConfigWrite32Eyj",
+      "sdk_declaration": {
+        "kind": "declare",
+        "abi": {
+          "return_type": "void",
+          "return_attributes": [],
+          "calling_convention": "ccc",
+          "parameters": [
+            {
+              "type": "ptr",
+              "abi_attributes": []
+            },
+            {
+              "type": "i64",
+              "abi_attributes": []
+            },
+            {
+              "type": "i32",
+              "abi_attributes": []
+            }
+          ],
+          "variadic": false
+        },
+        "inline_asm": [],
+        "direct_stack_register_asm": []
+      },
+      "historical_caller_declaration": {
+        "kind": "declare",
+        "abi": {
+          "return_type": "void",
+          "return_attributes": [],
+          "calling_convention": "ccc",
+          "parameters": [
+            {
+              "type": "ptr",
+              "abi_attributes": []
+            },
+            {
+              "type": "i64",
+              "abi_attributes": []
+            },
+            {
+              "type": "i32",
+              "abi_attributes": []
+            }
+          ],
+          "variadic": false
+        },
+        "inline_asm": [],
+        "direct_stack_register_asm": []
+      },
+      "status": "SDK_CALLER_TYPE_MATCH",
+      "level": "COMPILER_CALL_ABI_SHAPE_ONLY_NOT_PROVIDER_IMPLEMENTATION_ABI"
+    }
+  ],
+  "headers": [
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h",
+      "sha256": "1d07805ca214f6903601a4ffca5e3b239bff766795852423fe635af333063a72",
+      "bytes": 58163
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/acpi/IOACPIPlatformDevice.h",
+      "sha256": "8b3e628593b5b6a30aec5ffcd7b8d1b03e8cae13a4486ad52df10d55524cbf84",
+      "bytes": 11212
+    }
+  ],
+  "environment": {
+    "sdk_version": {
+      "argv": [
+        "xcrun",
+        "--show-sdk-version"
+      ],
+      "exit": 0,
+      "stdout": "15.5\n",
+      "stderr": ""
+    },
+    "xcode": {
+      "argv": [
+        "xcodebuild",
+        "-version"
+      ],
+      "exit": 0,
+      "stdout": "Xcode 16.4\nBuild version 16F6\n",
+      "stderr": ""
+    },
+    "compiler": {
+      "argv": [
+        "xcrun",
+        "clang++",
+        "--version"
+      ],
+      "exit": 0,
+      "stdout": "Apple clang version 17.0.0 (clang-1700.0.13.5)\nTarget: x86_64-apple-darwin24.6.0\nThread model: posix\nInstalledDir: /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin\n",
+      "stderr": ""
+    },
+    "os": {
+      "argv": [
+        "sw_vers"
+      ],
+      "exit": 0,
+      "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t15.7.9\nBuildVersion:\t\t24G830\n",
+      "stderr": ""
+    },
+    "kernel": {
+      "argv": [
+        "uname",
+        "-r"
+      ],
+      "exit": 0,
+      "stdout": "24.6.0\n",
+      "stderr": ""
+    }
+  },
+  "ir_sha256": "5fdf3dcaf1400c4912c2ba4e13cc3045d1daa117b593fb9af6f78705d0f43273",
+  "caller_selection_sha256": "aee2d2f35f89793b5986cdebba5343da48d99ccafdb1bc899898a27404b16405",
+  "historical_full_abi_report_sha256": "7444e9f66a702755e19c975014fb0e49de5a7c6d0b852704fc08be7a7b5eb22c",
+  "historical_caller": {
+    "schema": "honor.g1.kc8.historical-caller-selection.v1",
+    "run_id": 39127772586,
+    "source_commit": "c670c559cc4bd507f5efcb951dd428de250ba90c",
+    "artifact_id": 12136159692,
+    "artifact_zip_sha256": "cd1f6a8e27a0eb6353ec1e3e71e3f463f6ce16c5dbb8d5e2569dc3bec23799b1",
+    "original_ir_path": "full-flags-abi/uni-NVRM_cpp.ll",
+    "original_ir_sha256": "b829f38ea146c03cdc6d10f413f1b7e837df9e89752e3987348ec765515138e3",
+    "original_ir_bytes": 681685,
+    "llvm_command": [
+      "xcrun",
+      "clang++",
+      "-arch",
+      "x86_64",
+      "-mmacosx-version-min=15.5",
+      "-isysroot",
+      "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+      "-fapple-kext",
+      "-mkernel",
+      "-nostdinc",
+      "-I/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers",
+      "-DKERNEL",
+      "-DKERNEL_PRIVATE",
+      "-DDRIVER_PRIVATE",
+      "-DAPPLE",
+      "-DNeXT",
+      "-std=c++17",
+      "-fno-rtti",
+      "-fno-exceptions",
+      "-fno-builtin",
+      "-fno-common",
+      "-O2",
+      "-Wall",
+      "-Wno-unused-parameter",
+      "-Wno-inconsistent-missing-override",
+      "-Wno-unused-function",
+      "-DNV_UNIX",
+      "-DNV_LINUX",
+      "-DNV_X86_64",
+      "-DNV_ARCH_BITS=64",
+      "-DMBEDTLS_USER_CONFIG_FILE=<nvrm_mbedtls_config.h>",
+      "-D__NO_CTYPE",
+      "-DLOCK_VAL_ENABLED=0",
+      "-DPORT_ATOMIC_64_BIT_SUPPORTED=1",
+      "-DPORT_IS_KERNEL_BUILD=1",
+      "-DPORT_IS_CHECKED_BUILD=0",
+      "-DPORT_MODULE_atomic=1",
+      "-DPORT_MODULE_core=1",
+      "-DPORT_MODULE_cpu=1",
+      "-DPORT_MODULE_crypto=1",
+      "-DPORT_MODULE_debug=1",
+      "-DPORT_MODULE_memory=1",
+      "-DPORT_MODULE_safe=1",
+      "-DPORT_MODULE_string=1",
+      "-DPORT_MODULE_sync=1",
+      "-DPORT_MODULE_thread=1",
+      "-DPORT_MODULE_time=1",
+      "-DPORT_MODULE_util=1",
+      "-DPORT_MODULE_example=0",
+      "-DPORT_MODULE_mmio=0",
+      "-DRS_STANDALONE=0",
+      "-DRS_STANDALONE_TEST=0",
+      "-DRS_COMPATABILITY_MODE=1",
+      "-DRS_PROVIDES_API_STATE=0",
+      "-DNV_CONTAINERS_NO_TEMPLATES",
+      "-DINCLUDE_NVLINK_LIB",
+      "-DINCLUDE_NVSWITCH_LIB",
+      "-DNV_PRINTF_STRINGS_ALLOWED=1",
+      "-DNV_ASSERT_FAILED_USES_STRINGS=1",
+      "-DPORT_ASSERT_FAILED_USES_STRINGS=1",
+      "-DNVRM",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/common/inc",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/common/inc/gsp",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/os",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/interface",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/src/libraries",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/shared/inc",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/nvlink/interface",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc/swref",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc/swref/published",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/uproc/os/common/include",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc/displayport",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/nvlink/inband/interface",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/unix/nvidia-push/interface",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/unix/common/inc",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/modeset",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/unix/common/utils/interface",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/os-interface/include",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/kapi/interface",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/kapi/include",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/interface",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/include",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/softfloat/nvidia",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/softfloat",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/softfloat/source/include",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/softfloat/source/8086-SSE",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/unix/nvidia-headsurface",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/softfloat/source",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/src/libraries/libspdm/nvidia",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/src/libraries/libspdm/3.5.0/include",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/src/libraries/libspdm",
+      "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/include",
+      "-I/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM",
+      "-MD",
+      "-MF",
+      "/Users/runner/work/_temp/gpu-safety-r5-logs/full-flags-abi/uni-NVRM_cpp-ir.d",
+      "-MT",
+      "honor_g1_inputs",
+      "-S",
+      "-emit-llvm",
+      "/Users/runner/work/_temp/gpu-safety-r5-logs/full-flags-abi/uni-NVRM_cpp.cpp",
+      "-o",
+      "/Users/runner/work/_temp/gpu-safety-r5-logs/full-flags-abi/uni-NVRM_cpp.ll"
+    ],
+    "llvm_exit": 0,
+    "original_full_abi_report_sha256": "7444e9f66a702755e19c975014fb0e49de5a7c6d0b852704fc08be7a7b5eb22c",
+    "source_level": "FULL_ORIGINAL_TU_DIAGNOSTIC_IR_NOT_FINAL_BINARY_DISASSEMBLY",
+    "extraction": "EXACT_SELECTED_LINES_NOT_COMPLETE_IR_COPY",
+    "not_observed_in_this_ir": [
+      "_ZN11IOPCIDevice20extendedConfigWrite8Eyh"
+    ]
+  },
+  "data_symbols": [
+    "@_ZN11IOPCIDevice9metaClassE = external constant ptr, align 8",
+    "@_ZN20IOACPIPlatformDevice9metaClassE = external constant ptr, align 8"
+  ],
+  "limitations": [
+    "six SDK declarations do not establish provider return/semantic ABI",
+    "historical diagnostic IR is not this-run rebuilt candidate",
+    "one unobserved historical method stays unknown",
+    "pointee/class layout and vtable not accepted"
+  ],
+  "full_abi": "NOT_VERIFIED",
+  "kext_load": "NO-GO"
+}

@@ -1,0 +1,76 @@
+{
+  "schema": "honor.g1.runner-provider-discovery.v1",
+  "status": "DISCOVERY_COMPLETE_NOT_TARGET_KPI_OR_ABI_ACCEPTANCE",
+  "source_commit": "ab772c6842b34947aacec3f4edd49730eff076a5",
+  "source_run_id": "39133232412",
+  "required_evidence_gate": {
+    "status": "PASSED",
+    "failures": [],
+    "level": "COLLECTION_COMPLETENESS_ONLY_NOT_KPI_ABI_OR_LOAD_ACCEPTANCE"
+  },
+  "environment": {
+    "os": {
+      "argv": [
+        "sw_vers"
+      ],
+      "exit": 0,
+      "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t15.7.9\nBuildVersion:\t\t24G830\n",
+      "stderr": ""
+    },
+    "kernel": {
+      "argv": [
+        "uname",
+        "-r"
+      ],
+      "exit": 0,
+      "stdout": "24.6.0\n",
+      "stderr": ""
+    },
+    "sdk": {
+      "argv": [
+        "xcrun",
+        "--show-sdk-path"
+      ],
+      "exit": 0,
+      "stdout": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk\n",
+      "stderr": ""
+    },
+    "sdk_version": {
+      "argv": [
+        "xcrun",
+        "--show-sdk-version"
+      ],
+      "exit": 0,
+      "stdout": "15.5\n",
+      "stderr": ""
+    },
+    "xcode": {
+      "argv": [
+        "xcodebuild",
+        "-version"
+      ],
+      "exit": 0,
+      "stdout": "Xcode 16.4\nBuild version 16F6\n",
+      "stderr": ""
+    },
+    "nm": {
+      "argv": [
+        "xcrun",
+        "nm",
+        "--version"
+      ],
+      "exit": 0,
+      "stdout": "llvm-nm, compatible with GNU nm\nApple LLVM version 17.0.0\n  Optimized build.\n",
+      "stderr": ""
+    }
+  },
+  "counts": {
+    "GLOBAL_DEFINITION_OBSERVED_ONLY": 464,
+    "FAMILY_EXPORT_ALLOWLIST_ONLY": 8
+  },
+  "target_export_abi_acceptance": "NOT_VERIFIED",
+  "kext_load": "NO-GO",
+  "gpu_execution": false,
+  "original_report_sha256": "32a9e6d9f30898752c5991770dcb8b4d1b9c331fd6e33cee324afcd97536d1b9",
+  "selection": "EXPLICIT_REPORT_FIELD_SELECTION_NOT_COMPLETE_REPORT_COPY"
+}

@@ -1,0 +1,42 @@
+{
+  "status": "NEGATIVE_CONTROL_REJECTED_AS_REQUIRED",
+  "child_exit": 2,
+  "injected_fault": "ONLY_KERNEL_NM_RESPONSE",
+  "kernel_observation": {
+    "id": "runner-kernel",
+    "path": "/System/Library/Kernels/kernel",
+    "level": "RUNNER_KERNEL_GLOBAL_DEFINITION_NOT_KPI_EXPORT_PROOF",
+    "observation": "NM_FAILED",
+    "matches": {},
+    "bytes": 18349264,
+    "sha256": "04a501246caf768356f4090a8fd662daf5bbc949993353526c66771f5ba1d8e4",
+    "real_path": "/System/Library/Kernels/kernel",
+    "argv": [
+      "xcrun",
+      "nm",
+      "-arch",
+      "x86_64",
+      "-gU",
+      "/System/Library/Kernels/kernel"
+    ],
+    "exit": 1,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "ead320f48444fd16e60a4d6fd303592f4e025f0b6e834b4109ab62550204e20d",
+    "diagnostic": "intentional negative control: nm failed"
+  },
+  "required_evidence_gate": {
+    "status": "FAILED",
+    "failures": [
+      {
+        "id": "runner-kernel",
+        "reason": "REQUIRED_OBSERVATION_FAILED",
+        "observation": "NM_FAILED"
+      }
+    ],
+    "level": "COLLECTION_COMPLETENESS_ONLY_NOT_KPI_ABI_OR_LOAD_ACCEPTANCE"
+  },
+  "child_stdout": "{\"status\": \"DISCOVERY_INCOMPLETE_REQUIRED_EVIDENCE_FAILED\", \"counts\": {\"NOT_OBSERVED_IN_SCANNED_INPUTS\": 464, \"FAMILY_EXPORT_ALLOWLIST_ONLY\": 8}, \"required_evidence_gate\": {\"status\": \"FAILED\", \"failures\": [{\"id\": \"runner-kernel\", \"reason\": \"REQUIRED_OBSERVATION_FAILED\", \"observation\": \"NM_FAILED\"}], \"level\": \"COLLECTION_COMPLETENESS_ONLY_NOT_KPI_ABI_OR_LOAD_ACCEPTANCE\"}}\n",
+  "child_stderr": "",
+  "report_preserved": true,
+  "level": "NATIVE_COLLECTOR_FAILURE_CONTRACT_NOT_DRIVER_EXECUTION"
+}

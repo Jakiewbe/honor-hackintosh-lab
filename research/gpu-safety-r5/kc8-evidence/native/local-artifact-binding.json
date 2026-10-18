@@ -1,0 +1,57 @@
+{
+  "run_id": 39134085153,
+  "artifact_id": 12138578202,
+  "artifact_sha256": "7d569be4fda4145a2eb45457189a75dddb05857f1802bdaa748c4128ea9bd0a8",
+  "members": [
+    {
+      "path": "diagnostic-publication.json",
+      "sha256": "4d312a3f768b58d794c1893c6164f210cc7fa875273ed47e1694e7144682a87c",
+      "bytes": 1388
+    },
+    {
+      "path": "kc/kc8-report.json",
+      "sha256": "965b8514bf75559b9d218e8241b0a7a7494693d55901b5cb080887346ee23fd7",
+      "bytes": 527951
+    },
+    {
+      "path": "kc/kmutil-fileset-entries.json",
+      "sha256": "c4f69e8a73703e3a374ff5d9d64c1de6822a00316a609e6ad49c8c6c8fb9f24f",
+      "bytes": 1193234
+    },
+    {
+      "path": "kc/kmutil-kext-load-addresses.json",
+      "sha256": "ec2ab398e3b93c18a4421f4cf41386eb4231be311e4ce6b6bad96c58690132a9",
+      "bytes": 48674
+    },
+    {
+      "path": "kc/kmutil-kext-uuids.json",
+      "sha256": "0beac473fe613cfad33863c17ccebb482a6d7101a611c3f0e19333433542247f",
+      "bytes": 64169
+    },
+    {
+      "path": "sdk/sdk-compile.json",
+      "sha256": "65942588d7cf9eef759f315b9a9a9f5b023ebe1039438099fa5b9c26792bee1b",
+      "bytes": 18702
+    },
+    {
+      "path": "sdk/sdk-methods.cpp",
+      "sha256": "5aabdbfc8286a4d210d6e2f121f9ec7b2ed8ced0055b3fad0f68b26ab4488ebe",
+      "bytes": 831
+    },
+    {
+      "path": "sdk/sdk-methods.d",
+      "sha256": "7895070bd7a97914450908c832a4dc5f4c356bf834c61498a914b2fa8914fc85",
+      "bytes": 48592
+    },
+    {
+      "path": "sdk/sdk-methods.ll",
+      "sha256": "5fdf3dcaf1400c4912c2ba4e13cc3045d1daa117b593fb9af6f78705d0f43273",
+      "bytes": 4965
+    },
+    {
+      "path": "sdk/sdk-report.json",
+      "sha256": "a538d35e0739d5b590d29f2afd7f0cd86f14bc304d40505dc92da34f4f42f64a",
+      "bytes": 16812
+    }
+  ]
+}

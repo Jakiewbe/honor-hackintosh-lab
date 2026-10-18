@@ -16,10 +16,14 @@ P2：analyse()与CLI必需外部给定run ID、采集源码SHA、artifact ID、Z
 
 - Windows：采集器13/13、复算器11/11；原三组回归10/10、5/5、7/7。
 - 对固定历史原始文本使用外部身份重新复算：464项runner KPI精确条目及真实目标全局，8项仅family名单，14别名目标，23424全局。结果与独立审计一致。
-- Darwin：本修复尚未执行；待此源码提交后运行只读provider workflow，包括真实失败注入。不以本地测试代替原生证据。
+- Darwin：源码ab772c6842b34947aacec3f4edd49730eff076a5的[run39133232412](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39133232412)真实成功，13/13采集器与11/11复算器测试通过；真实collect子进程故意让kernel nm失败后exit2，kernel匹配为空且report保留。artifact12138563353，ZIP SHA256 dba65036eecbc4f6279669da903d67bffe79934770678ba648a1e436eba90c38，下载已核验。以该run外部身份重新复算仍为464/8、14别名。
+- 对两个真实下载目录做替换负控：用历史run39130439405预期去验39133232412目录，被external artifact identity mismatch: run_id拒绝；后一目录用自身正确外部身份可复算通过。
 
 ## 下一主线与限制
 
 原生门禁通过后推进G1-KC-8：两家族KC真实成员/UUID/符号表，区分6函数与2数据；观察不到精确符号时记KC_BINARY_SYMBOL_NOT_OBSERVABLE；再做SDK15.5下6方法的返回宽度/参数/扩展属性/调用约定与真实候选调用侧比较。普通C++ mangled名称不携带返回类型，不能只看名字通过ABI。无需重跑1280TU。
 
 本修复不改变驱动行为；完整ABI、版本兼容、用户最终系统、PM/关闭集成未验收。GPU初始化、真实渲染、像素读回与安全结束未执行，设备NO-GO。不写.agent、不改固定upstream、不操作设备。
+
+
+后续KC8已执行，8项runner外部节定义已观察，5项选定调用类型匹配/1项未知；见[KC8结果](KC8-20261018.md)。这些新增结果不倒改历史464/8分类，也不放行设备。复盘：本次修复将“完成采集”与“必要观察成功”分离，并把外部预期身份置于内容复算之前；不再以绿色job替代逐层证据验收。

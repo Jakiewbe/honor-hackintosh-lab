@@ -1,0 +1,161 @@
+{
+  "status": "FIXED_NATIVE_TEXT_CROSSCHECKS_PASSED",
+  "checks_passed": 58,
+  "checks": [
+    "external run",
+    "external artifact",
+    "external ZIP digest",
+    "download member diagnostic-publication.json",
+    "download member kc/kc8-report.json",
+    "download member kc/kmutil-fileset-entries.json",
+    "download member kc/kmutil-kext-load-addresses.json",
+    "download member kc/kmutil-kext-uuids.json",
+    "download member sdk/sdk-compile.json",
+    "download member sdk/sdk-methods.cpp",
+    "download member sdk/sdk-methods.d",
+    "download member sdk/sdk-methods.ll",
+    "download member sdk/sdk-report.json",
+    "publication member kc/kc8-report.json",
+    "publication member kc/kmutil-fileset-entries.json",
+    "publication member kc/kmutil-kext-load-addresses.json",
+    "publication member kc/kmutil-kext-uuids.json",
+    "publication member sdk/sdk-compile.json",
+    "publication member sdk/sdk-methods.cpp",
+    "publication member sdk/sdk-methods.d",
+    "publication member sdk/sdk-methods.ll",
+    "publication member sdk/sdk-report.json",
+    "native source",
+    "native run",
+    "eight exact targets",
+    "query identity --show-fileset-entries",
+    "query identity --show-kext-uuids",
+    "query identity --show-kext-load-addresses",
+    "KC parse /System/Library/KernelCollections/BootKernelExtensions.kc",
+    "fileset crosscheck com.apple.iokit.IOPCIFamily",
+    "uuid unique com.apple.iokit.IOPCIFamily",
+    "uuid crosscheck com.apple.iokit.IOPCIFamily",
+    "load-view bundle presence com.apple.iokit.IOPCIFamily",
+    "fileset crosscheck com.apple.iokit.IOACPIFamily",
+    "uuid unique com.apple.iokit.IOACPIFamily",
+    "uuid crosscheck com.apple.iokit.IOACPIFamily",
+    "load-view bundle presence com.apple.iokit.IOACPIFamily",
+    "KC parse /System/Library/KernelCollections/SystemKernelExtensions.kc",
+    "one actual definition __ZN11IOPCIDevice19extendedConfigRead8Ey",
+    "exact external section role __ZN11IOPCIDevice19extendedConfigRead8Ey",
+    "one actual definition __ZN11IOPCIDevice20extendedConfigRead16Ey",
+    "exact external section role __ZN11IOPCIDevice20extendedConfigRead16Ey",
+    "one actual definition __ZN11IOPCIDevice20extendedConfigRead32Ey",
+    "exact external section role __ZN11IOPCIDevice20extendedConfigRead32Ey",
+    "one actual definition __ZN11IOPCIDevice20extendedConfigWrite8Eyh",
+    "exact external section role __ZN11IOPCIDevice20extendedConfigWrite8Eyh",
+    "one actual definition __ZN11IOPCIDevice21extendedConfigWrite16Eyt",
+    "exact external section role __ZN11IOPCIDevice21extendedConfigWrite16Eyt",
+    "one actual definition __ZN11IOPCIDevice21extendedConfigWrite32Eyj",
+    "exact external section role __ZN11IOPCIDevice21extendedConfigWrite32Eyj",
+    "one actual definition __ZN11IOPCIDevice9metaClassE",
+    "exact external section role __ZN11IOPCIDevice9metaClassE",
+    "one actual definition __ZN20IOACPIPlatformDevice9metaClassE",
+    "exact external section role __ZN20IOACPIPlatformDevice9metaClassE",
+    "SDK IR digest",
+    "SDK compiler shapes recomputed",
+    "five match one unknown",
+    "SDK15.5"
+  ],
+  "source_commit": "4c36e828edc62bec765e89e149b475d11799c7c5",
+  "run_id": 39134085153,
+  "artifact_id": 12138578202,
+  "artifact_zip_sha256": "7d569be4fda4145a2eb45457189a75dddb05857f1802bdaa748c4128ea9bd0a8",
+  "members": [
+    {
+      "bundle_id": "com.apple.iokit.IOPCIFamily",
+      "uuid": "1224b03e2295392c9019bf418d27f860",
+      "version": "2.9",
+      "collection_fileoff": 41443328,
+      "collection_vmaddr_hex": "0xffffff8002886000",
+      "kmutil_numeric_load_address": "NOT_OBSERVED",
+      "symbol_table": {
+        "symoff": 55757536,
+        "nsyms": 1583,
+        "stroff": 56898632,
+        "strsize": 8650328
+      }
+    },
+    {
+      "bundle_id": "com.apple.iokit.IOACPIFamily",
+      "uuid": "50d529b0a9293533839b6ce41fc937f2",
+      "version": "1.4",
+      "collection_fileoff": 36728832,
+      "collection_vmaddr_hex": "0xffffff8002407000",
+      "kmutil_numeric_load_address": "NOT_OBSERVED",
+      "symbol_table": {
+        "symoff": 55242304,
+        "nsyms": 544,
+        "stroff": 56898632,
+        "strsize": 8650328
+      }
+    }
+  ],
+  "definitions": [
+    {
+      "macho_symbol": "__ZN11IOPCIDevice19extendedConfigRead8Ey",
+      "vmaddr_hex": "0xffffff8002899572",
+      "fileoff": 41522546,
+      "role": "FUNCTION_SECTION"
+    },
+    {
+      "macho_symbol": "__ZN11IOPCIDevice20extendedConfigRead16Ey",
+      "vmaddr_hex": "0xffffff8002897138",
+      "fileoff": 41513272,
+      "role": "FUNCTION_SECTION"
+    },
+    {
+      "macho_symbol": "__ZN11IOPCIDevice20extendedConfigRead32Ey",
+      "vmaddr_hex": "0xffffff8002898408",
+      "fileoff": 41518088,
+      "role": "FUNCTION_SECTION"
+    },
+    {
+      "macho_symbol": "__ZN11IOPCIDevice20extendedConfigWrite8Eyh",
+      "vmaddr_hex": "0xffffff80028995cc",
+      "fileoff": 41522636,
+      "role": "FUNCTION_SECTION"
+    },
+    {
+      "macho_symbol": "__ZN11IOPCIDevice21extendedConfigWrite16Eyt",
+      "vmaddr_hex": "0xffffff8002897192",
+      "fileoff": 41513362,
+      "role": "FUNCTION_SECTION"
+    },
+    {
+      "macho_symbol": "__ZN11IOPCIDevice21extendedConfigWrite32Eyj",
+      "vmaddr_hex": "0xffffff8002898462",
+      "fileoff": 41518178,
+      "role": "FUNCTION_SECTION"
+    },
+    {
+      "macho_symbol": "__ZN11IOPCIDevice9metaClassE",
+      "vmaddr_hex": "0xffffff80028bec60",
+      "fileoff": 41675872,
+      "role": "DATA_SECTION"
+    },
+    {
+      "macho_symbol": "__ZN20IOACPIPlatformDevice9metaClassE",
+      "vmaddr_hex": "0xffffff8002409050",
+      "fileoff": 36737104,
+      "role": "DATA_SECTION"
+    }
+  ],
+  "actual_section_definitions": 8,
+  "function_sections": 6,
+  "data_sections": 2,
+  "selected_caller_matches": 5,
+  "selected_caller_unknown": 1,
+  "limitations": [
+    "Binary definitions and collection SHA256 are native collector witnesses; KC bytes not published.",
+    "Text crosschecks do not independently recompute raw KC nlist/section bytes or whole-file digests.",
+    "KPI export permission, full C++ ABI, versions and user target system remain unaccepted.",
+    "kmutil load-address flag emitted no numeric addresses; fileset VM coordinates are not live ASLR addresses."
+  ],
+  "gpu_execution": false,
+  "device": "NO-GO"
+}

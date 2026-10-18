@@ -1,0 +1,8 @@
+{
+  "status": "REAL_OTHER_RUN_DIRECTORY_REJECTED",
+  "error": "external artifact identity mismatch: run_id",
+  "expected_run_id": 39130439405,
+  "actual_directory_run_id": 39133232412,
+  "actual_directory_successfully_recomputed_with_own_identity": true,
+  "note": "Both real downloaded directories are internally valid; caller expectation differs."
+}
