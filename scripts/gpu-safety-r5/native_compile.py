@@ -280,7 +280,9 @@ def main():
             c_flags = [f for f in common_flags if f not in ("-std=c++17", "-fno-rtti", "-fno-exceptions")]
             compat = Path(__file__).resolve().parents[2] / "research/gpu-safety-r5/darwin-compat"
             compat_flags = []
-            if (compat / "nv-darwin-compat.h").exists():
+            # With -DNVRM the platform header provides nv_dynamic_power_mode_t itself; the shim would now
+            # only collide with it (redefinition of enumerator). Keep the shim out of this configuration.
+            if False and (compat / "nv-darwin-compat.h").exists():
                 compat_flags = ["-I" + str(compat), "-include", str(compat / "nv-darwin-compat.h")]
             # The gate takes its macros from the LINUX dry-run, so -DNV_LINUX is in there. A Darwin probe
             # must not claim to be Linux: drop it and keep the neutral NV_UNIX.
