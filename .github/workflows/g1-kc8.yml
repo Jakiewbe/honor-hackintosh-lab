@@ -1,0 +1,40 @@
+name: HONOR G1 read-only Intel KC eight-symbol observation
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  kc8:
+    runs-on: macos-15-intel
+    timeout-minutes: 10
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Test bounded Mach-O and compiler contract parsers
+        run: python3 -m unittest discover -s tools -p test_g1_kc8.py -v
+      - name: Read KC member headers and symbols without extraction or loading
+        run: python3 tools/g1_kc8.py --out "$RUNNER_TEMP/g1-kc8/kc"
+      - name: Compile six SDK method calls to LLVM IR without linking or executing
+        if: ${{ !cancelled() }}
+        run: |
+          python3 tools/g1_kc8_sdk.py --out "$RUNNER_TEMP/g1-kc8/sdk" \
+            --caller research/gpu-safety-r5/kc8-caller-selection.json
+      - name: Prepare text only
+        if: ${{ always() }}
+        run: |
+          python3 tools/g1_text_diagnostics.py --source "$RUNNER_TEMP/g1-kc8" \
+            --out "$RUNNER_TEMP/g1-kc8-text"
+      - name: Upload text only
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: honor-g1-kc8-text
+          path: ${{ runner.temp }}/g1-kc8-text/
+          if-no-files-found: error
+          retention-days: 14

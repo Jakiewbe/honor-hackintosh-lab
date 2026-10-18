@@ -1,0 +1,775 @@
+{
+  "schema": "honor.g1.kc8.historical-caller-selection.v1",
+  "run_id": 39127772586,
+  "source_commit": "c670c559cc4bd507f5efcb951dd428de250ba90c",
+  "artifact_id": 12136159692,
+  "artifact_zip_sha256": "cd1f6a8e27a0eb6353ec1e3e71e3f463f6ce16c5dbb8d5e2569dc3bec23799b1",
+  "original_ir_path": "full-flags-abi/uni-NVRM_cpp.ll",
+  "original_ir_sha256": "b829f38ea146c03cdc6d10f413f1b7e837df9e89752e3987348ec765515138e3",
+  "original_ir_bytes": 681685,
+  "llvm_command": [
+    "xcrun",
+    "clang++",
+    "-arch",
+    "x86_64",
+    "-mmacosx-version-min=15.5",
+    "-isysroot",
+    "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+    "-fapple-kext",
+    "-mkernel",
+    "-nostdinc",
+    "-I/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers",
+    "-DKERNEL",
+    "-DKERNEL_PRIVATE",
+    "-DDRIVER_PRIVATE",
+    "-DAPPLE",
+    "-DNeXT",
+    "-std=c++17",
+    "-fno-rtti",
+    "-fno-exceptions",
+    "-fno-builtin",
+    "-fno-common",
+    "-O2",
+    "-Wall",
+    "-Wno-unused-parameter",
+    "-Wno-inconsistent-missing-override",
+    "-Wno-unused-function",
+    "-DNV_UNIX",
+    "-DNV_LINUX",
+    "-DNV_X86_64",
+    "-DNV_ARCH_BITS=64",
+    "-DMBEDTLS_USER_CONFIG_FILE=<nvrm_mbedtls_config.h>",
+    "-D__NO_CTYPE",
+    "-DLOCK_VAL_ENABLED=0",
+    "-DPORT_ATOMIC_64_BIT_SUPPORTED=1",
+    "-DPORT_IS_KERNEL_BUILD=1",
+    "-DPORT_IS_CHECKED_BUILD=0",
+    "-DPORT_MODULE_atomic=1",
+    "-DPORT_MODULE_core=1",
+    "-DPORT_MODULE_cpu=1",
+    "-DPORT_MODULE_crypto=1",
+    "-DPORT_MODULE_debug=1",
+    "-DPORT_MODULE_memory=1",
+    "-DPORT_MODULE_safe=1",
+    "-DPORT_MODULE_string=1",
+    "-DPORT_MODULE_sync=1",
+    "-DPORT_MODULE_thread=1",
+    "-DPORT_MODULE_time=1",
+    "-DPORT_MODULE_util=1",
+    "-DPORT_MODULE_example=0",
+    "-DPORT_MODULE_mmio=0",
+    "-DRS_STANDALONE=0",
+    "-DRS_STANDALONE_TEST=0",
+    "-DRS_COMPATABILITY_MODE=1",
+    "-DRS_PROVIDES_API_STATE=0",
+    "-DNV_CONTAINERS_NO_TEMPLATES",
+    "-DINCLUDE_NVLINK_LIB",
+    "-DINCLUDE_NVSWITCH_LIB",
+    "-DNV_PRINTF_STRINGS_ALLOWED=1",
+    "-DNV_ASSERT_FAILED_USES_STRINGS=1",
+    "-DPORT_ASSERT_FAILED_USES_STRINGS=1",
+    "-DNVRM",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/common/inc",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/common/inc/gsp",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/os",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/interface",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/src/libraries",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/shared/inc",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/nvlink/interface",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc/swref",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc/swref/published",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/uproc/os/common/include",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc/displayport",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/nvlink/inband/interface",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/unix/nvidia-push/interface",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/unix/common/inc",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/modeset",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/unix/common/utils/interface",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/os-interface/include",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/kapi/interface",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/kapi/include",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/interface",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/include",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/softfloat/nvidia",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/softfloat",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/softfloat/source/include",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/softfloat/source/8086-SSE",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/unix/nvidia-headsurface",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/softfloat/source",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/src/libraries/libspdm/nvidia",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/src/libraries/libspdm/3.5.0/include",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/src/libraries/libspdm",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/include",
+    "-I/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM",
+    "-MD",
+    "-MF",
+    "/Users/runner/work/_temp/gpu-safety-r5-logs/full-flags-abi/uni-NVRM_cpp-ir.d",
+    "-MT",
+    "honor_g1_inputs",
+    "-S",
+    "-emit-llvm",
+    "/Users/runner/work/_temp/gpu-safety-r5-logs/full-flags-abi/uni-NVRM_cpp.cpp",
+    "-o",
+    "/Users/runner/work/_temp/gpu-safety-r5-logs/full-flags-abi/uni-NVRM_cpp.ll"
+  ],
+  "llvm_exit": 0,
+  "original_full_abi_report_sha256": "7444e9f66a702755e19c975014fb0e49de5a7c6d0b852704fc08be7a7b5eb22c",
+  "source_level": "FULL_ORIGINAL_TU_DIAGNOSTIC_IR_NOT_FINAL_BINARY_DISASSEMBLY",
+  "extraction": "EXACT_SELECTED_LINES_NOT_COMPLETE_IR_COPY",
+  "declarations": {
+    "_ZN11IOPCIDevice20extendedConfigRead32Ey": {
+      "line_number": 5581,
+      "line": "declare i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef, i64 noundef) local_unnamed_addr #3"
+    },
+    "_ZN11IOPCIDevice21extendedConfigWrite32Eyj": {
+      "line_number": 5829,
+      "line": "declare void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef, i64 noundef, i32 noundef) local_unnamed_addr #3"
+    },
+    "_ZN11IOPCIDevice19extendedConfigRead8Ey": {
+      "line_number": 12152,
+      "line": "declare zeroext i8 @_ZN11IOPCIDevice19extendedConfigRead8Ey(ptr noundef, i64 noundef) local_unnamed_addr #3"
+    },
+    "_ZN11IOPCIDevice20extendedConfigRead16Ey": {
+      "line_number": 12155,
+      "line": "declare zeroext i16 @_ZN11IOPCIDevice20extendedConfigRead16Ey(ptr noundef, i64 noundef) local_unnamed_addr #3"
+    },
+    "_ZN11IOPCIDevice21extendedConfigWrite16Eyt": {
+      "line_number": 12170,
+      "line": "declare void @_ZN11IOPCIDevice21extendedConfigWrite16Eyt(ptr noundef, i64 noundef, i16 noundef zeroext) local_unnamed_addr #3"
+    }
+  },
+  "calls": [
+    {
+      "line_number": 1396,
+      "line": "  %12 = tail call zeroext i8 @_ZN11IOPCIDevice19extendedConfigRead8Ey(ptr noundef nonnull %9, i64 noundef 11) #15"
+    },
+    {
+      "line_number": 1397,
+      "line": "  %13 = tail call zeroext i8 @_ZN11IOPCIDevice19extendedConfigRead8Ey(ptr noundef nonnull %9, i64 noundef 10) #15"
+    },
+    {
+      "line_number": 1398,
+      "line": "  %14 = tail call zeroext i16 @_ZN11IOPCIDevice20extendedConfigRead16Ey(ptr noundef nonnull %9, i64 noundef 0) #15"
+    },
+    {
+      "line_number": 1399,
+      "line": "  %15 = tail call zeroext i16 @_ZN11IOPCIDevice20extendedConfigRead16Ey(ptr noundef nonnull %9, i64 noundef 2) #15"
+    },
+    {
+      "line_number": 1400,
+      "line": "  %16 = tail call zeroext i16 @_ZN11IOPCIDevice20extendedConfigRead16Ey(ptr noundef nonnull %9, i64 noundef 44) #15"
+    },
+    {
+      "line_number": 1401,
+      "line": "  %17 = tail call zeroext i16 @_ZN11IOPCIDevice20extendedConfigRead16Ey(ptr noundef nonnull %9, i64 noundef 46) #15"
+    },
+    {
+      "line_number": 1697,
+      "line": "  %108 = call zeroext i16 @_ZN11IOPCIDevice20extendedConfigRead16Ey(ptr noundef %107, i64 noundef 0) #15"
+    },
+    {
+      "line_number": 1701,
+      "line": "  %111 = call zeroext i16 @_ZN11IOPCIDevice20extendedConfigRead16Ey(ptr noundef %110, i64 noundef 2) #15"
+    },
+    {
+      "line_number": 1705,
+      "line": "  %114 = call zeroext i16 @_ZN11IOPCIDevice20extendedConfigRead16Ey(ptr noundef %113, i64 noundef 44) #15"
+    },
+    {
+      "line_number": 1709,
+      "line": "  %117 = call zeroext i16 @_ZN11IOPCIDevice20extendedConfigRead16Ey(ptr noundef %116, i64 noundef 46) #15"
+    },
+    {
+      "line_number": 2335,
+      "line": "  %16 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %14, i64 noundef %15) #15"
+    },
+    {
+      "line_number": 2362,
+      "line": "  %33 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %30, i64 noundef %32) #15"
+    },
+    {
+      "line_number": 2394,
+      "line": "  %57 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %54, i64 noundef %56) #15"
+    },
+    {
+      "line_number": 2407,
+      "line": "  %68 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %66, i64 noundef %67) #15"
+    },
+    {
+      "line_number": 2494,
+      "line": "  %119 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %118, i64 noundef 24) #15"
+    },
+    {
+      "line_number": 2498,
+      "line": "  %123 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %122, i64 noundef 20) #15"
+    },
+    {
+      "line_number": 2556,
+      "line": "  %157 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %156, i64 noundef 20) #15"
+    },
+    {
+      "line_number": 2558,
+      "line": "  %159 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %158, i64 noundef 28) #15"
+    },
+    {
+      "line_number": 2560,
+      "line": "  %161 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %160, i64 noundef 32) #15"
+    },
+    {
+      "line_number": 2562,
+      "line": "  %163 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %162, i64 noundef 24) #15"
+    },
+    {
+      "line_number": 2587,
+      "line": "  %182 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %181, i64 noundef 16) #15"
+    },
+    {
+      "line_number": 3220,
+      "line": "  %634 = call zeroext i8 @_ZN11IOPCIDevice19extendedConfigRead8Ey(ptr noundef nonnull %631, i64 noundef 14) #15"
+    },
+    {
+      "line_number": 3231,
+      "line": "  %639 = call zeroext i8 @_ZN11IOPCIDevice19extendedConfigRead8Ey(ptr noundef nonnull %631, i64 noundef 52) #15"
+    },
+    {
+      "line_number": 3240,
+      "line": "  %646 = call zeroext i8 @_ZN11IOPCIDevice19extendedConfigRead8Ey(ptr noundef %631, i64 noundef %645) #15"
+    },
+    {
+      "line_number": 3246,
+      "line": "  %650 = call zeroext i8 @_ZN11IOPCIDevice19extendedConfigRead8Ey(ptr noundef %631, i64 noundef %649) #15"
+    },
+    {
+      "line_number": 3257,
+      "line": "  %659 = call zeroext i16 @_ZN11IOPCIDevice20extendedConfigRead16Ey(ptr noundef %631, i64 noundef %658) #15"
+    },
+    {
+      "line_number": 3271,
+      "line": "  %667 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %631, i64 noundef 24) #15"
+    },
+    {
+      "line_number": 3309,
+      "line": "  %691 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %631, i64 noundef 36) #15"
+    },
+    {
+      "line_number": 3310,
+      "line": "  %692 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %631, i64 noundef 40) #15"
+    },
+    {
+      "line_number": 3311,
+      "line": "  %693 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %631, i64 noundef 44) #15"
+    },
+    {
+      "line_number": 3360,
+      "line": "  %722 = call zeroext i16 @_ZN11IOPCIDevice20extendedConfigRead16Ey(ptr noundef %721, i64 noundef 4) #15"
+    },
+    {
+      "line_number": 3363,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite16Eyt(ptr noundef %723, i64 noundef 4, i16 noundef zeroext %724) #15"
+    },
+    {
+      "line_number": 3375,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %726, i64 noundef %727, i32 noundef %733) #15"
+    },
+    {
+      "line_number": 3377,
+      "line": "  %735 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %734, i64 noundef %727) #15"
+    },
+    {
+      "line_number": 3393,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %742, i64 noundef %727, i32 noundef %44) #15"
+    },
+    {
+      "line_number": 3395,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %743, i64 noundef 20, i32 noundef %157) #15"
+    },
+    {
+      "line_number": 3397,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %744, i64 noundef 24, i32 noundef %163) #15"
+    },
+    {
+      "line_number": 3399,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite16Eyt(ptr noundef %745, i64 noundef 4, i16 noundef zeroext %722) #15"
+    },
+    {
+      "line_number": 3407,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %747, i64 noundef 20, i32 noundef %750) #15"
+    },
+    {
+      "line_number": 3411,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %751, i64 noundef 24, i32 noundef %753) #15"
+    },
+    {
+      "line_number": 3416,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %754, i64 noundef 28, i32 noundef %757) #15"
+    },
+    {
+      "line_number": 3420,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %758, i64 noundef 32, i32 noundef %760) #15"
+    },
+    {
+      "line_number": 3421,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %631, i64 noundef 36, i32 noundef 65520) #15"
+    },
+    {
+      "line_number": 3422,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %631, i64 noundef 40, i32 noundef %753) #15"
+    },
+    {
+      "line_number": 3425,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %631, i64 noundef 44, i32 noundef %762) #15"
+    },
+    {
+      "line_number": 3431,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %631, i64 noundef 36, i32 noundef %767) #15"
+    },
+    {
+      "line_number": 3433,
+      "line": "  %769 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %768, i64 noundef 20) #15"
+    },
+    {
+      "line_number": 3440,
+      "line": "  %774 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %773, i64 noundef 24) #15"
+    },
+    {
+      "line_number": 3446,
+      "line": "  %778 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %777, i64 noundef 28) #15"
+    },
+    {
+      "line_number": 3453,
+      "line": "  %783 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %782, i64 noundef 32) #15"
+    },
+    {
+      "line_number": 3458,
+      "line": "  %786 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %631, i64 noundef 36) #15"
+    },
+    {
+      "line_number": 3464,
+      "line": "  %790 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %631, i64 noundef 40) #15"
+    },
+    {
+      "line_number": 3469,
+      "line": "  %793 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %631, i64 noundef 44) #15"
+    },
+    {
+      "line_number": 3475,
+      "line": "  %797 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %796, i64 noundef 20) #15"
+    },
+    {
+      "line_number": 3477,
+      "line": "  %799 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %798, i64 noundef 24) #15"
+    },
+    {
+      "line_number": 3478,
+      "line": "  %800 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %631, i64 noundef 36) #15"
+    },
+    {
+      "line_number": 3479,
+      "line": "  %801 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %631, i64 noundef 40) #15"
+    },
+    {
+      "line_number": 3480,
+      "line": "  %802 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %631, i64 noundef 44) #15"
+    },
+    {
+      "line_number": 3483,
+      "line": "  %804 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %803, i64 noundef 20) #15"
+    },
+    {
+      "line_number": 3485,
+      "line": "  %806 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %805, i64 noundef 24) #15"
+    },
+    {
+      "line_number": 3486,
+      "line": "  %807 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %631, i64 noundef 36) #15"
+    },
+    {
+      "line_number": 3487,
+      "line": "  %808 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %631, i64 noundef 40) #15"
+    },
+    {
+      "line_number": 3488,
+      "line": "  %809 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %631, i64 noundef 44) #15"
+    },
+    {
+      "line_number": 3490,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %631, i64 noundef 36, i32 noundef 65520) #15"
+    },
+    {
+      "line_number": 3491,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %631, i64 noundef 40, i32 noundef %692) #15"
+    },
+    {
+      "line_number": 3492,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %631, i64 noundef 44, i32 noundef %693) #15"
+    },
+    {
+      "line_number": 3493,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %631, i64 noundef 36, i32 noundef %691) #15"
+    },
+    {
+      "line_number": 3499,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %811, i64 noundef %812, i32 noundef %44) #15"
+    },
+    {
+      "line_number": 3504,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %814, i64 noundef 20, i32 noundef %157) #15"
+    },
+    {
+      "line_number": 3506,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %815, i64 noundef 24, i32 noundef %163) #15"
+    },
+    {
+      "line_number": 3508,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %816, i64 noundef 28, i32 noundef %159) #15"
+    },
+    {
+      "line_number": 3510,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %817, i64 noundef 32, i32 noundef %161) #15"
+    },
+    {
+      "line_number": 3512,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite16Eyt(ptr noundef %818, i64 noundef 4, i16 noundef zeroext %722) #15"
+    },
+    {
+      "line_number": 3518,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite16Eyt(ptr noundef %820, i64 noundef 4, i16 noundef zeroext %821) #15"
+    },
+    {
+      "line_number": 3602,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite16Eyt(ptr noundef %870, i64 noundef 4, i16 noundef zeroext %724) #15"
+    },
+    {
+      "line_number": 3603,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %631, i64 noundef 36, i32 noundef 65520) #15"
+    },
+    {
+      "line_number": 3604,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %631, i64 noundef 40, i32 noundef %692) #15"
+    },
+    {
+      "line_number": 3605,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %631, i64 noundef 44, i32 noundef %693) #15"
+    },
+    {
+      "line_number": 3606,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %631, i64 noundef 36, i32 noundef %691) #15"
+    },
+    {
+      "line_number": 3612,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %872, i64 noundef %873, i32 noundef %44) #15"
+    },
+    {
+      "line_number": 3617,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %875, i64 noundef 20, i32 noundef %157) #15"
+    },
+    {
+      "line_number": 3619,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %876, i64 noundef 24, i32 noundef %163) #15"
+    },
+    {
+      "line_number": 3621,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %877, i64 noundef 28, i32 noundef %159) #15"
+    },
+    {
+      "line_number": 3623,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %878, i64 noundef 32, i32 noundef %161) #15"
+    },
+    {
+      "line_number": 3625,
+      "line": "  call void @_ZN11IOPCIDevice21extendedConfigWrite16Eyt(ptr noundef %879, i64 noundef 4, i16 noundef zeroext %722) #15"
+    },
+    {
+      "line_number": 3800,
+      "line": "  %45 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %41, i64 noundef %44) #15"
+    },
+    {
+      "line_number": 3818,
+      "line": "  %59 = call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %56, i64 noundef %58) #15"
+    },
+    {
+      "line_number": 5389,
+      "line": "  %89 = call zeroext i16 @_ZN11IOPCIDevice20extendedConfigRead16Ey(ptr noundef %88, i64 noundef 4) #15"
+    },
+    {
+      "line_number": 5393,
+      "line": "  %92 = call zeroext i16 @_ZN11IOPCIDevice20extendedConfigRead16Ey(ptr noundef %91, i64 noundef 4) #15"
+    },
+    {
+      "line_number": 5776,
+      "line": "  %81 = tail call zeroext i8 @_ZN11IOPCIDevice19extendedConfigRead8Ey(ptr noundef nonnull %20, i64 noundef 14) #15"
+    },
+    {
+      "line_number": 5782,
+      "line": "  %85 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef nonnull %20, i64 noundef 36) #15"
+    },
+    {
+      "line_number": 5783,
+      "line": "  %86 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef nonnull %20, i64 noundef 40) #15"
+    },
+    {
+      "line_number": 5790,
+      "line": "  %93 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef nonnull %20, i64 noundef 44) #15"
+    },
+    {
+      "line_number": 7254,
+      "line": "  %5 = tail call zeroext i16 @_ZN11IOPCIDevice20extendedConfigRead16Ey(ptr noundef %4, i64 noundef 4) #15"
+    },
+    {
+      "line_number": 7259,
+      "line": "  %9 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %8, i64 noundef 16) #15"
+    },
+    {
+      "line_number": 7262,
+      "line": "  %11 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %10, i64 noundef 20) #15"
+    },
+    {
+      "line_number": 7266,
+      "line": "  %14 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %13, i64 noundef 24) #15"
+    },
+    {
+      "line_number": 7270,
+      "line": "  %17 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %16, i64 noundef 28) #15"
+    },
+    {
+      "line_number": 7274,
+      "line": "  %20 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %19, i64 noundef 32) #15"
+    },
+    {
+      "line_number": 7278,
+      "line": "  %23 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %22, i64 noundef 36) #15"
+    },
+    {
+      "line_number": 7288,
+      "line": "  %30 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %28, i64 noundef %29) #15"
+    },
+    {
+      "line_number": 7302,
+      "line": "  %40 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %37, i64 noundef %39) #15"
+    },
+    {
+      "line_number": 7328,
+      "line": "  %58 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %57, i64 noundef %54) #15"
+    },
+    {
+      "line_number": 7370,
+      "line": "  %87 = tail call zeroext i16 @_ZN11IOPCIDevice20extendedConfigRead16Ey(ptr noundef nonnull %83, i64 noundef 4) #15"
+    },
+    {
+      "line_number": 7375,
+      "line": "  %91 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %90, i64 noundef 24) #15"
+    },
+    {
+      "line_number": 7378,
+      "line": "  %93 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %92, i64 noundef 28) #15"
+    },
+    {
+      "line_number": 7382,
+      "line": "  %96 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %95, i64 noundef 32) #15"
+    },
+    {
+      "line_number": 7386,
+      "line": "  %99 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %98, i64 noundef 36) #15"
+    },
+    {
+      "line_number": 7390,
+      "line": "  %102 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %101, i64 noundef 40) #15"
+    },
+    {
+      "line_number": 7394,
+      "line": "  %105 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %104, i64 noundef 44) #15"
+    },
+    {
+      "line_number": 7474,
+      "line": "  %9 = tail call zeroext i16 @_ZN11IOPCIDevice20extendedConfigRead16Ey(ptr noundef %8, i64 noundef 0) #15"
+    },
+    {
+      "line_number": 7480,
+      "line": "  %13 = tail call zeroext i16 @_ZN11IOPCIDevice20extendedConfigRead16Ey(ptr noundef %12, i64 noundef 0) #15"
+    },
+    {
+      "line_number": 7484,
+      "line": "  %16 = tail call zeroext i16 @_ZN11IOPCIDevice20extendedConfigRead16Ey(ptr noundef %15, i64 noundef 0) #15"
+    },
+    {
+      "line_number": 7497,
+      "line": "  %24 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef nonnull %20, i64 noundef 24) #15"
+    },
+    {
+      "line_number": 7510,
+      "line": "  %31 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %30, i64 noundef 28) #15"
+    },
+    {
+      "line_number": 7527,
+      "line": "  %42 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %41, i64 noundef 32) #15"
+    },
+    {
+      "line_number": 7542,
+      "line": "  %51 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %50, i64 noundef 36) #15"
+    },
+    {
+      "line_number": 7557,
+      "line": "  %60 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %59, i64 noundef 40) #15"
+    },
+    {
+      "line_number": 7572,
+      "line": "  %69 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %68, i64 noundef 44) #15"
+    },
+    {
+      "line_number": 7590,
+      "line": "  tail call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %77, i64 noundef 24, i32 noundef %78) #15"
+    },
+    {
+      "line_number": 7594,
+      "line": "  tail call void @_ZN11IOPCIDevice21extendedConfigWrite16Eyt(ptr noundef %79, i64 noundef 28, i16 noundef zeroext %81) #15"
+    },
+    {
+      "line_number": 7597,
+      "line": "  tail call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %82, i64 noundef 32, i32 noundef %83) #15"
+    },
+    {
+      "line_number": 7599,
+      "line": "  tail call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %84, i64 noundef 36, i32 noundef 65520) #15"
+    },
+    {
+      "line_number": 7602,
+      "line": "  tail call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %85, i64 noundef 40, i32 noundef %86) #15"
+    },
+    {
+      "line_number": 7605,
+      "line": "  tail call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %87, i64 noundef 44, i32 noundef %88) #15"
+    },
+    {
+      "line_number": 7608,
+      "line": "  tail call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %89, i64 noundef 36, i32 noundef %90) #15"
+    },
+    {
+      "line_number": 7614,
+      "line": "  %94 = tail call zeroext i16 @_ZN11IOPCIDevice20extendedConfigRead16Ey(ptr noundef %93, i64 noundef 4) #15"
+    },
+    {
+      "line_number": 7625,
+      "line": "  tail call void @_ZN11IOPCIDevice21extendedConfigWrite16Eyt(ptr noundef %101, i64 noundef 4, i16 noundef zeroext %102) #15"
+    },
+    {
+      "line_number": 7645,
+      "line": "  %116 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %115, i64 noundef 16) #15"
+    },
+    {
+      "line_number": 7657,
+      "line": "  %126 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %122, i64 noundef %125) #15"
+    },
+    {
+      "line_number": 7690,
+      "line": "  %147 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %146, i64 noundef 20) #15"
+    },
+    {
+      "line_number": 7705,
+      "line": "  %156 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %155, i64 noundef 24) #15"
+    },
+    {
+      "line_number": 7720,
+      "line": "  %165 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %164, i64 noundef 28) #15"
+    },
+    {
+      "line_number": 7735,
+      "line": "  %174 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %173, i64 noundef 32) #15"
+    },
+    {
+      "line_number": 7750,
+      "line": "  %183 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %182, i64 noundef 36) #15"
+    },
+    {
+      "line_number": 7767,
+      "line": "  %192 = tail call zeroext i16 @_ZN11IOPCIDevice20extendedConfigRead16Ey(ptr noundef %191, i64 noundef 4) #15"
+    },
+    {
+      "line_number": 7770,
+      "line": "  tail call void @_ZN11IOPCIDevice21extendedConfigWrite16Eyt(ptr noundef %193, i64 noundef 4, i16 noundef zeroext %194) #15"
+    },
+    {
+      "line_number": 7783,
+      "line": "  tail call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %201, i64 noundef 16, i32 noundef %202) #15"
+    },
+    {
+      "line_number": 7786,
+      "line": "  tail call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %203, i64 noundef 20, i32 noundef %204) #15"
+    },
+    {
+      "line_number": 7789,
+      "line": "  tail call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %205, i64 noundef 24, i32 noundef %206) #15"
+    },
+    {
+      "line_number": 7792,
+      "line": "  tail call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %207, i64 noundef 28, i32 noundef %208) #15"
+    },
+    {
+      "line_number": 7795,
+      "line": "  tail call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %209, i64 noundef 32, i32 noundef %210) #15"
+    },
+    {
+      "line_number": 7798,
+      "line": "  tail call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %211, i64 noundef 36, i32 noundef %212) #15"
+    },
+    {
+      "line_number": 7810,
+      "line": "  tail call void @_ZN11IOPCIDevice21extendedConfigWrite32Eyj(ptr noundef %216, i64 noundef %219, i32 noundef %221) #15"
+    },
+    {
+      "line_number": 7820,
+      "line": "  %229 = tail call zeroext i16 @_ZN11IOPCIDevice20extendedConfigRead16Ey(ptr noundef %228, i64 noundef 4) #15"
+    },
+    {
+      "line_number": 7831,
+      "line": "  tail call void @_ZN11IOPCIDevice21extendedConfigWrite16Eyt(ptr noundef %236, i64 noundef 4, i16 noundef zeroext %237) #15"
+    },
+    {
+      "line_number": 7847,
+      "line": "  %247 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %246, i64 noundef 16) #15"
+    },
+    {
+      "line_number": 7851,
+      "line": "  %251 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %250, i64 noundef 20) #15"
+    },
+    {
+      "line_number": 7855,
+      "line": "  %255 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %254, i64 noundef 24) #15"
+    },
+    {
+      "line_number": 7859,
+      "line": "  %259 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %258, i64 noundef 28) #15"
+    },
+    {
+      "line_number": 7863,
+      "line": "  %263 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %262, i64 noundef 32) #15"
+    },
+    {
+      "line_number": 7867,
+      "line": "  %267 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %266, i64 noundef 36) #15"
+    },
+    {
+      "line_number": 7878,
+      "line": "  %278 = tail call zeroext i16 @_ZN11IOPCIDevice20extendedConfigRead16Ey(ptr noundef %277, i64 noundef 4) #15"
+    },
+    {
+      "line_number": 7882,
+      "line": "  %281 = tail call zeroext i16 @_ZN11IOPCIDevice20extendedConfigRead16Ey(ptr noundef %280, i64 noundef 4) #15"
+    },
+    {
+      "line_number": 7894,
+      "line": "  %290 = tail call i32 @_ZN11IOPCIDevice20extendedConfigRead32Ey(ptr noundef %286, i64 noundef %289) #15"
+    }
+  ],
+  "not_observed_in_this_ir": [
+    "_ZN11IOPCIDevice20extendedConfigWrite8Eyh"
+  ]
+}
