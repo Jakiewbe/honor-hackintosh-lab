@@ -1,0 +1,12 @@
+ok   armVbl takes exactly one reference
+ok   stop returns the reference once
+ok   a later callback cannot release again
+ok   late callback does not double release
+ok   failed allocate takes no reference
+ok   stop after a failed allocate releases nothing
+ok   stop keeps the reference when the call is in flight
+ok   the callback returns it once
+ok   a second callback entry releases nothing
+ok   double stop releases once
+ok   re-arm keeps one reference
+RESULT: 11/11 checks

@@ -1,0 +1,5 @@
+workdir=/tmp/r27-HUp9xW
+source=/mnt/d/Hactk/gpu-r5-20261017/src/kexts/NMIntelFB/intelfb.cpp
+source_sha256=5e8020e544cd327fcfd9e86a9db0d24135a8fd0171596c83528ce147f8cf3718
+generated_sha256=c56250739ec050d6d712ce5f04fd6ea17850c889f5cd31f2718e4da76afb3eb7
+RESULT: PASS (candidate passes, R22 baseline fails, negative control fails closed)

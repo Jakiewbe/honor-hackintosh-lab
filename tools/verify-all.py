@@ -100,6 +100,9 @@ def main():
         step("structure-intel", [py, str(ws / "work/check_intel_stop.py")], ws)
         step("structure-pm", [py, str(REPO / "tools/check-pm-exclusion.py")], REPO)
         if not args.skip_host:
+            step("vbl-host", ["wsl", "-e", "bash", "-c",
+                              f"GPU_R27_WORK={wsl_path(ws)} GPU_R27_OUT={wsl_path(ws)}/evidence/r27 "
+                              f"bash {wsl_path(REPO)}/tools/run-r27-test.sh"], ws, 1800)
             step("pm-host", ["wsl", "-e", "bash", "-c",
                               f"GPU_R24_WORK={wsl_path(ws)} GPU_R24_OUT={wsl_path(ws)}/evidence/r24 "
                               f"bash {wsl_path(REPO)}/tools/run-r24-test.sh"], ws, 1800)
