@@ -72,3 +72,41 @@ vkms-kapi.c | COMPILE_FAILED | 同上 |
 探针实现过程中的两次错误也记录在此，避免重复：probe_root 曾取成 
 vroot.parent（应为两级上），
 导致全部 MISSING；随后又把不存在的 include 目录传给 -I，clang 直接报 "no such file"。两处已修。
+
+## 七、改成 C 编译后的结果（R50，run 39089494955）
+
+| 文件 | 结果 | 说明 |
+|---|---|---|
+| **src/nvidia-modeset/src/nvkms.c** | **COMPILED** | 首个在 Xcode 16.4 工具链下产出 Darwin 对象的 OGKM 跨平台 TU |
+| osapi.c / unix_intr.c / dynamic-power.c | COMPILE_FAILED | 
+v-priv.h:233: unknown type name 'nv_dynamic_power_mode_t' |
+| 
+vkms-kapi.c | COMPILE_FAILED | 
+vkms-softfloat.h:32: 'nv-softfloat.h' file not found |
+
+### 两个失败的性质不同
+
+1. **
+vkms-kapi.c 是 include 路径问题**：
+v-softfloat.h 实际在 src/common/softfloat/nvidia/，
+   探针没有把这个目录加进 -I。属于构建配置遗漏，可直接修。
+2. **三个 RM 文件是平台层 typedef 缺失**：
+v_dynamic_power_mode_t 定义在
+   kernel-open/common/inc/nv.h:757——那是 **Linux/FreeBSD 的 kernel-open 层**；
+   Darwin 的 
+v-xnu.h 里没有等价定义。这不是"加个宏"能解决的，属于移植层缺口。
+
+### 意义
+
+
+vkms.c 编译通过说明：**OGKM 的 modeset 核心层不需要 Linux 才能编译**，之前的失败全部来自语言选择
+（C++ 当 C 编）。这一条把"公开源码路线不可行"的怀疑削掉了一大块——同时也说明我此前把
+"编译失败"归因于"源码不可用"是过早的。
+
+### 下一轮
+
+先修 include 路径（
+v-softfloat.h），看 
+vkms-kapi.c 能否也编过；RM 那三个文件另算，
+需要评估 Darwin 层要提供哪些 typedef，而不是把 kernel-open/common/inc/nv.h 整个拖进来
+（那会把 Linux 依赖一起带进来）。
