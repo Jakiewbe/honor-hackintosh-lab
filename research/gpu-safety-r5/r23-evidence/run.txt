@@ -1,0 +1,5 @@
+workdir=/tmp/r23-xqKDcx
+source=/mnt/d/Hactk/gpu-r5-20261017/src/kexts/NVRM/os-nvkms-xnu.cpp
+source_sha256=b951b59ef74e0899ef23f034960675ee232aa070d9660ba3c09189b4d318ba24
+generated_sha256=e834c9932dcd9df63e6db5ee531db7e2afca78e4fe76ad9d8a0ad136d07117eb
+RESULT: PASS (candidate passes, R22 baseline fails, negative control fails closed)

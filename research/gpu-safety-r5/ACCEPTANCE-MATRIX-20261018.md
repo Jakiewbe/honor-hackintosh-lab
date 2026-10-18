@@ -17,8 +17,9 @@
 | 隔离态可回收 | 主机测试 + 调用点合同 | ✅ 9/9、12/12 | `evidence/r6/` | — |
 | 共享 Device 生命周期 | 计数/孤儿/创建者 retain | ✅ 34/34、45/45（R14） | `evidence/r11/` | — |
 | PM 竞态关闭 | pin 语义 + suspend 等待 | ✅ 38/38、50/50（R15） | `evidence/r11/` | — |
+| **PM pin 与挂起严格互斥** | 有界等待 + 明确拒绝 + 调用者不 ack | ✅ 主机 23/23、结构 25/25、R22 基线失败 11 项（R23） | `research/gpu-safety-r5/r23-evidence/` | Darwin/链接需用户手动门禁 |
 | 关闭失败可上报 | OGKM `void` 接口改造 | ❌ **不可关闭**（已记录） | `README.md` R15 段 | 上游 |
-| 原生编译 | 真实 Xcode 工具链 | ✅ 16/16 对象、告警零增量 | run 39057316645 | — |
+| 原生编译 | 真实 Xcode 工具链 | ✅ 16/16 对象、告警零增量 | run 39058264569 | — |
 | Kext 链接 | NVAccel + 生产 NVRMFB 链成 | ✅ 248,584 B / 315,744 B | 同上 | — |
 | NVRM 可重建 | 与发行版符号/体积可比 | ❌ **BLOCKED**：361,936 B / 650 符号 vs 16,787,920 B / 17,679；REA 发现 7.93 MB 不透明载荷 | `REA-NVRM-BINARY-20261018.md` | 上游 |
 | 加载前一致性 | Info.plist 与链接产物、标识符、provider 类 | ✅ 30/30（`tools/check-bundles.py`） | `evidence/preload/bundle-consistency.json` | — |

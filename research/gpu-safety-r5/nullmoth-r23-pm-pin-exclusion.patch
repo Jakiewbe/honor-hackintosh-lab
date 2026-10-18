@@ -1,0 +1,196 @@
+diff --git a/kexts/NVRM/NVRM.cpp b/kexts/NVRM/NVRM.cpp
+index b3d6477..e557c9c 100644
+--- a/kexts/NVRM/NVRM.cpp
++++ b/kexts/NVRM/NVRM.cpp
+@@ -127,7 +127,7 @@ private:
+         UInt32 bar[6]; UInt16 cmd;
+         IOPCIDevice *rp; UInt32 rpWin[6]; UInt16 rpCmd;   // root port 0x18..0x2c and command
+     } fPciSave = {};
+-    void gpuSuspend();
++    bool gpuSuspend();   // false: the sleep was refused, nothing was suspended
+     void gpuResume();
+     void pciSaveForSleep();
+     bool pciRestoreAfterWake();
+@@ -1380,12 +1380,16 @@ void NVRM::stop(IOService *provider)
+     super::stop(provider);
+ }
+ 
+-extern "C" { void nvkms_xnu_suspend(NvU32 gpuId); void nvkms_xnu_resume(NvU32 gpuId, NvBool gpuOk); }
++extern "C" { NvBool nvkms_xnu_suspend(NvU32 gpuId, uint32_t waitMs); void nvkms_xnu_resume(NvU32 gpuId, NvBool gpuOk); }
+ 
+ IOReturn NVRM::setPowerState(unsigned long ordinal, IOService *device)
+ {
+     const SInt32 pm = OSAddAtomic(0, &fGpuPm);
+-    if (ordinal == 0 && pm == kGpuPmRunning && fAdapter) gpuSuspend();
++    if (ordinal == 0 && pm == kGpuPmRunning && fAdapter) {
++        // kIOPMAckImplied would tell IOPM the device is asleep. A refused suspend means it is not: report the
++        // failure instead of acknowledging a state change that did not happen.
++        if (!gpuSuspend()) return kIOReturnBusy;
++    }
+     else if (ordinal != 0 && pm == kGpuPmSuspended) gpuResume();
+     else LOG("power: setPowerState %lu (gpu %s, adapter %s) - nothing to do", ordinal,
+              pm == kGpuPmRunning ? "running" : pm == kGpuPmSuspended ? "suspended" : "lost", fAdapter ? "up" : "down");
+@@ -1394,7 +1398,7 @@ IOReturn NVRM::setPowerState(unsigned long ordinal, IOService *device)
+ 
+ // Linux order (nvidia_suspend): NVKMS first, while the GPU still serves the core channel, then RM standby. RM saves
+ // what it must keep from VRAM to system memory and unloads GSP-RM; the GPU then loses power with the slot.
+-void NVRM::gpuSuspend()
++bool NVRM::gpuSuspend()
+ {
+     uint64_t t0 = mach_absolute_time();
+     fPmCycles++;
+@@ -1404,7 +1408,18 @@ void NVRM::gpuSuspend()
+     notifyFramebuffers(0);
+     // NVKMS first: once it is suspended no thread is inside it, so none can hold gKmsLock while it waits at the RM
+     // gate (closing the gate first deadlocked against an NVKMS ioctl calling into RM).
+-    nvkms_xnu_suspend(fNv.gpu_id);
++    if (!nvkms_xnu_suspend(fNv.gpu_id, 30000)) {
++        // The display teardown still holds a pin after the bound, so NVKMS was not suspended. Doing RM standby
++        // here would leave the two halves disagreeing, and acknowledging would lie to IOPM. Undo what this
++        // attempt changed and let the sleep fail.
++        OSCompareAndSwap(kGpuPmSuspended, kGpuPmRunning, &fGpuPm);
++        setProperty("nvrm-pm", "running");
++        notifyFramebuffers(1);
++        uint64_t ns = 0; absolutetime_to_nanoseconds(mach_absolute_time() - t0, &ns);
++        LOG("sleep #%u: REFUSED after %llu ms - a display teardown still holds the GPU; RM standby not run",
++            fPmCycles, ns / 1000000ULL);
++        return false;
++    }
+     const int busy = nv_xnu_pm_close(10000);
+     if (busy) LOG("sleep #%u: %d RM call(s) still running after 10 s - suspending anyway", fPmCycles, busy);
+     // nv_preempt_user_channels(): with every VRAM allocation preserved, user channels must be idle and stopped
+@@ -1416,6 +1431,7 @@ void NVRM::gpuSuspend()
+     uint64_t ns = 0; absolutetime_to_nanoseconds(mach_absolute_time() - t0, &ns);
+     LOG("sleep #%u: user channels stopped -> 0x%x; rm_power_management(STANDBY) -> 0x%x in %llu ms%s", fPmCycles,
+         (unsigned)cst, (unsigned)st, ns / 1000000ULL, st == NV_OK ? "" : " - resume will still be tried, as on Linux");
++    return true;
+ }
+ 
+ // The slot is powered again and IOPCIFamily restored the config space it shadowed. Put back what it does not know
+diff --git a/kexts/NVRM/os-nvkms-xnu.cpp b/kexts/NVRM/os-nvkms-xnu.cpp
+index 091b6d9..dba8e7f 100644
+--- a/kexts/NVRM/os-nvkms-xnu.cpp
++++ b/kexts/NVRM/os-nvkms-xnu.cpp
+@@ -42,6 +42,14 @@ static int gKmsPmState = kKmsPmRunning;
+ // A teardown that passed nvkms_xnu_pm_running() holds a pin: suspend waits for it, so the
+ // release/free pair can no longer be cut in half between the check and the call.
+ static int gKmsPmPins;
++// Set from the moment a suspend is accepted until it commits or is abandoned. While it is set,
++// new teardown pins are refused: the pin count can then only fall, so the transition cannot be
++// cut in half by a teardown that started after the decision.
++static bool gKmsSuspendPending;
++// Every request takes a sequence number; a resume bumps it, cancelling a waiter that has not
++// committed yet. The PM thread never waits without a bound.
++static uint32_t gKmsSuspendSeq;
++static const uint32_t kKmsSuspendPinWaitMs = 30000;
+ // nvKmsClose()/FreeDevice() are void: a refused close cannot be propagated upward. Counting it
+ // with a reason still makes the failure observable after the fact.
+ static volatile uint32_t gKmsCloseDeferred;
+@@ -197,30 +205,71 @@ NvBool nvkms_xnu_load(void)
+ // nvkms_suspend() / nvkms_resume() of nvidia-modeset-linux.c. Suspend runs before rm_power_management(STANDBY) and
+ // shuts every head down while the GPU still answers; resume runs after rm_power_management(RESUME). gpuOk false
+ // leaves NVKMS LOST: every later ioctl and timer is refused instead of pushing to a core channel nobody serves.
+-void nvkms_xnu_suspend(NvU32 gpuId)
++// Returns NV_TRUE only after NVKMS has actually been moved to SUSPENDED. While a teardown pin is held the
++// transition waits for it (bounded); NV_FALSE means nothing was suspended and nothing was told to NVKMS, so
++// the caller must not run RM standby and must not acknowledge the sleep.
++NvBool nvkms_xnu_suspend(NvU32 gpuId, uint32_t waitMs)
+ {
+-    if (!gKmsLoaded) return;
+-    nvKmsKapiSuspendResume(NV_TRUE);
++    if (!gKmsLoaded || !gKmsLock) return NV_FALSE;
++
+     IOLockLock(gKmsLock);
++    if (gKmsPmState != kKmsPmRunning) {
++        kprintf("NVRM-xnu: suspend refused: NVKMS is %s\n", kKmsPmName[gKmsPmState]);
++        IOLockUnlock(gKmsLock);
++        return NV_FALSE;
++    }
++    if (gKmsSuspendPending) {
++        kprintf("NVRM-xnu: suspend refused: another suspend is already pending\n");
++        IOLockUnlock(gKmsLock);
++        return NV_FALSE;
++    }
++    gKmsSuspendPending = true;                 // admission for new pins closes here
++    const uint32_t seq = ++gKmsSuspendSeq;
++
++    // Wait for the teardowns that already hold a pin. unpin() wakes this address, so the wait ends as soon as
++    // the last holder is done; the request is bounded so a stuck teardown cannot hang the sleep.
+     if (gKmsPmPins > 0) {
+         uint64_t deadline = 0;
+-        clock_interval_to_deadline(kKmsPmPinWaitMs, kMillisecondScale, &deadline);
+-        while (gKmsPmPins > 0) {
++        clock_interval_to_deadline(waitMs ? waitMs : kKmsSuspendPinWaitMs, kMillisecondScale, &deadline);
++        while (gKmsPmPins > 0 && gKmsSuspendPending && gKmsSuspendSeq == seq)
+             if (IOLockSleepDeadline(gKmsLock, &gKmsPmPins, deadline, THREAD_UNINT) == THREAD_TIMED_OUT) break;
+-        }
+-        if (gKmsPmPins > 0)
+-            kprintf("NVRM-xnu: NVKMS suspend proceeded with %d teardown pin(s) still held\n", gKmsPmPins);
+     }
+-    const bool wasRunning = gKmsPmState == kKmsPmRunning;
++    const bool stillMine = gKmsSuspendPending && gKmsSuspendSeq == seq;
++    if (!stillMine || gKmsPmPins > 0) {
++        const int pins = gKmsPmPins;
++        if (stillMine) { gKmsSuspendPending = false; gKmsSuspendSeq++; }
++        IOLockUnlock(gKmsLock);
++        kprintf("NVRM-xnu: suspend abandoned: %d teardown pin(s) still held, or the request was cancelled\n", pins);
++        return NV_FALSE;
++    }
++    IOLockUnlock(gKmsLock);
++
++    // The pins are gone and admission is closed, so nothing can start a teardown while NVKMS is told to stop.
++    nvKmsKapiSuspendResume(NV_TRUE);
++
++    IOLockLock(gKmsLock);
++    if (!(gKmsSuspendPending && gKmsSuspendSeq == seq) || gKmsPmPins > 0) {
++        IOLockUnlock(gKmsLock);
++        nvKmsKapiSuspendResume(NV_FALSE);       // a resume overtook the request: undo and report failure
++        kprintf("NVRM-xnu: suspend abandoned at commit: a resume overtook it\n");
++        return NV_FALSE;
++    }
++    gKmsSuspendPending = false;
+     gKmsPmState = kKmsPmSuspended;
+-    if (wasRunning) nvKmsSuspend(gpuId);
++    nvKmsSuspend(gpuId);
+     IOLockUnlock(gKmsLock);
+-    kprintf("NVRM-xnu: NVKMS suspended (gpu 0x%x, was %s)\n", gpuId, wasRunning ? "running" : "not running");
++    kprintf("NVRM-xnu: NVKMS suspended (gpu 0x%x) after the teardown pins drained\n", gpuId);
++    return NV_TRUE;
+ }
+ void nvkms_xnu_resume(NvU32 gpuId, NvBool gpuOk)
+ {
+     if (!gKmsLoaded) return;
+     IOLockLock(gKmsLock);
++    // Cancel a request that has not committed yet, and wake its waiter so it returns instead of sleeping out
++    // its bound. A committed suspend is unaffected: it already cleared the flag under this lock.
++    gKmsSuspendPending = false;
++    gKmsSuspendSeq++;
++    IOLockWakeup(gKmsLock, &gKmsPmPins, false);
+     if (gpuOk && gKmsPmState == kKmsPmSuspended) nvKmsResume(gpuId);
+     gKmsPmState = gpuOk ? kKmsPmRunning : kKmsPmLost;
+     IOLockWakeup(gKmsLock, &gKmsPmState, false);
+@@ -245,7 +294,7 @@ NvBool nvkms_xnu_pm_pin(void)
+ {
+     if (!gKmsLock) return NV_FALSE;
+     IOLockLock(gKmsLock);
+-    const NvBool ok = (gKmsPmState == kKmsPmRunning);
++    const NvBool ok = (gKmsPmState == kKmsPmRunning) && !gKmsSuspendPending;
+     if (ok) gKmsPmPins++;
+     IOLockUnlock(gKmsLock);
+     return ok;
+@@ -259,6 +308,15 @@ void nvkms_xnu_pm_unpin(void)
+     IOLockUnlock(gKmsLock);
+ }
+ 
++NvBool nvkms_xnu_pm_suspend_pending(void)
++{
++    if (!gKmsLock) return NV_FALSE;
++    IOLockLock(gKmsLock);
++    const NvBool pending = gKmsSuspendPending || gKmsPmState != kKmsPmRunning;
++    IOLockUnlock(gKmsLock);
++    return pending;
++}
++
+ NvBool nvkms_xnu_pm_running(void)
+ {
+     if (!gKmsLock) return NV_FALSE;

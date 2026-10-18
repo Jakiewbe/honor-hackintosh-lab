@@ -98,6 +98,7 @@ def main():
     if applied["exit"] == 0:
         step("structure-nvidia", [py, str(ws / "work/check_r11_lifetime.py")], ws)
         step("structure-intel", [py, str(ws / "work/check_intel_stop.py")], ws)
+        step("structure-pm", [py, str(REPO / "tools/check-pm-exclusion.py")], REPO)
     root = ""
     r = run("root-commit", ["git", "rev-list", "--max-parents=0", "HEAD"], src)
     if r["exit"] == 0 and r["tail"]:

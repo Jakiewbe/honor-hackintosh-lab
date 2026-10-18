@@ -1,0 +1,136 @@
+{
+ "level": "SOURCE-STRUCTURE (R23 pin/suspend exclusion)",
+ "source_sha256": {
+  "os-nvkms-xnu.cpp": "b951b59ef74e0899ef23f034960675ee232aa070d9660ba3c09189b4d318ba24",
+  "NVRM.cpp": "6edc784f1f1363481bf2abe02d349522cb5c92073a29f15469b7079f71eaa781"
+ },
+ "checks": [
+  {
+   "check": "suspend reports a result instead of returning void",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "the old 'suspend anyway' log is gone",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "the wait watches the pin count",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "the wait is bounded",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "a pending request takes a sequence number",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "abandon returns before any NVKMS call",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "abandon reopens pin admission",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "NVKMS is only told after the pins drained",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "exactly one nvKmsSuspend call site",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "the commit re-checks the sequence (a resume can overtake)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "a lost race tells NVKMS to undo",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "a pin is refused while a suspend is pending",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "resume clears the pending request",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "resume bumps the sequence",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "resume wakes the waiting suspend",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "gpuSuspend checks the result",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "refusal returns before the RM gate closes",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "refusal returns before user channels are stopped",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "refusal returns before RM standby",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "refusal undoes the pm flag",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "refusal re-lights the framebuffers",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "success returns true",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "setPowerState refuses the sleep instead of acknowledging it",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "setPowerState still acknowledges a real resume",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "check": "no asynchronous ack is used (the call completes synchronously)",
+   "ok": true,
+   "detail": ""
+  }
+ ],
+ "result": "PASS",
+ "failures": []
+}

@@ -1,0 +1,37 @@
+[kprintf] NVRM-xnu: NVKMS suspended (gpu 0x1, was running)
+[kprintf] NVRM-xnu: NVKMS suspend proceeded with 1 teardown pin(s) still held
+[kprintf] NVRM-xnu: NVKMS suspended (gpu 0x1, was running)
+[kprintf] NVRM-xnu: NVKMS suspended (gpu 0x1, was running)
+[kprintf] NVRM-xnu: NVKMS suspend proceeded with 1 teardown pin(s) still held
+[kprintf] NVRM-xnu: NVKMS suspended (gpu 0x1, was running)
+[kprintf] NVRM-xnu: NVKMS suspend proceeded with 1 teardown pin(s) still held
+[kprintf] NVRM-xnu: NVKMS suspended (gpu 0x1, was not running)
+[kprintf] NVRM-xnu: NVKMS resumed (gpu 0x1)
+[kprintf] NVRM-xnu: NVKMS suspended (gpu 0x1, was running)
+[kprintf] NVRM-xnu: NVKMS suspended (gpu 0x1, was not running)
+[kprintf] NVRM-xnu: NVKMS suspend proceeded with 1 teardown pin(s) still held
+[kprintf] NVRM-xnu: NVKMS suspended (gpu 0x1, was running)
+[kprintf] NVRM-xnu: NVKMS suspended (gpu 0x1, was running)
+ok   no pins -> suspend succeeds
+ok   no pins -> nvKmsSuspend called once
+ok   no pins -> state suspended
+ok   pin taken
+FAIL held pin -> suspend refuses
+FAIL held pin -> nvKmsSuspend never called
+FAIL held pin -> state still running
+FAIL held pin -> wait was bounded
+FAIL held pin -> admission reopened
+ok   last unpin lets the suspend proceed
+ok   last unpin -> exactly one nvKmsSuspend
+FAIL duplicate suspend is refused
+ok   first suspend still completes once
+FAIL resume cancels the pending suspend
+FAIL cancelled suspend never reached NVKMS
+FAIL LOST -> suspend refused
+ok   LOST -> no NVKMS suspend
+FAIL abandoned request returns false
+FAIL late unpin does not suspend
+ok   async unpin releases the suspend
+ok   async unpin -> one suspend
+ok   async unpin -> committed state
+RESULT: 11/22 checks - FAIL
