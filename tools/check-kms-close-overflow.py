@@ -56,11 +56,30 @@ def evaluate(os_text):
               "kms_deferred_try_free_impl" in drain and "nextOverflow" in drain,
               "walks the list")
 
-    calls = [(m.start(), m.group(0)) for m in re.finditer(r"kms_deferred_drain\s*\(", os_text)]
-    companion = re.search(r"kms_close_overflow_drain(_locked)?\s*\(\s*\)", os_text)
-    check("R3 every deferred drain also drains the overflow list",
-          bool(companion) and len(calls) >= 1,
-          f"{len(calls)} queue drain call(s), overflow drain present={bool(companion)}")
+    # R3 must be per call site: a companion anywhere in the file would pass even if the queue drain and the
+    # overflow drain lived in unrelated functions, which is exactly the split that loses wrappers.
+    def enclosing_function(text, position):
+        start = text.rfind("\n{", 0, position)
+        fn_start = text.rfind("\n", 0, start) if start > 0 else 0
+        # walk back to the signature line of the function that owns this brace
+        sig = text.rfind("\n", 0, fn_start)
+        begin = max(sig, 0)
+        return braces(text, start + 1), begin
+
+    contexts = []
+    for m in re.finditer(r"kms_deferred_drain\s*\(", os_text):
+        try:
+            body, begin = enclosing_function(os_text, m.start())
+        except ValueError:
+            contexts.append((None, m.start()))
+            continue
+        contexts.append((body, m.start()))
+
+    missing = [pos for body, pos in contexts
+               if body is None or not re.search(r"kms_close_overflow_drain(_locked)?\s*\(\s*\)", body)]
+    check("R3 every deferred drain also drains the overflow list in the same function",
+          bool(contexts) and not missing,
+          f"{len(contexts)} queue drain call(s), {len(missing)} without a companion")
 
     return {"level": "SOURCE-STRUCTURE-ONLY; OVERFLOW-RUNTIME-COVERED-BY-CPU-SCENARIO",
             "checks": checks, "result": "PASS" if all(c["ok"] for c in checks) else "FAIL",
@@ -98,10 +117,16 @@ static void kms_close_retry_fire(void)
 BAD_LOG_ONLY = GOOD.replace("popen->nextOverflow = gKmsCloseOverflow;\n        gKmsCloseOverflow = popen;",
                             'kprintf("table full; retained without a slot");')
 BAD_NO_COMPANION = GOOD.replace("    kms_close_overflow_drain_locked();\n", "")
+# the companion exists, but in a different function: the queue drain would run without it
+BAD_SPLIT = GOOD.replace("    kms_close_overflow_drain_locked();\n", "").replace(
+    "static void kms_close_retry_fire(void)",
+    "static void unrelated_helper(void) { kms_close_overflow_drain_locked(); }\n"
+    "static void kms_close_retry_fire(void)")
 
 
 def self_test():
-    cases = {"good": (GOOD, True), "log_only": (BAD_LOG_ONLY, False), "no_companion": (BAD_NO_COMPANION, False)}
+    cases = {"good": (GOOD, True), "log_only": (BAD_LOG_ONLY, False),
+             "no_companion": (BAD_NO_COMPANION, False), "split_functions": (BAD_SPLIT, False)}
     bad = 0
     for name, (text, expect) in cases.items():
         rec = evaluate(text)

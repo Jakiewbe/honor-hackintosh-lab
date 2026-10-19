@@ -26,6 +26,12 @@ class OverflowGuardTests(unittest.TestCase):
         self.assertEqual(rec["result"], "FAIL")
         self.assertTrue(any("R3" in c["check"] for c in rec["failures"]))
 
+    def test_companion_in_another_function_is_rejected(self):
+        # Presence anywhere in the file is not enough: the queue drain and the overflow drain must meet.
+        rec = self.mod.evaluate(self.mod.BAD_SPLIT)
+        self.assertEqual(rec["result"], "FAIL")
+        self.assertTrue(any("R3" in c["check"] for c in rec["failures"]))
+
     def test_good_shape_is_accepted(self):
         rec = self.mod.evaluate(self.mod.GOOD)
         self.assertEqual(rec["result"], "PASS", [c for c in rec["failures"]])
