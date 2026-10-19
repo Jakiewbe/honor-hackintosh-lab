@@ -12,6 +12,8 @@
 | backend 拒绝时 NISO 不解映射 | `tools/g1_r36_try_free_contract.py`（ASan） | run 39311033396 | CPU 运行；注入拒绝，非真实 RM |
 | 成功关闭恰好解映射两次 / 重试先 0 后 2 | 同上 | run 39311033396 | 同上 |
 | legacy 关闭有界等待两条分支 | `tools/g1_kms_close_retry_contract.py` | run 39319576695 | 桩在等待点清标志，非真实线程 |
+| 延迟关闭表满时不丢 wrapper | `tools/g1_kms_close_retry_contract.py`（`overflow-reclaim`） | run 39339549232 | CPU 运行；真实并发未测 |
+| legacy 关闭在等待期间完成 | 同上（`join-completes`） | run 39319576695 | 桩在等待点清标志 |
 | 分配失败 owner：隔离表 + resume 回收 | `python3 tools/check-kapi-alloc-owner.py` | 自检 4/4；候选 4/4 | 静态；回收未运行验证 |
 | PM 状态机 9+2 条规则 | `python3 tools/check-pm-state-machine.py` | 11/11 | 静态 |
 | RM 门忙不进 STANDBY | `python3 tools/check-pm-exclusion.py` | 32/32 | 静态；代价未实测 |
