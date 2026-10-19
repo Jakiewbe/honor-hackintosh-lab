@@ -35,6 +35,12 @@ CHAIN = (
       'pre_sha256': '7e5492e0a0961e45ea75f664d2a16c49c66d728b93b8e3e87dca3ae9ebe38200',
       'post_sha256': '895de47ae03abc08d9a032f8f083db0be76aa5aa45317ebe37d7720a54c657cb',
       'defined_symbol': '_nvKmsKapiTryFreeDevice'},
+    {'patch': 'ogkm-r38-quiesce-order.patch',
+      'patch_sha256': '1171a8e675ffdc9d9d6dd39ff4a1a2a72cdd4bb0e44c4a4708fbee2d967edf12',
+      'source': 'src/nvidia-modeset/kapi/src/nvkms-kapi.c',
+      'pre_sha256': '895de47ae03abc08d9a032f8f083db0be76aa5aa45317ebe37d7720a54c657cb',
+      'post_sha256': '03f3b08e158b357d683b51896771aa457d72966bfed551bfc4303067a4acba0a',
+      'defined_symbol': '_nvKmsKapiTryFreeDevice'},
 )
 
 

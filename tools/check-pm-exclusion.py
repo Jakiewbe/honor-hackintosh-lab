@@ -100,7 +100,13 @@ def main():
     deferred = close_fn[wait_at:close_fn.index("return;", wait_at)]
     check("a timed-out close never calls nvKmsClose", "nvKmsClose" not in deferred)
     check("a timed-out close retains the wrapper", "nvkms_free" not in deferred)
-    check("a timed-out close refuses new work", "popen->closing = true" in deferred)
+    # The flag may legitimately be set before the wait (refusing new work immediately) or inside the
+    # timeout branch. Both satisfy the requirement; requiring one exact position made this check report
+    # a failure whenever the implementation moved the flag earlier.
+    closing_before_wait = "popen->closing = true" in close_fn[:wait_at]
+    closing_in_deferred = "popen->closing = true" in deferred
+    check("a timed-out close refuses new work", closing_before_wait or closing_in_deferred,
+          "closing set before wait" if closing_before_wait else "closing set in the deferred branch")
     check("a timed-out close is counted", "gKmsCloseDeferred++" in deferred)
 
     sp = braces(nv, nv.index("IOReturn NVRM::setPowerState(unsigned long ordinal, IOService *device)"))

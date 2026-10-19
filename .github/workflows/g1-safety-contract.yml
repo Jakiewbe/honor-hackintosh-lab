@@ -1,0 +1,76 @@
+name: g1 safety contract
+
+# Blocking safety gate, deliberately separate from the build gate: a green build must never imply
+# SAFETY_ACCEPTED, and a red safety contract must not erase the build evidence.
+#
+# Currently expected RED: P0-3 (RM busy then STANDBY) is still open, so check-pm-exclusion fails. The
+# free-order contract is green only after the R38 chain is applied.
+#
+# Manual dispatch only (project rule: no push/schedule triggers).
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  free-order:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch the pinned OGKM tree
+        run: |
+          set -euo pipefail
+          git clone --filter=blob:none --no-checkout https://github.com/NVIDIA/open-gpu-kernel-modules.git "$RUNNER_TEMP/ogkm"
+          git -C "$RUNNER_TEMP/ogkm" checkout --detach e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb
+
+      - name: Build the approved candidate and check the free order
+        run: |
+          set -euo pipefail
+          python3 - "$RUNNER_TEMP/ogkm" "$RUNNER_TEMP/ogkm-candidate" <<'PY'
+          import pathlib, sys
+          sys.path.insert(0, "tools")
+          import g1_ogkm_candidate as g
+          nv = pathlib.Path(sys.argv[1]); cand = pathlib.Path(sys.argv[2])
+          logs = cand.parent / "ogkm-logs"; logs.mkdir(parents=True, exist_ok=True)
+          manifest = g.make_candidate(nv, cand, pathlib.Path("research/gpu-safety-r5"), logs)
+          print("patches:", len(manifest["patches"]))
+          PY
+          python3 tools/check-kapi-free-order.py "$RUNNER_TEMP/ogkm-candidate/src/nvidia-modeset/kapi/src/nvkms-kapi.c"
+
+      - name: Self-test the free-order checker
+        run: |
+          set -euo pipefail
+          cd tools && python3 -m unittest test_check_kapi_free_order
+
+  pm-exclusion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch the pinned NullMoth tree
+        run: |
+          set -euo pipefail
+          git clone --filter=blob:none --no-checkout https://github.com/NullMoth/nvidia-macos-driver.git "$RUNNER_TEMP/nm"
+          git -C "$RUNNER_TEMP/nm" checkout --detach ac55984c473e746c2a8ebea7ba0913461aa7c393
+
+      - name: Apply the approved series
+        run: |
+          set -euo pipefail
+          python3 tools/apply_series.py --candidate "$RUNNER_TEMP/nm" --repo .
+
+      - name: PM exclusion contract (fails while P0-3 is open)
+        run: |
+          set -euo pipefail
+          python3 tools/check-pm-exclusion.py --source "$RUNNER_TEMP/nm" --out "$RUNNER_TEMP/pm" || {
+            echo "::error::SAFETY_CONTRACT: a busy RM gate still reaches STANDBY (P0-3 open)"; exit 1; }
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: g1-safety-pm
+          path: ${{ runner.temp }}/pm/**
+          if-no-files-found: error
