@@ -13,3 +13,6 @@
 请沿固定真实FreeDevice/KmsFreeDevice、OS wrapper/event worker、framebuffer dropKapiDevice/finishOrphanedDevice/kapiInit/creator retain链，给最小可失败关闭方案。入口须先禁止新callback并处理在途引用；拒绝须在破坏性资源销毁前传播；保留完整Device和creator，不只保wrapper；关闭中不得复用gDev；覆盖allocate失败自毁、锁序与PM线程身份。不得直接改公开表ABI却假定旧消费者匹配。
 
 按P0/P1/P2给固定文件/行号、触发条件、后果、建议与证据局限，并回答RTX2050距离初始化/真实离屏GPU执行/正确像素/错误传播/安全结束还缺哪些实际步骤。GPU未运行、KEXT-LOAD NO-GO、Intel基础显示保持；不重复“公开源码到顶/只能上机”的旧结论。
+
+
+最新再读R34-DEVICE-CALLER-CONTRACT-20261019.md、tools/g1_fb_device_close_contract.py和r34-caller-evidence/。本次没有新驱动修复。核对fixture确实提取两个完整FB方法和真实OGKM/OS函数、source hash绑定R33原生报告；5正常路径PASS、2拒绝路径FAIL且整体exit1，拒绝后gDev/creator均丢失。NISO/RM/IOKit与锁为注入边界，free只计数，不是已观察内核UAF。初始未使用变量编译失败与最终#error负控都未执行旧产物。不要把“失败已复现”写成“安全门禁通过”。审查该文档的版本化内部try-close设计，特别是入口quiesce、每阶段失败保留owner、drop/orphan/再绑定/allocate失败整链，指出仍缺的所有权或锁序约束；给出可落地的最小实现，不能把尚未实施方案当完成。

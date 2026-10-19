@@ -1,0 +1,3 @@
+/mnt/d/Hactk/g1-audit-fix-20261018/evidence/r34-fb-callers-compile-negative/fixture.cpp:643:2: error: #error COMPILE_NEGATIVE_CONTROL
+  643 | #error COMPILE_NEGATIVE_CONTROL
+      |  ^~~~~

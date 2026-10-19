@@ -1,0 +1,33 @@
+{
+  "level": "REAL_FB_OGKM_OS_BODIES_INJECTED_CPU_ONLY",
+  "source_sha256": {
+    "fb": "4849c2f4fcdac03f25c221e72372dc7c9cf8bca9957b5c0d6689deb2e8df7453",
+    "os": "7d86b6b96c0911b2aebd3fdc567fa5ba1dde1122630c515db28b271c3f1f4430",
+    "ogkm": "7e5492e0a0961e45ea75f664d2a16c49c66d728b93b8e3e87dca3ae9ebe38200"
+  },
+  "binding": "FB_AND_OS_SOURCE_MATCH_ACCEPTED_R33_NATIVE_REPORT;OGKM_FIXED_R3_SOURCE",
+  "native_report_sha256": "eb6cd2104952a8df3c9656fd48d5bf87eec8db9ddddf5db89b1adf21a3987c1d",
+  "fixture_sha256": "6467d01caa6dcba9a4d47c2845fdaa48a95d767427f3e85c61fba6fa8591a1dc",
+  "fb_methods": [
+    "void NVRMNVDAFramebuffer::dropKapiDevice()",
+    "void NVRMNVDAFramebuffer::finishOrphanedDevice()"
+  ],
+  "compile_argv": [
+    "g++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-I/mnt/d/Hactk/g1-audit-fix-20261018/candidate-audit-r34-device-preflight/kexts/NVRM",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/candidate-audit-r34-device-preflight/kexts/NVRM/kms_deferred.cpp",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/r34-fb-callers-compile-negative/fixture.cpp",
+    "-o",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/r34-fb-callers-compile-negative/fixture"
+  ],
+  "compile_exit": 1,
+  "binary_exists": false,
+  "scenarios": [],
+  "status": "COMPILE_FAILED",
+  "gpu": "NOT_RUN",
+  "device": "NO-GO"
+}

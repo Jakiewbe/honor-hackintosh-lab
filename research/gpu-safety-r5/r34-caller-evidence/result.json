@@ -1,0 +1,33 @@
+{
+  "stage": "SOURCE_MATCHED_CPU_CALLER_AUDIT_NOT_DRIVER_FIX",
+  "result": "CONTRACT_FAIL",
+  "source_commit": "7a5cb7188ef6477b7383f9529228bbb4426aa1fd",
+  "accepted_native_run": 39189188122,
+  "source_sha256": {
+    "fb": "4849c2f4fcdac03f25c221e72372dc7c9cf8bca9957b5c0d6689deb2e8df7453",
+    "os": "7d86b6b96c0911b2aebd3fdc567fa5ba1dde1122630c515db28b271c3f1f4430",
+    "ogkm": "7e5492e0a0961e45ea75f664d2a16c49c66d728b93b8e3e87dca3ae9ebe38200"
+  },
+  "normal_or_keep_paths_passed": 5,
+  "refusal_paths_failed": 2,
+  "compile_negative": "NONZERO_NO_BINARY_NO_EXECUTION",
+  "driver_source_changed": false,
+  "injected_boundaries": [
+    "IOKit classes/types, display gate, release counters, releaseOwnership",
+    "NISO cleanup, RM free, GPU close, semaphore free and allocator services",
+    "FREE_DEVICE ioctl refusal and transition to LOST after caller checks; no actual PM scheduling"
+  ],
+  "real_bodies": [
+    "framebuffer dropKapiDevice/finishOrphanedDevice",
+    "OGKM KmsFreeDevice/FreeDevice/event handler",
+    "OS close, PM pin/running/unpin and scoped queue helpers; real kms_deferred.cpp"
+  ],
+  "not_proven": [
+    "actual XNU interleaving/locks",
+    "real memory deletion or kernel UAF",
+    "NISO failure propagation",
+    "complete Device/creator safe teardown",
+    "GPU initialization/render/readback"
+  ],
+  "device": "NO-GO"
+}

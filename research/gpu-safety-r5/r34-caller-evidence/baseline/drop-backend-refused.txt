@@ -1,0 +1,2 @@
+FAIL drop-backend-refused CALLER_DROPPED_DEVICE_AND_CREATOR_AFTER_REFUSAL
+OBSERVATION gDev_retained=0 creator_retained=0 creator_release=1 RM_free=1 Device_free=1 backend_close=0 wrapper_free=0 queued=1 pin=0 ownership_release=1

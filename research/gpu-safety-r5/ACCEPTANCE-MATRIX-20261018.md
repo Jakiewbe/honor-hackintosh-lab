@@ -11,7 +11,7 @@
 | 发布物导入对照 | 修正有界解析器后472项、与候选交集471 | 候选独有panic；发行独有IOUserClient::free来自两张派生虚表+160数据重定位，候选经父类虚表间接调用；完整发布配方仍未知 |
 | PCI调用侧 | 六方法真实对象导入/直接调用/SDK形状一致 | run39140902850、固定source9015c246；九TU参数/源码/依赖与历史逐字节一致；不是R30/完整provider ABI验收 |
 | NVLink四锁 | 真实后端与17项CPU合同及原生链接已验证 | 不能据此关闭freeDevice/PM问题 |
-| P0-4 freeDevice关闭拒绝 | OPEN | 旧void边界与所有权/返回传播需继续改造；不是“项目无能力修改” |
+| P0-4 freeDevice关闭拒绝 | FAIL；R34两个真实FB调用者反例均exit1 | 拒绝后RM/Device/creator各释放一次，gDev也被清空；新可失败接口尚未实现 |
 | RM门忙仍STANDBY | OPEN，当前结构审计31/32，exit1 | nv_xnu_pm_close超时后仍继续；不能以IOPM ack要求证明其安全 |
 | 延迟KMS close回收 | OPEN；R32b局部源码/CPU候选通过 | R32b run39186519502原生/完整链接与12限定CPU通过；正常busy仍无界join、单独FAIL。容量耗尽、open rollback、上层Device生命周期/PM交错仍未闭合 |
 | 延迟队列单一所有权 | R30 CPU两项FAIL，R31同合同PASS | R31 run39184119617原生/完整链接通过；真实close合同2/4、两项FAIL，不作为PM安全放行 |
@@ -34,3 +34,5 @@ R32局部候选：[关闭重试与未解决项](R32-CLOSE-RETRY-20261019.md)。�
 2026-10-19 R33：原生队列路线已排除遗漏；R3+NISO官方参数双源候选和最终归档/定义门禁已实现，R33 Darwin未运行前保持待验收。R32b历史OGKM route FAIL不改写。[实现与下一断点](R33-OGKM-FINAL-ROUTE-20261019.md)。
 
 R33最终验收：run39189188122 / source7a5cb71 / artifact12159721676，1954文本ZIP成员已核验，1280官方TU及完整候选来源PASS。历史排队段仅为当时记录；P0-4、normal busy join、RM busy→STANDBY继续FAIL，GPU未运行、设备NO-GO。
+
+R34：[真实调用者合同及可失败关闭设计](R34-DEVICE-CALLER-CONTRACT-20261019.md)，五条正常路径PASS、两条拒绝路径FAIL，整体exit1；未新增驱动补丁，不改变R33原生结果。

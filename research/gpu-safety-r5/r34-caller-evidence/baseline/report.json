@@ -1,0 +1,69 @@
+{
+  "level": "REAL_FB_OGKM_OS_BODIES_INJECTED_CPU_ONLY",
+  "source_sha256": {
+    "fb": "4849c2f4fcdac03f25c221e72372dc7c9cf8bca9957b5c0d6689deb2e8df7453",
+    "os": "7d86b6b96c0911b2aebd3fdc567fa5ba1dde1122630c515db28b271c3f1f4430",
+    "ogkm": "7e5492e0a0961e45ea75f664d2a16c49c66d728b93b8e3e87dca3ae9ebe38200"
+  },
+  "binding": "FB_AND_OS_SOURCE_MATCH_ACCEPTED_R33_NATIVE_REPORT;OGKM_FIXED_R3_SOURCE",
+  "native_report_sha256": "eb6cd2104952a8df3c9656fd48d5bf87eec8db9ddddf5db89b1adf21a3987c1d",
+  "fixture_sha256": "95541597293f75b7c8d49baebc703979e326ba3fbd1a7033286be6f2c05e30f3",
+  "fb_methods": [
+    "void NVRMNVDAFramebuffer::dropKapiDevice()",
+    "void NVRMNVDAFramebuffer::finishOrphanedDevice()"
+  ],
+  "compile_argv": [
+    "g++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-I/mnt/d/Hactk/g1-audit-fix-20261018/candidate-audit-r34-device-preflight/kexts/NVRM",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/candidate-audit-r34-device-preflight/kexts/NVRM/kms_deferred.cpp",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/r34-fb-callers-v2/fixture.cpp",
+    "-o",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/r34-fb-callers-v2/fixture"
+  ],
+  "compile_exit": 0,
+  "binary_exists": true,
+  "scenarios": [
+    {
+      "name": "drop-success",
+      "exit": 0,
+      "output": "PASS drop-success\n"
+    },
+    {
+      "name": "orphan-success",
+      "exit": 0,
+      "output": "PASS orphan-success\n"
+    },
+    {
+      "name": "drop-other-user",
+      "exit": 0,
+      "output": "PASS drop-other-user\n"
+    },
+    {
+      "name": "pin-refused",
+      "exit": 0,
+      "output": "PASS pin-refused\n"
+    },
+    {
+      "name": "orphan-other-users",
+      "exit": 0,
+      "output": "PASS orphan-other-users\n"
+    },
+    {
+      "name": "drop-backend-refused",
+      "exit": 1,
+      "output": "FAIL drop-backend-refused CALLER_DROPPED_DEVICE_AND_CREATOR_AFTER_REFUSAL\nOBSERVATION gDev_retained=0 creator_retained=0 creator_release=1 RM_free=1 Device_free=1 backend_close=0 wrapper_free=0 queued=1 pin=0 ownership_release=1\n"
+    },
+    {
+      "name": "orphan-backend-refused",
+      "exit": 1,
+      "output": "FAIL orphan-backend-refused CALLER_DROPPED_DEVICE_AND_CREATOR_AFTER_REFUSAL\nOBSERVATION gDev_retained=0 creator_retained=0 creator_release=1 RM_free=1 Device_free=1 backend_close=0 wrapper_free=0 queued=1 pin=0 ownership_release=2\n"
+    }
+  ],
+  "status": "CONTRACT_FAIL",
+  "gpu": "NOT_RUN",
+  "device": "NO-GO"
+}
