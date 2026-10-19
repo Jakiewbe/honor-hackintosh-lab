@@ -154,4 +154,11 @@ def main():
     (a.out/'report.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
     print(json.dumps(report));return 0 if report['status']=='PASS_CPU_ASAN_ONLY' else 1
 
-if __name__=='__main__':raise SystemExit(main())
+if __name__=='__main__':
+    try:
+        raise SystemExit(main())
+    except SystemExit:
+        raise
+    except Exception as error:  # annotations survive the missing log/artifact channel
+        print('::error::R36_CONTRACT '+(type(error).__name__+': '+str(error))[:280], flush=True)
+        raise
