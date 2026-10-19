@@ -83,8 +83,16 @@ jobs:
       - name: Deferred-close overflow guard
         run: |
           set -euo pipefail
-          python3 tools/check-kms-close-overflow.py --source "\/nm" || {
-            echo "::error::SAFETY_CONTRACT: an overflowed close could be lost again"; exit 1; }
+          set +e
+          python3 tools/check-kms-close-overflow.py --source "$RUNNER_TEMP/nm" > "$RUNNER_TEMP/overflow.txt" 2>&1
+          rc=$?
+          set -e
+          cat "$RUNNER_TEMP/overflow.txt"
+          grep -E '^(FAIL|RESULT)' "$RUNNER_TEMP/overflow.txt" | sed 's/^/::error::OVERFLOW_GUARD /' || true
+          if [ "$rc" -ne 0 ]; then
+            echo "::error::SAFETY_CONTRACT: an overflowed close could be lost again (rc=$rc)"
+            exit 1
+          fi
 
       - name: PM state machine contract (A4 and B4 fail today)
         run: |
