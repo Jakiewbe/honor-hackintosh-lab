@@ -29,6 +29,12 @@
 #include <cstring>
 #include <stdexcept>
 #include "kms_deferred.h"
+
+// Negative compile control: the same compile line with -DCOMPILE_NEGATIVE_CONTROL must fail, so a stale
+// binary from an earlier run can never be mistaken for a passing contract.
+#ifdef COMPILE_NEGATIVE_CONTROL
+#error COMPILE_NEGATIVE_CONTROL
+#endif
 using NvU32 = uint32_t;
 using NvBool = int;
 using thread_call_t = void *;
