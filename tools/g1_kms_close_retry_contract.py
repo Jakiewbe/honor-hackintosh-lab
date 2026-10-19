@@ -218,7 +218,6 @@ NAMES = [
     'static void kms_close_retry_schedule_locked(void)',
     'static void kms_deferred_close_impl(void *data, void *)',
     'static int kms_deferred_try_free_impl(void *node, void *)',
-    'static void kms_close_overflow_drain_locked(void)',
     'static void kms_close_retry_fire(thread_call_param_t, thread_call_param_t)',
     'static void kms_close_remember_locked(struct nvkms_per_open *popen)',
     'static void kms_close_common(struct nvkms_per_open *popen)',
@@ -226,6 +225,7 @@ NAMES = [
     'void nvkms_xnu_suspend_abort(uint32_t seq)',
     'void nvkms_xnu_resume(NvU32 gpuId, NvBool gpuOk)',
     'void nvkms_xnu_reap_closes(void)',
+    'static void kms_close_overflow_drain_locked(void)',
 ]
 SCENARIOS = ('suspended-retain', 'deferred-recover', 'normal-free-failure', 'stalled-callback',
              'cancel-pending', 'pending-abort', 'lost-no-retry',
