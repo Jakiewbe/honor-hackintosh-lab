@@ -72,7 +72,7 @@ jobs:
         run: |
           set -euo pipefail
           set +e
-          python3 tools/check-pm-exclusion.py --source "$RUNNER_TEMP/nm" --out "$RUNNER_TEMP/pm" > "$RUNNER_TEMP/pm.txt" 2>&1
+          python3 tools/check-pm-exclusion.py --source "$RUNNER_TEMP/nm" --out "$RUNNER_TEMP/pm-exclusion" > "$RUNNER_TEMP/pm.txt" 2>&1
           rc=$?
           set -e
           cat "$RUNNER_TEMP/pm.txt"
@@ -87,5 +87,7 @@ jobs:
         if: always()
         with:
           name: g1-safety-pm
-          path: ${{ runner.temp }}/pm/**
+          path: |
+            ${{ runner.temp }}/pm/**
+            ${{ runner.temp }}/pm-exclusion/**
           if-no-files-found: error
