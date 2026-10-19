@@ -93,7 +93,7 @@ def generate(nm,kapi):
     prefix=prefix.replace('schedules, event_runs, lock_depth','schedules, lock_depth')
     declarations=[]
     for name in ('static thread_call_t gKmsCloseWorker;', 'static bool gKmsCloseRetryReady',
-                 'static bool gKmsCloseRetryArmed;', 'static const uint32_t kKmsCloseRetryMs'):
+                 'static bool gKmsCloseRetryArmed;', 'static const uint32_t kKmsCloseRetryMs', 'static const uint32_t kKmsCloseJoinMs'):
         rows=[r for r in os.splitlines() if r.startswith(name)]
         if len(rows)!=1:raise ValueError('state definition differs')
         declarations+=rows

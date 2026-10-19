@@ -227,7 +227,7 @@ def main():
     source = args.out/'fixture.cpp'
     declarations = []
     for prefix in ('static thread_call_t gKmsCloseWorker;', 'static bool gKmsCloseRetryReady',
-                   'static bool gKmsCloseRetryArmed;', 'static const uint32_t kKmsCloseRetryMs'):
+                   'static bool gKmsCloseRetryArmed;', 'static const uint32_t kKmsCloseRetryMs', 'static const uint32_t kKmsCloseJoinMs'):
         lines = [line for line in text.splitlines() if line.startswith(prefix)]
         if len(lines) != 1: raise ValueError('retry state definition differs: '+prefix)
         declarations.append(lines[0])
