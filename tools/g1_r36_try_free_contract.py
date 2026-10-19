@@ -104,6 +104,7 @@ def generate(nm,kapi):
     bodies.insert(4,os[ops:os.index('\n};',ops)+3])
     bodies += [function(os,n) for n in ('NvBool nvkms_xnu_pm_pin(void)',
       'void nvkms_xnu_pm_unpin(void)','NvBool nvkms_xnu_pm_running(void)',
+      'extern "C" NvBool nvkms_xnu_try_quiesce_kapi(struct nvkms_per_open *popen)',
       'extern "C" NvBool nvkms_xnu_try_close_kapi(struct nvkms_per_open *popen)')]
     bodies += [function(k,n) for n in ('static NvBool KmsFreeDevice(struct NvKmsKapiDevice *device)',
       'NvBool nvKmsKapiTryFreeDevice(struct NvKmsKapiDevice *device)',
