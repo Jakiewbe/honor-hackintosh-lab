@@ -80,6 +80,12 @@ jobs:
             --source "$RUNNER_TEMP/nm" || {
             echo "::error::SAFETY_CONTRACT: allocation-failure owner contract failed"; exit 1; }
 
+      - name: Deferred-close overflow guard
+        run: |
+          set -euo pipefail
+          python3 tools/check-kms-close-overflow.py --source "\/nm" || {
+            echo "::error::SAFETY_CONTRACT: an overflowed close could be lost again"; exit 1; }
+
       - name: PM state machine contract (A4 and B4 fail today)
         run: |
           set -euo pipefail
