@@ -1,0 +1,37 @@
+--- a/src/nvidia-modeset/kapi/src/nvkms-kapi.c
++++ b/src/nvidia-modeset/kapi/src/nvkms-kapi.c
+@@ -421,15 +421,18 @@
+  */
+ /* Internal Darwin pair; public NvKmsKapiFunctionsTable layout is unchanged. */
+ extern NvBool nvkms_xnu_try_close_kapi(struct nvkms_per_open *popen);
++extern NvBool nvkms_xnu_try_quiesce_kapi(struct nvkms_per_open *popen);
+ extern NvBool nvkms_xnu_pm_pin(void);
+ extern void nvkms_xnu_pm_unpin(void);
+ 
+ static NvBool KmsFreeDevice(struct NvKmsKapiDevice *device)
+ {
+-    /* Free notifier and semaphore memory */
+-
+-    nvKmsKapiFreeNisoSurface(device, &device->semaphore);
+-    nvKmsKapiFreeNisoSurface(device, &device->notifier);
++    /* Stop callbacks first: they may still reference the notifier or semaphore surface, so neither may be
++     * unmapped before this returns NV_TRUE. */
++
++    if (device->pKmsOpen != NULL && !nvkms_xnu_try_quiesce_kapi(device->pKmsOpen)) {
++        return NV_FALSE; /* Retain all remaining Device/owner state. */
++    }
+ 
+     /* Free NVKMS device */
+ 
+@@ -446,6 +449,11 @@
+ 
+         device->hKmsDevice = device->hKmsDisp = 0x0;
+     }
++
++    /* Only now, with the callbacks stopped and NVKMS gone, unmap the NISO surfaces. */
++
++    nvKmsKapiFreeNisoSurface(device, &device->semaphore);
++    nvKmsKapiFreeNisoSurface(device, &device->notifier);
+ 
+     /* Close NVKMS */
+ 

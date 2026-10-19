@@ -1,0 +1,39 @@
+--- a/kexts/NVRM/os-nvkms-xnu.cpp
++++ b/kexts/NVRM/os-nvkms-xnu.cpp
+@@ -237,7 +237,10 @@
+ // Internal result API for the complete KAPI Device owner. Failure never queues
+ // or frees popen: the caller retains Device, popen and creator for an explicit retry.
+ // The caller holds a PM pin through every KMS/RM release. No callback join here.
+-extern "C" NvBool nvkms_xnu_try_close_kapi(struct nvkms_per_open *popen)
++// Stop callbacks without tearing anything down. NVKMS surfaces the callbacks use must not be unmapped
++// before this returns NV_TRUE: that ordering is what keeps an in-flight event from touching freed state.
++// `closing` is deliberately left alone - FREE_DEVICE still has to go through this per-open.
++extern "C" NvBool nvkms_xnu_try_quiesce_kapi(struct nvkms_per_open *popen)
+ {
+     if (!popen) return NV_TRUE;
+     if (!gKmsLock) return NV_FALSE;
+@@ -258,8 +261,23 @@
+         return NV_FALSE;
+     }
+     popen->eventCall = NULL;
++    popen->eventWanted = false;
++    IOLockUnlock(gKmsLock);
++    return NV_TRUE;
++}
++
++// Close NVKMS and free the wrapper. Quiescing here again is harmless and keeps the pair safe when the
++// caller skipped the explicit quiesce.
++extern "C" NvBool nvkms_xnu_try_close_kapi(struct nvkms_per_open *popen)
++{
++    if (!nvkms_xnu_try_quiesce_kapi(popen)) return NV_FALSE;
++    if (!popen) return NV_TRUE;
++    IOLockLock(gKmsLock);
++    if (popen->closing) {
++        IOLockUnlock(gKmsLock);
++        return NV_FALSE;
++    }
+     popen->closing = true;
+-    popen->eventWanted = false;
+     if (popen->data) nvKmsClose(popen->data);
+     popen->data = NULL;
+     popen->device = NULL;
