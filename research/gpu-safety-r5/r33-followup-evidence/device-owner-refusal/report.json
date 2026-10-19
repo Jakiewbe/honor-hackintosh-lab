@@ -1,0 +1,25 @@
+{
+  "level": "REAL_OGKM_AND_DRIVER_BODIES_INJECTED_CPU_ONLY",
+  "binding": "LOCAL_SOURCE_ONLY",
+  "os_sha256": "7d86b6b96c0911b2aebd3fdc567fa5ba1dde1122630c515db28b271c3f1f4430",
+  "ogkm_sha256": "7e5492e0a0961e45ea75f664d2a16c49c66d728b93b8e3e87dca3ae9ebe38200",
+  "ogkm_input": "R3_NULL_GUARD_CANDIDATE",
+  "fixture_sha256": "01ac4d60bbc8178b7d4eb585a7d5424e594848c7b7918181a4450f52ef40ad6d",
+  "scenario": "backend-refused",
+  "compile_argv": [
+    "g++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-I/mnt/d/Hactk/g1-audit-fix-20261018/candidate-audit-r32b-close-device-boundary/kexts/NVRM",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/candidate-audit-r32b-close-device-boundary/kexts/NVRM/kms_deferred.cpp",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/r33-device-owner-refusal/fixture.cpp",
+    "-o",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/r33-device-owner-refusal/fixture"
+  ],
+  "compile_exit": 0,
+  "run_exit": 1,
+  "status": "CONTRACT_FAIL",
+  "output": "CONTRACT_FAIL DEVICE_DESTROYED_AFTER_KMS_REFUSAL backend_close=0 wrapper_free=0 queued=1 device_free=1 rm_free=1 events=0 sleeps=0\n"
+}

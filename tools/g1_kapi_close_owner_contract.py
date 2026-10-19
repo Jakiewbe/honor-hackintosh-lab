@@ -116,7 +116,11 @@ def main():
     p.add_argument('--scenario',choices=('active-event','backend-refused'),default='active-event')
     args = p.parse_args()
     args.out.mkdir(parents=True,exist_ok=False)
-    if sha(args.ogkm_kapi) != '66437bc38d96d3b4f15546c3e6f7a8c0caccc158b35893c2406f80f2e6e8816b':
+    kapi_sha=sha(args.ogkm_kapi)
+    accepted={
+        '66437bc38d96d3b4f15546c3e6f7a8c0caccc158b35893c2406f80f2e6e8816b':'FIXED_ORIGINAL',
+        '7e5492e0a0961e45ea75f664d2a16c49c66d728b93b8e3e87dca3ae9ebe38200':'R3_NULL_GUARD_CANDIDATE'}
+    if kapi_sha not in accepted:
         raise ValueError('OGKM fixed KAPI source mismatch')
     unit=args.candidate/'kexts/NVRM'
     os_text=(unit/'os-nvkms-xnu.cpp').read_text(encoding='utf-8')
@@ -149,7 +153,7 @@ def main():
     (args.out/'compile.txt').write_text(result.stdout+result.stderr,encoding='utf-8')
     report={'level':'REAL_OGKM_AND_DRIVER_BODIES_INJECTED_CPU_ONLY',
         'binding':'LOCAL_SOURCE_ONLY','os_sha256':sha(unit/'os-nvkms-xnu.cpp'),
-        'ogkm_sha256':sha(args.ogkm_kapi),'fixture_sha256':sha(source),
+        'ogkm_sha256':kapi_sha,'ogkm_input':accepted[kapi_sha],'fixture_sha256':sha(source),
         'scenario':args.scenario,'compile_argv':command,'compile_exit':result.returncode,'run_exit':None,'status':'COMPILE_FAILED'}
     if result.returncode==0 and binary.is_file():
         result=subprocess.run([str(binary),args.scenario],capture_output=True,text=True,timeout=10)

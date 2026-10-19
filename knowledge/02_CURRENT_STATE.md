@@ -1,4 +1,4 @@
-> **2026-10-19 R33：R32b原生/队列实际链接已独立复核；确认R3只进探针、完整KAPI仍原始源。现以固定两补丁/两源完整候选修正官方逐TU源选择，新增实际归档/why_load/最终定义门禁。3871文件往返仅两源变化、NISO真实函数CPU 3/3；R33 Darwin尚待执行。关闭三项FAIL不变，GPU未运行、设备NO-GO。** [本轮实现与断点](../research/gpu-safety-r5/R33-OGKM-FINAL-ROUTE-20261019.md)。
+> **2026-10-19 R33源码已推送7a5cb71；run39189188122已触发，最近观察为queued，原生尚待结果/产物复核。R32b原生与队列实际链接成立；本轮修正OGKM官方参数源选择并纳入NISO两行修复。局部CPU通过；Device拒绝后继续销毁、正常无界join、RM busy→STANDBY仍FAIL，GPU未运行、设备NO-GO。** [当前证据与断点](../research/gpu-safety-r5/R33-OGKM-FINAL-ROUTE-20261019.md)。
 
 > **2026-10-19 R31原生已验收：run39184119617通过，十个NVRM C++ TU、31个native补丁记录、官方1280个C/C++ TU+5shader和完整候选链接，472导入，选定ABI通过。队列去重/唯一drain的CPU合同与本次原生快照绑定。新增真实关闭函数合同2/4通过，正常close回调释放失败未入队及eventBusy无界等待两项保持FAIL；RM busy→STANDBY仍31/32 FAIL。完整ABI/loader、设备初始化/渲染/像素/安全结束未验收，设备NO-GO。** [原生证据与下一断点](../research/gpu-safety-r5/R31-NATIVE-AND-CLOSE-CONTRACT-20261019.md)。
 

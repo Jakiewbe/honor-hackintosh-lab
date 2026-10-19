@@ -15,8 +15,8 @@
 | RM门忙仍STANDBY | OPEN，当前结构审计31/32，exit1 | nv_xnu_pm_close超时后仍继续；不能以IOPM ack要求证明其安全 |
 | 延迟KMS close回收 | OPEN；R32b局部源码/CPU候选通过 | R32b run39186519502原生/完整链接与12限定CPU通过；正常busy仍无界join、单独FAIL。容量耗尽、open rollback、上层Device生命周期/PM交错仍未闭合 |
 | 延迟队列单一所有权 | R30 CPU两项FAIL，R31同合同PASS | R31 run39184119617原生/完整链接通过；真实close合同2/4、两项FAIL，不作为PM安全放行 |
-| OGKM补丁进入最终对象 | FAIL | R3仅独立NVKAPI探针；完整链接KAPI为原始66437bc，实际why_load已确认；g1_ogkm_patch_route exit1 |
-| NISO参数身份 | 局部候选CPU通过；未原生编译 | 原始清错notifier、3 FAIL；两行参数修复3 PASS；错误传播未修，尚未接入full build |
+| OGKM补丁进入最终对象 | R32b历史FAIL；R33修复源码已推，CI排队待验 | R3仅独立NVKAPI探针；完整链接KAPI为原始66437bc，实际why_load已确认；g1_ogkm_patch_route exit1 |
+| NISO参数身份 | 局部候选CPU通过；R33完整源路线已接入，原生待验 | 原始清错notifier、3 FAIL；两行参数修复3 PASS；错误传播未修，尚未接入full build |
 | Kext加载 | 未执行、NO-GO | 未签名/安装/加载/卸载 |
 | GPU初始化/渲染/正确像素/安全结束 | 未执行 | 编译/链接/CPU检查都不替代这四层证据 |
 | Intel基础显示 | 保持现状，不扩大显示所有权 | 不进入G2/G3/WindowServer/Intel Metal |

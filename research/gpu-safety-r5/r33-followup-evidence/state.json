@@ -1,0 +1,11 @@
+{
+  "source": "7a5cb7188ef6477b7383f9529228bbb4426aa1fd",
+  "run_id": 39189188122,
+  "observed_status": "queued",
+  "observed_conclusion": null,
+  "native": "NOT_ACCEPTED_PENDING_RUN_AND_ARTIFACT_REVIEW",
+  "gpu": "NOT_RUN",
+  "device": "NO-GO",
+  "checker_followup": "POSIX runner identities on Windows; missing manifest always nonzero",
+  "current_r3_owner_contract": "compile0/run1 DEVICE_DESTROYED_AFTER_KMS_REFUSAL"
+}

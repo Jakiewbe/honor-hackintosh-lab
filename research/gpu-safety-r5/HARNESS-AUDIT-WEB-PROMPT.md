@@ -32,3 +32,8 @@ P0-4补强：backend-refused注入真实FreeDevice仍RM free1/Device free1、bac
 已排除队列遗漏：源051651e的BASELINE_CPP包含kms_deferred.cpp，R32b实际队列snapshot/object/finalARGV与四个最终定义已复算。避免将本地过时脚本当runner源码。历史R32b OGKM route仍exit1，不撤销完整编译事实。NISO候选只有成功路径参数身份修复，不得说完整错误传播/Device释放已修。
 
 报告应回答：距离RTX2050真实初始化/离屏GPU执行/正确像素/错误传播/安全结束还缺什么；将源码、CPU合同、原生对象、最终候选链接、loader/完整ABI及实机分层。正常busy join、P0-4和RM busy→STANDBY三项FAIL不得混入绿色总数。给出下一项能推进真实调用链的最小修改，不制造“源码到顶/只能上机”的结论。只读审查，不运行设备，不发送Issue/PR。
+
+
+R33实际构建源码固定7a5cb7188ef6477b7383f9529228bbb4426aa1fd，run39189188122已触发，本文写作时排队。必须独立查询状态，不能以派发204作为原生通过。本文所在后续提交还修了门禁缺manifest必失败、POSIX路径跨平台身份；工具fixture三项在Windows/WSL通过。本轮驱动源码与1280官方参数不因这些工具修补而改变，审查CI产物时使用当前更严格工具。
+
+本轮R3候选的真实FreeDevice backend-refused CPU合同仍compile0/run1、RM/Device各free1。请审查r33-followup-evidence并给出入口quiesce/完整Device所有权/可失败析构传播的最小方案：先看调用者怎样保留gDev、creator、资源与pin，再决定API，不能只改void close。GPU执行始终未运行，设备NO-GO。

@@ -14,7 +14,7 @@
 
 固定OGKM仍为 `e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb`，NullMoth仍为 `ac55984c473e746c2a8ebea7ba0913461aa7c393`；不替换版本、不改原始缓存。
 
-`g1_ogkm_candidate.py` 建立明确命名的完整源码候选副本，放在CI文本采集目录之外。只允许R3与NISO两项补丁、两个源文件变化；哈希逐项固定，全部3871个文件名/内容比较，正向、反向恢复、重新应用及编译后再次比较。头文件与其他输入不得变化，拒绝链接和额外文件。
+`g1_ogkm_candidate.py` 建立明确命名的完整源码候选副本，放在CI文本采集目录之外。只允许R3与NISO两项补丁、两个源文件变化；哈希逐项固定，全部3871个文件名/内容比较，正向、反向恢复、重新应用及编译后再次比较。头文件与其他输入不得变化，拒绝符号链接和额外文件。
 
 `g1_full_build.py` 仍从固定原树展开官方逐TU命令；仅将两个明确目标TU的源操作数换成候选副本文件，保留官方每TU flags、原始cwd、原始头路径与既有Darwin桥。其他1278个TU保持原源选择，五shader/NVLink路线不变。每个修改TU记录原始/候选双哈希、补丁身份、真实源路径、官方/实际ARGV、对象哈希和日志。不使用独立探针对象替换完整参数对象。
 
@@ -42,3 +42,14 @@ NISO补丁只有两行，把错误清理 `device->notifier` 改为传入的 `sur
 本轮CI若通过，只关闭“这两项补丁实际进入官方参数归档及最终链接”的来源缺口。下一步沿真实FreeDevice/KmsFreeDevice调用链处理完整Device所有权和可失败的关闭传播；不能把void末尾记录失败当成停止了析构。RTX2050初始化、GPU执行、像素读回和安全结束尚未运行，仍然不能提供可部署驱动。
 
 回退限于本轮指定文本修改或回到原始源选择；不得通过删除FAIL、使用旧对象/探针对象、放宽参数比较来回退。没有新建分支/worktree、没有.agent写入、没有设备或系统修改。
+
+
+## 发布后的复核与当前运行
+
+驱动构建源码已推送 `7a5cb7188ef6477b7383f9529228bbb4426aa1fd`；[run39189188122](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39189188122)已按授权触发，最近查询仍排队、未分配runner。没有R33原生完成结论，等待真实日志及文本产物后才能验收。
+
+检查工具随后补强两点，均不改本次驱动输入：缺少完整候选manifest时，即使单个探针源相同也必须exit1；离线复核使用PurePosixPath保留runner路径身份，避免Windows路径分隔符造成误判。三项route测试（包含多种负控）在Windows与WSL Python通过；不能用修改元数据的工具fixture当原生编译。当前CI使用7a5cb71中的检查工具，后续产物还要用补强后的工具独立复算，无需因此重复1280编译。
+
+对本轮R3候选真实FreeDevice再运行backend-refused合同：源码7e5492e0...、OS7d86b6b...，compile0/run1；backend_close0、wrapper_free0、queue1、RM_free1、Device_free1。这是关闭拒绝仍继续销毁的CPU反例，非内核UAF观察；本轮源码修复没有关闭P0-4。证据见[r33-followup-evidence](r33-followup-evidence/)。
+
+下一接手点是读取此run的真实状态和产物：失败仅按第一条错误修；成功则用当前route工具复核双源/官方参数/归档成员/最终定义并保存结果。若runner继续排队，不重复触发，不写成编译失败或成功。确认来源后再实现完整Device生命周期，不能用void close尾端补丁冒充停止了上层析构。

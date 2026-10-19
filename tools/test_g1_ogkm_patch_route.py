@@ -1,9 +1,11 @@
 """Synthetic route metadata negative controls; not compilation/driver evidence."""
 import copy
 import json
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import tempfile
 import unittest
+import subprocess
+import sys
 from g1_ogkm_candidate import SPECS
 from g1_ogkm_patch_route import check_candidate_route
 from g1_full_build import darwin_command
@@ -16,25 +18,26 @@ def log(path, argv, body=''):
 class RouteTests(unittest.TestCase):
     def fixture(self, root):
         out=root/'full-source'; out.mkdir()
-        original=(root/'original').resolve(); candidate=(root/'candidate').resolve()
+        original=PurePosixPath('/runner/original'); candidate=PurePosixPath('/runner/candidate')
+        runnerout=PurePosixPath('/runner/full-source')
         cwd=original/'src/nvidia-modeset'; sdk='/fixture-sdk'
         full={'status':'COMPLETE_SOURCE_CANDIDATE_LINKED_NOT_CLOSURE_OR_ABI_ACCEPTED',
             'compiler_failures':0,'sdk':sdk,'objects':[],
             'ogkm_candidate':{'original_root':str(original),'candidate_root':str(candidate),
                 'patches':list(SPECS),'reverse_restores_original':True,'exact_two_source_delta':True}}
         for index,s in enumerate(SPECS):
-            obj=out/('actual-'+str(index)+'.o'); source=candidate/s['source']
+            obj=runnerout/('actual-'+str(index)+'.o'); source=candidate/s['source']
             official=['clang','-DOFFICIAL_TU_'+str(index)+'=1','-c',str(original/s['source']),'-o','old.o']
-            argv=darwin_command(official,source,obj,sdk,Path(sdk)/'System/Library/Frameworks/Kernel.framework/Headers')
+            argv=darwin_command(official,source,obj,sdk,PurePosixPath(sdk)/'System/Library/Frameworks/Kernel.framework/Headers')
             row={'source':s['source'],'component':'nvidia-modeset','source_sha256':s['candidate_sha256'],
                 'original_source_sha256':s['original_sha256'],'compiled_source':str(source),
                 'candidate_patch':dict(s),'compile_cwd':str(cwd),'compile_exit':0,'object_sha256':'fixture-hash',
                 'object':str(obj),'official_argv':official,'candidate_argv':argv,'log':str(index)+'.txt'}
             log(out/row['log'],argv); full['objects'].append(row)
-        archive=str(out/'libnvidia-modeset.a')
+        archive=str(runnerout/'libnvidia-modeset.a')
         full['link']={'exit':0,'archive_order':[archive],'baseline_objects':[],
             'extra_objects':[],'artifact_sha256':'fixture-not-an-artifact'}
-        dest=str(out/'NVRM-complete-source-candidate.kext/Contents/MacOS/NVRM')
+        dest=str(runnerout/'NVRM-complete-source-candidate.kext/Contents/MacOS/NVRM')
         link=['xcrun','clang++','-arch','x86_64','-mmacosx-version-min=15.5','-fapple-kext',
             '-isysroot',sdk,'-nostdlib','-Xlinker','-kext','-Wl,-why_load',archive,
             '-lkmodc++','-lkmod','-lcc_kext','-o',dest]
@@ -75,6 +78,17 @@ class RouteTests(unittest.TestCase):
                     with self.subTest(file=file,old=old), self.assertRaises(ValueError):
                         check_candidate_route(root,native,full)
                 finally: p.write_text(good)
+
+    def test_missing_manifest_never_accepts_matching_probe_source(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d); native,full=self.fixture(root)
+            del full['ogkm_candidate']
+            (root/'full-source/report.json').write_text(json.dumps(full))
+            result=subprocess.run([sys.executable,str(Path(__file__).with_name('g1_ogkm_patch_route.py')),
+                '--artifact-dir',str(root),'--out',str(root/'result')],capture_output=True,text=True)
+            self.assertEqual(result.returncode,1)
+            report=json.loads((root/'result/report.json').read_text())
+            self.assertEqual(report['status'],'FAIL_FULL_CANDIDATE_MANIFEST_MISSING')
 
 
 if __name__=='__main__': unittest.main()

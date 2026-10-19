@@ -1,0 +1,1 @@
+CONTRACT_FAIL DEVICE_DESTROYED_AFTER_KMS_REFUSAL backend_close=0 wrapper_free=0 queued=1 device_free=1 rm_free=1 events=0 sleeps=0
