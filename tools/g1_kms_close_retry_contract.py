@@ -143,6 +143,25 @@ int main(int argc, char **argv) {
             on_deadline_wait = nullptr;
             require(backend_closes == 1 && wrapper_frees == 1 && sleeps == 0 && deadline_sleeps >= 1,
                     "close did not complete once the callback finished during the wait");
+        } else if (std::strcmp(name, "overflow-reclaim") == 0) {
+            // Fill the fixed deferred table, then close once more: the extra wrapper must be retained on the
+            // overflow list and reclaimed by the same retry pass, not lost.
+            static struct nvkms_per_open many[KMS_DEFERRED_CAPACITY + 1];
+            gKmsPmState = kKmsPmLost;
+            for (unsigned i = 0; i < KMS_DEFERRED_CAPACITY; ++i) {
+                many[i].data = &data;
+                kms_close_common(&many[i]);
+            }
+            require(gKmsCloseOverflowCount == 0 && kms_deferred_count() == KMS_DEFERRED_CAPACITY,
+                    "the deferred table did not fill as expected");
+            many[KMS_DEFERRED_CAPACITY].data = &data;
+            kms_close_common(&many[KMS_DEFERRED_CAPACITY]);
+            require(gKmsCloseOverflowCount == 1 && wrapper_frees == 0,
+                    "an overflowed close was dropped instead of retained");
+            gKmsPmState = kKmsPmRunning;
+            kms_close_overflow_drain_locked();
+            require(gKmsCloseOverflowCount == 0 && wrapper_frees == 1,
+                    "the overflowed close was not reclaimed exactly once");
         } else if (std::strcmp(name, "cancel-pending") == 0) {
             node.eventBusy = true; cancel_ok = true;
             kms_close_common(&node); complete();
@@ -206,11 +225,12 @@ NAMES = [
     'void nvkms_xnu_suspend_abort(uint32_t seq)',
     'void nvkms_xnu_resume(NvU32 gpuId, NvBool gpuOk)',
     'void nvkms_xnu_reap_closes(void)',
+    'static void kms_close_overflow_drain_locked(void)',
 ]
 SCENARIOS = ('suspended-retain', 'deferred-recover', 'normal-free-failure', 'stalled-callback',
              'cancel-pending', 'pending-abort', 'lost-no-retry',
              'repeat-close', 'counter-isolation', 'gate-before-reap', 'worker-unavailable', 'stable-deadline',
-             'join-completes')
+             'join-completes', 'overflow-reclaim')
 
 
 def sha(path): return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -252,7 +272,8 @@ def main():
     source = args.out/'fixture.cpp'
     declarations = []
     for prefix in ('static thread_call_t gKmsCloseWorker;', 'static bool gKmsCloseRetryReady',
-                   'static bool gKmsCloseRetryArmed;', 'static const uint32_t kKmsCloseRetryMs', 'static const uint32_t kKmsCloseJoinMs'):
+                   'static bool gKmsCloseRetryArmed;', 'static const uint32_t kKmsCloseRetryMs', 'static const uint32_t kKmsCloseJoinMs',
+                 'static struct nvkms_per_open *gKmsCloseOverflow;', 'static unsigned gKmsCloseOverflowCount;'):
         lines = [line for line in text.splitlines() if line.startswith(prefix)]
         if len(lines) != 1: raise ValueError('retry state definition differs: '+prefix)
         declarations.append(lines[0])
