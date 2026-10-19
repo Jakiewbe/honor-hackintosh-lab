@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: read
+  checks: write   # annotations are how this job reports which scenario failed
 
 jobs:
   callers:
