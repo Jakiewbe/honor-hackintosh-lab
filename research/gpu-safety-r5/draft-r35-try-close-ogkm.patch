@@ -1,3 +1,24 @@
+--- a/src/nvidia-modeset/kapi/include/nvkms-kapi-internal.h
++++ b/src/nvidia-modeset/kapi/include/nvkms-kapi-internal.h
+@@ -104,6 +104,10 @@
+ 
+     NvBool isSOC;
+     NvBool isSOCDisplay;
++
++    /* Set only when NVKMS accepted FREE_DEVICE and the per-open was closed. A device whose
++     * close was refused keeps this false and must not be torn down by its owner. */
++    NvBool bFreeCompleted;
+     NvKmsDispIOCoherencyModes isoIOCoherencyModes;
+     NvKmsDispIOCoherencyModes nisoIOCoherencyModes;
+     NvBool supportsSyncpts;
+@@ -269,4 +273,7 @@
+     NvU64 index,
+     NvU64 new_value);
+ 
++/* Query for the owner: NV_TRUE only after a completed close. */
++NvBool nvKmsKapiDeviceFreeCompleted(const struct NvKmsKapiDevice *device);
++
+ #endif /* __NVKMS_KAPI_INTERNAL_H__ */
 --- a/src/nvidia-modeset/kapi/src/nvkms-kapi.c
 +++ b/src/nvidia-modeset/kapi/src/nvkms-kapi.c
 @@ -419,23 +419,27 @@
@@ -33,16 +54,22 @@
  
          device->hKmsDevice = device->hKmsDisp = 0x0;
      }
-@@ -446,6 +450,8 @@
+@@ -446,6 +450,14 @@
          nvkms_close_from_kapi(device->pKmsOpen);
          device->pKmsOpen = NULL;
      }
 +
++    device->bFreeCompleted = NV_TRUE;
 +    return NV_TRUE;
++}
++
++NvBool nvKmsKapiDeviceFreeCompleted(const struct NvKmsKapiDevice *device)
++{
++    return (device != NULL) && device->bFreeCompleted;
  }
  
  /*
-@@ -624,9 +630,14 @@
+@@ -624,9 +636,14 @@
  
  static void FreeDevice(struct NvKmsKapiDevice *device)
  {
