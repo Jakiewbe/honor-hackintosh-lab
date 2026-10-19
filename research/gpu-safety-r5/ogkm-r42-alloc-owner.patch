@@ -1,0 +1,67 @@
+--- a/src/nvidia-modeset/kapi/src/nvkms-kapi.c
++++ b/src/nvidia-modeset/kapi/src/nvkms-kapi.c
+@@ -638,6 +638,45 @@
+     nvKmsKapiFree(paramsAlloc);
+ 
+     return ret;
++}
++
++/*
++ * A failed allocation rollback can leave a Device whose NVKMS close was refused. Dropping the pointer would
++ * leak RM state with no way to retry, so a bounded table keeps such devices reachable until a later reap.
++ * Only touched from the KAPI entry points (single-threaded per GPU), never from an interrupt.
++ */
++#define NVKMS_KAPI_QUARANTINE_MAX 4
++static struct NvKmsKapiDevice *gKapiQuarantine[NVKMS_KAPI_QUARANTINE_MAX];
++
++static NvBool KmsQuarantineAdd(struct NvKmsKapiDevice *device)
++{
++    NvU32 i;
++
++    for (i = 0; i < NVKMS_KAPI_QUARANTINE_MAX; i++) {
++        if (gKapiQuarantine[i] == NULL) {
++            gKapiQuarantine[i] = device;
++            return NV_TRUE;
++        }
++    }
++    return NV_FALSE;
++}
++
++NvBool nvKmsKapiReapQuarantine(void)
++{
++    NvU32 i;
++    NvBool allFreed = NV_TRUE;
++
++    for (i = 0; i < NVKMS_KAPI_QUARANTINE_MAX; i++) {
++        if (gKapiQuarantine[i] == NULL) {
++            continue;
++        }
++        if (nvKmsKapiTryFreeDevice(gKapiQuarantine[i])) {
++            gKapiQuarantine[i] = NULL;
++        } else {
++            allFreed = NV_FALSE;
++        }
++    }
++    return allFreed;
+ }
+ 
+ NvBool nvKmsKapiTryFreeDevice(struct NvKmsKapiDevice *device)
+@@ -1022,7 +1061,17 @@
+ 
+ failed:
+ 
+-    FreeDevice(device);
++    /* FreeDevice() is the void ABI wrapper and cannot report a refusal. The rollback needs the answer: a
++     * retained Device must stay reachable, otherwise its RM state leaks with nobody able to retry. */
++    if (device != NULL && !nvKmsKapiTryFreeDevice(device)) {
++        if (KmsQuarantineAdd(device)) {
++            nvKmsKapiLogDebug(
++                "Allocation rollback refused; Device 0x%p quarantined for retry", device);
++        } else {
++            nvKmsKapiLogDebug(
++                "Allocation rollback refused and the quarantine is full; Device 0x%p leaked", device);
++        }
++    }
+ 
+     return NULL;
+ }

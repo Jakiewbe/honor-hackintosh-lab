@@ -41,6 +41,12 @@ CHAIN = (
       'pre_sha256': '895de47ae03abc08d9a032f8f083db0be76aa5aa45317ebe37d7720a54c657cb',
       'post_sha256': '03f3b08e158b357d683b51896771aa457d72966bfed551bfc4303067a4acba0a',
       'defined_symbol': '_nvKmsKapiTryFreeDevice'},
+    {'patch': 'ogkm-r42-alloc-owner.patch',
+      'patch_sha256': '85b752df5b5061cd79b7bc3047d44411e03f406beef2781e9264c926636a4bc5',
+      'source': 'src/nvidia-modeset/kapi/src/nvkms-kapi.c',
+      'pre_sha256': '03f3b08e158b357d683b51896771aa457d72966bfed551bfc4303067a4acba0a',
+      'post_sha256': '0305f74a38791731d9d550f60231c3bf9e96a55bd9ede8e0defee85dda7e87c1',
+      'defined_symbol': '_nvKmsKapiReapQuarantine'},
 )
 
 

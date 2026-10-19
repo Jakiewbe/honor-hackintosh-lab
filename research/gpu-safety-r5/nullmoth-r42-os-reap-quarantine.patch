@@ -1,0 +1,19 @@
+--- a/kexts/NVRM/os-nvkms-xnu.cpp
++++ b/kexts/NVRM/os-nvkms-xnu.cpp
+@@ -13,6 +13,8 @@
+ extern "C" {
+ #include "nvidia-modeset-os-interface.h"
+ #include "nv-gpu-info.h"
++// Defined by nvidia-modeset: retries Device frees whose NVKMS close was refused during allocation.
++extern "C" NvBool nvKmsKapiReapQuarantine(void);
+ #include "nvUnixVersion.h"
+ #include "kms_deferred.h"
+ }
+@@ -183,6 +185,7 @@
+     gKmsCloseRetryArmed = false;
+     if (gKmsCloseRetryReady && !gKmsSuspendPending && gKmsPmState == kKmsPmRunning) {
+         kms_deferred_drain(&kKmsDeferredOps, 1, NULL);
++    nvKmsKapiReapQuarantine();
+         kms_close_retry_schedule_locked();
+     }
+     IOLockUnlock(gKmsLock);
