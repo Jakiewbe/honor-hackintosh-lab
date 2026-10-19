@@ -165,7 +165,11 @@ def main():
             line=(s["output"].strip().splitlines() or ["(no output)"])[-1]
             print("::error::R36_SCENARIO "+s["name"]+": "+line[:240], flush=True)
         if not bad:
-            print("::error::R36_COMPILE exit="+str(report["compile_exit"]), flush=True)
+            errs=[l for l in (a.out/'compile.txt').read_text(encoding='utf-8',errors='replace').splitlines() if 'error:' in l][:4]
+            for line in errs:
+                print("::error::R36_COMPILE "+line[:240], flush=True)
+            if not errs:
+                print("::error::R36_COMPILE exit="+str(report["compile_exit"]), flush=True)
     return 0 if report["status"]=="PASS_CPU_ASAN_ONLY" else 1
 
 if __name__=='__main__':
