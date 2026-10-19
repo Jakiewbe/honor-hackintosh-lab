@@ -1,0 +1,13 @@
+{
+  "scope": "two-file R32 delta; full sequence pending CI",
+  "patch_sha256": "43e06dce6c435cfdea6f4045e187308ec5eca9621085575bbcebd48faebb3d14",
+  "baseline": {
+    "os-nvkms-xnu.cpp": "071567c3ea376a612a6e65b75dcc2bab2bfa6e69d86e78e53e42fc4d9814fb72",
+    "NVRM.cpp": "206c277f15c36d78d02d2e4c823c54991a3e92f3a6f6ae53d299d614695bd6a2"
+  },
+  "candidate": {
+    "os-nvkms-xnu.cpp": "438fd0a6ebf4162d7a3f951ae4ac2c3e7ed4d8c07da186904f6b354ecd5cea63",
+    "NVRM.cpp": "f284893a1dc8e5a2ab7ae1071598ec528db25cfd248c613d8a523059b79a5469"
+  },
+  "reverse_and_apply": "PASS"
+}

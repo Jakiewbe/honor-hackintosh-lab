@@ -1,18 +1,14 @@
-# 网页端只读独立审查 prompt：真实调用链与R31队列所有权
+# 网页端只读独立审查：R32真实关闭路径
 
-请只读独立审查 github.com/Jakiewbe/honor-hackintosh-lab。先从main历史定位同时包含 `CALLERS-FREE-R30-R31-20261019.md` 与 `nullmoth-r31-deferred-single-owner.patch` 的提交，固定完整SHA。后续CI结果提交与驱动源码提交分开固定。不要改文件、触发Actions、发上游消息或执行设备操作。
+只读审查 github.com/Jakiewbe/honor-hackintosh-lab。定位包含 nullmoth-r32-close-retry.patch 的源码提交，固定完整SHA；后续CI证据提交另行固定。不要修改/提交、触发Actions、发送上游消息或操作设备。
 
-先读 research/gpu-safety-r5/CALLERS-FREE-R30-R31-20261019.md、ACCEPTANCE-MATRIX-20261018.md；再读 pci-caller-evidence/、free-chain-evidence/、r30-audit-evidence/。已有假绿审计见HARNESS-AUDIT-20261018.md，不重复“源码是否存在”的历史循环。
+先读 R32-CLOSE-RETRY-20261019.md、ACCEPTANCE-MATRIX-20261018.md、R31-NATIVE-AND-CLOSE-CONTRACT-20261019.md。对照R31失败证据与R32补丁，核对：
 
-核查四组相互独立的证据：
-1. PCI：source9015c246bdfd119c5f13a64b34c170533694ea92、run39140902850、artifact12141348433。九TU快照是否逐字节匹配历史命令/源码/对象/依赖；六PCI方法是否同时有真实对象导入与函数内call、SDK ABI形状；write8是否真实源于os_pci_write_byte而不是合成调用者。不能把该历史九TU证据挪作R30十TU验收。
-2. free：发布物SHA256 cb3775fa7f8261641cc08328e12793aa7c3698d12a3264c443a68c4f55fb1bdb；LC_DYSYMTAB有3397外部重定位，目标nlist33915在0xd81380/0xd81df0，两张派生虚表区间+160。验证数据重定位而非直接call；候选原生NVRM.cpp IR是否由派生slot20指向NVRMUserClient::free，再加载父类vtable+160且通过同一SSA指针调用。检查tools/macho_xref.py有界读取、精确Mach-O名称、非零失败及7测试；不得以词法/字节扫描猜执行来源。
-3. R30：source195f5335563bc78f4800756473490f3dd6d86d90、run39143508201、artifact12143225527。完整官方编译集合实际1240C+40C++（两component各含生成nvidstring）与五shader；十NVRM C++ TU、实际链接和472导入；136布局/20形状只是选定ABI。检查独立复算脚本的默认文本验证与可选完整产物验证是否诚实区分。
-4. R31：对照R30单元的重复node入队与try_free回调重入反例（不真实释放内存），核实基线失败、新候选通过和编译错误负控不执行。审查补丁去重/数据冲突/closed保留、gDraining跨回调独占，以及外部锁前提；该CPU反例不自动证明内核可触发double free。核对native_compile在R30后追加补丁，workflow基于本次真实依赖快照编译测试实际单元；若已有新run，核对其source SHA与产物，未执行不得报通过。
+1. 真实kms_close_common是否在nvKmsClose成功后，以NULL data转交唯一队列所有者；所有失败路径是否可追踪；重复调用的有效指针前提是否明确。不要把只计数的CPU free当真实内存回收。
+2. 实际try_free是否在eventBusy时立即保留而不等；thread_call_cancel/free的XNU语义、closing阻止重入、callback最后一次popen访问能否支持wrapper寿命；上层KAPI Device寿命是否仍有缺口。
+3. 独立ONCE worker是否确实预分配、100ms重试、保留未完成节点、不重复backend close；新节点是否重置deadline造成饥饿；suspend pending/commit/abort、resume LOST、旧已排队worker是否正确拒绝；RM gate重开之前是否可能抢KMS lock进入RM。
+4. deferredCounted是否只递减所属backend拒绝计数；全局差值计数合同仍有什么风险。容量64溢出与open rollback漏队列是已登记OPEN，不应误称本轮已修。
+5. 13场景是否来自真实11函数、实际声明/ops/queue；编译失败无二进制不运行、三个语义变异均非零失败是否真实；检查注入边界和未覆盖实际XNU并发。四项源码结构检查不能当执行证据。
+6. 若有新CI，核对run的源码SHA、31个NullMoth补丁加OGKM适配、完整序列反向恢复、10 NVRM C++ TU、官方1280 C/C++ TU（1240C/40C++）+5shader与NVLink、真实链接、472导入；CPU合同必须绑定本次原生依赖快照。没有run不得报告Darwin通过。136布局/20形状不是完整ABI。
 
-重点挑剩余真实问题：容量64溢出后仅计数；正常close thread_call_free失败是否仍无队列；drain IOLockSleep无界等待、等待释放锁后的PM状态与生命周期；累积deferred计数被递减与旧调用者差值合同的冲突。RM busy仍进入STANDBY必须保持31/32 FAIL；P0-4仍开放。不要把已登记风险当新发现，不把未知写成已证UAF。给出P0/P1/P2、固定文件行号、触发条件、后果、建议和证据局限。
-
-最后按层级报告：源码→CPU合同→Darwin对象→候选链接→loader/ABI→设备初始化→真实GPU执行→正确像素→安全结束。目前设备层全NO-GO，Intel基础显示保持。不要把编译、CPU拷贝、标签或单条PASS写成显卡适配完成。
-
-
-后续已交付：再读R31-NATIVE-AND-CLOSE-CONTRACT-20261019.md、r31-native-evidence/及tools/g1_kms_close_contract.py。驱动源码bc8e1d56343483e695cd47b414b0adcb669bedf8、run39184119617；证据提交另固定SHA。核查新门禁真实源哈希与日志，以及正常close释放失败未入队/eventBusy持续等待两例真实函数CPU FAIL是否准确；不得把2/4写成全部通过，也不得把注入的停滞当作已经观察到真实内核死锁。所有设备层仍NO-GO。
+按P0/P1/P2给固定文件行号、触发条件、后果、建议、证据局限。RM busy→STANDBY保持FAIL，P0-4/Device生命周期/容量耗尽仍OPEN。按源码→CPU→Darwin对象→候选链接→完整ABI/loader→初始化→真实GPU执行→像素→安全结束分层；设备仍NO-GO，Intel基础显示保持。不要重复“公开源码到顶”或要求设备部署来替代可继续的源码工作。

@@ -13,7 +13,7 @@
 | NVLink四锁 | 真实后端与17项CPU合同及原生链接已验证 | 不能据此关闭freeDevice/PM问题 |
 | P0-4 freeDevice关闭拒绝 | OPEN | 旧void边界与所有权/返回传播需继续改造；不是“项目无能力修改” |
 | RM门忙仍STANDBY | OPEN，当前结构审计31/32，exit1 | nv_xnu_pm_close超时后仍继续；不能以IOPM ack要求证明其安全 |
-| 延迟KMS close回收 | OPEN | R30 resume队列已真实编译链接，但容量耗尽、正常close回收失败、无界等待、PM交错仍未闭合 |
+| 延迟KMS close回收 | OPEN；R32局部源码/CPU候选通过 | 正常free拒绝入队、busy不等待与gate后重试13/13 CPU；Darwin尚未执行。容量耗尽、open rollback、上层Device生命周期/PM交错仍未闭合 |
 | 延迟队列单一所有权 | R30 CPU两项FAIL，R31同合同PASS | R31 run39184119617原生/完整链接通过；真实close合同2/4、两项FAIL，不作为PM安全放行 |
 | Kext加载 | 未执行、NO-GO | 未签名/安装/加载/卸载 |
 | GPU初始化/渲染/正确像素/安全结束 | 未执行 | 编译/链接/CPU检查都不替代这四层证据 |
@@ -24,3 +24,5 @@
 2026-10-19更新证据：[PCI/free链、R30独立审计、R31候选](CALLERS-FREE-R30-R31-20261019.md)。
 
 R31后续验收：[原生证据与真实关闭函数失败合同](R31-NATIVE-AND-CLOSE-CONTRACT-20261019.md)。
+
+R32局部候选：[关闭重试与未解决项](R32-CLOSE-RETRY-20261019.md)。本轮CPU通过不撤销R31历史2/4失败记录。

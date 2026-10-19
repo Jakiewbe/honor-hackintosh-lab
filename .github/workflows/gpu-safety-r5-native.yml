@@ -111,6 +111,19 @@ jobs:
             --snapshot "$RUNNER_TEMP/gpu-safety-r5-logs/input-snapshots/uni-kms_deferred_cpp.json" \
             --out "$RUNNER_TEMP/gpu-safety-r5-logs/deferred-owner-host" --cxx clang++
 
+      - name: Test actual close retries and reject negative controls (CPU only)
+        shell: bash
+        run: |
+          set -euo pipefail
+          candidate="$RUNNER_TEMP/nullmoth-v2.3.3-gpu-safety-r5-candidate"
+          logs="$RUNNER_TEMP/gpu-safety-r5-logs"
+          python3 tools/g1_kms_close_retry_contract.py --candidate "$candidate" \
+            --os-snapshot "$logs/input-snapshots/uni-os-nvkms-xnu_cpp.json" \
+            --queue-snapshot "$logs/input-snapshots/uni-kms_deferred_cpp.json" \
+            --out "$logs/close-retry-host" --cxx clang++
+          python3 tools/g1_kms_close_retry_checks.py --candidate "$candidate" \
+            --out "$logs/close-retry-controls" --cxx clang++
+
       - name: Test real owner-copy transaction and baseline regression (CPU only)
         shell: bash
         run: |

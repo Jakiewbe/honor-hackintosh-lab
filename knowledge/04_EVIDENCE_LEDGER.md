@@ -1,3 +1,5 @@
+> **2026-10-19 R32源码候选：正常close回收失败改为入队；eventBusy等待改为独立100ms重试，RM gate重开后才放行。13/13真实函数CPU场景、4负向控制和4结构检查通过，历史回归通过；Darwin/链接尚未执行。容量溢出、open rollback、P0-4、RM busy→STANDBY仍OPEN/FAIL，设备NO-GO。** [实现与证据](../research/gpu-safety-r5/R32-CLOSE-RETRY-20261019.md)。
+
 > **2026-10-19 R31原生已验收：run39184119617通过，十个NVRM C++ TU、31个native补丁记录、官方1280个C/C++ TU+5shader和完整候选链接，472导入，选定ABI通过。队列去重/唯一drain的CPU合同与本次原生快照绑定。新增真实关闭函数合同2/4通过，正常close回调释放失败未入队及eventBusy无界等待两项保持FAIL；RM busy→STANDBY仍31/32 FAIL。完整ABI/loader、设备初始化/渲染/像素/安全结束未验收，设备NO-GO。** [原生证据与下一断点](../research/gpu-safety-r5/R31-NATIVE-AND-CLOSE-CONTRACT-20261019.md)。
 
 > **2026-10-18 Harness 独立审计更新：** 已否定“988 探针证明源码构建到顶”的推断：最新 run39138580661 只编过135/988，部分链接后仍exit0。此前 run39127772586 的1280官方C TU、5 shader及完整NVRM重建候选链接证据保持有效。错误探针已退休并非零退出；Mach-O解析器修正后发布版472/候选交集471复算成立。PM结构合同不再把“RM门忙仍STANDBY”当PASS，真实候选现为31/32、exit1；风险未修。新增九个实际NVRM TU的PCI调用侧原生诊断，待本轮CI。完整ABI、loader/版本、初始化、GPU渲染/读回/安全结束仍未验收，设备NO-GO。 [审计与真实断点](../research/gpu-safety-r5/HARNESS-AUDIT-20261018.md)。

@@ -1,0 +1,3 @@
+/mnt/d/Hactk/g1-audit-fix-20261018/evidence/r32-close-controls/compile-failure/fixture.cpp:231:2: error: #error NEGATIVE_COMPILE_CONTROL
+  231 | #error NEGATIVE_COMPILE_CONTROL
+      |  ^~~~~

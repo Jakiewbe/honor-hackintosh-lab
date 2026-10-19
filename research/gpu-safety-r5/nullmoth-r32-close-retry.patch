@@ -1,0 +1,250 @@
+diff --git a/kexts/NVRM/os-nvkms-xnu.cpp b/kexts/NVRM/os-nvkms-xnu.cpp
+--- a/kexts/NVRM/os-nvkms-xnu.cpp
++++ b/kexts/NVRM/os-nvkms-xnu.cpp
+@@ -24,6 +24,11 @@
+ 
+ static IOLock *gKmsLock;
+ static bool    gKmsLoaded;
++// Global module worker, allocated before any KAPI client is published. No unload path is supported.
++static thread_call_t gKmsCloseWorker;
++static bool gKmsCloseRetryReady = true;
++static bool gKmsCloseRetryArmed;
++static const uint32_t kKmsCloseRetryMs = 100;
+ struct nvkms_timer_t;
+ static IOSimpleLock *gKmsTimerQueueLock;
+ static thread_call_t gKmsTimerWorker;
+@@ -80,6 +85,7 @@
+     struct NvKmsKapiDevice *device;
+     thread_call_t eventCall;
+     bool eventBusy, eventWanted, closing;
++    bool deferredCounted; // Only a refused backend close contributes to the old teardown counter.
+     volatile int eventsAvailable;
+ };
+ 
+@@ -130,10 +136,71 @@
+     return popen;
+ }
+ 
++// All queue operations and callbacks run with gKmsLock held. None drops it or waits for an event.
++static void kms_close_retry_schedule_locked(void)
++{
++    if (!gKmsCloseWorker || gKmsCloseRetryArmed || !gKmsCloseRetryReady || gKmsSuspendPending ||
++        gKmsPmState != kKmsPmRunning || kms_deferred_count() == 0) return;
++    uint64_t deadline;
++    clock_interval_to_deadline(kKmsCloseRetryMs, kMillisecondScale, &deadline);
++    gKmsCloseRetryArmed = true; // New arrivals must not keep postponing an already armed deadline.
++    thread_call_enter_delayed(gKmsCloseWorker, deadline);
++}
++
++static void kms_deferred_close_impl(void *data, void *)
++{
++    nvKmsClose(data);
++}
++
++static int kms_deferred_try_free_impl(void *node, void *)
++{
++    struct nvkms_per_open *popen = (struct nvkms_per_open *)node;
++    if (popen->eventCall && popen->eventBusy) {
++        if (thread_call_cancel(popen->eventCall)) popen->eventBusy = false;
++        if (popen->eventBusy) return 0; // The worker may be waiting for RM; never join it here.
++    }
++    if (popen->eventCall && !thread_call_free(popen->eventCall)) return 0;
++    // A successful thread_call_free is not a join. eventBusy became false under this same lock;
++    // after unlocking, the closing event callback returns without accessing popen again.
++    popen->eventCall = NULL;
++    popen->data = NULL;
++    if (popen->deferredCounted && gKmsCloseDeferred) gKmsCloseDeferred--;
++    nvkms_free(popen, sizeof *popen);
++    return 1;
++}
++
++static const struct kms_deferred_ops kKmsDeferredOps = {
++    kms_deferred_close_impl,
++    kms_deferred_try_free_impl,
++};
++
++static void kms_close_retry_fire(thread_call_param_t, thread_call_param_t)
++{
++    IOLockLock(gKmsLock);
++    gKmsCloseRetryArmed = false;
++    if (gKmsCloseRetryReady && !gKmsSuspendPending && gKmsPmState == kKmsPmRunning) {
++        kms_deferred_drain(&kKmsDeferredOps, 1, NULL);
++        kms_close_retry_schedule_locked();
++    }
++    IOLockUnlock(gKmsLock);
++}
++
++static void kms_close_remember_locked(struct nvkms_per_open *popen)
++{
++    if (kms_deferred_push(popen, popen->data) != 0) {
++        // Capacity exhaustion is still unresolved: keep memory alive, report, never claim reclamation.
++        kprintf("NVRM-xnu: deferred-close table full/conflicting; wrapper retained without a queue slot\n");
++    }
++    kms_close_retry_schedule_locked();
++}
++
+ static void kms_close_common(struct nvkms_per_open *popen)
+ {
+     if (!popen) return;
+     IOLockLock(gKmsLock);
++    if (popen->closing) { IOLockUnlock(gKmsLock); return; }
++    popen->closing = true;
++    popen->eventWanted = false;
+     // nvidia-modeset-os-interface.h: NVKMS keeps the pointer handed to nvKmsOpen() as pOpenKernel and
+     // still passes it back to nvkms_event_queue_changed() until nvKmsClose() has destroyed that
+     // per-open. While the GPU is suspended or lost nvKmsClose() must not touch the display engine
+@@ -141,35 +208,23 @@
+     // completed close: keep the per-open, this wrapper and its event worker allocated, refuse new
+     // work, and never hand back memory NVKMS still points at.
+     if (!kms_pm_wait_locked(false, kKmsPmWaitMs)) {
+-        popen->closing = true;
+-        popen->eventWanted = false;
+-        // Remember the node so a later resume can finish the close. A full table is reported, not hidden:
+-        // the per-open stays alive either way, and the counter below shows the backlog.
+-        if (kms_deferred_push(popen, popen->data) != 0) {
+-            kprintf("NVRM-xnu: deferred-close table is full; wrapper kept and tracked by the counter only\n");
+-        }
++        popen->deferredCounted = true;
+         gKmsCloseDeferred++;
+         if (gKmsPmState == kKmsPmLost) gKmsCloseDeferredLost++;
++        const int state = gKmsPmState;
++        const unsigned deferred = gKmsCloseDeferred, lost = gKmsCloseDeferredLost;
++        kms_close_remember_locked(popen);
+         IOLockUnlock(gKmsLock);
+         kprintf("NVRM-xnu: NVKMS close deferred while the GPU is %s: per-open and wrapper kept (deferred #%u, lost #%u)\n",
+-                kKmsPmName[gKmsPmState], (unsigned)gKmsCloseDeferred, (unsigned)gKmsCloseDeferredLost);
++                kKmsPmName[state], deferred, lost);
+         return;
+     }
+     if (popen->data) nvKmsClose(popen->data);
+     popen->data = NULL;
+-    popen->closing = true;
+-    if (popen->eventCall && popen->eventBusy) {
+-        if (thread_call_cancel(popen->eventCall)) popen->eventBusy = false;
+-        while (popen->eventBusy) IOLockSleep(gKmsLock, popen, THREAD_UNINT);
+-    }
+-    IOLockUnlock(gKmsLock);
+-    if (popen->eventCall && !thread_call_free(popen->eventCall)) {
+-        // A pending or rearmed call makes thread_call_free fail. Keep the
+-        // argument alive; successful release is not a callback join operation.
+-        kprintf("NVRM-xnu: NVKMS close could not free its event call; closing wrapper retained\n");
+-        return;
+-    }
+-    nvkms_free(popen, sizeof *popen);
++    // If the callback is still running or its call cannot be released, the queue becomes the sole
++    // wrapper owner. A NULL data entry is already backend-closed and must not call nvKmsClose again.
++    if (!kms_deferred_try_free_impl(popen, NULL)) kms_close_remember_locked(popen);
++    IOLockUnlock(gKmsLock);
+ }
+ 
+ static NvBool kms_ioctl_common(struct nvkms_per_open *popen, NvU32 cmd, NvU64 address, size_t size, bool tryPm = false)
+@@ -193,6 +248,9 @@
+     if (!gKmsTimerWorker) gKmsTimerWorker = thread_call_allocate_with_options(
+         kms_timer_drain, NULL, THREAD_CALL_PRIORITY_KERNEL, THREAD_CALL_OPTIONS_ONCE);
+     if (!gKmsTimerWorker) return NV_FALSE;
++    if (!gKmsCloseWorker) gKmsCloseWorker = thread_call_allocate_with_options(
++        kms_close_retry_fire, NULL, THREAD_CALL_PRIORITY_KERNEL, THREAD_CALL_OPTIONS_ONCE);
++    if (!gKmsCloseWorker) return NV_FALSE;
+     IOLockLock(gKmsLock);
+     NvBool ok = nvKmsModuleLoad();
+     IOLockUnlock(gKmsLock);
+@@ -263,6 +321,7 @@
+     // The pin count is zero and admission is closed, so nothing can start a teardown while NVKMS is
+     // told to stop. Both calls happen under the same lock, so a resume cannot slip between them.
+     gKmsSuspendPending = false;
++    gKmsCloseRetryReady = false;
+     nvKmsKapiSuspendResume(NV_TRUE);
+     gKmsPmState = kKmsPmSuspended;
+     nvKmsSuspend(gpuId);
+@@ -279,43 +338,17 @@
+         gKmsSuspendPending = false;
+         gKmsSuspendSeq++;
+         IOLockWakeup(gKmsLock, &gKmsPmPins, false);
+-    }
+-    IOLockUnlock(gKmsLock);
+-}
+-
+-// Real implementations for the portable bookkeeping unit. Kept out of the unit so it stays testable.
+-static void kms_deferred_close_impl(void *data, void *)
+-{
+-    nvKmsClose(data);
+-}
+-
+-static int kms_deferred_try_free_impl(void *node, void *)
+-{
+-    struct nvkms_per_open *popen = (struct nvkms_per_open *)node;
+-    if (popen->eventCall && popen->eventBusy) {
+-        if (thread_call_cancel(popen->eventCall)) popen->eventBusy = false;
+-        while (popen->eventBusy) IOLockSleep(gKmsLock, popen, THREAD_UNINT);
+-    }
+-    if (popen->eventCall && !thread_call_free(popen->eventCall)) {
+-        // A pending or rearmed call keeps the argument alive; leave it queued for the next resume.
+-        return 0;
+-    }
+-    popen->eventCall = NULL;
+-    popen->data = NULL;
+-    if (gKmsCloseDeferred) gKmsCloseDeferred--;
+-    nvkms_free(popen, sizeof *popen);
+-    return 1;
+-}
+-
+-static const struct kms_deferred_ops kKmsDeferredOps = {
+-    kms_deferred_close_impl,
+-    kms_deferred_try_free_impl,
+-};
++        kms_close_retry_schedule_locked();
++    }
++    IOLockUnlock(gKmsLock);
++}
++
+ 
+ void nvkms_xnu_resume(NvU32 gpuId, NvBool gpuOk)
+ {
+     if (!gKmsLoaded) return;
+     IOLockLock(gKmsLock);
++    gKmsCloseRetryReady = false; // gpuResume has not opened the RM gate yet.
+     // Cancel a request that has not committed yet, and wake its waiter so it returns instead of sleeping out
+     // its bound. A committed suspend is unaffected: it already cleared the flag under this lock.
+     gKmsSuspendPending = false;
+@@ -324,11 +357,20 @@
+     if (gpuOk && gKmsPmState == kKmsPmSuspended) nvKmsResume(gpuId);
+     gKmsPmState = gpuOk ? kKmsPmRunning : kKmsPmLost;
+     IOLockWakeup(gKmsLock, &gKmsPmState, false);
+-    // Only a running GPU may touch the display engine, so the drain is gated on gpuOk.
+-    kms_deferred_drain(&kKmsDeferredOps, gpuOk, NULL);
++    // Reclamation is scheduled by nvkms_xnu_reap_closes(), after the RM gate opens.
++    // Do not wait for event callbacks on the PM owner thread: they may be blocked at that gate.
+     IOLockUnlock(gKmsLock);
+     if (gpuOk) nvKmsKapiSuspendResume(NV_FALSE);
+     kprintf("NVRM-xnu: NVKMS %s (gpu 0x%x)\n", gpuOk ? "resumed" : "left LOST: the GPU did not resume", gpuId);
++}
++// Called only by gpuResume, immediately after nv_xnu_pm_open(). This is not a general resume API.
++void nvkms_xnu_reap_closes(void)
++{
++    if (!gKmsLoaded) return;
++    IOLockLock(gKmsLock);
++    gKmsCloseRetryReady = (gKmsPmState == kKmsPmRunning);
++    kms_close_retry_schedule_locked();
++    IOLockUnlock(gKmsLock);
+ }
+ // True while NVKMS may touch the GPU. KAPI teardown (releaseOwnership/freeDevice) reaches NVKMS
+ // through nvkms_ioctl_from_kapi, which waits on the PM gate and is refused once the GPU is LOST;
+diff --git a/kexts/NVRM/NVRM.cpp b/kexts/NVRM/NVRM.cpp
+--- a/kexts/NVRM/NVRM.cpp
++++ b/kexts/NVRM/NVRM.cpp
+@@ -1385,6 +1385,7 @@
+ NvBool nvkms_xnu_suspend_commit(NvU32 gpuId, uint32_t seq, uint32_t waitMs);
+ void   nvkms_xnu_suspend_abort(uint32_t seq);
+ void   nvkms_xnu_resume(NvU32 gpuId, NvBool gpuOk);
++void   nvkms_xnu_reap_closes(void);
+ }
+ 
+ IOReturn NVRM::setPowerState(unsigned long ordinal, IOService *device)
+@@ -1468,6 +1469,7 @@
+     OSCompareAndSwap(kGpuPmSuspended, ok ? kGpuPmRunning : kGpuPmLost, &fGpuPm);
+     nvkms_xnu_resume(fNv.gpu_id, ok);
+     nv_xnu_pm_open();   // also when lost: RM then answers the waiting calls with errors instead of leaving them blocked
++    nvkms_xnu_reap_closes(); // Independent worker may now enter RM; never join an event on the PM thread.
+     setProperty("nvrm-pm", ok ? "running" : "lost (resume failed)");
+     uint64_t ns = 0; absolutetime_to_nanoseconds(mach_absolute_time() - t0, &ns);
+     LOG("wake #%u: rm_power_management(RESUME) -> 0x%x, user channels restarted -> 0x%x, %llu ms - %s", fPmCycles,

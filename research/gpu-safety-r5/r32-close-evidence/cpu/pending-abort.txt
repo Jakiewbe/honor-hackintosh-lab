@@ -1,0 +1,1 @@
+pending-abort PASS close=1 free=1 queued=0 schedules=1 sleeps=0 counter=0

@@ -1,0 +1,1 @@
+worker-unavailable PASS close=1 free=0 queued=1 schedules=0 sleeps=0 counter=0
