@@ -22,7 +22,18 @@
 | NMIntelFB 厂商级匹配 + 60000 分 | `kexts/NMIntelFB/Info.plist:17-20`、`intelfb.cpp:272-300` | 静态 | 未上机 |
 | 内屏当前提供者 / 残留 kext / SIP | `DEVICE-PLAN-20261020.md` D0 命令 | **未执行** | 需授权 |
 
-## 未执行项（必须显式保留）
+## 本地运行说明（Windows 工作区）
+
+本地 `python -m unittest discover -s tools` 会有 **1 项失败**：
+`test_frozen_real_472_inventory_and_byte_mutation` 报 "frozen complete-candidate import inventory
+hash mismatch"。这是 `core.autocrlf=true` 造成的 CRLF 工作区副本，不是内容漂移：
+
+```
+raw sha256 == 常量 : False
+LF 归一化后       : True   （0691e92b…df9dc8）
+```
+
+CI 检出为 LF，同一测试通过（门禁绿可佐证）。**不要**为了让本地测试变绿而修改该固定值。
 
 | 项 | 原因 |
 |---|---|
