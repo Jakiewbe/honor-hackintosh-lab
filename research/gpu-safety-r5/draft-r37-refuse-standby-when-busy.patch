@@ -1,0 +1,27 @@
+--- a/kexts/NVRM/NVRM.cpp
++++ b/kexts/NVRM/NVRM.cpp
+@@ -1439,7 +1439,23 @@
+         return false;
+     }
+     const int busy = nv_xnu_pm_close(10000);
+-    if (busy) LOG("sleep #%u: %d RM call(s) still running after 10 s - suspending anyway", fPmCycles, busy);
++    if (busy) {
++        // Refusing STANDBY is the only way to keep RM from being asked to quiesce while calls are still
++        // inside it. IOKit cannot be told to abort the sleep, so the sleep still happens; what is avoided
++        // is splitting RM state under a live caller. The gate is reopened first so those callers finish
++        // against a running RM instead of blocking until the wake gate handoff.
++        nv_xnu_pm_open();
++        nvkms_xnu_suspend_abort(seq);
++        OSCompareAndSwap(kGpuPmSuspended, kGpuPmRunning, &fGpuPm);
++        setProperty("nvrm-pm", "running");
++        setProperty("nvrm-pm-violation", kOSBooleanTrue);
++        notifyFramebuffers(1);
++        uint64_t ns = 0;
++        absolutetime_to_nanoseconds(mach_absolute_time() - t0, &ns);
++        LOG("sleep #%u: %d RM call(s) still running after %llu ms - STANDBY refused, GPU kept in D0",
++            fPmCycles, busy, ns / 1000000ULL);
++        return false;
++    }
+     // nv_preempt_user_channels(): with every VRAM allocation preserved, user channels must be idle and stopped
+     // while their memory is copied out, and restarted once it is back.
+     NV_STATUS cst = rm_stop_user_channels(NULL, &fNv);
