@@ -1,0 +1,24 @@
+{
+  "level": "REAL_OGKM_AND_DRIVER_BODIES_INJECTED_CPU_ONLY",
+  "binding": "LOCAL_SOURCE_ONLY",
+  "os_sha256": "438fd0a6ebf4162d7a3f951ae4ac2c3e7ed4d8c07da186904f6b354ecd5cea63",
+  "ogkm_sha256": "66437bc38d96d3b4f15546c3e6f7a8c0caccc158b35893c2406f80f2e6e8816b",
+  "fixture_sha256": "4567787307d5c3589fd274adcb929b18270e9a8c75bef63dc51ca7af53f588a1",
+  "scenario": "active-event",
+  "compile_argv": [
+    "g++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-I/mnt/d/Hactk/g1-audit-fix-20261018/candidate-audit-r32-close-retry/kexts/NVRM",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/candidate-audit-r32-close-retry/kexts/NVRM/kms_deferred.cpp",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/r32a-device-owner-v2/fixture.cpp",
+    "-o",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/r32a-device-owner-v2/fixture"
+  ],
+  "compile_exit": 0,
+  "run_exit": 1,
+  "status": "CONTRACT_FAIL",
+  "output": "CONTRACT_FAIL DEVICE_FREED_BEFORE_ACTIVE_EVENT_FINISHED backend_close=1 wrapper_free=0 queued=1 device_free=1 rm_free=1 events=1 sleeps=0\n"
+}

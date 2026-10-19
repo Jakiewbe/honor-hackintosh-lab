@@ -1,0 +1,19 @@
+{
+  "level": "ACTUAL_C_FUNCTION_CPU_SUCCESS_ONLY_NOT_FAILURE_PROPAGATION",
+  "source_sha256": "78d310ca74ab282beec5c18d2c208ab4862d1344566f3db088017c9fe972c641",
+  "fixture_sha256": "80354481b40598e0e36b037c7ad4b34734708e11b1dabf60f739641d1ea6b48e",
+  "compile_argv": [
+    "g++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/niso-original-final/fixture.cpp",
+    "-o",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/niso-original-final/fixture"
+  ],
+  "compile_exit": 0,
+  "run_exit": 1,
+  "status": "CONTRACT_FAIL",
+  "output": "parameter_identity FAIL semaphore(kms=11,mapped=1) notifier(kms=0,mapped=0)\nsequential_cleanup FAIL unregister=1 unmap=1 rm_free=2 allocator_free=2\nrepeat_cleanup FAIL unregister=2 unmap=2\n"
+}

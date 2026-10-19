@@ -1,0 +1,3 @@
+/mnt/d/Hactk/g1-audit-fix-20261018/evidence/niso-negative-cpu/fixture.cpp:49:2: error: #error NEGATIVE_NISO_COMPILE
+   49 | #error NEGATIVE_NISO_COMPILE
+      |  ^~~~~

@@ -1,0 +1,10 @@
+ARGV=["C:\\Users\\19082\\AppData\\Local\\Programs\\Python\\Python312\\python.exe", "-m", "unittest", "discover", "-s", "tools", "-p", "test_g1_ogkm_patch_route.py", "-v"]
+test_rejects_missing_archive_load_definition_and_changed_link (test_g1_ogkm_patch_route.RouteTests.test_rejects_missing_archive_load_definition_and_changed_link) ... ok
+test_rejects_wrong_source_probe_flags_cwd_and_failed_compilation (test_g1_ogkm_patch_route.RouteTests.test_rejects_wrong_source_probe_flags_cwd_and_failed_compilation) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.204s
+
+OK
+
+EXIT=0

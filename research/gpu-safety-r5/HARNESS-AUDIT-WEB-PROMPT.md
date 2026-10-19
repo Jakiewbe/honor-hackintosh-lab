@@ -16,3 +16,19 @@
 必须独立检查R32b纠正：0d4c329初稿/run39186159503不能作为整条close设计验收。固定OGKM KmsFreeDevice446调用void close后，FreeDevice629-643继续释放Device，而event handler3827可能仍读Device。当前恢复正常close原有无界join，--open-normal-busy必须真实exit1；只修正常free拒绝漏队列与deferred try_free不等待。不得把12项通过合并为13/13，也不得悄悄丢弃正常busy失败。查看r32b-close-evidence/binding.json和kapi-device-boundary.txt；旧r32-close-evidence是被取代初稿历史。
 
 再查tools/g1_kapi_close_owner_contract.py及r32b-close-evidence/device-owner-contract：是否确实提取固定OGKM完整FreeDevice/KmsFreeDevice/事件函数；两份编译0、运行1的证据有无准确区分初稿提前Device free与修订版无界join。这里是注入交错与替身类型，未真实删除内存，不能升级为已证内核UAF/死锁。CI驱动源码固定051651ec0dfc43cfbb9c39534895a8fe4288f035；文档证据后续提交单独固定。
+
+
+最新优先审查 R32B-NATIVE-ROUTE-NISO-20261019.md。原生驱动源码固定051651ec0dfc43cfbb9c39534895a8fe4288f035/run39186519502/artifact12158179549，证据文档后续提交另固定。1937纯文本ZIP成员、1936publication成员；1280真实编译日志、10 NVRM C++ TU、31 NullMoth补丁完整反向、12限定CPU绑定本次快照、4负控及候选链接是否可复算。正常busy/P0-4/PM FAIL不得合并进绿色CPU数量。
+
+重点独立复核新P1：native_compile对OGKM R3打补丁的候选探针源7e5492e0...，full build实际KAPI源66437bc3...，why_load从完整modeset归档选中真实原始KAPI对象。g1_ogkm_patch_route.py必须exit1；不能撤销1280完整构建事实，也不能说32条native补丁全进入最终候选。给出把明确候选源纳入官方逐TU命令、保留原始/候选双哈希和实际对象归档来源的最小改法，禁止用不同参数的探针对象替代。
+
+再复核NISO两行候选：固定nvkms-kapi-notifiers.c在清semaphore时误清device->notifier字段；同真实函数CPU原始3 FAIL、候选3 PASS、编译负控无二进制不执行，重复清理断言是否比较前后差值而不被其他漏清理抵消。ogkm-niso-surface-owner.patch尚未接入原生/最终链接；只成功路径参数身份，不是注销失败/整体Device关闭已修。
+
+P0-4补强：backend-refused注入真实FreeDevice仍RM free1/Device free1、backend close0/queue1，编译0运行1；CPU边界不删除内存，不能称已证内核UAF。当前源码绝不放行设备。请按P0/P1/P2、固定行号、触发/后果/证据局限给出结论；下一步先补最终OGKM源选择，再推进完整Device生命周期，不重复“源码是否存在”。
+
+
+当前优先复核 R33-OGKM-FINAL-ROUTE-20261019.md 及本prompt所在固定提交。沿g1_ogkm_candidate.py → g1_full_build.py → g1_ogkm_patch_route.py逐行检查：两项固定补丁/两源变化、3871文件正反向/编译后完整比较，候选放在文本发布目录之外；只替换两个源操作数、保持官方逐TU flags/cwd，不混入探针对象；逐项验证真实编译日志、完整归档ARGV、最终链接ARGV、why_load和实际全局定义。新增门禁是否在真实错误源/漏成员/缺定义时非零退出。R33原生若尚未登记，禁止用R32b成功顶替。
+
+已排除队列遗漏：源051651e的BASELINE_CPP包含kms_deferred.cpp，R32b实际队列snapshot/object/finalARGV与四个最终定义已复算。避免将本地过时脚本当runner源码。历史R32b OGKM route仍exit1，不撤销完整编译事实。NISO候选只有成功路径参数身份修复，不得说完整错误传播/Device释放已修。
+
+报告应回答：距离RTX2050真实初始化/离屏GPU执行/正确像素/错误传播/安全结束还缺什么；将源码、CPU合同、原生对象、最终候选链接、loader/完整ABI及实机分层。正常busy join、P0-4和RM busy→STANDBY三项FAIL不得混入绿色总数。给出下一项能推进真实调用链的最小修改，不制造“源码到顶/只能上机”的结论。只读审查，不运行设备，不发送Issue/PR。

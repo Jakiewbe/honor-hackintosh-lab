@@ -1,0 +1,18 @@
+{
+  "level": "ACTUAL_C_FUNCTION_CPU_SUCCESS_ONLY_NOT_FAILURE_PROPAGATION",
+  "source_sha256": "ba13d2c2765be14727f4ebda63528107667661bc0ea76d87b3aa634c8c17ac05",
+  "fixture_sha256": "b63139d758dc4ef45785853437f16a7d0f768187410abf002b8811c997a2e822",
+  "compile_argv": [
+    "g++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/niso-negative-cpu/fixture.cpp",
+    "-o",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/niso-negative-cpu/fixture"
+  ],
+  "compile_exit": 1,
+  "run_exit": null,
+  "status": "COMPILE_FAILED"
+}

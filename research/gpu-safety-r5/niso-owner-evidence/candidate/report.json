@@ -1,0 +1,19 @@
+{
+  "level": "ACTUAL_C_FUNCTION_CPU_SUCCESS_ONLY_NOT_FAILURE_PROPAGATION",
+  "source_sha256": "527df580bab9c6c0226edfdcaf3663dc2ed9d42c2151bfbf7efbc80f586c098c",
+  "fixture_sha256": "364aa46c12ee41d9965e8ac3cd610aa2d269842aed113e92081ea6ff568d6f93",
+  "compile_argv": [
+    "g++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/niso-candidate/fixture.cpp",
+    "-o",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/niso-candidate/fixture"
+  ],
+  "compile_exit": 0,
+  "run_exit": 0,
+  "status": "PASS_CPU_ONLY",
+  "output": "parameter_identity PASS semaphore(kms=0,mapped=0) notifier(kms=12,mapped=1)\nsequential_cleanup PASS unregister=2 unmap=2 rm_free=2 allocator_free=2\nrepeat_cleanup PASS unregister=2 unmap=2\n"
+}

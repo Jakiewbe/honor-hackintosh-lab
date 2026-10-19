@@ -1,0 +1,3 @@
+parameter_identity PASS semaphore(kms=0,mapped=0) notifier(kms=12,mapped=1)
+sequential_cleanup PASS unregister=2 unmap=2 rm_free=2 allocator_free=2
+repeat_cleanup PASS unregister=2 unmap=2

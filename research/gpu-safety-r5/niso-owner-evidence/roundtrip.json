@@ -1,0 +1,10 @@
+{
+  "ogkm_commit": "e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb",
+  "source": "src/nvidia-modeset/kapi/src/nvkms-kapi-notifiers.c",
+  "original_sha256": "78d310ca74ab282beec5c18d2c208ab4862d1344566f3db088017c9fe972c641",
+  "candidate_sha256": "527df580bab9c6c0226edfdcaf3663dc2ed9d42c2151bfbf7efbc80f586c098c",
+  "patch_sha256": "e6f4293d09e6d24414a4cd1faba90be2a88ad8dc9f5b15817ab548ac207fb508",
+  "reverse_apply": "PASS",
+  "native_compile": "NOT_RUN_NOT_WIRED",
+  "runtime": "NOT_RUN"
+}

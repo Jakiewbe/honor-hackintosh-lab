@@ -1,0 +1,140 @@
+{
+  "level": "PATCH-APPLIED-COMPLETE-TREE",
+  "nm_commit": "ac55984c473e746c2a8ebea7ba0913461aa7c393",
+  "nm_tree": "528e804da39cb6c358727455385563d414606a70",
+  "pristine_sha256": "97e76f376f620a7a0500c862a9cbd224c1680b8bfceed89f760642d7c38f2c2f",
+  "pristine_files": 611,
+  "patches": [
+    {
+      "name": "gpu-safety-r1.patch",
+      "sha256": "ad176fb5ced857718fdb7a3fd99f4e5db4cc67b0c58ca82929a2a013158dcf0b"
+    },
+    {
+      "name": "gpu-safety-r2-kms-open.patch",
+      "sha256": "5abc69a716dd9fc2d6293d68f1140d64b9aa57e159668111b8164b3013e44ece"
+    },
+    {
+      "name": "nullmoth-r3-thread-call-comment.patch",
+      "sha256": "290e42d6e23e6a48a136701915820581f85bc26b7ca097c506aba92b3da86ba9"
+    },
+    {
+      "name": "nullmoth-r4-bridge-owner.patch",
+      "sha256": "1e0a20db22be8212a4232f35ffad2397304188dd5785239b5c9ef96bd84a0572"
+    },
+    {
+      "name": "nullmoth-r5-kms-close-deferred.patch",
+      "sha256": "6949ef1301279c462b4630f8e59b927237eef3c97e8a8638108556765fac56f2"
+    },
+    {
+      "name": "nullmoth-r6-kms-close-reclaim.patch",
+      "sha256": "9de170ca6b78c2b1102a377961bb041d7f84d337ed512e9f0f11e2cccd328aae"
+    },
+    {
+      "name": "nullmoth-r7-kapi-device-rollback.patch",
+      "sha256": "5f420497b594f7acdae28f30364716756bb9f48b5261b3d8a31879d966b315c4"
+    },
+    {
+      "name": "nullmoth-r8-shared-device-lifetime.patch",
+      "sha256": "ab5e9a1245ddde2755d9969a247081da1990c5f5e193354c2a6bab10a8624e19"
+    },
+    {
+      "name": "nullmoth-r9-pm-gated-device-teardown.patch",
+      "sha256": "2235f7ad76c8ffcd68a7c8f10790e37bb8f1402953b889ebf2a3cc2713629cb4"
+    },
+    {
+      "name": "nullmoth-r10-nvrmfb-production-lifetime.patch",
+      "sha256": "5e2a0b6746a1cb3e93cc3a7389e38d6d3c3e3517aade980e82218d6a6356b7d1"
+    },
+    {
+      "name": "nullmoth-r11-orphan-device-recovery.patch",
+      "sha256": "e7a22e83a727e68bdb10dcd5e70b48cf704f3b6bca19bf65d4ac9a96f628a151"
+    },
+    {
+      "name": "nullmoth-r12-serialize-device-state.patch",
+      "sha256": "abb76985002c15bcb2f610de553b69bc194bde2f8d3c09e6fae97bd881c7e7fe"
+    },
+    {
+      "name": "nullmoth-r14-orphan-ownership-fix.patch",
+      "sha256": "c28455478f6b017ef18bf74cc145d36270b65210e2713256a90a119dcf196ef4"
+    },
+    {
+      "name": "nullmoth-r15-pm-pin-teardown.patch",
+      "sha256": "f97562d77ca12eab70fcb17447d27b3b3552b14b246b1894954184e713455559"
+    },
+    {
+      "name": "nullmoth-r16-intel-bounded-vbl-teardown.patch",
+      "sha256": "cfdbf1be46cf1f404a3f7359121a6a2a45265cc0fbbab33186a07ce91de53759"
+    },
+    {
+      "name": "nullmoth-r17-intel-owner-copy.patch",
+      "sha256": "bcf5a953164dea340f4068130e957b4dce4ad7c01adaee4a51d974f7ed66053b"
+    },
+    {
+      "name": "nullmoth-r18-intel-restart-safety.patch",
+      "sha256": "8a77b1399f3bdf41317a32d384632bbad4d175269c1a7f1dc66ce1389bb99537"
+    },
+    {
+      "name": "nullmoth-r19-owner-copy-without-kva.patch",
+      "sha256": "ee766fb4e73891a2bbe5b8e0aa200a1e5c5e0bfee9e9b8aff1cdbc4b1e2f368f"
+    },
+    {
+      "name": "nullmoth-r20-intel-register-dump.patch",
+      "sha256": "90e2c4a57cbffddf4ea39a1bb2d438dd68e827bb14eee9c8fe5f6d81ccda2c9e"
+    },
+    {
+      "name": "nullmoth-r21-deferred-close-instrumentation.patch",
+      "sha256": "796b9a462e2252894ecf261db85bb6cc54a2b98fcbfcf8a38704c1284bd511bc"
+    },
+    {
+      "name": "nullmoth-r22-safety-convergence.patch",
+      "sha256": "ffb8febe93406f42353c62c16ef10b75ba6545737b97eb0ef81cec1a61827cfa"
+    },
+    {
+      "name": "nullmoth-r23-pm-pin-exclusion.patch",
+      "sha256": "e7f0a54ef044e8c1f0736e476a7d3faa1ad478c7a11e77f71545d9fea700b525"
+    },
+    {
+      "name": "nullmoth-r24-suspend-begin-commit.patch",
+      "sha256": "866f38085de798f773a5cadd56169bba6a2ed143c323ffce989dd00525cd798c"
+    },
+    {
+      "name": "nullmoth-r25-vbl-single-owner.patch",
+      "sha256": "c1a2649b97cfd58397e99b890d19dae04e678ddb3e9457f5df82058a1a9795de"
+    },
+    {
+      "name": "nullmoth-r26-drop-unused-const.patch",
+      "sha256": "81ea3f9f200a5b030ee444e0b06f098dd2f888bb8028980f444de9b1d4cfb8db"
+    },
+    {
+      "name": "nullmoth-r27-precheck-before-free.patch",
+      "sha256": "751b4aa7a1d5eecdfa8fc3081cf70f6eeced5d3daac7cb58aa0c586887d582b9"
+    },
+    {
+      "name": "nullmoth-r29-explicit-aperture-offset-cast.patch",
+      "sha256": "950ca52aa54e68a449e864102d774d14a21a20fee68b66784e61b5761efc1bf5"
+    },
+    {
+      "name": "nullmoth-r28-owner-copy-errors.patch",
+      "sha256": "ef21d54a3c9386628fc95d34aba083f5ae4bac98938c982b0d40966a1826a842"
+    },
+    {
+      "name": "nullmoth-r30-deferred-close-drain.patch",
+      "sha256": "894618dbbfe8ef478ee086ccd96d794953e3a411766eeedbaa17b964d33a2ba0"
+    },
+    {
+      "name": "nullmoth-r31-deferred-single-owner.patch",
+      "sha256": "921a3d948047c7417cca238004acda9f2b81c1f1862badb325332f0fcb5aa48a"
+    },
+    {
+      "name": "nullmoth-r32-close-retry.patch",
+      "sha256": "a9c5a4f3d2bf1eae90a23767aded5b332e95021e71b14c93b40650f38f018912"
+    }
+  ],
+  "baseline_sha256": "d9deec445966789f1a1e5d88f918abb65797b8896e449996c37c7e587903a4ae",
+  "baseline_accel_sha256": "46522de7f9028fbba90f34850ca786ca2127efa0688ed99ce3bf93a7fe29fc7b",
+  "candidate_sha256": "28a9125ec7279a3c11fc51bbb10abf8d5fcc6d1798dcda83bea0fa4622b5a37d",
+  "candidate_files": 614,
+  "candidate_accel_sha256": "46522de7f9028fbba90f34850ca786ca2127efa0688ed99ce3bf93a7fe29fc7b",
+  "restored_sha256": "97e76f376f620a7a0500c862a9cbd224c1680b8bfceed89f760642d7c38f2c2f",
+  "result": "PASS"
+}

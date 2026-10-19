@@ -22,6 +22,7 @@ from g1_dependency_audit import OGKM_PIN, NM_PIN
 from g1_symbol_identity import parse_nm_undefined
 from g1_special_object_providers import defined_symbols
 from g1_compile_inputs import BOUND_RM, bound_compile, verify_snapshot
+from g1_ogkm_candidate import SPECS as OGKM_PATCHES, make_candidate, verify_candidate
 
 COMPONENTS = ('nvidia', 'nvidia-modeset')
 SHADERS = ('turing', 'ampere', 'hopper', 'blackwell', 'gb20x')
@@ -280,6 +281,12 @@ def build(args, report):
     if platform.system() != 'Darwin' or platform.machine() != 'x86_64':
         raise ValueError('native macOS Intel runner required; no cross-build substitute')
     sources = inventory(nv)
+    # Keep the complete candidate outside the text-publication tree. Only the
+    # exact patched TUs use this copy; all official per-TU flags/cwds stay intact.
+    ogkm_candidate = out.parent.parent/'ogkm-e4a5faa-r33-full-source-candidate'
+    assets = Path(__file__).resolve().parents[1]/'research/gpu-safety-r5'
+    report['ogkm_candidate'] = make_candidate(nv, ogkm_candidate, assets, out)
+    patch_by_source = {s['source']: s for s in OGKM_PATCHES}
     sdk = subprocess.check_output(['xcrun', '--sdk', 'macosx', '--show-sdk-path'], text=True).strip()
     headers = Path(sdk)/'System/Library/Frameworks/Kernel.framework/Headers'
     if not (headers/'IOKit').is_dir():
@@ -307,8 +314,9 @@ def build(args, report):
         for source, original in commands.items():
             key = source.relative_to(nv).as_posix() if source.is_relative_to(nv) else component+'/generated/g_nvid_string.c'
             obj = object_path(objects, component, key)
-            command = darwin_command(original, source, obj, sdk, headers)
-            compile_jobs.append((component, source, obj, command, base, out/(obj.stem+'.txt'), original, key))
+            actual_source = ogkm_candidate/key if key in patch_by_source else source
+            command = darwin_command(original, actual_source, obj, sdk, headers)
+            compile_jobs.append((component, actual_source, obj, command, base, out/(obj.stem+'.txt'), original, key))
     report['required_c_translation_units'] = len(compile_jobs)
     write_json(out/'report.json', report)
 
@@ -322,6 +330,9 @@ def build(args, report):
         row = {'component': component, 'source': key, 'source_sha256': digest(source.read_bytes()),
                'object': str(obj), 'compile_exit': rc, 'official_argv': original, 'candidate_argv': argv,
                'compile_cwd': str(cwd), 'log': log.name}
+        if key in patch_by_source:
+            row.update({'compiled_source': str(source), 'original_source_sha256': digest((nv/key).read_bytes()),
+                        'candidate_patch': patch_by_source[key]})
         if key in BOUND_RM:
             row['dependency_snapshot'] = inputs
         if rc == 0:
@@ -351,6 +362,7 @@ def build(args, report):
     if report['compiler_failures']:
         report['status'] = 'FULL_SOURCE_COMPILE_FAILED_NO_ARCHIVES_OR_LINK'
         return 2
+    verify_candidate(nv, ogkm_candidate, report['ogkm_candidate'])
 
     for family in SHADERS:
         raw_source = nv/'src/nvidia-modeset/src/shaders'/('g_'+family+'_shaders')
@@ -428,6 +440,7 @@ def build(args, report):
     report['link']['nvlink_delta'] = nvlink_delta(before, report['link']['undefined_symbols'],
                                                  read_defined_log(out/'full-nvrm-defined.txt'))
     report['link']['artifact_sha256'] = validate_kext(dest)
+    verify_candidate(nv, ogkm_candidate, report['ogkm_candidate'])
     fixed_input(nv)
     report['status'] = 'COMPLETE_SOURCE_CANDIDATE_LINKED_NOT_CLOSURE_OR_ABI_ACCEPTED'
     return 0

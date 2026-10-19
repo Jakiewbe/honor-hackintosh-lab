@@ -1,0 +1,18 @@
+[
+  {
+    "test": "test_g1_ogkm_candidate.py",
+    "exit": 0
+  },
+  {
+    "test": "test_g1_ogkm_patch_route.py",
+    "exit": 0
+  },
+  {
+    "test": "test_g1_full_build.py",
+    "exit": 0
+  },
+  {
+    "test": "test_g1_full_abi.py",
+    "exit": 0
+  }
+]

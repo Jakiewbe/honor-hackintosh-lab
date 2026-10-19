@@ -1,0 +1,21 @@
+diff --git a/src/nvidia-modeset/kapi/src/nvkms-kapi-notifiers.c b/src/nvidia-modeset/kapi/src/nvkms-kapi-notifiers.c
+--- a/src/nvidia-modeset/kapi/src/nvkms-kapi-notifiers.c
++++ b/src/nvidia-modeset/kapi/src/nvkms-kapi-notifiers.c
+@@ -53,7 +53,7 @@
+                 "NVKMS_IOCTL_UNREGISTER_SURFACE failed");
+         }
+ 
+-        device->notifier.hKmsHandle = 0;
++        surface->hKmsHandle = 0;
+     }
+ 
+     if (surface->mapped) {
+@@ -72,7 +72,7 @@
+                 status);
+         }
+ 
+-        device->notifier.mapped = NV_FALSE;
++        surface->mapped = NV_FALSE;
+     }
+ 
+     if (surface->hRmHandle != 0) {

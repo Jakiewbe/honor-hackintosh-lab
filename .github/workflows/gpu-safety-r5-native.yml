@@ -63,7 +63,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for test in test_index_definitions.py test_native_manifest.py test_text_diagnostics.py test_g1_compile_inputs.py test_g1_rm_abi.py test_g1_full_abi.py test_g1_symbol_identity.py test_g1_special_symbol_sources.py test_g1_special_object_providers.py test_g1_full_build.py; do
+          for test in test_index_definitions.py test_native_manifest.py test_text_diagnostics.py test_g1_compile_inputs.py test_g1_rm_abi.py test_g1_full_abi.py test_g1_symbol_identity.py test_g1_special_symbol_sources.py test_g1_special_object_providers.py test_g1_full_build.py test_g1_ogkm_candidate.py test_g1_ogkm_patch_route.py; do
             python3 -m unittest discover -s tools -p "$test" -v
           done
           python3 tools/index-definitions.py "$RUNNER_TEMP/gpu-safety-r5-nv" \
@@ -184,6 +184,17 @@ jobs:
             --native-logs "$RUNNER_TEMP/gpu-safety-r5-logs" \
             --out "$RUNNER_TEMP/gpu-safety-r5-logs/full-source" --jobs 2 \
             2>&1 | tee "$RUNNER_TEMP/gpu-safety-r5-logs/full-source-console.txt"
+
+      - name: Require patched OGKM sources in official-flag archives and actual final link
+        if: ${{ !cancelled() && steps.full_source.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          logs="$RUNNER_TEMP/gpu-safety-r5-logs"
+          python3 tools/g1_ogkm_patch_route.py --artifact-dir "$logs" --out "$logs/ogkm-patch-route"
+          python3 tools/g1_niso_surface_contract.py \
+            --source "$RUNNER_TEMP/ogkm-e4a5faa-r33-full-source-candidate/src/nvidia-modeset/kapi/src/nvkms-kapi-notifiers.c" \
+            --out "$logs/niso-owner-host" --cxx clang++
 
       - name: Compare selected ABI under actual complete-build RM and linked NVRM flags
         if: ${{ !cancelled() && steps.full_source.outcome == 'success' }}

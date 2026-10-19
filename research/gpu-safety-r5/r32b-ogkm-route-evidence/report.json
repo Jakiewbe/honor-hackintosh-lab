@@ -1,0 +1,30 @@
+{
+  "level": "SOURCE_COMPILE_LOG_AND_ARCHIVE_LOAD_NOT_RUNTIME",
+  "status": "FAIL_PROBE_PATCH_NOT_IN_FINAL_SOURCE",
+  "candidate_probe": {
+    "profile": "candidate",
+    "unit": "NVKAPI",
+    "source_sha256": "7e5492e0a0961e45ea75f664d2a16c49c66d728b93b8e3e87dca3ae9ebe38200",
+    "compile_exit": 0,
+    "object_sha256": "3e97bb3035085cb9bc3316ad0b7269846182f51ffb3b8f8b4f1bce7229eae10f"
+  },
+  "final_compiled_source": {
+    "component": "nvidia-modeset",
+    "source": "src/nvidia-modeset/kapi/src/nvkms-kapi.c",
+    "source_sha256": "66437bc38d96d3b4f15546c3e6f7a8c0caccc158b35893c2406f80f2e6e8816b",
+    "object": "/Users/runner/work/_temp/gpu-safety-r5-logs/full-source/objects/nvidia-modeset-nvkms-kapi-3a32632a4dc98297.o",
+    "object_sha256": "615e989f32585797600a7d44ae48c324b081ab427c3bdc60ae5109bdb92160f9",
+    "compile_exit": 0,
+    "log": "nvidia-modeset-nvkms-kapi-3a32632a4dc98297.txt"
+  },
+  "probe_and_final_source_equal": false,
+  "archive_member_load": [
+    "_nvKmsKapiGetFunctionsTableInternal forced load of /Users/runner/work/_temp/gpu-safety-r5-logs/full-source/libnvidia-modeset.a(nvidia-modeset-nvkms-kapi-3a32632a4dc98297.o)"
+  ],
+  "native_report_sha256": "eb6cd2104952a8df3c9656fd48d5bf87eec8db9ddddf5db89b1adf21a3987c1d",
+  "full_report_sha256": "0124b5735fce476873ca697fb91d4984158b92edf192336c34f5b4c14ec25dff",
+  "full_compile_log_sha256": "66c1d835baf9ff94d2acfef76b54d2dde4074120aa1fb174793eb808cb650214",
+  "link_log_sha256": "25dd882c204f384116792f8f5dac41ea9fe507278567e3307309ebd0d78b0369",
+  "complete_build_success_not_retracted": true,
+  "abi_loader_gpu": "NOT_ACCEPTED"
+}

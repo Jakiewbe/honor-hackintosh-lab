@@ -13,8 +13,10 @@
 | NVLink四锁 | 真实后端与17项CPU合同及原生链接已验证 | 不能据此关闭freeDevice/PM问题 |
 | P0-4 freeDevice关闭拒绝 | OPEN | 旧void边界与所有权/返回传播需继续改造；不是“项目无能力修改” |
 | RM门忙仍STANDBY | OPEN，当前结构审计31/32，exit1 | nv_xnu_pm_close超时后仍继续；不能以IOPM ack要求证明其安全 |
-| 延迟KMS close回收 | OPEN；R32b局部源码/CPU候选通过 | 正常free拒绝入队、deferred busy不等待与gate后重试12项CPU；正常busy仍无界join、单独FAIL；Darwin尚未执行。容量耗尽、open rollback、上层Device生命周期/PM交错仍未闭合 |
+| 延迟KMS close回收 | OPEN；R32b局部源码/CPU候选通过 | R32b run39186519502原生/完整链接与12限定CPU通过；正常busy仍无界join、单独FAIL。容量耗尽、open rollback、上层Device生命周期/PM交错仍未闭合 |
 | 延迟队列单一所有权 | R30 CPU两项FAIL，R31同合同PASS | R31 run39184119617原生/完整链接通过；真实close合同2/4、两项FAIL，不作为PM安全放行 |
+| OGKM补丁进入最终对象 | FAIL | R3仅独立NVKAPI探针；完整链接KAPI为原始66437bc，实际why_load已确认；g1_ogkm_patch_route exit1 |
+| NISO参数身份 | 局部候选CPU通过；未原生编译 | 原始清错notifier、3 FAIL；两行参数修复3 PASS；错误传播未修，尚未接入full build |
 | Kext加载 | 未执行、NO-GO | 未签名/安装/加载/卸载 |
 | GPU初始化/渲染/正确像素/安全结束 | 未执行 | 编译/链接/CPU检查都不替代这四层证据 |
 | Intel基础显示 | 保持现状，不扩大显示所有权 | 不进入G2/G3/WindowServer/Intel Metal |
@@ -26,3 +28,7 @@
 R31后续验收：[原生证据与真实关闭函数失败合同](R31-NATIVE-AND-CLOSE-CONTRACT-20261019.md)。
 
 R32局部候选：[关闭重试与未解决项](R32-CLOSE-RETRY-20261019.md)。本轮CPU通过不撤销R31历史2/4失败记录。
+
+当前主断点与实测：[R32B-NATIVE-ROUTE-NISO-20261019.md](R32B-NATIVE-ROUTE-NISO-20261019.md)。官方完整构建仍成立；不将探针补丁记为最终产物已含补丁。
+
+2026-10-19 R33：原生队列路线已排除遗漏；R3+NISO官方参数双源候选和最终归档/定义门禁已实现，R33 Darwin未运行前保持待验收。R32b历史OGKM route FAIL不改写。[实现与下一断点](R33-OGKM-FINAL-ROUTE-20261019.md)。

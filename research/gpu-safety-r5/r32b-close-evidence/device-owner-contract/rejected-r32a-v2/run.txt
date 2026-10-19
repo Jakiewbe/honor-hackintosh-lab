@@ -1,0 +1,1 @@
+CONTRACT_FAIL DEVICE_FREED_BEFORE_ACTIVE_EVENT_FINISHED backend_close=1 wrapper_free=0 queued=1 device_free=1 rm_free=1 events=1 sleeps=0

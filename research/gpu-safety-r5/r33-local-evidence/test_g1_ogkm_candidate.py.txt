@@ -1,0 +1,10 @@
+ARGV=["C:\\Users\\19082\\AppData\\Local\\Programs\\Python\\Python312\\python.exe", "-m", "unittest", "discover", "-s", "tools", "-p", "test_g1_ogkm_candidate.py", "-v"]
+test_exact_patch_delta_accepts_only_expected_bytes (test_g1_ogkm_candidate.CandidateTests.test_exact_patch_delta_accepts_only_expected_bytes) ... ok
+test_tree_digest_is_order_independent_but_binds_names_and_bytes (test_g1_ogkm_candidate.CandidateTests.test_tree_digest_is_order_independent_but_binds_names_and_bytes) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.000s
+
+OK
+
+EXIT=0

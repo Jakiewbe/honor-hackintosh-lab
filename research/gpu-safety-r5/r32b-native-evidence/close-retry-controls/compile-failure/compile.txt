@@ -1,0 +1,4 @@
+/Users/runner/work/_temp/gpu-safety-r5-logs/close-retry-controls/compile-failure/fixture.cpp:238:2: error: NEGATIVE_COMPILE_CONTROL
+  238 | #error NEGATIVE_COMPILE_CONTROL
+      |  ^
+1 error generated.

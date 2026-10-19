@@ -45,3 +45,5 @@ R31 的原生构建成立，但真实关闭函数 CPU 合同只有 2/4 通过。
 - 当前R32b：编译0、运行1；`unbounded callback sleep`，Device free0/RM free0/event0。保留原正常join，仍是OPEN/FAIL，不能称为安全结束。
 
 [两份原始结果与完整fixture](r32b-close-evidence/device-owner-contract/)。这是新的可执行失败证据，未改本次待运行原生源码 `051651ec0dfc43cfbb9c39534895a8fe4288f035`，不将文档/测试提交冒充驱动源码提交。下一步应从FreeDevice入口阻止事件新准入，并把整个Device的销毁与回调/PM所有权一起建模；原void边界可以通过本地候选适配，不是“超出项目能力”。
+
+后续原生验证已执行并通过：source051651e/run39186519502；完整文本独立复核完成。新发现OGKM补丁未进入最终对象的门禁FAIL，以及NISO参数错误的局部CPU候选；以[R32b原生、来源审计及下一断点](R32B-NATIVE-ROUTE-NISO-20261019.md)为当前结果。上文“待执行”保留其写作时点，不能作为当前状态。
