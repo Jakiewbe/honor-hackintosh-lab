@@ -119,6 +119,9 @@ int main(int argc, char **argv) {
             tick(); tick();
             require(backend_closes == 1 && wrapper_frees == 0 && kms_deferred_count() == 1 && sleeps == 0,
                     "busy callback was waited/freed/double-closed");
+            // R41: the legacy close waits with a deadline, never with an unbounded sleep.
+            if (!deferred) require(deadline_sleeps >= 1,
+                    "normal close did not bounded-wait for the event call");
             kms_kapi_event_fire(&node, nullptr);
             require(event_runs == 0 && !node.eventBusy, "closing event invoked KAPI/rearmed");
             tick(); complete();
