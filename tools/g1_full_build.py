@@ -483,6 +483,9 @@ def main():
         write_json(args.out/'report.json', report)
     print(json.dumps({'status': report['status'], 'attempts': len(report['objects']),
                       'compiler_failures': report.get('compiler_failures'), 'dependency_closure': report['dependency_closure']}))
+    if rc:
+        detail = report.get('error') or report.get('dependency_closure') or 'status='+str(report['status'])
+        print('::error::FULL_BUILD_PARTIAL ' + str(detail)[:300], flush=True)
     return rc
 
 
