@@ -1,0 +1,30 @@
+name: g1 R35 caller contract
+
+# Manual-only. Builds the R35 caller fixture with the host compiler and runs the seven close-chain
+# scenarios. The two backend-refused scenarios are the point: they must pass now that the teardown keeps
+# the device and creator when NVKMS refuses the close. A stale binary cannot mask a failure because the
+# negative control has to fail to compile.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  callers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run the caller contract
+        run: |
+          set -euo pipefail
+          python3 tools/g1_r35_callers.py --out "$RUNNER_TEMP/r35-callers" --cxx g++
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: g1-r35-callers
+          path: ${{ runner.temp }}/r35-callers/**
+          if-no-files-found: warn
