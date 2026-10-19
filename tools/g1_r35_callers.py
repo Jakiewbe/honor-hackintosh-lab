@@ -60,7 +60,10 @@ def main():
         print(f"{status:4} {scenario}")
         if run.returncode != 0:
             failures.append(scenario)
-            print((run.stdout + run.stderr).strip()[-400:])
+            text = (run.stdout + run.stderr).strip()
+            print(text[-400:])
+            obs = [l for l in text.splitlines() if l.startswith(("FAIL", "OBSERVATION"))][:2]
+            print("::error::SCENARIO_FAILED " + scenario + ": " + " | ".join(obs)[:300])
 
     neg = subprocess.run([a.cxx, "-std=c++17", "-DCOMPILE_NEGATIVE_CONTROL", "-I", str(DIR), str(FIXTURE),
                           str(UNIT), "-o", str(out / "negative")], capture_output=True, text=True)
