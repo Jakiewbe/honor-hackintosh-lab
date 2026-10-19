@@ -76,7 +76,13 @@ def main():
 
     print(f"RESULT: {len(SCENARIOS) - len([f for f in failures if f != 'compile-negative-control'])}"
           f"/{len(SCENARIOS)} scenarios; failures={failures}")
-    return 0 if not failures else 1
+    if not failures:
+        return 0
+    # Encode the first failing scenario in the exit code: the generic "Process completed with exit code N"
+    # annotation then identifies it even when logs and artifacts are unreachable.
+    if 'compile-negative-control' in failures:
+        return 3
+    return 10 + SCENARIOS.index(failures[0])
 
 
 if __name__ == "__main__":
