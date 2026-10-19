@@ -10,13 +10,16 @@ class CandidateTests(unittest.TestCase):
         good = list(SPECS) + list(CHAIN)
         folded = approved_specs(good)
         self.assertEqual(folded[0]['original_sha256'], SPECS[0]['original_sha256'])
-        self.assertEqual(folded[0]['candidate_sha256'], CHAIN[0]['post_sha256'])
+        # The fold reports the final state of the source, so it must match the LAST chained patch, not the
+        # first one: R38 stacks on R36 for the same file.
+        self.assertEqual(folded[0]['candidate_sha256'], CHAIN[-1]['post_sha256'])
         self.assertEqual(folded[0]['defined_symbol'], '_nvKmsKapiTryFreeDevice')
         for field in ('pre_sha256', 'post_sha256', 'patch_sha256', 'defined_symbol'):
             bad = copy.deepcopy(good); bad[-1][field] = 'unreviewed'
             with self.subTest(field=field), self.assertRaises(ValueError):
                 approved_specs(bad)
-        for bad in (good[::-1], good[:-2], good + list(CHAIN)):
+        # Chain now has two entries (R36 then R38), so dropping two leaves the valid SPECS-only prefix.
+        for bad in (good[::-1], good[:-1], good + list(CHAIN)):
             with self.assertRaises(ValueError): approved_specs(bad)
 
     def test_exact_patch_delta_accepts_only_expected_bytes(self):
