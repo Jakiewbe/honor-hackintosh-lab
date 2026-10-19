@@ -62,6 +62,12 @@ jobs:
           set -euo pipefail
           python3 tools/apply_series.py --candidate "$RUNNER_TEMP/nm" --repo .
 
+      - name: PM state machine contract (A4 and B4 fail today)
+        run: |
+          set -euo pipefail
+          python3 tools/check-pm-state-machine.py --source "$RUNNER_TEMP/nm" --out "$RUNNER_TEMP/pm" || {
+            echo "::error::SAFETY_CONTRACT: PM state machine inconsistent - see the FAIL lines"; exit 1; }
+
       - name: PM exclusion contract (fails while P0-3 is open)
         run: |
           set -euo pipefail
