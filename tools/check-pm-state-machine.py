@@ -78,13 +78,26 @@ def evaluate(nvrm, os_text):
                 offenders.append(f"{name}: {line.strip()}")
     check("A3 only the NVKMS commit sets gKmsPmState = Suspended", not offenders, "; ".join(offenders[:3]))
 
-    # A4: abort after commit is a no-op
-    if "nvkms_xnu_suspend_abort(" in suspend and "nvkms_xnu_suspend_commit(" in suspend:
-        ok = suspend.find("nvkms_xnu_suspend_abort(") < suspend.find("nvkms_xnu_suspend_commit(")
-        check("A4 suspend_abort is not called after the commit", ok,
-              "abort before commit" if ok else "abort would be a no-op here")
+    # A4: abort is only meaningful while the request is still pending. Calling it inside the failed-commit
+    # branch is correct (the commit did not take); calling it after a successful commit is a no-op and leaves
+    # NVKMS suspended while other flags claim otherwise.
+    commit_at = suspend.find("nvkms_xnu_suspend_commit(")
+    abort_positions = [m.start() for m in re.finditer(r"nvkms_xnu_suspend_abort\(", suspend)]
+    if commit_at < 0:
+        check("A4 suspend_abort is only used while the request is pending", not abort_positions)
     else:
-        check("A4 suspend_abort is not called after the commit", True, "no abort call in gpuSuspend")
+        # the guard if (!nvkms_xnu_suspend_commit(...)) { ... } is the legitimate place
+        guard = re.search(r"if\s*\(\s*!\s*nvkms_xnu_suspend_commit\(", suspend)
+        guard_span = (guard.start(), guard.end()) if guard else None
+        bad = []
+        for pos in abort_positions:
+            if guard_span and guard_span[0] <= pos <= guard_span[1] + 400:
+                continue  # inside the failed-commit branch
+            if pos < commit_at:
+                continue  # before the commit attempt
+            bad.append(pos)
+        check("A4 suspend_abort is only used while the request is pending", not bad,
+              "abort found after a successful commit" if bad else "abort only in the failed-commit branch")
 
     # Busy branch: the statement guarded by `if (busy)` … up to the next blank-line block boundary
     m = re.search(r"if\s*\(\s*busy\s*\)", suspend)

@@ -1,0 +1,22 @@
+--- a/kexts/NVRM/NVRM.cpp
++++ b/kexts/NVRM/NVRM.cpp
+@@ -1440,7 +1440,18 @@
+         return false;
+     }
+     const int busy = nv_xnu_pm_close(10000);
+-    if (busy) LOG("sleep #%u: %d RM call(s) still running after 10 s - suspending anyway", fPmCycles, busy);
++    if (busy) {
++        // RM still has calls inside it, so asking it to quiesce would split its state under a live caller.
++        // The sleep cannot be refused (XNU treats a negative return as an implied ack), so the price is a GPU
++        // left out of STANDBY; that price is recorded instead of hidden. NVKMS is already suspended and
++        // fGpuPm stays Suspended, so the wake path still calls gpuResume().
++        setProperty("nvrm-pm-violation", kOSBooleanTrue);
++        notifyFramebuffers(1);
++        uint64_t ns = 0; absolutetime_to_nanoseconds(mach_absolute_time() - t0, &ns);
++        LOG("sleep #%u: %d RM call(s) still running after %llu ms - STANDBY skipped, GPU kept in D0",
++            fPmCycles, busy, ns / 1000000ULL);
++        return false;
++    }
+     // nv_preempt_user_channels(): with every VRAM allocation preserved, user channels must be idle and stopped
+     // while their memory is copied out, and restarted once it is back.
+     NV_STATUS cst = rm_stop_user_channels(NULL, &fNv);

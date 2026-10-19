@@ -108,3 +108,46 @@ suspend_abort(1425)。也就是说，**违反 pin 的那条既有回滚路径**�
 
 .github/workflows/g1-safety-contract.yml 的 pm-exclusion job 现在先跑状态机检查、再跑 PM 检查，
 两者都失败即红（预期红）。
+
+## R40：把状态机修到自洽（已进序列）
+
+
+ullmoth-r40-pm-state-machine.patch（22 行，序列第 34 项）：
+
+`c
+const int busy = nv_xnu_pm_close(10000);
+if (busy) {
+    setProperty("nvrm-pm-violation", kOSBooleanTrue);
+    notifyFramebuffers(1);
+    LOG("sleep #%u: %d RM call(s) still running after %llu ms - STANDBY skipped, GPU kept in D0", ...);
+    return false;          // 不进 rm_stop_user_channels / rm_power_management
+}
+`
+
+GpuPm 与 gKmsPmState 都保持 Suspended（状态表第 3 行：suspended、RM 未 STANDBY、已记录违规），
+所以唤醒时 setPowerState 的条件仍然成立，gpuResume() 会真的跑 
+vkms_xnu_resume。
+
+### 验证（在固定 NullMoth 树上应用全部 34 项补丁）
+
+| 检查 | 结果 |
+|---|---|
+| check-pm-state-machine.py | **9/9 PASS** |
+| check-pm-exclusion.py | **32/32 PASS** |
+| 	ools/apply_series.py（34 项逐项 --check + 应用） | **PASS** |
+
+### 一处必须记录的自我纠正
+
+我最初把 gpuSuspend 里位于偏移 1425 的 suspend_abort 当成"commit 之后的空操作"，并据此删掉了它。
+**那是错的**：它位于 if (!nvkms_xnu_suspend_commit(...)) { ... } 的**失败分支**里，
+commit 没成功时 abort 是正确动作。check-pm-exclusion.py 的
+"a failed commit aborts the request" 当场抓住了这个错误，我据此：
+
+- 把 A4 规则改精确：只有出现在**成功 commit 之后、失败分支之外**的 abort 才算违规；
+- 撤回 R40 中删除该 abort 的改动，只保留 busy 分支的修复。
+
+### 边界
+
+- 9/9 与 32/32 都是**源码结构**结论：证明状态转移在代码上自洽、busy 时不再推进 RM；
+- **不证明**：断电时 GPU 未进低功耗态是否可接受、唤醒后 NVKMS 是否真能恢复、回调是否真的排空；
+- 这些只能靠实机观测，仍属 NO-GO 范畴。
