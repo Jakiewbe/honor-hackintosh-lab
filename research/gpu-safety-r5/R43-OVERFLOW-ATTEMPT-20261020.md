@@ -66,3 +66,30 @@ vKmsClose 桩要求 lock_depth == 1，于是报
 - run **39339549232**（构建门禁，37 项序列 + 5 项链）：**success**，含 overflow-reclaim
   （填满 64 项 → 溢出计数 1、未释放 → 回收后恰好释放一次）
 - 离线：状态机 11/11、PM exclusion 32/32、free-order PASS
+
+## 回归护栏（2026-10-20）
+
+CPU 场景证明的是"当前代码能把溢出的关闭回收"。为防止它**悄悄退回**"只打日志"，
+新增结构护栏 	ools/check-kms-close-overflow.py：
+
+| 规则 | 断言 |
+|---|---|
+| R1 | kms_close_remember_locked 在压入失败时必须把 wrapper 挂到溢出链表（而不是只打印） |
+| R2 | 存在遍历该链表、通过 kms_deferred_try_free_impl 释放并在成功后摘链的回收函数 |
+| R3 | 每个 kms_deferred_drain() 调用点在同一函数内也调用溢出回收 |
+
+自检 3/3（good / log_only / no_companion），并有 4 项单元测试接入门禁。
+
+### 接入时踩到的一个自己造成的 bug
+
+工作流里的守卫步骤最初写成了 --source "\/nm"：我用 shell 内联 Python 生成 YAML 时，
+PowerShell 把 $RUNNER_TEMP 展开成空串，只留下一个反斜杠。CI 因此把 /nm 当作源码路径，
+守卫以非零退出，注解显示"an overflowed close could be lost again"——**看起来像代码退化，其实是工作流坏了**。
+
+修复方式：改用编辑器直接改文件，并把 $RUNNER_TEMP 完整保留；同时让该步骤打印自己的输出
+（OVERFLOW_GUARD RESULT: ...），避免下次再被一句通用错误掩盖。
+
+### 验证
+
+- 安全门禁 run **39343911721**：**success**，注解 OVERFLOW_GUARD RESULT: 3/3; PASS
+- 构建门禁 run 39339549232（37 项序列）：success
