@@ -13,3 +13,6 @@
 重点挑剩余真实问题：容量64溢出后仅计数；正常close thread_call_free失败是否仍无队列；drain IOLockSleep无界等待、等待释放锁后的PM状态与生命周期；累积deferred计数被递减与旧调用者差值合同的冲突。RM busy仍进入STANDBY必须保持31/32 FAIL；P0-4仍开放。不要把已登记风险当新发现，不把未知写成已证UAF。给出P0/P1/P2、固定文件行号、触发条件、后果、建议和证据局限。
 
 最后按层级报告：源码→CPU合同→Darwin对象→候选链接→loader/ABI→设备初始化→真实GPU执行→正确像素→安全结束。目前设备层全NO-GO，Intel基础显示保持。不要把编译、CPU拷贝、标签或单条PASS写成显卡适配完成。
+
+
+后续已交付：再读R31-NATIVE-AND-CLOSE-CONTRACT-20261019.md、r31-native-evidence/及tools/g1_kms_close_contract.py。驱动源码bc8e1d56343483e695cd47b414b0adcb669bedf8、run39184119617；证据提交另固定SHA。核查新门禁真实源哈希与日志，以及正常close释放失败未入队/eventBusy持续等待两例真实函数CPU FAIL是否准确；不得把2/4写成全部通过，也不得把注入的停滞当作已经观察到真实内核死锁。所有设备层仍NO-GO。

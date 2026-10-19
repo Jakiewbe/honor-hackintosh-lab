@@ -1,0 +1,2036 @@
+{
+  "schema": "honor.g1.compile-inputs.v1",
+  "source": "/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM/os-nvkms-xnu.cpp",
+  "object": "/Users/runner/work/_temp/uni-os-nvkms-xnu_cpp.o",
+  "object_sha256": "ee459f0aab86f3cf26463b4960b463c437ca1560a2ea4c2353a50bcd06f5a2d5",
+  "cwd": "/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate",
+  "compile_argv": [
+    "xcrun",
+    "clang++",
+    "-arch",
+    "x86_64",
+    "-mmacosx-version-min=15.5",
+    "-isysroot",
+    "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+    "-fapple-kext",
+    "-mkernel",
+    "-nostdinc",
+    "-I/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers",
+    "-DKERNEL",
+    "-DKERNEL_PRIVATE",
+    "-DDRIVER_PRIVATE",
+    "-DAPPLE",
+    "-DNeXT",
+    "-std=c++17",
+    "-fno-rtti",
+    "-fno-exceptions",
+    "-fno-builtin",
+    "-fno-common",
+    "-O2",
+    "-Wall",
+    "-Wno-unused-parameter",
+    "-Wno-inconsistent-missing-override",
+    "-Wno-unused-function",
+    "-DNV_UNIX",
+    "-DNV_LINUX",
+    "-DNV_X86_64",
+    "-DNV_ARCH_BITS=64",
+    "-DMBEDTLS_USER_CONFIG_FILE=<nvrm_mbedtls_config.h>",
+    "-D__NO_CTYPE",
+    "-DLOCK_VAL_ENABLED=0",
+    "-DPORT_ATOMIC_64_BIT_SUPPORTED=1",
+    "-DPORT_IS_KERNEL_BUILD=1",
+    "-DPORT_IS_CHECKED_BUILD=0",
+    "-DPORT_MODULE_atomic=1",
+    "-DPORT_MODULE_core=1",
+    "-DPORT_MODULE_cpu=1",
+    "-DPORT_MODULE_crypto=1",
+    "-DPORT_MODULE_debug=1",
+    "-DPORT_MODULE_memory=1",
+    "-DPORT_MODULE_safe=1",
+    "-DPORT_MODULE_string=1",
+    "-DPORT_MODULE_sync=1",
+    "-DPORT_MODULE_thread=1",
+    "-DPORT_MODULE_time=1",
+    "-DPORT_MODULE_util=1",
+    "-DPORT_MODULE_example=0",
+    "-DPORT_MODULE_mmio=0",
+    "-DRS_STANDALONE=0",
+    "-DRS_STANDALONE_TEST=0",
+    "-DRS_COMPATABILITY_MODE=1",
+    "-DRS_PROVIDES_API_STATE=0",
+    "-DNV_CONTAINERS_NO_TEMPLATES",
+    "-DINCLUDE_NVLINK_LIB",
+    "-DINCLUDE_NVSWITCH_LIB",
+    "-DNV_PRINTF_STRINGS_ALLOWED=1",
+    "-DNV_ASSERT_FAILED_USES_STRINGS=1",
+    "-DPORT_ASSERT_FAILED_USES_STRINGS=1",
+    "-DNVRM",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/common/inc",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/common/inc/gsp",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/os",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/interface",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/src/libraries",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/generated",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/shared/inc",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/nvlink/interface",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc/swref",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc/swref/published",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/uproc/os/common/include",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc/displayport",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/nvlink/inband/interface",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/unix/nvidia-push/interface",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/unix/common/inc",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/modeset",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/unix/common/utils/interface",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/os-interface/include",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/kapi/interface",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/kapi/include",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/interface",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/include",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/softfloat/nvidia",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/softfloat",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/softfloat/source/include",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/softfloat/source/8086-SSE",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/unix/nvidia-headsurface",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/softfloat/source",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/src/libraries/libspdm/nvidia",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/src/libraries/libspdm/3.5.0/include",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/src/libraries/libspdm",
+    "-I/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/include",
+    "-I/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM",
+    "-MD",
+    "-MF",
+    "/Users/runner/work/_temp/gpu-safety-r5-logs/input-snapshots/uni-os-nvkms-xnu_cpp.d",
+    "-MT",
+    "honor_g1_inputs",
+    "-c",
+    "/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM/os-nvkms-xnu.cpp",
+    "-o",
+    "/Users/runner/work/_temp/uni-os-nvkms-xnu_cpp.o"
+  ],
+  "inputs": [
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/Availability.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/Availability.h",
+      "sha256": "19778e53358af735e2eeb61696c3f961c5d843e25bb2b1222540dffcc08b65e3"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/AvailabilityInternal.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityInternal.h",
+      "sha256": "bc7678491a219f97121a4e47c93f02ef73b26858f70229c98100dfea058ab08d"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/AvailabilityInternalLegacy.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityInternalLegacy.h",
+      "sha256": "c870957de1ab12b504c5d3d54f894630dee0aac25acd29946438aa6729005a31"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/AvailabilityVersions.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityVersions.h",
+      "sha256": "09eec914d3f2b9b9052f0823ba4300b44bab38a107153f32f00fe764ac8842f1"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/DriverKit/IOMemoryDescriptor.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/DriverKit/IOMemoryDescriptor.h",
+      "sha256": "5df18c15f607b0778f050b880def1e5c22862670977afdb84d585685bb000db9"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/DriverKit/IOMemoryMap.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/DriverKit/IOMemoryMap.h",
+      "sha256": "cdf5a634bd5d90ca8958cc21ace7c83241cc46c4e2386fdaf20d42400a7fc9f6"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/DriverKit/IOService.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/DriverKit/IOService.h",
+      "sha256": "26c8efca1f959c0a161c3738cc4cf9910016de475f834b1ddf0a6a90c780fc54"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/DriverKit/IOTypes.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/DriverKit/IOTypes.h",
+      "sha256": "42fb65aa1ba30e15fb746a2ad8e75e92dff78f8d0430469ce08e9ba6387601b1"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/DriverKit/OSObject.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/DriverKit/OSObject.h",
+      "sha256": "fb8967b561bbe597152d0d2195e2581034f75e4d4a856d4d1c941b32b0cd06d5"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/IODeviceMemory.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit/IODeviceMemory.h",
+      "sha256": "13127f899ead3da37394532afa6011b817f8b2070d1b3ea806db47b0cf2bccc9"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/IOEventSource.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit/IOEventSource.h",
+      "sha256": "97089afdc7a6080bef0d9a6ec15b1d37c1b14e68855030976c555690d7a36113"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/IOInterrupts.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit/IOInterrupts.h",
+      "sha256": "f72c8736f89337c49ccbc0ba25b14ff4939747479ac1d4e79bdefe4b1c9edc15"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/IOKitDebug.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit/IOKitDebug.h",
+      "sha256": "84833968ddccf1a0d66dbea2eeda526249b9e07fb42be3eab051a1c7c4f6cc57"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/IOLib.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit/IOLib.h",
+      "sha256": "ecee583778ac99a815de4d02dbfaf87a0ae938bcd95ba6ec6dc086ad1938fe5c"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/IOLocks.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit/IOLocks.h",
+      "sha256": "b8c590a5c31ba1efe08ca5eeb59ed03688eab3f7f42b0879470dbbf24df7d158"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/IOMapTypes.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit/IOMapTypes.h",
+      "sha256": "cea3ef6397bf5e7e94e67832fab824b62695d42e16fb3de0f9c1edff8fd5e238"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/IOMemoryDescriptor.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit/IOMemoryDescriptor.h",
+      "sha256": "74ad1eb29c9e52ef3b457cad37ae8f8d789f22ef6c955edda00e7a7ffc3e4c0f"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/IOMessage.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit/IOMessage.h",
+      "sha256": "e09e00c2607119880171250e57596aa5effa39b455d74d25dc67b12b27a31350"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/IONotifier.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit/IONotifier.h",
+      "sha256": "d9bd546bbda8a61b6f9f9cd3e05b4585a34690b40d12d14af09c46f2728bbdee"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/IORPC.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit/IORPC.h",
+      "sha256": "5f66ca6d158041dc9700c3a5c700f4755536631c04dfd2bfdb730df961c5b24f"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/IORegistryEntry.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit/IORegistryEntry.h",
+      "sha256": "30976c70f6fb1c92675e11c99694f45615797d292aa0e91cadfeac5d85aab247"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/IOReportTypes.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit/IOReportTypes.h",
+      "sha256": "d6b1a66d6e5933416e025efada06367fe15e642b9120eb0c24c13196a76e705f"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/IOReturn.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit/IOReturn.h",
+      "sha256": "4a5cc7c1b78add6c171c81177acc152cfde2cb59d349f5161250494debe4db03"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/IOService.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit/IOService.h",
+      "sha256": "8c9d69d1b562e4f0b0df8d1fab437a373cd814773da2aa1187d47d46e1e44351"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/IOServicePM.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit/IOServicePM.h",
+      "sha256": "9989175d59590c796056bfbf08e13a620f1d3d325dee2bb7b6f3e16db850b2f4"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/IOTypes.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit/IOTypes.h",
+      "sha256": "42fb65aa1ba30e15fb746a2ad8e75e92dff78f8d0430469ce08e9ba6387601b1"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/IOWorkLoop.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit/IOWorkLoop.h",
+      "sha256": "bf6f7e30c6c2f4b9227e022cae232c85b929aeeaf68689d118718eb1712d774a"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/assert.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit/assert.h",
+      "sha256": "aa8d986c63f249e128eb4cdeb8078c4eda0627e486cacbf7d8f1e0c81a8fdd9d"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit/pci/IOPCIDevice.h",
+      "sha256": "1d07805ca214f6903601a4ffca5e3b239bff766795852423fe635af333063a72"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIFamilyDefinitions.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit/pci/IOPCIFamilyDefinitions.h",
+      "sha256": "49321c0bb96a5f32e63f20b19db0b2871106ab9d0a81eb3063975eeef343afb1"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pwr_mgt/IOPM.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit/pwr_mgt/IOPM.h",
+      "sha256": "7dc240d1f13cfad431d6f5c49ad9ffba46771200339101e5fe163908bf32b52f"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pwr_mgt/IOPMpowerState.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit/pwr_mgt/IOPMpowerState.h",
+      "sha256": "66e19c7c0544e2523d1dc3617cbf436f0b0b7eff7205651b9f36c3798516a424"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/system.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/IOKit/system.h",
+      "sha256": "4e263f8d51f14352611520bd68d45b0fb96af40c6afb9e01e9cfb844185980e2"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/PCIDriverKit/IOPCIDevice.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/PCIDriverKit/IOPCIDevice.h",
+      "sha256": "d490bbb2646a613f75c2ce9722a469cdbb55f0be1dfe5376905613d39a5949f4"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/TargetConditionals.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/TargetConditionals.h",
+      "sha256": "848b421facded3124edb3d1a86f7270001dcee2df6a1c10edbf868ef90f75937"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/bsm/audit.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/bsm/audit.h",
+      "sha256": "c3d1674087f9abb817dc13056fef6d9d7215af34f5b6ac12b430fb02aea0f6b1"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/device/device_types.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/device/device_types.h",
+      "sha256": "20858c1baf7aefe76a44581e2f9f50f216b2cc24b0601aa3d13a5614c75e1b84"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/i386/_endian.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/i386/_endian.h",
+      "sha256": "cb01ca375d12ab9617f5e737d801f51e70ef870498ba6a4d0a503824c2b5cc5f"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/i386/_limits.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/i386/_limits.h",
+      "sha256": "cf2c6461281daf4ac20b06459e7b70bc405fec5ce95b9c748475a1f87c302de4"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/i386/_mcontext.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/i386/_mcontext.h",
+      "sha256": "5b045b513673ffe42a8b3ec2c9c0a7e75ed107e48cbcc30e65724695d4ca744c"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/i386/_param.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/i386/_param.h",
+      "sha256": "d262293a288476b48fc7ed4db8dc090918fa5433dbd8f35f36a84c021ed75389"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/i386/_types.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/i386/_types.h",
+      "sha256": "45bc32e2120f0391be97f62e309136d825be2383e4e7c43af7344f68d8c4a3e0"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/i386/eflags.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/i386/eflags.h",
+      "sha256": "443b68f584255f7f9942bd3f7579375e734e43a71351791fdde2d1e7255b6d73"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/i386/endian.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/i386/endian.h",
+      "sha256": "06d889fa0d9f65af9c6b2cb9580f44883dc2193f39c59f816c35e577ab430200"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/i386/limits.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/i386/limits.h",
+      "sha256": "0495318789148fa987c502897eb9ecb2ec3d8ed7f019a0670b089d9ea737624b"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/i386/locks.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/i386/locks.h",
+      "sha256": "46a7ceebbd9c7ed6f15ac9fcc1a5b8df53df3fddeab8eb94a30a35468b08c88c"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/i386/machine_routines.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/i386/machine_routines.h",
+      "sha256": "501ff1c83bcc6df17808bba8cd9456247407cf0cbabc1fec35ca781133893883"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/i386/param.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/i386/param.h",
+      "sha256": "40d69a5c12bf38598716fcb237287c68d2f5e323a90d8ff588d28f67c8d83581"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/i386/signal.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/i386/signal.h",
+      "sha256": "e44703be27d4b669d69757b811cd54b908bd129449a52e254d19b3b2ba145a68"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/i386/trap.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/i386/trap.h",
+      "sha256": "6e3eaf11deb5c3475e83231ac79a733ab90b98882e743cebc04d591b49a84bf0"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/i386/types.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/i386/types.h",
+      "sha256": "1463e3c1b8d097ea0e8df30d893fb893ea7c75434c5b40d3ecde85fe6546f251"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/kern/assert.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/kern/assert.h",
+      "sha256": "406ca15f85e0976848b018fed3fe0cbd6558b261d3431a448337ffad69cf8ff7"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/kern/block_hint.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/kern/block_hint.h",
+      "sha256": "7f0ee0cc023aba0e7f86744bd665f61168a80cf83b18980a54da05cc6bba9cdc"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/kern/clock.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/kern/clock.h",
+      "sha256": "45d713e7936d2216cee2d97ac7448949a5f018a3c934f8773f946a91989bd34f"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/kern/debug.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/kern/debug.h",
+      "sha256": "c0384ad72a08912118c1e6453ce347866683c810d5db679896b140a93b476b70"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/kern/ipc_mig.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/kern/ipc_mig.h",
+      "sha256": "4328cc76b0ed25f1b9b501fa87b9ba00878e7c4c36e4dd6f70642f04f4dd8ae6"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/kern/kcdata.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/kern/kcdata.h",
+      "sha256": "391b327d72d6a3beadaf1c9d35c04844d5a93b138f76eff151b771428fc3866e"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/kern/kern_types.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/kern/kern_types.h",
+      "sha256": "ea94078bb651794e86c0e1f33729747a4f2a2ca8daab8202aeac24c1ab04bdd2"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/kern/lock_attr.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/kern/lock_attr.h",
+      "sha256": "3034199bd3a9716d24ac6ad82e4bb16c4f10c00595379227ea3c9e9d52e91cae"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/kern/lock_group.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/kern/lock_group.h",
+      "sha256": "2aa3b0248bcdc247f27d67196244d0e1c0f92ac84933d6c8310019f9d785e502"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/kern/lock_mtx.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/kern/lock_mtx.h",
+      "sha256": "1e1037967bd9bd530968187147259cde3e257c8106abf7d2244d74bd7a5279bd"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/kern/lock_rw.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/kern/lock_rw.h",
+      "sha256": "1b4f635c5adbf04aa8107b690a1d4226f7a8dbca57c882b52bfeccfdc1d68b21"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/kern/lock_types.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/kern/lock_types.h",
+      "sha256": "7da1c8e07f2693d6b59d4fb947296b00ab0c23df04cc7be9c6246f00b76e3b9b"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/kern/locks.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/kern/locks.h",
+      "sha256": "affaeb7a4592cfac2035139ae10ff4271158d888fc046696eb4fafb43ec531c0"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/kern/macro_help.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/kern/macro_help.h",
+      "sha256": "6bf35433d7fab3ea45dd0e19dd0998f59974bf87b2cf2b661be9d45ab3789d24"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/kern/panic_call.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/kern/panic_call.h",
+      "sha256": "43825a085501a616bc304218e6709d0877a0972ac26abb4794321eb9417f66c2"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/kern/percpu.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/kern/percpu.h",
+      "sha256": "50cf21748b28de5c590a708b4a3c9943d2c3410840bb9f48a707c10c88e3ac90"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/kern/queue.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/kern/queue.h",
+      "sha256": "bfeb428fd849374d1eeab51b04b87dae8421ed26042c1f920e5fef5d04eba4a2"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/kern/sched_prim.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/kern/sched_prim.h",
+      "sha256": "d88935c67e2b936691b3d9e7becf52956f82a284413eb5ace9f83d30aa6868c3"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/kern/smr_types.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/kern/smr_types.h",
+      "sha256": "3a43b50e194a553fca166c8e42f5768df8585d091968d0b1d819ff14e2c473c7"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/kern/task.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/kern/task.h",
+      "sha256": "24a663e176cdee4438cdc54d3d5a7832642d596f535540eddad9dedfb95e0711"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/kern/task_ref.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/kern/task_ref.h",
+      "sha256": "b98a008f289be92fb11962193b1b189f872e508a3abbed4e7f2d60c61ffc6825"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/kern/thread.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/kern/thread.h",
+      "sha256": "0d3b12f6f9dd540b2afc1c9a4143afc9e9ab6772ad6afe0307510186013fd33f"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/kern/thread_call.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/kern/thread_call.h",
+      "sha256": "418e366dd97d39b3e899f00c488934b6c146cbd0d0c1b323233f403f6db88e43"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/kern/waitq.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/kern/waitq.h",
+      "sha256": "69b20d5dd304f1de6f4a7440d6da006e894019d70c6dff6ca1914a9c5ea33a02"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/OSAtomic.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/OSAtomic.h",
+      "sha256": "5b0220e3e7189b3a3bc411e5957c4bd6ede9d552a7e903b6d17599085e6a78d8"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/OSBase.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/OSBase.h",
+      "sha256": "25822be8e18afc423a9669aa612bd00c98d2cb13f6b7449b5b0f37a3e82cce5f"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/OSByteOrder.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/OSByteOrder.h",
+      "sha256": "d17d3304cb999d80a98165490aa38e0a550a8a3fa914b764e906dd68681bd3c9"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/OSReturn.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/OSReturn.h",
+      "sha256": "e22babe2d96685bdce81d345b06a34c3dfa74eccbaa66638a0f9d3ac42f98884"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/OSTypes.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/OSTypes.h",
+      "sha256": "fdf6d10065f7d4c0e5fd939c752d1f2d66583ba489314ff99c70d67f02cdfcdf"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/_OSByteOrder.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/_OSByteOrder.h",
+      "sha256": "f0febaef6f9ec75339ebdd896dab2a6d1a1934628d76098f165f1db1b4b74c14"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSArray.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/c++/OSArray.h",
+      "sha256": "078641c07822cc38b2c7b4eafdf4b4fef9ced3d083b59458d82103d43c551545"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSBoolean.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/c++/OSBoolean.h",
+      "sha256": "08eeeaa74fc879be3627605a97d085f0bac81ffd401f38c35550ffebb67b6e73"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSCollection.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/c++/OSCollection.h",
+      "sha256": "ddf35b9819a041c3e7044fefcc601360c1cf76ca1c9fcb647c5236a7258438bb"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSCollectionIterator.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/c++/OSCollectionIterator.h",
+      "sha256": "14f34cedc5fd6e814069d6ed6edab4ef95b1784b9a879f8809a3444a59fc012c"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSContainers.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/c++/OSContainers.h",
+      "sha256": "b194d296f2cd84db12c9506bb311bf39c2d6fbac78b35f86e0c154950c07c332"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSData.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/c++/OSData.h",
+      "sha256": "70af60d8a9021b87edec82c1d9345fd85afffbd8286a316b15e39c0c1bf5329d"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSDictionary.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/c++/OSDictionary.h",
+      "sha256": "d01da21a660373f0fed788b1fa48bfa297c81a4bbc5b63d036ca4943ad7e2806"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSIterator.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/c++/OSIterator.h",
+      "sha256": "7e2decf6a33148fe7082b460eabc8c1c84a70fee4e190a687699588c85146517"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSMetaClass.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/c++/OSMetaClass.h",
+      "sha256": "1e374eea48489b044a0d124314b2fcf8a9622a9d7d6cd30a1c6244058f733fcd"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSNumber.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/c++/OSNumber.h",
+      "sha256": "135e807ee67378dc7eb7d685807409977e4ed0172788f9df2510b5b98a96928b"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSObject.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/c++/OSObject.h",
+      "sha256": "69783dc78e1a398b11c0f2dcd2147277425f68a7e5c655519ded056d5b57ed3b"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSOrderedSet.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/c++/OSOrderedSet.h",
+      "sha256": "c76aa09fd0c76400b8527de1f9b682dd66600a4a9df99d4d27abb46bfc6e36ec"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSPtr.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/c++/OSPtr.h",
+      "sha256": "4aef9a98a6004edd6bf8b31f00f3f3a2e16eed3a43d968e96e1e065cfc7208fb"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSSerialize.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/c++/OSSerialize.h",
+      "sha256": "7066749f7f603c84e1d9230b5b042a2efb52c68f6e36883ad3e8817c47318b14"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSSet.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/c++/OSSet.h",
+      "sha256": "38a4c427eb56b84e62451147f58ce64e7ebbe1fd70fa778cc1308deea8f9d37b"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSSharedPtr.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/c++/OSSharedPtr.h",
+      "sha256": "760920935fcb2964dd9a6b78071658a4728d333e7c2f162b92240203d1fc31ad"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSString.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/c++/OSString.h",
+      "sha256": "a8419a7984c44e7296beeb22a0fd11fa7dc092dbef3801c06ad07d554b46fbaa"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSSymbol.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/c++/OSSymbol.h",
+      "sha256": "ce3934bbf7e8d56f66b5eb6cea8d1e6241607614dc17b25b30ef69557ed6f12f"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSUnserialize.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/c++/OSUnserialize.h",
+      "sha256": "7ad50664216e46a72e9404371f35e692eef136a480741d3e14246c40cef7cb2e"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/intrusive_shared_ptr.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/c++/intrusive_shared_ptr.h",
+      "sha256": "dfc3f7cfb972c53c5f3981946f40b9a574f4e21601845cf44c99b896c015fc1b"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/copyio.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/copyio.h",
+      "sha256": "8c2f096da61fd150deb5f188a59b73707226c1919e0bd26a87deff82ab02b72e"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/crc.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/crc.h",
+      "sha256": "ee72e1c66e7fb88760ec8970354045554f5b2cfaef677f066cf369c41b82c623"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/i386/OSByteOrder.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/i386/OSByteOrder.h",
+      "sha256": "a5aff364a9b4703ddd71b45ec4bb570b665308dc2d0459e40a5701694e0e3ee4"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/i386/_OSByteOrder.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/i386/_OSByteOrder.h",
+      "sha256": "1114ce25796b6a04172f4372bf6c2e6c9d5e65919364ed12911d85ed928aaa7d"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/libkern.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/libkern.h",
+      "sha256": "e4c6bbc3606cf4e9bebaed3f7dc30d95492b86049deb5f307fbfbc2196b3159a"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/locks.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/locks.h",
+      "sha256": "1e0d33b32c1bf246b882c9ecbaa1d7b930e844413b4bfe721fdd8059cd9875d4"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/sysctl.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/libkern/sysctl.h",
+      "sha256": "5e3227747e3e980c08b1173eadf2d068329dda7a9d7ae8c41c376c86e07e2d7b"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/boolean.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/boolean.h",
+      "sha256": "c050da6ed29d186ac403c0ba187031aca3ac32da2b4e618e0d0c8ba1b7665523"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/clock.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/clock.h",
+      "sha256": "a585e3cd0647600450d10cbd9c04dd8b373e71bcee3ff0a6071521f2ed0d21cd"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/clock_priv.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/clock_priv.h",
+      "sha256": "86a9c286baf87975efaaf36326aa35b4e3819d063c62cfd735fc4778d7007e1a"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/clock_reply_server.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/clock_reply_server.h",
+      "sha256": "7f28a0ea82331d3110679065a4ad869ee13cec49f57ed342a4398c3e7e8be1c4"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/clock_types.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/clock_types.h",
+      "sha256": "713a82de87f460e5f03d7e29951166ebab75a387b8245ab8bff0725c04f689e3"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/dyld_kernel.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/dyld_kernel.h",
+      "sha256": "1fceeeca56348b1aad6e6c97d5b12c5616094459fad45676b0bd57cb603a9c83"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/error.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/error.h",
+      "sha256": "bd288ca8dab37bee91ab75cb3ed6238be9bbffae3c687f4cb54057bba6467d8d"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/exc_server.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/exc_server.h",
+      "sha256": "3fcd2e12e77ff2e82cac71098e5d33393fa230f8a7770e1f54a60ae9646f5843"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/exception_types.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/exception_types.h",
+      "sha256": "8b7c3999787e8017b1127faac0e7d6885524a6b7ca05fb88a705773e0dd1e64a"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/host_info.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/host_info.h",
+      "sha256": "cd7ade83776311475b088c430902b78591867d2df7c93fbb492113921d421adc"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/host_notify.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/host_notify.h",
+      "sha256": "31b3050a653a792d3f40294224d5edd5d0257611b48c34e123ee3296b7bf181a"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/host_priv.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/host_priv.h",
+      "sha256": "d2e965e9026f2bf42d3ec05530fd6179e9c49160b4e783d767e1d73937ff0016"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/host_security.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/host_security.h",
+      "sha256": "4432dde9bd8a5a5dbad634c0e18d4dcba3d3ce828aeebbf1245fd0ebc0db1fd0"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/host_special_ports.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/host_special_ports.h",
+      "sha256": "41fd94666f924c5b9b00e31e0fe7a3d3ec6fc4b89d3c56b58212041f2a197582"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/i386/_structs.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/i386/_structs.h",
+      "sha256": "6003cc7f64c45d144be10f5ddb270e0133e0e94f852a98be9a78771dd442ab03"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/i386/boolean.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/i386/boolean.h",
+      "sha256": "e3d090a9d12970eaa17fb235849f8d078036ad6c49cf18deb0433cfa30d50c63"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/i386/exception.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/i386/exception.h",
+      "sha256": "9c157794ed9eca912c4ef683b0dbb4b446654628159dca81ab38338b0593e584"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/i386/fp_reg.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/i386/fp_reg.h",
+      "sha256": "6476d6a3532d0618a55c68cc8a5201fe3f1e19acc220ed76868b521b790ef965"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/i386/kern_return.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/i386/kern_return.h",
+      "sha256": "3c806753bb3af781d46d45fef3321928691e2e1b4ec86c4d89d163c3f399ad17"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/i386/processor_info.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/i386/processor_info.h",
+      "sha256": "4b77588c7403625db62340637fd479d5e2029321247704996c14bd287012bb29"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/i386/thread_state.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/i386/thread_state.h",
+      "sha256": "ec167951a952a94045359aff7d34153d32fb52af0f65f75576656d69898e0564"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/i386/thread_status.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/i386/thread_status.h",
+      "sha256": "e92e479c33f426ca2f6a7fd80a30e1effa21d1d7084e573e3103806b02d8bc6c"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/i386/vm_param.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/i386/vm_param.h",
+      "sha256": "7c8fc55c27cd3d5d1f0179863ec26c33737e1a869e07e76cf70561995027809c"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/i386/vm_types.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/i386/vm_types.h",
+      "sha256": "fd08a1f8d73c50d02b568a85ec995937ffc0c1426c8b464d94b79c1ecfce2565"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/kern_return.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/kern_return.h",
+      "sha256": "4577d58f74dfbb8ef07ce460f82cb7a45999ad2a0479486df8d22658d4847f50"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/kmod.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/kmod.h",
+      "sha256": "17dcdc1fb20211dab697cc46ef29053688598661506835f7d47ff94d699ff726"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/mach_exc_server.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/mach_exc_server.h",
+      "sha256": "ce661ff1d0e9b66667d9ce6f7701eb0c929e7fcd65828b6e33abb3ba5a19ded9"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/mach_host.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/mach_host.h",
+      "sha256": "69f14b0aa0225a1d3894359dc789a1922bf318865d1cee3f419ae37cd4732cf7"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/mach_interface.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/mach_interface.h",
+      "sha256": "fc783a915aaa5f5e3823f434bfd0e6d81a8e807c756066de0683cb9d7a1f9139"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/mach_param.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/mach_param.h",
+      "sha256": "eb32eacc91c909cdc66a60a13f79c16cbd7b79cd33aadc9d1772fe71800d8756"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/mach_port.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/mach_port.h",
+      "sha256": "81111de0a5bd20e3234f93c7e30d5ca4a0bfdb0014ddadec1508edf5d61b46a8"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/mach_time.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/mach_time.h",
+      "sha256": "7c730bcc4e6cbd783e0a7d99535cd832acb1814fa1184cac743dad985087cc0f"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/mach_types.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/mach_types.h",
+      "sha256": "51736cb18a8ed753801f7130278a61eb44130c95eede21a26fa590c9e662f57d"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/mach_voucher_types.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/mach_voucher_types.h",
+      "sha256": "8c277e9c3c3bc0df00f26b8f3d4e4e7eae014946b31ad131490cc49cddf9655a"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/machine.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/machine.h",
+      "sha256": "49a270495ddd645d22dce3855e1633c29971baa21aef0d12713785e2e6b95bb3"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/machine/_structs.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/machine/_structs.h",
+      "sha256": "410350f04225bf139bd89f1a99418a55734e4ab2101bb93dc301f790a130f59c"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/machine/boolean.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/machine/boolean.h",
+      "sha256": "a22e0c8c541b9117a86d85ab4a977eda49917a9867b24576f5972b6fa6554f23"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/machine/exception.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/machine/exception.h",
+      "sha256": "50a572de0f7b9ddd7925debb3de372a1535baa0a6955c53e5709cbbf3947be94"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/machine/kern_return.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/machine/kern_return.h",
+      "sha256": "160d3b4460244b7f469a34f3030071bd717d2918cb748527c1207ca78310d51d"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/machine/processor_info.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/machine/processor_info.h",
+      "sha256": "806acb7cca13b111b07ca0aee27c12e72ea264d7e9220ceaeb2c24889129fd1b"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/machine/thread_state.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/machine/thread_state.h",
+      "sha256": "c8b6a465623bee017fbaecb5fffbe86d96b34bc657f026950389e0f760ad02f3"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/machine/thread_status.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/machine/thread_status.h",
+      "sha256": "756a3db7289b7cea839f9bd9e9556427ab3c9effa77e552bdc9b2e6e096d2f7c"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/machine/vm_param.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/machine/vm_param.h",
+      "sha256": "574cf089b3d18d6334da1339692ffff16d15d5064692af27fc0a94042603a2d8"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/machine/vm_types.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/machine/vm_types.h",
+      "sha256": "1c2a4ff4b5843ded602775a447494f353a295015ca8d913a0a13439f4ee28654"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/memory_object_types.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/memory_object_types.h",
+      "sha256": "f258fd35958a0dd6d4de586db15055d3fa50c5688857a14f705f7da2cb98044d"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/message.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/message.h",
+      "sha256": "1019119dbaca74912eea11e78be9dd9cb724b5385b195faa3197dc562fc49309"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/mig.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/mig.h",
+      "sha256": "6a033fb714f481d2e678a94f05fbc8e6f11ca33e15a723f7b4855924fc34994f"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/mig_errors.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/mig_errors.h",
+      "sha256": "5f9b82c31996cb2929d7bca5acb91ff5ffb1959e74da7e47deef1e25033a89c6"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/mig_strncpy_zerofill_support.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/mig_strncpy_zerofill_support.h",
+      "sha256": "20937df811221e2b01bed456cd369a326606ff6f020f9346941f4a688a77118e"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/ndr.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/ndr.h",
+      "sha256": "2fe22ecac00808ca9c927748c58f51844fdb3b70f4d0f95cebe1e7fe15ff400c"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/notify.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/notify.h",
+      "sha256": "27e62c4585f9b23413df9bf0ce50cf777d619e70d99a63f7132fedaed98b3343"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/notify_server.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/notify_server.h",
+      "sha256": "e0d7a13f849c48c543780d79024e2a036e73212a5b3fcfdec0e02ec19002f413"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/policy.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/policy.h",
+      "sha256": "a457c6acb170fab0e17c517959c01098c9625960e1d077d232a89a5b288595b8"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/port.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/port.h",
+      "sha256": "7d27db70c51805386c575af7cf2a0f2931ebf91a68e52cac854341736acc19f6"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/processor.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/processor.h",
+      "sha256": "38346be85c982b3338d8b010b97e64971fb3aba669fbb431889d229b5a75e545"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/processor_info.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/processor_info.h",
+      "sha256": "bfeb48381b2a114f504af73c8f0bec5b75cfcbd7cc53d5d6102126d690208899"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/processor_set.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/processor_set.h",
+      "sha256": "dd9d122040de1765f297bb62724666cffb2df51ea9ea49486616133c9bde2102"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/semaphore.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/semaphore.h",
+      "sha256": "43cae62c66e4f4e1c640acc54adc9ce46d8a7310df73f79bff00d38a1c0fb075"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/std_types.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/std_types.h",
+      "sha256": "839d581eb7f1b8ac5d74ed9506fd11f49e287e0c2fb39ffc62f9139dffcdf3fb"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/sync_policy.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/sync_policy.h",
+      "sha256": "111f6b8d80950c57b42425540f5cf5a565f4adbf7d34e95c3010478f6e641c5d"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/task.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/task.h",
+      "sha256": "7fea7e1380bf4d0fb029cfbbfd9aa8a369abf8019a07ce80cba0375773ae6ebc"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/task_info.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/task_info.h",
+      "sha256": "ff0a83fbe39e4d6be2d11d240981e8067f6433e78abb7082decb121b5776a072"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/task_inspect.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/task_inspect.h",
+      "sha256": "686e81a4c1c01904b6ce238d98341bc9652dffe7df3e78c2814f12957de04471"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/task_policy.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/task_policy.h",
+      "sha256": "eaf4a66f72243497f3bb26361411282274cd2745c1223440b74b308ef8055d84"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/task_special_ports.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/task_special_ports.h",
+      "sha256": "981483377dd187dc3f992dd9da0ff6a18a38abdacdc8631ce5c45b2532334898"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/thread_act.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/thread_act.h",
+      "sha256": "9dd14f209bc2caa8fc0e6c2d87bbb8ebbe18128cb6867d273af980f4b2e13a6b"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/thread_info.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/thread_info.h",
+      "sha256": "8e2e6446558fc793c257943b1f663d08d6c6de3f4ed21d4f4f940f05e0cc38ce"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/thread_policy.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/thread_policy.h",
+      "sha256": "8f8a2086c7668bd0d377f303570ee77de8a644d69695d2eadff85eb24393a885"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/thread_special_ports.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/thread_special_ports.h",
+      "sha256": "e1bede553979e7d79b9035c351d303a68f1d0384de5e8098929f07d04f34beb1"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/thread_status.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/thread_status.h",
+      "sha256": "ebffe87f2b535072fb6d6da945fbcdd6da7e6eab26bcb5383807d34e0299162b"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/time_value.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/time_value.h",
+      "sha256": "b11b0606d2f5f44bd0fa1728928ff6dd301b42d67d5ab2c035a84be85f1f7b21"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/vm_attributes.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/vm_attributes.h",
+      "sha256": "b00af7534a5025e955c6dec28e8ab2085f652fc59d000f45cf1f9fbe39579222"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/vm_behavior.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/vm_behavior.h",
+      "sha256": "e721e36e652826189f90425c7e6ba62b7f932e3a42201a0e7a7d44a82a1dab94"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/vm_inherit.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/vm_inherit.h",
+      "sha256": "db0db4c2ca0627076fab369bab78820d16dc156c83fcd62181c4fcf30507dacd"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/vm_map.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/vm_map.h",
+      "sha256": "7a7cd590ff9042f5a816dbff9d4a623673c531e37cd735f80aec3f66c4b03ddd"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/vm_param.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/vm_param.h",
+      "sha256": "8058ef4eaee6a6baafdbe2c94340ba2cd0d6d456883ae33525bce2b0e4f98cce"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/vm_prot.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/vm_prot.h",
+      "sha256": "61cf112227e4cb0ae68d8273fa507f9172996d7a09d992bdd829307e0504370a"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/vm_purgable.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/vm_purgable.h",
+      "sha256": "b92939147f96ca880e189829d6f134d88e766070052040fd4b3d22ac8abec4ba"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/vm_region.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/vm_region.h",
+      "sha256": "cd8f86882d81b723b1b02571d414674aa7e3bcf8aa50332c279aa97f3c2f8bee"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/vm_statistics.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/vm_statistics.h",
+      "sha256": "0cb83fd695642b9d07c5fd227aa710c65d2ec5fa44e906dcb19785f59cb74459"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/vm_sync.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/vm_sync.h",
+      "sha256": "8a55361f3fb89f212e4f1c57d29c5e32a9d72e346f989202748b1fe96d09d8f1"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/vm_types.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/vm_types.h",
+      "sha256": "f9f55e57078a2b8e5682d5113e846447822c676539b9aa2c49b77fcec94fcb2b"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach/vm_types_unsafe.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach/vm_types_unsafe.h",
+      "sha256": "1d12efaecbd02d29e960d7bd931f441ca17ca9c24c896f6e74b707ba1e81a792"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach_debug/hash_info.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach_debug/hash_info.h",
+      "sha256": "43856caea0a9d8c799083e6ff5f2f1806e18ea66fad8e657f83fa4df77e94078"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach_debug/ipc_info.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach_debug/ipc_info.h",
+      "sha256": "30e7dae3dc521b5394ccc5fdfada8c26b2cec176bbf5bf78ac6d3bae3a9843eb"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach_debug/lockgroup_info.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach_debug/lockgroup_info.h",
+      "sha256": "a009f5856efa59f9e6010447e4b9f38777ff2c624af23abb5dd028a35e99df2e"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach_debug/mach_debug_types.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach_debug/mach_debug_types.h",
+      "sha256": "40fd2fb8998d29e2dbfaaf4ef8540bdebb3e1ebae749b6e82b1d511c8f5113bd"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach_debug/page_info.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach_debug/page_info.h",
+      "sha256": "9c7143b9e06a8b94cc27d98374275699f930ba286e6cbe7193f65d06930d08e6"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach_debug/vm_info.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach_debug/vm_info.h",
+      "sha256": "6fff640b0422da5f051f6373c053a4bc56b800e79fd58baaab50ad3b76fb8892"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/mach_debug/zone_info.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/mach_debug/zone_info.h",
+      "sha256": "1f919b1ca0f8b4f6ea4f767701d50965c2a6d2b3e8bafca8f5ddb05f60c93cb1"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/machine/_endian.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/machine/_endian.h",
+      "sha256": "17eb7d38845502ce04aac3ab709dffeb4ec253781051b5d7894703e9786730de"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/machine/_mcontext.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/machine/_mcontext.h",
+      "sha256": "9d3425653d2a1623d785dee4601c3c00e05f4797d7e840b00f17d529f8c6c51e"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/machine/_types.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/machine/_types.h",
+      "sha256": "f27264f8fdec9f164b4fc2b556f666ed7c5c0e5b88fd9f23db0b731ffa6cf864"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/machine/endian.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/machine/endian.h",
+      "sha256": "37f9e1c8599a729e605477a5b6a77cea727fa66816e4585d0dd32e3ba377f450"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/machine/limits.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/machine/limits.h",
+      "sha256": "50345f1ab843fca787a38c552a84177e678d79dab86e714434f94f2546839357"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/machine/locks.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/machine/locks.h",
+      "sha256": "0650343b50c27f44e5a3f68ab742e2acdd3aaddfae50a107c4f554832120d08d"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/machine/machine_routines.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/machine/machine_routines.h",
+      "sha256": "d474a1bdb02cbac4094108bee8fcfdd4f2d96bed227b365b488981a412abda27"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/machine/param.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/machine/param.h",
+      "sha256": "9a03a8edbbe2c4718553013b97dbac07113610350f983994aa53db0db07e0bb5"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/machine/signal.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/machine/signal.h",
+      "sha256": "09b1798034cf3b5217df3e415d6053df9c2e16b858036fc11888e63f4493f53f"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/machine/trap.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/machine/trap.h",
+      "sha256": "77bcda52fe44e0b28c5a40d0d97522a57ccb52c6f821a7f56a333f4aaf2b4345"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/machine/types.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/machine/types.h",
+      "sha256": "76e7c59451d996fe674a6fc7e518366609a95875c9b9aec9fd590a3ac138dddd"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/os/alloc_util.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/os/alloc_util.h",
+      "sha256": "6ed8f292e73da669ede50e3cb83bb6c95380e4fae0914caeaaa18a2da2d18323"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/os/availability.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/os/availability.h",
+      "sha256": "12f612a91826a69b5abd89b263466930ecef0e17de106c287ebcdadc1ce96ac4"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/os/base.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/os/base.h",
+      "sha256": "9bc7d6324cc450c24f69499260c0fc2cea46485d545c132a1836396f6ead23db"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/os/cpp_util.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/os/cpp_util.h",
+      "sha256": "e957f06cfd6e27e6e5ed04309a774c83222027ec1c644bbfcee693ffd2ac1861"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/os/overflow.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/os/overflow.h",
+      "sha256": "776965f5343582b345fbe5c6d6b135cc0628d146105639e9339ba53eb69dc1de"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/pexpert/boot.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/pexpert/boot.h",
+      "sha256": "3273a124a1b743e7bf53252e5a2ce158aa63090a25467d6b95e8024a39e3aa4b"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/pexpert/i386/boot.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/pexpert/i386/boot.h",
+      "sha256": "263825e4a59eda35532cdbbc4a27cc6470ba48a040c3ddd2e60b4f3cd5ec4dd7"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/pexpert/machine/boot.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/pexpert/machine/boot.h",
+      "sha256": "2f4474c9dbc9460298517e24dd5d7211f7a1b3035769f4f5cdd74ad845087bba"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/pexpert/pexpert.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/pexpert/pexpert.h",
+      "sha256": "faa0b50c458f7d2fd9aa76de72d03db64fa220264499e9a6e80a894c2fd5bc2c"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/ptrauth.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/ptrauth.h",
+      "sha256": "9a8eb54a418f84216e6c7f0ed0b4206d32917f73015e22e7965ca9075c37bd51"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/stdarg.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/stdarg.h",
+      "sha256": "8da8c90ede2c3d8690230f69aacc7e7f03daca2d9ca9498ceddd10b2132e7acb"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/stdbool.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/stdbool.h",
+      "sha256": "cc6686217aabc9be90ce0e6663614f632fbdc3b7b0c4f620077cdc966b87f545"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/stddef.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/stddef.h",
+      "sha256": "a9bf26094aa1fc7493589a94776047cde29bfe6917cdb41c605c7d1cddc73939"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/stdint.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/stdint.h",
+      "sha256": "078c015573934614d2b721275b59f6aea476ba4f75760cc86a1ddc705a0dc0e4"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/string.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/string.h",
+      "sha256": "0e12547798e582cf96b05a09acb8fe506110c0c978563c88120c80c0c58f2a09"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/__endian.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/__endian.h",
+      "sha256": "ca3470d9c69f8fd16b84b4ae93d208a8bba5ca9cbfc284797d4a32f5fba798c4"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_endian.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_endian.h",
+      "sha256": "4b23704d23d9e0c7b46acb7f4129c8c875c4297a6675ed6d8f292110b66d8470"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types.h",
+      "sha256": "5d7322d56ec07c925f5ea167c7998dddca4c69b8e9f9eb7fe55cc42b72b9ab70"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_blkcnt_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_blkcnt_t.h",
+      "sha256": "3526cf25ca7734bf6bc945c9483727b8c1ab3fde5ad8fb23acad7489e231330d"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_blksize_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_blksize_t.h",
+      "sha256": "4331ba446f9b5930e5da1dc065c97e258672ed0cbec5b3f0816c228fd0198955"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_caddr_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_caddr_t.h",
+      "sha256": "3843114a65099e1fab961e6b42bbd04b6785b94468ce150b4244284642eb817a"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_clock_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_clock_t.h",
+      "sha256": "e7be094e48f450875288ef68a59409e530dbe2d9449c78ff3d9ea9d654e0e857"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_dev_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_dev_t.h",
+      "sha256": "4ba3d19759544b9f7bf424d2a16a518ff586e31ed968d525440e678cfbb07a5d"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_errno_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_errno_t.h",
+      "sha256": "ca230b22b22becab1bb191bfe5a8dd4595ea0566f5c8cc9b299eca308ee5a271"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_fd_clr.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_fd_clr.h",
+      "sha256": "ccb785f37fdf5503df860a3fba82d8570a65f7ecbd754a5558254483b996747c"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_fd_copy.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_fd_copy.h",
+      "sha256": "f4f4289b3da098621b7ed0115faa7d4b85b65852c4615c9bad5e222a8ceb0078"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_fd_def.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_fd_def.h",
+      "sha256": "189baf8c0c449fc2e4ef347f33260c77c047e7f9c3a20d0e45b2706e2e20c6ed"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_fd_isset.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_fd_isset.h",
+      "sha256": "17bdc86c26b6c82411601e955af5e2563a86f2fdd345568b78ab8642b895d1ae"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_fd_set.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_fd_set.h",
+      "sha256": "57009e7fed060e007604e0259788a7bea6afcb18fc4840fc30cd641f58655190"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_fd_setsize.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_fd_setsize.h",
+      "sha256": "7cd3a93f51f4521e60151c08b1fab36ea8efbb98988bb03db24264a1c434eaee"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_fd_zero.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_fd_zero.h",
+      "sha256": "e5c44af3534182fe3b0872f39617ae17cd2ada72339e6f388eead5472df64c6f"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_fsblkcnt_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_fsblkcnt_t.h",
+      "sha256": "f986ed21599c2e0e1fc2efb8e014aae5a99e9f40d374a3e1af9b7c98ac9815cf"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_fsfilcnt_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_fsfilcnt_t.h",
+      "sha256": "e56f6f9b9c48eb7c035d5241a611169cd130a6319a5d179522c818d9d3384cdb"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_fsid_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_fsid_t.h",
+      "sha256": "63908a097cb2628d6d652317974e416a0df39e46b1a9a0ab0a10b83ea8948a2f"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_fsobj_id_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_fsobj_id_t.h",
+      "sha256": "f411229eb775e55326d5f3e1e00c822c97fff57e474e5f66574aa1572d67259f"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_gid_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_gid_t.h",
+      "sha256": "e687ad58c03701c132a02ebf20699c8cacfd34c3a67271bd2a415a5a8e4a9ea7"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_guid_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_guid_t.h",
+      "sha256": "7fa1d7251dbc7160b64401e61ec841c0f70414976c8d65b9204887fc65e2c618"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_id_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_id_t.h",
+      "sha256": "fb7255c9872e2a805c206796326e21d47146e22c93c09752126d7166bdaba5e5"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_in_addr_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_in_addr_t.h",
+      "sha256": "8da608117e441ff6e6b108d35334d7cf4b346b838522f97bcc621d925e0ba7fe"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_in_port_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_in_port_t.h",
+      "sha256": "cf4b90c7af861346ee46c6b9e5d57cfe20bd62a03b1533ee9a369480ace0bac9"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_ino64_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_ino64_t.h",
+      "sha256": "f143d5c0bfea65489ef89a866e96c9065d7ac28d62c0cec36f79d4dd7269fd13"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_ino_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_ino_t.h",
+      "sha256": "1e067108b372f2c81cfcad28413d6c0d2b9ef21d34fab740c3c8af059deadfea"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_int16_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_int16_t.h",
+      "sha256": "e40d40ad59c6dc98577b2c7cfdba1121ebfee17b29e093cbd10b7936df496d8e"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_int32_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_int32_t.h",
+      "sha256": "77127195e57f1690402377ddd72e3dcda684ddf591346f08ef4772dddcbbc281"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_int64_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_int64_t.h",
+      "sha256": "a2427b34e5e83996bd28d83cec920cf3b82a366af90e767234557bd11fa33a18"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_int8_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_int8_t.h",
+      "sha256": "607f6beede0251eb801e763493df26fd45d46eb951e4ff9cac17f1ac951b8cc0"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_intptr_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_intptr_t.h",
+      "sha256": "b2a7ba9b9b2d357d75e59114874658f893b23ea6d1357815b027d8189075daba"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_iovec_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_iovec_t.h",
+      "sha256": "f60cfdd101322d759ce291978284113a4e5a3f867cabecdcc66318a59c0f3884"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_key_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_key_t.h",
+      "sha256": "42e8a3f076c5892d7b8ca5594b15a989eb206df5834070bd2b89b1febb3e9913"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_mode_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_mode_t.h",
+      "sha256": "7c4261bde41387fc23aefe5dee1e6298ae6b6f5592bca51947fdd9736e0640a6"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_mount_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_mount_t.h",
+      "sha256": "b2e3f4a4bc8f59a6a47e2907ec11a33fa3c406e1a55f81f8ec90ec15acc6b14b"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_nlink_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_nlink_t.h",
+      "sha256": "7cc46bfc5d0f4238c735ff28bb1a8dcefc26d1f0e52b7098a5c89e68bf87288a"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_null.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_null.h",
+      "sha256": "aec1c5e35a6aa999c571332772797e37f9cf49d8347d3928b5fe7b05a5942c7f"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_off_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_off_t.h",
+      "sha256": "7b07626d71084f1b3220e045089f54fd30f4d736be9cd0449042c5fe411fc569"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_offsetof.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_offsetof.h",
+      "sha256": "e91a69d6f258c83eefb30c1a172686c52bfa50fd09adb0dfe22693931cd6ef38"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_os_inline.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_os_inline.h",
+      "sha256": "0b4aa055199f1aa01485a7951a191aed5e3c8377be334e9a9e928988d52d1409"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_pid_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_pid_t.h",
+      "sha256": "052a6dbbec8e30623c2d33dd373992f6c5d0c57c57ed4949d2b48c4ab0976487"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_rsize_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_rsize_t.h",
+      "sha256": "52e4f4cc9848ab830889a40ed2fe9d831583f019693185215f125357282f2d16"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_sigaltstack.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_sigaltstack.h",
+      "sha256": "2bc87d34186fe6524fe89fa1e2d878462c6688134d03880b8bfa1486db297687"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_sigset_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_sigset_t.h",
+      "sha256": "df99c73ecdbde1fcb3a4a22169871e036240452472b8ea70f287456d42593972"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_size_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_size_t.h",
+      "sha256": "bbdc295910f1e376fc5dde134765f9e565eb29a44ec545fe7c0ee5aea905f387"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_ssize_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_ssize_t.h",
+      "sha256": "58eb3bdea24b27e6b5fb45e203e476faf2510b5c0aa81a0b45c17b528aa9c192"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_suseconds_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_suseconds_t.h",
+      "sha256": "d799ffc16cf29b6559b36d879fc7d5fec80ec3c39502eaef078ae9178eeaf275"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_time_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_time_t.h",
+      "sha256": "c0a28cdc5c9c8cf99abea53556895bd8001a6cb13ae6ca9f366955500678b35a"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_timespec.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_timespec.h",
+      "sha256": "3314f260a6b3ce09c02df185ba2253577b2a268dac05d3cad55f76bb3e8019e8"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_timeval.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_timeval.h",
+      "sha256": "f723018fec267200e915777897515b5d7ed20901bcb294873f94b1d835f9ae45"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_timeval64.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_timeval64.h",
+      "sha256": "76ac085edf939eac51da6b4a605f42ac3b97e9ea69c6f4935a7c5b3c70721226"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_u_char.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_u_char.h",
+      "sha256": "50e11dbb6152079cdefd9eaf854e3182496130b651142e0fc08fcd1456802e81"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_u_int.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_u_int.h",
+      "sha256": "85e9858c13fdc4fb614948fbcadec5f5973dbf6874b97464044a3b4e23486978"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_u_int16_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_u_int16_t.h",
+      "sha256": "9dabbd8280c28416a5ba115355678d2540588df1a7251bd9b4a13e30c309a71b"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_u_int32_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_u_int32_t.h",
+      "sha256": "196cba7a865c086bba457758d3b2605a4c1299c54a758366b7d420a585895f1d"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_u_int64_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_u_int64_t.h",
+      "sha256": "d096eee54a5acc2c3cd5cf71256d69198ada8f8d82cdb0a717bc8ed65650ad93"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_u_int8_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_u_int8_t.h",
+      "sha256": "7505dbbdf3ecca2b8e585871ad81c0e67a3cb63c97c47abe73fe262e071a3ebb"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_u_short.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_u_short.h",
+      "sha256": "f78b1ac66a04e293df9a08ce2466401f50075a773c5f64000864b9d59ec4edc9"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_ucontext.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_ucontext.h",
+      "sha256": "d67fecbd5fba1fc876b41b0a69ff080e3d47c9884f3ea4012f8a334ffda62681"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_uid_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_uid_t.h",
+      "sha256": "d2140a65a17943a857381757c0b73a920f35ade41dc9809437c168be457c276a"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_uintptr_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_uintptr_t.h",
+      "sha256": "e435f739013a22883da08b7d8b8819d6fd421756d025b369fecdee90ff40eb39"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_useconds_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_useconds_t.h",
+      "sha256": "37c49808a92cc4417181adb1530cc24ca11cc89f064c6c0494a1aff981f92870"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_user32_itimerval.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_user32_itimerval.h",
+      "sha256": "fc689880cbe9fe7dd72ea9f06dff03a6d130024ec6a99726e20cbf817723b8b5"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_user32_timespec.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_user32_timespec.h",
+      "sha256": "90727af0930039d876f20ad210ac925a2abf8636df13bf256ab044e61d82d362"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_user32_timeval.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_user32_timeval.h",
+      "sha256": "79d26b93b028036f04a581f8a9cbf3f10ede5ee1f4160ba8f76ce13464ce145b"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_user64_itimerval.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_user64_itimerval.h",
+      "sha256": "2973b3865a3b8b5fec17b4b2dfaa9a0d7696cd8950734eb40a1be378c616c530"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_user64_timespec.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_user64_timespec.h",
+      "sha256": "e4319055bb4c81394cfc7c2718c77cfba039b1b0b4c23c86cd58bc5d199d6cc2"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_user64_timeval.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_user64_timeval.h",
+      "sha256": "d7ccc1fb077ce1eafa8813cc4f75b5d9ea571b85f65fd244bb8bcc27401c185d"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_user_timespec.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_user_timespec.h",
+      "sha256": "2f4271c9404cf0c8d510ead07c27483856f18e6c34c89bc9519534a9432c34a7"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_user_timeval.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_user_timeval.h",
+      "sha256": "189626de56c7f25e8176aed9f741f89d29e125d4cdcee756c8639bd4dd147a6e"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_uuid_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_uuid_t.h",
+      "sha256": "ba8364ff4aed847f5ca3259e27fc2d1920432d02e8e79c7ac57ec043f1dc2842"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/_types/_vnode_t.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/_types/_vnode_t.h",
+      "sha256": "334e00e29a707f060907cb9f6c946dd9f0dc7102ab9a7c7986ff6f1c670c51ed"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/appleapiopts.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/appleapiopts.h",
+      "sha256": "efd9793f56c08917cf1ddf5108b78240ede88a5bbc8977d6fdaf1684b6b01c1c"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/cdefs.h",
+      "sha256": "87a8eb356daebe702d13092959d7240ded77e37c61b786dd6f17a25fcc612fd4"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/constrained_ctypes.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/constrained_ctypes.h",
+      "sha256": "e1dd91315709cb992252a440ab81d817979a450b2ba18219b4e64ed48c1e970b"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/errno.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/errno.h",
+      "sha256": "c062e675a1104d8d624c886de5d9535d82fb4c8e46f533cf460f809b79fc82ac"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/event.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/event.h",
+      "sha256": "2d20e3b926da6ecad72ddccbc310696b33134cc5f7a575721dfe2c0840e981e9"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/kernel_types.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/kernel_types.h",
+      "sha256": "ca549a78ad60e3e6798a0ea74477bf47f74db40677baf40ce7f3e391754598a8"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/lock.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/lock.h",
+      "sha256": "d03afcaaab915a6335c7118ea39152d64fb3444dfc70f001fb9fa7bb0cb15912"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/param.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/param.h",
+      "sha256": "f1c5d931527df4f1d917475c6f5ca8a3e4c201448bd6b9634570cc51c2263382"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/proc.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/proc.h",
+      "sha256": "cd46ce1df0dea9f159ba06ee4523fcdec889cdb492fa2764b2711297acaebcb7"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/queue.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/queue.h",
+      "sha256": "70dd22988c82ae2ca344277d073b6189b4875b92905a687ab75cfc4c983fe029"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/resource.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/resource.h",
+      "sha256": "3840966fa9b62d3f13a5d4cf44076c13c7a9a73aed96b81ccef665badf6203f6"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/select.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/select.h",
+      "sha256": "00873de551adcd320c61b7ef4c5610478a94eb83e6aa67c1d062ea959e977654"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/signal.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/signal.h",
+      "sha256": "4c8c0461d44c66d835d688db7d6f865526048e661c69315a0407ab955932629e"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/sysctl.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/sysctl.h",
+      "sha256": "955f51ca1c91ca8e2feb46c784f9b5307bfdfb69405f4b540c7c3e5172e8ebe2"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/syslimits.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/syslimits.h",
+      "sha256": "170629c923b4ef2b7132dc8a9d71e9f010332bada56363f619b7c758e17d2c83"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/time.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/time.h",
+      "sha256": "0179ac83180bff1b3bf320353ea2ef0330faf41d617d21e41a373d2f636bff77"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/types.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/types.h",
+      "sha256": "54611730ecae60cb9e535eec2796967c7da111007551f0a31cf61b2b31249ceb"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/ucred.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/ucred.h",
+      "sha256": "da9b789766d2e4f8abbc99a0855df409ca8142c5c2ae48b86f1a930acd62dee3"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/uio.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/uio.h",
+      "sha256": "dc0e12da995256f07abfbd8ab4a91a8ab021b3eac2e236f56577cae4ea45134f"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/vm.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys/vm.h",
+      "sha256": "0f85ef7783da1e560926ba618e555a1d0041126faad2202c62d30326ebc56478"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/uuid/uuid.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/uuid/uuid.h",
+      "sha256": "44b15054890b872fdd904b05f00119c4817126edeec1f560f15b94b073a77f82"
+    },
+    {
+      "path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/Kernel.framework/Headers/vm/vm_kern.h",
+      "resolved_path": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/vm/vm_kern.h",
+      "sha256": "cb0d700094e07c49871142c24c1bac5b7083d75e635389798b3e4dc2c790b218"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc/nvUnixVersion.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc/nvUnixVersion.h",
+      "sha256": "fa5b6e9cb0aeed297155df6b2bc16656d21b6cabd826fd9270292ba253fddc7a"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc/nv_mig_types.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/inc/nv_mig_types.h",
+      "sha256": "5d397dba04768fb1f5e6ee46ed574e6690116ee55df9416293cecfeb2db98af8"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl9010.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl9010.h",
+      "sha256": "f388882c995687540d7515e25f68613e3f8a67a35add99d761afd005656a49c7"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl9010_callback.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/class/cl9010_callback.h",
+      "sha256": "2571a29472ad80a60c60f2bcaedc8354179b45c6248c98792503349dae419ba8"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/cpuopsys.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/cpuopsys.h",
+      "sha256": "80d4c081e47473763f8e5fd3a21af1713a8f73a8896167cb375e082c248d8f9c"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nv-kernel-interface-api.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nv-kernel-interface-api.h",
+      "sha256": "1cf34c1dcd1abf535fb27387145374972a43ec9cd6f6c9ef927777431bda3cc4"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nv_stdarg.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nv_stdarg.h",
+      "sha256": "bd61b81589cfff85ac7af809d792af63f1e48f5648038e27576983a7ecf5ce4d"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvcfg_sdk.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvcfg_sdk.h",
+      "sha256": "cb9b9ddf1d9d55527e182c1864fb45dcc7331e6de1498a71814cfc5bbe0c62c8"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvgputypes.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvgputypes.h",
+      "sha256": "dcb4bf6a0eae9883ef36438dac4765a47a90555a01e887c380caf0690c7be08d"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvi2c.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvi2c.h",
+      "sha256": "1f80c3c54d3556f8baf1f61e1ec5a9953e02d5447bea8b4d6c4aaf2e37eeaeee"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvimpshared.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvimpshared.h",
+      "sha256": "77a54cb2e5afa4d1d0d7ad579609bb00c63a90113216962f9db0c6b6eb957726"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvlimits.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvlimits.h",
+      "sha256": "7c7bf27c5360464b459f6069d2e72f6070bb3fdd0862baccf6c7aa71da67c593"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvmisc.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvmisc.h",
+      "sha256": "8f4cf58c2ff99c01a1ab6e8841beb4cb057c75a14c2875013a988014d502618d"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvos.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvos.h",
+      "sha256": "c218e5e250040409e7fc492fb52f0cc2c0ee579c412963236a3d44fca548c16d"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvstatus.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvstatus.h",
+      "sha256": "e8267172a1f7a56420d612c6734b3554b9ff6a3d33fdda21b1371ff4ce4b8675"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvstatuscodes.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvstatuscodes.h",
+      "sha256": "09c3cacf0ecbb97644a86fa629a51f64919282aeabf51f609542e2421a170746"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvtypes.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/nvtypes.h",
+      "sha256": "b6a5ea0183053cfa3d5596215abbd93a3a04f5afac4a41ac5ea832658bab5d02"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/rs_access.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/sdk/nvidia/inc/rs_access.h",
+      "sha256": "ee3174aa565a08594f66c325b06d24bd8e798d933bf74ff12c803cf3614bb117"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/unix/common/inc/nv_common_utils.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/unix/common/inc/nv_common_utils.h",
+      "sha256": "587aeaa55bc03bdd69ef596bbc57da5fb1a3777cf1120c64709f7dcff0013aa5"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/unix/common/inc/nv_dpy_id.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/common/unix/common/inc/nv_dpy_id.h",
+      "sha256": "f5ea7dcb39396a987fa7bf5e40c1c08a59ee8bd2b3c87c24314911df168ba8a4"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/interface/nvkms-api-types.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/interface/nvkms-api-types.h",
+      "sha256": "ad2a12c8a42ff76dd1693f69a4b077e54cb603c6f4ac1b496d5b6bcea6e07c24"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/interface/nvkms-format.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/interface/nvkms-format.h",
+      "sha256": "ab92f64f5801b736b514e8a1a21133b2924bf6c7789366a6d7663f2d69b00a4f"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/kapi/interface/nvkms-kapi.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/kapi/interface/nvkms-kapi.h",
+      "sha256": "6747eba7dca7a8d97f6a725c8ef9582cbed889406763bba3adfd3bb78d7c9385"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/os-interface/include/nvkms.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia-modeset/os-interface/include/nvkms.h",
+      "sha256": "0aefb2533605f96040f283b12fa5eb9350f86467564ab47659a1c84940ab5fa5"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/common/inc/nv-firmware.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/common/inc/nv-firmware.h",
+      "sha256": "377e737e101085ef2acdba4998fb128b2e40bf2d256a69418bd34484877de5a3"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv-caps.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv-caps.h",
+      "sha256": "b36a1d6cb9a66bf2716e15e6f25de87f691cea930c2763ff5effcd3e8a7742c3"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv-gpu-info.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv-gpu-info.h",
+      "sha256": "73facf51c904453b8f3741b5b1015421017c7a3a9f692f6505841d9c0e430122"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv-ioctl-numa.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv-ioctl-numa.h",
+      "sha256": "73b8d70a2b02f0c80d7b6d1dc2b5c12104f5010b4ea403cd4a599ef2e5a234de"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv-ioctl-numbers.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv-ioctl-numbers.h",
+      "sha256": "7a9d2670092496aca00b5109b61e41c90c9f66ace404965a728d692b77191352"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv-ioctl.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv-ioctl.h",
+      "sha256": "c2aa6dad513c8dd1ae9bd412b649ccf1928c45dccf32adbbce8a3bed28420f48"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv-kernel-rmapi-ops.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv-kernel-rmapi-ops.h",
+      "sha256": "697db4709d68c28dfe6168b1814ee5c7d3041d4d94b0d3ee3791883b58688494"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/nv.h",
+      "sha256": "87f9a06577430d3602d9644c7ea6b40d471b22d5a5742561eac6cf818f556635"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/os-interface.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/arch/nvalloc/unix/include/os-interface.h",
+      "sha256": "03ac42e41c4ddaba043eae2c4691cc350c6b5e9981754a19d67891a2dabad302"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/os/nv_memory_area.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/os/nv_memory_area.h",
+      "sha256": "4fc1fdb861047e6cca8224e22a225c30a57f3d6fcb874a528793a7b85edc9d55"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/os/nv_memory_type.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/kernel/os/nv_memory_type.h",
+      "sha256": "c6472e939ac912d5df5e2e17dab35f8444269b964e2b1536f05df874990354cb"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/atomic.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/atomic.h",
+      "sha256": "b4df4d845bc4c912a575f173a88fe0a57ec37f952a01e6a00edb0fd4eee00523"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/core.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/core.h",
+      "sha256": "f4a2c178a681264300c307ea0a18d3b9df22c14bd34d71d8a74115ae73c09137"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/cpu.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/cpu.h",
+      "sha256": "56176e8f6ee5ee29a47de10a494493af05a1926d1fcb3ef96548893251d97a72"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/crypto.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/crypto.h",
+      "sha256": "cfc33b7347157c532611b5484b69263a018011d4fcbf682ae802275e2fa8be21"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/debug.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/debug.h",
+      "sha256": "ac5b2e1c191c09b38ba90d40913b470bbc04f0a519f44935448437866200d849"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/atomic_clang.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/atomic_clang.h",
+      "sha256": "5380244e9e0408a997937a495e83bdd1196b9c8691a286277b74ecc0a308fcda"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/debug_unix_kernel_os.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/debug_unix_kernel_os.h",
+      "sha256": "23714ddddb8c8dc04ced274c5f80bca866680196ae94bd05a1685a8f4e5a5ead"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/memory_tracking.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/memory_tracking.h",
+      "sha256": "9732d626c2387c84dc6832ae640a986baac40361e018881b577db646e9cbb2eb"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/safe_generic.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/safe_generic.h",
+      "sha256": "8e8ca640cade42f204d2afd699c3fe399d0fca82507e0c4adb869c768e51d85e"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/sync_tracking.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/sync_tracking.h",
+      "sha256": "d8b0d2d656bec191746f2f3de736aebd994e39b1a0c7a694659924d98afbca86"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/time_timer.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/time_timer.h",
+      "sha256": "67efba1c1c0040d1c422dcfe06cd2fd45a171c467f7e318133fb1aded2300048"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/util_gcc_clang.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/util_gcc_clang.h",
+      "sha256": "19fd080750e3bbc07dba2030658ed3ed68adf81a114d670dca5bdc3d1ea71f8e"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/util_generic.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/util_generic.h",
+      "sha256": "d76fd0f11f329bcbcdab9f3e390b945c405be51fa1efb611454be67b5ff0c611"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/util_valist.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/inline/util_valist.h",
+      "sha256": "c36b3c60e271a1acfe01fea9c55c1f8dfa1290e634980041631f514e8d4cdf75"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/memory.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/memory.h",
+      "sha256": "4757a1ac36a40ef7b13e753c9d2ffa717d63799b3e8efb57b7b35841c2c86280"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/nvport.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/nvport.h",
+      "sha256": "7e4fa997b9a3835b96e48f081460b7be4f0d52e0c5d3c7414470ee7a8904e3d4"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/safe.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/safe.h",
+      "sha256": "5c0ab8a43edd1eba3e7e7d7903bd8c17222320452608efce82e0f3ad00db4e67"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/string.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/string.h",
+      "sha256": "e39544b30acc096963b09453254f7335a9e8f4276aee055edf93aeba386aeb10"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/sync.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/sync.h",
+      "sha256": "e5fb2dba02d14f3e8a3ca73c56dcf9c5da3c8ca8815c2aee3118134d13801694"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/thread.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/thread.h",
+      "sha256": "a80e19d397a25a09d047becf7639ebc51edad1266f32afd0a25e3f055b542087"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/time.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/time.h",
+      "sha256": "4e4235041b9a3d5b52550dd5c0a2081df8353bec79465033093b30686e797061"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/util.h",
+      "resolved_path": "/Users/runner/work/_temp/gpu-safety-r5-nv/src/nvidia/inc/libraries/nvport/util.h",
+      "sha256": "c52b4f630b81686e33dc898ce237667859eef692e8e4408627660ce432cade4b"
+    },
+    {
+      "path": "/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM/kms_deferred.h",
+      "resolved_path": "/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM/kms_deferred.h",
+      "sha256": "053aa9e24ad6d0e399d84629b38f5fb77ee0f6b2a3787018bb97746411f484f4"
+    },
+    {
+      "path": "/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM/nv-xnu.h",
+      "resolved_path": "/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM/nv-xnu.h",
+      "sha256": "410711cdf0f0cd6dee51e6ae0f0b78faaba31a67dd79d992ea6cdd05c6f0d6cc"
+    },
+    {
+      "path": "/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM/nvidia-modeset-os-interface.h",
+      "resolved_path": "/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM/nvidia-modeset-os-interface.h",
+      "sha256": "130f5bdcc47154fcf54a87533b97aba3ca4c1aa377b7657ec6a551f0c653bf12"
+    },
+    {
+      "path": "/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM/os-nvkms-xnu.cpp",
+      "resolved_path": "/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM/os-nvkms-xnu.cpp",
+      "sha256": "071567c3ea376a612a6e65b75dcc2bab2bfa6e69d86e78e53e42fc4d9814fb72"
+    }
+  ],
+  "depfiles": [
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-logs/input-snapshots/uni-os-nvkms-xnu_cpp-before.d",
+      "sha256": "760105d6042040c18e5c6118f394a76fbc4423c0b26118d88b9331eebd5d7551"
+    },
+    {
+      "path": "/Users/runner/work/_temp/gpu-safety-r5-logs/input-snapshots/uni-os-nvkms-xnu_cpp.d",
+      "sha256": "760105d6042040c18e5c6118f394a76fbc4423c0b26118d88b9331eebd5d7551"
+    }
+  ],
+  "limitations": [
+    "pre/post content equality does not detect adversarial mutate-and-restore",
+    "compiler binaries, environment and negative include lookups not captured"
+  ]
+}

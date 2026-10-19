@@ -14,11 +14,13 @@
 | P0-4 freeDevice关闭拒绝 | OPEN | 旧void边界与所有权/返回传播需继续改造；不是“项目无能力修改” |
 | RM门忙仍STANDBY | OPEN，当前结构审计31/32，exit1 | nv_xnu_pm_close超时后仍继续；不能以IOPM ack要求证明其安全 |
 | 延迟KMS close回收 | OPEN | R30 resume队列已真实编译链接，但容量耗尽、正常close回收失败、无界等待、PM交错仍未闭合 |
-| 延迟队列单一所有权 | R30 CPU两项FAIL，R31同合同PASS | R31去重/唯一drain补丁已接入门禁；Darwin/链接未执行，不作为PM安全放行 |
+| 延迟队列单一所有权 | R30 CPU两项FAIL，R31同合同PASS | R31 run39184119617原生/完整链接通过；真实close合同2/4、两项FAIL，不作为PM安全放行 |
 | Kext加载 | 未执行、NO-GO | 未签名/安装/加载/卸载 |
 | GPU初始化/渲染/正确像素/安全结束 | 未执行 | 编译/链接/CPU检查都不替代这四层证据 |
 | Intel基础显示 | 保持现状，不扩大显示所有权 | 不进入G2/G3/WindowServer/Intel Metal |
 
-当前动作是验证R31实际原生对象与完整链接，随后推进family loader/版本和PM关闭/回收集成合同；无需重复完整构建、无需新写占位PORT层，也不转设备部署。详见[审计](HARNESS-AUDIT-20261018.md)。
+当前动作是推进真实close未回收/无界等待及PM集成合同，并继续family loader/版本边界；无需重复完整构建、无需新写占位PORT层，也不转设备部署。详见[审计](HARNESS-AUDIT-20261018.md)。
 
 2026-10-19更新证据：[PCI/free链、R30独立审计、R31候选](CALLERS-FREE-R30-R31-20261019.md)。
+
+R31后续验收：[原生证据与真实关闭函数失败合同](R31-NATIVE-AND-CLOSE-CONTRACT-20261019.md)。

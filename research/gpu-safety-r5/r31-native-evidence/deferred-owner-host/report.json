@@ -1,0 +1,25 @@
+{
+  "level": "CPU_UNIT_ONLY_NOT_KERNEL_REACHABILITY",
+  "source_sha256": {
+    "kms_deferred.cpp": "c500f4734abb0a8897bb414c32e64f2301524d23f53d55a88847b8864820370c",
+    "kms_deferred.h": "053aa9e24ad6d0e399d84629b38f5fb77ee0f6b2a3787018bb97746411f484f4"
+  },
+  "snapshot_sha256": "092af980766de66bccde23bd708c8e3594cfeb08771ce9438e6509addddce0d5",
+  "binding": "NATIVE_SNAPSHOT_MATCH",
+  "compile_argv": [
+    "clang++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-I/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM",
+    "/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM/kms_deferred.cpp",
+    "/Users/runner/work/_temp/gpu-safety-r5-logs/deferred-owner-host/contract.cpp",
+    "-o",
+    "/Users/runner/work/_temp/gpu-safety-r5-logs/deferred-owner-host/contract"
+  ],
+  "compile_exit": 0,
+  "run_exit": 0,
+  "run": "EXECUTED_NEW_BINARY",
+  "status": "PASS_CPU_UNIT_ONLY"
+}

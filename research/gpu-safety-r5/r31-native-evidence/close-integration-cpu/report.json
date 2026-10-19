@@ -1,0 +1,43 @@
+{
+  "level": "REAL_FUNCTIONS_CPU_INJECTED_BOUNDARIES_NOT_XNU_RUNTIME",
+  "os_source_sha256": "071567c3ea376a612a6e65b75dcc2bab2bfa6e69d86e78e53e42fc4d9814fb72",
+  "os_snapshot_sha256": "cfcbd21d4ea6640e8ce0c8c7ee8895b2f885ac918bae433b13b0a6c18f83b7c3",
+  "queue_sha256": "c500f4734abb0a8897bb414c32e64f2301524d23f53d55a88847b8864820370c",
+  "fixture_sha256": "5674246545af1bade88daa92567f692a26365d44ca81300c2a914d3f8acf01e5",
+  "compile_argv": [
+    "g++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-I/mnt/d/Hactk/g1-audit-fix-20261018/candidate-audit-r31-queue-owner/kexts/NVRM",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/candidate-audit-r31-queue-owner/kexts/NVRM/kms_deferred.cpp",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/r31-close-integration-cpu/fixture.cpp",
+    "-o",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/r31-close-integration-cpu/fixture"
+  ],
+  "compile_exit": 0,
+  "scenarios": [
+    {
+      "scenario": "suspended-retain",
+      "exit": 0,
+      "output": "suspended-retain PASS close=0 free=0 queued=1 deadline_waits=1\n"
+    },
+    {
+      "scenario": "deferred-recover",
+      "exit": 0,
+      "output": "deferred-recover PASS close=1 free=1 queued=0\n"
+    },
+    {
+      "scenario": "normal-free-failure",
+      "exit": 1,
+      "output": "normal-free-failure FAIL close=1 free=0 queued=0\n"
+    },
+    {
+      "scenario": "stalled-callback",
+      "exit": 1,
+      "output": "stalled-callback FAIL STALLED_CALLBACK: 3 unbounded sleep iterations close=1 free=0 queued=1\n"
+    }
+  ],
+  "status": "CONTRACT_FAIL"
+}
