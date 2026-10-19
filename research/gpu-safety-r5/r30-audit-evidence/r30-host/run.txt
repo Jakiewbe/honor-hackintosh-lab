@@ -1,0 +1,3 @@
+duplicate unique_node=FAIL entries=2 close_calls=2 free_calls=2
+reentrant unique_free=FAIL close_calls=1 free_calls=2
+capacity overflow_observable=PASS unqueued=1 close_calls=64 free_calls=64

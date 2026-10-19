@@ -1,0 +1,166 @@
+{
+  "source_head": "9015c246bdfd119c5f13a64b34c170533694ea92",
+  "run_id": 39140902850,
+  "job_id": 117714949084,
+  "artifact_id": 12141348433,
+  "artifact_sha256": "60dc6f46f5ee0a38fd3936d0c7363800f5136da8703edfcdc110a2be206470b7",
+  "artifact_text_members": 145,
+  "verified_artifact_members": 145,
+  "verified_publication_members": 144,
+  "result": "SIX_METHOD_REAL_CALLER_SHAPES_MATCH_SDK",
+  "native_objects": 9,
+  "diagnostic_ir_units": 9,
+  "all_nine_actual_snapshots_identical_to_historical": true,
+  "snapshots": [
+    {
+      "source": "kexts/NVRM/NVRM.cpp",
+      "reused_snapshot": "research/gpu-safety-r5/input-binding-evidence/input-snapshots/uni-NVRM_cpp.json",
+      "snapshot_sha256": "ab487b8e9c191c6d0558da4689b9286deac56b5142b7889bc316b5bb66262d8c",
+      "current_bytes_identical_to_historical": true,
+      "object_sha256": "6302d888bc0832a28db5b25f984261d3c349f2b8506e8e69f2d4d6a13d7c86cf",
+      "input_files": 388
+    },
+    {
+      "source": "kexts/NVRM/nv_xnu_stubs.cpp",
+      "reused_snapshot": "research/gpu-safety-r5/input-binding-evidence/input-snapshots/uni-nv_xnu_stubs_cpp.json",
+      "snapshot_sha256": "282cb5a4e0088820d2edb1263afac41a3c45aae3e1496c69978cb713ad6d2248",
+      "current_bytes_identical_to_historical": true,
+      "object_sha256": "164d724d41d3d618d7555e06eb38f270b2c88a162af6c248e44342cfebe2c32a",
+      "input_files": 327
+    },
+    {
+      "source": "kexts/NVRM/nvkms_shaders.cpp",
+      "reused_snapshot": "research/gpu-safety-r5/input-binding-evidence/input-snapshots/uni-nvkms_shaders_cpp.json",
+      "snapshot_sha256": "9e154b4f04502d097043e57a803e84542f4038c0d8c8fea816521c5ff4ef638a",
+      "current_bytes_identical_to_historical": true,
+      "object_sha256": "7d0a0031beb9ce2606a88ce12ee5b0cc00823e4e7980727ebab4ceba81e656a0",
+      "input_files": 1
+    },
+    {
+      "source": "kexts/NVRM/nvrm_fbinfo.cpp",
+      "reused_snapshot": "research/gpu-safety-r5/input-binding-evidence/input-snapshots/uni-nvrm_fbinfo_cpp.json",
+      "snapshot_sha256": "839a0ff53bab67984fb0eebb166fbb780508af9762518e525001410bc7d71e7e",
+      "current_bytes_identical_to_historical": true,
+      "object_sha256": "8601dd6e1ab1886b72c8a8b74b3008b61c254cb06077572d61e5b0f6dd9bfae5",
+      "input_files": 327
+    },
+    {
+      "source": "kexts/NVRM/nvrm_gpuva.cpp",
+      "reused_snapshot": "research/gpu-safety-r5/input-binding-evidence/input-snapshots/uni-nvrm_gpuva_cpp.json",
+      "snapshot_sha256": "a29b0af012d8fe7a72fa853892d3201998aa4246d7aa46a1c9f7e50f5c32b6ad",
+      "current_bytes_identical_to_historical": true,
+      "object_sha256": "c38a07cc6b8b11f2c008bb2628e6efa338c57288a80451abc215b1e178f0a503",
+      "input_files": 324
+    },
+    {
+      "source": "kexts/NVRM/nvrm_surfshare.cpp",
+      "reused_snapshot": "research/gpu-safety-r5/input-binding-evidence/input-snapshots/uni-nvrm_surfshare_cpp.json",
+      "snapshot_sha256": "b23c592771876eafb5135826c002f64a1b1b823bce08db1590a75b5b407df286",
+      "current_bytes_identical_to_historical": true,
+      "object_sha256": "4c5c5942753202fb425a54e0bb06548cf4ccff94fd2cdf8f061844c92a5e4e02",
+      "input_files": 370
+    },
+    {
+      "source": "kexts/NVRM/os-nvkms-xnu.cpp",
+      "reused_snapshot": "research/gpu-safety-r5/input-binding-evidence/input-snapshots/uni-os-nvkms-xnu_cpp.json",
+      "snapshot_sha256": "cec704952ba7fb89e99c3ee9773395aa3e38bb34ca0f5e13d3da10a065873efb",
+      "current_bytes_identical_to_historical": true,
+      "object_sha256": "32d2149ed6b6daf281ef07fb2dfd39ea9864ecfa96a0f8778ea67104a89a50cc",
+      "input_files": 379
+    },
+    {
+      "source": "kexts/NVRM/os-xnu.cpp",
+      "reused_snapshot": "research/gpu-safety-r5/input-binding-evidence/input-snapshots/uni-os-xnu_cpp.json",
+      "snapshot_sha256": "db4c7b8ef054be8b6e24892231d6d9d6b1c5f4f474782e0837b1b458e4a4a98a",
+      "current_bytes_identical_to_historical": true,
+      "object_sha256": "4cb695caf45a71448c75ea196f2fb3e378ff7261329c46f92306605aee3fbf3d",
+      "input_files": 385
+    },
+    {
+      "source": "kexts/NVRM/os-xnu2.cpp",
+      "reused_snapshot": "research/gpu-safety-r5/input-binding-evidence/input-snapshots/uni-os-xnu2_cpp.json",
+      "snapshot_sha256": "43c4ff529aa48f6101b3dbb5c822b8086eec8c2951ecb1dee76239aa914e200c",
+      "current_bytes_identical_to_historical": true,
+      "object_sha256": "e2a1bc726475fd8776ebeb73e3261eaea619b8cd674f58a3da28c417ccddecd6",
+      "input_files": 386
+    }
+  ],
+  "write8_source": "kexts/NVRM/os-xnu.cpp:253",
+  "write8_owner": "os_pci_write_byte",
+  "write8_expansion": "IOPCIDevice::configWrite8 inline -> extendedConfigWrite8",
+  "write8_call": {
+    "owner": "define range(i32 0, 32) i32 @os_pci_write_byte(ptr noundef readonly %0, i32 noundef %1, i8 noundef zeroext %2) local_unnamed_addr #0 {",
+    "line": "tail call void @_ZN11IOPCIDevice20extendedConfigWrite8Eyh(ptr noundef %12, i64 noundef %13, i8 noundef zeroext %2) #10",
+    "abi": {
+      "return_type": "void",
+      "return_attributes": [],
+      "calling_convention": "ccc",
+      "parameters": [
+        {
+          "type": "ptr",
+          "abi_attributes": []
+        },
+        {
+          "type": "i64",
+          "abi_attributes": []
+        },
+        {
+          "type": "i8",
+          "abi_attributes": [
+            "zeroext"
+          ]
+        }
+      ],
+      "variadic": false
+    }
+  },
+  "write8_abi": {
+    "return_type": "void",
+    "return_attributes": [],
+    "calling_convention": "ccc",
+    "parameters": [
+      {
+        "type": "ptr",
+        "abi_attributes": []
+      },
+      {
+        "type": "i64",
+        "abi_attributes": []
+      },
+      {
+        "type": "i8",
+        "abi_attributes": [
+          "zeroext"
+        ]
+      }
+    ],
+    "variadic": false
+  },
+  "preserved_artifact_members": [
+    "caller-report.json",
+    "native-report.json",
+    "sdk-methods.cpp",
+    "sdk-methods.ll",
+    "sdk-compile.txt",
+    "uni-os-xnu_cpp.ll",
+    "uni-os-xnu_cpp.txt",
+    "uni-os-xnu_cpp-ir.txt",
+    "uni-os-xnu_cpp-undefined.txt",
+    "toolchain.txt",
+    "diagnostic-publication.json",
+    "local-artifact-binding.json",
+    "uni-NVRM_cpp.ll",
+    "uni-NVRM_cpp-undefined.txt"
+  ],
+  "sdk_method_count": 6,
+  "native_tool_tests": 34,
+  "first_failed_run": 39140641398,
+  "full_abi": "NOT_VERIFIED",
+  "loader_exports_versions": "NOT_VERIFIED",
+  "gpu_initialization": "NOT_RUN",
+  "gpu_render": "NOT_RUN",
+  "pixel_readback": "NOT_RUN",
+  "safe_shutdown": "NOT_ACCEPTED",
+  "kext_load": "NO-GO",
+  "next": "family loader/versions and RM gate/IOPM shutdown integration; do not repeat 1280TU or write8 discovery"
+}

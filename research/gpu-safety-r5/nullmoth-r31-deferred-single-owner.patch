@@ -1,0 +1,73 @@
+diff --git a/kexts/NVRM/kms_deferred.cpp b/kexts/NVRM/kms_deferred.cpp
+--- a/kexts/NVRM/kms_deferred.cpp
++++ b/kexts/NVRM/kms_deferred.cpp
+@@ -9,6 +9,8 @@
+ };
+ Entry gEntries[KMS_DEFERRED_CAPACITY];
+ unsigned gCount;
++// Callbacks may temporarily drop the caller's lock. Keep one drain owner across them.
++bool gDraining;
+ }  // namespace
+ 
+ extern "C" void kms_deferred_reset(void)
+@@ -24,6 +26,15 @@
+ extern "C" int kms_deferred_push(void *node, void *data)
+ {
+     if (!node) return -1;
++    // Scan for an existing owner before choosing an empty slot. A repeated close
++    // must not install a second owner, even if a lower-numbered slot is empty.
++    for (unsigned i = 0; i < KMS_DEFERRED_CAPACITY; i++) {
++        const Entry &e = gEntries[i];
++        if (e.node == node) {
++            if (!e.closed && e.data != data) return -1;
++            return 0;  // Preserve closed state and the sole existing obligation.
++        }
++    }
+     for (unsigned i = 0; i < KMS_DEFERRED_CAPACITY; i++) {
+         if (gEntries[i].node == nullptr) {
+             gEntries[i].node = node;
+@@ -38,7 +49,8 @@
+ 
+ extern "C" unsigned kms_deferred_drain(const struct kms_deferred_ops *ops, int pm_running, void *arg)
+ {
+-    if (!ops || !pm_running) return 0;
++    if (!ops || !ops->close || !ops->try_free || !pm_running || gDraining) return 0;
++    gDraining = true;
+     unsigned freed = 0;
+     for (unsigned i = 0; i < KMS_DEFERRED_CAPACITY; i++) {
+         Entry &e = gEntries[i];
+@@ -56,6 +68,7 @@
+             freed++;
+         }
+     }
++    gDraining = false;
+     return freed;
+ }
+ 
+diff --git a/kexts/NVRM/kms_deferred.h b/kexts/NVRM/kms_deferred.h
+--- a/kexts/NVRM/kms_deferred.h
++++ b/kexts/NVRM/kms_deferred.h
+@@ -7,6 +7,8 @@
+  * the driver runs, and it can be exercised by a host test without mocking IOKit.
+  *
+  * The unit never allocates: capacity is fixed and an overflow is reported, not hidden.
++ * Caller serializes every operation with its lock; callbacks may temporarily drop
++ * that lock. A drain remains the sole owner until it returns; nested drains defer.
+  */
+ #ifndef KMS_DEFERRED_H
+ #define KMS_DEFERRED_H
+@@ -24,10 +26,12 @@
+     int (*try_free)(void *node, void *arg);
+ };
+ 
+-/* Drop every entry without calling anything. */
++/* Initialization/test reset only: caller must be quiescent, with no drain in flight. */
+ void kms_deferred_reset(void);
+ 
+-/* Remember one node. Returns 0 on success, -1 when the table is full (the caller must then keep the
++/* Remember one unique node. Repeating the same node is idempotent; an unclosed node
++ * with a conflicting data pointer is rejected. Returns 0 on success, -1 on conflict
++ * or when the table is full (the caller must then keep the
+  * resources and refuse further deferred closes loudly rather than silently forgetting one). */
+ int kms_deferred_push(void *node, void *data);
+ 

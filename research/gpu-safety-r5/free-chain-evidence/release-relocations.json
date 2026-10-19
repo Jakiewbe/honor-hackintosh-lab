@@ -1,0 +1,98 @@
+{
+  "schema": "honor.g1.kext-external-refs.v1",
+  "binary_sha256": "cb3775fa7f8261641cc08328e12793aa7c3698d12a3264c443a68c4f55fb1bdb",
+  "binary_bytes": 16787920,
+  "symbol": "__ZN12IOUserClient4freeEv",
+  "target_nlist": {
+    "index": 33915,
+    "name": "__ZN12IOUserClient4freeEv",
+    "type": 1,
+    "section": 0,
+    "value": 0,
+    "nlist_file_offset": 15362680
+  },
+  "load_command_count": 8,
+  "extreloff": 15368872,
+  "nextrel": 3397,
+  "references": [
+    {
+      "ordinal": 95,
+      "relocation_file_offset": 15369632,
+      "relocation_bytes_hex": "8013d8007b84000e",
+      "address": 14160768,
+      "file_offset": 14160768,
+      "symbol_index": 33915,
+      "pcrel": 0,
+      "length_log2": 3,
+      "external": 1,
+      "type": 0,
+      "value_bytes_hex": "0000000000000000",
+      "section": {
+        "ordinal": 7,
+        "name": "__const",
+        "segment": "__DATA",
+        "address": 14155792,
+        "size": 340448,
+        "offset": 14155792,
+        "flags": 0
+      },
+      "container_symbols": [
+        {
+          "index": 17884,
+          "name": "__ZTV14NVRMUserClient",
+          "type": 15,
+          "section": 7,
+          "value": 14160608,
+          "nlist_file_offset": 15106184
+        }
+      ],
+      "container_start": 14160608,
+      "container_end_exclusive": 14163032,
+      "offset_in_container": 160,
+      "classification": "DATA_REFERENCE_NOT_A_DIRECT_CALL"
+    },
+    {
+      "ordinal": 96,
+      "relocation_file_offset": 15369640,
+      "relocation_bytes_hex": "f01dd8007b84000e",
+      "address": 14163440,
+      "file_offset": 14163440,
+      "symbol_index": 33915,
+      "pcrel": 0,
+      "length_log2": 3,
+      "external": 1,
+      "type": 0,
+      "value_bytes_hex": "0000000000000000",
+      "section": {
+        "ordinal": 7,
+        "name": "__const",
+        "segment": "__DATA",
+        "address": 14155792,
+        "size": 340448,
+        "offset": 14155792,
+        "flags": 0
+      },
+      "container_symbols": [
+        {
+          "index": 17885,
+          "name": "__ZTV17IOAccelNVRMBridge",
+          "type": 15,
+          "section": 7,
+          "value": 14163280,
+          "nlist_file_offset": 15106200
+        }
+      ],
+      "container_start": 14163280,
+      "container_end_exclusive": 14165704,
+      "offset_in_container": 160,
+      "classification": "DATA_REFERENCE_NOT_A_DIRECT_CALL"
+    }
+  ],
+  "status": "EXACT_EXTERNAL_RELOCATIONS_OBSERVED",
+  "limits": [
+    "zero-based Intel kext only; no inferred alternate relocation base",
+    "symbol intervals may include aliases; not proof of source TU or executed call",
+    "no-reference result does not rule out dynamic/vtable calls"
+  ],
+  "kext_load": "NO-GO"
+}

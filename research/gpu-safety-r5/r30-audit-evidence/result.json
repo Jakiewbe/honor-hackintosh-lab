@@ -1,0 +1,62 @@
+{
+  "run_id": 39143508201,
+  "source_head": "195f5335563bc78f4800756473490f3dd6d86d90",
+  "artifact_id": 12143225527,
+  "artifact_sha256": "e8f6ee5d9697b4cb64afee369f2f6d5a74bf5724c681744597f463aec937cc50",
+  "verified_zip_text_members": 1845,
+  "verified_publication_text_members": 1844,
+  "full_report_sha256": "7ff4ceaf3391977ded17c8f2e20a299228eb38dbfd24ddcf62cd39579258fbfa",
+  "official_compilation_units": {
+    "nvidia": {
+      "required": 1055,
+      "attempted": 1055,
+      "failed": 0
+    },
+    "nvidia-modeset": {
+      "required": 225,
+      "attempted": 225,
+      "failed": 0
+    }
+  },
+  "source_languages": {
+    "c": 1240,
+    "cpp": 40,
+    "shader_payloads": 5
+  },
+  "compiled_objects": 1285,
+  "additional_nvlink_objects": 1,
+  "native_nvrm_cpp_units": {
+    "NVRM.cpp": 0,
+    "os-xnu.cpp": 0,
+    "os-xnu2.cpp": 0,
+    "os-nvkms-xnu.cpp": 0,
+    "nv_xnu_stubs.cpp": 0,
+    "nvrm_gpuva.cpp": 0,
+    "nvrm_fbinfo.cpp": 0,
+    "nvrm_surfshare.cpp": 0,
+    "nvkms_shaders.cpp": 0,
+    "kms_deferred.cpp": 0
+  },
+  "patch_count": 30,
+  "candidate_sha256": "74ce9fe05c9a10f8a55fa39ce2e0a097e4b436e4c9e0298fabecca0b8a5f561b",
+  "remaining_import_count": 472,
+  "official_inventory_identical_to_run": 39127772586,
+  "identical_official_command_rows": 1280,
+  "identical_official_object_hashes": 1285,
+  "selected_layout_values": 136,
+  "selected_function_shapes": 20,
+  "preserved_artifact_members": [
+    "native-report.json",
+    "full-flags-abi/full-abi-report.json",
+    "toolchain.txt",
+    "input-snapshots/uni-kms_deferred_cpp.json",
+    "input-snapshots/uni-os-nvkms-xnu_cpp.json",
+    "full-source/full-nvrm-link.txt",
+    "r28-series/report.json"
+  ],
+  "pm_gate": "31/32 FAIL; unchanged by R30/R31 queue-only patch",
+  "r31_native": "NOT_RUN",
+  "kext_load": "NO-GO",
+  "gpu_runtime": "NOT_RUN",
+  "scope": "R30 native build acceptance only; R31 CPU candidate is not yet Darwin accepted"
+}

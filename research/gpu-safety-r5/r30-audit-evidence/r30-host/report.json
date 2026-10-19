@@ -1,0 +1,24 @@
+{
+  "level": "CPU_UNIT_ONLY_NOT_KERNEL_REACHABILITY",
+  "source_sha256": {
+    "kms_deferred.cpp": "6ec9ec0d9f62568c73d27716af573cc8223f9fabe1844edd1172805dd1292e39",
+    "kms_deferred.h": "9b1c309f0d7a07200a9ca65a07fc842f8317d461ad94e9f6ddc7c459e77ac32c"
+  },
+  "snapshot_sha256": "a107dcb082099102a533aa8571823cf54c7bc5f29c4dc9463845633775ae6e41",
+  "compile_argv": [
+    "g++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-I/mnt/d/Hactk/g1-audit-fix-20261018/candidate-audit-r30-195f533/kexts/NVRM",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/candidate-audit-r30-195f533/kexts/NVRM/kms_deferred.cpp",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/r30-adversarial-cpu/contract.cpp",
+    "-o",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/r30-adversarial-cpu/contract"
+  ],
+  "compile_exit": 0,
+  "run_exit": 1,
+  "run": "EXECUTED_NEW_BINARY",
+  "status": "CONTRACT_FAIL"
+}

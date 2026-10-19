@@ -1,0 +1,13 @@
+{
+  "scope": "two-file R31 delta only; full sequence pending CI",
+  "patch_sha256": "921a3d948047c7417cca238004acda9f2b81c1f1862badb325332f0fcb5aa48a",
+  "baseline": {
+    "kms_deferred.cpp": "6ec9ec0d9f62568c73d27716af573cc8223f9fabe1844edd1172805dd1292e39",
+    "kms_deferred.h": "9b1c309f0d7a07200a9ca65a07fc842f8317d461ad94e9f6ddc7c459e77ac32c"
+  },
+  "candidate": {
+    "kms_deferred.cpp": "c500f4734abb0a8897bb414c32e64f2301524d23f53d55a88847b8864820370c",
+    "kms_deferred.h": "053aa9e24ad6d0e399d84629b38f5fb77ee0f6b2a3787018bb97746411f484f4"
+  },
+  "reverse_and_apply": "PASS"
+}

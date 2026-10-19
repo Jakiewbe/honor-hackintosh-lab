@@ -1,0 +1,25 @@
+{
+  "level": "CPU_UNIT_ONLY_NOT_KERNEL_REACHABILITY",
+  "source_sha256": {
+    "kms_deferred.cpp": "008c9d9a61cd2c85adb026e9908252608ff37d8e1d7fe1986c03850bf0c652ed",
+    "kms_deferred.h": "053aa9e24ad6d0e399d84629b38f5fb77ee0f6b2a3787018bb97746411f484f4"
+  },
+  "snapshot_sha256": null,
+  "binding": "LOCAL_SOURCE_ONLY",
+  "compile_argv": [
+    "g++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-I/mnt/d/Hactk/g1-audit-fix-20261018/evidence/r31-negative-src/kexts/NVRM",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/r31-negative-src/kexts/NVRM/kms_deferred.cpp",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/r31-negative-cpu/contract.cpp",
+    "-o",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/r31-negative-cpu/contract"
+  ],
+  "compile_exit": 1,
+  "run_exit": null,
+  "run": "NOT_RUN",
+  "status": "COMPILE_FAILED"
+}

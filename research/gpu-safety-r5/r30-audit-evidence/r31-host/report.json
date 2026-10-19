@@ -1,0 +1,25 @@
+{
+  "level": "CPU_UNIT_ONLY_NOT_KERNEL_REACHABILITY",
+  "source_sha256": {
+    "kms_deferred.cpp": "c500f4734abb0a8897bb414c32e64f2301524d23f53d55a88847b8864820370c",
+    "kms_deferred.h": "053aa9e24ad6d0e399d84629b38f5fb77ee0f6b2a3787018bb97746411f484f4"
+  },
+  "snapshot_sha256": null,
+  "binding": "LOCAL_SOURCE_ONLY",
+  "compile_argv": [
+    "g++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-I/mnt/d/Hactk/g1-audit-fix-20261018/candidate-audit-r31-queue-owner/kexts/NVRM",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/candidate-audit-r31-queue-owner/kexts/NVRM/kms_deferred.cpp",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/r31-owner-cpu/contract.cpp",
+    "-o",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/r31-owner-cpu/contract"
+  ],
+  "compile_exit": 0,
+  "run_exit": 0,
+  "run": "EXECUTED_NEW_BINARY",
+  "status": "PASS_CPU_UNIT_ONLY"
+}

@@ -102,6 +102,15 @@ jobs:
             --assets research/gpu-safety-r5 --out "$RUNNER_TEMP/gpu-safety-r5-logs" \
             2>&1 | tee "$RUNNER_TEMP/gpu-safety-r5-logs/probe.txt"
 
+      - name: Test actual candidate deferred-close ownership (CPU only)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/g1_kms_deferred_audit.py \
+            --candidate "$RUNNER_TEMP/nullmoth-v2.3.3-gpu-safety-r5-candidate" \
+            --snapshot "$RUNNER_TEMP/gpu-safety-r5-logs/input-snapshots/uni-kms_deferred_cpp.json" \
+            --out "$RUNNER_TEMP/gpu-safety-r5-logs/deferred-owner-host" --cxx clang++
+
       - name: Test real owner-copy transaction and baseline regression (CPU only)
         shell: bash
         run: |
