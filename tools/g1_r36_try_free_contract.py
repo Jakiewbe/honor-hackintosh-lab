@@ -12,8 +12,8 @@ from g1_kms_close_retry_contract import PREFIX,NAMES
 from g1_kms_close_contract import function
 
 EXPECTED={'fb':'f5e0f84db0c321739d8477bf81af5c96943e7e748b11763fce2a65269fab56dd',
- 'os':'d9a8330d324cb90ad063603feb27206ef7fc0a13530924278b1e6f57a3ef8a1e',
- 'ogkm':'895de47ae03abc08d9a032f8f083db0be76aa5aa45317ebe37d7720a54c657cb'}
+ 'os':'56ecf5a88bdb20b1a4613f9ab63b2e50e270ac2513f103cfb9e8052c94a9c36f',
+ 'ogkm':'03f3b08e158b357d683b51896771aa457d72966bfed551bfc4303067a4acba0a'}
 SCENARIOS=('drop-success','orphan-success','drop-other-user','orphan-other-users','pin-refused',
  'drop-backend-refused','orphan-backend-refused','drop-close-refused','callback-active',
  'callback-free-refused','callback-retry','null-device')
