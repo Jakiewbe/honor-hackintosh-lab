@@ -77,6 +77,24 @@ def analyse(text):
         pass  # already reported above
     if not re.search(r"if\s*\(\s*!\s*nvkms_ioctl_from_kapi", body):
         problems.append("FREE_DEVICE is not guarded by a failing check")
+    # F1: ordering alone is not enough - a NISO free inside the FREE_DEVICE failure branch would run on the
+    # very path that must leave NVKMS resources untouched.
+    guard = re.search(r"if\s*\(\s*!\s*nvkms_ioctl_from_kapi.*?\)\s*\{", body, re.S)
+    if guard:
+        start = guard.end() - 1
+        depth = 0
+        end = None
+        for k in range(start, len(body)):
+            if body[k] == "{":
+                depth += 1
+            elif body[k] == "}":
+                depth -= 1
+                if depth == 0:
+                    end = k
+                    break
+        branch = body[start:end] if end else ""
+        if "nvKmsKapiFreeNisoSurface" in branch:
+            problems.append("a NISO surface is freed inside the FREE_DEVICE failure branch")
     return not problems, problems, positions
 
 
@@ -107,7 +125,15 @@ def self_test():
     nvKmsKapiFreeNisoSurface(device, &device->semaphore);
     nvKmsKapiFreeNisoSurface(device, &device->notifier);
     return NV_TRUE; }""", False),
-        "unguarded": ("""static NvBool KmsFreeDevice(struct NvKmsKapiDevice *device){
+        "niso_on_failure": ("""static NvBool KmsFreeDevice(struct NvKmsKapiDevice *device){
+    if (!nvkms_xnu_try_quiesce_kapi(device->pKmsOpen)) return NV_FALSE;
+    if (!nvkms_ioctl_from_kapi(device->pKmsOpen, NVKMS_IOCTL_FREE_DEVICE, 0, 0)) {
+        nvKmsKapiFreeNisoSurface(device, &device->semaphore);
+        return NV_FALSE; }
+    nvKmsKapiFreeNisoSurface(device, &device->semaphore);
+    nvKmsKapiFreeNisoSurface(device, &device->notifier);
+    return NV_TRUE; }""", False),
+    "unguarded": ("""static NvBool KmsFreeDevice(struct NvKmsKapiDevice *device){
     if (!nvkms_xnu_try_quiesce_kapi(device->pKmsOpen)) return NV_FALSE;
     nvkms_ioctl_from_kapi(device->pKmsOpen, NVKMS_IOCTL_FREE_DEVICE, 0, 0);
     nvKmsKapiFreeNisoSurface(device, &device->semaphore);
