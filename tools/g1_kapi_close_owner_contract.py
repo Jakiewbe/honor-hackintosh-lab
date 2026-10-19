@@ -40,10 +40,10 @@ struct NvKmsKapiEvent {
 enum { NVKMS_IOCTL_FREE_DEVICE, NVKMS_IOCTL_GET_NEXT_EVENT,
        NVKMS_EVENT_TYPE_DPY_CHANGED, NVKMS_EVENT_TYPE_DYNAMIC_DPY_CONNECTED,
        NVKMS_EVENT_TYPE_FLIP_OCCURRED };
-static int device_frees, rm_frees, downstream_events;
+static int device_frees, rm_frees, downstream_events, niso_frees;
 static int nvkms_ioctl_from_kapi(nvkms_per_open *, int, void *, size_t);
 static void nvkms_close_from_kapi(nvkms_per_open *);
-static void nvKmsKapiFreeNisoSurface(NvKmsKapiDevice *, int *) {}
+static void nvKmsKapiFreeNisoSurface(NvKmsKapiDevice *, int *) { ++niso_frees; }
 static void RmFreeDevice(NvKmsKapiDevice *) { ++rm_frees; }
 static void nvkms_close_gpu(int, int) {}
 static void nvkms_sema_free(void *) {}

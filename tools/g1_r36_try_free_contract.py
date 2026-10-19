@@ -55,21 +55,23 @@ int main(int argc, char **argv) {
                 require(gDev==heap&&gDevCreator==&creator&&gDevOrphaned&&
                   !creator.releases&&!rm_frees&&!device_frees&&!backend_closes&&!wrapper_frees&&
                   kms_deferred_count()==0,"incomplete close lost owner or queued wrapper alone");
+                require(niso_frees==0,"NISO unmapped before the close was known to succeed");
                 if(callback_retry){
                     node.eventBusy=false;event_free_ok=true;fb.finishOrphanedDevice();
                     require(!gDev&&!gDevCreator&&creator.releases==1&&device_frees==1&&rm_frees==1&&
-                      backend_closes==1&&wrapper_frees==1&&!gKmsPmPins,"retry not completed exactly once");
+                      backend_closes==1&&wrapper_frees==1&&!gKmsPmPins&&niso_frees==2,
+                      "retry not completed exactly once or NISO not unmapped");
                 }
             } else if(std::strcmp(name,"pin-refused")==0){
                 require(gDev==heap&&gDevOrphaned&&gOrphanGrabs==1&&!fb.fDev&&gDevUsers==0&&
-                  !device_frees&&!rm_frees&&!creator.releases,"pin refusal lost ownership/debt");
+                  !device_frees&&!rm_frees&&!creator.releases&&niso_frees==0,"pin refusal lost ownership/debt");
             } else if(std::strstr(name,"other-user")){
                 require(gDev==heap&&gDevUsers==1&&!creator.releases&&!device_frees&&!rm_frees&&
                   ownership_releases==(orphan?2:1),"shared device released");
             } else {
                 require(!gDev&&!gDevCreator&&creator.releases==1&&device_frees==1&&rm_frees==1&&
                   backend_closes==1&&wrapper_frees==1&&ownership_releases==(orphan?2:1),
-                  "successful free not exactly once");
+                  niso_frees==2,"successful free not exactly once or NISO not unmapped twice");
             }
         }
         if(!device_frees)delete heap; // Harness cleanup after all ownership observations.
