@@ -149,7 +149,7 @@ int main(int argc, char **argv) {
             require(backend_closes == 2 && wrapper_frees == 2 && kms_deferred_count() == 0 &&
                     gKmsCloseDeferred == 0, "deferred counter did not recover");
         } else if (std::strcmp(name, "worker-unavailable") == 0) {
-            gKmsCloseWorker = nullptr; node.eventBusy = true; kms_close_common(&node);
+            gKmsCloseWorker = nullptr; event_free_ok = false; kms_close_common(&node);
             require(wrapper_frees == 0 && kms_deferred_count() == 1 && schedules == 0, "missing worker freed argument");
         } else if (std::strcmp(name, "stable-deadline") == 0) {
             event_free_ok = false;
@@ -184,7 +184,7 @@ NAMES = [
     'void nvkms_xnu_reap_closes(void)',
 ]
 SCENARIOS = ('suspended-retain', 'deferred-recover', 'normal-free-failure', 'stalled-callback',
-             'normal-busy', 'cancel-pending', 'pending-abort', 'lost-no-retry',
+             'cancel-pending', 'pending-abort', 'lost-no-retry',
              'repeat-close', 'counter-isolation', 'gate-before-reap', 'worker-unavailable', 'stable-deadline')
 
 
@@ -207,6 +207,8 @@ def main():
     p.add_argument('--out', type=Path, required=True)
     p.add_argument('--cxx', default='g++')
     p.add_argument('--negative-compile', action='store_true')
+    p.add_argument('--open-normal-busy', action='store_true',
+                   help='Run only the known OPEN normal-close join; failure remains exit 1')
     args = p.parse_args()
     args.out.mkdir(parents=True, exist_ok=False)
     unit = args.candidate/'kexts/NVRM'
@@ -246,7 +248,7 @@ def main():
         'compile_exit':result.returncode,'scenarios':[],'status':'COMPILE_FAILED',
         'negative_compile':args.negative_compile,'binary_exists':binary.is_file()}
     if result.returncode == 0 and binary.is_file():
-        for name in SCENARIOS:
+        for name in (('normal-busy',) if args.open_normal_busy else SCENARIOS):
             result = subprocess.run([str(binary),name],capture_output=True,text=True,timeout=10)
             output = result.stdout+result.stderr
             (args.out/(name+'.txt')).write_text(output, encoding='utf-8')

@@ -13,7 +13,7 @@
 | NVLink四锁 | 真实后端与17项CPU合同及原生链接已验证 | 不能据此关闭freeDevice/PM问题 |
 | P0-4 freeDevice关闭拒绝 | OPEN | 旧void边界与所有权/返回传播需继续改造；不是“项目无能力修改” |
 | RM门忙仍STANDBY | OPEN，当前结构审计31/32，exit1 | nv_xnu_pm_close超时后仍继续；不能以IOPM ack要求证明其安全 |
-| 延迟KMS close回收 | OPEN；R32局部源码/CPU候选通过 | 正常free拒绝入队、busy不等待与gate后重试13/13 CPU；Darwin尚未执行。容量耗尽、open rollback、上层Device生命周期/PM交错仍未闭合 |
+| 延迟KMS close回收 | OPEN；R32b局部源码/CPU候选通过 | 正常free拒绝入队、deferred busy不等待与gate后重试12项CPU；正常busy仍无界join、单独FAIL；Darwin尚未执行。容量耗尽、open rollback、上层Device生命周期/PM交错仍未闭合 |
 | 延迟队列单一所有权 | R30 CPU两项FAIL，R31同合同PASS | R31 run39184119617原生/完整链接通过；真实close合同2/4、两项FAIL，不作为PM安全放行 |
 | Kext加载 | 未执行、NO-GO | 未签名/安装/加载/卸载 |
 | GPU初始化/渲染/正确像素/安全结束 | 未执行 | 编译/链接/CPU检查都不替代这四层证据 |

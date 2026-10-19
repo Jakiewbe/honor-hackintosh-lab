@@ -93,7 +93,7 @@ diff --git a/kexts/NVRM/os-nvkms-xnu.cpp b/kexts/NVRM/os-nvkms-xnu.cpp
      // nvidia-modeset-os-interface.h: NVKMS keeps the pointer handed to nvKmsOpen() as pOpenKernel and
      // still passes it back to nvkms_event_queue_changed() until nvKmsClose() has destroyed that
      // per-open. While the GPU is suspended or lost nvKmsClose() must not touch the display engine
-@@ -141,35 +208,23 @@
+@@ -141,35 +208,30 @@
      // completed close: keep the per-open, this wrapper and its event worker allocated, refuse new
      // work, and never hand back memory NVKMS still points at.
      if (!kms_pm_wait_locked(false, kKmsPmWaitMs)) {
@@ -119,10 +119,13 @@ diff --git a/kexts/NVRM/os-nvkms-xnu.cpp b/kexts/NVRM/os-nvkms-xnu.cpp
      if (popen->data) nvKmsClose(popen->data);
      popen->data = NULL;
 -    popen->closing = true;
--    if (popen->eventCall && popen->eventBusy) {
--        if (thread_call_cancel(popen->eventCall)) popen->eventBusy = false;
--        while (popen->eventBusy) IOLockSleep(gKmsLock, popen, THREAD_UNINT);
--    }
++    // KAPI FreeDevice continues releasing Device immediately after this void close returns.
++    // Until Device ownership can also be deferred, keep the normal-close callback join.
++    // This wait is still unbounded and is an explicit OPEN contract, not a safe async close.
+     if (popen->eventCall && popen->eventBusy) {
+         if (thread_call_cancel(popen->eventCall)) popen->eventBusy = false;
+         while (popen->eventBusy) IOLockSleep(gKmsLock, popen, THREAD_UNINT);
+     }
 -    IOLockUnlock(gKmsLock);
 -    if (popen->eventCall && !thread_call_free(popen->eventCall)) {
 -        // A pending or rearmed call makes thread_call_free fail. Keep the
@@ -131,14 +134,14 @@ diff --git a/kexts/NVRM/os-nvkms-xnu.cpp b/kexts/NVRM/os-nvkms-xnu.cpp
 -        return;
 -    }
 -    nvkms_free(popen, sizeof *popen);
-+    // If the callback is still running or its call cannot be released, the queue becomes the sole
++    // If its call cannot be released, the queue becomes the sole
 +    // wrapper owner. A NULL data entry is already backend-closed and must not call nvKmsClose again.
 +    if (!kms_deferred_try_free_impl(popen, NULL)) kms_close_remember_locked(popen);
 +    IOLockUnlock(gKmsLock);
  }
  
  static NvBool kms_ioctl_common(struct nvkms_per_open *popen, NvU32 cmd, NvU64 address, size_t size, bool tryPm = false)
-@@ -193,6 +248,9 @@
+@@ -193,6 +255,9 @@
      if (!gKmsTimerWorker) gKmsTimerWorker = thread_call_allocate_with_options(
          kms_timer_drain, NULL, THREAD_CALL_PRIORITY_KERNEL, THREAD_CALL_OPTIONS_ONCE);
      if (!gKmsTimerWorker) return NV_FALSE;
@@ -148,7 +151,7 @@ diff --git a/kexts/NVRM/os-nvkms-xnu.cpp b/kexts/NVRM/os-nvkms-xnu.cpp
      IOLockLock(gKmsLock);
      NvBool ok = nvKmsModuleLoad();
      IOLockUnlock(gKmsLock);
-@@ -263,6 +321,7 @@
+@@ -263,6 +328,7 @@
      // The pin count is zero and admission is closed, so nothing can start a teardown while NVKMS is
      // told to stop. Both calls happen under the same lock, so a resume cannot slip between them.
      gKmsSuspendPending = false;
@@ -156,7 +159,7 @@ diff --git a/kexts/NVRM/os-nvkms-xnu.cpp b/kexts/NVRM/os-nvkms-xnu.cpp
      nvKmsKapiSuspendResume(NV_TRUE);
      gKmsPmState = kKmsPmSuspended;
      nvKmsSuspend(gpuId);
-@@ -279,43 +338,17 @@
+@@ -279,43 +345,17 @@
          gKmsSuspendPending = false;
          gKmsSuspendSeq++;
          IOLockWakeup(gKmsLock, &gKmsPmPins, false);
@@ -206,7 +209,7 @@ diff --git a/kexts/NVRM/os-nvkms-xnu.cpp b/kexts/NVRM/os-nvkms-xnu.cpp
      // Cancel a request that has not committed yet, and wake its waiter so it returns instead of sleeping out
      // its bound. A committed suspend is unaffected: it already cleared the flag under this lock.
      gKmsSuspendPending = false;
-@@ -324,11 +357,20 @@
+@@ -324,11 +364,20 @@
      if (gpuOk && gKmsPmState == kKmsPmSuspended) nvKmsResume(gpuId);
      gKmsPmState = gpuOk ? kKmsPmRunning : kKmsPmLost;
      IOLockWakeup(gKmsLock, &gKmsPmState, false);

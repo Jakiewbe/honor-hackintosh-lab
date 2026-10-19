@@ -1,0 +1,1 @@
+stable-deadline PASS close=2 free=2 queued=0 schedules=1 sleeps=0 counter=0

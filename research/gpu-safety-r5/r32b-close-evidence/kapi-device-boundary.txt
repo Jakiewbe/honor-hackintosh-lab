@@ -1,0 +1,158 @@
+// Fixed OGKM e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb; source SHA256 above in binding.json.
+/*
+ * SPDX-FileCopyrightText: Copyright (c) 2015-2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ * SPDX-License-Identifier: MIT
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ */
+
+
+// Original nvkms-kapi.c lines 422-450
+static void KmsFreeDevice(struct NvKmsKapiDevice *device)
+{
+    /* Free notifier and semaphore memory */
+
+    nvKmsKapiFreeNisoSurface(device, &device->semaphore);
+    nvKmsKapiFreeNisoSurface(device, &device->notifier);
+
+    /* Free NVKMS device */
+
+    if (device->hKmsDevice != 0x0)  {
+        struct NvKmsFreeDeviceParams paramsFree = { };
+
+        paramsFree.request.deviceHandle = device->hKmsDevice;
+
+        nvkms_ioctl_from_kapi(device->pKmsOpen,
+                              NVKMS_IOCTL_FREE_DEVICE,
+                              &paramsFree, sizeof(paramsFree));
+
+        device->hKmsDevice = device->hKmsDisp = 0x0;
+    }
+
+    /* Close NVKMS */
+
+    if (device->pKmsOpen != NULL) {
+        nvkms_close_from_kapi(device->pKmsOpen);
+        device->pKmsOpen = NULL;
+    }
+}
+
+
+// Original nvkms-kapi.c lines 625-644
+static void FreeDevice(struct NvKmsKapiDevice *device)
+{
+    /* Free NVKMS objects allocated for NvKmsKapiDevice */
+
+    KmsFreeDevice(device);
+
+    /* Free RM objects allocated for NvKmsKapiDevice */
+
+    RmFreeDevice(device);
+
+    /* Lower the reference count of gpu. */
+
+    nvkms_close_gpu(device->gpuId, NV_TRUE /* reset_aware */);
+
+    if (device->pSema != NULL) {
+        nvkms_sema_free(device->pSema);
+    }
+
+    nvKmsKapiFree(device);
+}
+
+// Original nvkms-kapi.c lines 3823-3901
+/*
+ * This executes without the nvkms_lock held. The lock will be grabbed
+ * during the kapi dispatching contained in this function.
+ */
+void nvKmsKapiHandleEventQueueChange
+(
+    struct NvKmsKapiDevice *device
+)
+{
+    if (device == NULL) {
+        return;
+    }
+
+    /*
+     * If the callback is NULL, event interest declaration should be
+     * rejected, and no events would be reported.
+     */
+    nvAssert(device->eventCallback != NULL);
+
+    do
+    {
+        struct NvKmsGetNextEventParams kmsEventParams = { };
+        struct NvKmsKapiEvent kapiEvent = { };
+        NvBool err = NV_FALSE;
+
+        if (!nvkms_ioctl_from_kapi(device->pKmsOpen,
+                                   NVKMS_IOCTL_GET_NEXT_EVENT,
+                                   &kmsEventParams, sizeof(kmsEventParams))) {
+            break;
+        }
+
+        if (!kmsEventParams.reply.valid) {
+            break;
+        }
+
+        kapiEvent.type = kmsEventParams.reply.event.eventType;
+
+        kapiEvent.device = device;
+        kapiEvent.privateData = device->privateData;
+
+        switch (kmsEventParams.reply.event.eventType) {
+            case NVKMS_EVENT_TYPE_DPY_CHANGED:
+                kapiEvent.u.displayChanged.display =
+                    nvDpyIdToNvU32(kmsEventParams.
+                                   reply.event.u.dpyChanged.dpyId);
+                break;
+            case NVKMS_EVENT_TYPE_DYNAMIC_DPY_CONNECTED:
+                kapiEvent.u.dynamicDisplayConnected.display =
+                    nvDpyIdToNvU32(kmsEventParams.
+                                   reply.event.u.dynamicDpyConnected.dpyId);
+                break;
+            case NVKMS_EVENT_TYPE_FLIP_OCCURRED:
+                kapiEvent.u.flipOccurred.head =
+                    kmsEventParams.reply.event.u.flipOccurred.head;
+                kapiEvent.u.flipOccurred.layer =
+                    kmsEventParams.reply.event.u.flipOccurred.layer;
+                break;
+            default:
+                continue;
+        }
+
+        if (err) {
+            nvKmsKapiLogDeviceDebug(
+                device,
+                "Error in conversion from "
+                "NvKmsGetNextEventParams to NvKmsKapiEvent");
+            continue;
+        }
+
+        device->eventCallback(&kapiEvent);
+
+    } while(1);
+}
+
+/*
+ * Helper function to convert NvKmsQueryDpyCRC32Reply to NvKmsKapiDpyCRC32.
+ */
+static void NvKmsCrcsToKapi
+(

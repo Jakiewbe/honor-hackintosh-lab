@@ -1,4 +1,4 @@
-> **2026-10-19 R32源码候选：正常close回收失败改为入队；eventBusy等待改为独立100ms重试，RM gate重开后才放行。13/13真实函数CPU场景、4负向控制和4结构检查通过，历史回归通过；Darwin/链接尚未执行。容量溢出、open rollback、P0-4、RM busy→STANDBY仍OPEN/FAIL，设备NO-GO。** [实现与证据](../research/gpu-safety-r5/R32-CLOSE-RETRY-20261019.md)。
+> **2026-10-19 R32b限定候选：正常thread_call_free失败入队、deferred回收非等待重试及RM gate后放行，12项CPU通过；正常close忙回调仍无界等待，单独合同FAIL/exit1。初稿wrapper异步返回不能保证KAPI Device寿命，已撤销该设计。原生/链接待运行；容量、P0-4、RM busy→STANDBY仍OPEN/FAIL，设备NO-GO。** [依据与证据](../research/gpu-safety-r5/R32-CLOSE-RETRY-20261019.md)。
 
 > **2026-10-19 R31原生已验收：run39184119617通过，十个NVRM C++ TU、31个native补丁记录、官方1280个C/C++ TU+5shader和完整候选链接，472导入，选定ABI通过。队列去重/唯一drain的CPU合同与本次原生快照绑定。新增真实关闭函数合同2/4通过，正常close回调释放失败未入队及eventBusy无界等待两项保持FAIL；RM busy→STANDBY仍31/32 FAIL。完整ABI/loader、设备初始化/渲染/像素/安全结束未验收，设备NO-GO。** [原生证据与下一断点](../research/gpu-safety-r5/R31-NATIVE-AND-CLOSE-CONTRACT-20261019.md)。
 

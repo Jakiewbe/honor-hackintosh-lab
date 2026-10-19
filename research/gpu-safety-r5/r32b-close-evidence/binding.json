@@ -1,0 +1,10 @@
+{
+  "ogkm_commit": "e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb",
+  "ogkm_source": "src/nvidia-modeset/kapi/src/nvkms-kapi.c",
+  "sha256": "66437bc38d96d3b4f15546c3e6f7a8c0caccc158b35893c2406f80f2e6e8816b",
+  "finding_level": "SOURCE_ORDERING_NOT_OBSERVED_KERNEL_UAF",
+  "superseded_source": "0d4c329efc4a8554bf5cdf40a62ed0ca49b64454",
+  "superseded_run": 39186159503,
+  "superseded_reason": "wrapper-only async normal close did not preserve KAPI Device owner",
+  "final_scope": "normal free refusal ownership + nonwaiting deferred retry; normal active callback join remains FAIL"
+}
