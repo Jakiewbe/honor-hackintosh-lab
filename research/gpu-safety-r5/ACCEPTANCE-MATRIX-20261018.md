@@ -11,9 +11,9 @@
 | 发布物导入对照 | 修正有界解析器后472项、与候选交集471 | 候选独有panic；发行独有IOUserClient::free来自两张派生虚表+160数据重定位，候选经父类虚表间接调用；完整发布配方仍未知 |
 | PCI调用侧 | 六方法真实对象导入/直接调用/SDK形状一致 | run39140902850、固定source9015c246；九TU参数/源码/依赖与历史逐字节一致；不是R30/完整provider ABI验收 |
 | NVLink四锁 | 真实后端与17项CPU合同及原生链接已验证 | 不能据此关闭freeDevice/PM问题 |
-| P0-4 freeDevice关闭拒绝 | OPEN；R35释放后查询被真实heap/ASan负控证伪；R36可失败候选本地12/12 | 新原生未验收；callback先静默/NISO失败/legacy与allocate owner仍缺，不作整体安全放行 |
-| RM门忙仍STANDBY | OPEN，当前结构审计31/32，exit1 | nv_xnu_pm_close超时后仍继续；不能以IOPM ack要求证明其安全 |
-| 延迟KMS close回收 | OPEN；R32b局部源码/CPU候选通过 | R32b run39186519502原生/完整链接与12限定CPU通过；正常busy仍无界join、单独FAIL。容量耗尽、open rollback、上层Device生命周期/PM交错仍未闭合 |
+| P0-4 freeDevice 关闭拒绝 | **已实现，待实机**：R36 返回关闭结果、R38 quiesce 先于 NISO、R42 分配失败隔离 | 构建门禁 39294220812、安全门禁 39314501756 绿；R36 ASan 合同断言 backend 拒绝时 `niso_frees==0`、成功恰好 2；回调真实并发仍是建模，未实测 |
+| RM 门忙仍 STANDBY | **已实现，待实机**：R40 门忙时跳过 STANDBY，两侧状态保持 Suspended | 状态机 11/11、PM exclusion 32/32；断电时 GPU 未进低功耗态的代价只能实机裁定 |
+| 延迟 KMS close 回收 | 部分闭合：R41 把 legacy 关闭等待改为 10 s 有界并在超时保留 wrapper | 容量耗尽时的 open rollback、上层 Device 生命周期与 PM 交错仍未闭合 |
 | 延迟队列单一所有权 | R30 CPU两项FAIL，R31同合同PASS | R31 run39184119617原生/完整链接通过；真实close合同2/4、两项FAIL，不作为PM安全放行 |
 | OGKM补丁进入最终对象 | R33原生及最终来源独立验收PASS；R32b历史FAIL保留 | run39189188122，双源候选/官方参数/完整ar/真实why_load/最终定义；非完整ABI或运行验收 |
 | NISO参数身份 | R33候选真实函数原生CPU 3/3、官方参数对象及最终链接通过 | 只修成功路径参数身份与重复清理；注销/解映射失败及完整Device安全仍OPEN |
