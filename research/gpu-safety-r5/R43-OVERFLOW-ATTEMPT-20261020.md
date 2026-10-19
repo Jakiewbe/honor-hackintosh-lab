@@ -42,3 +42,27 @@ extOverflow；
 vkms_per_open，先断言填满成功，再断言溢出；
 3. 溢出回收函数必须定义在使用点之前（或前置声明）；
 4. 每次只改一处，先让新场景在旧代码上**失败**，再上新代码让它通过。
+
+## 结果：R43 已合入并通过（2026-10-20）
+
+按上一轮记录的教训重做，四步都做到了：
+
+1. **先加注解**：close-retry 工具现在会打印 RETRY_SCENARIO / RETRY_COMPILE；
+2. **夹具顺序**：kms_close_overflow_drain_locked 定义在 kms_close_retry_fire **之前**，
+   两个 static 全局也进入夹具前置声明；
+3. **本地先看夹具文本**：无编译器也能生成 ixture.cpp 并核对定义顺序（6096 < 6629）；
+4. **逐次只改一处**：先后两次失败都定位到具体问题（定义顺序、场景未持锁），不是盲改。
+
+### 过程中第二个真实问题
+
+overflow-reclaim 场景直接调用 kms_close_overflow_drain_locked() 时**没有持 gKmsLock**，
+而 
+vKmsClose 桩要求 lock_depth == 1，于是报
+ackend close with gate shut/outside lock。这是**夹具错误**，不是代码错误：
+真实调用点在 kms_close_retry_fire() 内，那里已持锁。场景已补上 IOLockLock/Unlock。
+
+### 验证
+
+- run **39339549232**（构建门禁，37 项序列 + 5 项链）：**success**，含 overflow-reclaim
+  （填满 64 项 → 溢出计数 1、未释放 → 回收后恰好释放一次）
+- 离线：状态机 11/11、PM exclusion 32/32、free-order PASS
