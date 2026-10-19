@@ -53,3 +53,38 @@ vkms_xnu_resume 中被调用 |
 
 隔离表是**有界**的（4 个），满时明确记录泄漏而不是掩盖；回收只发生在 resume 且 GPU 正常时。
 没有运行证据证明"被拒绝的关闭在下一次 resume 真的能成功"，也没有证明真实 RM 会拒绝。
+
+## R42 验证结果（2026-10-20）
+
+| 门 | run | 结果 |
+|---|---|---|
+| 构建（36 项序列、CHAIN 5 项） | **39294220812** | **success** |
+| 安全（free-order / alloc-owner / 状态机 11/11 / exclusion 32/32） | **39297385638** | **success** |
+
+### 过程中修掉的两个真实问题
+
+1. **C 语言声明顺序**：第一版 R42 把隔离表放在 
+vKmsKapiTryFreeDevice **之前**，
+   而 
+vKmsKapiReapQuarantine 调用它 → 隐式声明，官方完整构建编译失败。
+   已改为放在该函数之后（ailed: 之前仍可见），并重算 patch/post 哈希。
+2. **夹具缺桩**：
+vkms_xnu_resume 的新 reap 调用被 close-retry 夹具整段提取，
+   但夹具没有该符号 → 编译失败。已加 no-op 桩并注明原因。
+
+### 当前整体状态（构建层）
+
+| 项 | 状态 |
+|---|---|
+| 36 项序列逐项应用 | PASS |
+| free-order（quiesce → FREE_DEVICE → NISO） | PASS |
+| alloc-owner（E1–E4） | 4/4 PASS |
+| PM 状态机（A1–A4、B1–B4、C1、D1–D2） | 11/11 PASS |
+| PM exclusion | 32/32 PASS |
+| 构建（1280 TU + 归档 + 链接） | success |
+
+### 仍开放
+
+- 隔离表只有 4 个槽，满时明确记录泄漏；没有运行证据证明"被拒绝的关闭在下一次 resume 会成功"；
+- 回调是否真的排空、真实 RM 是否真的拒绝关闭，仍无运行证据；
+- 实机：初始化 / 渲染 / 读回 / 安全结束 —— NO-GO。
