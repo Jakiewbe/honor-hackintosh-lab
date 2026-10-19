@@ -36,3 +36,12 @@ R31 的原生构建成立，但真实关闭函数 CPU 合同只有 2/4 通过。
 复盘：先保存真实失败，再修实际函数，再用反向变异证明合同能拒绝错误；原生链接的绿色不能覆盖剩余 PM/设备生命周期失败。
 
 有效证据：[r32b-close-evidence](r32b-close-evidence/)，含Device源码边界与正常busy的非零FAIL；r32-close-evidence仅保留被取代初稿的历史结果。下一轮需在FreeDevice最初入口关闭事件准入并保留完整Device所有权，或提供可失败的quiesce/teardown传播，不能在void close末尾才尝试补救。
+
+## Device边界补充：真实OGKM函数CPU反例
+
+`tools/g1_kapi_close_owner_contract.py` 从固定OGKM SHA256 `66437bc38d96d3b4f15546c3e6f7a8c0caccc158b35893c2406f80f2e6e8816b` 提取完整 `KmsFreeDevice`、`FreeDevice`、`nvKmsKapiHandleEventQueueChange`，连同真实候选11个函数和队列编译。注入边界模拟事件已获取、消费前发生拆除；OS服务和结构类型为测试替身，free仅计数，不删除内存，不运行内核。
+
+- 被取代R32a：编译0、运行1；`DEVICE_FREED_BEFORE_ACTIVE_EVENT_FINISHED`，backend close1/wrapper free0/queued1/Device free1/RM free1/event1。证明wrapper限定合同不足以支持此注入交错，不能称为已实测内核UAF。
+- 当前R32b：编译0、运行1；`unbounded callback sleep`，Device free0/RM free0/event0。保留原正常join，仍是OPEN/FAIL，不能称为安全结束。
+
+[两份原始结果与完整fixture](r32b-close-evidence/device-owner-contract/)。这是新的可执行失败证据，未改本次待运行原生源码 `051651ec0dfc43cfbb9c39534895a8fe4288f035`，不将文档/测试提交冒充驱动源码提交。下一步应从FreeDevice入口阻止事件新准入，并把整个Device的销毁与回调/PM所有权一起建模；原void边界可以通过本地候选适配，不是“超出项目能力”。

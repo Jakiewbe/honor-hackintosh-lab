@@ -14,3 +14,5 @@
 按P0/P1/P2给固定文件行号、触发条件、后果、建议、证据局限。RM busy→STANDBY保持FAIL，P0-4/Device生命周期/容量耗尽仍OPEN。按源码→CPU→Darwin对象→候选链接→完整ABI/loader→初始化→真实GPU执行→像素→安全结束分层；设备仍NO-GO，Intel基础显示保持。不要重复“公开源码到顶”或要求设备部署来替代可继续的源码工作。
 
 必须独立检查R32b纠正：0d4c329初稿/run39186159503不能作为整条close设计验收。固定OGKM KmsFreeDevice446调用void close后，FreeDevice629-643继续释放Device，而event handler3827可能仍读Device。当前恢复正常close原有无界join，--open-normal-busy必须真实exit1；只修正常free拒绝漏队列与deferred try_free不等待。不得把12项通过合并为13/13，也不得悄悄丢弃正常busy失败。查看r32b-close-evidence/binding.json和kapi-device-boundary.txt；旧r32-close-evidence是被取代初稿历史。
+
+再查tools/g1_kapi_close_owner_contract.py及r32b-close-evidence/device-owner-contract：是否确实提取固定OGKM完整FreeDevice/KmsFreeDevice/事件函数；两份编译0、运行1的证据有无准确区分初稿提前Device free与修订版无界join。这里是注入交错与替身类型，未真实删除内存，不能升级为已证内核UAF/死锁。CI驱动源码固定051651ec0dfc43cfbb9c39534895a8fe4288f035；文档证据后续提交单独固定。
