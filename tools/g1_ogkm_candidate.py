@@ -29,23 +29,31 @@ SPECS = (
 # Patches that stack on top of SPECS: same source, applied after it, with the intermediate hash pinned so
 # a stale or reordered patch cannot slip through. Reverse application unwinds the stack.
 CHAIN = (
-    {'patch': 'ogkm-r35-kapi-try-close.patch',
-      'patch_sha256': '240849919dbc5ab78124c6f49801cdc5e74157419de0da94dc6d95dff2257bac',
+    {'patch': 'ogkm-r36-try-free-result.patch',
+      'patch_sha256': '0bb0bb2650b483e1002e7a5976e94f02fee1542b7d2cab20dfebe6872a753ead',
       'source': 'src/nvidia-modeset/kapi/src/nvkms-kapi.c',
       'pre_sha256': '7e5492e0a0961e45ea75f664d2a16c49c66d728b93b8e3e87dca3ae9ebe38200',
-      'post_sha256': '30c4c8441593b061f50296fa9f3421032280f7aeede6133d0bce1275d8cc1bbd',
-      'defined_symbol': '_nvKmsKapiDeviceFreeCompleted'},
+      'post_sha256': '895de47ae03abc08d9a032f8f083db0be76aa5aa45317ebe37d7720a54c657cb',
+      'defined_symbol': '_nvKmsKapiTryFreeDevice'},
 )
 
 
+def approved_specs(patches):
+    """Accept only historical R33 or the exact reviewed R36 chain."""
+    if patches not in (list(SPECS), list(SPECS) + list(CHAIN)):
+        raise ValueError('exact approved R33 or R36 patch sequence required')
+    folded = {s['source']: dict(s) for s in SPECS}
+    for c in patches[len(SPECS):]:
+        previous = folded[c['source']]
+        if previous['candidate_sha256'] != c['pre_sha256']:
+            raise ValueError('chain intermediate source identity differs')
+        previous.update({k: c[k] for k in ('patch', 'patch_sha256', 'defined_symbol')})
+        previous['candidate_sha256'] = c['post_sha256']
+    return list(folded.values())
+
+
 def delta_specs():
-    """Collapse SPECS+CHAIN into one original->final entry per source for check_delta."""
-    pre = {s['source']: s['original_sha256'] for s in SPECS}
-    final = {s['source']: s['candidate_sha256'] for s in SPECS}
-    for c in CHAIN:
-        pre.setdefault(c['source'], c['pre_sha256'])
-        final[c['source']] = c['post_sha256']
-    return [{'source': k, 'original_sha256': pre[k], 'candidate_sha256': final[k]} for k in final]
+    return approved_specs(list(SPECS) + list(CHAIN))
 
 
 def sha(path):
@@ -101,7 +109,13 @@ def make_candidate(nv, candidate, assets, logs):
     if tree_files(candidate) != before:
         raise ValueError('candidate initial copy differs')
     env = dict(os.environ, GIT_CEILING_DIRECTORIES=str(candidate.parent))
+    steps = []
     def apply(spec, reverse, stage):
+        pre = spec.get('pre_sha256', spec.get('original_sha256'))
+        post = spec.get('post_sha256', spec.get('candidate_sha256'))
+        expected_before, expected_after = (post, pre) if reverse else (pre, post)
+        if sha(candidate/spec['source']) != expected_before:
+            raise ValueError(stage+' patch input hash differs: '+spec['source'])
         for check in (True, False):
             argv = ['git', '-c', 'core.autocrlf=false', 'apply', '--whitespace=error-all']
             if reverse: argv.append('--reverse')
@@ -113,6 +127,10 @@ def make_candidate(nv, candidate, assets, logs):
                 rc = subprocess.run(argv, cwd=candidate, env=env, stdout=stream, stderr=subprocess.STDOUT).returncode
                 stream.write('\nEXIT='+str(rc)+'\n')
             if rc: raise ValueError('OGKM candidate patch failed: '+spec['patch'])
+        if sha(candidate/spec['source']) != expected_after:
+            raise ValueError(stage+' patch output hash differs: '+spec['source'])
+        steps.append({'stage': stage, 'patch': spec['patch'], 'reverse': reverse,
+                      'before_sha256': expected_before, 'after_sha256': expected_after})
     for spec in SPECS: apply(spec, False, 'forward')
     for spec in CHAIN:
         if sha(candidate/spec['source']) != spec['pre_sha256']:
@@ -133,10 +151,12 @@ def make_candidate(nv, candidate, assets, logs):
     return {'schema': 'honor.g1.ogkm-candidate.v1', 'candidate_root': str(candidate),
             'original_root': str(nv), 'files': len(before), 'patches': list(SPECS) + list(CHAIN),
             'original_tree_sha256': tree_digest(before), 'candidate_tree_sha256': tree_digest(after),
-            'reverse_restores_original': True, 'exact_two_source_delta': True}
+            'reverse_restores_original': True, 'exact_two_source_delta': True, 'patch_steps': steps}
 
 
 def verify_candidate(nv, candidate, manifest):
+    if manifest['patches'] != list(SPECS) + list(CHAIN):
+        raise ValueError('current candidate manifest differs')
     before, after = tree_files(nv), tree_files(candidate)
     check_delta(before, after, delta_specs())
     if (tree_digest(before) != manifest['original_tree_sha256'] or

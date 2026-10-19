@@ -1,0 +1,23 @@
+{
+  "status": "CONTROLS_REJECTED_NOT_DRIVER_ACCEPTANCE",
+  "r35_original_fixture_sha256": "dc57d36b2397fd09ea90a8c60888e023cf9c06bbdc4cb1a142765542674d9f1c",
+  "r35_real_free_control_sha256": "9e29f6b06c1d8557ff2a34b67a9acdb37cd82bfa1ca79da9844322ba66e64ed9",
+  "r35_compile_argv": [
+    "g++",
+    "-std=c++17",
+    "-O1",
+    "-g",
+    "-fsanitize=address",
+    "-fno-omit-frame-pointer",
+    "-I/mnt/d/Hactk/g1-audit-fix-20261018/research/gpu-safety-r5/r35-caller-evidence",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/r36-controls/r35-real-free-control.cpp",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/research/gpu-safety-r5/r35-caller-evidence/kms_deferred.cpp",
+    "-o",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/r36-controls/r35-asan"
+  ],
+  "r35_compile_exit": 0,
+  "r35_asan_exit": 1,
+  "r35_observation": "heap-use-after-free in nvKmsKapiDeviceFreeCompleted",
+  "r36_compile_negative": "NONZERO_NO_BINARY_NO_SCENARIOS",
+  "device": "NO-GO"
+}

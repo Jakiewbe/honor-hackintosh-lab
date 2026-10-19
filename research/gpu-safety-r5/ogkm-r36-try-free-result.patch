@@ -1,0 +1,86 @@
+--- a/src/nvidia-modeset/kapi/src/nvkms-kapi.c
++++ b/src/nvidia-modeset/kapi/src/nvkms-kapi.c
+@@ -419,7 +419,12 @@
+ /*
+  * Helper function to free NVKMS objects allocated for NvKmsKapiDevice.
+  */
+-static void KmsFreeDevice(struct NvKmsKapiDevice *device)
++/* Internal Darwin pair; public NvKmsKapiFunctionsTable layout is unchanged. */
++extern NvBool nvkms_xnu_try_close_kapi(struct nvkms_per_open *popen);
++extern NvBool nvkms_xnu_pm_pin(void);
++extern void nvkms_xnu_pm_unpin(void);
++
++static NvBool KmsFreeDevice(struct NvKmsKapiDevice *device)
+ {
+     /* Free notifier and semaphore memory */
+ 
+@@ -433,9 +438,11 @@
+ 
+         paramsFree.request.deviceHandle = device->hKmsDevice;
+ 
+-        nvkms_ioctl_from_kapi(device->pKmsOpen,
+-                              NVKMS_IOCTL_FREE_DEVICE,
+-                              &paramsFree, sizeof(paramsFree));
++        if (!nvkms_ioctl_from_kapi(device->pKmsOpen,
++                                  NVKMS_IOCTL_FREE_DEVICE,
++                                  &paramsFree, sizeof(paramsFree))) {
++            return NV_FALSE; /* Retain all remaining Device/owner state. */
++        }
+ 
+         device->hKmsDevice = device->hKmsDisp = 0x0;
+     }
+@@ -443,9 +450,12 @@
+     /* Close NVKMS */
+ 
+     if (device->pKmsOpen != NULL) {
+-        nvkms_close_from_kapi(device->pKmsOpen);
++        if (!nvkms_xnu_try_close_kapi(device->pKmsOpen)) {
++            return NV_FALSE; /* No wrapper queue owns this complete Device. */
++        }
+         device->pKmsOpen = NULL;
+     }
++    return NV_TRUE;
+ }
+ 
+ /*
+@@ -622,16 +632,20 @@
+     return ret;
+ }
+ 
+-static void FreeDevice(struct NvKmsKapiDevice *device)
++NvBool nvKmsKapiTryFreeDevice(struct NvKmsKapiDevice *device)
+ {
+     /* AllocateDevice() also reaches this path when its first allocation fails. */
+     if (device == NULL) {
+-        return;
++        return NV_TRUE;
+     }
+ 
+     /* Free NVKMS objects allocated for NvKmsKapiDevice */
+ 
+-    KmsFreeDevice(device);
++    if (!nvkms_xnu_pm_pin()) return NV_FALSE;
++    if (!KmsFreeDevice(device)) {
++        nvkms_xnu_pm_unpin();
++        return NV_FALSE;
++    }
+ 
+     /* Free RM objects allocated for NvKmsKapiDevice */
+ 
+@@ -646,6 +660,16 @@
+     }
+ 
+     nvKmsKapiFree(device);
++    nvkms_xnu_pm_unpin(); /* No Device read after its real free. */
++    return NV_TRUE;
++}
++
++static void FreeDevice(struct NvKmsKapiDevice *device)
++{
++    /* Legacy table/allocate rollback has no result channel; ownership remains OPEN. */
++    if (!nvKmsKapiTryFreeDevice(device)) {
++        nvKmsKapiLogDeviceDebug(device, "Device close refused; retained (legacy owner unresolved)");
++    }
+ }
+ 
+ NvBool nvKmsKapiAllocateSystemMemory(struct NvKmsKapiDevice *device,

@@ -1,0 +1,8 @@
+test_dsym_and_objects_excluded_text_preserved (test_text_diagnostics.TextPublicationTests.test_dsym_and_objects_excluded_text_preserved) ... ok
+test_macho_disguised_as_text_fails (test_text_diagnostics.TextPublicationTests.test_macho_disguised_as_text_fails) ... ok
+test_nested_output_rejected (test_text_diagnostics.TextPublicationTests.test_nested_output_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.021s
+
+OK

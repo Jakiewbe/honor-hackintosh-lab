@@ -22,7 +22,7 @@ from g1_dependency_audit import OGKM_PIN, NM_PIN
 from g1_symbol_identity import parse_nm_undefined
 from g1_special_object_providers import defined_symbols
 from g1_compile_inputs import BOUND_RM, bound_compile, verify_snapshot
-from g1_ogkm_candidate import SPECS as OGKM_PATCHES, CHAIN as OGKM_CHAIN, make_candidate, verify_candidate
+from g1_ogkm_candidate import approved_specs, make_candidate, verify_candidate
 
 COMPONENTS = ('nvidia', 'nvidia-modeset')
 SHADERS = ('turing', 'ampere', 'hopper', 'blackwell', 'gb20x')
@@ -286,13 +286,7 @@ def build(args, report):
     ogkm_candidate = out.parent.parent/'ogkm-e4a5faa-r33-full-source-candidate'
     assets = Path(__file__).resolve().parents[1]/'research/gpu-safety-r5'
     report['ogkm_candidate'] = make_candidate(nv, ogkm_candidate, assets, out)
-    # A chained patch supersedes the earlier entry for its source: the compiled file is the final state.
-    patch_by_source = {s['source']: s for s in OGKM_PATCHES}
-    for c in OGKM_CHAIN:
-        merged = dict(patch_by_source.get(c['source'], {}))
-        merged.update({k: c[k] for k in ('patch', 'patch_sha256', 'source', 'defined_symbol')})
-        merged['candidate_sha256'] = c['post_sha256']
-        patch_by_source[c['source']] = merged
+    patch_by_source = {s['source']: s for s in approved_specs(report['ogkm_candidate']['patches'])}
     sdk = subprocess.check_output(['xcrun', '--sdk', 'macosx', '--show-sdk-path'], text=True).strip()
     headers = Path(sdk)/'System/Library/Frameworks/Kernel.framework/Headers'
     if not (headers/'IOKit').is_dir():
@@ -367,6 +361,10 @@ def build(args, report):
             for r in report['objects'] if r['compile_exit']][:10]}), flush=True)
     if report['compiler_failures']:
         report['status'] = 'FULL_SOURCE_COMPILE_FAILED_NO_ARCHIVES_OR_LINK'
+        failures = [r for r in report['objects'] if r['compile_exit']]
+        report['error'] = 'official-source-compile: '+json.dumps([
+            {k: r.get(k) for k in ('source', 'compile_exit', 'first_errors', 'object_error', 'log')}
+            for r in failures[:3]])
         return 2
     verify_candidate(nv, ogkm_candidate, report['ogkm_candidate'])
 
@@ -390,6 +388,7 @@ def build(args, report):
         report['objects'].append(row)
         if rc:
             report['status'] = 'SHADER_EMBED_FAILED_NO_ARCHIVES_OR_LINK'
+            report['error'] = 'shader-embed: '+family+'; exit='+str(rc)+'; log='+family+'-shader-embed.txt'
             return 2
     archives = []
     for component in COMPONENTS:
@@ -437,6 +436,7 @@ def build(args, report):
                            for r in replaced]}
     if rc:
         report['status'] = 'COMPLETE_ARCHIVES_LINK_FAILED'
+        report['error'] = 'final-candidate-link: exit='+str(rc)+'; log=full-nvrm-link.txt'
         return 2
     for label, flags in [('undefined', ['-u']), ('defined', ['-gU'])]:
         if run(['xcrun', 'nm', *flags, str(dest)], out, out/('full-nvrm-'+label+'.txt')):
@@ -484,8 +484,9 @@ def main():
     print(json.dumps({'status': report['status'], 'attempts': len(report['objects']),
                       'compiler_failures': report.get('compiler_failures'), 'dependency_closure': report['dependency_closure']}))
     if rc:
-        detail = report.get('error') or report.get('dependency_closure') or 'status='+str(report['status'])
-        print('::error::FULL_BUILD_PARTIAL ' + str(detail)[:300], flush=True)
+        detail = 'status='+str(report['status'])+'; '+str(report.get('error') or 'see report.json')
+        detail = detail.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+        print('::error::FULL_BUILD_PARTIAL ' + detail[:1000], flush=True)
     return rc
 
 

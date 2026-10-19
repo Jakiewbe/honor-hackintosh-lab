@@ -1,3 +1,5 @@
+> **2026-10-19 R36 当前断点：R35 原生失败定位为 KAPI 缺字段（1279/1280），且 free 后查询被真实heap＋ASan负控证伪；旧夹具验收入口已退役。R36直接返回关闭结果，12/12本地ASan、40工具检查、三组10＋5＋7回归、完整补丁往返通过；新Darwin/链接尚未运行，导入数未知。callback静默先于NISO销毁、NISO错误传播、legacy/allocate owner、normal busy join与RM busy→STANDBY仍OPEN，GPU未运行、设备NO-GO。** [审计与下一断点](../research/gpu-safety-r5/R36-R35-AUDIT-TRY-FREE-20261019.md)。
+
 > **2026-10-19：R33官方1280TU及两项OGKM补丁最终来源已原生独立验收（run39189188122）。R34新增真实FB→OGKM→OS合同：5条正常/保留路径PASS，2条关闭拒绝路径FAIL（整体exit1），确认gDev/creator也被丢弃；编译失败无旧二进制执行。R34没有新驱动修复。P0-4、normal busy join、RM busy→STANDBY仍FAIL，GPU未运行、设备NO-GO。** [当前断点](../research/gpu-safety-r5/R34-DEVICE-CALLER-CONTRACT-20261019.md)。
 
 > **2026-10-19 R31原生已验收：run39184119617通过，十个NVRM C++ TU、31个native补丁记录、官方1280个C/C++ TU+5shader和完整候选链接，472导入，选定ABI通过。队列去重/唯一drain的CPU合同与本次原生快照绑定。新增真实关闭函数合同2/4通过，正常close回调释放失败未入队及eventBusy无界等待两项保持FAIL；RM busy→STANDBY仍31/32 FAIL。完整ABI/loader、设备初始化/渲染/像素/安全结束未验收，设备NO-GO。** [原生证据与下一断点](../research/gpu-safety-r5/R31-NATIVE-AND-CLOSE-CONTRACT-20261019.md)。

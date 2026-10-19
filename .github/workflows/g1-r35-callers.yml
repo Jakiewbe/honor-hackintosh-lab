@@ -1,31 +1,19 @@
-name: g1 R35 caller contract
+name: g1 R35 caller contract RETIRED
 
-# Manual-only. Builds the R35 caller fixture with the host compiler and runs the seven close-chain
-# scenarios. The two backend-refused scenarios are the point: they must pass now that the teardown keeps
-# the device and creator when NVKMS refuses the close. A stale binary cannot mask a failure because the
-# negative control has to fail to compile.
+# Historical handwritten fixture masked a post-free read. No compile or upload here.
 on:
   workflow_dispatch:
 
 permissions:
   contents: read
-  checks: write   # annotations are how this job reports which scenario failed
 
 jobs:
-  callers:
+  retired:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 2
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Run the caller contract
+      - name: Refuse retired acceptance path
+        shell: bash
         run: |
-          set -euo pipefail
-          python3 tools/g1_r35_callers.py --out "$RUNNER_TEMP/r35-callers" --cxx g++
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: g1-r35-callers
-          path: ${{ runner.temp }}/r35-callers/**
-          if-no-files-found: warn
+          echo '::error::R35 caller fixture is retired: real heap free exposes UAF. Use gpu-safety-r5-native.yml for R36 source-bound ASan and native diagnostics.'
+          exit 2

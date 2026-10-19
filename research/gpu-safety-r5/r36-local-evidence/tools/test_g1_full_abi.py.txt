@@ -1,0 +1,17 @@
+test_actual_clang_style_return_range_is_not_a_calling_convention_difference (test_g1_full_abi.FullAbiTests.test_actual_clang_style_return_range_is_not_a_calling_convention_difference) ... ok
+test_actual_final_link_command_rejects_swapped_missing_extra_or_failed_inputs (test_g1_full_abi.FullAbiTests.test_actual_final_link_command_rejects_swapped_missing_extra_or_failed_inputs) ... ok
+test_compile_log_requires_complete_unique_success (test_g1_full_abi.FullAbiTests.test_compile_log_requires_complete_unique_success) ... ok
+test_extension_calling_convention_and_width_are_preserved (test_g1_full_abi.FullAbiTests.test_extension_calling_convention_and_width_are_preserved) ... ok
+test_full_profiles_cannot_accidentally_compare_as_probe_profiles (test_g1_full_abi.FullAbiTests.test_full_profiles_cannot_accidentally_compare_as_probe_profiles) ... ok
+test_function_scope_is_exact_and_stack_asm_is_visible (test_g1_full_abi.FullAbiTests.test_function_scope_is_exact_and_stack_asm_is_visible) ... ok
+test_parameter_nesting_variadic_and_marker_identity (test_g1_full_abi.FullAbiTests.test_parameter_nesting_variadic_and_marker_identity) ... ok
+test_report_from_other_run_directory_is_rejected_before_read (test_g1_full_abi.FullAbiTests.test_report_from_other_run_directory_is_rejected_before_read) ... ok
+test_rm_recipe_binds_cwd_flags_source_object_log_and_no_probe_fallback (test_g1_full_abi.FullAbiTests.test_rm_recipe_binds_cwd_flags_source_object_log_and_no_probe_fallback) ... ok
+test_signature_mismatch_missing_profile_and_definition_rejected (test_g1_full_abi.FullAbiTests.test_signature_mismatch_missing_profile_and_definition_rejected) ... ok
+test_unknown_abi_types_or_attributes_never_silently_match (test_g1_full_abi.FullAbiTests.test_unknown_abi_types_or_attributes_never_silently_match) ... ok
+test_wrapper_uses_real_typeof_no_redeclared_function_or_flag (test_g1_full_abi.FullAbiTests.test_wrapper_uses_real_typeof_no_redeclared_function_or_flag) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.218s
+
+OK

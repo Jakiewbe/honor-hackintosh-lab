@@ -1,18 +1,13 @@
-# 网页端独立审查：R33实际原生验收与Device关闭边界
+# 网页端独立审查 prompt：R35真实失败与R36直接关闭结果
 
-只读审查 github.com/Jakiewbe/honor-hackintosh-lab，先固定本文所在完整commit，再读R33-OGKM-FINAL-ROUTE-20261019.md、ACCEPTANCE-MATRIX-20261018.md及r33-native-evidence/result.json。不得修改/提交、触发Actions、发送上游消息或操作设备。
+请只读审查 https://github.com/Jakiewbe/honor-hackintosh-lab ，固定本文所在完整commit。先读 R36-R35-AUDIT-TRY-FREE-20261019.md、r36-local-evidence/、ACCEPTANCE-MATRIX-20261018.md。目标为RTX2050初始化→真实GPU执行→正确像素读回→错误传播→安全结束，Intel保留基础显示；设备始终NO-GO。本审查不授权修改仓库、触发Actions、发送上游消息或操作设备。
 
-真实驱动源码固定7a5cb7188ef6477b7383f9529228bbb4426aa1fd；run39189188122、job117858001079、artifact12159721676，ZIP SHA256 bb358a648b789c07710395935d9cd55d8dfbaac0e79318491db2fd60d48b03f5。代码与后续验收文档分别固定；不要再沿用旧排队状态。
+核对R35 run39207578260/source393d00b5899c84b74309c2fd4ab16919b63f9271/artifact12166357598，ZIP a5552c7f240dbe55905824c9ae0a07436000edf2f3d1178615713e205ee7968d：1280尝试、1279成功、KAPI缺bFreeCompleted字段，未归档/未链接。不要再称artifact凭据阻塞或推断CHAIN导致本次编译失败。
 
-审查tools/g1_ogkm_candidate.py→g1_full_build.py→g1_ogkm_patch_route.py→g1_verify_r33_native.py。核对3871文件仅两源变化、补丁往返和编译后比较；1280官方C/C++ TU（1240C/40C++）、5shader及10 NVRM C++ TU的实际参数/快照/对象/完整ar/最终ARGV绑定；两项OGKM修复是否真被why_load拉入且最终定义存在。不得用探针对象代替官方完整参数对象，也不得用名称覆盖率代替loader/完整ABI。
+审查两份R36补丁、g1_ogkm_candidate.py、g1_full_build.py、g1_ogkm_patch_route.py、native_compile.py与正式native workflow。核对不改公开表布局；直接返回try-free结果，成功后无Device解引用；FREE_DEVICE及per-open拒绝保留Device/creator/句柄；drop/orphan两个真实调用者都消费结果，kapiInit不复用部分关闭孤儿。完整官方逐TU参数/cwd必须保留，R3→R36叠加的pre/post及正反重放逐步受约束；历史R33复算仍可用。独立probe的源不等于最终官方参数对象，不得混称。
 
-独立检查1954 ZIP/1953 publication成员、固定下载receipt/ZIP身份的信任边界；本地脚本不是GitHub再次认证。检查错误run/source/status/artifact/截短清单是否必须拒绝。精选文本不是1280日志全量；若要复跑从原始Actions artifact取得完整文本。检查12限定CPU/4负控与本次快照绑定、NISO3项仅成功路径、136布局/20形状仅选定ABI。
+检查g1_r36_try_free_contract.py是否实际提取固定三源完整函数、真实new/delete＋ASan，12场景是否能发现拒绝路径丢owner/重复free；IOKit/锁/NISO/RM/backend注入的局限是什么。检查g1_r36_controls.py将历史R35 free改成真实delete后确实因post-free查询触发ASan；不能据CPU负控宣称实机UAF。#error负控需无二进制、无场景执行；不能跑旧产物。旧R35工作流与工具须exit2并停止上传二进制；正式门禁必须只发布文本。
 
-三个安全FAIL保持：正常close eventBusy无界join；P0-4 KMS拒绝后仍RmFreeDevice/Device free；nv_xnu_pm_close忙后仍STANDBY。r33-followup-evidence/device-owner-refusal真实CPU反例编译0运行1，RM/Device各free1，不删内存，不能称观察到内核UAF。
+不要将R36当作全部P0-4解决：重点沿真实KmsFreeDevice检查callback静默是否早于NISO销毁，注销/解映射失败是否传播；legacy/allocate失败完整owner、回收、容量64、锁序、PM忙→STANDBY及无界join仍有何漏洞。为下一轮给出最小可实现的“入口先静默、拒绝保留owner、成功恰好一次”合同与反例，避免再增加只验证计数的模型。
 
-请沿固定真实FreeDevice/KmsFreeDevice、OS wrapper/event worker、framebuffer dropKapiDevice/finishOrphanedDevice/kapiInit/creator retain链，给最小可失败关闭方案。入口须先禁止新callback并处理在途引用；拒绝须在破坏性资源销毁前传播；保留完整Device和creator，不只保wrapper；关闭中不得复用gDev；覆盖allocate失败自毁、锁序与PM线程身份。不得直接改公开表ABI却假定旧消费者匹配。
-
-按P0/P1/P2给固定文件/行号、触发条件、后果、建议与证据局限，并回答RTX2050距离初始化/真实离屏GPU执行/正确像素/错误传播/安全结束还缺哪些实际步骤。GPU未运行、KEXT-LOAD NO-GO、Intel基础显示保持；不重复“公开源码到顶/只能上机”的旧结论。
-
-
-最新再读R34-DEVICE-CALLER-CONTRACT-20261019.md、tools/g1_fb_device_close_contract.py和r34-caller-evidence/。本次没有新驱动修复。核对fixture确实提取两个完整FB方法和真实OGKM/OS函数、source hash绑定R33原生报告；5正常路径PASS、2拒绝路径FAIL且整体exit1，拒绝后gDev/creator均丢失。NISO/RM/IOKit与锁为注入边界，free只计数，不是已观察内核UAF。初始未使用变量编译失败与最终#error负控都未执行旧产物。不要把“失败已复现”写成“安全门禁通过”。审查该文档的版本化内部try-close设计，特别是入口quiesce、每阶段失败保留owner、drop/orphan/再绑定/allocate失败整链，指出仍缺的所有权或锁序约束；给出可落地的最小实现，不能把尚未实施方案当完成。
+按P0/P1/P2列出固定commit文件/行号、触发条件、后果、建议和证据局限。若native结果尚未归档，明确原生未验收、导入数未知；若已有结果，逐项读文本而非只看总绿。最后用几句话回答真实驱动适配到了哪一层、离GPU闭环还缺什么，不以审计轮次代表加速完成度。

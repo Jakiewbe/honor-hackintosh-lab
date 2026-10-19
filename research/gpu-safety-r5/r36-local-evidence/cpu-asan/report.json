@@ -1,0 +1,95 @@
+{
+  "level": "REAL_SOURCE_BODIES_CPU_ASAN_NOT_KERNEL",
+  "source_sha256": {
+    "fb": "f5e0f84db0c321739d8477bf81af5c96943e7e748b11763fce2a65269fab56dd",
+    "os": "d9a8330d324cb90ad063603feb27206ef7fc0a13530924278b1e6f57a3ef8a1e",
+    "ogkm": "895de47ae03abc08d9a032f8f083db0be76aa5aa45317ebe37d7720a54c657cb"
+  },
+  "fixture_sha256": "ed9cdebfa588a2f86248e8abf6ce55a0926919f67737c1061b1416d5dbb650a1",
+  "binding": "LOCAL_FIXED_SOURCE_ONLY",
+  "native_report_sha256": null,
+  "compile_argv": [
+    "g++",
+    "-std=c++17",
+    "-O1",
+    "-g",
+    "-fsanitize=address",
+    "-fno-omit-frame-pointer",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-I/mnt/d/Hactk/g1-audit-fix-20261018/candidate-audit-r36-try-free/nm/kexts/NVRM",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/candidate-audit-r36-try-free/nm/kexts/NVRM/kms_deferred.cpp",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/r36-cpu-final/fixture.cpp",
+    "-o",
+    "/mnt/d/Hactk/g1-audit-fix-20261018/evidence/r36-cpu-final/fixture"
+  ],
+  "compile_exit": 0,
+  "binary_exists": true,
+  "scenarios": [
+    {
+      "name": "drop-success",
+      "exit": 0,
+      "output": "PASS drop-success\n"
+    },
+    {
+      "name": "orphan-success",
+      "exit": 0,
+      "output": "PASS orphan-success\n"
+    },
+    {
+      "name": "drop-other-user",
+      "exit": 0,
+      "output": "PASS drop-other-user\n"
+    },
+    {
+      "name": "orphan-other-users",
+      "exit": 0,
+      "output": "PASS orphan-other-users\n"
+    },
+    {
+      "name": "pin-refused",
+      "exit": 0,
+      "output": "PASS pin-refused\n"
+    },
+    {
+      "name": "drop-backend-refused",
+      "exit": 0,
+      "output": "PASS drop-backend-refused\n"
+    },
+    {
+      "name": "orphan-backend-refused",
+      "exit": 0,
+      "output": "PASS orphan-backend-refused\n"
+    },
+    {
+      "name": "drop-close-refused",
+      "exit": 0,
+      "output": "PASS drop-close-refused\n"
+    },
+    {
+      "name": "callback-active",
+      "exit": 0,
+      "output": "PASS callback-active\n"
+    },
+    {
+      "name": "callback-free-refused",
+      "exit": 0,
+      "output": "PASS callback-free-refused\n"
+    },
+    {
+      "name": "callback-retry",
+      "exit": 0,
+      "output": "PASS callback-retry\n"
+    },
+    {
+      "name": "null-device",
+      "exit": 0,
+      "output": "PASS null-device\n"
+    }
+  ],
+  "injections": "IOKit/locks, NISO, RM, backend and counters; Device heap allocation/free are real",
+  "status": "PASS_CPU_ASAN_ONLY",
+  "device": "NO-GO",
+  "gpu": "NOT_RUN"
+}

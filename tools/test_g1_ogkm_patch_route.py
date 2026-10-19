@@ -6,7 +6,7 @@ import tempfile
 import unittest
 import subprocess
 import sys
-from g1_ogkm_candidate import SPECS
+from g1_ogkm_candidate import SPECS, CHAIN, approved_specs
 from g1_ogkm_patch_route import check_candidate_route
 from g1_full_build import darwin_command
 
@@ -16,7 +16,7 @@ def log(path, argv, body=''):
 
 
 class RouteTests(unittest.TestCase):
-    def fixture(self, root):
+    def fixture(self, root, chain=False):
         out=root/'full-source'; out.mkdir()
         original=PurePosixPath('/runner/original'); candidate=PurePosixPath('/runner/candidate')
         runnerout=PurePosixPath('/runner/full-source')
@@ -24,8 +24,9 @@ class RouteTests(unittest.TestCase):
         full={'status':'COMPLETE_SOURCE_CANDIDATE_LINKED_NOT_CLOSURE_OR_ABI_ACCEPTED',
             'compiler_failures':0,'sdk':sdk,'objects':[],
             'ogkm_candidate':{'original_root':str(original),'candidate_root':str(candidate),
-                'patches':list(SPECS),'reverse_restores_original':True,'exact_two_source_delta':True}}
-        for index,s in enumerate(SPECS):
+                'patches':list(SPECS)+(list(CHAIN) if chain else []),'reverse_restores_original':True,'exact_two_source_delta':True}}
+        specs=approved_specs(full['ogkm_candidate']['patches'])
+        for index,s in enumerate(specs):
             obj=runnerout/('actual-'+str(index)+'.o'); source=candidate/s['source']
             official=['clang','-DOFFICIAL_TU_'+str(index)+'=1','-c',str(original/s['source']),'-o','old.o']
             argv=darwin_command(official,source,obj,sdk,PurePosixPath(sdk)/'System/Library/Frameworks/Kernel.framework/Headers')
@@ -42,16 +43,37 @@ class RouteTests(unittest.TestCase):
             '-isysroot',sdk,'-nostdlib','-Xlinker','-kext','-Wl,-why_load',archive,
             '-lkmodc++','-lkmod','-lcc_kext','-o',dest]
         body='\n'.join(s['defined_symbol']+' forced load of '+archive+'('+Path(r['object']).name+')'
-            for s,r in zip(SPECS,full['objects']))
+            for s,r in zip(specs,full['objects']))
         log(out/'full-nvrm-link.txt',link,body)
         log(out/'nvidia-modeset-archive.txt',['xcrun','ar','rcs',archive,*[r['object'] for r in full['objects']]])
         log(out/'full-nvrm-defined.txt',['xcrun','nm','-gU',dest],
-            '\n'.join('000000 T '+s['defined_symbol'] for s in SPECS))
+            '\n'.join('000000 T '+s['defined_symbol'] for s in specs))
         native={'objects':[{'unit':'NVKAPI','profile':'candidate','compile_exit':0,
             'source_sha256':SPECS[0]['candidate_sha256']}]}
         (root/'native-report.json').write_text(json.dumps(native))
         (out/'report.json').write_text(json.dumps(full))
         return native,full
+
+    def test_r36_chain_requires_final_source_and_definition(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d); native,full=self.fixture(root,chain=True)
+            result=check_candidate_route(root,native,full)
+            self.assertEqual(result['routes'][0]['final_definition'],'_nvKmsKapiTryFreeDevice')
+            mutations=[]
+            bad=copy.deepcopy(full);bad['ogkm_candidate']['patches']=list(SPECS);mutations.append(bad)
+            for key in ('pre_sha256','post_sha256','defined_symbol'):
+                bad=copy.deepcopy(full);bad['ogkm_candidate']['patches'][-1][key]='drift';mutations.append(bad)
+            bad=copy.deepcopy(full);bad['objects'][0]['source_sha256']=SPECS[0]['candidate_sha256'];mutations.append(bad)
+            bad=copy.deepcopy(full);bad['objects'][0]['candidate_patch']=SPECS[0];mutations.append(bad)
+            for bad in mutations:
+                with self.assertRaises(ValueError):check_candidate_route(root,native,bad)
+            for name,old,new in [('full-nvrm-defined.txt','_nvKmsKapiTryFreeDevice','_wrong'),
+                    ('full-nvrm-link.txt','actual-0.o','missing.o'),
+                    ('nvidia-modeset-archive.txt','actual-0.o','probe.o')]:
+                p=root/'full-source'/name;good=p.read_text();p.write_text(good.replace(old,new))
+                try:
+                    with self.assertRaises(ValueError):check_candidate_route(root,native,full)
+                finally:p.write_text(good)
 
     def test_rejects_wrong_source_probe_flags_cwd_and_failed_compilation(self):
         with tempfile.TemporaryDirectory() as d:

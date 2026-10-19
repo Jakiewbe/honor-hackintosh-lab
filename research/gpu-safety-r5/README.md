@@ -1,16 +1,4 @@
-> **2026-10-18 KC8实际进展：** P1/P2门禁修复已在[run39133232412](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39133232412)通过，真实失败注入exit2且报告保留、外部身份跨run替换被拒。[KC最终run39134085153](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39134085153)观察到余下8项runner真实外部节定义（6函数+2数据），58项文本交叉核对；SDK六方法真实编译，5项与历史调用IR形状一致，write8调用侧仍未知。**未重新编完整驱动；472名称已有实际定义观察，不等于loader导出/完整ABI/最终用户系统通过；GPU初始化/渲染/读回/安全结束未执行，设备NO-GO。** 下一步定位write8实际TU/对象做单TU诊断，再补family loader/版本/提供侧ABI与PM关闭集成；不重复1280TU或本轮八符号首次取证。[结果](KC8-20261018.md)｜[网页端审查prompt](KC8-WEB-PROMPT.md)。
-
-> **2026-10-18 目标提供者新证据：** [run 39130439405](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39130439405) 只读取证成功；在runner macOS15.7.9/24G830内核中，464项有精确KPI条目且实际目标全局存在，14个别名目标已核对；其余8项仅有IOPCIFamily/IOACPIFamily随系统导出名单。完整候选仍是上轮固定字节，本轮未重新编译驱动。**8项实际二进制/C++ABI、完整ABI、最终用户系统、GPU初始化/渲染/读回/关闭仍未验收；设备NO-GO。** 下一步只读检查KC中的这8项，不重复1280TU构建。[报告](TARGET-PROVIDERS-20261018.md)｜[网页端prompt](TARGET-PROVIDERS-WEB-PROMPT.md)。
-
-> **2026-10-18 ABI输入绑定实测：** [run 39127772586](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39127772586) 在源码 `c670c55` 上成功。11个NVRM基线与3个RM对象的传递依赖快照、六profile诊断前后校验、真实链接ARGV核对通过；真实clang的头文件i64→i32漂移反例被拒，编译失败负控无对象/快照、未执行；Darwin工具80项通过。完整构建/候选链接及136布局/20接口形状重新通过。**仅P1/P2选定证据绑定闭环；完整ABI、472目标导出、GPU初始化/渲染/读回仍未验收，设备NO-GO。** [报告](ABI-INPUT-BINDING-20261018.md)｜[网页端prompt](ABI-INPUT-BINDING-WEB-PROMPT.md)。
-
-> **2026-10-18 完整参数 ABI 实测：** [run 39122635883](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39122635883) 在源码 `0308ed4` 上成功。三个完整官方RM逐TU命令与三个已链接NVRM C++ TU的 136 项选定布局值、20个接口LLVM ABI形状一致，六profile均未定义altstack，20个提供侧定义未观察到直接栈寄存器内联汇编。1280 C TU、5 shader与独立Darwin后端、完整候选链接再次通过。**只关闭这组选定合同，完整ABI及472个目标导出未验收；初始化/渲染/像素读回未执行，设备NO-GO。** [报告](FULL-FLAGS-ABI-20261018.md)｜[网页端prompt](FULL-FLAGS-ABI-WEB-PROMPT.md)。
-
-> **2026-10-18 NVLink 实际结果：** [run 39118504329](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39118504329) 在源码 `0dcc527` 上真实通过。四个真实 Darwin semaphore 接口已编译并进入完整 NVRM 重建候选，同 run 无/有后端对照精确消除四个 NVLink 导入，新增 `_panic` 已登记；仍有 472 个目标导出/ABI 未验收导入。CPU 合同17/17及编译失败负控通过；1280 C TU、5 shader 与独立后端对象、完整归档及候选链接通过。**GPU初始化、渲染、像素读回未执行，设备NO-GO。** 下一步用完整官方逐TU参数核对共享ABI与目标导出，不再重复解决这四个链接缺口。[报告](NVLINK-DARWIN-LOCKS-20261018.md)｜[网页端审查prompt](NVLINK-WEB-REVIEW-PROMPT.md)。
-
-> **2026-10-18 实际构建进展：** [run 39116405484](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39116405484) 已成功执行源码提交 `30485ae`：全部1,280个C TU和5个shader对象通过，RM/modeset完整归档及NVRM重建候选已链接。先前九项UNKNOWN均在最终nm中观察到定义；仍有四个已知NVLink锁内部导入，其余471个目标导出/ABI未验收。六个旧profile选定布局一致不覆盖本轮完整逐TU参数。**初始化、GPU渲染、像素读回均未执行，驱动尚不可交付，设备NO-GO。** 下一步是四个真实Darwin锁接口、完整参数ABI与目标导出核验。[结果与证据](FULL-SOURCE-BUILD-20261018.md)｜[网页端只读复核prompt](FULL-SOURCE-WEB-REVIEW-PROMPT.md)。
-
-> **2026-10-18 R80 符号身份与来源：** 修正 Mach-O 转 C 名称时删光下划线的问题；九项 UNKNOWN 已逐项定位为六项数据、一项函数、一项宏数据及一项生成配方候选。已接入本轮显式对象哈希/精确导出取证，47项工具测试及三组历史回归通过。新 Darwin/对象提供者/链接/ABI 尚未运行，完整闭包与设备仍 NO-GO。[报告](R80-SYMBOL-IDENTITY-AND-SOURCES-20261018.md)｜[网页端复核 prompt](R80-WEB-REVIEW-PROMPT.md)。
+> **2026-10-19 R36 当前断点：R35 原生失败定位为 KAPI 缺字段（1279/1280），且 free 后查询被真实heap＋ASan负控证伪；旧夹具验收入口已退役。R36直接返回关闭结果，12/12本地ASan、40工具检查、三组10＋5＋7回归、完整补丁往返通过；新Darwin/链接尚未运行，导入数未知。callback静默先于NISO销毁、NISO错误传播、legacy/allocate owner、normal busy join与RM busy→STANDBY仍OPEN，GPU未运行、设备NO-GO。** [审计与下一断点](R36-R35-AUDIT-TRY-FREE-20261019.md)。
 
 > **2026-10-18 R79 审计纠错：** 已撤回“45个符号闭源”与“351→667证明增量闭包不收敛”；索引及同基线显式链接清单已修。固定346符号新扫描为337个词法候选、9个UNKNOWN，尚非对象闭包。27项工具测试和三组历史回归通过；加入六TU选定ABI布局诊断与严格文本发布。新Darwin/链接/ABI尚未执行。见 [本轮报告](R79-AUDIT-CLOSURE-GATE-20261018.md)。完整闭包与实机继续NO-GO。
 

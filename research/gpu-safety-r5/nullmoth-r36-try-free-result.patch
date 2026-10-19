@@ -1,0 +1,100 @@
+--- a/kexts/NVRM/os-nvkms-xnu.cpp
++++ b/kexts/NVRM/os-nvkms-xnu.cpp
+@@ -234,6 +234,40 @@
+     IOLockUnlock(gKmsLock);
+ }
+ 
++// Internal result API for the complete KAPI Device owner. Failure never queues
++// or frees popen: the caller retains Device, popen and creator for an explicit retry.
++// The caller holds a PM pin through every KMS/RM release. No callback join here.
++extern "C" NvBool nvkms_xnu_try_close_kapi(struct nvkms_per_open *popen)
++{
++    if (!popen) return NV_TRUE;
++    if (!gKmsLock) return NV_FALSE;
++    IOLockLock(gKmsLock);
++    if (popen->closing || !kms_pm_wait_locked(true, 0)) {
++        IOLockUnlock(gKmsLock);
++        return NV_FALSE;
++    }
++    if (popen->eventCall && popen->eventBusy) {
++        if (thread_call_cancel(popen->eventCall)) popen->eventBusy = false;
++        if (popen->eventBusy) {
++            IOLockUnlock(gKmsLock);
++            return NV_FALSE;
++        }
++    }
++    if (popen->eventCall && !thread_call_free(popen->eventCall)) {
++        IOLockUnlock(gKmsLock);
++        return NV_FALSE;
++    }
++    popen->eventCall = NULL;
++    popen->closing = true;
++    popen->eventWanted = false;
++    if (popen->data) nvKmsClose(popen->data);
++    popen->data = NULL;
++    popen->device = NULL;
++    nvkms_free(popen, sizeof *popen);
++    IOLockUnlock(gKmsLock);
++    return NV_TRUE;
++}
++
+ static NvBool kms_ioctl_common(struct nvkms_per_open *popen, NvU32 cmd, NvU64 address, size_t size, bool tryPm = false)
+ {
+     NvBool ret = NV_FALSE;
+--- a/kexts/NVRMFB/fb/nvrm-fb.cpp
++++ b/kexts/NVRMFB/fb/nvrm-fb.cpp
+@@ -699,7 +699,8 @@
+ // Pin hold: guarantees suspend cannot run between the check and the release/free pair.
+ extern "C" NvBool nvkms_xnu_pm_pin(void);
+ extern "C" void nvkms_xnu_pm_unpin(void);
+-extern "C" void nvkms_xnu_kms_close_deferred_count(uint32_t *total, uint32_t *lost);
++// Explicit internal result; never inspect a Device after a successful free.
++extern "C" NvBool nvKmsKapiTryFreeDevice(struct NvKmsKapiDevice *device);
+ void NVRMNVDAFramebuffer::dropKapiDevice()
+ {
+     // gDev, gDevUsers, gDevOrphaned and gHeadsTaken are shared by every framebuffer instance and are
+@@ -746,15 +747,13 @@
+         nvkms_xnu_pm_unpin();
+         return;
+     }
+-    uint32_t deferredBefore = 0, lostBefore = 0, deferredAfter = 0, lostAfter = 0;
+-    nvkms_xnu_kms_close_deferred_count(&deferredBefore, &lostBefore);
+-    fKms->freeDevice(fDev);
+-    nvkms_xnu_kms_close_deferred_count(&deferredAfter, &lostAfter);
+-    if (deferredAfter != deferredBefore)
+-        FBLOG("device 0x%llx: freeDevice returned but NVKMS refused the close (%u new deferral(s), %u from LOST)"
+-              " -- RM state may be split; the void interface cannot report this upward",
+-              (unsigned long long)(uintptr_t)fDev, (unsigned)(deferredAfter - deferredBefore),
+-              (unsigned)(lostAfter - lostBefore));
++    if (!nvKmsKapiTryFreeDevice(fDev)) {
++        gDevOrphaned = true;
++        fDev = nullptr;
++        nvkms_xnu_pm_unpin();
++        FBLOG("shared Device close incomplete -- Device and creator retained for retry");
++        return;
++    }
+     if (gDev == fDev) gDev = nullptr;
+     fDev = nullptr;
+     gDevOrphaned = false;
+@@ -792,7 +791,11 @@
+         return;
+     }
+     while (gOrphanGrabs > 0) { fKms->releaseOwnership(gDev); gOrphanGrabs--; }
+-    fKms->freeDevice(gDev);
++    if (!nvKmsKapiTryFreeDevice(gDev)) {
++        nvkms_xnu_pm_unpin();
++        FBLOG("orphan close incomplete -- Device and creator retained for retry");
++        return;
++    }
+     gDev = nullptr;
+     gDevOrphaned = false;
+     nvkms_xnu_pm_unpin();
+@@ -803,6 +806,8 @@
+ bool NVRMNVDAFramebuffer::kapiInit()
+ {
+     finishOrphanedDevice();   // a previous stop may have left the shared device behind
++    // No new user may bind a Device whose destructive close started but did not finish.
++    if (gDev && gDevOrphaned && gDevUsers == 0) return false;
+     struct NvKmsKapiAllocateDeviceParams ap = {}; ap.gpuId = fGpuId; ap.privateData = this; ap.eventCallback = eventCallback;
+     KapiRollback rollback = { this, true };
+     if (gDev) {

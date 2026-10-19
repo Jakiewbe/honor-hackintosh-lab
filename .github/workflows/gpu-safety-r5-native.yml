@@ -185,6 +185,19 @@ jobs:
             --out "$RUNNER_TEMP/gpu-safety-r5-logs/full-source" --jobs 2 \
             2>&1 | tee "$RUNNER_TEMP/gpu-safety-r5-logs/full-source-console.txt"
 
+      - name: Test actual R36 Device frees with ASan and reject unsafe historical control (CPU only)
+        if: ${{ !cancelled() && steps.full_source.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          logs="$RUNNER_TEMP/gpu-safety-r5-logs"
+          candidate="$RUNNER_TEMP/nullmoth-v2.3.3-gpu-safety-r5-candidate"
+          kapi="$RUNNER_TEMP/ogkm-e4a5faa-r33-full-source-candidate/src/nvidia-modeset/kapi/src/nvkms-kapi.c"
+          python3 tools/g1_r36_try_free_contract.py --candidate "$candidate" --ogkm-kapi "$kapi" \
+            --native-report "$logs/native-report.json" --out "$logs/r36-try-free-host" --cxx clang++
+          python3 tools/g1_r36_controls.py --candidate "$candidate" --ogkm-kapi "$kapi" \
+            --out "$logs/r36-controls" --cxx clang++
+
       - name: Require patched OGKM sources in official-flag archives and actual final link
         if: ${{ !cancelled() && steps.full_source.outcome == 'success' }}
         shell: bash

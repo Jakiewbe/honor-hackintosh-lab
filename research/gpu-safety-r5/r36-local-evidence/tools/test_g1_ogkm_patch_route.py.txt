@@ -1,0 +1,9 @@
+test_missing_manifest_never_accepts_matching_probe_source (test_g1_ogkm_patch_route.RouteTests.test_missing_manifest_never_accepts_matching_probe_source) ... ok
+test_r36_chain_requires_final_source_and_definition (test_g1_ogkm_patch_route.RouteTests.test_r36_chain_requires_final_source_and_definition) ... ok
+test_rejects_missing_archive_load_definition_and_changed_link (test_g1_ogkm_patch_route.RouteTests.test_rejects_missing_archive_load_definition_and_changed_link) ... ok
+test_rejects_wrong_source_probe_flags_cwd_and_failed_compilation (test_g1_ogkm_patch_route.RouteTests.test_rejects_wrong_source_probe_flags_cwd_and_failed_compilation) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.427s
+
+OK

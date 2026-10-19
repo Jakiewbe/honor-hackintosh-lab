@@ -11,7 +11,7 @@ from pathlib import Path, PurePosixPath
 import posixpath
 from g1_full_abi import successful_argv
 from g1_full_build import darwin_command, read_defined_log
-from g1_ogkm_candidate import SPECS
+from g1_ogkm_candidate import SPECS, approved_specs
 
 
 def read(p): return json.loads(p.read_text(encoding='utf-8'))
@@ -20,8 +20,8 @@ def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
 
 def check_candidate_route(src, native, full):
     manifest = full['ogkm_candidate']
-    if (manifest['patches'] != list(SPECS) or not manifest['reverse_restores_original'] or
-            not manifest['exact_two_source_delta']):
+    specs = approved_specs(manifest['patches'])
+    if (not manifest['reverse_restores_original'] or not manifest['exact_two_source_delta']):
         raise ValueError('exact approved OGKM candidate manifest required')
     if (full['status'] != 'COMPLETE_SOURCE_CANDIDATE_LINKED_NOT_CLOSURE_OR_ABI_ACCEPTED' or
             full['link']['exit'] or full['compiler_failures']):
@@ -49,7 +49,7 @@ def check_candidate_route(src, native, full):
     if ar != ['xcrun','ar','rcs',archive,*[r['object'] for r in kms]]:
         raise ValueError('archive ARGV differs from exact full-flag object inventory')
     rows = []
-    for spec in SPECS:
+    for spec in specs:
         row, = [r for r in kms if r['source']==spec['source']]
         actual = str(PurePosixPath(manifest['candidate_root'])/spec['source'])
         original = PurePosixPath(manifest['original_root'])/spec['source']

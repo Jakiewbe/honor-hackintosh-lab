@@ -1,0 +1,101 @@
+{
+  "schema": "honor.g1.ogkm-candidate.v1",
+  "candidate_root": "D:\\Hactk\\g1-audit-fix-20261018\\candidate-audit-r36-official-route",
+  "original_root": "D:\\Hactk\\g1-dev-20261015\\upstream\\open-gpu-kernel-modules",
+  "files": 3871,
+  "patches": [
+    {
+      "patch": "ogkm-r3-kapi-null-free.patch",
+      "patch_sha256": "75a98868e878c00fc63698cfa04a2309777ed341cf0178a94c4dd5658570a3d5",
+      "source": "src/nvidia-modeset/kapi/src/nvkms-kapi.c",
+      "original_sha256": "66437bc38d96d3b4f15546c3e6f7a8c0caccc158b35893c2406f80f2e6e8816b",
+      "candidate_sha256": "7e5492e0a0961e45ea75f664d2a16c49c66d728b93b8e3e87dca3ae9ebe38200",
+      "defined_symbol": "_nvKmsKapiGetFunctionsTableInternal"
+    },
+    {
+      "patch": "ogkm-niso-surface-owner.patch",
+      "patch_sha256": "e6f4293d09e6d24414a4cd1faba90be2a88ad8dc9f5b15817ab548ac207fb508",
+      "source": "src/nvidia-modeset/kapi/src/nvkms-kapi-notifiers.c",
+      "original_sha256": "78d310ca74ab282beec5c18d2c208ab4862d1344566f3db088017c9fe972c641",
+      "candidate_sha256": "527df580bab9c6c0226edfdcaf3663dc2ed9d42c2151bfbf7efbc80f586c098c",
+      "defined_symbol": "_nvKmsKapiFreeNisoSurface"
+    },
+    {
+      "patch": "ogkm-r36-try-free-result.patch",
+      "patch_sha256": "0bb0bb2650b483e1002e7a5976e94f02fee1542b7d2cab20dfebe6872a753ead",
+      "source": "src/nvidia-modeset/kapi/src/nvkms-kapi.c",
+      "pre_sha256": "7e5492e0a0961e45ea75f664d2a16c49c66d728b93b8e3e87dca3ae9ebe38200",
+      "post_sha256": "895de47ae03abc08d9a032f8f083db0be76aa5aa45317ebe37d7720a54c657cb",
+      "defined_symbol": "_nvKmsKapiTryFreeDevice"
+    }
+  ],
+  "original_tree_sha256": "66276173d370220c6f1ff8b140727b18291ccefcb3dc11b58ed47136ae9a22a7",
+  "candidate_tree_sha256": "7dc645d37242e7d4d1c843be688e8a498ff98ec9a5591548c14471e7bc5c5eb8",
+  "reverse_restores_original": true,
+  "exact_two_source_delta": true,
+  "patch_steps": [
+    {
+      "stage": "forward",
+      "patch": "ogkm-r3-kapi-null-free.patch",
+      "reverse": false,
+      "before_sha256": "66437bc38d96d3b4f15546c3e6f7a8c0caccc158b35893c2406f80f2e6e8816b",
+      "after_sha256": "7e5492e0a0961e45ea75f664d2a16c49c66d728b93b8e3e87dca3ae9ebe38200"
+    },
+    {
+      "stage": "forward",
+      "patch": "ogkm-niso-surface-owner.patch",
+      "reverse": false,
+      "before_sha256": "78d310ca74ab282beec5c18d2c208ab4862d1344566f3db088017c9fe972c641",
+      "after_sha256": "527df580bab9c6c0226edfdcaf3663dc2ed9d42c2151bfbf7efbc80f586c098c"
+    },
+    {
+      "stage": "chain-forward",
+      "patch": "ogkm-r36-try-free-result.patch",
+      "reverse": false,
+      "before_sha256": "7e5492e0a0961e45ea75f664d2a16c49c66d728b93b8e3e87dca3ae9ebe38200",
+      "after_sha256": "895de47ae03abc08d9a032f8f083db0be76aa5aa45317ebe37d7720a54c657cb"
+    },
+    {
+      "stage": "chain-reverse",
+      "patch": "ogkm-r36-try-free-result.patch",
+      "reverse": true,
+      "before_sha256": "895de47ae03abc08d9a032f8f083db0be76aa5aa45317ebe37d7720a54c657cb",
+      "after_sha256": "7e5492e0a0961e45ea75f664d2a16c49c66d728b93b8e3e87dca3ae9ebe38200"
+    },
+    {
+      "stage": "reverse",
+      "patch": "ogkm-niso-surface-owner.patch",
+      "reverse": true,
+      "before_sha256": "527df580bab9c6c0226edfdcaf3663dc2ed9d42c2151bfbf7efbc80f586c098c",
+      "after_sha256": "78d310ca74ab282beec5c18d2c208ab4862d1344566f3db088017c9fe972c641"
+    },
+    {
+      "stage": "reverse",
+      "patch": "ogkm-r3-kapi-null-free.patch",
+      "reverse": true,
+      "before_sha256": "7e5492e0a0961e45ea75f664d2a16c49c66d728b93b8e3e87dca3ae9ebe38200",
+      "after_sha256": "66437bc38d96d3b4f15546c3e6f7a8c0caccc158b35893c2406f80f2e6e8816b"
+    },
+    {
+      "stage": "reapply",
+      "patch": "ogkm-r3-kapi-null-free.patch",
+      "reverse": false,
+      "before_sha256": "66437bc38d96d3b4f15546c3e6f7a8c0caccc158b35893c2406f80f2e6e8816b",
+      "after_sha256": "7e5492e0a0961e45ea75f664d2a16c49c66d728b93b8e3e87dca3ae9ebe38200"
+    },
+    {
+      "stage": "reapply",
+      "patch": "ogkm-niso-surface-owner.patch",
+      "reverse": false,
+      "before_sha256": "78d310ca74ab282beec5c18d2c208ab4862d1344566f3db088017c9fe972c641",
+      "after_sha256": "527df580bab9c6c0226edfdcaf3663dc2ed9d42c2151bfbf7efbc80f586c098c"
+    },
+    {
+      "stage": "chain-reapply",
+      "patch": "ogkm-r36-try-free-result.patch",
+      "reverse": false,
+      "before_sha256": "7e5492e0a0961e45ea75f664d2a16c49c66d728b93b8e3e87dca3ae9ebe38200",
+      "after_sha256": "895de47ae03abc08d9a032f8f083db0be76aa5aa45317ebe37d7720a54c657cb"
+    }
+  ]
+}

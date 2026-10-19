@@ -1,0 +1,8 @@
+test_exact_patch_delta_accepts_only_expected_bytes (test_g1_ogkm_candidate.CandidateTests.test_exact_patch_delta_accepts_only_expected_bytes) ... ok
+test_pinned_chain_folds_final_source_and_rejects_drift (test_g1_ogkm_candidate.CandidateTests.test_pinned_chain_folds_final_source_and_rejects_drift) ... ok
+test_tree_digest_is_order_independent_but_binds_names_and_bytes (test_g1_ogkm_candidate.CandidateTests.test_tree_digest_is_order_independent_but_binds_names_and_bytes) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.001s
+
+OK

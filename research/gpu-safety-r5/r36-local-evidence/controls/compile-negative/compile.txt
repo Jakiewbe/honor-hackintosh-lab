@@ -1,0 +1,3 @@
+/mnt/d/Hactk/g1-audit-fix-20261018/evidence/r36-controls/compile-negative/fixture.cpp:701:2: error: #error COMPILE_NEGATIVE_CONTROL
+  701 | #error COMPILE_NEGATIVE_CONTROL
+      |  ^~~~~
