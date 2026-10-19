@@ -13,7 +13,7 @@ class CandidateTests(unittest.TestCase):
         # The fold reports the final state of the source, so it must match the LAST chained patch, not the
         # first one: R38 stacks on R36 for the same file.
         self.assertEqual(folded[0]['candidate_sha256'], CHAIN[-1]['post_sha256'])
-        self.assertEqual(folded[0]['defined_symbol'], '_nvKmsKapiTryFreeDevice')
+        self.assertEqual(folded[0]['defined_symbol'], CHAIN[-1]['defined_symbol'])
         for field in ('pre_sha256', 'post_sha256', 'patch_sha256', 'defined_symbol'):
             bad = copy.deepcopy(good); bad[-1][field] = 'unreviewed'
             with self.subTest(field=field), self.assertRaises(ValueError):

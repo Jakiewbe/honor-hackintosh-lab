@@ -58,7 +58,7 @@ class RouteTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d); native,full=self.fixture(root,chain=True)
             result=check_candidate_route(root,native,full)
-            self.assertEqual(result['routes'][0]['final_definition'],'_nvKmsKapiTryFreeDevice')
+            self.assertEqual(result['routes'][0]['final_definition'], CHAIN[-1]['defined_symbol'])
             mutations=[]
             bad=copy.deepcopy(full);bad['ogkm_candidate']['patches']=list(SPECS);mutations.append(bad)
             for key in ('pre_sha256','post_sha256','defined_symbol'):
@@ -67,7 +67,7 @@ class RouteTests(unittest.TestCase):
             bad=copy.deepcopy(full);bad['objects'][0]['candidate_patch']=SPECS[0];mutations.append(bad)
             for bad in mutations:
                 with self.assertRaises(ValueError):check_candidate_route(root,native,bad)
-            for name,old,new in [('full-nvrm-defined.txt','_nvKmsKapiTryFreeDevice','_wrong'),
+            for name,old,new in [('full-nvrm-defined.txt', CHAIN[-1]['defined_symbol'], '_wrong'),
                     ('full-nvrm-link.txt','actual-0.o','missing.o'),
                     ('nvidia-modeset-archive.txt','actual-0.o','probe.o')]:
                 p=root/'full-source'/name;good=p.read_text();p.write_text(good.replace(old,new))
