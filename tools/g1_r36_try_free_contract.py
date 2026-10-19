@@ -155,7 +155,15 @@ def main():
             report['scenarios'].append({'name':name,'exit':r.returncode,'output':output})
         report['status']='PASS_CPU_ASAN_ONLY' if all(r['exit']==0 for r in report['scenarios']) else 'CONTRACT_FAIL'
     (a.out/'report.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
-    print(json.dumps(report));return 0 if report['status']=='PASS_CPU_ASAN_ONLY' else 1
+    print(json.dumps(report))
+    if report["status"]!="PASS_CPU_ASAN_ONLY":
+        bad=[s for s in report["scenarios"] if s["exit"]]
+        for s in bad[:4]:
+            line=(s["output"].strip().splitlines() or ["(no output)"])[-1]
+            print("::error::R36_SCENARIO "+s["name"]+": "+line[:240], flush=True)
+        if not bad:
+            print("::error::R36_COMPILE exit="+str(report["compile_exit"]), flush=True)
+    return 0 if report["status"]=="PASS_CPU_ASAN_ONLY" else 1
 
 if __name__=='__main__':
     try:
