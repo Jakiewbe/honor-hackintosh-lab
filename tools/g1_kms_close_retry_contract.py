@@ -50,7 +50,17 @@ static void require(bool ok, const char *message) { if (!ok) throw std::runtime_
 static void IOLockLock(IOLock *) { require(lock_depth == 0, "recursive KMS lock"); ++lock_depth; }
 static void IOLockUnlock(IOLock *) { require(lock_depth == 1, "unlock without lock"); --lock_depth; }
 static int IOLockSleep(IOLock *, void *, int) { ++sleeps; throw std::runtime_error("unbounded callback sleep"); }
-static int IOLockSleepDeadline(IOLock *, void *, uint64_t, int) { ++deadline_sleeps; return THREAD_TIMED_OUT; }
+// The scenario installs a hook to model the event call finishing while the closer waits. The hook takes
+// void* because the per-open type is defined later in the generated fixture.
+static void (*on_deadline_wait)(void *);
+static int IOLockSleepDeadline(IOLock *, void *event, uint64_t, int) {
+    ++deadline_sleeps;
+    if (on_deadline_wait) {
+        on_deadline_wait(event);
+        return 0;   // THREAD_AWOKEN
+    }
+    return THREAD_TIMED_OUT;
+}
 static void IOLockWakeup(IOLock *, void *, bool) { require(lock_depth == 1, "wakeup outside lock"); }
 static void clock_interval_to_deadline(uint32_t ms, int, uint64_t *out) { *out = ms; }
 static bool thread_call_cancel(thread_call_t) { require(lock_depth == 1, "cancel outside lock"); return cancel_ok; }
@@ -125,6 +135,14 @@ int main(int argc, char **argv) {
             kms_kapi_event_fire(&node, nullptr);
             require(event_runs == 0 && !node.eventBusy, "closing event invoked KAPI/rearmed");
             tick(); complete();
+        } else if (std::strcmp(name, "join-completes") == 0) {
+            // The callback is still running when the close starts and finishes during the bounded wait.
+            node.eventBusy = true;
+            on_deadline_wait = [](void *event) { static_cast<struct nvkms_per_open *>(event)->eventBusy = false; };
+            kms_close_common(&node);
+            on_deadline_wait = nullptr;
+            require(backend_closes == 1 && wrapper_frees == 1 && sleeps == 0 && deadline_sleeps >= 1,
+                    "close did not complete once the callback finished during the wait");
         } else if (std::strcmp(name, "cancel-pending") == 0) {
             node.eventBusy = true; cancel_ok = true;
             kms_close_common(&node); complete();
@@ -191,7 +209,8 @@ NAMES = [
 ]
 SCENARIOS = ('suspended-retain', 'deferred-recover', 'normal-free-failure', 'stalled-callback',
              'cancel-pending', 'pending-abort', 'lost-no-retry',
-             'repeat-close', 'counter-isolation', 'gate-before-reap', 'worker-unavailable', 'stable-deadline')
+             'repeat-close', 'counter-isolation', 'gate-before-reap', 'worker-unavailable', 'stable-deadline',
+             'join-completes')
 
 
 def sha(path): return hashlib.sha256(path.read_bytes()).hexdigest()
