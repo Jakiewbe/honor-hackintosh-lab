@@ -1,0 +1,62 @@
+--- a/src/nvidia-modeset/kapi/src/nvkms-kapi.c
++++ b/src/nvidia-modeset/kapi/src/nvkms-kapi.c
+@@ -419,23 +419,27 @@
+ /*
+  * Helper function to free NVKMS objects allocated for NvKmsKapiDevice.
+  */
+-static void KmsFreeDevice(struct NvKmsKapiDevice *device)
++static NvBool KmsFreeDevice(struct NvKmsKapiDevice *device)
+ {
+     /* Free notifier and semaphore memory */
+ 
+     nvKmsKapiFreeNisoSurface(device, &device->semaphore);
+     nvKmsKapiFreeNisoSurface(device, &device->notifier);
+ 
+-    /* Free NVKMS device */
++    /* Free NVKMS device. The ioctl result is the only evidence that NVKMS released the handle: on
++     * failure the handle and the per-open must stay alive, and the caller must not proceed to the
++     * irreversible RM/GPU teardown. */
+ 
+     if (device->hKmsDevice != 0x0)  {
+         struct NvKmsFreeDeviceParams paramsFree = { };
+ 
+         paramsFree.request.deviceHandle = device->hKmsDevice;
+ 
+-        nvkms_ioctl_from_kapi(device->pKmsOpen,
+-                              NVKMS_IOCTL_FREE_DEVICE,
+-                              &paramsFree, sizeof(paramsFree));
++        if (!nvkms_ioctl_from_kapi(device->pKmsOpen,
++                                   NVKMS_IOCTL_FREE_DEVICE,
++                                   &paramsFree, sizeof(paramsFree))) {
++            return NV_FALSE;
++        }
+ 
+         device->hKmsDevice = device->hKmsDisp = 0x0;
+     }
+@@ -446,6 +450,8 @@
+         nvkms_close_from_kapi(device->pKmsOpen);
+         device->pKmsOpen = NULL;
+     }
++
++    return NV_TRUE;
+ }
+ 
+ /*
+@@ -624,9 +630,14 @@
+ 
+ static void FreeDevice(struct NvKmsKapiDevice *device)
+ {
+-    /* Free NVKMS objects allocated for NvKmsKapiDevice */
+-
+-    KmsFreeDevice(device);
++    /* Free NVKMS objects allocated for NvKmsKapiDevice. A refusal is not a completed free: keep RM,
++     * the GPU reference, the semaphore and the device allocation so a later attempt can finish, and
++     * leave the device allocated so its owner can observe that the close did not happen. */
++
++    if (!KmsFreeDevice(device)) {
++        nvKmsKapiLogDeviceDebug(device, "NVKMS refused FREE_DEVICE; device retained\n");
++        return;
++    }
+ 
+     /* Free RM objects allocated for NvKmsKapiDevice */
+ 
