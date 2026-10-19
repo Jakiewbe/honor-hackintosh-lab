@@ -19,7 +19,9 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-FIXTURE = ROOT / "research/gpu-safety-r5/r35-caller-evidence/fixture.cpp"
+DIR = ROOT / "research/gpu-safety-r5/r35-caller-evidence"
+FIXTURE = DIR / "fixture.cpp"
+UNIT = DIR / "kms_deferred.cpp"   # R30 deferral unit, embedded by the fixture's os-nvkms-xnu bodies
 SCENARIOS = ["drop-success", "drop-other-user", "drop-backend-refused",
              "orphan-success", "orphan-other-users", "orphan-backend-refused",
              "pin-refused"]
@@ -35,7 +37,8 @@ def main():
     exe = out / "r35_callers"
     log = out / "compile.txt"
 
-    cmd = [a.cxx, "-std=c++17", "-O1", "-Wall", str(FIXTURE), "-o", str(exe)]
+    cmd = [a.cxx, "-std=c++17", "-O1", "-Wall", "-I", str(DIR), str(FIXTURE), str(UNIT),
+           "-o", str(exe)]
     print("compile:", " ".join(cmd))
     cp = subprocess.run(cmd, capture_output=True, text=True)
     log.write_text("ARGV=" + repr(cmd) + "\n" + cp.stdout + cp.stderr, encoding="utf-8")
@@ -59,8 +62,8 @@ def main():
             failures.append(scenario)
             print((run.stdout + run.stderr).strip()[-400:])
 
-    neg = subprocess.run([a.cxx, "-std=c++17", "-DCOMPILE_NEGATIVE_CONTROL", str(FIXTURE),
-                          "-o", str(out / "negative")], capture_output=True, text=True)
+    neg = subprocess.run([a.cxx, "-std=c++17", "-DCOMPILE_NEGATIVE_CONTROL", "-I", str(DIR), str(FIXTURE),
+                          str(UNIT), "-o", str(out / "negative")], capture_output=True, text=True)
     (out / "compile-negative.txt").write_text(neg.stdout + neg.stderr, encoding="utf-8")
     if neg.returncode == 0:
         print("NEGATIVE_CONTROL_UNEXPECTEDLY_COMPILED")
