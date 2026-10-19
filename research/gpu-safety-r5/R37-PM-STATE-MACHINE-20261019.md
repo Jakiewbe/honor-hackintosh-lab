@@ -151,3 +151,38 @@ commit 没成功时 abort 是正确动作。check-pm-exclusion.py 的
 - 9/9 与 32/32 都是**源码结构**结论：证明状态转移在代码上自洽、busy 时不再推进 RM；
 - **不证明**：断电时 GPU 未进低功耗态是否可接受、唤醒后 NVKMS 是否真能恢复、回调是否真的排空；
 - 这些只能靠实机观测，仍属 NO-GO 范畴。
+
+## 安全门禁转绿（2026-10-19）
+
+.github/workflows/g1-safety-contract.yml 手动触发 run **39276303803**：**success**
+
+| job | 步骤 | 结果 |
+|---|---|---|
+| ree-order | 固定 OGKM → 构建候选（r3+r36+r38）→ 顺序检查 → 检查器自检 | success |
+| pm-exclusion | 固定 NullMoth → 应用 34 项序列 → 状态机 9/9 → PM exclusion 32/32 | success |
+
+### 这一轮修掉的三个"检查自身"问题（都不是产品代码）
+
+1. **共享输出目录**：两个 PM 步骤都用 --out "/pm"，第二个因 mkdir(exist_ok=False) 直接
+   FileExistsError，注解却显示成"P0-3 仍开放"——**是工作流 bug，不是产品失败**。现改为独立目录。
+2. **失败不可读**：步骤只打印一句通用错误。现打印检查器全部输出，并把 FAIL 行与输出尾部
+   转成 ::error::PM_CHECK / PM_TAIL 注解。
+3. **A4 规则过宽**：曾把 commit 失败分支里的 suspend_abort 误判为违规。已改精确：
+   只有**成功 commit 之后、失败分支之外**的 abort 才算违规。
+
+### 现在的完整证据链（全部离线）
+
+| 层 | 证据 | 结果 |
+|---|---|---|
+| 构建 | native gate run 39271951271（34 项序列） | success |
+| 关闭顺序 | check-kapi-free-order.py + 6 项自检 | PASS |
+| PM 状态机 | check-pm-state-machine.py 9 条 + 4 项自检 | PASS |
+| PM 排除 | check-pm-exclusion.py 32 条 | PASS |
+| 安全门禁 | run 39276303803 | success |
+
+### 仍开放
+
+- P0-4：AllocateDevice() 半初始化失败 / legacy oid 路径的 owner 与重试回收；
+- P0-5：kms_close_common 里 while (popen->eventBusy) IOLockSleep(...) 的无界等待（legacy 正常关闭）；
+- R38 的"回调确实排空后才释放 NISO"仍只有源码顺序证据，没有运行证据；
+- 实机：初始化/渲染/读回/安全结束，NO-GO。
