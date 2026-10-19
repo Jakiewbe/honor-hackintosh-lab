@@ -42,6 +42,11 @@ def main():
     if cp.returncode != 0:
         print("COMPILE_FAILED", cp.returncode)
         print(cp.stderr[-2000:])
+        # Workflow commands are parsed from stdout, so a compile failure becomes an annotation that can
+        # be read back through the checks API when artifact download is unavailable.
+        first = [l for l in cp.stderr.splitlines() if "error:" in l][:3] or cp.stderr.splitlines()[:3]
+        for line in first:
+            print("::error::" + line[:300])
         return 2
 
     failures = []
