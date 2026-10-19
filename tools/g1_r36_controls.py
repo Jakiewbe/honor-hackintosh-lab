@@ -17,7 +17,10 @@ def main():
     s=s.replace(needle,'    auto *heap = new NvKmsKapiDevice{};\n    NvKmsKapiDevice &device = *heap;')
     source=a.out/'r35-real-free-control.cpp';source.write_text(s,encoding='utf-8')
     exe=a.out/'r35-asan'
-    argv=[a.cxx,'-std=c++17','-O1','-g','-fsanitize=address','-fno-omit-frame-pointer',
+    # -O0 keeps nvKmsKapiDeviceFreeCompleted as its own frame: at -O1 clang inlines it into the
+    # caller, ASan then reports the access under dropKapiDevice and the frame-name assertion fails
+    # even though the use-after-free did happen. The control is about the access, not the frame.
+    argv=[a.cxx,'-std=c++17','-O0','-g','-fsanitize=address','-fno-omit-frame-pointer',
           '-I'+str(old),str(source),str(old/'kms_deferred.cpp'),'-o',str(exe)]
     c=subprocess.run(argv,capture_output=True,text=True,timeout=60)
     (a.out/'r35-compile.txt').write_text(c.stdout+c.stderr,encoding='utf-8')
