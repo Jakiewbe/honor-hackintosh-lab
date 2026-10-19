@@ -1,0 +1,10 @@
+ARGV=["C:\\Users\\19082\\AppData\\Local\\Programs\\Python\\Python312\\python.exe", "-m", "unittest", "discover", "-s", "tools", "-p", "test_g1_verify_r33_native.py", "-v"]
+test_artifact_substitution_and_receipt_truncation_rejected (test_g1_verify_r33_native.RealIdentityControls.test_artifact_substitution_and_receipt_truncation_rejected) ... ok
+test_wrong_run_source_status_rejected (test_g1_verify_r33_native.RealIdentityControls.test_wrong_run_source_status_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.178s
+
+OK
+
+EXIT=0

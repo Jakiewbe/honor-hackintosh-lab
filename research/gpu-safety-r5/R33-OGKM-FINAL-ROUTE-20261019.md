@@ -1,4 +1,6 @@
-# R33：让 OGKM 修复真正进入最终候选
+# R33：OGKM 两补丁完整构建来源已原生验收
+
+> 当前结论：run39189188122 已完成并独立复核通过。下文“待验收/排队”段为发布当时记录；以本页最后的实际验收段为当前状态。GPU 未运行、设备 NO-GO。
 
 目标仍是 RTX 2050 正确初始化、真实离屏执行、正确像素、错误传播和安全结束。本轮只推进构建来源与两项已审查的源码修复；GPU 尚未执行，设备 NO-GO。
 
@@ -53,3 +55,22 @@ NISO补丁只有两行，把错误清理 `device->notifier` 改为传入的 `sur
 对本轮R3候选真实FreeDevice再运行backend-refused合同：源码7e5492e0...、OS7d86b6b...，compile0/run1；backend_close0、wrapper_free0、queue1、RM_free1、Device_free1。这是关闭拒绝仍继续销毁的CPU反例，非内核UAF观察；本轮源码修复没有关闭P0-4。证据见[r33-followup-evidence](r33-followup-evidence/)。
 
 下一接手点是读取此run的真实状态和产物：失败仅按第一条错误修；成功则用当前route工具复核双源/官方参数/归档成员/最终定义并保存结果。若runner继续排队，不重复触发，不写成编译失败或成功。确认来源后再实现完整Device生命周期，不能用void close尾端补丁冒充停止了上层析构。
+
+
+## 实际原生验收（取代上文排队断点）
+
+固定源码 `7a5cb7188ef6477b7383f9529228bbb4426aa1fd`；[run39189188122](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39189188122)、job117858001079，completed/success。artifact12159721676 的原始ZIP SHA256为 `bb358a648b789c07710395935d9cd55d8dfbaac0e79318491db2fd60d48b03f5`；实际下载校验后仅解出纯文本，1954 ZIP成员/1953 publication成员，拒绝二进制和路径逃逸。没有下载驱动二进制。
+
+`tools/g1_verify_r33_native.py` 独立逐项复算1280个官方命令、Darwin转换及真实成功编译日志（1240C/40C++）；五个固定shader、两个完整ar输入、NVLink、十个NVRM C++ TU及实际最终链接通过。31个NullMoth补丁和2个OGKM补丁分开记数：旧native探针32条记录不能当成完整补丁总数。完整候选3871文件仅两源变化，原始/候选/反向恢复/编译后树比较成立。两源why_load实际选中对应完整参数归档成员，最终定义存在。
+
+候选runner SHA256 `a88dca3c439879eab6f2cf2b46e428bc9a2faf06b2a3b47b28bea6f0dd2a2b6e`，472导入。KAPI正式对象SHA256 `5dd937bed912fcebf3b46ded6d4b211ba9513481e3e437bdbc19cf02c9b32e9f`；NISO正式对象 `bd8ae1485b94f2430d59323f2adcd804bb175a08b26abf6cabb5e29c533b9ade`。未上传这些对象或kext。
+
+NISO真实函数原生CPU三项成功路径合同通过；close十二项限定合同与四个负控通过，并绑定本次实际原生输入快照；队列四个定义确实进入最终产物。136布局/20接口形状通过，只覆盖选定ABI。复核工具另以真实元数据测试错误run/source/status/conclusion、替换artifact和截短receipt，共七个负向变体全部拒绝；这些是验收工具的身份检查，不是驱动测试。
+
+原始full-source报告SHA256 `6520f7f60d0651fe4720671f3145280f71d7b715c0f329d43c49ebc909be56d7`；[精选原始文本及复核结果](r33-native-evidence/result.json)。完整报告/1280日志在原始Actions文本artifact，精选不冒充全量。验收脚本固定下载receipt和publication哈希，不能通过删除成员后自洽重写清单绕过。外部ZIP身份来自已实际完成的下载校验，离线脚本不声称自行向GitHub重新认证ZIP。
+
+复跑：`python tools/g1_verify_r33_native.py --artifact-dir <完整R33文本artifact目录> --run-meta <GitHub run元数据> --baseline-report <已审计R32b full-source/report.json> --out <新的输出目录>`。基线与run/artifact/digest均固定，跨run替换必须拒绝。
+
+**三项安全FAIL仍未修：正常close eventBusy无界join；P0-4关闭被拒仍销毁Device；RM门忙后仍STANDBY。** NISO注销/解映射失败传播、容量64耗尽、open rollback、计数差值、模块卸载保持OPEN。完整ABI/loader、RTX2050初始化、真实GPU执行、正确像素读回与安全结束未验收，设备NO-GO。
+
+下一步沿完整Device与creator真实所有权修可失败关闭：拒绝必须发生在破坏性NISO/KMS/RM释放前，并传回dropKapiDevice/finishOrphanedDevice；禁止关闭中gDev再次复用，覆盖allocate失败自毁。已重建614文件、tree28a9125e...的精确NullMoth基线供后续候选使用；该目录尚未新增修复，不计作完成。

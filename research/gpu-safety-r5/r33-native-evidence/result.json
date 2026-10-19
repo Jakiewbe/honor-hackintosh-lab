@@ -1,0 +1,87 @@
+{
+  "status": "PASS_FIXED_R33_TEXT_BUILD_ROUTE_ONLY",
+  "source": "7a5cb7188ef6477b7383f9529228bbb4426aa1fd",
+  "run_id": 39189188122,
+  "artifact_id": 12159721676,
+  "artifact_zip_sha256": "bb358a648b789c07710395935d9cd55d8dfbaac0e79318491db2fd60d48b03f5",
+  "verified_zip_members": 1954,
+  "verified_publication_members": 1953,
+  "official_recipes_and_compile_logs_checked": 1280,
+  "language_counts": {
+    ".c": 1240,
+    ".cpp": 40
+  },
+  "native_nvrm_cpp_units": 10,
+  "nullmoth_patches": 31,
+  "full_ogkm_patches": 2,
+  "candidate_sha256": "a88dca3c439879eab6f2cf2b46e428bc9a2faf06b2a3b47b28bea6f0dd2a2b6e",
+  "imports": 472,
+  "ogkm_route": {
+    "status": "PASS_SOURCE_FULL_FLAGS_ARCHIVE_AND_FINAL_DEFINITIONS_ONLY",
+    "level": "TEXT_SOURCE_OBJECT_ARCHIVE_LINK_NOT_RUNTIME",
+    "routes": [
+      {
+        "source": "src/nvidia-modeset/kapi/src/nvkms-kapi.c",
+        "patch": "ogkm-r3-kapi-null-free.patch",
+        "original_sha256": "66437bc38d96d3b4f15546c3e6f7a8c0caccc158b35893c2406f80f2e6e8816b",
+        "candidate_sha256": "7e5492e0a0961e45ea75f664d2a16c49c66d728b93b8e3e87dca3ae9ebe38200",
+        "compiled_source": "/Users/runner/work/_temp/ogkm-e4a5faa-r33-full-source-candidate/src/nvidia-modeset/kapi/src/nvkms-kapi.c",
+        "object": "/Users/runner/work/_temp/gpu-safety-r5-logs/full-source/objects/nvidia-modeset-nvkms-kapi-3a32632a4dc98297.o",
+        "object_sha256": "5dd937bed912fcebf3b46ded6d4b211ba9513481e3e437bdbc19cf02c9b32e9f",
+        "actual_archive_load": [
+          "_nvKmsKapiGetFunctionsTableInternal forced load of /Users/runner/work/_temp/gpu-safety-r5-logs/full-source/libnvidia-modeset.a(nvidia-modeset-nvkms-kapi-3a32632a4dc98297.o)"
+        ],
+        "final_definition": "_nvKmsKapiGetFunctionsTableInternal",
+        "compile_log_sha256": "daec9e599c5a9e512f94e1b4702a50a22abc121c560d60ca158e83bbab6bc6b2"
+      },
+      {
+        "source": "src/nvidia-modeset/kapi/src/nvkms-kapi-notifiers.c",
+        "patch": "ogkm-niso-surface-owner.patch",
+        "original_sha256": "78d310ca74ab282beec5c18d2c208ab4862d1344566f3db088017c9fe972c641",
+        "candidate_sha256": "527df580bab9c6c0226edfdcaf3663dc2ed9d42c2151bfbf7efbc80f586c098c",
+        "compiled_source": "/Users/runner/work/_temp/ogkm-e4a5faa-r33-full-source-candidate/src/nvidia-modeset/kapi/src/nvkms-kapi-notifiers.c",
+        "object": "/Users/runner/work/_temp/gpu-safety-r5-logs/full-source/objects/nvidia-modeset-nvkms-kapi-notifiers-4ec1c77128bd23f0.o",
+        "object_sha256": "bd8ae1485b94f2430d59323f2adcd804bb175a08b26abf6cabb5e29c533b9ade",
+        "actual_archive_load": [
+          "_nvKmsKapiAllocateNotifiers forced load of /Users/runner/work/_temp/gpu-safety-r5-logs/full-source/libnvidia-modeset.a(nvidia-modeset-nvkms-kapi-notifiers-4ec1c77128bd23f0.o)"
+        ],
+        "final_definition": "_nvKmsKapiFreeNisoSurface",
+        "compile_log_sha256": "089634e583bc9d3cd26af8262e42ea43ea7714016ee35d94ecf0da19d864a1ef"
+      }
+    ],
+    "native_report_sha256": "eb6cd2104952a8df3c9656fd48d5bf87eec8db9ddddf5db89b1adf21a3987c1d",
+    "full_report_sha256": "6520f7f60d0651fe4720671f3145280f71d7b715c0f329d43c49ebc909be56d7",
+    "candidate_sha256": "a88dca3c439879eab6f2cf2b46e428bc9a2faf06b2a3b47b28bea6f0dd2a2b6e",
+    "full_abi_loader": "NOT_ACCEPTED",
+    "gpu": "NOT_RUN",
+    "kext_load": "NO-GO"
+  },
+  "niso_cpu": "3 success-path contracts PASS",
+  "retry_cpu": "12 scoped PASS; 4 controls rejected",
+  "selected_abi": "136 values / 20 shapes PASS; full ABI NOT ACCEPTED",
+  "device_owner": "FAIL_NOT_FIXED",
+  "normal_busy_join": "FAIL_NOT_FIXED",
+  "rm_busy_standby": "FAIL_NOT_FIXED",
+  "gpu_runtime": "NOT_RUN",
+  "kext_load": "NO-GO",
+  "preserved_sha256": {
+    "toolchain.txt": "aff4193a2f0b029c8c6f412fcfb2db84f72922ac99a94311a05671c17b1d5143",
+    "local-artifact-binding.json": "c3bfa70bcc7097d3b0021853581d2b45a29abb2255ce0a5eebd07161978bdef8",
+    "ogkm-patch-route/report.json": "2ec0edceedaafce2de8d489ef2a776b120f59b0231ca49f03b198cf1e5f5f16e",
+    "niso-owner-host/report.json": "e07420fb33e2597c1164f4af71f80d8ec3107568627c7e423d1835af738f1887",
+    "niso-owner-host/fixture.cpp": "364aa46c12ee41d9965e8ac3cd610aa2d269842aed113e92081ea6ff568d6f93",
+    "niso-owner-host/compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "niso-owner-host/run.txt": "85c30cf5df951ca722cf8e6696267b98d5d7703c343e0cd9b6f82afe1041b233",
+    "full-source/full-nvrm-link.txt": "25dd882c204f384116792f8f5dac41ea9fe507278567e3307309ebd0d78b0369",
+    "full-source/full-nvrm-defined.txt": "be0a989a95f49b4b0c201a69fceeaf76367aab774951710234a33bd64cc1dd6b",
+    "full-source/nvidia-modeset-archive.txt": "f5de2f85ceb61de0444d37a6886aad91ddfe039d9444a785bd4ab1dc412b33ea",
+    "full-source/nvidia-archive.txt": "46aebbe9fa652ae5895a12d215d2a3c315ad1247155a47c430e4437b4360ebc5",
+    "full-flags-abi/full-abi-report.json": "4be1b30f0825355f6bcd12a79f5b8dd1a67aae6a22557201d582c08089646c67",
+    "close-retry-host/report.json": "acc83165537e3aa86222674024db8e2e5e26834f4006fde6589d05c524a5d619",
+    "close-retry-controls/report.json": "ccc322c7c7af58cc158486c89c743c791f6fb144f5e7de059b4e106f9f1a2bcc",
+    "r28-series/report.json": "b0ef0bcdfa513155727eb7134815d423cea72b8bbf4dca692760b3df90b2df61",
+    "native-report.json": "eb6cd2104952a8df3c9656fd48d5bf87eec8db9ddddf5db89b1adf21a3987c1d",
+    "full-source/nvidia-modeset-nvkms-kapi-notifiers-4ec1c77128bd23f0.txt": "089634e583bc9d3cd26af8262e42ea43ea7714016ee35d94ecf0da19d864a1ef",
+    "full-source/nvidia-modeset-nvkms-kapi-3a32632a4dc98297.txt": "daec9e599c5a9e512f94e1b4702a50a22abc121c560d60ca158e83bbab6bc6b2"
+  }
+}

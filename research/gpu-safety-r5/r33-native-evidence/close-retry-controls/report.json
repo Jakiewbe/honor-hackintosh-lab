@@ -1,0 +1,56 @@
+{
+  "level": "CPU_MUTATION_AND_SOURCE_STRUCTURE_NOT_KERNEL",
+  "structural": {
+    "reap_after_rm_open": true,
+    "worker_allocated_before_module_load": true,
+    "allocation_failure_refuses_load": true,
+    "commit_closes_retry_before_suspend": true
+  },
+  "controls": [
+    {
+      "case": "compile-failure",
+      "tool_exit": 1,
+      "compile_exit": 1,
+      "failed_scenarios": [],
+      "control_rejected": true
+    },
+    {
+      "case": "missing-owner",
+      "tool_exit": 1,
+      "compile_exit": 0,
+      "failed_scenarios": [
+        "normal-free-failure",
+        "repeat-close",
+        "counter-isolation",
+        "worker-unavailable",
+        "stable-deadline"
+      ],
+      "control_rejected": true
+    },
+    {
+      "case": "gate-bypass",
+      "tool_exit": 1,
+      "compile_exit": 0,
+      "failed_scenarios": [
+        "deferred-recover",
+        "stalled-callback",
+        "gate-before-reap"
+      ],
+      "control_rejected": true
+    },
+    {
+      "case": "counter-drift",
+      "tool_exit": 1,
+      "compile_exit": 0,
+      "failed_scenarios": [
+        "counter-isolation"
+      ],
+      "control_rejected": true
+    }
+  ],
+  "source_sha256": {
+    "os-nvkms-xnu.cpp": "7d86b6b96c0911b2aebd3fdc567fa5ba1dde1122630c515db28b271c3f1f4430",
+    "NVRM.cpp": "f284893a1dc8e5a2ab7ae1071598ec528db25cfd248c613d8a523059b79a5469"
+  },
+  "status": "PASS"
+}

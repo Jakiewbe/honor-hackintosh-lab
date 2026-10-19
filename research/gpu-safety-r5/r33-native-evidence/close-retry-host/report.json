@@ -1,0 +1,106 @@
+{
+  "level": "REAL_FUNCTIONS_CPU_INJECTED_BOUNDARIES_NOT_XNU_RUNTIME",
+  "binding": "NATIVE_SNAPSHOTS_MATCH",
+  "source_sha256": {
+    "os-nvkms-xnu.cpp": "7d86b6b96c0911b2aebd3fdc567fa5ba1dde1122630c515db28b271c3f1f4430",
+    "kms_deferred.cpp": "c500f4734abb0a8897bb414c32e64f2301524d23f53d55a88847b8864820370c",
+    "kms_deferred.h": "053aa9e24ad6d0e399d84629b38f5fb77ee0f6b2a3787018bb97746411f484f4",
+    "NVRM.cpp": "f284893a1dc8e5a2ab7ae1071598ec528db25cfd248c613d8a523059b79a5469"
+  },
+  "snapshot_sha256": {
+    "os": "fc30e9a0e7974d474d2bc91a4d319cf589591f3f05d62b4b594be9cc0da86e1d",
+    "queue": "092af980766de66bccde23bd708c8e3594cfeb08771ce9438e6509addddce0d5"
+  },
+  "fixture_sha256": "6519b720c1fedb6e0fb7d2b291e6281df59e09ad87778483146deb77280728a9",
+  "functions": [
+    "static bool kms_pm_wait_locked(bool tryOnly, uint32_t waitMs)",
+    "static void kms_close_retry_schedule_locked(void)",
+    "static void kms_deferred_close_impl(void *data, void *)",
+    "static int kms_deferred_try_free_impl(void *node, void *)",
+    "static void kms_close_retry_fire(thread_call_param_t, thread_call_param_t)",
+    "static void kms_close_remember_locked(struct nvkms_per_open *popen)",
+    "static void kms_close_common(struct nvkms_per_open *popen)",
+    "static void kms_kapi_event_fire(thread_call_param_t p0, thread_call_param_t)",
+    "void nvkms_xnu_suspend_abort(uint32_t seq)",
+    "void nvkms_xnu_resume(NvU32 gpuId, NvBool gpuOk)",
+    "void nvkms_xnu_reap_closes(void)"
+  ],
+  "compile_argv": [
+    "clang++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-I/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM",
+    "/Users/runner/work/_temp/nullmoth-v2.3.3-gpu-safety-r5-candidate/kexts/NVRM/kms_deferred.cpp",
+    "/Users/runner/work/_temp/gpu-safety-r5-logs/close-retry-host/fixture.cpp",
+    "-o",
+    "/Users/runner/work/_temp/gpu-safety-r5-logs/close-retry-host/fixture"
+  ],
+  "compile_exit": 0,
+  "scenarios": [
+    {
+      "scenario": "suspended-retain",
+      "exit": 0,
+      "output": "suspended-retain PASS close=0 free=0 queued=1 schedules=0 sleeps=0 counter=1\n"
+    },
+    {
+      "scenario": "deferred-recover",
+      "exit": 0,
+      "output": "deferred-recover PASS close=1 free=1 queued=0 schedules=1 sleeps=0 counter=0\n"
+    },
+    {
+      "scenario": "normal-free-failure",
+      "exit": 0,
+      "output": "normal-free-failure PASS close=1 free=1 queued=0 schedules=3 sleeps=0 counter=0\n"
+    },
+    {
+      "scenario": "stalled-callback",
+      "exit": 0,
+      "output": "stalled-callback PASS close=1 free=1 queued=0 schedules=3 sleeps=0 counter=0\n"
+    },
+    {
+      "scenario": "cancel-pending",
+      "exit": 0,
+      "output": "cancel-pending PASS close=1 free=1 queued=0 schedules=0 sleeps=0 counter=0\n"
+    },
+    {
+      "scenario": "pending-abort",
+      "exit": 0,
+      "output": "pending-abort PASS close=1 free=1 queued=0 schedules=1 sleeps=0 counter=0\n"
+    },
+    {
+      "scenario": "lost-no-retry",
+      "exit": 0,
+      "output": "lost-no-retry PASS close=0 free=0 queued=1 schedules=0 sleeps=0 counter=1\n"
+    },
+    {
+      "scenario": "repeat-close",
+      "exit": 0,
+      "output": "repeat-close PASS close=1 free=1 queued=0 schedules=1 sleeps=0 counter=0\n"
+    },
+    {
+      "scenario": "counter-isolation",
+      "exit": 0,
+      "output": "counter-isolation PASS close=2 free=2 queued=0 schedules=2 sleeps=0 counter=0\n"
+    },
+    {
+      "scenario": "gate-before-reap",
+      "exit": 0,
+      "output": "gate-before-reap PASS close=1 free=1 queued=0 schedules=1 sleeps=0 counter=0\n"
+    },
+    {
+      "scenario": "worker-unavailable",
+      "exit": 0,
+      "output": "worker-unavailable PASS close=1 free=0 queued=1 schedules=0 sleeps=0 counter=0\n"
+    },
+    {
+      "scenario": "stable-deadline",
+      "exit": 0,
+      "output": "stable-deadline PASS close=2 free=2 queued=0 schedules=1 sleeps=0 counter=0\n"
+    }
+  ],
+  "status": "PASS_CPU_ONLY",
+  "negative_compile": false,
+  "binary_exists": true
+}
