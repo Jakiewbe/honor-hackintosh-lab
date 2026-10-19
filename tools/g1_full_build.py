@@ -22,7 +22,7 @@ from g1_dependency_audit import OGKM_PIN, NM_PIN
 from g1_symbol_identity import parse_nm_undefined
 from g1_special_object_providers import defined_symbols
 from g1_compile_inputs import BOUND_RM, bound_compile, verify_snapshot
-from g1_ogkm_candidate import SPECS as OGKM_PATCHES, make_candidate, verify_candidate
+from g1_ogkm_candidate import SPECS as OGKM_PATCHES, CHAIN as OGKM_CHAIN, make_candidate, verify_candidate
 
 COMPONENTS = ('nvidia', 'nvidia-modeset')
 SHADERS = ('turing', 'ampere', 'hopper', 'blackwell', 'gb20x')
@@ -286,7 +286,13 @@ def build(args, report):
     ogkm_candidate = out.parent.parent/'ogkm-e4a5faa-r33-full-source-candidate'
     assets = Path(__file__).resolve().parents[1]/'research/gpu-safety-r5'
     report['ogkm_candidate'] = make_candidate(nv, ogkm_candidate, assets, out)
+    # A chained patch supersedes the earlier entry for its source: the compiled file is the final state.
     patch_by_source = {s['source']: s for s in OGKM_PATCHES}
+    for c in OGKM_CHAIN:
+        merged = dict(patch_by_source.get(c['source'], {}))
+        merged.update({k: c[k] for k in ('patch', 'patch_sha256', 'source', 'defined_symbol')})
+        merged['candidate_sha256'] = c['post_sha256']
+        patch_by_source[c['source']] = merged
     sdk = subprocess.check_output(['xcrun', '--sdk', 'macosx', '--show-sdk-path'], text=True).strip()
     headers = Path(sdk)/'System/Library/Frameworks/Kernel.framework/Headers'
     if not (headers/'IOKit').is_dir():
@@ -472,6 +478,7 @@ def main():
             rc = build(args, report)
     except Exception as error:
         report.update({'status': 'FAILED', 'error': type(error).__name__+': '+str(error)})
+        print('::error::FULL_BUILD_ERROR ' + (type(error).__name__+': '+str(error))[:300], flush=True)
     finally:
         write_json(args.out/'report.json', report)
     print(json.dumps({'status': report['status'], 'attempts': len(report['objects']),

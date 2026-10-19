@@ -33,7 +33,8 @@ CHAIN = (
       'patch_sha256': '240849919dbc5ab78124c6f49801cdc5e74157419de0da94dc6d95dff2257bac',
       'source': 'src/nvidia-modeset/kapi/src/nvkms-kapi.c',
       'pre_sha256': '7e5492e0a0961e45ea75f664d2a16c49c66d728b93b8e3e87dca3ae9ebe38200',
-      'post_sha256': '30c4c8441593b061f50296fa9f3421032280f7aeede6133d0bce1275d8cc1bbd'},
+      'post_sha256': '30c4c8441593b061f50296fa9f3421032280f7aeede6133d0bce1275d8cc1bbd',
+      'defined_symbol': '_nvKmsKapiDeviceFreeCompleted'},
 )
 
 
