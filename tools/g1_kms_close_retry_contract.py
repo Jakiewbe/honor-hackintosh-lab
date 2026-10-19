@@ -157,7 +157,9 @@ int main(int argc, char **argv) {
             require(gKmsCloseOverflowCount == 1 && wrapper_frees == 0,
                     "an overflowed close was dropped instead of retained");
             gKmsPmState = kKmsPmRunning;
+            IOLockLock(gKmsLock);           // the drain runs under the same lock as the retry callback
             kms_close_overflow_drain_locked();
+            IOLockUnlock(gKmsLock);
             require(gKmsCloseOverflowCount == 0 && wrapper_frees == 1,
                     "the overflowed close was not reclaimed exactly once");
         } else if (std::strcmp(name, "cancel-pending") == 0) {
