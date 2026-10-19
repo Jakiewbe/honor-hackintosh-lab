@@ -55,7 +55,9 @@ int main(int argc, char **argv) {
                 require(gDev==heap&&gDevCreator==&creator&&gDevOrphaned&&
                   !creator.releases&&!rm_frees&&!device_frees&&!backend_closes&&!wrapper_frees&&
                   kms_deferred_count()==0,"incomplete close lost owner or queued wrapper alone");
-                require(niso_frees==0,"NISO unmapped before the close was known to succeed");
+                // A refused FREE_DEVICE must leave both NISO surfaces alone. A refused wrapper close happens
+                // after the backend close already succeeded, so NISO is legitimately unmapped there.
+                if(backend_refused) require(niso_frees==0,"NISO unmapped before the backend close succeeded");
                 if(callback_retry){
                     node.eventBusy=false;event_free_ok=true;fb.finishOrphanedDevice();
                     require(!gDev&&!gDevCreator&&creator.releases==1&&device_frees==1&&rm_frees==1&&
