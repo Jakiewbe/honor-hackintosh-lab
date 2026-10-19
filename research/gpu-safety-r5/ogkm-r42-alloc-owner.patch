@@ -1,10 +1,9 @@
 --- a/src/nvidia-modeset/kapi/src/nvkms-kapi.c
 +++ b/src/nvidia-modeset/kapi/src/nvkms-kapi.c
-@@ -638,6 +638,45 @@
-     nvKmsKapiFree(paramsAlloc);
- 
-     return ret;
-+}
+@@ -671,6 +671,46 @@
+     nvkms_xnu_pm_unpin(); /* No Device read after its real free. */
+     return NV_TRUE;
+ }
 +
 +/*
 + * A failed allocation rollback can leave a Device whose NVKMS close was refused. Dropping the pointer would
@@ -43,10 +42,12 @@
 +        }
 +    }
 +    return allFreed;
- }
++}
++
  
- NvBool nvKmsKapiTryFreeDevice(struct NvKmsKapiDevice *device)
-@@ -1022,7 +1061,17 @@
+ static void FreeDevice(struct NvKmsKapiDevice *device)
+ {
+@@ -1022,7 +1062,17 @@
  
  failed:
  

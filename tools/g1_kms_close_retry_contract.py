@@ -40,6 +40,9 @@ static volatile uint32_t gKmsCloseDeferred, gKmsCloseDeferredLost;
 static const uint32_t kKmsPmWaitMs = 30000;
 static const char *const kKmsPmName[] = {"running", "suspended", "lost"};
 static int worker_id;
+// The extracted resume path reaps the KAPI quarantine; this fixture has no Devices, so it is a no-op.
+static NvBool nvKmsKapiReapQuarantine(void) { return NV_TRUE; }
+
 // RETRY_STATE_FROM_SOURCE
 static int backend_closes, wrapper_frees, sleeps, deadline_sleeps, schedules, event_runs, lock_depth;
 static bool event_free_ok = true, cancel_ok, rm_closed;
