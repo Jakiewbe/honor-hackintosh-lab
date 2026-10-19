@@ -143,6 +143,23 @@ int main(int argc, char **argv) {
             on_deadline_wait = nullptr;
             require(backend_closes == 1 && wrapper_frees == 1 && sleeps == 0 && deadline_sleeps >= 1,
                     "close did not complete once the callback finished during the wait");
+        } else if (std::strcmp(name, "overflow-reclaim") == 0) {
+            static struct nvkms_per_open many[KMS_DEFERRED_CAPACITY + 1];
+            gKmsPmState = kKmsPmLost;
+            for (unsigned i = 0; i < KMS_DEFERRED_CAPACITY; ++i) {
+                many[i].data = &data;
+                kms_close_common(&many[i]);
+            }
+            require(gKmsCloseOverflowCount == 0 && kms_deferred_count() == KMS_DEFERRED_CAPACITY,
+                    "the deferred table did not fill as expected");
+            many[KMS_DEFERRED_CAPACITY].data = &data;
+            kms_close_common(&many[KMS_DEFERRED_CAPACITY]);
+            require(gKmsCloseOverflowCount == 1 && wrapper_frees == 0,
+                    "an overflowed close was dropped instead of retained");
+            gKmsPmState = kKmsPmRunning;
+            kms_close_overflow_drain_locked();
+            require(gKmsCloseOverflowCount == 0 && wrapper_frees == 1,
+                    "the overflowed close was not reclaimed exactly once");
         } else if (std::strcmp(name, "cancel-pending") == 0) {
             node.eventBusy = true; cancel_ok = true;
             kms_close_common(&node); complete();
@@ -199,6 +216,7 @@ NAMES = [
     'static void kms_close_retry_schedule_locked(void)',
     'static void kms_deferred_close_impl(void *data, void *)',
     'static int kms_deferred_try_free_impl(void *node, void *)',
+    'static void kms_close_overflow_drain_locked(void)',
     'static void kms_close_retry_fire(thread_call_param_t, thread_call_param_t)',
     'static void kms_close_remember_locked(struct nvkms_per_open *popen)',
     'static void kms_close_common(struct nvkms_per_open *popen)',
@@ -210,7 +228,7 @@ NAMES = [
 SCENARIOS = ('suspended-retain', 'deferred-recover', 'normal-free-failure', 'stalled-callback',
              'cancel-pending', 'pending-abort', 'lost-no-retry',
              'repeat-close', 'counter-isolation', 'gate-before-reap', 'worker-unavailable', 'stable-deadline',
-             'join-completes')
+             'join-completes', 'overflow-reclaim')
 
 
 def sha(path): return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -252,7 +270,8 @@ def main():
     source = args.out/'fixture.cpp'
     declarations = []
     for prefix in ('static thread_call_t gKmsCloseWorker;', 'static bool gKmsCloseRetryReady',
-                   'static bool gKmsCloseRetryArmed;', 'static const uint32_t kKmsCloseRetryMs', 'static const uint32_t kKmsCloseJoinMs'):
+                   'static bool gKmsCloseRetryArmed;', 'static const uint32_t kKmsCloseRetryMs', 'static const uint32_t kKmsCloseJoinMs',
+                   'static struct nvkms_per_open *gKmsCloseOverflow;', 'static unsigned gKmsCloseOverflowCount;'):
         lines = [line for line in text.splitlines() if line.startswith(prefix)]
         if len(lines) != 1: raise ValueError('retry state definition differs: '+prefix)
         declarations.append(lines[0])
@@ -281,6 +300,18 @@ def main():
         report['status'] = 'PASS_CPU_ONLY' if all(r['exit'] == 0 for r in report['scenarios']) else 'CONTRACT_FAIL'
     (args.out/'report.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
     print(json.dumps(report))
+    if report['status'] != 'PASS_CPU_ONLY':
+        bad = [s for s in report['scenarios'] if s['exit']]
+        for s in bad[:4]:
+            line = (s['output'].strip().splitlines() or ['(no output)'])[-1]
+            print('::error::RETRY_SCENARIO ' + s['scenario'] + ': ' + line[:240], flush=True)
+        if not bad:
+            errs = [l for l in (args.out/'compile.txt').read_text(encoding='utf-8', errors='replace').splitlines()
+                    if 'error:' in l][:4]
+            for line in errs:
+                print('::error::RETRY_COMPILE ' + line[:240], flush=True)
+            if not errs:
+                print('::error::RETRY_COMPILE exit=' + str(report['compile_exit']), flush=True)
     return 0 if report['status'] == 'PASS_CPU_ONLY' else 1
 
 
