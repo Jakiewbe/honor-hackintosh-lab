@@ -1,0 +1,53 @@
+--- a/src/nvidia-modeset/kapi/src/nvkms-kapi.c
++++ b/src/nvidia-modeset/kapi/src/nvkms-kapi.c
+@@ -419,7 +419,7 @@
+ /*
+  * Helper function to free NVKMS objects allocated for NvKmsKapiDevice.
+  */
+-static void KmsFreeDevice(struct NvKmsKapiDevice *device)
++static NvBool KmsFreeDevice(struct NvKmsKapiDevice *device)
+ {
+     /* Free notifier and semaphore memory */
+ 
+@@ -433,9 +433,11 @@
+ 
+         paramsFree.request.deviceHandle = device->hKmsDevice;
+ 
+-        nvkms_ioctl_from_kapi(device->pKmsOpen,
+-                              NVKMS_IOCTL_FREE_DEVICE,
+-                              &paramsFree, sizeof(paramsFree));
++        if (!nvkms_ioctl_from_kapi(device->pKmsOpen,
++                                   NVKMS_IOCTL_FREE_DEVICE,
++                                   &paramsFree, sizeof(paramsFree))) {
++            return NV_FALSE;   /* refused: handles stay, the owner must keep the device */
++        }
+ 
+         device->hKmsDevice = device->hKmsDisp = 0x0;
+     }
+@@ -446,6 +448,14 @@
+         nvkms_close_from_kapi(device->pKmsOpen);
+         device->pKmsOpen = NULL;
+     }
++
++    device->bFreeCompleted = NV_TRUE;
++    return NV_TRUE;
++}
++
++NvBool nvKmsKapiDeviceFreeCompleted(const struct NvKmsKapiDevice *device)
++{
++    return (device != NULL) && device->bFreeCompleted;
+ }
+ 
+ /*
+@@ -631,7 +641,10 @@
+ 
+     /* Free NVKMS objects allocated for NvKmsKapiDevice */
+ 
+-    KmsFreeDevice(device);
++    if (!KmsFreeDevice(device)) {
++        nvKmsKapiLogDeviceDebug(device, "NVKMS refused FREE_DEVICE; device retained\n");
++        return;
++    }
+ 
+     /* Free RM objects allocated for NvKmsKapiDevice */
+ 

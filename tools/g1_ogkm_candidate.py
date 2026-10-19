@@ -26,6 +26,26 @@ SPECS = (
      'defined_symbol': '_nvKmsKapiFreeNisoSurface'},
 )
 
+# Patches that stack on top of SPECS: same source, applied after it, with the intermediate hash pinned so
+# a stale or reordered patch cannot slip through. Reverse application unwinds the stack.
+CHAIN = (
+    {'patch': 'ogkm-r35-kapi-try-close.patch',
+      'patch_sha256': '240849919dbc5ab78124c6f49801cdc5e74157419de0da94dc6d95dff2257bac',
+      'source': 'src/nvidia-modeset/kapi/src/nvkms-kapi.c',
+      'pre_sha256': '7e5492e0a0961e45ea75f664d2a16c49c66d728b93b8e3e87dca3ae9ebe38200',
+      'post_sha256': '30c4c8441593b061f50296fa9f3421032280f7aeede6133d0bce1275d8cc1bbd'},
+)
+
+
+def delta_specs():
+    """Collapse SPECS+CHAIN into one original->final entry per source for check_delta."""
+    pre = {s['source']: s['original_sha256'] for s in SPECS}
+    final = {s['source']: s['candidate_sha256'] for s in SPECS}
+    for c in CHAIN:
+        pre.setdefault(c['source'], c['pre_sha256'])
+        final[c['source']] = c['post_sha256']
+    return [{'source': k, 'original_sha256': pre[k], 'candidate_sha256': final[k]} for k in final]
+
 
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -73,6 +93,9 @@ def make_candidate(nv, candidate, assets, logs):
     for spec in SPECS:
         if before.get(spec['source']) != spec['original_sha256'] or sha(assets/spec['patch']) != spec['patch_sha256']:
             raise ValueError('pinned OGKM source/patch identity differs')
+    for spec in CHAIN:
+        if sha(assets/spec['patch']) != spec['patch_sha256']:
+            raise ValueError('chained OGKM patch identity differs')
     shutil.copytree(nv, candidate, ignore=lambda p,n: ['.git'] if Path(p) == nv and '.git' in n else [])
     if tree_files(candidate) != before:
         raise ValueError('candidate initial copy differs')
@@ -90,23 +113,31 @@ def make_candidate(nv, candidate, assets, logs):
                 stream.write('\nEXIT='+str(rc)+'\n')
             if rc: raise ValueError('OGKM candidate patch failed: '+spec['patch'])
     for spec in SPECS: apply(spec, False, 'forward')
+    for spec in CHAIN:
+        if sha(candidate/spec['source']) != spec['pre_sha256']:
+            raise ValueError('chained patch base differs: '+spec['source'])
+        apply(spec, False, 'chain-forward')
+        if sha(candidate/spec['source']) != spec['post_sha256']:
+            raise ValueError('chained patch result differs: '+spec['source'])
     after = tree_files(candidate)
-    check_delta(before, after, SPECS)
+    check_delta(before, after, delta_specs())
+    for spec in reversed(CHAIN): apply(spec, True, 'chain-reverse')
     for spec in reversed(SPECS): apply(spec, True, 'reverse')
     if tree_files(candidate) != before:
         raise ValueError('OGKM reverse application did not restore exact original tree')
     for spec in SPECS: apply(spec, False, 'reapply')
+    for spec in CHAIN: apply(spec, False, 'chain-reapply')
     if tree_files(candidate) != after or tree_files(nv) != before:
         raise ValueError('candidate reapplication or original immutability failed')
     return {'schema': 'honor.g1.ogkm-candidate.v1', 'candidate_root': str(candidate),
-            'original_root': str(nv), 'files': len(before), 'patches': list(SPECS),
+            'original_root': str(nv), 'files': len(before), 'patches': list(SPECS) + list(CHAIN),
             'original_tree_sha256': tree_digest(before), 'candidate_tree_sha256': tree_digest(after),
             'reverse_restores_original': True, 'exact_two_source_delta': True}
 
 
 def verify_candidate(nv, candidate, manifest):
     before, after = tree_files(nv), tree_files(candidate)
-    check_delta(before, after, SPECS)
+    check_delta(before, after, delta_specs())
     if (tree_digest(before) != manifest['original_tree_sha256'] or
             tree_digest(after) != manifest['candidate_tree_sha256']):
         raise ValueError('OGKM tree changed after candidate preparation')

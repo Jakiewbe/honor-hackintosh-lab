@@ -1,0 +1,53 @@
+--- a/kexts/NVRMFB/fb/nvrm-fb.cpp
++++ b/kexts/NVRMFB/fb/nvrm-fb.cpp
+@@ -700,6 +700,9 @@
+ extern "C" NvBool nvkms_xnu_pm_pin(void);
+ extern "C" void nvkms_xnu_pm_unpin(void);
+ extern "C" void nvkms_xnu_kms_close_deferred_count(uint32_t *total, uint32_t *lost);
++// Defined by nvidia-modeset: NV_TRUE only when NVKMS accepted FREE_DEVICE and the per-open was
++// closed. A false result means the device, its RM state and the creator retain must be kept.
++extern "C" NvBool nvKmsKapiDeviceFreeCompleted(const struct NvKmsKapiDevice *device);
+ void NVRMNVDAFramebuffer::dropKapiDevice()
+ {
+     // gDev, gDevUsers, gDevOrphaned and gHeadsTaken are shared by every framebuffer instance and are
+@@ -750,11 +753,23 @@
+     nvkms_xnu_kms_close_deferred_count(&deferredBefore, &lostBefore);
+     fKms->freeDevice(fDev);
+     nvkms_xnu_kms_close_deferred_count(&deferredAfter, &lostAfter);
++    if (!nvKmsKapiDeviceFreeCompleted(fDev)) {
++        // The close was refused: RM state is split and the device is still referenced by NVKMS. Keep the
++        // shared Device, its creator retain and the orphan flag so a later attempt can retry instead of
++        // handing NVKMS a freed object. Only this instance's own references are dropped.
++        if (fGrabbedOwnership) { gOrphanGrabs++; fGrabbedOwnership = false; }
++        gDevOrphaned = true;
++        fDev = nullptr;
++        nvkms_xnu_pm_unpin();
++        FBLOG("device 0x%llx: close refused (%u new deferral(s), %u from LOST) -- device and creator kept,"
++              " retry deferred",
++              (unsigned long long)(uintptr_t)gDev, (unsigned)(deferredAfter - deferredBefore),
++              (unsigned)(lostAfter - lostBefore));
++        return;
++    }
+     if (deferredAfter != deferredBefore)
+-        FBLOG("device 0x%llx: freeDevice returned but NVKMS refused the close (%u new deferral(s), %u from LOST)"
+-              " -- RM state may be split; the void interface cannot report this upward",
+-              (unsigned long long)(uintptr_t)fDev, (unsigned)(deferredAfter - deferredBefore),
+-              (unsigned)(lostAfter - lostBefore));
++        FBLOG("device 0x%llx: freeDevice completed with %u new deferral(s) from other opens",
++              (unsigned long long)(uintptr_t)fDev, (unsigned)(deferredAfter - deferredBefore));
+     if (gDev == fDev) gDev = nullptr;
+     fDev = nullptr;
+     gDevOrphaned = false;
+@@ -793,6 +808,12 @@
+     }
+     while (gOrphanGrabs > 0) { fKms->releaseOwnership(gDev); gOrphanGrabs--; }
+     fKms->freeDevice(gDev);
++    if (!nvKmsKapiDeviceFreeCompleted(gDev)) {
++        // Refused close: keep the orphaned device and its creator retain for a later retry.
++        nvkms_xnu_pm_unpin();
++        FBLOG("orphaned device 0x%llx: close refused -- kept for retry", (unsigned long long)(uintptr_t)gDev);
++        return;
++    }
+     gDev = nullptr;
+     gDevOrphaned = false;
+     nvkms_xnu_pm_unpin();
