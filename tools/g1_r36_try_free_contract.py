@@ -70,7 +70,7 @@ int main(int argc, char **argv) {
                   ownership_releases==(orphan?2:1),"shared device released");
             } else {
                 require(!gDev&&!gDevCreator&&creator.releases==1&&device_frees==1&&rm_frees==1&&
-                  backend_closes==1&&wrapper_frees==1&&ownership_releases==(orphan?2:1),
+                  backend_closes==1&&wrapper_frees==1&&ownership_releases==(orphan?2:1)&&
                   niso_frees==2,"successful free not exactly once or NISO not unmapped twice");
             }
         }
