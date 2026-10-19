@@ -12,7 +12,7 @@ from g1_kms_close_retry_contract import PREFIX,NAMES
 from g1_kms_close_contract import function
 
 EXPECTED={'fb':'f5e0f84db0c321739d8477bf81af5c96943e7e748b11763fce2a65269fab56dd',
- 'os':'e544a36e62ec3b2f01773eb4fd0f826e77ef682dd6fb4e7824a9887f05c90724',
+ 'os':'1e6e1dc8c3a03f258c9b5ef66f89e71b14cb906ac4406a610a13666609b74da1',
  'ogkm':'dc4397d8478aa6f9a88656f7f10852da943ee27289a7544d44549a10b3329a6e'}
 SCENARIOS=('drop-success','orphan-success','drop-other-user','orphan-other-users','pin-refused',
  'drop-backend-refused','orphan-backend-refused','drop-close-refused','callback-active',
@@ -97,8 +97,7 @@ def generate(nm,kapi):
     prefix=prefix.replace('schedules, event_runs, lock_depth','schedules, lock_depth')
     declarations=[]
     for name in ('static thread_call_t gKmsCloseWorker;', 'static bool gKmsCloseRetryReady',
-                 'static bool gKmsCloseRetryArmed;', 'static const uint32_t kKmsCloseRetryMs', 'static const uint32_t kKmsCloseJoinMs',
-                 'static struct nvkms_per_open *gKmsCloseOverflow;', 'static unsigned gKmsCloseOverflowCount;'):
+                 'static bool gKmsCloseRetryArmed;', 'static const uint32_t kKmsCloseRetryMs', 'static const uint32_t kKmsCloseJoinMs'):
         rows=[r for r in os.splitlines() if r.startswith(name)]
         if len(rows)!=1:raise ValueError('state definition differs')
         declarations+=rows
