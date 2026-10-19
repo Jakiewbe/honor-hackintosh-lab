@@ -135,6 +135,17 @@ def evaluate(nvrm, os_text):
     wake = "ordinal != 0" in setpm and "gpuResume()" in setpm
     check("C1 setPowerState resumes when the GPU was suspended", wake)
 
+    # D1/D2: a legacy close must not sleep unboundedly on eventBusy, and a bounded wait must break on timeout.
+    unbounded = re.search(r"while\s*\(\s*popen->eventBusy\s*\)\s*IOLockSleep\s*\(", os_text)
+    check("D1 no unbounded IOLockSleep on eventBusy", unbounded is None,
+          "" if unbounded is None else "unbounded wait in os-nvkms-xnu.cpp")
+    if "popen->eventBusy" in os_text and "IOLockSleepDeadline" in os_text:
+        bounded = ("IOLockSleepDeadline(gKmsLock, popen, deadline" in os_text
+                   and "THREAD_TIMED_OUT" in os_text)
+        check("D2 a bounded event-call join breaks on timeout", bounded)
+    else:
+        check("D2 a bounded event-call join breaks on timeout", True, "no eventBusy wait in this tree")
+
     result = "PASS" if all(c["ok"] for c in checks) else "FAIL"
     return {"level": "SOURCE-STRUCTURE-ONLY; PM-STATE-MACHINE-NOT-ACCEPTED", "checks": checks,
             "result": result, "failures": [c for c in checks if not c["ok"]]}

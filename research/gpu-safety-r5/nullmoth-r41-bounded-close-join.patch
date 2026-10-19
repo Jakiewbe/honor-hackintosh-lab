@@ -1,0 +1,37 @@
+--- a/kexts/NVRM/os-nvkms-xnu.cpp
++++ b/kexts/NVRM/os-nvkms-xnu.cpp
+@@ -61,6 +61,9 @@
+ static volatile uint32_t gKmsCloseDeferred;
+ static volatile uint32_t gKmsCloseDeferredLost;
+ static const uint32_t kKmsPmWaitMs = 30000;
++// Bounded join for the legacy synchronous close: on timeout the wrapper is retained for
++// reclamation instead of sleeping forever behind a worker stuck in RM.
++static const uint32_t kKmsCloseJoinMs = 10000;
+ static const char *const kKmsPmName[] = { "running", "suspended", "lost" };
+ 
+ // Called with gKmsLock held. True once NVKMS may touch the GPU. tryOnly fails at once while suspended (the flips,
+@@ -226,7 +229,23 @@
+     // This wait is still unbounded and is an explicit OPEN contract, not a safe async close.
+     if (popen->eventCall && popen->eventBusy) {
+         if (thread_call_cancel(popen->eventCall)) popen->eventBusy = false;
+-        while (popen->eventBusy) IOLockSleep(gKmsLock, popen, THREAD_UNINT);
++        // Bounded join: the worker can be stuck behind RM, and an unbounded sleep here would hang the
++        // closing thread with no way out. On timeout the wrapper is kept and reclaimed later - the same
++        // ownership rule as a failed release below, so nothing is freed while the event call may still run.
++        if (popen->eventBusy) {
++            uint64_t deadline;
++            clock_interval_to_deadline(kKmsCloseJoinMs, kMillisecondScale, &deadline);
++            while (popen->eventBusy) {
++                if (IOLockSleepDeadline(gKmsLock, popen, deadline, THREAD_UNINT) == THREAD_TIMED_OUT) break;
++            }
++        }
++        if (popen->eventBusy) {
++            kms_close_remember_locked(popen);
++            IOLockUnlock(gKmsLock);
++            kprintf("NVRM-xnu: close of %p timed out waiting for its event call; wrapper kept for reclamation\n",
++                    popen);
++            return;
++        }
+     }
+     // If its call cannot be released, the queue becomes the sole
+     // wrapper owner. A NULL data entry is already backend-closed and must not call nvKmsClose again.
