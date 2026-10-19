@@ -78,6 +78,7 @@ jobs:
           cat "$RUNNER_TEMP/pm.txt"
           grep -E '^FAIL ' "$RUNNER_TEMP/pm.txt" | sed 's/^/::error::PM_CHECK /' || true
           if [ "$rc" -ne 0 ]; then
+            tail -c 3000 "$RUNNER_TEMP/pm.txt" | sed 's/^/::error::PM_TAIL /' || true
             echo "::error::SAFETY_CONTRACT: PM exclusion failed (rc=$rc)"
             exit 1
           fi
