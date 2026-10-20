@@ -1,0 +1,169 @@
+name: HONOR G1 stock v243 full kext link
+
+# Link-only integration for the v2.4.3 ONCE candidate: build the OGKM RM objects the way the
+# existing native gate does, compile all twelve NullMoth NVRM translation units, and link the
+# kext binary in the project's real mode (-Xlinker -kext). Nothing is installed, loaded or run.
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/g1-stock-v243-kext-link.yml'
+      - 'research/stock-v243-once-20261021/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: honor-g1-stock-v243-kext-link-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  NM_PIN: 272ccd9da04ff5de95c2791b902fe17a3fa77ce7
+  NV_PIN: e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb
+  XCODE: /Applications/Xcode_16.4.app/Contents/Developer
+
+jobs:
+  link:
+    runs-on: macos-15-intel
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$(uname -m)" == x86_64 ]]
+          [[ -d "$XCODE" ]]
+          echo "DEVELOPER_DIR=$XCODE" >> "$GITHUB_ENV"
+          export DEVELOPER_DIR="$XCODE"
+          [[ "$(xcrun --show-sdk-version)" == 15.5 ]]
+          command -v gmake >/dev/null || brew install make
+          mkdir -p "$RUNNER_TEMP/logs"
+          { sw_vers; xcodebuild -version; clang --version; xcrun --sdk macosx --show-sdk-version; } \
+            | tee "$RUNNER_TEMP/logs/toolchain.txt"
+
+      - name: Fetch the two pinned sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          for spec in "nm https://github.com/nullmoth/nvidia-macos-driver.git $NM_PIN" \
+                      "nv https://github.com/NVIDIA/open-gpu-kernel-modules.git $NV_PIN"; do
+            set -- $spec
+            d="$RUNNER_TEMP/$1"
+            git -c core.autocrlf=false init -q "$d"
+            git -C "$d" config core.autocrlf false
+            git -C "$d" remote add origin "$2"
+            git -C "$d" fetch --no-tags --depth 1 origin "$3"
+            git -C "$d" checkout --detach -q FETCH_HEAD
+            [[ "$(git -C "$d" rev-parse HEAD)" == "$3" ]]
+          done
+
+      - name: Apply the converged patch and verify the candidate identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          nm="$RUNNER_TEMP/nm"
+          patch="research/stock-v243-once-20261021/stock-v243-converged.patch"
+          git -C "$nm" apply --check "$GITHUB_WORKSPACE/$patch"
+          git -C "$nm" apply "$GITHUB_WORKSPACE/$patch"
+          # Expected identities come from the lock, never from this file.
+          python3 - "$nm" "research/stock-v243-once-20261021/source-lock.json" <<'PY'
+          import hashlib, json, sys, pathlib
+          nm = pathlib.Path(sys.argv[1])
+          lock = json.loads(pathlib.Path(sys.argv[2]).read_text())
+          bad = 0
+          for row in lock["files"]:
+              got = hashlib.sha256((nm / row["path"]).read_bytes()).hexdigest()
+              ok = got == row["candidate_sha256"]
+              print(("OK   " if ok else "FAIL ") + row["path"] + " " + got)
+              bad += 0 if ok else 1
+          raise SystemExit(1 if bad else 0)
+          PY
+
+      - name: Build the OGKM RM objects (objects only, the ELF link cannot run on macOS)
+        shell: bash
+        run: |
+          set -uo pipefail
+          nv="$RUNNER_TEMP/nv"
+          logs="$RUNNER_TEMP/logs"
+          jobs="$(sysctl -n hw.ncpu)"
+          gmake -C "$nv/src/nvidia" -k -j"$jobs" TARGET_OS=Darwin TARGET_ARCH=x86_64 CC=clang \
+            > "$logs/make-nvidia.log" 2>&1
+          echo "make rc=$?"
+          ls "$nv/src/nvidia/_out/Darwin_x86_64" 2>/dev/null | wc -l | tee "$logs/rm-objects.txt"
+          grep -c 'error:' "$logs/make-nvidia.log" | tee -a "$logs/rm-objects.txt" || true
+
+      - name: Compile the twelve NullMoth NVRM translation units
+        shell: bash
+        run: |
+          set -uo pipefail
+          nm="$RUNNER_TEMP/nm"; nv="$RUNNER_TEMP/nv"; logs="$RUNNER_TEMP/logs"
+          SDK="$(xcrun --show-sdk-path)"
+          KHDR="$SDK/System/Library/Frameworks/Kernel.framework/Headers"
+          NV="$nv/src/nvidia"; KMS="$nv/src/nvidia-modeset"
+          RMDEFS=()
+          if [[ -f "$NV/_out/Darwin_x86_64/compile_cmds.sh" ]]; then
+            while read -r d; do RMDEFS+=("$d"); done < <(head -1 "$NV/_out/Darwin_x86_64/compile_cmds.sh" | tr ' ' '\n' | grep -E '^-D' | sed -e 's/"//g')
+          else
+            while read -r d; do RMDEFS+=("$d"); done < <(grep -E ' -c [^ ]+\.(c|cpp) ' "$logs/make-nvidia.log" | head -1 | tr ' ' '\n' | grep -E '^-D')
+          fi
+          echo "defines: ${#RMDEFS[@]}" | tee "$logs/tu-compile.txt"
+          INC=( -I"$KHDR" -I"$nm" -I"$NV/arch/nvalloc/unix/include" -I"$NV/arch/nvalloc/common/inc"
+                -I"$NV/arch/nvalloc/common/inc/gsp" -I"$nv/src/common/sdk/nvidia/inc" -I"$nv/src/common/sdk/nvidia/inc/hw"
+                -I"$nv/src/common/inc" -I"$nv/src/common/shared/inc" -I"$NV/inc" -I"$NV/inc/os" -I"$NV/inc/kernel"
+                -I"$NV/kernel/inc" -I"$NV/interface" -I"$nv/src/common/nvlink/interface" -I"$nv/src/common/inc/swref"
+                -I"$nv/src/common/inc/swref/published" -I"$NV/inc/libraries" -I"$NV/src/libraries" -I"$NV/generated"
+                -I"$NV/src/mm/uvm/interface" -I"$nv/src/common/uproc/os/libos-v2.0.0/include"
+                -I"$nv/src/common/uproc/os/common/include" -I"$nv/src/common/inc/displayport"
+                -I"$nv/src/common/nvlink/inband/interface" -I"$KMS/os-interface/include" -I"$KMS/kapi/interface"
+                -I"$KMS/kapi/include" -I"$nv/src/common/unix/nvidia-push/interface" -I"$KMS/interface" -I"$KMS/include"
+                -I"$nv/src/common/unix/common/inc" -I"$nv/src/common/modeset" -I"$nv/src/common/unix/common/utils/interface" )
+          mkdir -p "$RUNNER_TEMP/objs"
+          fails=0
+          for src in "$nm"/kexts/NVRM/*.cpp "$nm"/kexts/NVRM/*.c; do
+            [[ -f "$src" ]] || continue
+            base="$(basename "$src")"; obj="$RUNNER_TEMP/objs/${base%.*}.o"
+            if xcrun clang++ -arch x86_64 -fapple-kext -mkernel -nostdinc "${INC[@]}" \
+                 -DKERNEL -DKERNEL_PRIVATE -DDRIVER_PRIVATE -DAPPLE -DNeXT "${RMDEFS[@]}" \
+                 -std=c++17 -fno-rtti -fno-exceptions -fno-builtin -fno-common -O2 \
+                 -Wall -Wno-unused-parameter -Wno-inconsistent-missing-override -Wno-unused-function \
+                 -c "$src" -o "$obj" > "$logs/tu-${base}.log" 2>&1; then
+              echo "OK   $base" >> "$logs/tu-compile.txt"
+            else
+              echo "FAIL $base" >> "$logs/tu-compile.txt"; fails=$((fails+1))
+            fi
+          done
+          echo "tu_failures=$fails" | tee -a "$logs/tu-compile.txt"
+          ls "$RUNNER_TEMP/objs" | wc -l | tee -a "$logs/tu-compile.txt"
+
+      - name: Link the kext binary
+        shell: bash
+        run: |
+          set -uo pipefail
+          logs="$RUNNER_TEMP/logs"
+          objs=("$RUNNER_TEMP"/objs/*.o)
+          rmobjs=("$RUNNER_TEMP"/nv/src/nvidia/_out/Darwin_x86_64/*.o)
+          # Shader objects are data blobs the gate packs separately; only .o files that link are included.
+          echo "tu objects: ${#objs[@]}  rm objects: ${#rmobjs[@]}" | tee "$logs/link.txt"
+          if xcrun clang++ -arch x86_64 -fapple-kext -nostdlib -Xlinker -kext -lkmodc++ -lkmod -lcc_kext \
+               "${objs[@]}" "${rmobjs[@]}" -o "$RUNNER_TEMP/NVRM" > "$logs/ld.txt" 2>&1; then
+            echo "link_exit=0" | tee -a "$logs/link.txt"
+            stat -f 'size=%z' "$RUNNER_TEMP/NVRM" | tee -a "$logs/link.txt"
+            shasum -a 256 "$RUNNER_TEMP/NVRM" | awk '{print "sha256="$1}' | tee -a "$logs/link.txt"
+            xcrun nm -u "$RUNNER_TEMP/NVRM" > "$logs/NVRM-undefined.txt"
+            wc -l < "$logs/NVRM-undefined.txt" | awk '{print "undefined="$1}' | tee -a "$logs/link.txt"
+          else
+            echo "link_exit=$?" | tee -a "$logs/link.txt"
+            grep -E 'error|duplicate|undefined' "$logs/ld.txt" | head -40 | tee -a "$logs/link.txt"
+          fi
+
+      - name: Upload the link reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g1-stock-v243-kext-link-text
+          path: ${{ runner.temp }}/logs/
+          if-no-files-found: error
+          retention-days: 14
