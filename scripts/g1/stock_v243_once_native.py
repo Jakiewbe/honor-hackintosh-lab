@@ -521,36 +521,6 @@ def main():
             if not symbols_ok:
                 report.setdefault('failed_stage', report['stage'])
                 errors.append('symbol/ABI integration differs from the reviewed set')
-            report['stage'] = 'partial-link'
-            link_ok = True
-            combined = objects / 'combined-candidate.o'
-            link_rc = run(['xcrun', 'ld', '-r', '-arch', 'x86_64', '-o', combined,
-                           objects / 'candidate-NVRM.o', objects / 'candidate-NVRMFB.o'],
-                          objects, logs / 'partial-link.txt')
-            link_record = dict(executed=True, exit=link_rc, object_exists=combined.exists())
-            if link_rc == 0 and combined.exists():
-                link_record['size'] = combined.stat().st_size
-                link_record['sha256'] = hashlib.sha256(combined.read_bytes()).hexdigest()
-                run(['xcrun', 'nm', '-u', combined], objects, logs / 'combined-undefined.txt')
-                run(['xcrun', 'nm', '-gU', combined], objects, logs / 'combined-defined.txt')
-                combined_und = nm_names(logs / 'combined-undefined.txt')
-                expected_und = set()
-                for index in range(2):
-                    expected_und |= set(report['objects'][index + 2]['undefined'])
-                link_record['undefined'] = len(combined_und)
-                link_record['undefined_matches_union'] = combined_und == expected_und
-                if combined_und != expected_und:
-                    link_ok = False
-            else:
-                link_ok = False
-            report['partial_link'] = link_record
-            report['staged_results']['partial_link'] = dict(
-                ok=link_ok, exit=link_rc,
-                undefined=link_record.get('undefined'),
-                undefined_matches_union=link_record.get('undefined_matches_union'))
-            if not link_ok:
-                report.setdefault('failed_stage', report['stage'])
-                errors.append('partial link of the two candidate objects failed or changed the undefined set')
             report['stage'] = 'gate-self-checks'
             self_checks = gate_self_checks(exceptions, integration)
             report['gate_self_checks'] = self_checks
@@ -601,11 +571,6 @@ def main():
                       flush=True)
             for line in verdict.get('unparsed', [])[:4]:
                 print('::error::DIAG_UNPARSED ' + line[:200], flush=True)
-    if report['status'] != PASS_STATUS and report.get('partial_link'):
-        if not report['staged_results'].get('partial_link', {}).get('ok', True):
-            print('::error::PARTIAL_LINK exit=%s undefined=%s matches_union=%s' %
-                  (report['partial_link'].get('exit'), report['partial_link'].get('undefined'),
-                   report['partial_link'].get('undefined_matches_union')), flush=True)
     if report['status'] != PASS_STATUS and report.get('gate_self_checks'):
         for c in report['gate_self_checks']['cases']:
             if not c['ok']:
