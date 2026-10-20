@@ -55,9 +55,11 @@
       "line": 1579,
       "column": 13,
       "category": "-Wdeprecated-declarations",
-      "message_regex": "IOPCIDevice.*deprecated",
+      "message_regex": "^'IOPCIDevice' is deprecated: Use PCIDriverKit$",
       "count": 1,
-      "reason": "IOPCIDevice is the in-kernel PCI provider API this driver must use; PCIDriverKit is a user-space story and moving the kext to it is out of scope for a two-TU convergence."
+      "reason": "IOPCIDevice is the in-kernel PCI provider API this driver must use; PCIDriverKit is a user-space story and moving the kext to it is out of scope for a two-TU convergence.",
+      "message_text": "'IOPCIDevice' is deprecated: Use PCIDriverKit",
+      "evidence": "compiler output of run 39446529816 (candidate-NVRM-compile.txt, artifact 12276826783) and re-confirmed in run 39450921177"
     },
     {
       "path": "kexts/NVRM/NVRM.cpp",
@@ -65,9 +67,11 @@
       "line": 1587,
       "column": 43,
       "category": "-Wdeprecated-declarations",
-      "message_regex": "IOPCIDevice.*deprecated",
+      "message_regex": "^'IOPCIDevice' is deprecated: Use PCIDriverKit$",
       "count": 1,
-      "reason": "Constructor parameter of the same deprecated type; removing the parameter would delete the rollback path that restores saved PCI command state."
+      "reason": "Constructor parameter of the same deprecated type; removing the parameter would delete the rollback path that restores saved PCI command state.",
+      "message_text": "'IOPCIDevice' is deprecated: Use PCIDriverKit",
+      "evidence": "compiler output of run 39446529816 (candidate-NVRM-compile.txt, artifact 12276826783) and re-confirmed in run 39450921177"
     },
     {
       "path": "kexts/NVRM/NVRM.cpp",
@@ -75,9 +79,11 @@
       "line": 1599,
       "column": 22,
       "category": "-Wdeprecated-declarations",
-      "message_regex": "setBusMasterEnable.*deprecated",
+      "message_regex": "^'setBusMasterEnable' is deprecated: first deprecated in macOS 12\\.4$",
       "count": 1,
-      "reason": "Restores bus-master state in the destructor; dropping it would leave DMA enabled after a failed bring-up, which is strictly less safe than the warning."
+      "reason": "Restores bus-master state in the destructor; dropping it would leave DMA enabled after a failed bring-up, which is strictly less safe than the warning.",
+      "message_text": "'setBusMasterEnable' is deprecated: first deprecated in macOS 12.4",
+      "evidence": "compiler output of run 39446529816 (candidate-NVRM-compile.txt, artifact 12276826783) and re-confirmed in run 39450921177"
     }
   ],
   "diagnostics_policy": "Closed exception list bound to the locked candidate SHA and to file/line/column/category/message pattern/count. Any other new diagnostic is rejected; a listed exception that no longer appears is rejected too. This is a reviewed acceptance, not a zero-new-warning claim.",
