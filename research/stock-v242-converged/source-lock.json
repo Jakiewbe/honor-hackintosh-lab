@@ -80,5 +80,48 @@
       "reason": "Restores bus-master state in the destructor; dropping it would leave DMA enabled after a failed bring-up, which is strictly less safe than the warning."
     }
   ],
-  "diagnostics_policy": "Closed exception list bound to the locked candidate SHA and to file/line/column/category/message pattern/count. Any other new diagnostic is rejected; a listed exception that no longer appears is rejected too. This is a reviewed acceptance, not a zero-new-warning claim."
+  "diagnostics_policy": "Closed exception list bound to the locked candidate SHA and to file/line/column/category/message pattern/count. Any other new diagnostic is rejected; a listed exception that no longer appears is rejected too. This is a reviewed acceptance, not a zero-new-warning claim.",
+  "integration_symbols": {
+    "approved_new_undefined": [
+      {
+        "path": "kexts/NVRM/NVRM.cpp",
+        "symbol": "__ZNK9IOService10isInactiveEv",
+        "provided_by": "kernel (XNU)",
+        "evidence": "research/gpu-safety-r5/target-provider-evidence/native/runner-kernel-nm-raw.txt:6584",
+        "reason": "IOService::isInactive() is exported by the kernel (T ffffff80009ec9a0 in the runner nm capture); the task-admission paths use it to refuse work after terminate begins."
+      },
+      {
+        "path": "kexts/NVRM/NVRM.cpp",
+        "symbol": "_rm_disable_adapter",
+        "provided_by": "OGKM RM objects (osapi.c)",
+        "evidence": "research/gpu-safety-r5/input-binding-evidence/full-source/full-nvrm-defined.txt:15838",
+        "reason": "Defined in src/nvidia/arch/nvalloc/unix/src/osapi.c and seen as T 0xa3fb0 in a previous complete NVRM link; the teardown path needs it to stand the adapter down."
+      }
+    ],
+    "approved_new_defined": [
+      {
+        "path": "kexts/NVRM/NVRM.cpp",
+        "symbols": [
+          "__ZN4NVRM12adoptAdapterEP10IOWorkLoopP28IOFilterInterruptEventSource",
+          "__ZN4NVRM12didTerminateEP9IOServicejPb",
+          "__ZN4NVRM12runHeadWatchEv",
+          "__ZN4NVRM12taskStoppingEv",
+          "__ZN4NVRM12taskSysWriteEPKci",
+          "__ZN4NVRM13willTerminateEP9IOServicej",
+          "__ZN4NVRM18closeTaskAdmissionEv",
+          "__ZN4NVRM20taskCompletionActionEP8OSObjectPvS2_S2_S2_",
+          "__ZN4NVRM21finishTaskTerminationEv",
+          "__ZN4NVRM23completeTaskTerminationEv",
+          "__ZN4NVRM7endTaskEv",
+          "__ZN4NVRM8finalizeEj",
+          "__ZN4NVRM9beginTaskEv",
+          "__ZN4NVRM9runAutoGoEv",
+          "__ZN4NVRM9taskSleepEj"
+        ],
+        "note": "Methods this patch adds to the NVRM class. Each is defined only in NVRM.cpp, and no stock symbol disappeared."
+      }
+    ],
+    "removed": [],
+    "note": "Symbol-level link integration only. It does not prove linking, loading or execution."
+  }
 }

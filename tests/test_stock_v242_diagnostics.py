@@ -138,9 +138,10 @@ class LockValidationTests(unittest.TestCase):
         self.assets = ROOT / 'research/stock-v242-converged'
 
     def test_delivered_lock_is_accepted(self):
-        patch, exceptions = self.mod.validate_lock(dict(self.lock), self.assets)
+        patch, exceptions, integration = self.mod.validate_lock(dict(self.lock), self.assets)
         self.assertTrue(patch.is_file())
         self.assertEqual(len(exceptions), 3)
+        self.assertIn('approved_new_undefined', integration)
 
     def test_exception_outside_the_two_files_is_rejected(self):
         bad = dict(self.lock)

@@ -139,7 +139,22 @@ def validate_lock(lock, assets):
         if entry['count'] < 1:
             raise ValueError('diagnostics exception count must be positive')
         re.compile(entry['message_regex'])
-    return patch, exceptions
+    integration = lock.get('integration_symbols', {})
+    if 'approved_new_undefined' not in integration or 'approved_new_defined' not in integration:
+        raise ValueError('integration_symbols must list both undefined and defined additions')
+    for entry in integration['approved_new_undefined']:
+        for field in ('path', 'symbol', 'provided_by', 'evidence', 'reason'):
+            if field not in entry:
+                raise ValueError('approved undefined symbol entry is missing ' + field)
+        if entry['path'] not in EXPECTED:
+            raise ValueError('approved undefined symbol names an out-of-scope file')
+    for group in integration['approved_new_defined']:
+        for field in ('path', 'symbols'):
+            if field not in group:
+                raise ValueError('approved defined symbols group is missing ' + field)
+        if group['path'] not in EXPECTED or not group['symbols']:
+            raise ValueError('approved defined symbols group must name a scoped file with entries')
+    return patch, exceptions, integration
 
 
 def prepare(nm, candidate, lock, patch, logs):
@@ -193,6 +208,36 @@ def object_identity(path):
     return dict(size=len(raw), sha256=sha(raw), format='x86_64_MH_OBJECT')
 
 
+def nm_names(path):
+    """Symbol names from a one-per-line `nm` log; the ARGV/EXIT wrapper lines are not symbols."""
+    names = set()
+    for line in path.read_text(encoding='utf-8', errors='replace').splitlines():
+        line = line.strip()
+        if not line or line.startswith('ARGV=') or line.startswith('EXIT='):
+            continue
+        names.add(line.split()[-1])
+    return names
+
+
+def classify_symbols(original, candidate, approved_new_undefined, approved_new_defined):
+    """Link-integration contract at symbol level: no unapproved dependency, no silent ABI change.
+
+    A new undefined symbol needs a reviewed provider; new defined symbols are enumerated; removing either
+    kind changes what other components link against and is rejected.
+    """
+    new_und = candidate['undefined'] - original['undefined']
+    gone_und = original['undefined'] - candidate['undefined']
+    new_def = candidate['defined'] - original['defined']
+    gone_def = original['defined'] - candidate['defined']
+    verdict = dict(new_undefined=sorted(new_und), missing_undefined=sorted(gone_und),
+                   new_defined=sorted(new_def), missing_defined=sorted(gone_def),
+                   approved_undefined=sorted(approved_new_undefined),
+                   approved_defined=sorted(approved_new_defined))
+    verdict['ok'] = (new_und == set(approved_new_undefined) and new_def == set(approved_new_defined)
+                     and not gone_und and not gone_def)
+    return verdict
+
+
 def compile_one(role, tree, source, flags, logs, objects):
     stem = role + '-' + ('NVRM' if source == EXPECTED[0] else 'NVRMFB')
     obj = objects / (stem + '.o')
@@ -221,6 +266,8 @@ def compile_one(role, tree, source, flags, logs, objects):
     for label, command in [('undefined', ['xcrun', 'nm', '-u']), ('defined', ['xcrun', 'nm', '-gU'])]:
         if run([*command, obj], tree, logs / (stem + '-' + label + '.txt')):
             raise ValueError('object inspection failed: ' + stem)
+    record['undefined'] = nm_names(logs / (stem + '-undefined.txt'))
+    record['defined'] = nm_names(logs / (stem + '-defined.txt'))
     record['diagnostics'] = parse_diagnostics((logs / (stem + '-compile.txt')).read_text(encoding='utf-8'))
     # Text evidence only. Never upload even these unlinked driver objects.
     obj.unlink()
@@ -244,7 +291,8 @@ def main():
         if platform.system() != 'Darwin' or platform.machine() != 'x86_64':
             raise ValueError('native Intel macOS runner required; cross compilation is not accepted')
         lock = json.loads((assets / 'source-lock.json').read_text(encoding='utf-8'))
-        patch, exceptions = validate_lock(lock, assets); report['source_lock'] = lock
+        patch, exceptions, integration = validate_lock(lock, assets); report['source_lock'] = lock
+        report['integration_symbols'] = integration
         report['diagnostics_exceptions'] = exceptions
         for name, tree, pin in [('nm', nm, NM_PIN), ('nv', nv, NV_PIN)]:
             if output(['git', '-C', tree, 'rev-parse', 'HEAD']) != pin:
@@ -323,6 +371,29 @@ def main():
             if not diag_ok:
                 report.setdefault('failed_stage', report['stage'])
                 errors.append('diagnostics not limited to the reviewed exceptions')
+            report['stage'] = 'symbol-integration'
+            symbols_ok = True
+            report['symbols'] = {}
+            for index, source in enumerate(EXPECTED):
+                approved_und = {e['symbol'] for e in integration['approved_new_undefined'] if e['path'] == source}
+                approved_def = set()
+                for group in integration['approved_new_defined']:
+                    if group['path'] == source:
+                        approved_def |= set(group['symbols'])
+                verdict = classify_symbols(report['objects'][index], report['objects'][index + 2],
+                                           approved_und, approved_def)
+                report['symbols'][source] = verdict
+                if not verdict['ok']:
+                    symbols_ok = False
+            report['staged_results']['symbol_integration'] = dict(
+                ok=symbols_ok,
+                new_undefined=sum(len(v['new_undefined']) for v in report['symbols'].values()),
+                missing_undefined=sum(len(v['missing_undefined']) for v in report['symbols'].values()),
+                new_defined=sum(len(v['new_defined']) for v in report['symbols'].values()),
+                missing_defined=sum(len(v['missing_defined']) for v in report['symbols'].values()))
+            if not symbols_ok:
+                report.setdefault('failed_stage', report['stage'])
+                errors.append('symbol/ABI integration differs from the reviewed set')
         report['stage'] = 'compiler-negative-control'
         try:
             report['compile_negative'] = run_negative_control(objects, logs)
@@ -355,6 +426,16 @@ def main():
                 print('::error::DIAG_MISSING %s:%d:%d seen=%d expected=%d' %
                       (entry['file'], entry['line'], entry['column'], entry['seen'], entry['count']),
                       flush=True)
+    if report['status'] != PASS_STATUS and report.get('symbols'):
+        for source, verdict in report['symbols'].items():
+            for sym in verdict['new_undefined'][:4]:
+                print('::error::SYM_NEW_UNDEFINED %s %s' % (source, sym), flush=True)
+            for sym in verdict['new_defined'][:8]:
+                print('::error::SYM_NEW_DEFINED %s %s' % (source, sym), flush=True)
+            for sym in verdict['missing_undefined'][:4]:
+                print('::error::SYM_MISSING_UNDEFINED %s %s' % (source, sym), flush=True)
+            for sym in verdict['missing_defined'][:4]:
+                print('::error::SYM_MISSING_DEFINED %s %s' % (source, sym), flush=True)
     print(report['status'], report['stage'], report.get('error', ''))
     return 0 if report['status'] == PASS_STATUS else 2
 
