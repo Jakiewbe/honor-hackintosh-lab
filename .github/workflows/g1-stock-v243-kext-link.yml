@@ -91,7 +91,7 @@ jobs:
           jobs="$(sysctl -n hw.ncpu)"
           rc=0
           gmake -C "$nv/src/nvidia" -k -j"$jobs" TARGET_OS=Darwin TARGET_ARCH=x86_64 CC=clang \
-            EXTRA_CFLAGS="-DNV_UNIX -DNV_LINUX" > "$logs/make-nvidia.log" 2>&1 || rc=$?
+            NV_VERBOSE=1 EXTRA_CFLAGS="-DNV_UNIX -DNV_LINUX" > "$logs/make-nvidia.log" 2>&1 || rc=$?
           {
             echo "make_rc=$rc"
             echo "objects=$(ls "$nv/src/nvidia/_out/Darwin_x86_64" 2>/dev/null | wc -l | tr -d ' ')"
@@ -109,11 +109,13 @@ jobs:
           SDK="$(xcrun --show-sdk-path)"
           KHDR="$SDK/System/Library/Frameworks/Kernel.framework/Headers"
           NV="$nv/src/nvidia"; KMS="$nv/src/nvidia-modeset"
-          RMDEFS=()
-          if [[ -f "$NV/_out/Darwin_x86_64/compile_cmds.sh" ]]; then
+          RMDEFS=(-DNV_UNIX -DNV_LINUX)
+          # The RM's own compile command is the authority for the define set; it needs NV_VERBOSE=1 in the log.
+          if grep -qE ' -c [^ ]+\.(c|cpp) ' "$logs/make-nvidia.log"; then
+            while read -r d; do RMDEFS+=("$d"); done < <(grep -E ' -c [^ ]+\.(c|cpp) ' "$logs/make-nvidia.log" \
+              | grep -E 'nvidia/arch|nvidia/inc|kernel' | head -1 | tr ' ' '\n' | grep -E '^-D' | sort -u)
+          elif [[ -f "$NV/_out/Darwin_x86_64/compile_cmds.sh" ]]; then
             while read -r d; do RMDEFS+=("$d"); done < <(head -1 "$NV/_out/Darwin_x86_64/compile_cmds.sh" | tr ' ' '\n' | grep -E '^-D' | sed -e 's/"//g')
-          else
-            while read -r d; do RMDEFS+=("$d"); done < <(grep -E ' -c [^ ]+\.(c|cpp) ' "$logs/make-nvidia.log" | head -1 | tr ' ' '\n' | grep -E '^-D')
           fi
           echo "defines: ${#RMDEFS[@]} ${RMDEFS[*]:-}" | tee "$logs/tu-compile.txt"
           INC=( -I"$KHDR" -I"$nm" -I"$NV/arch/nvalloc/unix/include" -I"$NV/arch/nvalloc/common/inc"
