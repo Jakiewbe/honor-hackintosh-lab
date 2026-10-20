@@ -1,0 +1,78 @@
+name: HONOR G1 stock v243 ONCE two-TU native gate
+
+# Manual only. Compiles the two changed translation units at the fixed 272ccd9
+# pin plus the scoped v2.4.3 ONCE backport. Never links, installs, loads or runs
+# a driver, and never accesses a device.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: honor-g1-stock-v243-once-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  changed-objects:
+    runs-on: macos-15-intel
+    timeout-minutes: 30
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+      NM_PIN: 272ccd9da04ff5de95c2791b902fe17a3fa77ce7
+      NV_PIN: e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Check Intel Xcode 16.4 and prepare runner GNU make
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$(uname -m)" == x86_64 ]]
+          [[ -d "$DEVELOPER_DIR" ]]
+          [[ "$(xcrun --show-sdk-version)" == 15.5 ]]
+          command -v gmake >/dev/null || brew install make
+
+      - name: Fetch only source and build-recipe files at fixed commits
+        shell: bash
+        run: |
+          set -euo pipefail
+          for spec in "nm https://github.com/nullmoth/nvidia-macos-driver.git $NM_PIN" \
+                      "nv https://github.com/NVIDIA/open-gpu-kernel-modules.git $NV_PIN"; do
+            read -r name url pin <<< "$spec"
+            dir="$RUNNER_TEMP/stock-v243-once-$name"
+            git -c core.autocrlf=false init -q "$dir"
+            git -C "$dir" config core.autocrlf false
+            git -C "$dir" remote add origin "$url"
+            git -C "$dir" config remote.origin.promisor true
+            git -C "$dir" config remote.origin.partialclonefilter blob:none
+            git -C "$dir" fetch --filter=blob:none --no-tags --depth 1 origin "$pin"
+            git -C "$dir" sparse-checkout init --no-cone
+            printf '%s\n' '*.h' '*.hpp' '*.c' '*.cpp' '*.inc' '*.mk' 'Makefile' '*.sh' '*.py' \
+                '*.S' '*.s' '*.ld' '*.lds' '*.in' '*.txt' \
+                'LICENSE*' 'COPYING*' 'COPYRIGHT*' | git -C "$dir" sparse-checkout set --no-cone --stdin
+            git -C "$dir" checkout --detach -q FETCH_HEAD
+            [[ "$(git -C "$dir" rev-parse HEAD)" == "$pin" ]]
+          done
+
+      - name: Compile original and candidate changed translation units
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/g1/stock_v243_once_native.py \
+            --nm "$RUNNER_TEMP/stock-v243-once-nm" \
+            --nv "$RUNNER_TEMP/stock-v243-once-nv" \
+            --assets research/stock-v243-once-20261021 \
+            --out "$RUNNER_TEMP/stock-v243-once-native-logs"
+
+      - name: Upload text diagnostics and source bindings even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: honor-g1-stock-v243-once-native-text
+          path: ${{ runner.temp }}/stock-v243-once-native-logs/
+          if-no-files-found: error
+          retention-days: 14

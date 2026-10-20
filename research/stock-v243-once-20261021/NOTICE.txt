@@ -1,0 +1,5 @@
+NullMoth original source and modifications: PolyForm-Noncommercial-1.0.0
+Required Notice: Copyright (c) 2026 NullMoth Systems (https://nullmothsystems.com)
+https://polyformproject.org/licenses/noncommercial/1.0.0/
+Reconstruction candidate, not an official NullMoth release. Source/CPU only until native evidence exists.
+GO_COMPILE_ONLY; DEVICE_NO_GO. No linking, signing, installing, loading, firmware download or GPU test.

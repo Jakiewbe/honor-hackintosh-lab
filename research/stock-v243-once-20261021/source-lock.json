@@ -1,0 +1,166 @@
+{
+  "schema": 1,
+  "upstream_repository": "nullmoth/nvidia-macos-driver",
+  "upstream_commit": "272ccd9da04ff5de95c2791b902fe17a3fa77ce7",
+  "ogkm_commit": "e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb",
+  "patch": "stock-v243-converged.patch",
+  "patch_sha256": "5afed01b91fb3c1dbe6f9e6a057245e5aba4ba54a7ed177c549fdc3179c2dc7c",
+  "files": [
+    {
+      "path": "kexts/NVRM/NVRM.cpp",
+      "original_sha256": "f1d682a36b4896ddb79c547947bcd3f890343cb8c753ea94bcd17511576af295",
+      "original_git_blob": "96fc110513acae83e003b9517e25826c815aca10",
+      "candidate_sha256": "ac0c75180a36a9b17b9350b4e39cd68e19496c7af276f3267060a1b9a0db9404",
+      "local_candidate": "candidate-stock-v242-converged/nm/kexts/NVRM/NVRM.cpp"
+    },
+    {
+      "path": "kexts/NVRMFB/fb/nvrm-fb.cpp",
+      "original_sha256": "5d1bf1c47ee6ad7246d93a8667bf104524cad4dc8412df3524f427341eecb185",
+      "original_git_blob": "859965bbe7776e0acc7039bf5e840f39f4bacd1c",
+      "candidate_sha256": "69df8a943ef5ea1f0fce87eceee7287d4814d3f5768117340596ea9b56f98f78",
+      "local_candidate": "research/stock-v243-once-20261021/nvrm-fb-once.cpp"
+    }
+  ],
+  "provenance": [
+    {
+      "path": "kexts/NVRM/NVRM.cpp",
+      "prior_candidate": "candidate-stock-v242-lifecycle-workloop/nm/kexts/NVRM/NVRM.cpp",
+      "prior_candidate_sha256": "99b73eb7bd3c94fa311c8e2252c6224598cb3c8b26dfbcfeffbf62d42044ea05",
+      "prior_patch": "research/stock-v242-lifecycle-fix-20261020/patches/stock-v242-lifecycle-workloop.patch",
+      "prior_patch_sha256": "c3c73b137ccda327c8fbb7ca6403ae33982a555a93de118fbf17ec3d7d97dca0",
+      "prerequisites": [
+        "research/stock-v242-init-20261020/patches/stock-v242-adapter-attempt.patch",
+        "research/stock-v242-workers-20261020/patches/stock-v242-worker-termination.patch"
+      ]
+    },
+    {
+      "path": "kexts/NVRMFB/fb/nvrm-fb.cpp",
+      "prior_candidate": "candidate-stock-v242-headless-enumeration/nm/kexts/NVRMFB/fb/nvrm-fb.cpp",
+      "prior_candidate_sha256": "35ebfb184ca7b597d5c79cdf4403977708e15995f814f65f4838a64bb317e3e8",
+      "prior_patch": "research/stock-v242-20261020/patches/stock-v242-headless-enumeration.patch",
+      "prior_patch_sha256": "cab666825e7d6562f57b135951b7bd097f9b21de57033f383d9cbd4459cfd192",
+      "prerequisites": []
+    }
+  ],
+  "apply": "Apply this ONE patch to the official pin; do not also apply its predecessors.",
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "required_notice": "Copyright (c) 2026 NullMoth Systems (https://nullmothsystems.com)",
+  "compilation_admission": "GO_COMPILE_ONLY",
+  "device_admission": "NO_GO",
+  "level": "SOURCE_CANDIDATE_NOT_DARWIN_COMPILED_NOT_LOADED",
+  "diagnostics_exceptions": [
+    {
+      "path": "kexts/NVRM/NVRM.cpp",
+      "file": "NVRM.cpp",
+      "line": 1579,
+      "column": 13,
+      "category": "-Wdeprecated-declarations",
+      "message_regex": "^'IOPCIDevice' is deprecated: Use PCIDriverKit$",
+      "count": 1,
+      "reason": "IOPCIDevice is the in-kernel PCI provider API this driver must use; PCIDriverKit is a user-space story and moving the kext to it is out of scope for a two-TU convergence.",
+      "message_text": "'IOPCIDevice' is deprecated: Use PCIDriverKit",
+      "evidence": "compiler output of run 39446529816 (candidate-NVRM-compile.txt, artifact 12276826783) and re-confirmed in run 39450921177"
+    },
+    {
+      "path": "kexts/NVRM/NVRM.cpp",
+      "file": "NVRM.cpp",
+      "line": 1587,
+      "column": 43,
+      "category": "-Wdeprecated-declarations",
+      "message_regex": "^'IOPCIDevice' is deprecated: Use PCIDriverKit$",
+      "count": 1,
+      "reason": "Constructor parameter of the same deprecated type; removing the parameter would delete the rollback path that restores saved PCI command state.",
+      "message_text": "'IOPCIDevice' is deprecated: Use PCIDriverKit",
+      "evidence": "compiler output of run 39446529816 (candidate-NVRM-compile.txt, artifact 12276826783) and re-confirmed in run 39450921177"
+    },
+    {
+      "path": "kexts/NVRM/NVRM.cpp",
+      "file": "NVRM.cpp",
+      "line": 1599,
+      "column": 22,
+      "category": "-Wdeprecated-declarations",
+      "message_regex": "^'setBusMasterEnable' is deprecated: first deprecated in macOS 12\\.4$",
+      "count": 1,
+      "reason": "Restores bus-master state in the destructor; dropping it would leave DMA enabled after a failed bring-up, which is strictly less safe than the warning.",
+      "message_text": "'setBusMasterEnable' is deprecated: first deprecated in macOS 12.4",
+      "evidence": "compiler output of run 39446529816 (candidate-NVRM-compile.txt, artifact 12276826783) and re-confirmed in run 39450921177"
+    }
+  ],
+  "diagnostics_policy": "Closed exception list bound to the locked candidate SHA and to file/line/column/category/message pattern/count. Any other new diagnostic is rejected; a listed exception that no longer appears is rejected too. This is a reviewed acceptance, not a zero-new-warning claim.",
+  "integration_symbols": {
+    "approved_new_undefined": [
+      {
+        "path": "kexts/NVRM/NVRM.cpp",
+        "symbol": "__ZNK9IOService10isInactiveEv",
+        "provided_by": "kernel (XNU)",
+        "evidence": "research/gpu-safety-r5/target-provider-evidence/native/runner-kernel-nm-raw.txt:6584",
+        "reason": "IOService::isInactive() is exported by the kernel (T ffffff80009ec9a0 in the runner nm capture); the task-admission paths use it to refuse work after terminate begins."
+      },
+      {
+        "path": "kexts/NVRM/NVRM.cpp",
+        "symbol": "_rm_disable_adapter",
+        "provided_by": "OGKM RM objects (osapi.c)",
+        "evidence": "research/gpu-safety-r5/input-binding-evidence/full-source/full-nvrm-defined.txt:15838",
+        "reason": "Defined in src/nvidia/arch/nvalloc/unix/src/osapi.c and seen as T 0xa3fb0 in a previous complete NVRM link; the teardown path needs it to stand the adapter down."
+      },
+      {
+        "path": "kexts/NVRMFB/fb/nvrm-fb.cpp",
+        "symbol": "_thread_call_allocate_with_options",
+        "provided_by": "kernel (XNU)",
+        "evidence": "research/gpu-safety-r5/target-provider-evidence/native/runner-kernel-nm-raw.txt:20704",
+        "reason": "thread_call_allocate is a real imported C function in this build (the v2.4.2 object imports _thread_call_allocate). The ONCE backport converts ten sites to thread_call_allocate_with_options; the kernel exports it at ffffff800034dc20. The two gConnectNotify sites stay on the old import, so no existing undefined symbol is removed."
+      }
+    ],
+    "approved_new_defined": [
+      {
+        "path": "kexts/NVRM/NVRM.cpp",
+        "symbols": [
+          "__ZN4NVRM12adoptAdapterEP10IOWorkLoopP28IOFilterInterruptEventSource",
+          "__ZN4NVRM12didTerminateEP9IOServicejPb",
+          "__ZN4NVRM12runHeadWatchEv",
+          "__ZN4NVRM12taskStoppingEv",
+          "__ZN4NVRM12taskSysWriteEPKci",
+          "__ZN4NVRM13willTerminateEP9IOServicej",
+          "__ZN4NVRM18closeTaskAdmissionEv",
+          "__ZN4NVRM20taskCompletionActionEP8OSObjectPvS2_S2_S2_",
+          "__ZN4NVRM21finishTaskTerminationEv",
+          "__ZN4NVRM23completeTaskTerminationEv",
+          "__ZN4NVRM7endTaskEv",
+          "__ZN4NVRM8finalizeEj",
+          "__ZN4NVRM9beginTaskEv",
+          "__ZN4NVRM9runAutoGoEv",
+          "__ZN4NVRM9taskSleepEj"
+        ],
+        "note": "Methods this patch adds to the NVRM class. Each is defined only in NVRM.cpp, and no stock symbol disappeared."
+      }
+    ],
+    "removed": [],
+    "note": "Symbol-level link integration only. It does not prove linking, loading or execution.",
+    "approved_removed_undefined": [
+      {
+        "path": "kexts/NVRMFB/fb/nvrm-fb.cpp",
+        "symbol": "_thread_call_allocate",
+        "reason": "All twelve allocations now use thread_call_allocate_with_options (release 47f818b does the same), so the plain allocator import disappears from this object. The replacement import is listed in approved_new_undefined.",
+        "evidence": "candidate nvrm-fb-once.cpp contains no thread_call_allocate( call; both allocators are declared together in osfmk/kern/thread_call.h"
+      }
+    ]
+  },
+  "overlay_patch": "stock-v243-once-overlay.patch",
+  "overlay_sha256": "cf641289200b002abdf5e81a356edbd55be824bb56eda1eb731cf1363f654d9c",
+  "upstream_fix_commit": "7dd3aeb",
+  "upstream_fix_subject": "NVRMFB: run every scheduled callback one at a time (#295)",
+  "upstream_release_commit": "47f818b11cef59acb480210afdf9065fdd44e356",
+  "upstream_release_parent": "5e711be242a8b23f12bf15572a6993b6bd08ec9a",
+  "excluded": {
+    "upstream_prs": [
+      "#317",
+      "#318"
+    ],
+    "upstream_change": "PR #294 NVMTLDriver AIR digest (plugin/NVMTLLibraryLoad.m) is not part of this candidate",
+    "sites": [
+      "kexts/NVRMFB/fb/nvrm-fb.cpp:gConnectNotify (both allocation sites)"
+    ]
+  },
+  "notice": "This lock describes the v2.4.2 two-file candidate PLUS a scoped v2.4.3 ONCE backport. It does not move the upstream pin and does not include PR #294/#317/#318. All twelve allocation sites carry ONCE, matching release 47f818b; it is a semantic reconstruction, not a byte-for-byte cherry-pick.",
+  "apply_order": "Apply stock-v243-converged.patch to the official 272ccd9 pin. It already contains the stock-v242-converged changes and the ONCE overlay; do not apply the base patch first."
+}

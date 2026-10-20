@@ -1,0 +1,664 @@
+--- a/kexts/NVRM/NVRM.cpp
++++ b/kexts/NVRM/NVRM.cpp
+@@ -102,6 +102,21 @@
+     virtual bool start(IOService *provider) override;
+     virtual void stop(IOService *provider) override;
+     IOReturn go(uint32_t pass);
++    virtual bool willTerminate(IOService *provider, IOOptionBits options) override;
++    virtual bool didTerminate(IOService *provider, IOOptionBits options, bool *defer) override;
++    bool beginTask();
++    void endTask();
++    bool taskStopping();
++    bool taskSleep(uint32_t ms);
++    void closeTaskAdmission();
++    void completeTaskTermination();
++    void finishTaskTermination();
++    static IOReturn taskCompletionAction(OSObject *owner, void *, void *, void *, void *);
++    virtual bool finalize(IOOptionBits options) override;
++    bool adoptAdapter(IOWorkLoop *loop, IOFilterInterruptEventSource *source);
++    bool taskSysWrite(const char *name, int value);
++    void runAutoGo();
++    void runHeadWatch();
+     static void autoGo(void *p0, wait_result_t w);
+     static void bootHoldCap(thread_call_param_t p0, thread_call_param_t p1);
+     void releaseBootHold(const char *why);
+@@ -139,6 +154,15 @@
+     bool         fPrivateState = false;
+     bool         fAdapter = false;
+     uint32_t     fPassDone = 0;
++    unsigned     fTasks = 0;
++    bool         fTaskStopping = false;
++    bool         fTaskDeferReady = false;
++    bool         fTaskTerminateDone = false;
++    IOService   *fTaskDeferProvider = NULL;
++    IOOptionBits fTaskDeferOptions = 0;
++    bool         fTaskFinalizePending = false;
++    bool         fTaskFinalizeDone = false;
++    IOOptionBits fTaskFinalizeOptions = 0;
+     IOWorkLoop  *fWorkLoop = NULL;
+     IOFilterInterruptEventSource *fIntSrc = NULL;
+     void readBARs();
+@@ -390,6 +414,155 @@
+     return res;
+ }
+ 
++// Task counters protect bring-up workers, not arbitrary RM clients or PM.
++bool NVRM::beginTask()
++{
++    if (!gNvClientsLock) return false;
++    IOLockLock(gNvClientsLock);
++    const bool admit = !fTaskStopping && !isInactive();
++    if (admit) { ++fTasks; retain(); }
++    IOLockUnlock(gNvClientsLock);
++    return admit;
++}
++bool NVRM::taskStopping()
++{
++    if (!gNvClientsLock) return true;
++    IOLockLock(gNvClientsLock);
++    const bool stopping = fTaskStopping || isInactive();
++    IOLockUnlock(gNvClientsLock);
++    return stopping;
++}
++bool NVRM::taskSleep(uint32_t ms)
++{
++    while (ms && !taskStopping()) {
++        const uint32_t step = ms > 50 ? 50 : ms;
++        IOSleep(step); ms -= step;
++    }
++    return !taskStopping();
++}
++void NVRM::closeTaskAdmission()
++{
++    if (gNvClientsLock) IOLockLock(gNvClientsLock);
++    fTaskStopping = true;
++    if (gNvClientsLock) IOLockUnlock(gNvClientsLock);
++    releaseBootHold("service terminating");
++}
++void NVRM::completeTaskTermination()
++{
++    IOLockLock(gNvClientsLock);
++    const bool ready = fTasks == 0 && (!fTaskDeferProvider || fTaskDeferReady) &&
++        (fTaskDeferProvider || (fTaskFinalizePending && !fTaskFinalizeDone));
++    IOLockUnlock(gNvClientsLock);
++    if (!ready) return;
++    // Match XNU _workLoopAction: use the service/provider loop, NOT our MSI loop.
++    // No private lock is held while taking the IOKit work-loop gate.
++    if (IOWorkLoop *loop = getWorkLoop()) {
++        loop->retain();
++        const IOReturn status = loop->runAction(&NVRM::taskCompletionAction, this);
++        loop->release();
++        // Ownership is taken only inside the action. A dispatch failure retains it.
++        if (status != kIOReturnSuccess) LOG("task termination dispatch failed: 0x%x; completion retained", status);
++    } else {
++        finishTaskTermination();
++    }
++}
++
++IOReturn NVRM::taskCompletionAction(OSObject *owner, void *, void *, void *, void *)
++{
++    ((NVRM *)owner)->finishTaskTermination();
++    return kIOReturnSuccess;
++}
++
++void NVRM::finishTaskTermination()
++{
++    IOService *provider = NULL; IOOptionBits options = 0, finalOptions = 0;
++    bool finalizeNow = false;
++    IOLockLock(gNvClientsLock);
++    // Both completion channels wait for the first didTerminate call to return.
++    if (fTasks == 0 && (!fTaskDeferProvider || fTaskDeferReady)) {
++        if (fTaskDeferProvider) {
++            provider = fTaskDeferProvider; options = fTaskDeferOptions;
++            fTaskDeferProvider = NULL; fTaskDeferReady = false; fTaskTerminateDone = true;
++        }
++        if (fTaskFinalizePending && !fTaskFinalizeDone) {
++            finalOptions = fTaskFinalizeOptions;
++            fTaskFinalizePending = false; fTaskFinalizeDone = true; finalizeNow = true;
++        }
++    }
++    IOLockUnlock(gNvClientsLock);
++    // The task caller or IOKit caller still owns self here. No private lock across IOKit.
++    if (provider) {
++        bool defer = false;
++        super::didTerminate(provider, options, &defer);
++        provider->release();
++    }
++    if (finalizeNow) super::finalize(finalOptions);
++}
++void NVRM::endTask()
++{
++    IOLockLock(gNvClientsLock);
++    if (fTasks == 0) { IOLockUnlock(gNvClientsLock); LOG("ERROR: task accounting underflow"); return; }
++    --fTasks;
++    IOLockUnlock(gNvClientsLock);
++    completeTaskTermination();
++    release();
++}
++bool NVRM::willTerminate(IOService *provider, IOOptionBits options)
++{
++    closeTaskAdmission();
++    return super::willTerminate(provider, options);
++}
++bool NVRM::didTerminate(IOService *provider, IOOptionBits options, bool *defer)
++{
++    closeTaskAdmission();
++    *defer = false;
++    if (!gNvClientsLock) return super::didTerminate(provider, options, defer);
++    IOLockLock(gNvClientsLock);
++    if (fTaskTerminateDone) { *defer = false; IOLockUnlock(gNvClientsLock); return true; }
++    if (fTaskDeferProvider) { *defer = true; IOLockUnlock(gNvClientsLock); return true; }
++    if (fTasks == 0) {
++        fTaskTerminateDone = true;
++        IOLockUnlock(gNvClientsLock);
++        return super::didTerminate(provider, options, defer);
++    }
++    provider->retain(); fTaskDeferProvider = provider; fTaskDeferOptions = options;
++    // endTask cannot complete until the initial superclass defer registration has returned.
++    fTaskDeferReady = false; *defer = true;
++    IOLockUnlock(gNvClientsLock);
++    const bool result = super::didTerminate(provider, options, defer);
++    IOLockLock(gNvClientsLock);
++    fTaskDeferReady = true;
++    IOLockUnlock(gNvClientsLock);
++    completeTaskTermination();
++    return result;
++}
++
++bool NVRM::finalize(IOOptionBits options)
++{
++    closeTaskAdmission();
++    if (!gNvClientsLock) return super::finalize(options);
++    IOLockLock(gNvClientsLock);
++    if (!fTaskFinalizePending && !fTaskFinalizeDone) {
++        fTaskFinalizePending = true; fTaskFinalizeOptions = options;
++    }
++    IOLockUnlock(gNvClientsLock);
++    // XNU ignores this bool. Delaying the BASE call, not returning true, prevents
++    // finalize's independent stop enqueue while counted work still owns hardware.
++    completeTaskTermination();
++    return true;
++}
++
++bool NVRM::adoptAdapter(IOWorkLoop *loop, IOFilterInterruptEventSource *source)
++{
++    IOLockLock(gNvClientsLock);
++    // RM succeeded: this is cleanup ownership, including when cancellation won.
++    fWorkLoop = loop; fIntSrc = source; fAdapter = true;
++    const bool ready = !fTaskStopping && !isInactive();
++    if (ready) fPassDone = 2;
++    IOLockUnlock(gNvClientsLock);
++    return ready;
++}
++
+ bool NVRM::start(IOService *provider)
+ {
+     { if (nvrm_driver_off()) return false; }
+@@ -471,6 +644,8 @@
+                 dl += settle;
+                 retain(); thread_call_enter_delayed(cap, dl);
+             } else { releaseBootHold("no cap timer — not holding"); }
++            if (!beginTask()) { releaseBootHold("auto-go admission closed"); }
++            else {
+             retain();
+             if (kernel_thread_start(&NVRM::autoGo, this, &th) == KERN_SUCCESS) {
+                 thread_deallocate(th);
+@@ -482,6 +657,8 @@
+                 release();
+                 setProperty("nvrm-autogo", "kernel_thread_start FAILED"); LOG("auto-go: kernel_thread_start FAILED — idle until asked");
+                 releaseBootHold("no auto-go thread");
++                endTask();
++            }
+             }
+         }
+     }
+@@ -640,6 +817,16 @@
+ void NVRM::headWatch(void *p0, wait_result_t)
+ {
+     NVRM *s = (NVRM *)p0;
++    s->runHeadWatch();
++    s->endTask();
++    s->release();
++    thread_terminate(current_thread());
++}
++
++void NVRM::runHeadWatch()
++{
++    NVRM *s = this;
++    if (taskStopping()) return;
+     nv_state_t *nv = &s->fNv;
+     IOMemoryDescriptor *md = nv->bars[0].size >= 0x700000
+         ? IOMemoryDescriptor::withPhysicalAddress((IOPhysicalAddress)nv->bars[0].cpu_address, 0x700000, kIODirectionIn) : NULL;
+@@ -653,6 +840,7 @@
+         kprintf("NVRM-xnu: armwatch: baseline taken (firmware) head0 SET_CONTROL 0x%08x RASTER_SIZE 0x%08x\n", armH[0], armH[0x64 / 4]);
+         uint64_t t0 = mach_absolute_time(), released = 0, ns = 0;
+         for (;;) {
++            if (taskStopping()) break;
+             const uint64_t now = mach_absolute_time();
+             absolutetime_to_nanoseconds(now - t0, &ns);
+             for (int h = 0; h < 2; h++) {
+@@ -677,14 +865,12 @@
+             if (!released && s->fBootHold == 0) released = now;
+             uint64_t sinceRel = 0; if (released) absolutetime_to_nanoseconds(now - released, &sinceRel);
+             if ((released && sinceRel > 15000000000ull) || ns > 90000000000ull) break;
+-            IOSleep(5);
++            if (!taskSleep(5)) break;
+         }
+         map->release();
+     }
+     if (md) md->release();
+     kprintf("NVRM-xnu: headwatch: done\n");
+-    s->release();
+-    thread_terminate(current_thread());
+ }
+ 
+ void NVRM::releaseBootHold(const char *why)
+@@ -708,6 +894,26 @@
+ void NVRM::autoGo(void *p0, wait_result_t)
+ {
+     NVRM *s = (NVRM *)p0;
++    s->runAutoGo();
++    s->endTask();
++    s->release();
++    thread_terminate(current_thread());
++}
++
++// true means the write was admitted, NOT that the target accepted its value.
++// Existing callers still read back the value and keep their original retry policy.
++bool NVRM::taskSysWrite(const char *name, int value)
++{
++    if (!beginTask()) return false;
++    nvrmSysW(name, value);
++    endTask();
++    return true;
++}
++
++void NVRM::runAutoGo()
++{
++    NVRM *s = this;
++    if (taskStopping()) return;
+     char nb[8] = { 0 };
+     // A card whose BAR1 could not be placed outside the boot screen (Resizable BAR off: 256 MB) waits 100 s here with
+     // the registry held busy, so the verbose screen showed only "busy timeout ... 'NVRM'" for two minutes and users
+@@ -722,22 +928,35 @@
+                 "is too small to move off the boot screen. This is not a freeze. To start in about a second instead, enable "
+                 "\"Above 4G Decoding\" and \"Resizable BAR\" in the BIOS.", s->fAutoGoSettleMs / 1000);
+         nvrm_guard_pause_for_wait(s->fAutoGoSettleMs);
++        struct GuardWaitExit {
++            ~GuardWaitExit() {
++                int cleared = 0;
++                if (nvrmSysR("debug.nvrmfb_guard_cleared", &cleared) != 0) cleared = 0;
++                nvrm_guard_resume_after_wait(cleared > 0);
++            }
++        } guardWaitExit;
+         for (uint32_t left = s->fAutoGoSettleMs; left > 0;) {
+             const uint32_t step = left > 15000 ? 15000 : left;
+-            IOSleep(step); left -= step;
++            if (!s->taskSleep(step)) return;
++            left -= step;
+             if (left) LOG("starting the NVIDIA card: %u s left (not a freeze)", left / 1000);
+         }
+         // the framebuffer says whether it already cleared the guard this boot (a display lit, or a card with nothing
+         // to light, after a hand-run go during the wait): counting again then would leave a strike behind a good boot
+-        { int cleared = 0; if (nvrmSysR("debug.nvrmfb_guard_cleared", &cleared) != 0) cleared = 0; nvrm_guard_resume_after_wait(cleared > 0); }
++        // GuardWaitExit also closes the pause when taskSleep cancels this wait.
+     } else {
+-        IOSleep(s->fAutoGoSettleMs);
+-    }
++        if (!s->taskSleep(s->fAutoGoSettleMs)) return;
++    }
++    if (s->taskStopping()) return;
+     s->measureBootRaster();
+-    { thread_t hw = THREAD_NULL; s->retain();
+-      if (kernel_thread_start(&NVRM::headWatch, s, &hw) == KERN_SUCCESS) thread_deallocate(hw); else s->release(); }
++    if (s->beginTask()) {
++        thread_t hw = THREAD_NULL; s->retain();
++        if (kernel_thread_start(&NVRM::headWatch, s, &hw) == KERN_SUCCESS) thread_deallocate(hw);
++        else { s->release(); s->endTask(); }
++    }
+     IOReturn r = s->go(2);
+     kprintf("NVRM-xnu: auto-go: go(2) -> 0x%x (fPassDone %u)\n", r, s->fPassDone);
++    if (s->taskStopping()) return;
+     if (r != kIOReturnSuccess) {
+         s->setProperty("nvrm-autogo", r == kIOReturnBusy ? "busy (a hand-run go is running)" : "go(2) failed");
+         s->releaseBootHold("go(2) failed");
+@@ -754,25 +973,25 @@
+                 OSNumber *cd = OSDynamicCast(OSNumber, gDisplayNub0->getProperty("connected-displays"));
+                 if (cd && cd->unsigned32BitValue() > 0 && (int)nvrmPop((unsigned)mask) >= (int)cd->unsigned32BitValue()) break;
+             }
+-            IOSleep(1000);
++            if (!s->taskSleep(1000)) return;
+         }
+         LOG("auto-go: heads published mask 0x%x (%u of nvfbheads %d) after %d s", mask, nvrmPop((unsigned)mask), want, i);
+         if (!OSCompareAndSwap(1, 2, &s->fBootHold)) {
+             LOG("auto-go: the hold was already released (cap) — NOT arming with WindowServer up; heads 0x%x", mask);
+             s->setProperty("nvrm-display", "not armed: hold released by the cap first");
+-            s->release(); thread_terminate(current_thread()); return;
++            return;
+         }
+         int armed = 0;
+-        for (i = 0; i < 10; i++) { nvrmSysW("debug.nvaccelfb", 1); nvrmSysR("debug.nvaccelfb", &armed); if (armed == 1) break; IOSleep(1000); }
+-        if (armed == 1) nvrmSysW("debug.nvaccelfb", 4);
++        for (i = 0; i < 10; i++) { if (!s->taskSysWrite("debug.nvaccelfb", 1)) return; nvrmSysR("debug.nvaccelfb", &armed); if (armed == 1) break; if (!s->taskSleep(1000)) return; }
++        if (armed == 1 && !s->taskSysWrite("debug.nvaccelfb", 4)) return;
+         LOG("auto-go: accelerator level 1 %s after %d tr%s%s", armed == 1 ? "took" : "NEVER took", i + 1, i ? "ies" : "y",
+             armed == 1 ? ", level 4 written" : " — not arming further");
+         int k5 = -99, ag = -99, iop = -99;
+         if (armed == 1) {
+-            nvrmSysW("debug.nvrmfb_agdc_k5", 1);
+-            nvrmSysW("debug.nvrmfb_agdc", 1);
+-            for (i = 0; i < 25; i++) { nvrmSysR("debug.nvrmfb_agdc", &ag); if (ag == 1 || ag < 0) break; IOSleep(200); }
+-            nvrmSysW("debug.nvaccel_iop", 1);
++            if (!s->taskSysWrite("debug.nvrmfb_agdc_k5", 1)) return;
++            if (!s->taskSysWrite("debug.nvrmfb_agdc", 1)) return;
++            for (i = 0; i < 25; i++) { nvrmSysR("debug.nvrmfb_agdc", &ag); if (ag == 1 || ag < 0) break; if (!s->taskSleep(200)) return; }
++            if (!s->taskSysWrite("debug.nvaccel_iop", 1)) return;
+             nvrmSysR("debug.nvrmfb_agdc_k5", &k5); nvrmSysR("debug.nvaccel_iop", &iop);
+         }
+         char sum[160];
+@@ -800,15 +1019,13 @@
+             if (why) {
+                 LOG("auto-go: zero-copy flip NOT started: %s; the copy path stays (as -nvrmnoflip)", why);
+                 s->setProperty("nvrm-flip", "off (copy path)");
+-                s->release(); thread_terminate(current_thread()); return;
++                return;
+             }
+-            int f = -99; nvrmSysW("debug.nvaccel_iop_flip", 1); nvrmSysR("debug.nvaccel_iop_flip", &f);
++            int f = -99; if (!s->taskSysWrite("debug.nvaccel_iop_flip", 1)) return; nvrmSysR("debug.nvaccel_iop_flip", &f);
+             LOG("auto-go: flip debug.nvaccel_iop_flip=%d (right after the release)", f);
+             s->setProperty("nvrm-flip", f == 1 ? "on" : "FAILED");
+         }
+     }
+-    s->release();
+-    thread_terminate(current_thread());
+ }
+ 
+ static void nv_xnu_dump_gsp_regs(nv_state_t *nv)
+@@ -1295,6 +1512,8 @@
+ 
+ IOReturn NVRM::go(uint32_t pass)
+ {
++    if (!beginTask()) return kIOReturnOffline;
++    struct TaskExit { NVRM *self; ~TaskExit() { self->endTask(); } } taskExit = { this };
+     // Bringing up the GPU and the RM for the first time is an administrator
+     // operation. Was: any process that could open the user client could call
+     // sGo with any pass number. Repeating a pass that is already done is a
+@@ -1353,6 +1572,34 @@
+         fPassDone = 1;
+     }
+     if (pass >= 2 && fPassDone < 2) {
++        // go() serialises bring-up attempts; didTerminate coordinates counted tasks before stop.
++        if (fWorkLoop || fIntSrc) { LOG("pass 2 found existing interrupt resources -- refusing to overwrite"); return kIOReturnNotReady; }
++        struct AdapterAttempt {
++            nv_state_t *nv;
++            IOPCIDevice *pci;
++            void *savedOsState;
++            NvU32 savedInterruptLine;
++            UInt16 savedCommand;
++            IOWorkLoop *loop;
++            IOFilterInterruptEventSource *source;
++            bool attached;
++            bool committed;
++            AdapterAttempt(nv_state_t *n, IOPCIDevice *p)
++                : nv(n), pci(p), savedOsState(n->os_state), savedInterruptLine(n->interrupt_line),
++                  savedCommand(p->configRead16(0x04)), loop(NULL), source(NULL), attached(false), committed(false) {}
++            ~AdapterAttempt()
++            {
++                if (committed) return;
++                // Detach under the work-loop gate before releasing our source and loop references.
++                // If RM was called and failed, its internal rollback must not be repeated here.
++                if (source) { source->disable(); if (attached) loop->removeEventSource(source); source->release(); }
++                if (loop) loop->release();
++                nv->interrupt_line = savedInterruptLine;
++                nv->os_state = savedOsState;
++                pci->setBusMasterEnable((savedCommand & 0x0004) != 0);
++                pci->setMemoryEnable((savedCommand & 0x0002) != 0);
++            }
++        } attempt(nv, fPCI);
+         nv->os_state = this;
+         fPCI->setMemoryEnable(true);
+         fPCI->setBusMasterEnable(true);
+@@ -1365,12 +1612,14 @@
+             if (msi < 0 && (type & kIOInterruptTypePCIMessaged)) msi = i;
+         }
+         if (msi < 0) { LOG("no MSI source on the device — refusing (the RM needs message-signalled interrupts)"); return kIOReturnUnsupported; }
+-        fWorkLoop = IOWorkLoop::workLoop();
+-        fIntSrc = IOFilterInterruptEventSource::filterInterruptEventSource(this,
++        attempt.loop = IOWorkLoop::workLoop();
++        if (!attempt.loop) { LOG("work loop allocation FAILED"); return kIOReturnError; }
++        attempt.source = IOFilterInterruptEventSource::filterInterruptEventSource(this,
+                     OSMemberFunctionCast(IOInterruptEventAction, this, &NVRM::interruptOccurred),
+                     OSMemberFunctionCast(IOFilterInterruptAction, this, &NVRM::interruptFilter), fPCI, msi);
+-        if (!fWorkLoop || !fIntSrc || fWorkLoop->addEventSource(fIntSrc) != kIOReturnSuccess) { LOG("interrupt source setup FAILED"); return kIOReturnError; }
+-        fIntSrc->enable();
++        if (!attempt.source || attempt.loop->addEventSource(attempt.source) != kIOReturnSuccess) { LOG("interrupt source setup FAILED"); return kIOReturnError; }
++        attempt.attached = true;
++        attempt.source->enable();
+         nv->interrupt_line = (NvU32)msi;
+         LOG("MSI %d armed; calling rm_init_adapter() — GSP boot from inside macOS", msi);
+         NvBool ok = rm_init_adapter(NULL, nv);
+@@ -1378,10 +1627,12 @@
+         nv_xnu_dump_live_allocs();
+         nv_xnu_dump_gsp_regs(nv);
+         if (!ok) return kIOReturnError;
+-        fAdapter = true;
+-        LOG("PASS 2 REACHED: the adapter is up — GSP-RM is running on the card under macOS");
+-        fPassDone = 2;
++        attempt.committed = true;
++        if (!adoptAdapter(attempt.loop, attempt.source)) return kIOReturnOffline;
++        LOG("PASS 2 REACHED: adapter ready (not an NVKMS/Metal/rendering result)");
+         {
++            if (!beginTask()) return kIOReturnOffline;
++            TaskExit effectExit = { this };
+             NvU32 ramKb = 0, totalKb = 0, qst = 0;
+             if (nvrm_query_vram_kb(nv->gpu_id, &ramKb, &totalKb, &qst) && ramKb) {
+                 const UInt64 bytes = (UInt64)ramKb * 1024ull;
+@@ -1394,8 +1645,23 @@
+                     (unsigned)qst, (unsigned)ramKb);
+             }
+         }
+-        publishGpuProfile();
+-        if (nvkms_xnu_load()) nvrm_display_publish(this, fNv.gpu_id);
++        {
++            if (!beginTask()) return kIOReturnOffline;
++            TaskExit effectExit = { this };
++            publishGpuProfile();
++        }
++        NvBool kmsLoaded = false;
++        {
++            if (!beginTask()) return kIOReturnOffline;
++            TaskExit effectExit = { this };
++            kmsLoaded = nvkms_xnu_load();
++        }
++        if (kmsLoaded) {
++            if (!beginTask()) return kIOReturnOffline;
++            TaskExit effectExit = { this };
++            nvrm_display_publish(this, fNv.gpu_id);
++        }
++        if (taskStopping()) return kIOReturnOffline;
+     }
+     return kIOReturnSuccess;
+ }
+@@ -1418,9 +1684,25 @@
+ 
+ void NVRM::stop(IOService *provider)
+ {
++    closeTaskAdmission();
++    if (gNvClientsLock) {
++        IOLockLock(gNvClientsLock); const unsigned active = fTasks; IOLockUnlock(gNvClientsLock);
++        if (active) { LOG("ERROR: stop before task drain (%u) -- resources retained, stop NOT completed", active); return; }
++    }
+     if (fPmJoined) { PMstop(); fPmJoined = false; }
++    // Same ordering as OGKM nv_shutdown_adapter: stop device interrupt generation,
++    // drain/remove the OS interrupt action, THEN release the RM adapter state.
++    // removeEventSource is serialized with checkForWork by the MSI work-loop gate.
++    if (fAdapter) rm_disable_adapter(NULL, &fNv);
++    if (fIntSrc) {
++        fIntSrc->disable();
++        if (!fWorkLoop || fWorkLoop->removeEventSource(fIntSrc) != kIOReturnSuccess) {
++            LOG("ERROR: MSI removal failed -- adapter/private state retained, stop NOT completed");
++            return;
++        }
++        fIntSrc->release(); fIntSrc = NULL;
++    }
+     if (fAdapter) { rm_shutdown_adapter(NULL, &fNv); fAdapter = false; }
+-    if (fIntSrc) { fIntSrc->disable(); if (fWorkLoop) fWorkLoop->removeEventSource(fIntSrc); fIntSrc->release(); fIntSrc = NULL; }
+     if (fWorkLoop) { fWorkLoop->release(); fWorkLoop = NULL; }
+     if (fPrivateState) { rm_free_private_state(NULL, &fNv); fPrivateState = false; }
+     super::stop(provider);
+--- a/kexts/NVRMFB/fb/nvrm-fb.cpp
++++ b/kexts/NVRMFB/fb/nvrm-fb.cpp
+@@ -156,7 +156,7 @@
+     if (!h || !h->init()) { OSSafeReleaseNULL(h); return nullptr; }
+     h->fRM = rm; rm->retain();
+     h->fFn = OSSymbol::withCStringNoCopy("NVRMBacklight");
+-    h->fApply = thread_call_allocate(applyFire, h);
++    h->fApply = thread_call_allocate_with_options(applyFire, h, THREAD_CALL_PRIORITY_HIGH, THREAD_CALL_OPTIONS_ONCE);
+     h->fLevel = level <= 100 ? (SInt32)level : 100;
+     if (!h->fFn || !h->fApply) { h->release(); return nullptr; }
+     return h;
+@@ -733,38 +733,56 @@
+     if (gNDpy < 0) {
+         NvU32 n = 0; NvKmsKapiDisplay handles[NVKMS_KAPI_MAX_CONNECTORS * 2];
+         if (!fKms->getDisplays(fDev, &n, NULL) || n == 0) { FBLOG("getDisplays: none"); return false; }
+-        if (n > sizeof handles / sizeof handles[0]) n = sizeof handles / sizeof handles[0];
++        const NvU32 capacity = (NvU32)(sizeof handles / sizeof handles[0]);
++        if (n > capacity) { FBLOG("getDisplays: %u handles exceed capacity %u -- enumeration unknown", n, capacity); return false; }
++        const NvU32 supplied = n;
+         if (!fKms->getDisplays(fDev, &n, handles)) return false;
++        if (n == 0 || n > supplied) { FBLOG("getDisplays: inconsistent count %u (supplied %u) -- enumeration unknown", n, supplied); return false; }
+         FBLOG("getDisplays: %u handle(s); this GPU has %u heads and %u connectors",
+               n, fNumHeads, fNumConnectors);
+-        struct NvKmsKapiDynamicDisplayParams *dd = (struct NvKmsKapiDynamicDisplayParams *)IOMalloc(sizeof *dd);
+-        if (!dd) return false;
+-        gNDpy = 0;
++        // Stage on the heap: failed queries must not publish a partial table or count as a headless good boot.
++        // kapiInit's caller holds startLock(); preserve the previous snapshot until this survey is complete.
++        struct DisplaySurvey {
++            struct NvKmsKapiDynamicDisplayParams dynamic;
++            struct nvrm_dpy_rec records[sizeof gDpy / sizeof gDpy[0]];
++        };
++        struct DisplaySurvey *survey = (struct DisplaySurvey *)IOMalloc(sizeof *survey);
++        if (!survey) return false;
++        nvu_zero(survey, sizeof *survey);
++        struct NvKmsKapiDynamicDisplayParams *dd = &survey->dynamic;
++        unsigned connected = 0;
++        bool complete = true;
+         for (NvU32 i = 0; i < n; i++) {
+             nvu_zero(dd, sizeof *dd); dd->handle = handles[i];
+             if (!fKms->getDynamicDisplayInfo(fDev, dd)) {
+-                FBLOG("dpy %u/%u 0x%x: getDynamicDisplayInfo FAILED", i, n, handles[i]);
+-                continue;
++                FBLOG("dpy %u/%u 0x%x: getDynamicDisplayInfo FAILED -- enumeration unknown", i, n, handles[i]);
++                complete = false; break;
+             }
+             struct NvKmsKapiStaticDisplayInfo si = {};
+             NvBool gs = dd->connected ? fKms->getStaticDisplayInfo(fDev, handles[i], &si) : NV_FALSE;
+             FBLOG("dpy %u/%u 0x%x: connected %u edid %u B connector 0x%x headMask 0x%x internal %u%s",
+                   i, n, handles[i], dd->connected, dd->edid.bufferSize,
+-                  gs ? (unsigned)si.connectorHandle : 0u, gs ? (unsigned)si.headMask : 0u, gs ? (unsigned)si.internal : 0u,
+-                  (dd->connected && !gs) ? " STATIC INFO FAILED" : "");
+-            if (!dd->connected || !gs) continue;
+-            if (gNDpy >= (int)(sizeof gDpy / sizeof gDpy[0])) { FBLOG("dpy table full at %d", gNDpy); break; }
+-            struct nvrm_dpy_rec *r = &gDpy[gNDpy++];
++                  gs ? (unsigned)si.connectorHandle : 0u, gs ? (unsigned)si.headMask : 0u,
++                  gs ? (unsigned)si.internal : 0u, (dd->connected && !gs) ? " STATIC INFO FAILED" : "");
++            if (!dd->connected) continue;
++            if (!gs) { complete = false; break; }
++            if (connected >= sizeof survey->records / sizeof survey->records[0]) {
++                FBLOG("dpy table full at %u -- enumeration unknown", connected); complete = false; break;
++            }
++            struct nvrm_dpy_rec *r = &survey->records[connected++];
+             r->handle = handles[i]; r->connector = si.connectorHandle; r->headMask = si.headMask; r->internal = si.internal;
+             r->edidSize = dd->edid.bufferSize > sizeof r->edid ? (NvU32)sizeof r->edid : dd->edid.bufferSize;
+             nvu_copy(r->edid, dd->edid.buffer, r->edidSize);
+         }
+-        IOFree(dd, sizeof *dd);
++        if (!complete) { IOFree(survey, sizeof *survey); return false; }
++        nvu_copy(gDpy, survey->records, sizeof gDpy);
++        gNDpy = (int)connected;
++        IOFree(survey, sizeof *survey);
+         if (getProvider()) getProvider()->setProperty("connected-displays", (unsigned long long)gNDpy, 32);
+         FBLOG("ENUMERATED: %d connected display(s) of %u handle(s), %u heads available",
+               gNDpy, n, fNumHeads);
+-        // NVKMS answered and nothing is plugged into this card (its displays are on another GPU): the driver is up as
+-        // far as it will go, so this start counts as good for the boot guard (nvrm_off.h)
++        // Only a complete successful survey may establish that this card has no connected display.
++        // This is a boot-guard criterion, not proof of Metal readiness or GPU execution.
+         if (n > 0 && gNDpy == 0) fbGuardCleared("NVKMS lists this card's connectors and none has a display");
+     }
+ 
+@@ -1299,7 +1317,7 @@
+             fb->adoptSwappedDisplay();
+             // the framework's connect-change path re-reads the EDID (getDDCBlock), the modes and the display's name,
+             // as it does when a monitor is plugged into a real Mac; the head is lit first so it re-probes a live display
+-            if (!gConnectNotify) gConnectNotify = thread_call_allocate(connectNotifyFire, nullptr);
++            if (!gConnectNotify) gConnectNotify = thread_call_allocate_with_options(connectNotifyFire, nullptr, THREAD_CALL_PRIORITY_HIGH, THREAD_CALL_OPTIONS_ONCE);
+             uint64_t d; clock_interval_to_deadline(500, kMillisecondScale, &d);
+             if (gConnectNotify) thread_call_enter1_delayed(gConnectNotify, fb, d);
+         }
+@@ -1769,7 +1787,7 @@
+         return false;
+     }
+     if (!fCurStateLock) fCurStateLock = IOSimpleLockAlloc();
+-    if (!fCursorCall) fCursorCall = thread_call_allocate(cursorFire, this);
++    if (!fCursorCall) fCursorCall = thread_call_allocate_with_options(cursorFire, this, THREAD_CALL_PRIORITY_HIGH, THREAD_CALL_OPTIONS_ONCE);
+     if (!fCurStateLock || !fCursorCall) { FBLOG("cursor: lock or thread call allocation FAILED"); return false; }
+     NvU32 dim = fCurMaxPx;
+     if (dim > 256) dim = 256;
+@@ -2219,7 +2237,7 @@
+           (unsigned long long)(fBarLen >> 20), (unsigned long long)fBar1Base,
+           (unsigned long long)(nvrmVramBudget(fBarLen) >> 20));
+     if (fIndex == 0 && gFB != this) { retain(); gFB = this; }
+-    if (fIndex == 0 && !gHotplug) gHotplug = thread_call_allocate(hotplugFire, nullptr);
++    if (fIndex == 0 && !gHotplug) gHotplug = thread_call_allocate_with_options(hotplugFire, nullptr, THREAD_CALL_PRIORITY_HIGH, THREAD_CALL_OPTIONS_ONCE);
+     // WhateverGreen (with Lilu) replaces IOFramebuffer::initFB. Unless boot-arg gfxrst=4 is set, the first initFB of any
+     // framebuffer copies the boot console from the address WhateverGreen saved at boot. macOS frees that mapping when
+     // the console moves (to a framebuffer, or to a new PCI window), and the copy then faults: a kernel panic in
+@@ -2246,7 +2264,7 @@
+     // gDpy and re-registered the idle nub). Such an instance has to fire the framework's connect handler once its head
+     // has a mode -- see connectNotifyFire and enableController.
+     fHotplugBorn = (gNDpyBoot >= 0 && (int)fIndex >= gNDpyBoot);
+-    if (fHotplugBorn && !gConnectNotify) gConnectNotify = thread_call_allocate(connectNotifyFire, nullptr);
++    if (fHotplugBorn && !gConnectNotify) gConnectNotify = thread_call_allocate_with_options(connectNotifyFire, nullptr, THREAD_CALL_PRIORITY_HIGH, THREAD_CALL_OPTIONS_ONCE);
+     if (fHotplugBorn) FBLOG("fb%u: a display appeared after boot -- the connect interrupt will be fired once the head has a mode", fIndex);
+     fPhysForVa = (nvrm_phys_for_va_t)(uintptr_t)propU64(provider, "phys-for-va");
+     if (!fKms || !fPhysForVa || !fKms->getFlipPendingStatus || !fKms->dupMemory) { FBLOG("nub lacks nvkms-kapi/phys-for-va properties"); return false; }
+@@ -2276,18 +2294,18 @@
+     }
+     fSleepTap = addFramebufferNotification(&NVRMNVDAFramebuffer::sleepTap, this, nullptr);
+     if (!fSleepTap) FBLOG("sleep/wake notification tap not registered - a wake after dark wakes may leave the accelerator off");
+-    fVblTimer = thread_call_allocate(vblFire, this);
++    fVblTimer = thread_call_allocate_with_options(vblFire, this, THREAD_CALL_PRIORITY_HIGH, THREAD_CALL_OPTIONS_ONCE);
+     if (fVblTimer) { uint64_t d; clock_interval_to_deadline(16667, kMicrosecondScale, &d); scheduleCall(fVblTimer, d); }
+     FBLOG("vbl timer %s", fVblTimer ? "armed (fallback)" : "ALLOCATE FAILED");
+-    fHwVblCall = thread_call_allocate(hwVblDeliver, this);
++    fHwVblCall = thread_call_allocate_with_options(hwVblDeliver, this, THREAD_CALL_PRIORITY_HIGH, THREAD_CALL_OPTIONS_ONCE);
+     UInt32 hwvblArg = 1; PE_parse_boot_argn("nvhwvbl", &hwvblArg, sizeof hwvblArg);
+     fHwVblWanted = hwvblArg && fHwVblCall && fKms && fDev && fKms->registerVblankIntrCallback && fHead < 8;
+     FBLOG("hw vblank on head %u: %s", fHead, !hwvblArg ? "OFF (boot-arg nvhwvbl=0) - the timer is the VBL"
+                                        : fHwVblWanted ? "deferred until NVKMS latches a flip on this head" : "not available - the timer stays the VBL");
+-    fReflip = thread_call_allocate(reflipFire, this);
+-    fGpuWake = thread_call_allocate(gpuWakeFire, this);
++    fReflip = thread_call_allocate_with_options(reflipFire, this, THREAD_CALL_PRIORITY_HIGH, THREAD_CALL_OPTIONS_ONCE);
++    fGpuWake = thread_call_allocate_with_options(gpuWakeFire, this, THREAD_CALL_PRIORITY_HIGH, THREAD_CALL_OPTIONS_ONCE);
+     FBLOG("reflip keep-alive NOT armed: enableController's modeset owns the head, no boot-time re-syncs");
+-    fBars = thread_call_allocate(barsFire, this);
++    fBars = thread_call_allocate_with_options(barsFire, this, THREAD_CALL_PRIORITY_HIGH, THREAD_CALL_OPTIONS_ONCE);
+     uint32_t hudGate = 0;
+     if (fBars && PE_parse_boot_argn("nvhud", &hudGate, sizeof hudGate) && hudGate) {
+         uint64_t d; clock_interval_to_deadline(45, kSecondScale, &d);
+@@ -2296,11 +2314,11 @@
+     } else {
+         FBLOG("probe grid + HUD OFF -- macOS only (add nvhud=1 to boot-args to show them)");
+     }
+-    fHeadProbe = thread_call_allocate(headProbeFire, this);
++    fHeadProbe = thread_call_allocate_with_options(headProbeFire, this, THREAD_CALL_PRIORITY_HIGH, THREAD_CALL_OPTIONS_ONCE);
+     FBLOG("head probe retired (answered: we own head %u)", fHead);
+     uint32_t sampleGate = 0;
+     if (PE_parse_boot_argn("nvfbsample", &sampleGate, sizeof sampleGate) && sampleGate) {
+-        fSampler = thread_call_allocate(sampleFire, this);
++        fSampler = thread_call_allocate_with_options(sampleFire, this, THREAD_CALL_PRIORITY_HIGH, THREAD_CALL_OPTIONS_ONCE);
+         if (fSampler) { uint64_t deadline; clock_interval_to_deadline(10, kSecondScale, &deadline); scheduleCall(fSampler, deadline); }
+         FBLOG("pixel sampler ARMED (boot-arg nvfbsample=1): every 10 s");
+     } else {
