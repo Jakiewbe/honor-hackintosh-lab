@@ -1,8 +1,9 @@
 name: HONOR G1 IOGraphics exports capture
 
-# Manual, read-only evidence capture: copy the IOGraphics kext's export list from the
-# runner so the NVRMFB link closure can name a provider for every IOFramebuffer /
-# IODisplay symbol. It never builds, links, installs or loads anything.
+# Read-only evidence capture: find the IOGraphics kext's export list on the runner so the
+# NVRMFB link closure can name a provider for every IOFramebuffer / IODisplay symbol.
+# It never builds, links, installs or loads anything, and it always uploads a listing even
+# when the expected file is not where an older macOS kept it.
 
 on:
   workflow_dispatch:
@@ -24,19 +25,38 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Copy the IOGraphics export list
+      - name: Collect everything that can name IOGraphics exports
         shell: bash
         run: |
-          set -euo pipefail
-          path=/System/Library/Extensions/IOGraphics.kext/Contents/Resources/config/IOGraphics.exports
+          set -uo pipefail
           mkdir -p out
-          ls -l "$path"
-          cp "$path" out/IOGraphics.exports
-          file out/IOGraphics.exports
-          wc -c out/IOGraphics.exports
-          grep -c '<string>' out/IOGraphics.exports || true
           sw_vers > out/sw_vers.txt
           uname -a > out/uname.txt
+          {
+            echo "== IOGraphics.kext layout"
+            ls -ld /System/Library/Extensions/IOGraphics.kext 2>&1 || true
+            find /System/Library/Extensions/IOGraphics.kext -maxdepth 5 2>&1 || true
+            echo "== every .exports under /System/Library/Extensions"
+            find /System/Library/Extensions -maxdepth 6 -name '*.exports' 2>&1 || true
+            echo "== the same search under DriverExtensions"
+            find /System/Library/DriverExtensions -maxdepth 4 -name '*.exports' 2>&1 || true
+            echo "== kmutil inspect --list-only (head)"
+            (kmutil inspect --list-only 2>&1 | head -80) || true
+            for p in \
+              /System/Library/Extensions/IOGraphics.kext/Contents/Resources/config/IOGraphics.exports \
+              /System/Library/Extensions/IOGraphics.kext/Contents/Resources/IOGraphics.exports; do
+              if [ -f "$p" ]; then
+                cp "$p" out/IOGraphics.exports
+                echo "copied $p"
+                wc -c out/IOGraphics.exports
+                grep -c '<string>' out/IOGraphics.exports || true
+              fi
+            done
+            echo "== kernel collections"
+            for kc in /System/Library/KernelCollections/*.kc; do ls -l "$kc" 2>&1 || true; done
+            echo "== loaded kexts of interest"
+            (kmutil showloaded 2>&1 | grep -i -E 'IOGraphics|IOPCIFamily|IOACPIFamily') || true
+          } > out/summary.txt 2>&1
 
       - name: Upload the capture
         uses: actions/upload-artifact@v4
