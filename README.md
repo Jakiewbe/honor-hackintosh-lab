@@ -6,7 +6,8 @@
 > `thread_call_allocate_with_options`）/ −1（`thread_call_allocate`，已登记移除）；
 > 门禁 11 项自检、编译器负控 exit 1 且 stale 对象被删除。
 > 链接前闭包：NVRM 468 个未定义符号全部有提供者（0 无法归属）；NVRMFB 478 个中 363 内核、
-> 115 IOGraphics（**缺该 kext 的 exports 证据**），0 无法归属。
+> 115 IOGraphics（**缺该 kext 的 exports 证据**；采集工作流 g1-iographics-exports.yml 已就绪，
+> 本轮 dispatch 因 api.github.com 的 TLS 抖动未成功），0 无法归属。
 > 仍未链接、未加载、未运行；`kext_link=NOT_RUN`，设备 NO-GO。
 > 见 [XNU 语义](research/stock-v243-once-20261021/ONCE-SEMANTICS-XNU-20261021.md)、
 > [12 点审计](research/stock-v243-once-20261021/ONCE-SITES-AUDIT-20261021.md)、
