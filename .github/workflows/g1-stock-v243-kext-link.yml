@@ -115,7 +115,7 @@ jobs:
           else
             while read -r d; do RMDEFS+=("$d"); done < <(grep -E ' -c [^ ]+\.(c|cpp) ' "$logs/make-nvidia.log" | head -1 | tr ' ' '\n' | grep -E '^-D')
           fi
-          echo "defines: ${#RMDEFS[@]}" | tee "$logs/tu-compile.txt"
+          echo "defines: ${#RMDEFS[@]} ${RMDEFS[*]:-}" | tee "$logs/tu-compile.txt"
           INC=( -I"$KHDR" -I"$nm" -I"$NV/arch/nvalloc/unix/include" -I"$NV/arch/nvalloc/common/inc"
                 -I"$NV/arch/nvalloc/common/inc/gsp" -I"$nv/src/common/sdk/nvidia/inc" -I"$nv/src/common/sdk/nvidia/inc/hw"
                 -I"$nv/src/common/inc" -I"$nv/src/common/shared/inc" -I"$NV/inc" -I"$NV/inc/os" -I"$NV/inc/kernel"
@@ -132,7 +132,7 @@ jobs:
             [[ -f "$src" ]] || continue
             base="$(basename "$src")"; obj="$RUNNER_TEMP/objs/${base%.*}.o"
             if xcrun clang++ -arch x86_64 -fapple-kext -mkernel -nostdinc "${INC[@]}" \
-                 -DKERNEL -DKERNEL_PRIVATE -DDRIVER_PRIVATE -DAPPLE -DNeXT "${RMDEFS[@]}" \
+                 -DKERNEL -DKERNEL_PRIVATE -DDRIVER_PRIVATE -DAPPLE -DNeXT ${RMDEFS[@]+"${RMDEFS[@]}"} \
                  -std=c++17 -fno-rtti -fno-exceptions -fno-builtin -fno-common -O2 \
                  -Wall -Wno-unused-parameter -Wno-inconsistent-missing-override -Wno-unused-function \
                  -c "$src" -o "$obj" > "$logs/tu-${base}.log" 2>&1; then
@@ -142,7 +142,8 @@ jobs:
             fi
           done
           echo "tu_failures=$fails" | tee -a "$logs/tu-compile.txt"
-          ls "$RUNNER_TEMP/objs" | wc -l | tee -a "$logs/tu-compile.txt"
+          echo "tu_objects=$(ls "$RUNNER_TEMP/objs" 2>/dev/null | wc -l | tr -d ' ')" | tee -a "$logs/tu-compile.txt"
+          exit 0
 
       - name: Link the kext binary
         shell: bash
