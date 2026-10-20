@@ -118,3 +118,29 @@ run [39485250953](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/
 
 这说明：**两个候选对象各自作为 kext 二进制链接成功**，且链接后的导入表与对象阶段一致
 （466→468 / 478→478）。仍不等于整包 kext 链接：NVRM 其余 TU 的链接配方与对象集仍缺（见 §3）。
+
+## 8. 整包 NVRM kext 链接（本轮达成）
+
+工作流 `.github/workflows/g1-stock-v243-kext-link.yml`，run
+[39498653458](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39498653458) /
+提交 `584abcf`：
+
+| 项 | 值 |
+|---|---|
+| 补丁应用与身份校验 | 通过（SHA 来自 lock，不写死在 workflow 里） |
+| OGKM RM 对象（`gmake TARGET_OS=Darwin`） | 3167 个 `.o`，`errors=0`（`make_rc=2`，末尾 ELF 链接步骤在 macOS 上不可用，属预期） |
+| NullMoth NVRM TU 编译 | **12/12 OK**（含本轮修改的 `NVRM.cpp`） |
+| 链接 | `-Xlinker -kext`，12 个 TU 对象 + 1055 个 RM 对象 |
+| 链接结果 | **exit 0**，16,185,000 B，SHA256 `28e9386a4b72f15899b4d51fb49356de89eac7b9c48893cfa7cf5a983b382f5e` |
+| 链接后未定义导入 | 493 |
+
+这证明：**改过的 `NVRM.cpp` 能与该 kext 其余 11 个 TU 以及 RM 对象一起，在工程真实的链接模式下产出 kext 二进制**，
+且没有重复定义冲突。此前一次只链进 10 个 TU（两个 `.c` 用 clang++ 编译失败）时也已经 exit 0，
+12/12 之后仍然是 exit 0。
+
+仍不是发布等价物，也不能加载：
+
+- 只链接了 `nvidia` 的 RM 对象，**没有** `nvidia-modeset` 的对象；493 个未定义导入里包含
+  NVKMS 侧的符号，加载时由其它 kext 或内核解析——这条没有验证；
+- 二进制没有签名、没有做 kext 格式校验、没有加载、没有执行；
+- NVRMFB 是另一个 kext，其整包链接未做（它的单 TU 链接已在门禁里 exit 0）。

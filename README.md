@@ -1,15 +1,13 @@
-> **2026-10-21 stock v2.4.3 ONCE（门禁 + kext 级链接探测全部通过）**：12 个分配点 ONCE，与上游 47f818b
-> 覆盖一致。门禁 run [39485250953](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39485250953)
-> （提交 `ea6ce53`）**success**，artifact `12293396621`。四个对象编译退出码 0；NVRM 3 条既有弃用例外、
-> FB 34→34；符号 +3/−1（已登记）；11 项自检；负控 exit 1 且 stale 对象消失。
-> **新增 kext 级链接探测**：按工程真实模式 `-Xlinker -kext` 分别链接两个 kext，四次全部 exit 0
-> （candidate NVRM 134,600 B / import 468；candidate NVRMFB 320,840 B / import 478）。
-> 链接闭包补完：NVRM 468 个未定义符号全部有提供者；NVRMFB 478 个 = 363 内核 + 115 IOGraphics，
-> 115 个在 `SystemKernelExtensions.kc` 的 nm 里全部找到（IOGraphics.kext 在 macOS 15 不存在）。
-> 仍未做整包 kext 链接（缺 NVRM 全量对象集/配方）、未加载、未运行；设备 NO-GO。
+> **2026-10-21 stock v2.4.3 ONCE（门禁 + 整包 kext 链接均通过）**：12 点 ONCE 与上游 47f818b 一致。
+> 门禁 run [39486606187](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39486606187)（`917e6f5`）success；
+> 四对象编译 0 退出、NVRM 3 条例外、FB 34→34、符号 +3/−1（已登记）、11 项自检、负控通过。
+> **整包链接** run [39498653458](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39498653458)（`584abcf`）：
+> 3167 个 OGKM RM 对象 + **12/12 NVRM TU**（含改过的 NVRM.cpp）用 `-Xlinker -kext` 链接 **exit 0**，
+> 16,185,000 B，SHA256 `28e9386a…`，493 个未定义导入。
+> 闭包：NVRM 468 / NVRMFB 478 个未定义符号全部有提供者（IOGraphics 115 个在 `SystemKernelExtensions.kc` 里找到）。
+> 边界：未链 modeset、未签名、未做 kext 格式校验、未加载、未执行；设备 NO-GO。
 > 见 [链接闭包](research/stock-v243-once-20261021/LINK-CLOSURE-20261021.md)、
-> [XNU 语义](research/stock-v243-once-20261021/ONCE-SEMANTICS-XNU-20261021.md)、
-> [12 点审计](research/stock-v243-once-20261021/ONCE-SITES-AUDIT-20261021.md)。
+> [XNU 语义](research/stock-v243-once-20261021/ONCE-SEMANTICS-XNU-20261021.md)。
 
 
 > **2026-10-21 stock v2.4.2 原生门禁（success，含审计修复）**：run 39461235023 / head `13449f8`，
