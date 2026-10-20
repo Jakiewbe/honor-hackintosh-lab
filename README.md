@@ -7,7 +7,9 @@
 > 门禁 11 项自检、编译器负控 exit 1 且 stale 对象被删除。
 > 链接前闭包：NVRM 468 个未定义符号全部有提供者（0 无法归属）；NVRMFB 478 个中 363 内核、
 > 115 IOGraphics（**缺该 kext 的 exports 证据**；采集工作流 g1-iographics-exports.yml 已就绪，
-> 本轮 dispatch 因 api.github.com 的 TLS 抖动未成功），0 无法归属。
+> dispatch 仍被 api.github.com 的 TLS 抖动挡住），0 无法归属。
+> 另发现：两个 TU 各自强定义 _kmod_info/__start/__stop，naive ld -r 必然重复定义，
+> 因此链接必须复用工程真实规则；NVRM 自己的链接配方不在 pin 的 build/ 里，属缺失输入。
 > 仍未链接、未加载、未运行；`kext_link=NOT_RUN`，设备 NO-GO。
 > 见 [XNU 语义](research/stock-v243-once-20261021/ONCE-SEMANTICS-XNU-20261021.md)、
 > [12 点审计](research/stock-v243-once-20261021/ONCE-SITES-AUDIT-20261021.md)、
