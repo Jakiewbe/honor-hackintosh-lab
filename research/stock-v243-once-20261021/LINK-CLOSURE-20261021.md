@@ -77,3 +77,44 @@ artifact `12286607574` / SHA256 `b6209029a94a43a76a86289a67c75976d2cb986e5e50bb8
 - NVRMFB 的定义集与原件完全一致（177 → 177），无新增。
 - 两个候选对象之间的共享定义只有 `__start` / `__stop` / `_kmod_info`（见 §5），
   与本次 ONCE 改动无关。
+
+## 7. 本轮补完：IOGraphics 提供者与两个 kext 的真实链接探测
+
+### 7.1 IOGraphics：115 个符号全部在内核集合里找到
+
+macOS 15 的 runner 上没有 `/System/Library/Extensions/IOGraphics.kext`（该 kext 在
+`SystemKernelExtensions.kc` 里），因此第一次采集失败。改为对集合本身取符号后
+（run [39483921334](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39483921334)，
+artifact `12292916197`）：
+
+| 项 | 结果 |
+|---|---|
+| `nm -gU SystemKernelExtensions.kc` 行数 | 79,841 |
+| 过滤出的 `IOFramebuffer`/`IODisplay` 符号 | 450 |
+| NVRMFB 的 115 个 IOGraphics 未定义符号 | **115/115 找到** |
+
+最初用前缀过滤时漏了 3 个，回到完整 `kc-nm.txt` 后都找到：
+`__ZNK13IOFramebuffer11getWorkLoopEv`（`T 0x149f8130`）、
+`__ZTV13IOFramebuffer`（`S 0x14a10248`）、`__ZTV25IODisplayParameterHandler`（`S 0x14a0da38`）。
+
+因此 NVRMFB 的 478 个未定义符号：363 内核 + 115 IOGraphics，**0 无法归属**；
+NVRM 的 468 个：412 内核 + 7 IOFamily + 46 自有对象 + 3 驱动源码，**0 无法归属**。
+
+### 7.2 真实链接探测：每个 kext 单独链接，四次全部 exit 0
+
+第一次探测把两个对象放在一起，`ld` 报 3 个重复定义（`__start`、`__stop`、`_kmod_info`）。
+原因是 **NVRM.cpp 与 nvrm-fb.cpp 属于两个不同的 kext**，各自带
+`KMOD_EXPLICIT_DECL`（`NVRM.cpp:45`、`nvrm-fb.cpp:107`）——重复是应有行为，不是缺陷。
+
+改为按 kext 分别用工程真实模式链接（`-fapple-kext -nostdlib -Xlinker -kext -lkmodc++ -lkmod -lcc_kext`），
+run [39485250953](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39485250953)：
+
+| 链接 | 退出码 | 二进制大小 | SHA256 前缀 | 未定义导入 |
+|---|---|---|---|---|
+| original NVRM | 0 | 129,008 | `94ffda99` | 466 |
+| candidate NVRM | 0 | 134,600 | `276ad641` | 468 |
+| original NVRMFB | 0 | 320,768 | `1e50d04c` | 478 |
+| candidate NVRMFB | 0 | 320,840 | `25f3fae3` | 478 |
+
+这说明：**两个候选对象各自作为 kext 二进制链接成功**，且链接后的导入表与对象阶段一致
+（466→468 / 478→478）。仍不等于整包 kext 链接：NVRM 其余 TU 的链接配方与对象集仍缺（见 §3）。

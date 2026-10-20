@@ -1,19 +1,15 @@
-> **2026-10-21 stock v2.4.3 ONCE（原生门禁 success）**：12 个分配点全部 ONCE，与上游 47f818b 覆盖一致。
-> run [39470420908](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39470420908) / 提交 `378b508`，
-> 结论 **success**，artifact `12286607574`（SHA256 `b6209029…70b2`，本轮已下载并读取 report.json）。
-> 状态 `PASS_DARWIN_TWO_TU_OBJECTS_WITH_ACCEPTED_DIAGNOSTICS_ONCE`：四个对象编译退出码 0；
-> NVRM 3 条既有弃用例外、FB 34→34 无新增；符号 +3（`isInactive`、`rm_disable_adapter`、
-> `thread_call_allocate_with_options`）/ −1（`thread_call_allocate`，已登记移除）；
-> 门禁 11 项自检、编译器负控 exit 1 且 stale 对象被删除。
-> 链接前闭包：NVRM 468 个未定义符号全部有提供者（0 无法归属）；NVRMFB 478 个中 363 内核、
-> 115 IOGraphics（**缺该 kext 的 exports 证据**；采集工作流 g1-iographics-exports.yml 已就绪，
-> dispatch 仍被 api.github.com 的 TLS 抖动挡住），0 无法归属。
-> 另发现：两个 TU 各自强定义 _kmod_info/__start/__stop，naive ld -r 必然重复定义，
-> 因此链接必须复用工程真实规则；NVRM 自己的链接配方不在 pin 的 build/ 里，属缺失输入。
-> 仍未链接、未加载、未运行；`kext_link=NOT_RUN`，设备 NO-GO。
-> 见 [XNU 语义](research/stock-v243-once-20261021/ONCE-SEMANTICS-XNU-20261021.md)、
-> [12 点审计](research/stock-v243-once-20261021/ONCE-SITES-AUDIT-20261021.md)、
-> [链接闭包](research/stock-v243-once-20261021/LINK-CLOSURE-20261021.md)。
+> **2026-10-21 stock v2.4.3 ONCE（门禁 + kext 级链接探测全部通过）**：12 个分配点 ONCE，与上游 47f818b
+> 覆盖一致。门禁 run [39485250953](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39485250953)
+> （提交 `ea6ce53`）**success**，artifact `12293396621`。四个对象编译退出码 0；NVRM 3 条既有弃用例外、
+> FB 34→34；符号 +3/−1（已登记）；11 项自检；负控 exit 1 且 stale 对象消失。
+> **新增 kext 级链接探测**：按工程真实模式 `-Xlinker -kext` 分别链接两个 kext，四次全部 exit 0
+> （candidate NVRM 134,600 B / import 468；candidate NVRMFB 320,840 B / import 478）。
+> 链接闭包补完：NVRM 468 个未定义符号全部有提供者；NVRMFB 478 个 = 363 内核 + 115 IOGraphics，
+> 115 个在 `SystemKernelExtensions.kc` 的 nm 里全部找到（IOGraphics.kext 在 macOS 15 不存在）。
+> 仍未做整包 kext 链接（缺 NVRM 全量对象集/配方）、未加载、未运行；设备 NO-GO。
+> 见 [链接闭包](research/stock-v243-once-20261021/LINK-CLOSURE-20261021.md)、
+> [XNU 语义](research/stock-v243-once-20261021/ONCE-SEMANTICS-XNU-20261021.md)、
+> [12 点审计](research/stock-v243-once-20261021/ONCE-SITES-AUDIT-20261021.md)。
 
 
 > **2026-10-21 stock v2.4.2 原生门禁（success，含审计修复）**：run 39461235023 / head `13449f8`，
