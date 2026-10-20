@@ -1,12 +1,27 @@
-> **2026-10-21 stock v2.4.2 原生门禁收敛（本轮，success）**：run 39452257558 / head `e518452`，
-> artifact 12279222611（SHA256 `77891e3c…37fb36`）。四个对象编译退出码为 0；候选 NVRM 的 3 条
-> `-Wdeprecated-declarations`（1579:13、1587:43、1599:22，逐字消息已从 artifact 核对）改为
-> **封闭例外清单**，清单外新增诊断与例外缺失都拒收；状态为
-> `PASS_DARWIN_TWO_TU_OBJECTS_WITH_ACCEPTED_DIAGNOSTICS`，不再声称零新增告警。
-> 新增符号级集成阶段：NVRM 新增 2 个外部依赖（`IOService::isInactive`、`rm_disable_adapter`）
-> 与 15 个自定义方法均逐条登记，未登记即拒收。负控始终执行并预置 stale 对象。
+> **2026-10-21 stock v2.4.3 ONCE 回移（源码已对齐，原生门禁待跑）**：按固定 XNU
+> `43a9088`/`rel/xnu-11417` 的 `osfmk/kern/thread_call.c` 逐段复核 ONCE 语义——它只在 call
+> **正在运行**时改写入队（`_pending/_delayed_call_enqueue` L714/L760 置 `THREAD_CALL_RESCHEDULE`），
+> 在 `thread_call_finish` L1590-1617 折叠成一次额外运行；不串行化、不等待运行中的回调，
+> `thread_call_cancel` 也清不掉 RESCHEDULE，`thread_call_cancel_wait` 对客户端自有 call 直接 panic。
+> 据此推翻上一轮"排除 gConnectNotify"的理由：plain 模式下同一 call 对象也是唯一队列元素，
+> pending 时同样合并通知，ONCE 不新增丢失；上游 47f818b 也是 12 个分配点全部 ONCE。
+> 本轮回移已改为**同样的 12 点**（`nvrmfbCall` 语义，未引入 helper），候选 `NVRM.cpp`
+> `ac0c7518…`、`nvrm-fb.cpp` `69df8a94…`（新），补丁可正向应用并反向恢复原文件。
+> 由于 `thread_call_allocate` 从该对象消失，符号检查新增"已登记的移除"；未批准的新增/移除仍拒收。
+> **本轮 GitHub API 与 git 远端连接持续失败，v2.4.3 原生门禁未运行**，因此不宣称任何编译结论；
+> 详见 [ONCE 语义复核](research/stock-v243-once-20261021/ONCE-SEMANTICS-XNU-20261021.md)。
+
+
+> **2026-10-21 stock v2.4.2 原生门禁（success，含审计修复）**：run 39461235023 / head `13449f8`，
+> artifact `12282672298`（SHA256 `f492267d…b5b2`）。四个对象编译退出码 0；3 条
+> `-Wdeprecated-declarations` 以**逐字消息**绑定为封闭例外，清单外新增与例外缺失都拒收；
+> 补丁范围改为从 diff 头验证（只允许两份受控文件）；无法解析的告警行不再被丢弃；
+> 既有告警按 `(message, category)` 入池。门禁每次运行执行 **9 项自检**（第三文件、重复路径、
+> 第四条告警、缺失例外、未解析行、未批准符号等），任一不再拒绝即失败。
+> 符号级集成：NVRM +2 外部依赖 / +15 自定义方法，逐条登记并有仓库内证据。
 > 仍未链接、未加载、未运行；设备 NO-GO。详见
 > [GATE-CONVERGENCE-20261021](research/stock-v242-converged/GATE-CONVERGENCE-20261021.md)。
+
 
 > **2026-10-19 R36 当前断点：R35 原生失败定位为 KAPI 缺字段（1279/1280），且 free 后查询被真实heap＋ASan负控证伪；旧夹具验收入口已退役。R36直接返回关闭结果，12/12本地ASan、40工具检查、三组10＋5＋7回归、完整补丁往返通过；新Darwin/链接尚未运行，导入数未知。callback静默先于NISO销毁、NISO错误传播、legacy/allocate owner、normal busy join与RM busy→STANDBY仍OPEN，GPU未运行、设备NO-GO。** [审计与下一断点](research/gpu-safety-r5/R36-R35-AUDIT-TRY-FREE-20261019.md)。
 
