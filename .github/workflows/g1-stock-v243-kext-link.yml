@@ -145,7 +145,7 @@ jobs:
             fi
             if "${cc[@]}" "${INC[@]}" \
                  -DKERNEL -DKERNEL_PRIVATE -DDRIVER_PRIVATE -DAPPLE -DNeXT ${RMDEFS[@]+"${RMDEFS[@]}"} \
-                 "${std[@]}" "${cxx[@]}" -fno-builtin -fno-common -O2 \
+                 "${std[@]}" ${cxx[@]+"${cxx[@]}"} -fno-builtin -fno-common -O2 \
                  -Wall -Wno-unused-parameter -Wno-unused-function \
                  -c "$src" -o "$obj" > "$logs/tu-${base}.log" 2>&1; then
               echo "OK   $base" >> "$logs/tu-compile.txt"
