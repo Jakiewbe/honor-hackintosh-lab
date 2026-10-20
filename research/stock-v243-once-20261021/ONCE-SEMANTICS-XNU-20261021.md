@@ -61,27 +61,44 @@ thread_call_enter_delayed_internal(...)                     // L1260
 调用进入 `thread_call_invoke(func, param0, param1, call)`（L1674-1693）时参数已按值快照，
 因此并发运行之间不会互相改写对方的参数，但**合并后的那次运行只会看到最后一个参数**。
 
-## 4. cancel / free
+## 4. cancel / free：不是排空屏障
 
 ```c
 thread_call_cancel(call)                                    // L1390-1402
-    thread_call_cancel_locked(call)                         // L1330-1379：只做 _call_dequeue，不清 RESCHEDULE
+    thread_call_cancel_locked(call)                         // L1330-1379：只 _call_dequeue，不清 RESCHEDULE
 thread_call_cancel_wait(call)                               // L1412
-    if (!(flags & THREAD_CALL_ALLOC)) panic(...)            // L1417-1420  ← 客户端自有存储不可 wait
+    if ((call->tc_flags & THREAD_CALL_ALLOC) == 0)          // L1417
+        panic("can't wait on thread call whose storage I don't own");   // L1418
     if (ONCE) { thread_call_cancel_locked(); thread_call_wait_once_locked(); }   // L1437-1445
 thread_call_free(call)                                      // L1097
-    if (call->tc_queue != NULL || (flags & RESCHEDULE)) return FALSE;   // L1105-1111
-    ...
-    if (flags & THREAD_CALL_RUNNING) panic("freeing a running once call");   // L1136-1137
+    if (call->tc_queue != NULL || (flags & RESCHEDULE)) return FALSE;       // L1105-1110
+    int32_t refs = --call->tc_refs;                         // L1113
+    if (refs == 0) { ... zfree(call); }                     // L1126-1149
+    return TRUE;                                            // L1151
 ```
 
-结论 4：
-- `thread_call_cancel()` 只能取消**队列里的 pending 项**；对正在运行的 ONCE call，
-  它既不能停止当前运行，也不能清掉 `RESCHEDULE`，所以**那次额外运行仍会发生**。
-- `thread_call_cancel_wait()` 对客户端自分配的 call 直接 panic，本驱动的 call 全部属于这一类，
-  因此不能用它做 stop 排空。
-- `thread_call_free()` 在 `RESCHEDULE` 未清或 call 仍在运行时会返回 FALSE / panic，
-  所以 stop 里必须循环到它成功，且回调要在入口检查 `fStopping` 才会让"额外的那次运行"空转退出。
+派发侧的资源账：
+
+```c
+if (call->tc_flags & THREAD_CALL_ALLOC) call->tc_refs++;    // L1778-1780  运行期间线程持有一个引用
+if (alloc || ONCE) { needs_finish = true; RUNNING; }        // L1781-1793
+thread_call_finish: if (!signal && alloc && refs == 0) zfree(call);          // L1620-1640
+```
+
+结论 4（逐条，均可复核）：
+
+1. `thread_call_cancel()` 只取消**队列里的 pending 项**；运行中的 ONCE call 没有队列项，
+   `cancel` 返回 FALSE，且**清不掉 RESCHEDULE**，所以那次额外运行仍会发生（在 finish L1590 处入队）。
+2. `thread_call_cancel_wait()` 仅对**不是** `thread_call_allocate()` 分配的 call panic（L1417）。
+   本驱动的 call 全部由 `thread_call_allocate*` 分配，`THREAD_CALL_ALLOC` 为真（L1024），
+   所以 `cancel_wait` 在类型上是允许的；但它会阻塞等待，stop 路径没有采用。
+3. `thread_call_free()` 在 call **仍在运行时并不等待**：ALLOC call 的引用计数是"客户端 1 + 运行线程 1"，
+   free 把它减到 1 就返回 TRUE，真正的 `zfree` 由运行线程在 `thread_call_finish` 里完成（L1620-1640）。
+   因此 `while (!thread_call_free(call)) { ... }` 这种循环**排不掉正在运行的回调**，
+   它只在 "队列里还有 pending 项或 RESCHEDULE 未清" 时返回 FALSE。
+4. 结论：停止路径不能把 `cancel` + `free` 的循环当作"回调已结束"的证明。回调能否安全返回，
+   取决于它自己在入口看到 `fStopping` 后立刻返回，以及 stop 在回调可能仍在栈上时推迟释放其访问的状态。
+   ONCE 不改变这一条：它只把"运行中再次 enter"变成"结束后再跑一次"。
 
 ## 5. 对回移的直接含义
 
