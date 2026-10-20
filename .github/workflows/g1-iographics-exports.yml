@@ -1,0 +1,44 @@
+name: HONOR G1 IOGraphics exports capture
+
+# Manual, read-only evidence capture: copy the IOGraphics kext's export list from the
+# runner so the NVRMFB link closure can name a provider for every IOFramebuffer /
+# IODisplay symbol. It never builds, links, installs or loads anything.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: honor-g1-iographics-exports-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    runs-on: macos-15-intel
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Copy the IOGraphics export list
+        shell: bash
+        run: |
+          set -euo pipefail
+          path=/System/Library/Extensions/IOGraphics.kext/Contents/Resources/config/IOGraphics.exports
+          mkdir -p out
+          ls -l "$path"
+          cp "$path" out/IOGraphics.exports
+          file out/IOGraphics.exports
+          wc -c out/IOGraphics.exports
+          grep -c '<string>' out/IOGraphics.exports || true
+          sw_vers > out/sw_vers.txt
+          uname -a > out/uname.txt
+
+      - name: Upload the capture
+        uses: actions/upload-artifact@v4
+        with:
+          name: g1-iographics-exports
+          path: out/
+          if-no-files-found: error
+          retention-days: 14
