@@ -392,7 +392,8 @@ def compile_one(role, tree, source, flags, logs, objects):
     record['diagnostics'], record['unparsed_diagnostics'] = parse_diagnostics(
         (logs / (stem + '-compile.txt')).read_text(encoding='utf-8'))
     # Text evidence only. Never upload even these unlinked driver objects.
-    obj.unlink()
+    # The kext-style link probe needs the file, so deletion happens in main() after that probe.
+    return record
     return record
 
 
@@ -542,6 +543,8 @@ def main():
             except Exception as probe_error:
                 probe = dict(executed=False, error=str(probe_error)[:200])
             report['kext_link_probe'] = probe
+            for leftover in objects.glob('*.o'):
+                leftover.unlink()
             report['staged_results']['kext_link_probe'] = dict(
                 ok=bool(probe.get('exit') == 0), probed=probe.get('executed'),
                 exit=probe.get('exit'), undefined=probe.get('undefined'))

@@ -58,6 +58,21 @@ jobs:
             (kmutil showloaded 2>&1 | grep -i -E 'IOGraphics|IOPCIFamily|IOACPIFamily') || true
           } > out/summary.txt 2>&1
 
+      - name: Name the IOFramebuffer / IODisplay providers from the kernel collection
+        shell: bash
+        run: |
+          set -uo pipefail
+          kc=/System/Library/KernelCollections/SystemKernelExtensions.kc
+          {
+            echo "== nm on the system kernel collection"
+            xcrun nm -gU "$kc" > out/kc-nm.txt 2> out/kc-nm.err || true
+            wc -l out/kc-nm.txt out/kc-nm.err || true
+            echo "== IOFramebuffer / IODisplay symbols found"
+            grep -E '__ZN13IOFramebuffer|__ZN9IODisplay|__ZN25IODisplayParameterHandler|_gIODisplay'               out/kc-nm.txt > out/iographics-symbols.txt || true
+            wc -l out/iographics-symbols.txt || true
+            head -40 out/iographics-symbols.txt || true
+          } >> out/summary.txt 2>&1
+
       - name: Upload the capture
         uses: actions/upload-artifact@v4
         with:
