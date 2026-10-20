@@ -128,6 +128,75 @@ def run_negative_control(objects, logs, runner=run):
     return record
 
 
+def gate_self_checks(exceptions, integration):
+    """Exercise the gate's own rejection logic on every run, so a regression cannot pass silently.
+
+    These are real negative controls for the checker: each case must fail exactly as designed, using the same
+    functions that judge the real inputs. A case that stops rejecting makes the whole gate fail.
+    """
+    cases = []
+
+    def case(name, fn, expect_raise):
+        try:
+            fn()
+            raised = False
+            detail = ''
+        except Exception as error:
+            raised = True
+            detail = str(error)[:160]
+        cases.append(dict(name=name, rejected=raised, expected_reject=expect_raise,
+                          ok=raised == expect_raise, detail=detail))
+
+    two_files = ('--- a/kexts/NVRM/NVRM.cpp\n+++ b/kexts/NVRM/NVRM.cpp\n'
+                 '--- a/kexts/NVRMFB/fb/nvrm-fb.cpp\n+++ b/kexts/NVRMFB/fb/nvrm-fb.cpp\n')
+    three_files = two_files + '--- a/kexts/NVRM/osapi.cpp\n+++ b/kexts/NVRM/osapi.cpp\n'
+    duplicated = ('--- a/kexts/NVRM/NVRM.cpp\n+++ b/kexts/NVRM/NVRM.cpp\n'
+                  '--- a/kexts/NVRM/NVRM.cpp\n+++ b/kexts/NVRM/NVRM.cpp\n')
+
+    case('patch-scope-accepts-two-files', lambda: check_patch_scope(two_files), False)
+    case('patch-scope-rejects-third-file', lambda: check_patch_scope(three_files), True)
+    case('patch-scope-rejects-duplicate', lambda: check_patch_scope(duplicated), True)
+
+    scoped = [e for e in exceptions if e['path'] == 'kexts/NVRM/NVRM.cpp']
+    if scoped:
+        # Build the reviewed set from the lock itself, so this control cannot drift from the real list.
+        def as_diag(entry):
+            return dict(file=entry['file'], line=entry['line'], column=entry['column'],
+                        category=entry['category'], message=entry.get('message_text', ''))
+        reviewed_all = [as_diag(e) for e in scoped]
+        case('diagnostics-accept-the-reviewed-exception',
+             lambda: _must_accept(classify_diagnostics([], reviewed_all, scoped)), False)
+        case('diagnostics-reject-a-fourth-warning',
+             lambda: _must_reject(classify_diagnostics(
+                 [], reviewed_all + [dict(reviewed_all[0], line=reviewed_all[0]['line'] + 400)], scoped)), False)
+        case('diagnostics-reject-a-missing-exception',
+             lambda: _must_reject(classify_diagnostics([], reviewed_all[:-1], scoped)), False)
+    case('diagnostics-reject-an-unparsed-line',
+         lambda: _must_reject(classify_diagnostics([], [], [], ['warning: no location'])), False)
+
+    good = dict(undefined=['A'], defined=['B'])
+    case('symbols-accept-the-approved-addition',
+         lambda: _must_accept(classify_symbols(good, dict(undefined=['A', 'NEW'], defined=['B']), {'NEW'}, set())),
+         False)
+    case('symbols-reject-an-unapproved-addition',
+         lambda: _must_reject(classify_symbols(good, dict(undefined=['A', 'NEW'], defined=['B']), set(), set())),
+         False)
+
+    return dict(cases=cases, ok=all(c['ok'] for c in cases))
+
+
+def _must_reject(verdict):
+    if verdict.get('ok'):
+        raise ValueError('checker accepted an input it must reject')
+    return verdict
+
+
+def _must_accept(verdict):
+    if not verdict.get('ok'):
+        raise ValueError('checker rejected a valid input: %r' % (verdict.get('failures') or verdict,))
+    return verdict
+
+
 def validate_lock(lock, assets):
     if lock['upstream_commit'] != NM_PIN or lock['ogkm_commit'] != NV_PIN:
         raise ValueError('fixed source pin differs')
@@ -431,6 +500,15 @@ def main():
             if not symbols_ok:
                 report.setdefault('failed_stage', report['stage'])
                 errors.append('symbol/ABI integration differs from the reviewed set')
+            report['stage'] = 'gate-self-checks'
+            self_checks = gate_self_checks(exceptions, integration)
+            report['gate_self_checks'] = self_checks
+            report['staged_results']['gate_self_checks'] = dict(
+                ok=self_checks['ok'], cases=len(self_checks['cases']),
+                failed=[c['name'] for c in self_checks['cases'] if not c['ok']])
+            if not self_checks['ok']:
+                report.setdefault('failed_stage', report['stage'])
+                errors.append('gate self-checks no longer reject the inputs they must reject')
         report['stage'] = 'compiler-negative-control'
         try:
             report['compile_negative'] = run_negative_control(objects, logs)
@@ -472,6 +550,11 @@ def main():
                       flush=True)
             for line in verdict.get('unparsed', [])[:4]:
                 print('::error::DIAG_UNPARSED ' + line[:200], flush=True)
+    if report['status'] != PASS_STATUS and report.get('gate_self_checks'):
+        for c in report['gate_self_checks']['cases']:
+            if not c['ok']:
+                print('::error::SELF_CHECK %s expected_reject=%s rejected=%s %s' %
+                      (c['name'], c['expected_reject'], c['rejected'], c['detail']), flush=True)
     if report['status'] != PASS_STATUS and report.get('symbols'):
         for source, verdict in report['symbols'].items():
             for sym in verdict['new_undefined'][:4]:
