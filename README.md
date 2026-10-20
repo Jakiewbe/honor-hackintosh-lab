@@ -1,3 +1,12 @@
+> **2026-10-21 stock v2.4.2 门禁收敛（本轮）**：run 39440488018 的失败点是候选 NVRM 的 3 条
+> -Wdeprecated-declarations（AdapterAttempt 内 1579:13 / 1587:43 / 1599:22），不是编译错误。
+> 这 3 条落在恢复总线主控/内存使能的回滚路径上，删除或迁移 DriverKit 都不成立，因此改为
+> **封闭的诊断例外清单**（绑定候选 SHA、文件、行列、类别、消息模式与计数），清单外任何新增诊断仍拒收，
+> 例外消失也拒收；状态字符串与报告字段不再声称零新增告警。报告阶段拆成对象编译/输入一致性/
+> 诊断验收/编译器负控，负控不再被告警拒收跳过且预置 stale 对象。详见
+> [GATE-CONVERGENCE-20261021](research/stock-v242-converged/GATE-CONVERGENCE-20261021.md)。
+> 设备仍 NO-GO；未读 artifact（401），编译器原文未独立核对。
+
 > **2026-10-19 R36 当前断点：R35 原生失败定位为 KAPI 缺字段（1279/1280），且 free 后查询被真实heap＋ASan负控证伪；旧夹具验收入口已退役。R36直接返回关闭结果，12/12本地ASan、40工具检查、三组10＋5＋7回归、完整补丁往返通过；新Darwin/链接尚未运行，导入数未知。callback静默先于NISO销毁、NISO错误传播、legacy/allocate owner、normal busy join与RM busy→STANDBY仍OPEN，GPU未运行、设备NO-GO。** [审计与下一断点](research/gpu-safety-r5/R36-R35-AUDIT-TRY-FREE-20261019.md)。
 
 > **2026-10-19：R33官方1280TU及两项OGKM补丁最终来源已原生独立验收（run39189188122）。R34新增真实FB→OGKM→OS合同：5条正常/保留路径PASS，2条关闭拒绝路径FAIL（整体exit1），确认gDev/creator也被丢弃；编译失败无旧二进制执行。R34没有新驱动修复。P0-4、normal busy join、RM busy→STANDBY仍FAIL，GPU未运行、设备NO-GO。** [当前断点](research/gpu-safety-r5/R34-DEVICE-CALLER-CONTRACT-20261019.md)。

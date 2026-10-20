@@ -47,5 +47,38 @@
   "required_notice": "Copyright (c) 2026 NullMoth Systems (https://nullmothsystems.com)",
   "compilation_admission": "GO_COMPILE_ONLY",
   "device_admission": "NO_GO",
-  "level": "SOURCE_CANDIDATE_NOT_DARWIN_COMPILED_NOT_LOADED"
+  "level": "SOURCE_CANDIDATE_NOT_DARWIN_COMPILED_NOT_LOADED",
+  "diagnostics_exceptions": [
+    {
+      "path": "kexts/NVRM/NVRM.cpp",
+      "file": "NVRM.cpp",
+      "line": 1579,
+      "column": 13,
+      "category": "-Wdeprecated-declarations",
+      "message_regex": "IOPCIDevice.*deprecated",
+      "count": 1,
+      "reason": "IOPCIDevice is the in-kernel PCI provider API this driver must use; PCIDriverKit is a user-space story and moving the kext to it is out of scope for a two-TU convergence."
+    },
+    {
+      "path": "kexts/NVRM/NVRM.cpp",
+      "file": "NVRM.cpp",
+      "line": 1587,
+      "column": 43,
+      "category": "-Wdeprecated-declarations",
+      "message_regex": "IOPCIDevice.*deprecated",
+      "count": 1,
+      "reason": "Constructor parameter of the same deprecated type; removing the parameter would delete the rollback path that restores saved PCI command state."
+    },
+    {
+      "path": "kexts/NVRM/NVRM.cpp",
+      "file": "NVRM.cpp",
+      "line": 1599,
+      "column": 22,
+      "category": "-Wdeprecated-declarations",
+      "message_regex": "setBusMasterEnable.*deprecated",
+      "count": 1,
+      "reason": "Restores bus-master state in the destructor; dropping it would leave DMA enabled after a failed bring-up, which is strictly less safe than the warning."
+    }
+  ],
+  "diagnostics_policy": "Closed exception list bound to the locked candidate SHA and to file/line/column/category/message pattern/count. Any other new diagnostic is rejected; a listed exception that no longer appears is rejected too. This is a reviewed acceptance, not a zero-new-warning claim."
 }
