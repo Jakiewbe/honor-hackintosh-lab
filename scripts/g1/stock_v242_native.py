@@ -47,15 +47,23 @@ def output(argv, cwd=None):
 
 
 def parse_diagnostics(text):
-    """Every warning with its real position and category. Unparsable warning lines are kept as raw text."""
-    found = []
+    """Every warning with its real position and category, plus the warning lines that could not be parsed.
+
+    A warning line that does not fit `path:line:col: warning: ... [-Wcategory]` is returned separately instead
+    of being dropped: an unparsed warning would otherwise be invisible to the comparison and could hide a new
+    diagnostic. Callers must treat a non-empty second list as a failure.
+    """
+    found, unparsed = [], []
     for raw in text.splitlines():
+        if ': warning: ' not in raw and not raw.lstrip().startswith('warning: '):
+            continue
         m = DIAG.match(raw)
         if not m:
+            unparsed.append(raw.strip())
             continue
         found.append(dict(file=Path(m['path']).name, line=int(m['line']), column=int(m['col']),
                           message=m['msg'].strip(), category=m['cat'] or ''))
-    return found
+    return found, unparsed
 
 
 def _exception_matches(entry, diag):
@@ -66,13 +74,15 @@ def _exception_matches(entry, diag):
     return re.search(entry['message_regex'], diag['message']) is not None
 
 
-def classify_diagnostics(original, candidate, exceptions):
+def classify_diagnostics(original, candidate, exceptions, unparsed=()):
     """Split candidate diagnostics into pre-existing, accepted exceptions and unexpected.
 
     A pre-existing warning is matched by message text only, because line numbers shift between trees.
     An exception must match file+line+column+category+message pattern, and is consumed at most `count` times.
     """
-    pool = collections.Counter(d['message'] for d in original)
+    # Key on (message, category): a diagnostic that keeps the text but changes category is a different
+    # warning and must not be absorbed by the old one.
+    pool = collections.Counter((d['message'], d['category']) for d in original)
     accepted, unexpected = [], []
     used = collections.Counter()
     for diag in candidate:
@@ -84,15 +94,16 @@ def classify_diagnostics(original, candidate, exceptions):
                 accepted.append(dict(diag, exception=index))
                 break
         else:
-            if pool[diag['message']] > 0:
-                pool[diag['message']] -= 1
+            if pool[(diag['message'], diag['category'])] > 0:
+                pool[(diag['message'], diag['category'])] -= 1
                 continue
             unexpected.append(diag)
     missing = [dict(entry, seen=used[index]) for index, entry in enumerate(exceptions)
                if used[index] != entry['count']]
+    unparsed = list(unparsed)
     return dict(original=len(original), candidate=len(candidate), accepted=accepted,
-                unexpected=unexpected, missing=missing,
-                ok=not unexpected and not missing)
+                unexpected=unexpected, missing=missing, unparsed=unparsed,
+                ok=not unexpected and not missing and not unparsed)
 
 
 def run_negative_control(objects, logs, runner=run):
@@ -157,6 +168,25 @@ def validate_lock(lock, assets):
     return patch, exceptions, integration
 
 
+def patch_paths(text):
+    """Files a unified diff touches, from its ---/+++ headers (order preserved, duplicates removed)."""
+    paths = []
+    for line in text.splitlines():
+        if line.startswith('+++ b/') or line.startswith('--- a/'):
+            path = line[6:].strip()
+            if path != '/dev/null' and path not in paths:
+                paths.append(path)
+    return paths
+
+
+def check_patch_scope(text):
+    """The diff may touch exactly the two locked paths, in any order, with no duplicates."""
+    touched = patch_paths(text)
+    if sorted(touched) != sorted(EXPECTED) or len(touched) != len(EXPECTED):
+        raise ValueError('patch touches %r, not exactly the two locked files' % (touched,))
+    return touched
+
+
 def prepare(nm, candidate, lock, patch, logs):
     # Only local source copies. Never copy any upstream binary objects.
     for row in lock['files']:
@@ -165,6 +195,7 @@ def prepare(nm, candidate, lock, patch, logs):
     def ignore(directory, names):
         return [n for n in names if n == '.git' or Path(n).suffix.lower() in
                 {'.o', '.a', '.dylib', '.bin', '.kext', '.bundle', '.tar', '.gz', '.zip'}]
+    check_patch_scope(patch.read_text(encoding='utf-8', errors='replace'))
     shutil.copytree(nm, candidate, ignore=ignore)
     for flags, label in ((['--check'], 'check'), ([], 'apply')):
         if run(['git', '-c', 'core.autocrlf=false', 'apply', *flags, '--whitespace=error-all', patch],
@@ -270,7 +301,8 @@ def compile_one(role, tree, source, flags, logs, objects):
             raise ValueError('object inspection failed: ' + stem)
     record['undefined'] = sorted(nm_names(logs / (stem + '-undefined.txt')))
     record['defined'] = sorted(nm_names(logs / (stem + '-defined.txt')))
-    record['diagnostics'] = parse_diagnostics((logs / (stem + '-compile.txt')).read_text(encoding='utf-8'))
+    record['diagnostics'], record['unparsed_diagnostics'] = parse_diagnostics(
+        (logs / (stem + '-compile.txt')).read_text(encoding='utf-8'))
     # Text evidence only. Never upload even these unlinked driver objects.
     obj.unlink()
     return record
@@ -362,14 +394,17 @@ def main():
                 original = report['objects'][index]['diagnostics']
                 cand = report['objects'][index + 2]['diagnostics']
                 scoped = [e for e in exceptions if e['path'] == source]
-                verdict = classify_diagnostics(original, cand, scoped)
+                verdict = classify_diagnostics(original, cand, scoped,
+                                               report['objects'][index]['unparsed_diagnostics'] +
+                                               report['objects'][index + 2]['unparsed_diagnostics'])
                 report['diagnostics'][source] = verdict
                 if not verdict['ok']:
                     diag_ok = False
             report['staged_results']['diagnostics_acceptance'] = dict(
                 ok=diag_ok, accepted=sum(len(v['accepted']) for v in report['diagnostics'].values()),
                 unexpected=sum(len(v['unexpected']) for v in report['diagnostics'].values()),
-                missing=sum(len(v['missing']) for v in report['diagnostics'].values()))
+                missing=sum(len(v['missing']) for v in report['diagnostics'].values()),
+                unparsed=sum(len(v['unparsed']) for v in report['diagnostics'].values()))
             if not diag_ok:
                 report.setdefault('failed_stage', report['stage'])
                 errors.append('diagnostics not limited to the reviewed exceptions')
@@ -435,6 +470,8 @@ def main():
                 print('::error::DIAG_MISSING %s:%d:%d seen=%d expected=%d' %
                       (entry['file'], entry['line'], entry['column'], entry['seen'], entry['count']),
                       flush=True)
+            for line in verdict.get('unparsed', [])[:4]:
+                print('::error::DIAG_UNPARSED ' + line[:200], flush=True)
     if report['status'] != PASS_STATUS and report.get('symbols'):
         for source, verdict in report['symbols'].items():
             for sym in verdict['new_undefined'][:4]:

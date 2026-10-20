@@ -32,7 +32,8 @@ class DiagnosticsPolicyTests(unittest.TestCase):
                 "[-Wdeprecated-declarations]\n"
                 "/tmp/nm/kexts/NVRM/NVRM.cpp:1600:5: warning: unused variable 'v' [-Wunused-variable]\n"
                 "not a diagnostic line\n")
-        found = self.mod.parse_diagnostics(text)
+        found, unparsed = self.mod.parse_diagnostics(text)
+        self.assertEqual(unparsed, [])
         self.assertEqual(len(found), 2)
         self.assertEqual((found[0]['file'], found[0]['line'], found[0]['column']), ('NVRM.cpp', 1579, 13))
         self.assertEqual(found[0]['category'], '-Wdeprecated-declarations')
@@ -94,6 +95,57 @@ class DiagnosticsPolicyTests(unittest.TestCase):
         rec = self.mod.classify_diagnostics([old], [old], [EXC])
         self.assertFalse(rec['ok'])   # the reviewed exception is now missing
         self.assertEqual(rec['missing'][0]['seen'], 0)
+
+
+class ParseAndScopeHardeningTests(unittest.TestCase):
+    """Cases that the first version of the gate would have missed (audit items 3 and 1)."""
+
+    def setUp(self):
+        self.mod = importlib.util.module_from_spec(SPEC)
+        SPEC.loader.exec_module(self.mod)
+
+    def test_warning_without_location_is_not_dropped(self):
+        text = "warning: something the parser cannot place\n" \
+               "/x/kexts/NVRM/NVRM.cpp:1:2: warning: fine [-Wunused-variable]\n"
+        found, unparsed = self.mod.parse_diagnostics(text)
+        self.assertEqual(len(found), 1)
+        self.assertEqual(unparsed, ["warning: something the parser cannot place"])
+
+    def test_unparsed_warning_fails_the_classification(self):
+        rec = self.mod.classify_diagnostics([], [diag()], [EXC], ["warning: no location"])
+        self.assertFalse(rec['ok'])
+        self.assertEqual(len(rec['unparsed']), 1)
+
+    def test_same_message_but_a_different_category_is_not_absorbed(self):
+        original = [diag(category='-Wdeprecated-declarations')]
+        candidate = [diag(category='-Wdeprecated-implementations')]
+        rec = self.mod.classify_diagnostics(original, candidate, [])
+        self.assertFalse(rec['ok'])
+        self.assertEqual(len(rec['unexpected']), 1)
+
+    def test_patch_scope_accepts_exactly_the_two_files(self):
+        text = "--- a/kexts/NVRM/NVRM.cpp\n+++ b/kexts/NVRM/NVRM.cpp\n" \
+               "--- a/kexts/NVRMFB/fb/nvrm-fb.cpp\n+++ b/kexts/NVRMFB/fb/nvrm-fb.cpp\n"
+        self.assertEqual(sorted(self.mod.check_patch_scope(text)),
+                         sorted(['kexts/NVRM/NVRM.cpp', 'kexts/NVRMFB/fb/nvrm-fb.cpp']))
+
+    def test_patch_scope_rejects_a_third_file(self):
+        text = "--- a/kexts/NVRM/NVRM.cpp\n+++ b/kexts/NVRM/NVRM.cpp\n" \
+               "--- a/kexts/NVRMFB/fb/nvrm-fb.cpp\n+++ b/kexts/NVRMFB/fb/nvrm-fb.cpp\n" \
+               "--- a/kexts/NVRM/osapi.cpp\n+++ b/kexts/NVRM/osapi.cpp\n"
+        with self.assertRaises(ValueError):
+            self.mod.check_patch_scope(text)
+
+    def test_patch_scope_rejects_a_duplicate_entry(self):
+        text = "--- a/kexts/NVRM/NVRM.cpp\n+++ b/kexts/NVRM/NVRM.cpp\n" \
+               "--- a/kexts/NVRM/NVRM.cpp\n+++ b/kexts/NVRM/NVRM.cpp\n"
+        with self.assertRaises(ValueError):
+            self.mod.check_patch_scope(text)
+
+    def test_delivered_patch_passes_the_scope_check(self):
+        text = (ROOT / 'research/stock-v242-converged/stock-v242-converged.patch') \
+            .read_text(encoding='utf-8', errors='replace')
+        self.assertEqual(len(self.mod.check_patch_scope(text)), 2)
 
 
 class NegativeControlTests(unittest.TestCase):
