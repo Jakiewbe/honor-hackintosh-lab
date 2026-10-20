@@ -113,7 +113,7 @@ jobs:
           # The RM's own compile command is the authority for the define set; it needs NV_VERBOSE=1 in the log.
           if grep -qE ' -c [^ ]+\.(c|cpp) ' "$logs/make-nvidia.log"; then
             while read -r d; do RMDEFS+=("$d"); done < <(grep -E ' -c [^ ]+\.(c|cpp) ' "$logs/make-nvidia.log" \
-              | grep -E 'nvidia/arch|nvidia/inc|kernel' | head -1 | tr ' ' '\n' | grep -E '^-D' | sort -u)
+              | grep -E 'nvidia/arch|nvidia/inc|kernel' | head -1 | tr ' ' '\n' | grep -E '^-D' | sed -e 's/"//g' | sort -u)
           elif [[ -f "$NV/_out/Darwin_x86_64/compile_cmds.sh" ]]; then
             while read -r d; do RMDEFS+=("$d"); done < <(head -1 "$NV/_out/Darwin_x86_64/compile_cmds.sh" | tr ' ' '\n' | grep -E '^-D' | sed -e 's/"//g')
           fi
