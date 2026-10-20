@@ -225,8 +225,8 @@ def classify_symbols(original, candidate, approved_new_undefined, approved_new_d
     A new undefined symbol needs a reviewed provider; new defined symbols are enumerated; removing either
     kind changes what other components link against and is rejected.
     """
-    original = {k: set(v) for k, v in original.items()}
-    candidate = {k: set(v) for k, v in candidate.items()}
+    original = {k: set(original[k]) for k in ('undefined', 'defined')}
+    candidate = {k: set(candidate[k]) for k in ('undefined', 'defined')}
     new_und = candidate['undefined'] - original['undefined']
     gone_und = original['undefined'] - candidate['undefined']
     new_def = candidate['defined'] - original['defined']

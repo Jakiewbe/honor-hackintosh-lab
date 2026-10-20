@@ -53,6 +53,14 @@ class SymbolIntegrationTests(unittest.TestCase):
         rec = self.mod.classify_symbols(obj({'U1'}, {'D1'}), obj({'U1'}, {'D1', 'D3'}), set(), {'D3'})
         self.assertTrue(rec['ok'])
 
+    def test_full_object_records_with_extra_fields_are_accepted(self):
+        # compile_one records carry more than symbol sets; those fields must not be treated as iterables.
+        original = {'undefined': ['U1'], 'defined': ['D1'], 'compile_exit': 0, 'role': 'original'}
+        candidate = {'undefined': ['U1', 'NEW'], 'defined': ['D1'], 'compile_exit': 0, 'role': 'candidate'}
+        rec = self.mod.classify_symbols(original, candidate, {'NEW'}, set())
+        self.assertTrue(rec['ok'])
+        self.assertEqual(rec['new_undefined'], ['NEW'])
+
     def test_delivered_lock_lists_the_two_observed_dependencies(self):
         _, _, integration = self.mod.validate_lock(
             self.mod.json.loads((ROOT / 'research/stock-v242-converged/source-lock.json')
