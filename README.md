@@ -1,11 +1,12 @@
-> **2026-10-21 stock v2.4.2 门禁收敛（本轮）**：run 39440488018 的失败点是候选 NVRM 的 3 条
-> -Wdeprecated-declarations（AdapterAttempt 内 1579:13 / 1587:43 / 1599:22），不是编译错误。
-> 这 3 条落在恢复总线主控/内存使能的回滚路径上，删除或迁移 DriverKit 都不成立，因此改为
-> **封闭的诊断例外清单**（绑定候选 SHA、文件、行列、类别、消息模式与计数），清单外任何新增诊断仍拒收，
-> 例外消失也拒收；状态字符串与报告字段不再声称零新增告警。报告阶段拆成对象编译/输入一致性/
-> 诊断验收/编译器负控，负控不再被告警拒收跳过且预置 stale 对象。详见
+> **2026-10-21 stock v2.4.2 原生门禁收敛（本轮，success）**：run 39452257558 / head `e518452`，
+> artifact 12279222611（SHA256 `77891e3c…37fb36`）。四个对象编译退出码为 0；候选 NVRM 的 3 条
+> `-Wdeprecated-declarations`（1579:13、1587:43、1599:22，逐字消息已从 artifact 核对）改为
+> **封闭例外清单**，清单外新增诊断与例外缺失都拒收；状态为
+> `PASS_DARWIN_TWO_TU_OBJECTS_WITH_ACCEPTED_DIAGNOSTICS`，不再声称零新增告警。
+> 新增符号级集成阶段：NVRM 新增 2 个外部依赖（`IOService::isInactive`、`rm_disable_adapter`）
+> 与 15 个自定义方法均逐条登记，未登记即拒收。负控始终执行并预置 stale 对象。
+> 仍未链接、未加载、未运行；设备 NO-GO。详见
 > [GATE-CONVERGENCE-20261021](research/stock-v242-converged/GATE-CONVERGENCE-20261021.md)。
-> 设备仍 NO-GO；未读 artifact（401），编译器原文未独立核对。
 
 > **2026-10-19 R36 当前断点：R35 原生失败定位为 KAPI 缺字段（1279/1280），且 free 后查询被真实heap＋ASan负控证伪；旧夹具验收入口已退役。R36直接返回关闭结果，12/12本地ASan、40工具检查、三组10＋5＋7回归、完整补丁往返通过；新Darwin/链接尚未运行，导入数未知。callback静默先于NISO销毁、NISO错误传播、legacy/allocate owner、normal busy join与RM busy→STANDBY仍OPEN，GPU未运行、设备NO-GO。** [审计与下一断点](research/gpu-safety-r5/R36-R35-AUDIT-TRY-FREE-20261019.md)。
 
