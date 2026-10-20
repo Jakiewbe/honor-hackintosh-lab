@@ -523,31 +523,37 @@ def main():
                 report.setdefault('failed_stage', report['stage'])
                 errors.append('symbol/ABI integration differs from the reviewed set')
             report['stage'] = 'kext-style-link-probe'
-            # The project links every kext with `-Xlinker -kext` (see kexts/NMHDA/build.sh at the same pin),
-            # and that mode is what accepts the per-TU `_kmod_info` definitions. A plain `ld -r` is NOT the
-            # project's link and fails on those duplicates, so this probe uses the real mode. It is a probe,
-            # not an acceptance gate: linking two of the kext's objects cannot prove the full kext links.
-            probe = dict(executed=False)
-            try:
-                out = objects / 'candidate-combined'
-                rc = run(['xcrun', 'clang++', '-arch', 'x86_64', '-fapple-kext', '-nostdlib',
-                          '-Xlinker', '-kext', '-lkmodc++', '-lkmod', '-lcc_kext',
-                          objects / 'candidate-NVRM.o', objects / 'candidate-NVRMFB.o', '-o', out],
-                         objects, logs / 'kext-link-probe.txt')
-                probe = dict(executed=True, exit=rc, binary_exists=out.exists())
-                if out.exists():
-                    probe['size'] = out.stat().st_size
-                    probe['sha256'] = hashlib.sha256(out.read_bytes()).hexdigest()
-                    run(['xcrun', 'nm', '-u', out], objects, logs / 'kext-link-probe-undefined.txt')
-                    probe['undefined'] = len(nm_names(logs / 'kext-link-probe-undefined.txt'))
-            except Exception as probe_error:
-                probe = dict(executed=False, error=str(probe_error)[:200])
+            # NVRM.cpp and nvrm-fb.cpp belong to two DIFFERENT kexts (each carries its own
+            # KMOD_EXPLICIT_DECL), so linking them together is meaningless: the first probe run showed
+            # exactly the three expected duplicate symbols (__start, __stop, _kmod_info). The probe now
+            # links each object on its own, in the project's real kext mode, for both the original and the
+            # candidate. Undefined imports are expected here (the kernel and other kexts resolve them at
+            # load), so a probe records rather than gates.
+            probe = {}
+            for role in ('original', 'candidate'):
+                for tu in ('NVRM', 'NVRMFB'):
+                    obj = objects / ('%s-%s.o' % (role, tu))
+                    out = objects / ('%s-%s-linked' % (role, tu))
+                    record = dict(executed=False)
+                    try:
+                        rc = run(['xcrun', 'clang++', '-arch', 'x86_64', '-fapple-kext', '-nostdlib',
+                                  '-Xlinker', '-kext', '-lkmodc++', '-lkmod', '-lcc_kext', obj,
+                                  '-o', out], objects, logs / ('link-%s-%s.txt' % (role, tu)))
+                        record = dict(executed=True, exit=rc, binary_exists=out.exists())
+                        if out.exists():
+                            record['size'] = out.stat().st_size
+                            record['sha256'] = hashlib.sha256(out.read_bytes()).hexdigest()
+                            run(['xcrun', 'nm', '-u', out], objects,
+                                logs / ('link-%s-%s-undefined.txt' % (role, tu)))
+                            record['undefined'] = len(nm_names(logs / ('link-%s-%s-undefined.txt' % (role, tu))))
+                    except Exception as probe_error:
+                        record = dict(executed=False, error=str(probe_error)[:160])
+                    probe['%s-%s' % (role, tu)] = record
             report['kext_link_probe'] = probe
-            for leftover in objects.glob('*.o'):
-                leftover.unlink()
             report['staged_results']['kext_link_probe'] = dict(
-                ok=bool(probe.get('exit') == 0), probed=probe.get('executed'),
-                exit=probe.get('exit'), undefined=probe.get('undefined'))
+                probed=sum(1 for v in probe.values() if v.get('executed')),
+                ok=all(v.get('exit') == 0 for v in probe.values()),
+                exits={k: v.get('exit') for k, v in probe.items()})
             report['stage'] = 'gate-self-checks'
             self_checks = gate_self_checks(exceptions, integration)
             report['gate_self_checks'] = self_checks
