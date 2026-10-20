@@ -39,8 +39,32 @@ def evaluate(kapi, os_text):
     def check(name, ok, detail=""):
         checks.append({"check": name, "ok": bool(ok), "detail": detail})
 
-    m = re.search(r"failed:\s*\n", kapi)
-    failed = kapi[m.end():kapi.index("return NULL;", m.end()) + len("return NULL;")] if m else ""
+    # The file has several `failed:` labels (RmAllocateDevice, ImportMemory, ...). Using the first one would
+    # audit a different function and could report PASS on code that never quarantines anything, so the block is
+    # taken from inside AllocateDevice only.
+    m_fn = re.search(r"static struct NvKmsKapiDevice\s*\*\s*AllocateDevice\s*\n?\s*\(", kapi)
+    if not m_fn:
+        return {"level": "SOURCE-STRUCTURE-ONLY; ALLOC-OWNER-NOT-RUNTIME-VERIFIED",
+                "checks": [{"check": "E0 AllocateDevice is present", "ok": False,
+                            "detail": "function not found"}],
+                "result": "FAIL", "failures": [{"check": "E0 AllocateDevice is present", "ok": False,
+                                                "detail": "function not found"}]}
+
+    def braces(text, start):
+        i = text.index("{", start)
+        depth = 0
+        for k in range(i, len(text)):
+            if text[k] == "{":
+                depth += 1
+            elif text[k] == "}":
+                depth -= 1
+                if depth == 0:
+                    return text[i:k + 1]
+        raise ValueError("unbalanced")
+
+    body = braces(kapi, m_fn.start())
+    m = re.search(r"failed:\s*\n", body)
+    failed = body[m.end():] if m else ""
     check("E1 allocate rollback uses the try-free result", "nvKmsKapiTryFreeDevice" in failed,
           "rollback calls the reporting API" if "nvKmsKapiTryFreeDevice" in failed
           else "rollback still calls the void wrapper")
@@ -59,29 +83,43 @@ def evaluate(kapi, os_text):
 
 SELF = {
     "good": ("""
+static void *RmAllocateDevice(void) {
+    goto failed;
+failed:
+    return NULL;
+}
+
+static struct NvKmsKapiDevice *AllocateDevice(const void *params) {
+    goto failed;
 failed:
     if (device != NULL && !nvKmsKapiTryFreeDevice(device)) {
         if (KmsQuarantineAdd(device)) { log("quarantined"); } else { log("leaked"); }
     }
     return NULL;
+}
 """, "static NvBool KmsQuarantineAdd(struct NvKmsKapiDevice *d) { return NV_TRUE; }\n"
      "NvBool nvKmsKapiReapQuarantine(void) { return NV_TRUE; }\n", True),
     "void_wrapper": ("""
+static struct NvKmsKapiDevice *AllocateDevice(const void *params) {
 failed:
     FreeDevice(device);
     return NULL;
+}
 """, "static NvBool KmsQuarantineAdd(struct NvKmsKapiDevice *d) { return NV_TRUE; }\n"
      "NvBool nvKmsKapiReapQuarantine(void) { return NV_TRUE; }\n", True),
     "no_reachability": ("""
+static struct NvKmsKapiDevice *AllocateDevice(const void *params) {
 failed:
     if (!nvKmsKapiTryFreeDevice(device)) { log("retained"); }
     return NULL;
+}
 """, "static NvBool KmsQuarantineAdd(struct NvKmsKapiDevice *d) { return NV_TRUE; }\n"
      "NvBool nvKmsKapiReapQuarantine(void) { return NV_TRUE; }\n", True),
     "no_reaper": ("""
 failed:
     if (!nvKmsKapiTryFreeDevice(device)) { KmsQuarantineAdd(device); }
     return NULL;
+}
 """, "static NvBool KmsQuarantineAdd(struct NvKmsKapiDevice *d) { return NV_TRUE; }\n", False),
 }
 
