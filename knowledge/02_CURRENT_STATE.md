@@ -1,3 +1,8 @@
+> **2026-10-21 v2.4.3 ONCE 门禁 success**：run 39470420908 / `378b508`，artifact `12286607574`。
+> 12 点 ONCE、NVRM 3 条例外、FB 34→34、符号 +3/−1（已登记）、11 项自检、负控通过。
+> 链接前闭包：两 TU 共 946 个未定义符号全部有提供者；仅缺 IOGraphics exports 证据。
+> 链接/加载/GPU 未运行，设备 NO-GO。
+
 > **2026-10-21 v2.4.3 ONCE 回移**：12 点全部 ONCE（与 47f818b 一致），XNU 语义与逐点审计已落文档；
 > 候选 `69df8a94…`，补丁可正反向应用。原生门禁因 api.github.com 不可达**未运行**；设备 NO-GO。
 > 见 [ONCE-SITES-AUDIT](../research/stock-v243-once-20261021/ONCE-SITES-AUDIT-20261021.md)。

@@ -1,14 +1,16 @@
-> **2026-10-21 stock v2.4.3 ONCE 回移（12 点已对齐；原生门禁仍被网络阻断）**：按固定 XNU
-> `43a9088`/`rel/xnu-11417` 的 `osfmk/kern/thread_call.c` 复核：ONCE 只在 call **运行中**时
-> 改成置 `THREAD_CALL_RESCHEDULE`（L714/L760），在 `thread_call_finish` L1590-1617 折叠成
-> **一次不可取消的额外运行**；参数每次覆盖（L1189/L1319）；`thread_call_free` 运行中不等待
-> （L1113/L1778/L1620）。据此上一轮排除 gConnectNotify 的理由不成立，已改为与上游 47f818b
-> 一致的 **12 个 ONCE 点**；候选 `NVRM.cpp` `ac0c7518…`、`nvrm-fb.cpp` `69df8a94…`，
-> 补丁 `5afed01b…` 可正向应用并 `-R` 恢复原版。逐点审计见
-> [12 点核对](research/stock-v243-once-20261021/ONCE-SITES-AUDIT-20261021.md)，语义见
-> [XNU 复核](research/stock-v243-once-20261021/ONCE-SEMANTICS-XNU-20261021.md)。
-> 阻塞：`api.github.com` 的 TLS 持续失败（git push/fetch 可通），**v2.4.3 原生门禁未运行**，
-> 不宣称任何编译/链接结论；设备 NO-GO。
+> **2026-10-21 stock v2.4.3 ONCE（原生门禁 success）**：12 个分配点全部 ONCE，与上游 47f818b 覆盖一致。
+> run [39470420908](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39470420908) / 提交 `378b508`，
+> 结论 **success**，artifact `12286607574`（SHA256 `b6209029…70b2`，本轮已下载并读取 report.json）。
+> 状态 `PASS_DARWIN_TWO_TU_OBJECTS_WITH_ACCEPTED_DIAGNOSTICS_ONCE`：四个对象编译退出码 0；
+> NVRM 3 条既有弃用例外、FB 34→34 无新增；符号 +3（`isInactive`、`rm_disable_adapter`、
+> `thread_call_allocate_with_options`）/ −1（`thread_call_allocate`，已登记移除）；
+> 门禁 11 项自检、编译器负控 exit 1 且 stale 对象被删除。
+> 链接前闭包：NVRM 468 个未定义符号全部有提供者（0 无法归属）；NVRMFB 478 个中 363 内核、
+> 115 IOGraphics（**缺该 kext 的 exports 证据**），0 无法归属。
+> 仍未链接、未加载、未运行；`kext_link=NOT_RUN`，设备 NO-GO。
+> 见 [XNU 语义](research/stock-v243-once-20261021/ONCE-SEMANTICS-XNU-20261021.md)、
+> [12 点审计](research/stock-v243-once-20261021/ONCE-SITES-AUDIT-20261021.md)、
+> [链接闭包](research/stock-v243-once-20261021/LINK-CLOSURE-20261021.md)。
 
 
 > **2026-10-21 stock v2.4.2 原生门禁（success，含审计修复）**：run 39461235023 / head `13449f8`，
