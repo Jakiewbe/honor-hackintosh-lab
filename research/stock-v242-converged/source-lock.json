@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "upstream_repository": "nullmoth/nvidia-macos-driver",
+  "upstream_commit": "272ccd9da04ff5de95c2791b902fe17a3fa77ce7",
+  "ogkm_commit": "e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb",
+  "patch": "stock-v242-converged.patch",
+  "patch_sha256": "a90d29bb3b7ada3d5c9a75f79c73a2fdd2777d755c84ca424976af95963665af",
+  "files": [
+    {
+      "path": "kexts/NVRM/NVRM.cpp",
+      "original_sha256": "f1d682a36b4896ddb79c547947bcd3f890343cb8c753ea94bcd17511576af295",
+      "original_git_blob": "96fc110513acae83e003b9517e25826c815aca10",
+      "candidate_sha256": "ac0c75180a36a9b17b9350b4e39cd68e19496c7af276f3267060a1b9a0db9404",
+      "local_candidate": "candidate-stock-v242-converged/nm/kexts/NVRM/NVRM.cpp"
+    },
+    {
+      "path": "kexts/NVRMFB/fb/nvrm-fb.cpp",
+      "original_sha256": "5d1bf1c47ee6ad7246d93a8667bf104524cad4dc8412df3524f427341eecb185",
+      "original_git_blob": "859965bbe7776e0acc7039bf5e840f39f4bacd1c",
+      "candidate_sha256": "35ebfb184ca7b597d5c79cdf4403977708e15995f814f65f4838a64bb317e3e8",
+      "local_candidate": "candidate-stock-v242-converged/nm/kexts/NVRMFB/fb/nvrm-fb.cpp"
+    }
+  ],
+  "provenance": [
+    {
+      "path": "kexts/NVRM/NVRM.cpp",
+      "prior_candidate": "candidate-stock-v242-lifecycle-workloop/nm/kexts/NVRM/NVRM.cpp",
+      "prior_candidate_sha256": "99b73eb7bd3c94fa311c8e2252c6224598cb3c8b26dfbcfeffbf62d42044ea05",
+      "prior_patch": "research/stock-v242-lifecycle-fix-20261020/patches/stock-v242-lifecycle-workloop.patch",
+      "prior_patch_sha256": "c3c73b137ccda327c8fbb7ca6403ae33982a555a93de118fbf17ec3d7d97dca0",
+      "prerequisites": [
+        "research/stock-v242-init-20261020/patches/stock-v242-adapter-attempt.patch",
+        "research/stock-v242-workers-20261020/patches/stock-v242-worker-termination.patch"
+      ]
+    },
+    {
+      "path": "kexts/NVRMFB/fb/nvrm-fb.cpp",
+      "prior_candidate": "candidate-stock-v242-headless-enumeration/nm/kexts/NVRMFB/fb/nvrm-fb.cpp",
+      "prior_candidate_sha256": "35ebfb184ca7b597d5c79cdf4403977708e15995f814f65f4838a64bb317e3e8",
+      "prior_patch": "research/stock-v242-20261020/patches/stock-v242-headless-enumeration.patch",
+      "prior_patch_sha256": "cab666825e7d6562f57b135951b7bd097f9b21de57033f383d9cbd4459cfd192",
+      "prerequisites": []
+    }
+  ],
+  "apply": "Apply this ONE patch to the official pin; do not also apply its predecessors.",
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "required_notice": "Copyright (c) 2026 NullMoth Systems (https://nullmothsystems.com)",
+  "compilation_admission": "GO_COMPILE_ONLY",
+  "device_admission": "NO_GO",
+  "level": "SOURCE_CANDIDATE_NOT_DARWIN_COMPILED_NOT_LOADED"
+}
