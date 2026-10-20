@@ -1,15 +1,14 @@
-> **2026-10-21 stock v2.4.3 ONCE 回移（源码已对齐，原生门禁待跑）**：按固定 XNU
-> `43a9088`/`rel/xnu-11417` 的 `osfmk/kern/thread_call.c` 逐段复核 ONCE 语义——它只在 call
-> **正在运行**时改写入队（`_pending/_delayed_call_enqueue` L714/L760 置 `THREAD_CALL_RESCHEDULE`），
-> 在 `thread_call_finish` L1590-1617 折叠成一次额外运行；不串行化、不等待运行中的回调，
-> `thread_call_cancel` 也清不掉 RESCHEDULE，`thread_call_cancel_wait` 对客户端自有 call 直接 panic。
-> 据此推翻上一轮"排除 gConnectNotify"的理由：plain 模式下同一 call 对象也是唯一队列元素，
-> pending 时同样合并通知，ONCE 不新增丢失；上游 47f818b 也是 12 个分配点全部 ONCE。
-> 本轮回移已改为**同样的 12 点**（`nvrmfbCall` 语义，未引入 helper），候选 `NVRM.cpp`
-> `ac0c7518…`、`nvrm-fb.cpp` `69df8a94…`（新），补丁可正向应用并反向恢复原文件。
-> 由于 `thread_call_allocate` 从该对象消失，符号检查新增"已登记的移除"；未批准的新增/移除仍拒收。
-> **本轮 GitHub API 与 git 远端连接持续失败，v2.4.3 原生门禁未运行**，因此不宣称任何编译结论；
-> 详见 [ONCE 语义复核](research/stock-v243-once-20261021/ONCE-SEMANTICS-XNU-20261021.md)。
+> **2026-10-21 stock v2.4.3 ONCE 回移（12 点已对齐；原生门禁仍被网络阻断）**：按固定 XNU
+> `43a9088`/`rel/xnu-11417` 的 `osfmk/kern/thread_call.c` 复核：ONCE 只在 call **运行中**时
+> 改成置 `THREAD_CALL_RESCHEDULE`（L714/L760），在 `thread_call_finish` L1590-1617 折叠成
+> **一次不可取消的额外运行**；参数每次覆盖（L1189/L1319）；`thread_call_free` 运行中不等待
+> （L1113/L1778/L1620）。据此上一轮排除 gConnectNotify 的理由不成立，已改为与上游 47f818b
+> 一致的 **12 个 ONCE 点**；候选 `NVRM.cpp` `ac0c7518…`、`nvrm-fb.cpp` `69df8a94…`，
+> 补丁 `5afed01b…` 可正向应用并 `-R` 恢复原版。逐点审计见
+> [12 点核对](research/stock-v243-once-20261021/ONCE-SITES-AUDIT-20261021.md)，语义见
+> [XNU 复核](research/stock-v243-once-20261021/ONCE-SEMANTICS-XNU-20261021.md)。
+> 阻塞：`api.github.com` 的 TLS 持续失败（git push/fetch 可通），**v2.4.3 原生门禁未运行**，
+> 不宣称任何编译/链接结论；设备 NO-GO。
 
 
 > **2026-10-21 stock v2.4.2 原生门禁（success，含审计修复）**：run 39461235023 / head `13449f8`，

@@ -1,3 +1,7 @@
+> **2026-10-21 v2.4.3 ONCE 回移**：12 点全部 ONCE（与 47f818b 一致），XNU 语义与逐点审计已落文档；
+> 候选 `69df8a94…`，补丁可正反向应用。原生门禁因 api.github.com 不可达**未运行**；设备 NO-GO。
+> 见 [ONCE-SITES-AUDIT](../research/stock-v243-once-20261021/ONCE-SITES-AUDIT-20261021.md)。
+
 > **2026-10-21 stock v2.4.3 ONCE 只读评估（回移建议，原生未运行）**：本地 v2.4.3 固定提交 `47f818b`；唯一相关功能改动是 `7dd3aeb`（NVRMFB 回调改用 `THREAD_CALL_OPTIONS_ONCE`，修 high 组 500 线程 panic）。逐项比较后建议**不整包升 pin**，只在现有 v2.4.2 两文件候选上回移 10 个安全分配点；`gConnectNotify` 因单个全局 call 携带多 framebuffer 参数、ONCE 会折叠通知而明确排除。ONCE 只限制 pending 项，不是回调互斥或完整安全关闭；旧编译证据保留，新候选需重跑两 TU 原生门禁（本轮未运行），设备 NO-GO。详见 [REVIEW](../research/stock-v243-once-20261021/REVIEW.md)。
 
 > **2026-10-21 stock v2.4.2 原生门禁（success）**：run 39452257558 / head `e518452`，`PASS_DARWIN_TWO_TU_OBJECTS_WITH_ACCEPTED_DIAGNOSTICS`。四个对象编译退出码 0；3 条 `-Wdeprecated-declarations` 以逐字消息绑定为封闭例外（清单外新增或例外缺失都拒收）；符号级集成：NVRM +2 外部依赖（`IOService::isInactive`、`rm_disable_adapter`，均有仓库内证据）、+15 自定义方法，未登记即拒收；负控始终执行并预置 stale 对象。未链接、未加载、未运行，设备 NO-GO。详见 [GATE-CONVERGENCE-20261021](../research/stock-v242-converged/GATE-CONVERGENCE-20261021.md)。
