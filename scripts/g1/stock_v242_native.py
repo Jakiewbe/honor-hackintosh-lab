@@ -225,6 +225,8 @@ def classify_symbols(original, candidate, approved_new_undefined, approved_new_d
     A new undefined symbol needs a reviewed provider; new defined symbols are enumerated; removing either
     kind changes what other components link against and is rejected.
     """
+    original = {k: set(v) for k, v in original.items()}
+    candidate = {k: set(v) for k, v in candidate.items()}
     new_und = candidate['undefined'] - original['undefined']
     gone_und = original['undefined'] - candidate['undefined']
     new_def = candidate['defined'] - original['defined']
@@ -266,8 +268,8 @@ def compile_one(role, tree, source, flags, logs, objects):
     for label, command in [('undefined', ['xcrun', 'nm', '-u']), ('defined', ['xcrun', 'nm', '-gU'])]:
         if run([*command, obj], tree, logs / (stem + '-' + label + '.txt')):
             raise ValueError('object inspection failed: ' + stem)
-    record['undefined'] = nm_names(logs / (stem + '-undefined.txt'))
-    record['defined'] = nm_names(logs / (stem + '-defined.txt'))
+    record['undefined'] = sorted(nm_names(logs / (stem + '-undefined.txt')))
+    record['defined'] = sorted(nm_names(logs / (stem + '-defined.txt')))
     record['diagnostics'] = parse_diagnostics((logs / (stem + '-compile.txt')).read_text(encoding='utf-8'))
     # Text evidence only. Never upload even these unlinked driver objects.
     obj.unlink()
@@ -413,7 +415,14 @@ def main():
         if objects_created:
             # Our new exact output directory only, never traverse another workspace.
             for obj in objects.glob('*.o'): obj.unlink()
-        (logs / 'report.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
+        try:
+            (logs / 'report.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
+        except Exception as serialization_error:
+            # A report must exist even if some field is not serialisable; say so instead of vanishing.
+            print('::error::REPORT_SERIALIZATION ' + str(serialization_error)[:200], flush=True)
+            minimal = {k: report[k] for k in ('status', 'stage', 'error', 'staged_results') if k in report}
+            (logs / 'report.json').write_text(json.dumps(minimal, indent=2, default=str) + '\n',
+                                              encoding='utf-8')
     # Annotations survive the missing-artifact channel: name the failing stage and the exact diagnostics.
     if report['status'] != PASS_STATUS:
         print('::error::GATE_FAILED_STAGE ' + str(report.get('failed_stage', report['stage'])) +
