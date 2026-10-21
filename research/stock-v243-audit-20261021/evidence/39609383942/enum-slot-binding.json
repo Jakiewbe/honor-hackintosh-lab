@@ -1,0 +1,164 @@
+{
+  "run_id": 39609383942,
+  "commit": "da20a569b622a71b26ae91675c70e3899bbf0b3a",
+  "nvaccel_sha256": "04b13d7f38710bd61a189b3c2ca1c417bfb081c86cf16f95856f976cdb959884",
+  "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+  "pointer_interpretation": "FORMAT11_TARGET30_CANDIDATE_ONLY_NOT_VALIDATED_CHAIN_WALK",
+  "full_abi": "UNVERIFIED",
+  "methods": [
+    {
+      "symbol": "__ZN14IOAccelSurface20surface_lock_optionsE9eLockTypejP25IOAccelSurfaceInformationy",
+      "vtable_observation": {
+        "class_name": "IOAccelSurface",
+        "slot": 324
+      },
+      "import_audit": {
+        "symbol": "__ZN14IOAccelSurface20surface_lock_optionsE9eLockTypejP25IOAccelSurfaceInformationy",
+        "providers": [
+          {
+            "bundle": "com.apple.iokit.IOAcceleratorFamily2",
+            "target": "__ZN14IOAccelSurface20surface_lock_optionsE9eLockTypejP25IOAccelSurfaceInformationy",
+            "version": "485",
+            "required": "2.0.0",
+            "compatible": "2.0.0",
+            "evidence": "KC_EXTERNAL_DEFINITION",
+            "explicit_export": "UNVERIFIED"
+          }
+        ],
+        "status": "DECLARED_VERSION_AND_DEFINITION"
+      }
+    },
+    {
+      "symbol": "__ZN14IOAccelSurface22surface_unlock_optionsE9eLockTypej",
+      "vtable_observation": {
+        "class_name": "IOAccelSurface",
+        "slot": 325
+      },
+      "import_audit": {
+        "symbol": "__ZN14IOAccelSurface22surface_unlock_optionsE9eLockTypej",
+        "providers": [
+          {
+            "bundle": "com.apple.iokit.IOAcceleratorFamily2",
+            "target": "__ZN14IOAccelSurface22surface_unlock_optionsE9eLockTypej",
+            "version": "485",
+            "required": "2.0.0",
+            "compatible": "2.0.0",
+            "evidence": "KC_EXTERNAL_DEFINITION",
+            "explicit_export": "UNVERIFIED"
+          }
+        ],
+        "status": "DECLARED_VERSION_AND_DEFINITION"
+      }
+    },
+    {
+      "symbol": "__ZN14IOAccelSurface28set_shape_backing_length_extE24eIOAccelSurfaceShapeBitsjyjyP19IOAccelDeviceRegiony",
+      "vtable_observation": {
+        "class_name": "IOAccelSurface",
+        "slot": 323
+      },
+      "import_audit": {
+        "symbol": "__ZN14IOAccelSurface28set_shape_backing_length_extE24eIOAccelSurfaceShapeBitsjyjyP19IOAccelDeviceRegiony",
+        "providers": [
+          {
+            "bundle": "com.apple.iokit.IOAcceleratorFamily2",
+            "target": "__ZN14IOAccelSurface28set_shape_backing_length_extE24eIOAccelSurfaceShapeBitsjyjyP19IOAccelDeviceRegiony",
+            "version": "485",
+            "required": "2.0.0",
+            "compatible": "2.0.0",
+            "evidence": "KC_EXTERNAL_DEFINITION",
+            "explicit_export": "UNVERIFIED"
+          }
+        ],
+        "status": "DECLARED_VERSION_AND_DEFINITION"
+      }
+    },
+    {
+      "symbol": "__ZN14IOAccelSurface9set_shapeE24eIOAccelSurfaceShapeBitsjP19IOAccelDeviceRegiony",
+      "vtable_observation": {
+        "class_name": "IOAccelSurface",
+        "slot": 322
+      },
+      "import_audit": {
+        "symbol": "__ZN14IOAccelSurface9set_shapeE24eIOAccelSurfaceShapeBitsjP19IOAccelDeviceRegiony",
+        "providers": [
+          {
+            "bundle": "com.apple.iokit.IOAcceleratorFamily2",
+            "target": "__ZN14IOAccelSurface9set_shapeE24eIOAccelSurfaceShapeBitsjP19IOAccelDeviceRegiony",
+            "version": "485",
+            "required": "2.0.0",
+            "compatible": "2.0.0",
+            "evidence": "KC_EXTERNAL_DEFINITION",
+            "explicit_export": "UNVERIFIED"
+          }
+        ],
+        "status": "DECLARED_VERSION_AND_DEFINITION"
+      }
+    },
+    {
+      "symbol": "__ZN17IOAccelGLContext211processSwapE7eDoSwap",
+      "vtable_observation": {
+        "class_name": "IOAccelGLContext2",
+        "slot": 366
+      },
+      "import_audit": {
+        "symbol": "__ZN17IOAccelGLContext211processSwapE7eDoSwap",
+        "providers": [
+          {
+            "bundle": "com.apple.iokit.IOAcceleratorFamily2",
+            "target": "__ZN17IOAccelGLContext211processSwapE7eDoSwap",
+            "version": "485",
+            "required": "2.0.0",
+            "compatible": "2.0.0",
+            "evidence": "KC_EXTERNAL_DEFINITION",
+            "explicit_export": "UNVERIFIED"
+          }
+        ],
+        "status": "DECLARED_VERSION_AND_DEFINITION"
+      }
+    },
+    {
+      "symbol": "__ZN24IOAccelLegacyDisplayPipe9setStereoE17IOAccelStereoMode",
+      "vtable_observation": {
+        "class_name": "IOAccelLegacyDisplayPipe",
+        "slot": 308
+      },
+      "import_audit": {
+        "symbol": "__ZN24IOAccelLegacyDisplayPipe9setStereoE17IOAccelStereoMode",
+        "providers": [
+          {
+            "bundle": "com.apple.iokit.IOAcceleratorFamily2",
+            "target": "__ZN24IOAccelLegacyDisplayPipe9setStereoE17IOAccelStereoMode",
+            "version": "485",
+            "required": "2.0.0",
+            "compatible": "2.0.0",
+            "evidence": "KC_EXTERNAL_DEFINITION",
+            "explicit_export": "UNVERIFIED"
+          }
+        ],
+        "status": "DECLARED_VERSION_AND_DEFINITION"
+      }
+    },
+    {
+      "symbol": "__ZN27IOAccelLegacyDisplayMachine9setStereoEj17IOAccelStereoMode",
+      "vtable_observation": {
+        "class_name": "IOAccelLegacyDisplayMachine",
+        "slot": 286
+      },
+      "import_audit": {
+        "symbol": "__ZN27IOAccelLegacyDisplayMachine9setStereoEj17IOAccelStereoMode",
+        "providers": [
+          {
+            "bundle": "com.apple.iokit.IOAcceleratorFamily2",
+            "target": "__ZN27IOAccelLegacyDisplayMachine9setStereoEj17IOAccelStereoMode",
+            "version": "485",
+            "required": "2.0.0",
+            "compatible": "2.0.0",
+            "evidence": "KC_EXTERNAL_DEFINITION",
+            "explicit_export": "UNVERIFIED"
+          }
+        ],
+        "status": "DECLARED_VERSION_AND_DEFINITION"
+      }
+    }
+  ]
+}

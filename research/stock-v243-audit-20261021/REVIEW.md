@@ -4,6 +4,57 @@
 当前里程碑为 **PRE-DEVICE STATIC INTEGRATION — CONDITIONAL PASS**，设备仍NO-GO。
 本轮没有安装、签名、加载、访问GPU、修改KC或安全策略。
 
+## 本轮原生验收完成：run39609383942
+
+固定执行提交`da20a569b622a71b26ae91675c70e3899bbf0b3a`，实际事件为`workflow_dispatch`，
+[运行39609383942](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39609383942)全部步骤success。
+三个文本附件均已按API大小/SHA256核验；PM包23个成员全部是文本，没有程序或dSYM。
+原始成员哈希见`evidence/39609383942/{package,pm,abi}/archive-binding.json`；
+`verify_native_evidence.py`可在普通Python下复算已归档成员身份、诊断绑定、声明依赖、提供者分类及槽位算术。
+它验证的是文本证据的内部一致性，没有重新读取未下载的驱动或KC二进制。
+
+| 组件 | 原生链接大小 | 导入数 | 仅局部定义、导出未证 |
+|---|---:|---:|---:|
+| NVRM | 17528944 B | 478 | 0 |
+| NVRMFB | 320840 B | 478 | 0 |
+| NVAccel | 244664 B | 884 | 27 |
+
+三个`kextutil`诊断均exit0，路径、可执行SHA、plist SHA及bundle ID与同run编译记录一致。
+真实变异bundle的缺executable及不存在依赖，被本项目生产检查器拒收；`kextutil`本身仍接受这两个坏bundle，
+故始终是INFORMATIONAL_ONLY。非零/未解析/身份变化等生产路径负控随原生步骤运行成功。
+IOGraphicsFamily仅有KC身份、无可用版本元数据，两处声明仍为`IDENTITY_OBSERVED_VERSION_UNVERIFIED`。
+
+**更正20→27的分类口径**：旧run的20项之外，另7项曾被`VTABLE_SLOT_OBSERVED_LOCAL_NAME_STRIPPED`
+排除在local-only之外。严格检查撤销该替代关系后，这7项归回局部定义、导出未知。
+新旧NVAccel SHA均为`04b13d7f38710bd61a189b3c2ca1c417bfb081c86cf16f95856f976cdb959884`，
+导入均884，因而这不是新增二进制缺口。当前27个名称绑定**78条**原始nlist记录；
+完整差分、多个地址、节范围及KC身份见`evidence/39609383942/local-only-binding.json`。
+历史`local-only-binding.json`保留为run39585922948的20项快照，不能当最新全量清单。
+
+新逐类观察的KC SHA仍为`12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2`，
+IOAcceleratorFamily2成员UUID为`65ceb805d3263f159595f6ec0a6d78da`。
+
+| 类 | 自身vtable起点 | 到下个具名定义前的原始字数 | 本类相对候选槽位 |
+|---|---|---:|---|
+| IOAccelSurface | `0x148bcab0` | 328 | set_shape 322、backing_length 323、lock 324、unlock 325 |
+| IOAccelGLContext2 | `0x148b64e0` | 374 | processSwap 366 |
+| IOAccelLegacyDisplayPipe | `0x148bbd38` | 319 | setStereo 308 |
+| IOAccelLegacyDisplayMachine | `0x148ad3f0` | 299 | setStereo 286 |
+
+七个方法均与真实NVAccel导入精确名称配对，见`evidence/39609383942/enum-slot-binding.json`。
+原始字、偏移、目标候选、全部命中nlist在`abi/per-class-vtable.json`；这些字数是保守上界范围内观察量，
+不是完整槽位数量证明。低30位匹配仍只是候选指针解释；未证明完整chained walk、完整ABI或外部导出。
+
+PM候选同run合同8/8、原基线2/8；非法编译负控exit1、无产物、未执行。
+只替换NVRM对象的重链成功，17528944 B，SHA`50692a79ed46483a606501ab1084c45c31932705de2645cab00fb711cc2e688f`，
+478导入不变。它与上表未合并PM的NVRM是不同产物，不混用身份；仍不证明睡眠否决、回滚或安全关闭。
+
+**本轮裁定**：审计要求的诊断拒收、候选身份、完整声明依赖检查、原始符号归档、四类有界取证及文档修订
+已经取得原生证据。27项外部导出、完整ABI、用户设备只读A、恢复能力、stop/PM和用户态组件配对仍未关闭。
+下一步针对27项的加载器导出元数据做定向只读取证，必须先找到可验证输入；找不到则保留未知，
+不重复整包编译，也不升级到设备加载。A需要用户macOS上的真实环境和合法候选实物，本机没有执行通路。
+本轮复盘：按证据能力分类，不能用vtable命中代替外部导出；工具接受坏输入时应降低其结论等级。
+
 ## 已独立复算的既有证据
 
 从GitHub API取回原始文本，核验artifact大小和SHA256后归档：
@@ -55,7 +106,7 @@ LegacyDisplayMachine::setStereo。认可类型修饰修复；不扩大为完整A
 新取证器g1_kc_vtable_bounded.py分别从四个类自己的ZTV地址起步，最多到同节下一个具名定义，
 输出各槽原始字、文件偏移、target30候选、所有匹配nlist记录、KC哈希和成员UUID。
 它只给有界静态观察：下一个符号是上界；掩码是候选解释；成员偏移、调用约定、导出及完整布局仍未知。
-相邻类越界、歧义起点、截断输入负控通过。新原生输出尚待运行验收。
+相邻类越界、歧义起点、截断输入负控通过。新原生输出已按顶部run39609383942结果验收。
 
 ## P0/P2：设备流程
 
@@ -66,10 +117,10 @@ DEVICE-CHECKLIST为唯一当前入口；DEVICE-RUNBOOK撤回，旧R43计划顶�
 只保存目标PCI ID，不保存完整ioreg/序列号。脚本未在用户设备运行，不自动安装Python或Xcode。
 
 两个重新出现的push触发器已移除；后续只用已授权workflow_dispatch。
-本地109项检查通过；新Darwin整包及逐类取证仍待验收。旧失败run39536854715仍保留，不能用新报告改写。
+本地109项检查通过；新Darwin整包及逐类取证现已按上节验收。旧失败run39536854715仍保留，不能用新报告改写。
 
 ## 剩余硬阻塞
 
-20项导出、IOGraphics版本及完整ABI、用户真实系统绑定、候选用户态Metal/NVK/GSP配对、
+27项导出（历史20项加7项原vtable替代分类）、IOGraphics版本及完整ABI、用户真实系统绑定、候选用户态Metal/NVK/GSP配对、
 stop准入与全部使用者/回调排空、PM及在途工作清理、设备恢复能力均未关闭。
 编译和链接已有实物，GPU一次未执行。“只剩真机加载”不成立。

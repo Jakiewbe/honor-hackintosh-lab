@@ -1,0 +1,17 @@
+{
+  "run_id": 39609383942,
+  "head_sha": "da20a569b622a71b26ae91675c70e3899bbf0b3a",
+  "event": "workflow_dispatch",
+  "conclusion": "success",
+  "artifact_id": 12350057528,
+  "name": "g1-stock-v243-abi-observation-text",
+  "archive_sha256": "ae313021c9c9248e49505b756ba9614f3ee6e26939c50872cb65a9d74510c6b4",
+  "archive_bytes": 26875,
+  "members": {
+    "per-class-vtable.json": {
+      "bytes": 449696,
+      "sha256": "57cd65468035ec7c062bdaf66096ec3685fba5e5d6626fe11f0c5f44fffa88a8"
+    }
+  },
+  "driver_execution": "NOT_RUN"
+}

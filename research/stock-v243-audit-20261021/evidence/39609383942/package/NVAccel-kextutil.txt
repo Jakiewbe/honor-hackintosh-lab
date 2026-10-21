@@ -1,0 +1,4 @@
+ARGV=["xcrun", "kextutil", "-n", "/Users/runner/work/_temp/internal-products/package-products/NVAccel.kext"]
+kextutil: -n is not a supported kmutil mode
+
+EXIT=0

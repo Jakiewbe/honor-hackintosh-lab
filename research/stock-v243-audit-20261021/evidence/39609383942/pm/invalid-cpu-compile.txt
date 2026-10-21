@@ -1,0 +1,10 @@
+ARGV=["xcrun", "clang++", "-std=c++17", "/Users/runner/work/_temp/pm-guard-text/invalid-cpu.cpp", "-o", "/Users/runner/work/_temp/pm-guard-text-cpu-products/invalid-cpu"]
+/Users/runner/work/_temp/pm-guard-text/invalid-cpu.cpp:1:1: error: unknown type name 'DELIBERATELY_INVALID_SOURCE'
+    1 | DELIBERATELY_INVALID_SOURCE !!!
+      | ^
+/Users/runner/work/_temp/pm-guard-text/invalid-cpu.cpp:1:29: error: expected unqualified-id
+    1 | DELIBERATELY_INVALID_SOURCE !!!
+      |                             ^
+2 errors generated.
+
+EXIT=1

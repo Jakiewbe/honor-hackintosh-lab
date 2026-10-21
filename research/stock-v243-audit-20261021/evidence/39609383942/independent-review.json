@@ -1,0 +1,148 @@
+{
+  "run_id": 39609383942,
+  "commit": "da20a569b622a71b26ae91675c70e3899bbf0b3a",
+  "event": "workflow_dispatch",
+  "artifact_binding": {
+    "package": {
+      "artifact_id": 12349403776,
+      "archive_sha256": "7ef4a012f65bd266d91cd63810983cc11f48376627cf6f68c382212a888fa2b3",
+      "archive_bytes": 963752
+    },
+    "pm": {
+      "artifact_id": 12349982839,
+      "archive_sha256": "b6834bd75ac92baf960b98600d46f0735f94998ebbc4b3eb596b4e76ea7fe399",
+      "archive_bytes": 326626
+    },
+    "abi": {
+      "artifact_id": 12350057528,
+      "archive_sha256": "ae313021c9c9248e49505b756ba9614f3ee6e26939c50872cb65a9d74510c6b4",
+      "archive_bytes": 26875
+    }
+  },
+  "level": "TEXT_IDENTITIES_AND_ARITHMETIC_RECOMPUTED_NOT_BINARY_LOADER_OR_FULL_ABI",
+  "bundles": {
+    "NVRM": {
+      "sha256": "b0e20deb11ec836311d324f153508be215e54c1690d757496f935d8fc48d5fe6",
+      "bytes": 17528944,
+      "imports": 478,
+      "local_only": 0,
+      "diagnostic_exit": 0,
+      "dependency_unknown": []
+    },
+    "NVRMFB": {
+      "sha256": "93617dc41855ba4a6f828b0567c83ab9a0b45cb20f0c14a3bedd789ee242e70d",
+      "bytes": 320840,
+      "imports": 478,
+      "local_only": 0,
+      "diagnostic_exit": 0,
+      "dependency_unknown": [
+        {
+          "bundle": "com.apple.iokit.IOGraphicsFamily",
+          "required": "1.0.0b1",
+          "status": "IDENTITY_OBSERVED_VERSION_UNVERIFIED"
+        }
+      ]
+    },
+    "NVAccel": {
+      "sha256": "04b13d7f38710bd61a189b3c2ca1c417bfb081c86cf16f95856f976cdb959884",
+      "bytes": 244664,
+      "imports": 884,
+      "local_only": 27,
+      "diagnostic_exit": 0,
+      "dependency_unknown": [
+        {
+          "bundle": "com.apple.iokit.IOGraphicsFamily",
+          "required": "1.0.0b1",
+          "status": "IDENTITY_OBSERVED_VERSION_UNVERIFIED"
+        }
+      ]
+    }
+  },
+  "local_only_unique_names": 27,
+  "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+  "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+  "classes": [
+    {
+      "name": "IOAccelSurface",
+      "address": "0x148bcab0",
+      "upper_bound": "0x148bd500",
+      "observed_words": 328,
+      "matched_words": 33,
+      "enum_methods": [
+        {
+          "slot": 322,
+          "symbol": "__ZN14IOAccelSurface9set_shapeE24eIOAccelSurfaceShapeBitsjP19IOAccelDeviceRegiony"
+        },
+        {
+          "slot": 323,
+          "symbol": "__ZN14IOAccelSurface28set_shape_backing_length_extE24eIOAccelSurfaceShapeBitsjyjyP19IOAccelDeviceRegiony"
+        },
+        {
+          "slot": 324,
+          "symbol": "__ZN14IOAccelSurface20surface_lock_optionsE9eLockTypejP25IOAccelSurfaceInformationy"
+        },
+        {
+          "slot": 325,
+          "symbol": "__ZN14IOAccelSurface22surface_unlock_optionsE9eLockTypej"
+        }
+      ]
+    },
+    {
+      "name": "IOAccelGLContext2",
+      "address": "0x148b64e0",
+      "upper_bound": "0x148b70a0",
+      "observed_words": 374,
+      "matched_words": 82,
+      "enum_methods": [
+        {
+          "slot": 366,
+          "symbol": "__ZN17IOAccelGLContext211processSwapE7eDoSwap"
+        }
+      ]
+    },
+    {
+      "name": "IOAccelLegacyDisplayPipe",
+      "address": "0x148bbd38",
+      "upper_bound": "0x148bc740",
+      "observed_words": 319,
+      "matched_words": 56,
+      "enum_methods": [
+        {
+          "slot": 308,
+          "symbol": "__ZN24IOAccelLegacyDisplayPipe9setStereoE17IOAccelStereoMode"
+        }
+      ]
+    },
+    {
+      "name": "IOAccelLegacyDisplayMachine",
+      "address": "0x148ad3f0",
+      "upper_bound": "0x148add58",
+      "observed_words": 299,
+      "matched_words": 34,
+      "enum_methods": [
+        {
+          "slot": 286,
+          "symbol": "__ZN27IOAccelLegacyDisplayMachine9setStereoEj17IOAccelStereoMode"
+        }
+      ]
+    }
+  ],
+  "pm_status": "PASS_RM_BUSY_GUARD_CALL_CONTRACT_AND_NATIVE_LINK_NOT_SAFE_SLEEP",
+  "pm_link": {
+    "size": 17528944,
+    "sha256": "50692a79ed46483a606501ab1084c45c31932705de2645cab00fb711cc2e688f",
+    "format": "x86_64_MH_KEXT_BUNDLE"
+  },
+  "gpu": "NOT_RUN",
+  "device": "NO_GO",
+  "local_only_raw_records": 78,
+  "reclassified_from_vtable": [
+    "__ZN15IOAccelContext220postTokenSanityCheckER24IOAccelCommandStreamInfo",
+    "__ZN17IOAccelSubmitter218setSubmissionErrorEj",
+    "__ZN17IOAccelSubmitter219retireCommandBufferEP17IOAccelEventFence",
+    "__ZNK15IOAccelContext210getGPUTaskEv",
+    "__ZNK15IOAccelContext213getOwningTaskEv",
+    "__ZNK15IOAccelContext216getOwningTaskPidEv",
+    "__ZNK17IOAccelSubmitter223isOpportunisticWorkloadEv"
+  ]
+}

@@ -1,0 +1,3 @@
+ARGV=["xcrun", "clang++", "-std=c++17", "-O1", "-g", "-fsanitize=address,undefined", "/Users/runner/work/_temp/pm-guard-text/candidate-cpu.cpp", "-o", "/Users/runner/work/_temp/pm-guard-text-cpu-products/candidate-cpu"]
+
+EXIT=0
