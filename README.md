@@ -1,3 +1,13 @@
+> **2026-10-21 三组件静态门禁通过（方案 1：按 macOS 15 布局裁剪 IOAccel 虚函数）**：
+> run [39549098741](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39549098741) / 提交 `98ab736`，
+> 状态 `PASS_STATIC_KERNEL_BUNDLES_NOT_LOADER_ABI_OR_GPU_ACCEPTANCE_LOCAL_ONLY_EXPORTS_UNVERIFIED`。
+> NVRM 478/478、NVRMFB 478/478、NVAccel **877/877** 全部有提供者，**未解析 0**；NVAccel 的 34 个
+> 仅有局部定义（导出未验证）单列。做法：`iofam-macos15-layout.patch` 把 7 个 macOS 26 才有的
+> IOAccel 虚函数包进 `#ifdef NM_TAHOE`，整包步骤内在内部链接之后应用（sha 由 lock 校验）。
+> 边界：静态、非 loader/ABI/GPU 验收；vtable 布局判断只能靠真机加载验证；未签名、未装入 KC、未加载。
+> 详见 [PACKAGE-20261021](research/stock-v243-once-20261021/PACKAGE-20261021.md)。
+
+
 > **2026-10-21 整包审计：NVRM/NVRMFB 导入全部归因，NVAccel 暴露 7 个 macOS 15 缺失符号**：
 > 修掉 KC 检查器三处误报（data/函数判定、同名符号、macOS 15 无磁盘 kext 目录）后，
 > run [39544753829](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39544753829) 跑完归因：
