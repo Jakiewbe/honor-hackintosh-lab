@@ -166,13 +166,20 @@ def main():
             # while the chained segment_offset is member-relative. Keep the two spaces apart.
             delta = section['offset'] - section['address']
             slots = []
-            for index in range(args.slots):
+            probe = []
+            for index in range(min(6, args.slots)):
                 filepos = address + 16 + index * 8 + delta
                 raw_value = _u64(raw, filepos)
                 if raw_value is None:
-                    break
-                plain = names.get(raw_value)
-                nearby = sorted(v for v in names if abs(v - raw_value) < 0x100)[:3]
+                    probe.append(dict(slot=index, error='EOF'))
+                    continue
+                probe.append(dict(slot=index, raw=hex(raw_value),
+                                  raw_symbol=names.get(raw_value, 'UNRESOLVED'),
+                                  nearby=[names[v] for v in sorted(names) if abs(v - raw_value) < 0x80][:3],
+                                  decoded=(walk(raw, starts[0], member_fileoff + starts[0]['segment_offset'],
+                                                filepos) or {}).get('target') if starts and starts[0] else None))
+            for index in range(args.slots):
+                filepos = address + 16 + index * 8 + delta
                 info = next((s for s in starts if s and s['segment_offset'] <= filepos - member_fileoff
                              < s['segment_offset'] + s['page_size'] * s['page_count']), None)
                 if not info:
@@ -186,6 +193,7 @@ def main():
                                   nearby=[names[v] for v in nearby],
                                   first_byte=decoded['first_byte'], stride=decoded['stride']))
             report['classes'].append(dict(class_name=cls, vtable=hex(address), vtable_section=vtable_section,
+                                          probe=probe,
                                           status='CHAIN_DECODED' if slots else 'CHAIN_FAILED',
                                           slots=slots))
         print(json.dumps(report, indent=1))
