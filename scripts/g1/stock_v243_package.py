@@ -142,10 +142,12 @@ def binary_metadata(path, info):
             if cmd['bytes'] != 16:
                 raise ValueError('invalid minimum-version command')
             deployment.append(struct.unpack_from('<II', raw, off+8))
-    if deployment != [(0x000f0500, 0x000f0500)]:
+    if deployment and deployment != [(0x000f0500, 0x000f0500)]:
         raise ValueError('expected macOS deployment and SDK 15.5: '+str(deployment))
     return dict(sha256=base.digest(path), bytes=len(raw), header=h, kmod_name=name,
-        kmod_version=ver, minimum_macos='15.5', sdk='15.5', imports=sorted(imports),
+        kmod_version=ver, minimum_macos='15.5' if deployment else None,
+        sdk='15.5' if deployment else None,
+        deployment_command='PRESENT' if deployment else 'ABSENT_NOT_INFERRED', imports=sorted(imports),
         code_signature='NOT_VERIFIED', loader='NOT_RUN', full_abi='UNVERIFIED')
 
 
@@ -233,7 +235,7 @@ def run(args, report):
         link = ['xcrun', 'clang++', '-arch', 'x86_64', '-mmacosx-version-min=15.5',
             '-isysroot', previous['toolchain']['sdk'], '-fapple-kext', '-nostdlib',
             '-Xlinker', '-kext', '-lkmodc++', '-lkmod', '-lcc_kext', obj, '-o', binary]
-        base.link_checked(link, tree, binary, args.out/(name+'-ld.txt'))
+        report.setdefault('links', {})[name]=base.link_checked(link, tree, binary, args.out/(name+'-ld.txt'))
         built[name] = binary
     report['stage'] = 'bundle-format'
     report['bundles'] = {}
@@ -245,13 +247,14 @@ def run(args, report):
         (bundle/'MacOS').mkdir(parents=True, exist_ok=False)
         shutil.copyfile(binary, bundle/'MacOS'/name)
         (bundle/'Info.plist').write_bytes(info_raw)
+        base.checked_run(['xcrun', 'otool', '-l', bundle/'MacOS'/name], tree, args.out/(name+'-otool.txt'))
         metadata = binary_metadata(bundle/'MacOS'/name, info)
         if metadata['sha256'] != base.digest(binary):
             raise ValueError('bundle copy differs')
         base.checked_run(['/usr/bin/plutil', '-lint', bundle/'Info.plist'], tree, args.out/(name+'-plutil.txt'))
-        base.checked_run(['xcrun', 'otool', '-l', bundle/'MacOS'/name], tree, args.out/(name+'-otool.txt'))
         (args.out/(name+'-Info.plist.txt')).write_bytes(info_raw)
         report['bundles'][name] = dict(info=info, plist_sha256=base.digest(bundle/'Info.plist'), **metadata)
+    report['compiler_target']='15.5_FROM_EXPLICIT_SAME_RUN_ARGUMENTS_NOT_INFERRED_BINARY_MINIMUM'
     report['stage'] = 'runner-dependencies'
     all_names = {n for b in report['bundles'].values() for n in b['imports']}
     sets, actual, families, exports = native_providers(all_names, args.out)

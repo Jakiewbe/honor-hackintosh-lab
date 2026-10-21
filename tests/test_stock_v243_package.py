@@ -45,6 +45,13 @@ class PackageContracts(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'deployment'):
             self.parse(fixture(minimum=0x000f0000))
 
+    def test_missing_version_command_is_unknown_not_fabricated(self):
+        data=fixture();struct.pack_into('<I',data,16,2);struct.pack_into('<I',data,20,176)
+        result=self.parse(data)
+        self.assertIsNone(result['minimum_macos'])
+        self.assertIsNone(result['sdk'])
+        self.assertEqual(result['deployment_command'],'ABSENT_NOT_INFERRED')
+
     def test_truncated_or_malformed_rejected(self):
         for size in (0, 31, 200, 600):
             with self.assertRaises((ValueError, struct.error)):

@@ -1,0 +1,3 @@
+ARGV=["git", "-c", "core.autocrlf=false", "apply", "--no-index", "--whitespace=error-all", "--check", "D:\\Hactk\\g1-stock-20261020\\research\\stock-v243-pm-20261021\\rm-busy-guard.patch"]
+
+EXIT=0

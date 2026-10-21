@@ -1,0 +1,20 @@
+--- a/kexts/NVRM/NVRM.cpp
++++ b/kexts/NVRM/NVRM.cpp
+@@ -1735,7 +1735,16 @@
+     // gate (closing the gate first deadlocked against an NVKMS ioctl calling into RM).
+     nvkms_xnu_suspend(fNv.gpu_id);
+     const int busy = nv_xnu_pm_close(10000);
+-    if (busy) LOG("sleep #%u: %d RM call(s) still running after 10 s - suspending anyway", fPmCycles, busy);
++    if (busy) {
++        // Never mutate RM power/channel state underneath calls that did not drain.
++        // NVKMS and fGpuPm stay Suspended; do not relight framebuffers or reopen
++        // the gate here. setPowerState cannot veto system sleep by returning an error.
++        // This guard is NOT a safe-sleep or recovery contract; device use stays NO-GO.
++        setProperty("nvrm-pm-violation", kOSBooleanTrue);
++        LOG("sleep #%u: %d RM call(s) still active - RM channel stop and STANDBY skipped; sleep safety unverified",
++            fPmCycles, busy);
++        return;
++    }
+     // nv_preempt_user_channels(): with every VRAM allocation preserved, user channels must be idle and stopped
+     // while their memory is copied out, and restarted once it is back.
+     NV_STATUS cst = rm_stop_user_channels(NULL, &fNv);

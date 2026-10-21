@@ -53,6 +53,7 @@ jobs:
           done
 
       - name: Baseline and paired internal link in the same run
+        id: internal
         shell: bash
         run: |
           set -euo pipefail
@@ -68,6 +69,24 @@ jobs:
           python3 scripts/g1/stock_v243_package.py \
             --internal-text "$RUNNER_TEMP/internal-text" \
             --work "$RUNNER_TEMP/internal-products" --out "$RUNNER_TEMP/package-text"
+
+      - name: RM busy guard actual-function contract and same-run native relink
+        if: ${{ !cancelled() && steps.internal.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/g1/stock_v243_pm_guard.py \
+            --internal-text "$RUNNER_TEMP/internal-text" \
+            --work "$RUNNER_TEMP/internal-products" --out "$RUNNER_TEMP/pm-guard-text"
+
+      - name: Upload PM guard text only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g1-stock-v243-pm-guard-text
+          path: ${{ runner.temp }}/pm-guard-text/
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Upload package text only
         if: always()

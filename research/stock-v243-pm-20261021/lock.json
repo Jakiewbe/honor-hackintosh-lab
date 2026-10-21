@@ -1,0 +1,9 @@
+{
+  "source": "kexts/NVRM/NVRM.cpp",
+  "before_sha256": "ac0c75180a36a9b17b9350b4e39cd68e19496c7af276f3267060a1b9a0db9404",
+  "after_sha256": "7ce28054014406d515736ac71ccac406cc64b27f4be1ef0a70547db83af01015",
+  "patch_sha256": "e367f6993a2d700acd53a46108fa84a268159bfbbab231faae88170d7fe85951",
+  "semantics": "GUARD_ONLY_NOT_SAFE_SLEEP",
+  "device": "NO_GO",
+  "sleep_veto": false
+}

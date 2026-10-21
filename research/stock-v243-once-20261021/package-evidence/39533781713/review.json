@@ -1,0 +1,28 @@
+{
+  "run": 39533781713,
+  "commit": "aa52b912eb843295a54da095d1853af872b875b8",
+  "event": "workflow_dispatch",
+  "conclusion": "failure",
+  "artifact_id": 12317325941,
+  "artifact_sha256": "9cb7415070fa68b317c38c258794bf9e7b130029b2154d47b918e361d3c07bdb",
+  "artifact_bytes": 54507,
+  "raw_member_sha256": {
+    "NVAccel-compile.txt": "0347db77161a5eb7a29409f1bbb879f5372184f4e8fb11b4704cb32ef7d9281b",
+    "NVAccel-deps.txt": "2c9f48137061c271b2d20617a1fedff52f373dd99db35f62988b8f2ef382a622",
+    "NVAccel-ld.txt": "292028fb069f1e94fc1273cc7045ffa6d239f99d86d93db3ff4197fa95abcb1d",
+    "NVAccel-post.d": "bc5289639ad67160bae08c89a0cdd18d21d408eae7ebd638e663af12a1d6bd53",
+    "NVAccel-pre.d": "bc5289639ad67160bae08c89a0cdd18d21d408eae7ebd638e663af12a1d6bd53",
+    "NVRMFB-compile.txt": "f6f46ce855ba53ac64884fc885f686bb1d74c1b786e08f54bb18c70f95f31ad1",
+    "NVRMFB-deps.txt": "38631d4b3afb61a7c0283f6d08f4066f18fa8345361dd70f1e414ea4e8ab3fb9",
+    "NVRMFB-ld.txt": "e0d48669cc77dcea9f875ea337edd75eeb15b19f75a394fbf2b44d65a0d518d8",
+    "NVRMFB-post.d": "74c807999199bc1586aff74fc07c8c702c332e93c2a0521dd8e7503fa041dcc7",
+    "NVRMFB-pre.d": "74c807999199bc1586aff74fc07c8c702c332e93c2a0521dd8e7503fa041dcc7",
+    "package-report.json": "471a3dd3dcb54adcfa965a82158ccb32037a479194b2e7a10eb6aaba7ddecb53"
+  },
+  "status": "FAILED",
+  "stage": "bundle-format",
+  "error": "expected macOS deployment and SDK 15.5: []",
+  "install_sign_load": "NOT_RUN",
+  "gpu_execution": "NOT_RUN",
+  "scope": "PACKAGE_TEXT_ONLY; separate internal-link artifact not consumed here"
+}

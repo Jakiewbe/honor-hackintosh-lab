@@ -1,0 +1,6 @@
+ARGV=["g++", "-std=c++17", "/mnt/d/Hactk/g1-stock-work/pm-guard-local-text/invalid-cpu.cpp", "-o", "/mnt/d/Hactk/g1-stock-work/pm-guard-local-text/invalid-cpu"]
+/mnt/d/Hactk/g1-stock-work/pm-guard-local-text/invalid-cpu.cpp:1:1: error: ‘DELIBERATELY_INVALID_SOURCE’ does not name a type
+    1 | DELIBERATELY_INVALID_SOURCE !!!
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+EXIT=1

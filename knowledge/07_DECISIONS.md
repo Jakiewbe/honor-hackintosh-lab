@@ -119,3 +119,11 @@ R4 为 NVRMUserClient 外部方法分发、映射和关闭增加串行会话门�
 **决定（对 D-17 的优先级重申，不修改其安全权限）：** 以外接 SSD macOS 可用、可复现、可回退为唯一工程目标；已通过 H1-COUNT 进入 macOS 桌面的 2026-10-15 实机事实覆盖 10-14 EXITBS 失败旧断点。接下来 H1 证据收尾、H2 外设（尤其 Wi-Fi/触控板）、H3 Intel 内屏真实显示链优先；H4 NVIDIA NVRM/GSP/DMA/Metal 暂时冻结，不再用增加原生对象/Mock/CI 数量替代实际整机进度。旧 H4 代码/40 项 CI/DMAR 与新 17 项未运行验证均保留原样，只在新证据或用户明确选择 H4 时重新启动。每项任务必须对应主线验收、独立证据、风险和回退，否则 DEFER。**本决定不授权新的重启、写盘、变更 BIOS/EFI 或加载 KEXT。** 详见 [12_MAINLINE_ALIGNMENT.md](12_MAINLINE_ALIGNMENT.md)。
 
 
+
+
+## 2026-10-21：冻结基线，叠加单点保护并保持 PM 阻塞
+
+依据用户“全部推进完”的无设备授权，保留已验收ac0c7518…基线；单独候选仅在RM gate仍busy时跳过channel stop/PCI save/STANDBY。
+不误报睡眠被拒；固定XNU源码将负setPowerState返回也作为隐式完成。不通知framebuffer恢复运行，不把已提交NVKMS挂起当成可abort。
+新候选必须真实CPU反例、非法编译负控、新Darwin对象及同run唯一对象替换链接。通过只关闭这条调用合同，不关闭PM/设备准入。
+二进制未携带最低系统版本命令时记未知；编译器目标参数与二进制metadata分别报告，不能用一个代替另一个。

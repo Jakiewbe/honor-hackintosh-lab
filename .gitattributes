@@ -1,3 +1,9 @@
 
 # codex-rules: preserve state bytes across computers
 .agent/** -text
+
+# This phase locks patch bytes and retains raw CI text without CRLF conversion.
+research/stock-v243-pm-20261021/*.patch text eol=lf
+research/stock-v243-pm-20261021/local-evidence/** -text
+research/stock-v243-once-20261021/package-evidence/** -text
+research/stock-v243-pm-20261021/native-evidence/** -text

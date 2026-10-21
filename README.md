@@ -1,3 +1,5 @@
+> **2026-10-21 整包首次结果与 PM 保护候选**：run39533781713 的内部集成及 NVRMFB/NVAccel 编译链接通过；格式检查因无最低版本命令拒收，现改为缺失记未知，89项本地检查通过，新原生未跑。新增 RM-busy 单点保护，真实完整函数 CPU 合同8/8、原候选2/8，ASan/UBSan与非法编译负控通过；Darwin保护候选尚未编译。没有睡眠否决或安全恢复证明，设备NO-GO。见[整包记录](research/stock-v243-once-20261021/PACKAGE-20261021.md)与[PM候选](research/stock-v243-pm-20261021/REVIEW.md)。
+
 > **2026-10-21 下一层：三个内核组件静态整包验收**。新增 NVRMFB/NVAccel 独立编译链接、KMOD/plist/部署目标和已声明提供者版本检查；85项本地检查通过。既有内部链接与候选固定不变，新 Darwin 门禁未执行；关闭/PM、用户态及设备仍未验收，NO-GO。见[方案与证据](research/stock-v243-once-20261021/PACKAGE-20261021.md)。
 
 > **2026-10-21 内部链接集成已原生验收**：run [39531652222](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39531652222) / `3e383c5` success；1055 RM、12 NVRM、225 modeset对象，配对归档及真实NVLink后端链接通过。同run导入 **493→481→478**，12+4内部接口全部消除并有最终定义，仅新增已登记`_panic`；实际ARGV差分、归档225对象及`__.SYMDEF`元数据已复算。最终17528944 B，SHA256 `b873afbe…`。478项仍为470历史KPI+定义/8家族名单，loader/完整ABI、用户设备及关闭安全未验收；GPU未执行，设备NO-GO。本地/CI76项通过，未签名/安装/加载，不改.agent。见[真实结果与下一断点](research/stock-v243-once-20261021/INTERNAL-LINK-20261021.md)。
