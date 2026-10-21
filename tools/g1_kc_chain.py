@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
-"""Decode chained-fixup vtable slots in a kernel collection and resolve them to symbol names.
+"""Decode kernel-collection vtable slots (LC_DYLD_CHAINED_FIXUPS) and resolve them to symbols.
 
-Why this exists: raw vtable words in a kernel collection are not plain addresses; they are
-dyld chained-fixup entries. dyld_info asserts on the 365 MB collection, so the chain is decoded
-here directly from LC_DYLD_CHAINED_FIXUPS.
+An x86_64 kernel collection uses DYLD_CHAINED_PTR_X86_64_KERNEL_CACHE (11): a 64-bit entry with
+target:30, cacheLevel:2, diversity:16, addrDiv:1, key:2, next:12, isAuth:1, and a 4-byte chain
+stride. dyld_info asserts on the 365 MB collection, so the chain is walked here directly.
 
 Read-only. Usage: g1_kc_chain.py <collection.kc> <bundle-id> <Class> [...]
 """
 import argparse
-import ctypes
 import json
 import mmap
 import struct
@@ -16,8 +15,10 @@ import struct
 import g1_kc8 as kc
 
 CHAINED = 0x80000034
+KERNEL_CACHE = 11
 PTR_64 = 2
 PTR_64_OFFSET = 6
+STRIDE = {KERNEL_CACHE: 4, PTR_64: 4, PTR_64_OFFSET: 4}
 
 
 def chained_header(raw, mach):
@@ -25,74 +26,80 @@ def chained_header(raw, mach):
         if int(command['cmd'], 16) != CHAINED:
             continue
         data = raw[command['offset']:command['offset'] + command['bytes']]
-        dataoff = struct.unpack_from('<I', data, 8)[0]
-        size = struct.unpack_from('<I', data, 12)[0]
-        if dataoff == 0 or size < 28:
+        dataoff, datasize = struct.unpack_from('<II', data, 8)
+        if dataoff == 0 or datasize < 28:
             return None
-        head = raw[dataoff:dataoff + size]
-        (fixups_version, starts_offset, imports_offset, symbols_offset,
-         imports_count, imports_format, symbols_format) = struct.unpack_from('<7I', head, 0)
-        return dict(base=dataoff, size=size, version=fixups_version, starts=starts_offset,
+        head = raw[dataoff:dataoff + datasize]
+        version, starts, imports_offset, symbols_offset, count, ifmt, sfmt = struct.unpack_from('<7I', head, 0)
+        return dict(base=dataoff, size=datasize, version=version, starts=starts,
                     imports_offset=imports_offset, symbols_offset=symbols_offset,
-                    imports_count=imports_count, imports_format=imports_format,
-                    symbols_format=symbols_format, head=head)
+                    imports_count=count, imports_format=ifmt, symbols_format=sfmt)
     return None
 
 
-def segment_starts(raw, base, starts_offset):
-    # The starts table begins at dataoff + starts_offset, not at dataoff.
-    start = base + starts_offset
-    seg_count = struct.unpack_from('<I', raw, start)[0]
-    if seg_count > 64:
-        raise ValueError('unreasonable segment count %d' % seg_count)
-    offsets = [struct.unpack_from('<I', raw, start + 4 + 4 * i)[0] for i in range(seg_count)]
+def segments(raw, chain):
+    start = chain['base'] + chain['starts']
+    count = struct.unpack_from('<I', raw, start)[0]
+    if count > 64:
+        raise ValueError('unreasonable segment count %d' % count)
     out = []
-    for offset in offsets:
+    for i in range(count):
+        offset = struct.unpack_from('<I', raw, start + 4 + 4 * i)[0]
         if not offset:
             out.append(None)
             continue
-        address = base + starts_offset + offset
+        address = start + offset
         size = struct.unpack_from('<I', raw, address)[0]
         page_size = struct.unpack_from('<H', raw, address + 4)[0]
         pointer_format = struct.unpack_from('<H', raw, address + 6)[0]
         segment_offset = struct.unpack_from('<Q', raw, address + 8)[0]
-        max_valid = struct.unpack_from('<I', raw, address + 16)[0]
         page_count = struct.unpack_from('<H', raw, address + 20)[0]
-        pages = [struct.unpack_from('<H', raw, address + 22 + 2 * i)[0] for i in range(page_count)]
+        pages = [struct.unpack_from('<H', raw, address + 22 + 2 * j)[0] for j in range(page_count)]
         out.append(dict(size=size, page_size=page_size, pointer_format=pointer_format,
-                        segment_offset=segment_offset, max_valid=max_valid,
-                        page_count=page_count, pages=pages))
+                        segment_offset=segment_offset, page_count=page_count, pages=pages))
     return out
 
 
-def decode_chain(raw, starts, member, target_filepos):
-    """Return the decoded target of the pointer stored at target_filepos, or None."""
-    for index, info in enumerate(starts):
-        if not info or info['pointer_format'] not in (PTR_64, PTR_64_OFFSET):
-            continue
-        start = info['segment_offset']
-        end = start + info['page_size'] * info['page_count']
-        if not (start <= target_filepos < end):
-            continue
-        page = (target_filepos - start) // info['page_size']
-        page_start = info['pages'][page]
-        if page_start in (0xFFFF, 0x8000):
-            return None
-        position = start + page * info['page_size'] + page_start
-        for _ in range(512):
-            if position < 0 or position + 8 > len(raw):
-                return None
-            value = struct.unpack_from('<Q', raw, position)[0]
-            bind = value >> 63
+def _u64(raw, position):
+    if position < 0 or position + 8 > len(raw):
+        return None
+    return struct.unpack_from('<Q', raw, position)[0]
+
+
+def walk(raw, info, segment_base, target_filepos):
+    """Try the plausible page_start/stride combinations and return the first that reaches the slot."""
+    page_size = info['page_size']
+    if not page_size:
+        return None
+    relative = target_filepos - segment_base
+    if relative < 0:
+        return None
+    page = relative // page_size
+    if page >= info['page_count']:
+        return None
+    start = info['pages'][page]
+    if start == 0xFFFF:
+        return None
+    stride = STRIDE.get(info['pointer_format'], 4)
+    for first in (start, start * 4, 0):
+        position = segment_base + page * page_size + first
+        for _ in range(4096):
+            value = _u64(raw, position)
+            if value is None:
+                break
             nxt = (value >> 51) & 0xFFF
-            target = value & 0xFFFFFFFFF
-            if bind:
-                return None
+            if info['pointer_format'] == KERNEL_CACHE:
+                target = value & 0x3FFFFFFF
+                authenticated = value >> 63
+            else:
+                target = value & 0xFFFFFFFFF
+                authenticated = 0
             if position == target_filepos:
-                return dict(target=target, format=info['pointer_format'], slot_offset=position)
+                return dict(target=target, first_byte=first, stride=stride,
+                            authenticated=int(authenticated))
             if nxt == 0:
-                return None
-            position += nxt * 4 if info['pointer_format'] == PTR_64 else nxt * 8
+                break
+            position += nxt * stride
     return None
 
 
@@ -121,34 +128,22 @@ def main():
     parser.add_argument('collection')
     parser.add_argument('bundle')
     parser.add_argument('classes', nargs='+')
+    parser.add_argument('--slots', type=int, default=64)
     args = parser.parse_args()
 
     with open(args.collection, 'rb') as file, mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_READ) as raw:
         outer = kc.header(raw)
         entries = [e for e in outer['entries'] if e['id'] == args.bundle]
         if len(entries) != 1:
-            raise SystemExit('expected one fileset entry')
-        member = kc.header(raw, entries[0]['fileoff'])
-        member_chain = chained_header(raw, member)
-        outer_chain = chained_header(raw, outer)
-        diagnostics = {}
-        for label, chain in (('member', member_chain), ('outer', outer_chain)):
-            if not chain:
-                diagnostics[label] = dict(present=False)
-                continue
-            seg_count = struct.unpack_from('<I', raw, chain['base'] + chain['starts'])[0]
-            offsets = [struct.unpack_from('<I', raw, chain['base'] + chain['starts'] + 4 + 4 * i)[0]
-                       for i in range(min(seg_count, 8))] if 0 < seg_count <= 64 else []
-            diagnostics[label] = dict(present=True, dataoff=chain['base'], datasize=chain['size'],
-                                      version=chain['version'], starts=chain['starts'],
-                                      seg_count=seg_count, first_offsets=offsets)
-        chain = member_chain or outer_chain
+            raise SystemExit('expected one fileset entry for %s' % args.bundle)
+        member_fileoff = entries[0]['fileoff']
+        member = kc.header(raw, member_fileoff)
+        chain = chained_header(raw, member) or chained_header(raw, outer)
         if not chain:
             raise SystemExit('no LC_DYLD_CHAINED_FIXUPS')
-        starts = segment_starts(raw, chain['base'], chain['starts'])
+        starts = segments(raw, chain)
         names = symbols(raw, member)
-        report = dict(collection=args.collection, bundle=args.bundle,
-                      diagnostics=diagnostics,
+        report = dict(collection=args.collection, bundle=args.bundle, member_fileoff=member_fileoff,
                       pointer_formats=sorted({s['pointer_format'] for s in starts if s}),
                       classes=[])
         for cls in args.classes:
@@ -161,16 +156,22 @@ def main():
             if not section:
                 report['classes'].append(dict(class_name=cls, status='VTABLE_OUTSIDE_SECTION'))
                 continue
-            base_offset = section['offset'] - section['address']
+            delta = section['offset'] - section['address']
             slots = []
-            for index in range(0, 64):
-                filepos = address + 16 + index * 8 + base_offset
-                decoded = decode_chain(raw, starts, member, filepos)
+            for index in range(args.slots):
+                filepos = address + 16 + index * 8 + delta
+                info = next((s for s in starts if s and s['segment_offset'] <= filepos - member_fileoff
+                             < s['segment_offset'] + s['page_size'] * s['page_count']), None)
+                if not info:
+                    break
+                decoded = walk(raw, info, member_fileoff + info['segment_offset'], filepos)
                 if not decoded:
                     break
                 slots.append(dict(slot=index, target=hex(decoded['target']),
-                                  symbol=names.get(decoded['target'], 'UNRESOLVED')))
-            report['classes'].append(dict(class_name=cls, status='CHAIN_DECODED',
+                                  symbol=names.get(decoded['target'], 'UNRESOLVED'),
+                                  first_byte=decoded['first_byte'], stride=decoded['stride']))
+            report['classes'].append(dict(class_name=cls,
+                                          status='CHAIN_DECODED' if slots else 'CHAIN_FAILED',
                                           slots=slots))
         print(json.dumps(report, indent=1))
 
