@@ -19,6 +19,13 @@ case "$ACTION" in
     sudo cp -a /Library/Extensions/. "$BACKUP/Extensions"/
     sudo cp -a /System/Library/KernelCollections/. "$BACKUP/KernelCollections"/
     kextstat > "$BACKUP/kextstat-before.txt"
+    # Record whether a NullMoth NVRM was installed at all: this machine may have none, in which case
+    # rollback means removing the candidate rather than restoring a release bundle.
+    if [[ -d /Library/Extensions/NVRM.kext ]]; then
+      echo present > "$BACKUP/nvrm-was-installed.txt"
+    else
+      echo absent > "$BACKUP/nvrm-was-installed.txt"
+    fi
     shasum -a 256 /System/Library/KernelCollections/*.kc > "$BACKUP/kc-before.txt"
     csrutil status > "$BACKUP/csrutil.txt" 2>&1 || true
     nvram boot-args > "$BACKUP/boot-args-before.txt" 2>&1 || true
@@ -53,9 +60,16 @@ case "$ACTION" in
     ;;
 
   rollback)
-    sudo rm -rf /Library/Extensions/NVRM.kext
-    sudo cp -R "$BACKUP/Extensions/NVRM.kext" /Library/Extensions/NVRM.kext
-    sudo chown -R root:wheel /Library/Extensions/NVRM.kext
+    if [[ -d "$BACKUP/Extensions/NVRM.kext" ]]; then
+      sudo rm -rf /Library/Extensions/NVRM.kext
+      sudo cp -R "$BACKUP/Extensions/NVRM.kext" /Library/Extensions/NVRM.kext
+      sudo chown -R root:wheel /Library/Extensions/NVRM.kext
+      echo "restored the bundle that was installed before the experiment"
+    else
+      # No release NVRM existed before: removing the candidate is the correct rollback.
+      sudo rm -rf /Library/Extensions/NVRM.kext
+      echo "no prior NVRM existed; removed the candidate instead"
+    fi
     sudo nvram -d boot-args || true
     [[ -f "$BACKUP/boot-args-before.txt" ]] && sudo nvram boot-args="$(cat "$BACKUP/boot-args-before.txt" | sed -n 's/.*boot-args[[:space:]]*//p')" || true
     sudo kmutil install --update-all 2>&1 | tee "$BACKUP/kmutil-rollback.txt"
