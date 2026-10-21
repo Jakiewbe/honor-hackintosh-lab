@@ -123,7 +123,7 @@ def main():
                       load_command_ids=['0x%x' % c for c in command_ids],
                       export_commands=export_commands,
                       linkinfo_sections=sections,
-                      trie_present=False, trie_names=0,
+                      trie_present=False, trie_names=0, trie_sample=[],
                       requested={}, controls={}, required={})
         names = []
         if args.names:
@@ -139,12 +139,16 @@ def main():
                     entry['error'] = str(error)[:120]
             report['trie_present'] = bool(found)
             report['trie_names'] = len(found)
+            report['trie_sample'] = sorted(found)[:5]
+        def hit(name):
+            return name in found or name.lstrip('_') in found or ('_' + name) in found
+
         for name in names:
-            report['requested'][name] = name in found
+            report['requested'][name] = hit(name)
         for name in filter(None, (s.strip() for s in args.controls.split(','))):
-            report['controls'][name] = name in found
+            report['controls'][name] = hit(name)
         for name in filter(None, (s.strip() for s in args.require.split(','))):
-            report['required'][name] = name in found
+            report['required'][name] = hit(name)
         report['requested_exported'] = sum(1 for v in report['requested'].values() if v)
         report['verdict'] = (
             'EXPORT_TRIE_ABSENT_NOT_OBSERVABLE' if not report['trie_present'] else
