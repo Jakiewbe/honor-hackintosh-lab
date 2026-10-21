@@ -38,32 +38,42 @@ def uleb(raw, position, end):
 
 
 def export_trie(raw, offset, size):
-    """Yield the exported names of a dyld export trie."""
-    end = offset + size
-    if size <= 0 or end > len(raw):
+    """Yield the exported names of a dyld export trie.
+
+    Node layout: ULEB128 terminalSize, terminalSize bytes of terminal payload, uint8 childCount,
+    then per child a NUL-terminated edge string and a ULEB128 node offset. Export names are unprefixed
+    (no leading underscore), which is why the controls are spelled that way.
+    """
+    trie_end = offset + size
+    if size <= 0 or trie_end > len(raw):
         raise ValueError('export trie outside file')
-    stack = [(0, b'')]
+    stack = [(0, '')]
     seen = set()
     while stack:
         position, prefix = stack.pop()
-        if position in seen:
+        if position in seen or not (0 <= position < size):
             continue
         seen.add(position)
-        terminal_size, cursor = uleb(raw, offset + position, end)
-        if terminal_size:
+        terminal_size, cursor = uleb(raw, offset + position, trie_end)
+        terminal = terminal_size != 0
+        if terminal:
             cursor += terminal_size
-        if cursor >= end:
+        if cursor >= trie_end:
+            if terminal:
+                yield prefix
             continue
         child_count = raw[cursor]
         cursor += 1
         for _ in range(child_count):
-            edge, cursor = uleb(raw, cursor, end)
-            node, cursor = uleb(raw, cursor, end)
-            edge_text = raw[cursor:cursor + edge].decode('utf-8', 'replace')
-            cursor += edge
-            stack.append((node, prefix + edge_text.encode('utf-8', 'replace')))
-        if prefix:
-            yield prefix.decode('utf-8', 'replace')
+            nul = raw.find(b'\0', cursor, trie_end)
+            if nul < 0:
+                raise ValueError('unterminated edge string')
+            edge = raw[cursor:nul].decode('utf-8', 'replace')
+            cursor = nul + 1
+            node, cursor = uleb(raw, cursor, trie_end)
+            stack.append((node, prefix + edge))
+        if terminal:
+            yield prefix
 
 
 def main():
