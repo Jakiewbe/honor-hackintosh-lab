@@ -322,8 +322,6 @@ def run(args, report):
         (args.out/(name+'-Info.plist.txt')).write_bytes(info_raw)
         report['bundles'][name] = dict(info=info, plist_sha256=base.digest(bundle/'Info.plist'), **metadata)
     report['compiler_target']='15.5_FROM_EXPLICIT_SAME_RUN_ARGUMENTS_NOT_INFERRED_BINARY_MINIMUM'
-    report['iofam_overlay'] = dict(sha256=overlay_lock['sha256'],
-        scope=overlay_lock['scope'], applied=True)
     # Loader-resolution dry run: kextutil -n resolves the bundle against the running kernel without loading
     # it. This is the closest static check to the loader and it needs no device and no kext load.
     report['stage'] = 'loader-dry-run'
