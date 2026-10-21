@@ -69,12 +69,14 @@ def audit_imports(names, declared, symbolsets, actual_kernel, families, exports)
                                 compatible=g.get('OSBundleCompatibleVersion'),
                                 evidence='EXACT_KPI_ENTRY_AND_KERNEL_DEFINITION'))
             f = families.get(bid)
-            if f and compatible(required, f['info']) and name in f['definitions']:
+            if f and (f['info'] is None or compatible(required, f['info'])) and name in f['definitions']:
                 allow = exports.get(bid)
                 # An actual KC definition is not by itself an export declaration.
                 providers.append(dict(bundle=bid, target=name,
-                    version=f['info']['CFBundleVersion'], required=required,
-                    compatible=f['info'].get('OSBundleCompatibleVersion'),
+                    version=(f['info'] or {}).get('CFBundleVersion', 'UNVERIFIED'),
+                    required=required,
+                    compatible=(f['info'].get('OSBundleCompatibleVersion')
+                                if f['info'] else 'UNVERIFIED_NO_DISK_INFO_PLIST'),
                     evidence='KC_EXTERNAL_DEFINITION',
                     explicit_export=(name in allow) if allow is not None else 'UNVERIFIED'))
         rows.append(dict(symbol=name, providers=providers,
@@ -177,14 +179,24 @@ def native_providers(names, logs):
     for short in family_ids:
         bid = 'com.apple.iokit.'+short
         path = Path('/System/Library/Extensions')/(short+'.kext')/'Contents/Info.plist'
-        info = plistlib.loads(path.read_bytes())
-        if info['CFBundleIdentifier'] != bid:
-            raise ValueError('family identity differs')
         definitions = sorted({r['macho_symbol'] for o in observations for m in o['members']
             if m['bundle_id'] == bid for r in m['symbols']['records']
             if r['status'] == 'KC_EXTERNAL_SECTION_DEFINITION_OBSERVED_NOT_EXPORT_OR_ABI'})
-        families[bid] = dict(info=info, definitions=definitions, plist_sha256=base.digest(path))
-        (logs/(short+'.plist.txt')).write_bytes(plistlib.dumps(info))
+        if path.is_file():
+            info = plistlib.loads(path.read_bytes())
+            if info['CFBundleIdentifier'] != bid:
+                raise ValueError('family identity differs')
+            families[bid] = dict(info=info, definitions=definitions, plist_sha256=base.digest(path),
+                identity_source='DISK_INFO_PLIST')
+            (logs/(short+'.plist.txt')).write_bytes(plistlib.dumps(info))
+        else:
+            # macOS 15 ships these families inside the kernel collections; there is no kext directory to
+            # read. Identity comes from the collection's fileset entry id, and version compatibility is
+            # recorded as unverified instead of being invented.
+            families[bid] = dict(info=None, definitions=definitions, plist_sha256=None,
+                identity_source='KC_FILESET_ENTRY_ID_DISK_PLIST_ABSENT')
+            (logs/(short+'.plist.txt')).write_text('INFO_PLIST_ABSENT_OBSERVED_IN_KERNEL_COLLECTION
+')
         if short in ('IOPCIFamily', 'IOACPIFamily'):
             rel = 'config/' if short == 'IOPCIFamily' else ''
             text = (path.parent/'Resources'/rel/(short+'.exports')).read_text()
@@ -192,7 +204,8 @@ def native_providers(names, logs):
             exports[bid] = {s.strip() for s in text.splitlines() if s.strip().startswith('_')}
     base.save(logs/'provider-binding.json', dict(kernel_sha256=kernel_sha,
         symbolsets_sha256=hashlib.sha256(raw[off:off+size]).hexdigest(),
-        families={k:dict(plist_sha256=v['plist_sha256'], defined_count=len(v['definitions'])) for k,v in families.items()}))
+        families={k:dict(plist_sha256=v['plist_sha256'], identity_source=v['identity_source'],
+                         defined_count=len(v['definitions'])) for k,v in families.items()}))
     return sets, actual, families, exports
 
 
