@@ -56,6 +56,23 @@ def required_of(declared, bid):
     return declared.get(bid, '0')
 
 
+VTABLE_HELPERS = None
+
+
+def vtable_evidence():
+    """Symbols whose definition is proven by a vtable slot rather than by an nlist name.
+
+    The kernel collection strips local names, so a function can exist and be called through a vtable
+    while the static nlist has no entry for it. The scan records the slot, which is definition evidence.
+    """
+    global VTABLE_HELPERS
+    if VTABLE_HELPERS is None:
+        path = ROOT/'research/stock-v243-offscreen-20261021/iogfx-vtable-20261021.json'
+        data = json.loads(path.read_text())
+        VTABLE_HELPERS = {entry['symbol']: entry['slot'] for entry in data.get('slots', [])}
+    return VTABLE_HELPERS
+
+
 def audit_imports(names, declared, symbolsets, actual_kernel, families, exports):
     groups = {g['CFBundleIdentifier']: g for g in symbolsets['SymbolsSets']}
     if len(groups) != len(symbolsets['SymbolsSets']):
@@ -86,6 +103,11 @@ def audit_imports(names, declared, symbolsets, actual_kernel, families, exports)
                     evidence='KC_EXTERNAL_DEFINITION',
                     explicit_export=(name in allow) if allow is not None else 'UNVERIFIED'))
         if not providers:
+            slot = vtable_evidence().get(name)
+            if slot is not None:
+                rows.append(dict(symbol=name, providers=[], vtable_slot=slot,
+                    status='VTABLE_SLOT_OBSERVED_LOCAL_NAME_STRIPPED'))
+                continue
             local = [bid for bid, f in families.items()
                      if f and (f['info'] is None or compatible(required_of(declared, bid), f['info']))
                      and name in f.get('local_definitions', ())]
@@ -98,6 +120,7 @@ def audit_imports(names, declared, symbolsets, actual_kernel, families, exports)
     return dict(count=len(rows), unresolved=[r['symbol'] for r in rows if not r['providers']
                 and r['status'] == 'UNRESOLVED'],
         local_only=[r['symbol'] for r in rows if r['status'] == 'LOCAL_DEFINITION_OBSERVED_EXPORT_UNVERIFIED'],
+        vtable_only=[r['symbol'] for r in rows if r['status'] == 'VTABLE_SLOT_OBSERVED_LOCAL_NAME_STRIPPED'],
         rows=rows, level='STATIC_RUNNER_PROVIDER_MATCH_NOT_LOADER_OR_FULL_ABI')
 
 
@@ -243,17 +266,14 @@ def run(args, report):
     for entry in json.loads((args.internal_text/'candidate-input-snapshots.json').read_text()).items():
         if base.digest(tree/entry[0]) != entry[1]:
             raise ValueError('candidate dependency changed')
-    # macOS 26 adds seven IOAccel virtuals that macOS 15.7.9 does not carry. Guarding them keeps the 15
-    # build from importing symbols the running system does not expose. The overlay is applied here, after
-    # the internal link (whose preflight requires a clean fixed input), and its hash is checked against a lock.
-    overlay = ROOT/'research/stock-v243-offscreen-20261021/iofam-macos15-layout.patch'
-    overlay_lock = json.loads((ROOT/'research/stock-v243-offscreen-20261021/iofam-lock.json').read_text())
-    if base.digest(overlay) != overlay_lock['sha256']:
-        raise ValueError('io_fam overlay differs from its lock')
-    for argv, name in ((['git','apply','--check','--unsafe-paths',overlay], 'iofam-overlay-check.txt'),
-                       (['git','apply','--unsafe-paths',overlay], 'iofam-overlay-apply.txt')):
-        if patch_run([str(v) for v in argv], tree, args.out/name):
-            raise ValueError('io_fam overlay failed: ' + name)
+    # A first hypothesis removed seven IOAccel virtuals as "macOS 26 only". The kernel-collection
+    # reverse engineering disproved it: slots 322-325 of IOAccelSurface carry set_shape,
+    # set_shape_backing_length_ext, surface_lock_options and surface_unlock_options in this exact order,
+    # and the remaining three exist on their own classes. The declarations stay; the import audit gets
+    # the vtable evidence instead of deleting layout.
+    report['iofam_overlay'] = dict(applied=False,
+        reason='rejected: vtable slots 322-325 observed in SystemKernelExtensions.kc',
+        evidence='research/stock-v243-offscreen-20261021/iogfx-vtable-20261021.json')
     products = args.work/'package-products'; products.mkdir(exist_ok=False)
     # Reuse the exact accepted NVRM compile flags, changing only local include paths
     # and language macros as in the fixed stock accelerator recipe (not executing it).
