@@ -1,0 +1,60 @@
+name: HONOR G1 kernel vtable observation
+
+# Read-only: dump the IOAcceleratorFamily2 vtable slots from the system kernel collection, resolved to
+# symbol names. This is what decides whether the reconstructed io_fam headers match macOS 15.7.9.
+# Nothing is built, loaded or executed.
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/g1_kc_vtable.py'
+      - 'tools/g1_kc8.py'
+      - '.github/workflows/g1-kc-vtable.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  dump:
+    runs-on: macos-15-intel
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Dump the accelerate-family vtables
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          sw_vers > out/sw_vers.txt
+          kc=/System/Library/KernelCollections/SystemKernelExtensions.kc
+          ls -l "$kc" > out/collection.txt
+          for cls in IOAccelSurface IOAccelContext2 IOAccelGLContext2 IOAccelLegacyDisplayPipe IOAccelLegacyDisplayMachine; do
+            python3 tools/g1_kc_vtable.py "$kc" com.apple.iokit.IOAcceleratorFamily2 "$cls" \
+              > "out/vtable-$cls.json" 2> "out/vtable-$cls.err" || true
+          done
+          python3 - <<'PY'
+          import json, pathlib
+          lines = []
+          for path in sorted(pathlib.Path('out').glob('vtable-*.json')):
+              try:
+                  data = json.loads(path.read_text())
+              except Exception as error:
+                  lines.append('%s: UNREADABLE %s' % (path.name, error)); continue
+              for entry in data['classes']:
+                  if entry['status'] != 'VTABLE_DUMPED':
+                      lines.append('%s: %s' % (entry['class_name'], entry['status'])); continue
+                  lines.append('%s: %d slots' % (entry['class_name'], len(entry['slots'])))
+                  for slot in entry['slots']:
+                      lines.append('  %3d %s' % (slot['slot'], slot['symbol']))
+          pathlib.Path('out/summary.txt').write_text('\n'.join(lines) + '\n')
+          print('\n'.join(lines))
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: g1-kc-vtable
+          path: out/
+          if-no-files-found: error
+          retention-days: 14
