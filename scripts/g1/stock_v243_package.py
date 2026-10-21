@@ -13,6 +13,7 @@ import plistlib
 from pathlib import Path
 import re
 import shutil
+import subprocess
 import struct
 import sys
 
@@ -303,6 +304,23 @@ def run(args, report):
     report['compiler_target']='15.5_FROM_EXPLICIT_SAME_RUN_ARGUMENTS_NOT_INFERRED_BINARY_MINIMUM'
     report['iofam_overlay'] = dict(sha256=overlay_lock['sha256'],
         scope=overlay_lock['scope'], applied=True)
+    # Loader-resolution dry run: kextutil -n resolves the bundle against the running kernel without loading
+    # it. This is the closest static check to the loader and it needs no device and no kext load.
+    report['stage'] = 'loader-dry-run'
+    report['loader_dry_run'] = {}
+    for name in built:
+        bundle = products/(name+'.kext')
+        log = args.out/(name+'-kextutil.txt')
+        with log.open('w', encoding='utf-8') as stream:
+            stream.write('ARGV='+repr(['xcrun', 'kextutil', '-n', str(bundle)])+'\n'); stream.flush()
+            result = subprocess.run(['xcrun', 'kextutil', '-n', str(bundle)], cwd=tree,
+                                    stdout=stream, stderr=subprocess.STDOUT, timeout=300)
+            stream.write('\nEXIT='+str(result.returncode)+'\n')
+        text = log.read_text(encoding='utf-8', errors='replace')
+        unresolved = sorted({line.strip() for line in text.splitlines()
+                             if 'can\'t resolve' in line or 'unresolved' in line.lower()})
+        report['loader_dry_run'][name] = dict(exit=result.returncode,
+                                              unresolved=unresolved, log=log.name)
     report['stage'] = 'runner-dependencies'
     all_names = {n for b in report['bundles'].values() for n in b['imports']}
     sets, actual, families, exports = native_providers(all_names, args.out)

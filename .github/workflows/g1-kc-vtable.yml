@@ -52,6 +52,42 @@ jobs:
           print('\n'.join(lines))
           PY
 
+      - name: Dump the chained-fixup records near each vtable
+        shell: bash
+        run: |
+          set -uo pipefail
+          kc=/System/Library/KernelCollections/SystemKernelExtensions.kc
+          # Raw vtable words are chained-fixup encoded, not plain addresses. dyld_info decodes them; keep only
+          # the window around each vtable so the artifact stays text-sized.
+          xcrun dyld_info -fixups "$kc" > out/fixups-all.txt 2> out/fixups.err || true
+          wc -l out/fixups-all.txt out/fixups.err || true
+          python3 - <<'PY'
+          import json, pathlib, re
+          out = pathlib.Path('out')
+          fixups = (out/'fixups-all.txt')
+          if not fixups.exists():
+              raise SystemExit('no fixups output')
+          region = []
+          for path in sorted(out.glob('vtable-*.json')):
+              data = json.loads(path.read_text())
+              for entry in data['classes']:
+                  if entry.get('status') == 'VTABLE_DUMPED':
+                      region.append((int(entry['address'], 16), entry['class_name']))
+          if not region:
+              raise SystemExit('no dumped vtable address')
+          text = fixups.read_text(errors='replace').splitlines()
+          kept = []
+          for line in text:
+              m = re.search(r'0x([0-9a-fA-F]+)', line)
+              if not m:
+                  continue
+              value = int(m.group(1), 16)
+              if any(start <= value <= start + 0x400 for start, _ in region):
+                  kept.append(line)
+          (out/'fixups-vtables.txt').write_text('\n'.join(kept) + '\n')
+          print('fixup lines near vtables:', len(kept))
+          PY
+
       - uses: actions/upload-artifact@v4
         with:
           name: g1-kc-vtable
