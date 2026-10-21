@@ -55,10 +55,12 @@ class LoaderGateTests(unittest.TestCase):
 class LoaderNegativeControlContract(unittest.TestCase):
     """The negative control must exercise a case kextutil actually rejects, and record the one it does not."""
 
-    def test_script_has_a_really_rejected_case(self):
+    def test_script_records_the_capability_probe(self):
         source = (Path(__file__).resolve().parents[1] / "scripts/g1/stock_v243_package.py").read_text(encoding="utf-8")
         self.assertIn("kextutil_capability_probe", source)
         self.assertIn("kextutil_is_a_validation_gate", source)
+        self.assertIn("missing executable", source)
+        self.assertIn("missing declared dependency", source)
 
     def test_script_records_the_missing_dependency_limitation(self):
         source = (Path(__file__).resolve().parents[1] / "scripts/g1/stock_v243_package.py").read_text(encoding="utf-8")
