@@ -10,6 +10,7 @@ on:
       - 'tools/g1_kc8.py'
       - 'scripts/g1/stock_v243_package.py'
       - 'scripts/g1/stock_v243_import_audit.py'
+      - 'tests/test_stock_v24*.py'
       - 'research/stock-v243-offscreen-20261021/iofam-macos15-layout.patch'
       - 'research/stock-v243-offscreen-20261021/iofam-lock.json'
       - '.github/workflows/g1-stock-v243-package.yml'
