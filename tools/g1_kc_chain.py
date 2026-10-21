@@ -143,6 +143,14 @@ def main():
             raise SystemExit('no LC_DYLD_CHAINED_FIXUPS')
         starts = segments(raw, chain)
         names = symbols(raw, member)
+        # Inherited slots point into the kernel, not into this kext. Merge the kernel member's symbols
+        # (when this collection carries it) so those slots can be named as well.
+        kernel_names = {}
+        for entry in outer['entries']:
+            if entry['id'] in ('com.apple.kernel', 'kernel'):
+                kernel_names = symbols(raw, kc.header(raw, entry['fileoff']))
+                break
+        names = {**kernel_names, **names}
         report = dict(collection=args.collection, bundle=args.bundle, member_fileoff=member_fileoff,
                       pointer_formats=sorted({s['pointer_format'] for s in starts if s}),
                       member_segments=[{k: s[k] for k in ('name','vmaddr','vmsize','fileoff','filesize')}
@@ -170,7 +178,7 @@ def main():
             scan = []
             if text:
                 text_lo, text_hi = text['vmaddr'], text['vmaddr'] + text['vmsize']
-                for index in range(0, 96):
+                for index in range(0, 256):
                     filepos = address + index * 8 + delta
                     value = _u64(raw, filepos)
                     if value is None:
@@ -210,6 +218,7 @@ def main():
                                   nearby=[names[v] for v in nearby],
                                   first_byte=decoded['first_byte'], stride=decoded['stride']))
             report['classes'].append(dict(class_name=cls, vtable=hex(address), vtable_section=vtable_section,
+                                          kernel_symbols=len(kernel_names),
                                           text_range=[hex(text_lo), hex(text_hi)] if text else None,
                                           scan=scan, probe=probe,
                                           status='CHAIN_DECODED' if slots else 'CHAIN_FAILED',
