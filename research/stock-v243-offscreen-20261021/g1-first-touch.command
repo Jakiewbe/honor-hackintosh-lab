@@ -42,8 +42,12 @@ find_repo() {
     printf '%s\n' "${REPO}"
     return 0
   fi
-  local candidate
+  local here candidate
+  here="$(cd "$(dirname "$0")" && pwd)"
+  # The repository can travel on the same stick as this script: g1-repo next to it, or one level up.
   for candidate in \
+      "${here}/g1-repo" \
+      "${here}/../g1-repo" \
       "${HOME}/honor-hackintosh-lab" \
       "${HOME}/Desktop/honor-hackintosh-lab" \
       "${HOME}/Documents/honor-hackintosh-lab" \
