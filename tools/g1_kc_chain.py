@@ -168,6 +168,11 @@ def main():
             slots = []
             for index in range(args.slots):
                 filepos = address + 16 + index * 8 + delta
+                raw_value = _u64(raw, filepos)
+                if raw_value is None:
+                    break
+                plain = names.get(raw_value)
+                nearby = sorted(v for v in names if abs(v - raw_value) < 0x100)[:3]
                 info = next((s for s in starts if s and s['segment_offset'] <= filepos - member_fileoff
                              < s['segment_offset'] + s['page_size'] * s['page_count']), None)
                 if not info:
@@ -177,6 +182,8 @@ def main():
                     break
                 slots.append(dict(slot=index, target=hex(decoded['target']),
                                   symbol=names.get(decoded['target'], 'UNRESOLVED'),
+                                  raw=hex(raw_value), raw_symbol=plain or 'UNRESOLVED',
+                                  nearby=[names[v] for v in nearby],
                                   first_byte=decoded['first_byte'], stride=decoded['stride']))
             report['classes'].append(dict(class_name=cls, vtable=hex(address), vtable_section=vtable_section,
                                           status='CHAIN_DECODED' if slots else 'CHAIN_FAILED',
