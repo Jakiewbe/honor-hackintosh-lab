@@ -1,0 +1,5 @@
+ARGV=["xcrun", "clang++", "-Wl,-g1_deliberate_invalid_link_option", "-nostdlib", "/Users/runner/work/_temp/internal-products/negative/link-input.o", "-o", "/Users/runner/work/_temp/internal-products/negative/invalid-link"]
+ld: unknown options: -g1_deliberate_invalid_link_option 
+clang++: error: linker command failed with exit code 1 (use -v to see invocation)
+
+EXIT=1

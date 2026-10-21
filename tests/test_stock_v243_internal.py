@@ -156,6 +156,18 @@ class InternalLinkContract(unittest.TestCase):
             run.assert_not_called()
         self.assertFalse(dest.exists())
 
+    def test_darwin_archive_index_is_metadata_not_an_object(self):
+        proof = gate.validate_archive_names(['__.SYMDEF SORTED','one.o','two.o'], ['one.o','two.o'])
+        self.assertEqual(proof['index_members'], ['__.SYMDEF SORTED'])
+        self.assertEqual(proof['object_members'], ['one.o','two.o'])
+        self.assertEqual(gate.validate_archive_names(['one.o'], ['one.o'])['index_members'], [])
+
+    def test_archive_index_cannot_hide_missing_extra_or_duplicate_objects(self):
+        for names in (['__.SYMDEF'], ['__.SYMDEF','one.o','extra.o'],
+                      ['__.SYMDEF','one.o','one.o'], ['__.SYMDEF','__.SYMDEF SORTED','one.o']):
+            with self.assertRaises(ValueError):
+                gate.validate_archive_names(names, ['one.o'])
+
     def test_integration_failure_cannot_inherit_baseline_pass(self):
         logs = self.root/'logs'
         argv = ['gate', *[s for key in ('nm','nv','assets','out','work')

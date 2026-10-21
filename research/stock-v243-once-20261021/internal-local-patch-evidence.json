@@ -1,0 +1,13 @@
+{
+  "level": "REAL_FIXED_SOURCE_PATCH_ROUNDTRIP_ONLY_NO_DRIVER_COMPILE",
+  "changed_files": [
+    "src/nvidia-modeset/kapi/src/nvkms-kapi.c",
+    "src/nvidia-modeset/src/nvkms-rm.c",
+    "src/nvidia/src/kernel/gpu/fsp/kern_fsp.c",
+    "src/nvidia/src/kernel/gpu/timer/timer_ostimer.c"
+  ],
+  "steps": 12,
+  "restores": true,
+  "replay": true,
+  "lock_sha256": "d5100f663ddd58bbd51255a12c6374f216732cd366f109563b0478e98b02146e"
+}

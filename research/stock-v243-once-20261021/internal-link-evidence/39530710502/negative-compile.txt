@@ -1,0 +1,10 @@
+ARGV=["xcrun", "clang++", "-arch", "x86_64", "-c", "/Users/runner/work/_temp/internal-products/negative/invalid.cpp", "-o", "/Users/runner/work/_temp/internal-products/negative/invalid.o"]
+/Users/runner/work/_temp/internal-products/negative/invalid.cpp:1:1: error: unknown type name 'DELIBERATE_INVALID_NATIVE_SOURCE'
+    1 | DELIBERATE_INVALID_NATIVE_SOURCE !!!
+      | ^
+/Users/runner/work/_temp/internal-products/negative/invalid.cpp:1:34: error: expected unqualified-id
+    1 | DELIBERATE_INVALID_NATIVE_SOURCE !!!
+      |                                  ^
+2 errors generated.
+
+EXIT=1

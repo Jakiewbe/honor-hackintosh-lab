@@ -204,6 +204,18 @@ def check_delta(before, after, defined, required, allowed_added, optional_remove
         acceptance='SYMBOL_NAME_CLOSURE_ONLY_NOT_LOADER_OR_ABI')
 
 
+def validate_archive_names(names, expected):
+    # Darwin ar can expose its generated symbol index in `ar -t`. This is
+    # archive metadata, never an extra or a substitute source object.
+    indexes = {'__.SYMDEF', '__.SYMDEF SORTED', '__.SYMDEF_64', '__.SYMDEF_64 SORTED'}
+    metadata = [n for n in names if n in indexes]
+    objects = [n for n in names if n not in indexes]
+    if len(metadata) > 1 or objects != expected:
+        raise ValueError('archive member inventory differs: expected_objects='+str(len(expected))+
+            ' actual_entries='+str(len(names))+' first_entries='+repr(names[:5]))
+    return dict(index_members=metadata, object_members=objects)
+
+
 def archive_checked(rows, dest, work, log):
     if len(rows) != 225 or len({r['path'] for r in rows}) != 225:
         raise ValueError('paired modeset archive needs all 225 source objects')
@@ -211,8 +223,8 @@ def archive_checked(rows, dest, work, log):
     try:
         base.checked_run(['xcrun', 'ar', 'rcs', dest, *[r['path'] for r in rows]], work, log)
         names = base.output(['xcrun', 'ar', '-t', dest]).splitlines()
-        if names != [Path(r['path']).name for r in rows]:
-            raise ValueError('archive member inventory differs')
+        log.with_name('modeset-archive-members.txt').write_text('\n'.join(names)+'\n', encoding='utf-8')
+        return validate_archive_names(names, [Path(r['path']).name for r in rows])
     except Exception:
         dest.unlink(missing_ok=True)
         raise
@@ -254,8 +266,9 @@ def integrate(args, report):
     report['modeset_objects'] = rows
     base.save(logs/'modeset-objects.json', rows)
     archive = work/'libnvkms-paired.a'
-    archive_checked(rows, archive, work, logs/'modeset-archive.txt')
+    inventory = archive_checked(rows, archive, work, logs/'modeset-archive.txt')
     report['paired_archive'] = dict(sha256=base.digest(archive), members=225,
+        inventory=inventory,
         payload_source='existing verified nvkms_shaders.cpp TU; no shader data member in this archive')
     report['stage'] = 'paired-rm-cleanup-objects'
     rm = candidate/'src/nvidia'
