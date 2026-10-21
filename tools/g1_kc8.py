@@ -152,9 +152,24 @@ def observe_symbols(raw, member, names):
                     raise ValueError('definition section/file/VM mapping mismatch')
                 row['definition_file_offset'] = filepos
         records.append(row)
-    if len({r['macho_symbol'] for r in records}) != len(records):
-        raise ValueError('duplicate selected symbol in member')
+    # A kernel collection member can legitimately carry the same symbol name more than once
+    # (local and external entries, or the same definition listed twice). Deduplicate identical
+    # (name, value) rows, keep genuinely conflicting ones and mark them, and never invent a winner.
+    unique, seen, duplicates, ambiguous = [], {}, [], []
+    for row in records:
+        key = (row['macho_symbol'], row['value'])
+        if key in seen:
+            duplicates.append(row['macho_symbol'])
+            continue
+        seen[key] = row
+        unique.append(row)
+    by_name = {}
+    for row in unique:
+        by_name.setdefault(row['macho_symbol'], set()).add(row['value'])
+    ambiguous = sorted(name for name, values in by_name.items() if len(values) > 1)
+    records = unique
     return {'status': 'MEMBER_SYMBOL_TABLE_PARSED', 'records': records,
+            'duplicates_removed': sorted(set(duplicates)), 'ambiguous_values': ambiguous,
         'unobserved': sorted(set(names)-{r['macho_symbol'] for r in records
             if r['status'] == 'KC_EXTERNAL_SECTION_DEFINITION_OBSERVED_NOT_EXPORT_OR_ABI'})}
 
