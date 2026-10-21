@@ -1,0 +1,58 @@
+name: HONOR G1 loader export metadata probe
+
+# Read-only: does the shipped kernel collection carry export metadata a loader consumes for the
+# IOAcceleratorFamily2 member, and do the 27 local-only names appear in it? No load, no build, no device.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: honor-g1-kc-exports-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: macos-15-intel
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Probe the family member's export metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          sw_vers > out/sw_vers.txt
+          kc=/System/Library/KernelCollections/SystemKernelExtensions.kc
+          shasum -a 256 "$kc" > out/collection-sha256.txt
+          ls -l "$kc" >> out/collection-sha256.txt
+          python3 - <<'PY'
+          import json, pathlib
+          names = []
+          for path in pathlib.Path('research/stock-v243-audit-20261021').rglob('local-only-binding.json'):
+              data = json.loads(path.read_text())
+              for row in data.get('rows', []):
+                  symbol = row.get('symbol')
+                  if symbol and symbol not in names:
+                      names.append(symbol)
+          pathlib.Path('out/requested-names.json').write_text(json.dumps(sorted(names), indent=1))
+          print('requested names:', len(names))
+          PY
+          python3 tools/g1_kc_exports.py "$kc" com.apple.iokit.IOAcceleratorFamily2 \
+            --names out/requested-names.json \
+            --require _IOServiceOpen,_IOFree \
+            --controls __ZTV14IOAccelSurface,__ZN14IOAccelSurface9set_shapeE24eIOAccelSurfaceShapeBitsjP19IOAccelDeviceRegiony \
+            > out/export-probe.json 2> out/export-probe.err || true
+          cat out/export-probe.err || true
+          head -c 2500 out/export-probe.json || true
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: g1-kc-export-probe
+          path: out/
+          if-no-files-found: error
+          retention-days: 14
