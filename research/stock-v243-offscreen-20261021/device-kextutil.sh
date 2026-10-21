@@ -17,7 +17,14 @@ mkdir -p "$WORK"
 echo "repo=$REPO work=$WORK"
 sw_vers | tee "$WORK/sw_vers.txt"
 xcodebuild -version | tee -a "$WORK/sw_vers.txt"
-[[ "$(xcrun --show-sdk-version)" == 15.5 ]] || { echo "STOP: need SDK 15.5"; exit 2; }
+SDK=$(xcrun --show-sdk-version)
+# The compile flags set -mmacosx-version-min=15.5, so any SDK at or above 15.5 works; Xcode 16.4's 15.5
+# is simply the version the CI evidence used. Only an older SDK is a hard stop.
+echo "SDK: $SDK"
+case "$SDK" in
+  15.[5-9]*|15.[5-9]|1[6-9].*|2[0-9].*) : ;;
+  *) echo "STOP: need SDK >= 15.5 (found $SDK); select Xcode 16.4 with xcode-select"; exit 2 ;;
+esac
 command -v gmake >/dev/null || { echo "STOP: install gmake (brew install make)"; exit 2; }
 
 fetch() {

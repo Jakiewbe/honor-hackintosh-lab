@@ -1,164 +1,213 @@
 #!/bin/bash
-# HONOR G1 / RTX 2050 首次接触 —— 一键脚本（macOS 双击可运行）
+# HONOR G1 / RTX 2050 first-touch helper for macOS.
+# Double-click in Finder, or run: bash g1-first-touch.command
 #
-# 双击本文件即可打开终端运行；也可以：bash g1-first-touch.command
-# 它会引导你做：检查环境 → 构建候选 → 备份 → 安装（只换 NVRM）→ 重启后验证 → 回退。
+# Menu:
+#   1 check environment (read only)
+#   2 build the candidate (20-40 min, needs Xcode 16.4 / SDK 15.5 / python3 / gmake)
+#   3 back up the current system (read only)
+#   4 install the candidate with -nvrmnogo (asks for YES, uses sudo)
+#   5 verify after reboot (read only)
+#   6 roll back
 #
-# 设计原则：
-#   * 只有"安装"和"回退"需要 sudo，且都会先让你输入 YES 确认；
-#   * 不跑 nvrmctl go，不跑 Metal，不碰 Windows/EFI/BIOS/SIP 其他项；
-#   * 所有输出同时写进 ~/Desktop/g1-first-touch/report-<时间>.txt，方便回传。
+# It never runs nvrmctl go, never runs Metal, and never touches Windows/EFI/BIOS or other SIP settings.
 
 set -uo pipefail
 
-REPORT_DIR="$HOME/Desktop/g1-first-touch"
-STAMP=$(date +%Y%m%d-%H%M%S)
-REPORT="$REPORT_DIR/report-$STAMP.txt"
-REPO=${REPO:-$HOME/honor-hackintosh-lab}
-WORK=${WORK:-$HOME/Desktop/g1-kextutil}
-CAND=${CAND:-$WORK/internal-products/package-products}
-BACKUP="$REPORT_DIR"
+REPORT_DIR="${HOME}/Desktop/g1-first-touch"
+STAMP="$(date +%Y%m%d-%H%M%S)"
+REPORT="${REPORT_DIR}/report-${STAMP}.txt"
+REPO="${REPO:-}"
+WORK="${WORK:-${HOME}/Desktop/g1-kextutil}"
+CAND="${CAND:-${WORK}/internal-products/package-products}"
+BACKUP="${REPORT_DIR}"
 
-mkdir -p "$REPORT_DIR"
-exec > >(tee -a "$REPORT") 2>&1
+mkdir -p "${REPORT_DIR}"
+exec > >(tee -a "${REPORT}") 2>&1
 
-say()  { printf '\n\033[1m%s\033[0m\n' "$*"; }
-warn() { printf '\033[33m%s\033[0m\n' "$*"; }
-die()  { printf '\033[31mSTOP: %s\033[0m\n' "$*"; exit 1; }
+say()  { printf '\n== %s\n' "$*"; }
+warn() { printf 'WARN: %s\n' "$*"; }
+die()  { printf 'STOP: %s\n' "$*"; exit 1; }
 ask()  { local a; read -r -p "$1 " a; printf '%s' "$a"; }
 
-say "HONOR G1 首次接触脚本   $(date)"
-echo "报告会写到: $REPORT"
+say "HONOR G1 first-touch  $(date)"
+printf 'report: %s\n' "${REPORT}"
 
-[[ "$(uname -s)" == Darwin ]] || die "这个脚本只能在 macOS 上运行（当前: $(uname -s)）"
+if [ "$(uname -s)" != "Darwin" ]; then
+  die "this script only runs on macOS (current: $(uname -s))"
+fi
 
-# ---------------------------------------------------------------- 环境检查
-check_env() {
-  say "== 环境检查"
-  sw_vers
-  echo "--- SIP"
-  csrutil status || warn "读不到 SIP 状态"
-  echo "--- 已加载的相关 kext"
-  kextstat | grep -Ei 'NVRM|NVAccel|NVRMFB' || echo "（没有 NVRM/NVAccel/NVRMFB 在运行）"
-  echo "--- /Library/Extensions"
-  ls -1 /Library/Extensions 2>/dev/null | head -20
-  echo "--- 候选是否存在"
-  if [[ -d "$CAND/NVRM.kext" ]]; then echo "有: $CAND/NVRM.kext"; else echo "无: $CAND/NVRM.kext"; fi
-  echo "--- 备份卷（安装盘）"
-  ls -1 /Volumes
-  echo "--- boot-args"
-  nvram boot-args 2>/dev/null || echo "（无）"
-}
-
-# ---------------------------------------------------------------- 构建候选
-build_candidate() {
-  say "== 构建候选（约 20-40 分钟；需要 Xcode 16.4 / SDK 15.5 / python3 / gmake）"
-  [[ -d "$REPO" ]] || die "找不到仓库 $REPO（可用 REPO=/path/to/repo 指定）"
-  [[ -f "$REPO/research/stock-v243-offscreen-20261021/device-kextutil.sh" ]] \
-    || die "仓库里没有 device-kextutil.sh，请先 git fetch && git checkout 最新 main"
-  bash "$REPO/research/stock-v243-offscreen-20261021/device-kextutil.sh" "$REPO" "$WORK"
-  [[ -d "$CAND/NVRM.kext" ]] || die "构建结束但没有 $CAND/NVRM.kext"
-  echo "候选就绪: $CAND/NVRM.kext"
-}
-
-# ---------------------------------------------------------------- 备份
-do_backup() {
-  say "== 备份（只读采集）"
-  mkdir -p "$BACKUP/Extensions" "$BACKUP/KernelCollections"
-  sudo cp -a /Library/Extensions/. "$BACKUP/Extensions"/
-  sudo cp -a /System/Library/KernelCollections/. "$BACKUP/KernelCollections"/
-  kextstat > "$BACKUP/kextstat-before.txt"
-  shasum -a 256 /System/Library/KernelCollections/*.kc > "$BACKUP/kc-before.txt"
-  for d in /System/Library/KernelCollections /Library/KernelCollections; do
-    [[ -d "$d" ]] && shasum -a 256 "$d"/*.kc* >> "$BACKUP/kc-before-all.txt" 2>/dev/null
+find_repo() {
+  if [ -n "${REPO}" ] && [ -d "${REPO}/.git" ]; then
+    printf '%s\n' "${REPO}"
+    return 0
+  fi
+  local candidate
+  for candidate in \
+      "${HOME}/honor-hackintosh-lab" \
+      "${HOME}/Desktop/honor-hackintosh-lab" \
+      "${HOME}/Documents/honor-hackintosh-lab" \
+      "/Volumes/macos/honor-hackintosh-lab" \
+      "${HOME}/Projects/honor-hackintosh-lab"; do
+    if [ -d "${candidate}/.git" ]; then
+      printf '%s\n' "${candidate}"
+      return 0
+    fi
   done
-  ls -la /System/Library/KernelCollections /Library/KernelCollections > "$BACKUP/kc-dirs.txt" 2>&1
-  if [[ -d /Library/Extensions/NVRM.kext ]]; then echo present > "$BACKUP/nvrm-was-installed.txt"
-  else echo absent > "$BACKUP/nvrm-was-installed.txt"; fi
-  nvram boot-args > "$BACKUP/boot-args-before.txt" 2>&1 || true
-  csrutil status > "$BACKUP/csrutil.txt" 2>&1 || true
-  echo "备份完成: $BACKUP"
-  echo "请回传: kextstat-before.txt / kc-before-all.txt / nvrm-was-installed.txt / boot-args-before.txt"
+  return 1
 }
 
-# ---------------------------------------------------------------- 安装
+ensure_repo() {
+  local found
+  if found="$(find_repo)"; then
+    REPO="${found}"
+    printf 'repo: %s\n' "${REPO}"
+  else
+    warn "repository not found in the usual places"
+    printf 'clone it now into %s ? [y/N] ' "${HOME}/honor-hackintosh-lab"
+    if [ "$(ask '')" = "y" ]; then
+      git clone https://github.com/Jakiewbe/honor-hackintosh-lab.git \
+        "${HOME}/honor-hackintosh-lab" || die "clone failed"
+      REPO="${HOME}/honor-hackintosh-lab"
+    else
+      die "set REPO=/path/to/honor-hackintosh-lab and run again"
+    fi
+  fi
+  printf 'repo HEAD: %s\n' "$(git -C "${REPO}" rev-parse --short HEAD 2>/dev/null || echo unknown)"
+}
+
+check_env() {
+  say "environment"
+  sw_vers
+  printf '\n-- SIP\n'
+  csrutil status || warn "cannot read SIP status"
+  printf '\n-- loaded kexts (NVRM/NVAccel/NVRMFB)\n'
+  kextstat | grep -Ei 'NVRM|NVAccel|NVRMFB' || echo "(none loaded)"
+  printf '\n-- /Library/Extensions\n'
+  ls -1 /Library/Extensions 2>/dev/null | head -20
+  printf '\n-- candidate\n'
+  if [ -d "${CAND}/NVRM.kext" ]; then echo "present: ${CAND}/NVRM.kext"; else echo "absent: ${CAND}/NVRM.kext"; fi
+  printf '\n-- volumes\n'
+  ls -1 /Volumes
+  printf '\n-- boot-args\n'
+  nvram boot-args 2>/dev/null || echo "(none)"
+  printf '\n-- toolchain\n'
+  xcodebuild -version 2>/dev/null | head -2 || warn "xcodebuild missing"
+  printf 'SDK: %s\n' "$(xcrun --show-sdk-version 2>/dev/null || echo missing)"
+  command -v python3 >/dev/null && printf 'python3: %s\n' "$(python3 -V 2>&1)" || warn "python3 missing"
+  command -v gmake   >/dev/null && printf 'gmake:   %s\n' "$(gmake --version | head -1)"     || warn "gmake missing (brew install make)"
+  ensure_repo
+}
+
+build_candidate() {
+  say "build candidate (20-40 min)"
+  ensure_repo
+  local script="${REPO}/research/stock-v243-offscreen-20261021/device-kextutil.sh"
+  [ -f "${script}" ] || die "missing ${script}; run: git -C ${REPO} fetch origin && git -C ${REPO} checkout main"
+  local sdk
+  sdk="$(xcrun --show-sdk-version 2>/dev/null || echo missing)"
+  printf 'SDK: %s\n' "${sdk}"
+  if [ "${sdk}" != "15.5" ] && [ "${ALLOW_OTHER_SDK:-0}" != "1" ]; then
+    warn "the build expects SDK 15.5; select Xcode 16.4 first, or re-run with ALLOW_OTHER_SDK=1"
+    printf 'continue anyway? [y/N] '
+    [ "$(ask '')" = "y" ] || return 1
+  fi
+  bash "${script}" "${REPO}" "${WORK}" || die "build failed; see the log above"
+  [ -d "${CAND}/NVRM.kext" ] || die "build finished but ${CAND}/NVRM.kext is missing"
+  printf 'candidate ready: %s\n' "${CAND}/NVRM.kext"
+}
+
+do_backup() {
+  say "backup (read only)"
+  mkdir -p "${BACKUP}/Extensions" "${BACKUP}/KernelCollections"
+  sudo cp -a /Library/Extensions/. "${BACKUP}/Extensions"/
+  sudo cp -a /System/Library/KernelCollections/. "${BACKUP}/KernelCollections"/
+  kextstat > "${BACKUP}/kextstat-before.txt"
+  shasum -a 256 /System/Library/KernelCollections/*.kc > "${BACKUP}/kc-before.txt"
+  local d
+  for d in /System/Library/KernelCollections /Library/KernelCollections; do
+    [ -d "${d}" ] && shasum -a 256 "${d}"/*.kc* >> "${BACKUP}/kc-before-all.txt" 2>/dev/null
+  done
+  ls -la /System/Library/KernelCollections /Library/KernelCollections > "${BACKUP}/kc-dirs.txt" 2>&1
+  if [ -d /Library/Extensions/NVRM.kext ]; then echo present > "${BACKUP}/nvrm-was-installed.txt"
+  else echo absent > "${BACKUP}/nvrm-was-installed.txt"; fi
+  nvram boot-args > "${BACKUP}/boot-args-before.txt" 2>&1 || true
+  csrutil status > "${BACKUP}/csrutil.txt" 2>&1 || true
+  printf 'backup: %s\n' "${BACKUP}"
+  printf 'send back: kextstat-before.txt kc-before-all.txt nvrm-was-installed.txt boot-args-before.txt\n'
+}
+
 do_install() {
-  say "== 安装（只替换 NVRM，加 -nvrmnogo）"
-  [[ -d "$CAND/NVRM.kext" ]] || die "没有候选 $CAND/NVRM.kext，先选 2 构建"
-  [[ -f "$BACKUP/kextstat-before.txt" ]] || die "还没有备份，先选 3 备份"
-  echo "将要执行："
-  echo "  rm -rf /Library/Extensions/NVRM.kext"
-  echo "  cp -R $CAND/NVRM.kext /Library/Extensions/NVRM.kext"
-  echo "  nvram boot-args=\"<现有> -nvrmnogo\""
-  echo "  kmutil install --update-all"
-  echo "不会运行 nvrmctl go，不会跑 Metal。"
-  [[ "$(ask '输入 YES 继续:')" == YES ]] || { warn "已取消"; return; }
+  say "install (replace NVRM only, add -nvrmnogo)"
+  [ -d "${CAND}/NVRM.kext" ] || die "no candidate at ${CAND}/NVRM.kext; run 2 first"
+  [ -f "${BACKUP}/kextstat-before.txt" ] || die "no backup yet; run 3 first"
+  printf 'will run:\n  rm -rf /Library/Extensions/NVRM.kext\n  cp -R %s/NVRM.kext /Library/Extensions/\n  nvram boot-args="<current> -nvrmnogo"\n  kmutil install --update-all\n' "${CAND}"
+  printf 'no nvrmctl go, no Metal.\n'
+  [ "$(ask 'type YES to continue:')" = "YES" ] || { warn "cancelled"; return 1; }
 
   sudo rm -rf /Library/Extensions/NVRM.kext
-  sudo cp -R "$CAND/NVRM.kext" /Library/Extensions/NVRM.kext
+  sudo cp -R "${CAND}/NVRM.kext" /Library/Extensions/NVRM.kext
   sudo chown -R root:wheel /Library/Extensions/NVRM.kext
   local current
-  current=$(nvram boot-args 2>/dev/null | sed -n 's/.*boot-args[[:space:]]*//p' || true)
-  case "$current" in
-    *-nvrmnogo*) echo "boot-args 已含 -nvrmnogo" ;;
+  current="$(nvram boot-args 2>/dev/null | sed -n 's/.*boot-args[[:space:]]*//p' || true)"
+  case "${current}" in
+    *-nvrmnogo*) echo "boot-args already contain -nvrmnogo" ;;
     *) sudo nvram boot-args="${current} -nvrmnogo" ;;
   esac
-  nvram boot-args > "$BACKUP/boot-args-after.txt" 2>&1 || true
+  nvram boot-args > "${BACKUP}/boot-args-after.txt" 2>&1 || true
   sudo kmutil install --update-all
-  say "装好了。现在重启，然后重新运行本脚本选 5 验证。"
+  say "installed. reboot now, then run this script and choose 5."
 }
 
-# ---------------------------------------------------------------- 验证
 do_verify() {
-  say "== 验证（重启后运行）"
-  kextstat | grep -Ei 'NVRM|NVAccel|NVRMFB' || warn "没有 NVRM/NVAccel/NVRMFB 被加载"
-  echo "--- NVRM 属性"
-  ioreg -rn NVRM -l 2>/dev/null | grep -E 'nvrm-(autogo|boot-hold|kext-version|pm-violation)' || echo "（读不到）"
-  echo "--- 最近 5 分钟内核日志（NVRM）"
+  say "verify (after reboot)"
+  kextstat | grep -Ei 'NVRM|NVAccel|NVRMFB' || warn "none of NVRM/NVAccel/NVRMFB is loaded"
+  printf '\n-- NVRM properties\n'
+  ioreg -rn NVRM -l 2>/dev/null | grep -E 'nvrm-(autogo|boot-hold|kext-version|pm-violation)' || echo "(not readable)"
+  printf '\n-- kernel log, last 5 min\n'
   log show --last 5m --predicate 'eventMessage CONTAINS "NVRM"' 2>/dev/null | tail -40 || true
-  echo "--- panic 记录"
-  ls -1 /Library/Logs/DiagnosticReports/*.panic 2>/dev/null | tail -3 || echo "（无）"
-  say "判据：NVRM 在 kextstat；nvrm-autogo 为 off (-nvrmnogo)；无 panic。"
+  printf '\n-- panic reports\n'
+  ls -1 /Library/Logs/DiagnosticReports/*.panic 2>/dev/null | tail -3 || echo "(none)"
+  say "pass criteria: NVRM in kextstat; nvrm-autogo = off (-nvrmnogo); no panic."
 }
 
-# ---------------------------------------------------------------- 回退
 do_rollback() {
-  say "== 回退"
-  if [[ -d "$BACKUP/Extensions/NVRM.kext" ]]; then
-    echo "将恢复备份里的 NVRM.kext"
+  say "rollback"
+  if [ -d "${BACKUP}/Extensions/NVRM.kext" ]; then
+    echo "will restore the backed-up NVRM.kext"
   else
-    echo "备份里没有旧 NVRM（本来就没装），将删除候选"
+    echo "no previous NVRM in the backup; will remove the candidate"
   fi
-  [[ "$(ask '输入 YES 继续:')" == YES ]] || { warn "已取消"; return; }
-  if [[ -d "$BACKUP/Extensions/NVRM.kext" ]]; then
+  [ "$(ask 'type YES to continue:')" = "YES" ] || { warn "cancelled"; return 1; }
+  if [ -d "${BACKUP}/Extensions/NVRM.kext" ]; then
     sudo rm -rf /Library/Extensions/NVRM.kext
-    sudo cp -R "$BACKUP/Extensions/NVRM.kext" /Library/Extensions/NVRM.kext
+    sudo cp -R "${BACKUP}/Extensions/NVRM.kext" /Library/Extensions/NVRM.kext
     sudo chown -R root:wheel /Library/Extensions/NVRM.kext
   else
     sudo rm -rf /Library/Extensions/NVRM.kext
   fi
-  if [[ -f "$BACKUP/boot-args-before.txt" ]]; then
-    sudo nvram boot-args="$(sed -n 's/.*boot-args[[:space:]]*//p' "$BACKUP/boot-args-before.txt")"
+  if [ -f "${BACKUP}/boot-args-before.txt" ]; then
+    sudo nvram boot-args="$(sed -n 's/.*boot-args[[:space:]]*//p' "${BACKUP}/boot-args-before.txt")"
   else
     sudo nvram -d boot-args
   fi
   sudo kmutil install --update-all
-  say "已回退。重启后确认 kextstat 与 $BACKUP/kextstat-before.txt 一致。"
+  say "rolled back. reboot and compare kextstat with ${BACKUP}/kextstat-before.txt"
 }
 
 menu() {
   while true; do
-    say "请选择"
+    say "menu"
     cat <<'EOF'
-  1) 环境检查（只读）
-  2) 构建候选（20-40 分钟）
-  3) 备份当前系统（只读）
-  4) 安装候选 + -nvrmnogo（需 sudo 确认）
-  5) 重启后验证
-  6) 回退
-  q) 退出
+  1) check environment (read only)
+  2) build the candidate (20-40 min)
+  3) back up the current system (read only)
+  4) install + -nvrmnogo (sudo, asks YES)
+  5) verify after reboot
+  6) roll back (sudo, asks YES)
+  q) quit
 EOF
-    case "$(ask '编号:')" in
+    case "$(ask 'choice:')" in
       1) check_env ;;
       2) build_candidate ;;
       3) do_backup ;;
@@ -166,13 +215,13 @@ EOF
       5) do_verify ;;
       6) do_rollback ;;
       q|Q) break ;;
-      *) warn "无效选择" ;;
+      *) warn "invalid choice" ;;
     esac
-    echo
-    ask '按回车回到菜单…' >/dev/null
+    printf '\n'
+    ask 'press Enter to return to the menu...' >/dev/null
   done
 }
 
 menu
-say "结束。报告在: $REPORT"
-echo "出事时的救援步骤见 U 盘里的 RECOVERY-FROM-INSTALLER.md（用 E: 安装盘启动进 Recovery 终端）。"
+say "done. report: ${REPORT}"
+printf 'recovery steps: RECOVERY-FROM-INSTALLER.md (boot the E: installer, open Terminal)\n'
