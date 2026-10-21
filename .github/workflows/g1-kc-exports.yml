@@ -41,14 +41,15 @@ jobs:
           pathlib.Path('out/requested-names.json').write_text(json.dumps(sorted(names), indent=1))
           print('requested names:', len(names))
           PY
-          # A dyld image with a real export trie is the positive control: the parser must find a known
-          # export here and must not find a name that cannot exist. (macOS 15's kernel file carries no
-          # export trie, so it cannot serve as the control.)
-          python3 tools/g1_kc_exports.py /usr/lib/libSystem.B.dylib libSystem --plain \
-            --require _malloc \
+          # Positive control: build a tiny dylib in this run, so it certainly carries an export trie.
+          # The parser must find the export and must not find a name that cannot exist.
+          printf 'int g1_export_probe(void) { return 7; }\n' > out/probe.c
+          xcrun clang -dynamiclib -o out/libprobe.dylib out/probe.c
+          python3 tools/g1_kc_exports.py out/libprobe.dylib libprobe --plain \
+            --require _g1_export_probe \
             --controls _g1_definitely_absent_symbol \
-            > out/libsystem-export-control.json 2> out/libsystem-export-control.err || true
-          cat out/libsystem-export-control.err || true
+            > out/dylib-export-control.json 2> out/dylib-export-control.err || true
+          cat out/dylib-export-control.err || true
           python3 tools/g1_kc_exports.py "$kc" com.apple.iokit.IOAcceleratorFamily2 \
             --names out/requested-names.json \
             --controls __ZTV14IOAccelSurface \
