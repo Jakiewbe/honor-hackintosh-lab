@@ -195,8 +195,7 @@ def native_providers(names, logs):
             # recorded as unverified instead of being invented.
             families[bid] = dict(info=None, definitions=definitions, plist_sha256=None,
                 identity_source='KC_FILESET_ENTRY_ID_DISK_PLIST_ABSENT')
-            (logs/(short+'.plist.txt')).write_text('INFO_PLIST_ABSENT_OBSERVED_IN_KERNEL_COLLECTION
-')
+            (logs/(short+'.plist.txt')).write_text('INFO_PLIST_ABSENT_OBSERVED_IN_KERNEL_COLLECTION\\n')
         if short in ('IOPCIFamily', 'IOACPIFamily'):
             rel = 'config/' if short == 'IOPCIFamily' else ''
             text = (path.parent/'Resources'/rel/(short+'.exports')).read_text()
