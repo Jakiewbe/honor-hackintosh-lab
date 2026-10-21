@@ -73,11 +73,8 @@ jobs:
                   lines.append('%s: %s' % (entry['class_name'], entry['status']))
                   for slot in entry.get('slots', []):
                       lines.append('  %3d %s' % (slot['slot'], slot['symbol']))
-          pathlib.Path('out/chain-summary.txt').write_text('
-'.join(lines) + '
-')
-          print('
-'.join(lines))
+          pathlib.Path('out/chain-summary.txt').write_text(chr(10).join(lines) + chr(10))
+          print(chr(10).join(lines))
           PY
 
       - name: Dump the chained-fixup records near each vtable
