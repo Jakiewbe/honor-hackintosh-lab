@@ -27,6 +27,12 @@ case "$ACTION" in
       echo absent > "$BACKUP/nvrm-was-installed.txt"
     fi
     shasum -a 256 /System/Library/KernelCollections/*.kc > "$BACKUP/kc-before.txt"
+    # The experiment writes into the auxiliary collection, not only System/Boot: record every collection
+    # the rebuild can touch, so a comparison after the fact is possible.
+    for d in /System/Library/KernelCollections /Library/KernelCollections; do
+      [[ -d "$d" ]] && shasum -a 256 "$d"/*.kc* >> "$BACKUP/kc-before-all.txt" 2>/dev/null || true
+    done
+    ls -la /System/Library/KernelCollections /Library/KernelCollections > "$BACKUP/kc-dirs.txt" 2>&1 || true
     csrutil status > "$BACKUP/csrutil.txt" 2>&1 || true
     nvram boot-args > "$BACKUP/boot-args-before.txt" 2>&1 || true
     echo "snapshot in $BACKUP; send kextstat-before.txt, kc-before.txt, boot-args-before.txt back"
