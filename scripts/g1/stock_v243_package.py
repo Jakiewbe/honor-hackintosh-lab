@@ -242,6 +242,17 @@ def run(args, report):
     for entry in json.loads((args.internal_text/'candidate-input-snapshots.json').read_text()).items():
         if base.digest(tree/entry[0]) != entry[1]:
             raise ValueError('candidate dependency changed')
+    # macOS 26 adds seven IOAccel virtuals that macOS 15.7.9 does not carry. Guarding them keeps the 15
+    # build from importing symbols the running system does not expose. The overlay is applied here, after
+    # the internal link (whose preflight requires a clean fixed input), and its hash is checked against a lock.
+    overlay = ROOT/'research/stock-v243-offscreen-20261021/iofam-macos15-layout.patch'
+    overlay_lock = json.loads((ROOT/'research/stock-v243-offscreen-20261021/iofam-lock.json').read_text())
+    if base.digest(overlay) != overlay_lock['sha256']:
+        raise ValueError('io_fam overlay differs from its lock')
+    for argv, name in ((['git','apply','--check','--unsafe-paths',overlay], 'iofam-overlay-check.txt'),
+                       (['git','apply','--unsafe-paths',overlay], 'iofam-overlay-apply.txt')):
+        if patch_run([str(v) for v in argv], tree, args.out/name):
+            raise ValueError('io_fam overlay failed: ' + name)
     products = args.work/'package-products'; products.mkdir(exist_ok=False)
     # Reuse the exact accepted NVRM compile flags, changing only local include paths
     # and language macros as in the fixed stock accelerator recipe (not executing it).
@@ -290,6 +301,8 @@ def run(args, report):
         (args.out/(name+'-Info.plist.txt')).write_bytes(info_raw)
         report['bundles'][name] = dict(info=info, plist_sha256=base.digest(bundle/'Info.plist'), **metadata)
     report['compiler_target']='15.5_FROM_EXPLICIT_SAME_RUN_ARGUMENTS_NOT_INFERRED_BINARY_MINIMUM'
+    report['iofam_overlay'] = dict(sha256=overlay_lock['sha256'],
+        scope=overlay_lock['scope'], applied=True)
     report['stage'] = 'runner-dependencies'
     all_names = {n for b in report['bundles'].values() for n in b['imports']}
     sets, actual, families, exports = native_providers(all_names, args.out)

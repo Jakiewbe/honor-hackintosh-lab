@@ -62,19 +62,6 @@ jobs:
             [[ "$(git -C "$dir" rev-parse HEAD)" == "$pin" ]]
           done
 
-      - name: Apply the macOS-15 io_fam layout overlay
-        shell: bash
-        run: |
-          set -euo pipefail
-          patch=research/stock-v243-offscreen-20261021/iofam-macos15-layout.patch
-          lock=research/stock-v243-offscreen-20261021/iofam-lock.json
-          want="$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1]))["sha256"])' "$lock")"
-          got="$(shasum -a 256 "$patch" | awk '{print $1}')"
-          [[ "$got" == "$want" ]]
-          git -C "$RUNNER_TEMP/nm" apply --check "$GITHUB_WORKSPACE/$patch"
-          git -C "$RUNNER_TEMP/nm" apply "$GITHUB_WORKSPACE/$patch"
-          echo "iofam overlay applied: $got" | tee "$RUNNER_TEMP/iofam-overlay.txt"
-
       - name: Baseline and paired internal link in the same run
         id: internal
         shell: bash
