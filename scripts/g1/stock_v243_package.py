@@ -17,7 +17,7 @@ import struct
 import sys
 
 import stock_v243_kext_link as base
-from stock_v243_internal_link import PASS as INTERNAL_PASS
+from stock_v243_internal_link import PASS as INTERNAL_PASS, patch_run
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT/'tools'))
