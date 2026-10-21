@@ -1,0 +1,942 @@
+{
+ "collection": "/System/Library/KernelCollections/SystemKernelExtensions.kc",
+ "bundle": "com.apple.iokit.IOAcceleratorFamily2",
+ "member_fileoff": 344207360,
+ "pointer_formats": [
+  11
+ ],
+ "member_segments": [
+  {
+   "name": "__TEXT",
+   "vmaddr": 344207360,
+   "vmsize": 434176,
+   "fileoff": 344207360,
+   "filesize": 434176
+  },
+  {
+   "name": "__DATA",
+   "vmaddr": 344641536,
+   "vmsize": 98304,
+   "fileoff": 344641536,
+   "filesize": 94208
+  },
+  {
+   "name": "__DATA_CONST",
+   "vmaddr": 344739840,
+   "vmsize": 12288,
+   "fileoff": 344739840,
+   "filesize": 12288
+  },
+  {
+   "name": "__LINKEDIT",
+   "vmaddr": 353058816,
+   "vmsize": 12677718,
+   "fileoff": 353058816,
+   "filesize": 12677718
+  }
+ ],
+ "chain_segments": [
+  {
+   "segment_offset": 434176,
+   "page_size": 4096,
+   "page_count": 24
+  },
+  {
+   "segment_offset": 532480,
+   "page_size": 4096,
+   "page_count": 3
+  }
+ ],
+ "classes": [
+  {
+   "class_name": "IOAccelGLContext2",
+   "vtable": "0x148b64e0",
+   "vtable_section": {
+    "name": "__const",
+    "segment": "__DATA",
+    "address": "0x148ad3e0",
+    "offset": 344642528,
+    "size": 92656
+   },
+   "kernel_symbols": 0,
+   "text_range": [
+    "0x14843000",
+    "0x148ad000"
+   ],
+   "scan": [
+    {
+     "word": 2,
+     "raw": "0x4000005485ba16",
+     "bits": 30,
+     "target": "0x1485ba16",
+     "symbol": "__ZN17IOAccelGLContext2D1Ev"
+    },
+    {
+     "word": 3,
+     "raw": "0x4000005485ba1c",
+     "bits": 30,
+     "target": "0x1485ba1c",
+     "symbol": "__ZN17IOAccelGLContext2D0Ev"
+    },
+    {
+     "word": 9,
+     "raw": "0x4000005485ba22",
+     "bits": 30,
+     "target": "0x1485ba22",
+     "symbol": "__ZNK17IOAccelGLContext212getMetaClassEv"
+    },
+    {
+     "word": 20,
+     "raw": "0x4000005484b6c6",
+     "bits": 30,
+     "target": "0x1484b6c6",
+     "symbol": "__ZN15IOAccelContext24freeEv"
+    },
+    {
+     "word": 186,
+     "raw": "0x4000005484aa24",
+     "bits": 30,
+     "target": "0x1484aa24",
+     "symbol": "__ZN15IOAccelContext25startEP9IOService"
+    },
+    {
+     "word": 187,
+     "raw": "0x4000005484abbe",
+     "bits": 30,
+     "target": "0x1484abbe",
+     "symbol": "__ZN15IOAccelContext24stopEP9IOService"
+    },
+    {
+     "word": 195,
+     "raw": "0x4000005484acc6",
+     "bits": 30,
+     "target": "0x1484acc6",
+     "symbol": "__ZN15IOAccelContext28finalizeEj"
+    },
+    {
+     "word": 208,
+     "raw": "0x4000005484a9dc",
+     "bits": 30,
+     "target": "0x1484a9dc",
+     "symbol": "__ZN15IOAccelContext26attachEP9IOService"
+    },
+    {
+     "word": 268,
+     "raw": "0x4000005485bd36",
+     "bits": 30,
+     "target": "0x1485bd36",
+     "symbol": "__ZN17IOAccelGLContext214externalMethodEjP25IOExternalMethodArgumentsP24IOExternalMethodDispatchP8OSObjectPv"
+    },
+    {
+     "word": 288,
+     "raw": "0x4000005484ac92",
+     "bits": 30,
+     "target": "0x1484ac92",
+     "symbol": "__ZN15IOAccelContext211clientCloseEv"
+    },
+    {
+     "word": 293,
+     "raw": "0x4000005484b6f6",
+     "bits": 30,
+     "target": "0x1484b6f6",
+     "symbol": "__ZN15IOAccelContext213connectClientEP12IOUserClient"
+    },
+    {
+     "word": 294,
+     "raw": "0x4000005484ba0c",
+     "bits": 30,
+     "target": "0x1484ba0c",
+     "symbol": "__ZN15IOAccelContext219clientMemoryForTypeEjPjPP18IOMemoryDescriptor"
+    },
+    {
+     "word": 298,
+     "raw": "0x4000005484b94c",
+     "bits": 30,
+     "target": "0x1484b94c",
+     "symbol": "__ZN15IOAccelContext226getTargetAndMethodForIndexEPP9IOServicej"
+    },
+    {
+     "word": 302,
+     "raw": "0x4000005485ec48",
+     "bits": 30,
+     "target": "0x1485ec48",
+     "symbol": "__ZNK15IOAccelContext213getOwningTaskEv"
+    },
+    {
+     "word": 303,
+     "raw": "0x4000005485ec56",
+     "bits": 30,
+     "target": "0x1485ec56",
+     "symbol": "__ZNK15IOAccelContext210getGPUTaskEv"
+    },
+    {
+     "word": 304,
+     "raw": "0x4000005485ec64",
+     "bits": 30,
+     "target": "0x1485ec64",
+     "symbol": "__ZNK15IOAccelContext216getOwningTaskPidEv"
+    },
+    {
+     "word": 305,
+     "raw": "0x4000005484e1c4",
+     "bits": 30,
+     "target": "0x1484e1c4",
+     "symbol": "__ZN15IOAccelContext223affectedByHardwareResetEbj"
+    },
+    {
+     "word": 306,
+     "raw": "0x4000005485ec70",
+     "bits": 30,
+     "target": "0x1485ec70",
+     "symbol": "__ZN17IOAccelSubmitter219retireCommandBufferEP17IOAccelEventFence"
+    },
+    {
+     "word": 307,
+     "raw": "0x4000005484e222",
+     "bits": 30,
+     "target": "0x1484e222",
+     "symbol": "__ZN15IOAccelContext227shouldHardwareCommandNoopedEv"
+    },
+    {
+     "word": 308,
+     "raw": "0x4000005484adc2",
+     "bits": 30,
+     "target": "0x1484adc2",
+     "symbol": "__ZN15IOAccelContext220orphanClientMappingsEP5OSSet"
+    },
+    {
+     "word": 309,
+     "raw": "0x4000005485b916",
+     "bits": 30,
+     "target": "0x1485b916",
+     "symbol": "__ZN17IOAccelSubmitter220setProtectionOptionsEy"
+    },
+    {
+     "word": 310,
+     "raw": "0x4000005485ec76",
+     "bits": 30,
+     "target": "0x1485ec76",
+     "symbol": "__ZN17IOAccelSubmitter218setSubmissionErrorEj"
+    },
+    {
+     "word": 311,
+     "raw": "0x4000005485b79e",
+     "bits": 30,
+     "target": "0x1485b79e",
+     "symbol": "__ZN17IOAccelSubmitter226_RESERVEDIOAccelSubmitter0Ev"
+    },
+    {
+     "word": 312,
+     "raw": "0x4000005485b7b2",
+     "bits": 30,
+     "target": "0x1485b7b2",
+     "symbol": "__ZN17IOAccelSubmitter226_RESERVEDIOAccelSubmitter1Ev"
+    },
+    {
+     "word": 313,
+     "raw": "0x4000005485b7c8",
+     "bits": 30,
+     "target": "0x1485b7c8",
+     "symbol": "__ZN17IOAccelSubmitter226_RESERVEDIOAccelSubmitter2Ev"
+    },
+    {
+     "word": 314,
+     "raw": "0x4000005485b7de",
+     "bits": 30,
+     "target": "0x1485b7de",
+     "symbol": "__ZN17IOAccelSubmitter226_RESERVEDIOAccelSubmitter3Ev"
+    },
+    {
+     "word": 315,
+     "raw": "0x4000005485b7f4",
+     "bits": 30,
+     "target": "0x1485b7f4",
+     "symbol": "__ZN17IOAccelSubmitter226_RESERVEDIOAccelSubmitter4Ev"
+    },
+    {
+     "word": 316,
+     "raw": "0x4000005485b80a",
+     "bits": 30,
+     "target": "0x1485b80a",
+     "symbol": "__ZN17IOAccelSubmitter226_RESERVEDIOAccelSubmitter5Ev"
+    },
+    {
+     "word": 317,
+     "raw": "0x4000005485ec7c",
+     "bits": 30,
+     "target": "0x1485ec7c",
+     "symbol": "__ZNK17IOAccelSubmitter223isOpportunisticWorkloadEv"
+    },
+    {
+     "word": 318,
+     "raw": "0x4000005485ba96",
+     "bits": 30,
+     "target": "0x1485ba96",
+     "symbol": "__ZN17IOAccelGLContext212contextStartEv"
+    },
+    {
+     "word": 319,
+     "raw": "0x4000005485bc52",
+     "bits": 30,
+     "target": "0x1485bc52",
+     "symbol": "__ZN17IOAccelGLContext211contextStopEv"
+    },
+    {
+     "word": 320,
+     "raw": "0x4000005484e142",
+     "bits": 30,
+     "target": "0x1484e142",
+     "symbol": "__ZN15IOAccelContext219getDataBufferLimitsEv"
+    },
+    {
+     "word": 321,
+     "raw": "0x4000005485e6cc",
+     "bits": 30,
+     "target": "0x1485e6cc",
+     "symbol": "__ZN17IOAccelGLContext214context_finishEv"
+    },
+    {
+     "word": 322,
+     "raw": "0x4000005484c186",
+     "bits": 30,
+     "target": "0x1484c186",
+     "symbol": "__ZN15IOAccelContext224initSidebandBufferHeaderEP27IOAccelSidebandBufferHeaderyy"
+    },
+    {
+     "word": 323,
+     "raw": "0x4000005484caa4",
+     "bits": 30,
+     "target": "0x1484caa4",
+     "symbol": "__ZN15IOAccelContext221processSidebandBufferEP24IOAccelCommandDescriptorb"
+    },
+    {
+     "word": 324,
+     "raw": "0x4000005485c4c0",
+     "bits": 30,
+     "target": "0x1485c4c0",
+     "symbol": "__ZN17IOAccelGLContext220processSidebandTokenER24IOAccelCommandStreamInfo"
+    },
+    {
+     "word": 325,
+     "raw": "0x4000005485ccf0",
+     "bits": 30,
+     "target": "0x1485ccf0",
+     "symbol": "__ZN17IOAccelGLContext220discardSidebandTokenER24IOAccelCommandStreamInfo"
+    },
+    {
+     "word": 326,
+     "raw": "0x4000005485ec84",
+     "bits": 30,
+     "target": "0x1485ec84",
+     "symbol": "__ZN15IOAccelContext220postTokenSanityCheckER24IOAccelCommandStreamInfo"
+    },
+    {
+     "word": 327,
+     "raw": "0x4000005485bd82",
+     "bits": 30,
+     "target": "0x1485bd82",
+     "symbol": "__ZN17IOAccelGLContext218processDataBuffersEj"
+    },
+    {
+     "word": 328,
+     "raw": "0x4000005484c168",
+     "bits": 30,
+     "target": "0x1484c168",
+     "symbol": "__ZN15IOAccelContext218beginCommandStreamER24IOAccelCommandStreamInfo"
+    },
+    {
+     "word": 329,
+     "raw": "0x4000005484c16e",
+     "bits": 30,
+     "target": "0x1484c16e",
+     "symbol": "__ZN15IOAccelContext216endCommandStreamER24IOAccelCommandStreamInfo"
+    },
+    {
+     "word": 330,
+     "raw": "0x4000005484df60",
+     "bits": 30,
+     "target": "0x1484df60",
+     "symbol": "__ZN15IOAccelContext212bindResourceER24IOAccelCommandStreamInfoP16IOAccelResource2bP15IOAccelChannel2jb"
+    },
+    {
+     "word": 331,
+     "raw": "0x4000005484e022",
+     "bits": 30,
+     "target": "0x1484e022",
+     "symbol": "__ZN15IOAccelContext214unbindResourceER24IOAccelCommandStreamInfoP16IOAccelResource2P15IOAccelChannel2"
+    },
+    {
+     "word": 332,
+     "raw": "0x4000005484cde0",
+     "bits": 30,
+     "target": "0x1484cde0",
+     "symbol": "__ZN15IOAccelContext223compactCurrentVidMemoryEv"
+    },
+    {
+     "word": 333,
+     "raw": "0x4000005484e04c",
+     "bits": 30,
+     "target": "0x1484e04c",
+     "symbol": "__ZN15IOAccelContext216prepareResourcesEPP16IOAccelResource2i"
+    },
+    {
+     "word": 334,
+     "raw": "0x4000005484cf98",
+     "bits": 30,
+     "target": "0x1484cf98",
+     "symbol": "__ZN15IOAccelContext222compactCurrentMappingsEP16IOAccelMemoryMap"
+    },
+    {
+     "word": 335,
+     "raw": "0x4000005484d2b8",
+     "bits": 30,
+     "target": "0x1484d2b8",
+     "symbol": "__ZN15IOAccelContext213getDataBufferEP29IOAccelContextGetDataBufferInP30IOAccelContextGetDataBufferOutP22IOAccelResourcePrivatey"
+    },
+    {
+     "word": 336,
+     "raw": "0x4000005484dcea",
+     "bits": 30,
+     "target": "0x1484dcea",
+     "symbol": "__ZN15IOAccelContext218allocOneDataBufferEbj"
+    },
+    {
+     "word": 337,
+     "raw": "0x4000005485ec8a",
+     "bits": 30,
+     "target": "0x1485ec8a",
+     "symbol": "__ZN15IOAccelContext220getDataBufferPrivateEP16IOAccelResource2P22IOAccelResourcePrivatey"
+    },
+    {
+     "word": 338,
+     "raw": "0x4000005485ec90",
+     "bits": 30,
+     "target": "0x1485ec90",
+     "symbol": "__ZN15IOAccelContext218validateDataBufferEyP24IOBufferMemoryDescriptorP16IOAccelResource2"
+    },
+    {
+     "word": 339,
+     "raw": "0x4000005484b946",
+     "bits": 30,
+     "target": "0x1484b946",
+     "symbol": "__ZN15IOAccelContext221populateContextConfigEP20IOAccelContextConfig"
+    },
+    {
+     "word": 340,
+     "raw": "0x4000005484c174",
+     "bits": 30,
+     "target": "0x1484c174",
+     "symbol": "__ZN15IOAccelContext222addDataBufferToChannelEP16IOAccelResource2j"
+    },
+    {
+     "word": 341,
+     "raw": "0x4000005484c17a",
+     "bits": 30,
+     "target": "0x1484c17a",
+     "symbol": "__ZN15IOAccelContext227removeDataBufferFromChannelEP16IOAccelResource2j"
+    },
+    {
+     "word": 342,
+     "raw": "0x4000005484c180",
+     "bits": 30,
+     "target": "0x1484c180",
+     "symbol": "__ZN15IOAccelContext232removeCurrentResourceFromChannelEP16IOAccelResource2j"
+    },
+    {
+     "word": 343,
+     "raw": "0x4000005485ec98",
+     "bits": 30,
+     "target": "0x1485ec98",
+     "symbol": "__ZN15IOAccelContext210invalidateEv"
+    },
+    {
+     "word": 344,
+     "raw": "0x4000005485ec9e",
+     "bits": 30,
+     "target": "0x1485ec9e",
+     "symbol": "__ZN15IOAccelContext217getFrameDelimiterEv"
+    },
+    {
+     "word": 345,
+     "raw": "0x4000005484e63c",
+     "bits": 30,
+     "target": "0x1484e63c",
+     "symbol": "__ZN15IOAccelContext222canSubmitCommandBufferEv"
+    },
+    {
+     "word": 346,
+     "raw": "0x4000005484e644",
+     "bits": 30,
+     "target": "0x1484e644",
+     "symbol": "__ZN15IOAccelContext224pauseSubmitCommandBufferEv"
+    },
+    {
+     "word": 347,
+     "raw": "0x4000005484e654",
+     "bits": 30,
+     "target": "0x1484e654",
+     "symbol": "__ZN15IOAccelContext215getPriorityInfoEv"
+    },
+    {
+     "word": 348,
+     "raw": "0x4000005484e660",
+     "bits": 30,
+     "target": "0x1484e660",
+     "symbol": "__ZN15IOAccelContext224_RESERVEDIOAccelContext0Ev"
+    },
+    {
+     "word": 349,
+     "raw": "0x4000005484e674",
+     "bits": 30,
+     "target": "0x1484e674",
+     "symbol": "__ZN15IOAccelContext224_RESERVEDIOAccelContext1Ev"
+    },
+    {
+     "word": 350,
+     "raw": "0x4000005484e68a",
+     "bits": 30,
+     "target": "0x1484e68a",
+     "symbol": "__ZN15IOAccelContext224_RESERVEDIOAccelContext2Ev"
+    },
+    {
+     "word": 351,
+     "raw": "0x4000005484e6a0",
+     "bits": 30,
+     "target": "0x1484e6a0",
+     "symbol": "__ZN15IOAccelContext224_RESERVEDIOAccelContext3Ev"
+    },
+    {
+     "word": 352,
+     "raw": "0x4000005484e6b6",
+     "bits": 30,
+     "target": "0x1484e6b6",
+     "symbol": "__ZN15IOAccelContext224_RESERVEDIOAccelContext4Ev"
+    },
+    {
+     "word": 353,
+     "raw": "0x4000005484e6cc",
+     "bits": 30,
+     "target": "0x1484e6cc",
+     "symbol": "__ZN15IOAccelContext224_RESERVEDIOAccelContext5Ev"
+    },
+    {
+     "word": 354,
+     "raw": "0x4000005485cd60",
+     "bits": 30,
+     "target": "0x1485cd60",
+     "symbol": "__ZNK17IOAccelGLContext217getSurfaceReqBitsEv"
+    },
+    {
+     "word": 355,
+     "raw": "0x5485cd6c",
+     "bits": 30,
+     "target": "0x1485cd6c",
+     "symbol": "__ZNK17IOAccelGLContext220requiresBackingStoreEv"
+    },
+    {
+     "word": 356,
+     "raw": "0x4000005485cd9c",
+     "bits": 30,
+     "target": "0x1485cd9c",
+     "symbol": "__ZN17IOAccelGLContext227set_compatible_surface_modeEPyyj"
+    },
+    {
+     "word": 357,
+     "raw": "0x4000005485cd28",
+     "bits": 30,
+     "target": "0x1485cd28",
+     "symbol": "__ZN17IOAccelGLContext213removeSurfaceEv"
+    },
+    {
+     "word": 358,
+     "raw": "0x4000005485cd78",
+     "bits": 30,
+     "target": "0x1485cd78",
+     "symbol": "__ZNK17IOAccelGLContext219allowsExclusiveModeEv"
+    },
+    {
+     "word": 359,
+     "raw": "0x4000005485cd80",
+     "bits": 30,
+     "target": "0x1485cd80",
+     "symbol": "__ZNK17IOAccelGLContext216isTripleBufferedEv"
+    },
+    {
+     "word": 360,
+     "raw": "0x4000005485cd8c",
+     "bits": 30,
+     "target": "0x1485cd8c",
+     "symbol": "__ZNK17IOAccelGLContext215contextModeBitsEv"
+    },
+    {
+     "word": 361,
+     "raw": "0x4000005484e3ec",
+     "bits": 30,
+     "target": "0x1484e3ec",
+     "symbol": "__ZN15IOAccelContext225describeDriverAllocationsEP21IOAccelAllocationInfo"
+    },
+    {
+     "word": 365,
+     "raw": "0x4000005485e734",
+     "bits": 30,
+     "target": "0x1485e734",
+     "symbol": "__ZN17IOAccelGLContext226sleepForSwapCompleteNoLockEj"
+    },
+    {
+     "word": 366,
+     "raw": "0x4000005485e72e",
+     "bits": 30,
+     "target": "0x1485e72e",
+     "symbol": "__ZN17IOAccelGLContext228addVendorSurfaceRequiredBitsEy"
+    },
+    {
+     "word": 368,
+     "raw": "0x4000005485e768",
+     "bits": 30,
+     "target": "0x1485e768",
+     "symbol": "__ZN17IOAccelGLContext211processSwapE7eDoSwap"
+    },
+    {
+     "word": 369,
+     "raw": "0x4000005485ebbc",
+     "bits": 30,
+     "target": "0x1485ebbc",
+     "symbol": "__ZN17IOAccelGLContext226_RESERVEDIOAccelGLContext0Ev"
+    },
+    {
+     "word": 370,
+     "raw": "0x4000005485ebd0",
+     "bits": 30,
+     "target": "0x1485ebd0",
+     "symbol": "__ZN17IOAccelGLContext226_RESERVEDIOAccelGLContext1Ev"
+    },
+    {
+     "word": 371,
+     "raw": "0x4000005485ebe6",
+     "bits": 30,
+     "target": "0x1485ebe6",
+     "symbol": "__ZN17IOAccelGLContext226_RESERVEDIOAccelGLContext2Ev"
+    },
+    {
+     "word": 372,
+     "raw": "0x4000005485ebfc",
+     "bits": 30,
+     "target": "0x1485ebfc",
+     "symbol": "__ZN17IOAccelGLContext226_RESERVEDIOAccelGLContext3Ev"
+    },
+    {
+     "word": 373,
+     "raw": "0x4000005485ec12",
+     "bits": 30,
+     "target": "0x1485ec12",
+     "symbol": "__ZN17IOAccelGLContext226_RESERVEDIOAccelGLContext4Ev"
+    },
+    {
+     "word": 374,
+     "raw": "0x10000005485ec28",
+     "bits": 30,
+     "target": "0x1485ec28",
+     "symbol": "__ZN17IOAccelGLContext226_RESERVEDIOAccelGLContext5Ev"
+    },
+    {
+     "word": 378,
+     "raw": "0x4000005485b9e2",
+     "bits": 30,
+     "target": "0x1485b9e2",
+     "symbol": "__ZN17IOAccelGLContext29MetaClassD1Ev"
+    },
+    {
+     "word": 379,
+     "raw": "0x4000005485ec3e",
+     "bits": 30,
+     "target": "0x1485ec3e",
+     "symbol": "__ZN17IOAccelGLContext29MetaClassD0Ev"
+    },
+    {
+     "word": 395,
+     "raw": "0x4000005485ba62",
+     "bits": 30,
+     "target": "0x1485ba62",
+     "symbol": "__ZNK17IOAccelGLContext29MetaClass5allocEv"
+    },
+    {
+     "word": 406,
+     "raw": "0xc000005485bbb6",
+     "bits": 30,
+     "target": "0x1485bbb6",
+     "symbol": "__ZN17IOAccelGLContext213s_set_surfaceEPS_PvP25IOExternalMethodArguments"
+    },
+    {
+     "word": 409,
+     "raw": "0xc000005485bbc4",
+     "bits": 30,
+     "target": "0x1485bbc4",
+     "symbol": "__ZN17IOAccelGLContext231s_set_surface_get_config_statusEPS_PvP25IOExternalMethodArguments"
+    },
+    {
+     "word": 412,
+     "raw": "0xc000005485bbd6",
+     "bits": 30,
+     "target": "0x1485bbd6",
+     "symbol": "__ZN17IOAccelGLContext215s_set_swap_rectEPS_PvP25IOExternalMethodArguments"
+    },
+    {
+     "word": 415,
+     "raw": "0xc000005485bc0e",
+     "bits": 30,
+     "target": "0x1485bc0e",
+     "symbol": "__ZN17IOAccelGLContext219s_set_swap_intervalEPS_PvP25IOExternalMethodArguments"
+    },
+    {
+     "word": 418,
+     "raw": "0xc000005485bc30",
+     "bits": 30,
+     "target": "0x1485bc30",
+     "symbol": "__ZN17IOAccelGLContext228s_set_surface_volatile_stateEPS_PvP25IOExternalMethodArguments"
+    },
+    {
+     "word": 421,
+     "raw": "0xc000005485bc44",
+     "bits": 30,
+     "target": "0x1485bc44",
+     "symbol": "__ZN17IOAccelGLContext213s_read_bufferEPS_PvP25IOExternalMethodArguments"
+    },
+    {
+     "word": 428,
+     "raw": "0x4000005485ed70",
+     "bits": 30,
+     "target": "0x1485ed70",
+     "symbol": "__ZN24IOAccelGPURestartReport2D1Ev"
+    },
+    {
+     "word": 429,
+     "raw": "0x4000005485ed7a",
+     "bits": 30,
+     "target": "0x1485ed7a",
+     "symbol": "__ZN24IOAccelGPURestartReport2D0Ev"
+    },
+    {
+     "word": 435,
+     "raw": "0x4000005485edba",
+     "bits": 30,
+     "target": "0x1485edba",
+     "symbol": "__ZNK24IOAccelGPURestartReport212getMetaClassEv"
+    },
+    {
+     "word": 667,
+     "raw": "0x4000005485eeb6",
+     "bits": 30,
+     "target": "0x1485eeb6",
+     "symbol": "__ZN24IOAccelGPURestartReport213newUserClientEP4taskPvjPP12IOUserClient"
+    },
+    {
+     "word": 697,
+     "raw": "0x4000005485ed1c",
+     "bits": 30,
+     "target": "0x1485ed1c",
+     "symbol": "__ZN24IOAccelGPURestartReport29MetaClassD1Ev"
+    },
+    {
+     "word": 698,
+     "raw": "0x4000005485eed6",
+     "bits": 30,
+     "target": "0x1485eed6",
+     "symbol": "__ZN24IOAccelGPURestartReport29MetaClassD0Ev"
+    },
+    {
+     "word": 714,
+     "raw": "0x4000005485edfa",
+     "bits": 30,
+     "target": "0x1485edfa",
+     "symbol": "__ZNK24IOAccelGPURestartReport29MetaClass5allocEv"
+    },
+    {
+     "word": 728,
+     "raw": "0x400000548606fa",
+     "bits": 30,
+     "target": "0x148606fa",
+     "symbol": "__ZN22IOAccelBlockFencePort2D1Ev"
+    },
+    {
+     "word": 729,
+     "raw": "0x40000054860704",
+     "bits": 30,
+     "target": "0x14860704",
+     "symbol": "__ZN22IOAccelBlockFencePort2D0Ev"
+    },
+    {
+     "word": 735,
+     "raw": "0x40000054860744",
+     "bits": 30,
+     "target": "0x14860744",
+     "symbol": "__ZNK22IOAccelBlockFencePort212getMetaClassEv"
+    },
+    {
+     "word": 746,
+     "raw": "0x4000005486088a",
+     "bits": 30,
+     "target": "0x1486088a",
+     "symbol": "__ZN22IOAccelBlockFencePort24freeEv"
+    },
+    {
+     "word": 763,
+     "raw": "0x100000054860840",
+     "bits": 30,
+     "target": "0x14860840",
+     "symbol": "__ZN22IOAccelBlockFencePort218initWithAsyncRef64EPy"
+    },
+    {
+     "word": 767,
+     "raw": "0x400000548606a6",
+     "bits": 30,
+     "target": "0x148606a6",
+     "symbol": "__ZN22IOAccelBlockFencePort29MetaClassD1Ev"
+    },
+    {
+     "word": 768,
+     "raw": "0x4000005486237e",
+     "bits": 30,
+     "target": "0x1486237e",
+     "symbol": "__ZN22IOAccelBlockFencePort29MetaClassD0Ev"
+    },
+    {
+     "word": 784,
+     "raw": "0x40000054860784",
+     "bits": 30,
+     "target": "0x14860784",
+     "symbol": "__ZNK22IOAccelBlockFencePort29MetaClass5allocEv"
+    },
+    {
+     "word": 798,
+     "raw": "0x4000005486091e",
+     "bits": 30,
+     "target": "0x1486091e",
+     "symbol": "__ZN17IOAccelEventFenceD1Ev"
+    },
+    {
+     "word": 799,
+     "raw": "0x40000054860924",
+     "bits": 30,
+     "target": "0x14860924",
+     "symbol": "__ZN17IOAccelEventFenceD0Ev"
+    },
+    {
+     "word": 805,
+     "raw": "0x4000005486092a",
+     "bits": 30,
+     "target": "0x1486092a",
+     "symbol": "__ZNK17IOAccelEventFence12getMetaClassEv"
+    },
+    {
+     "word": 816,
+     "raw": "0x40000054860a0a",
+     "bits": 30,
+     "target": "0x14860a0a",
+     "symbol": "__ZN17IOAccelEventFence4freeEv"
+    },
+    {
+     "word": 833,
+     "raw": "0x4000005486099e",
+     "bits": 30,
+     "target": "0x1486099e",
+     "symbol": "__ZN17IOAccelEventFence4initEP22IOGraphicsAccelerator2P17IOAccelSubmitter2"
+    },
+    {
+     "word": 838,
+     "raw": "0x400000548608ea",
+     "bits": 30,
+     "target": "0x148608ea",
+     "symbol": "__ZN17IOAccelEventFence9MetaClassD1Ev"
+    },
+    {
+     "word": 839,
+     "raw": "0x40000054862388",
+     "bits": 30,
+     "target": "0x14862388",
+     "symbol": "__ZN17IOAccelEventFence9MetaClassD0Ev"
+    },
+    {
+     "word": 855,
+     "raw": "0x4000005486096a",
+     "bits": 30,
+     "target": "0x1486096a",
+     "symbol": "__ZNK17IOAccelEventFence9MetaClass5allocEv"
+    },
+    {
+     "word": 869,
+     "raw": "0x40000054860aa2",
+     "bits": 30,
+     "target": "0x14860aa2",
+     "symbol": "__ZN17IOAccelBlockFenceD1Ev"
+    },
+    {
+     "word": 870,
+     "raw": "0x40000054860aac",
+     "bits": 30,
+     "target": "0x14860aac",
+     "symbol": "__ZN17IOAccelBlockFenceD0Ev"
+    },
+    {
+     "word": 876,
+     "raw": "0x40000054860aec",
+     "bits": 30,
+     "target": "0x14860aec",
+     "symbol": "__ZNK17IOAccelBlockFence12getMetaClassEv"
+    },
+    {
+     "word": 887,
+     "raw": "0x40000054860c40",
+     "bits": 30,
+     "target": "0x14860c40",
+     "symbol": "__ZN17IOAccelBlockFence4freeEv"
+    }
+   ],
+   "probe": [
+    {
+     "slot": 0,
+     "raw": "0x4000005485ba16",
+     "raw_symbol": "UNRESOLVED",
+     "nearby": [],
+     "decoded": null
+    },
+    {
+     "slot": 1,
+     "raw": "0x4000005485ba1c",
+     "raw_symbol": "UNRESOLVED",
+     "nearby": [],
+     "decoded": null
+    },
+    {
+     "slot": 2,
+     "raw": "0x4000000094b860",
+     "raw_symbol": "UNRESOLVED",
+     "nearby": [],
+     "decoded": null
+    },
+    {
+     "slot": 3,
+     "raw": "0x4000000094b880",
+     "raw_symbol": "UNRESOLVED",
+     "nearby": [],
+     "decoded": null
+    },
+    {
+     "slot": 4,
+     "raw": "0x4000000094b890",
+     "raw_symbol": "UNRESOLVED",
+     "nearby": [],
+     "decoded": null
+    },
+    {
+     "slot": 5,
+     "raw": "0x4000000094b8a0",
+     "raw_symbol": "UNRESOLVED",
+     "nearby": [],
+     "decoded": null
+    }
+   ],
+   "status": "CHAIN_FAILED",
+   "slots": []
+  }
+ ]
+}

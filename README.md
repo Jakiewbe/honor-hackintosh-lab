@@ -1,3 +1,5 @@
+> **2026-10-21 独立审计整改进行中**：已解包复算run39585922948 / a25d2f5的三组件链接与导入478/478/884，20个local-only名称绑定40条原始nlist、KC哈希/UUID，仍非外部导出证明；七个enum导入已绑定真实NVAccel。新门禁直接测试生产路径，子进程失败/未解析/身份变异/缺依赖负控通过；本地109项。历史vtable不再替代外部符号解析，新逐类有界取证待原生。撤回不可靠KC/GPU命令，A只读脚本未在设备执行；恢复、导出、完整ABI、stop/PM仍阻塞。恢复两个工作流仅手动触发。当前PRE-DEVICE STATIC INTEGRATION—CONDITIONAL PASS，设备NO-GO。见[整改与原始证据](research/stock-v243-audit-20261021/REVIEW.md)。
+
 > **2026-10-21 当前里程碑：`PRE-DEVICE STATIC INTEGRATION — CONDITIONAL PASS`**（独立审计后修订）。
 > 编译、链接、符号归因、`kextutil -n`、`IOAccelSurface` vtable 关键区间（303-326）都有原生证据；
 > 但 20 个 local-only 导入的导出状态、完整 ABI、加载器门禁的 fail-closed 性质、以及 KC 回退能力未关闭，

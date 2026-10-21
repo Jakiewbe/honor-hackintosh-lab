@@ -1,0 +1,5 @@
+IOAccelContext2: CHAIN_FAILED
+IOAccelGLContext2: CHAIN_FAILED
+chain-IOAccelLegacyDisplayMachine.json: UNREADABLE Expecting value: line 1 column 1 (char 0)
+IOAccelLegacyDisplayPipe: CHAIN_FAILED
+IOAccelSurface: CHAIN_FAILED

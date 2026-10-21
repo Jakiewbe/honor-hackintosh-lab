@@ -1,0 +1,185 @@
+{
+  "run_id": 39585922948,
+  "head_sha": "a25d2f54b22a71d4f1dbfec0778d0792a00c068d",
+  "event": "push",
+  "conclusion": "success",
+  "artifact_id": 12339424975,
+  "name": "g1-stock-v243-package-text",
+  "archive_sha256": "4cb3297a0bde218e9506cabe3bdc79a4d52948046ced9fe291dc154bd9cf26bd",
+  "archive_bytes": 962358,
+  "members": {
+    "IOACPIFamily.exports.txt": {
+      "bytes": 5091,
+      "sha256": "c7552a9cc6b3448a4a3bb0e7625206289486dd3adc8b3443a7ae960c3a02a93b"
+    },
+    "IOACPIFamily.plist.txt": {
+      "bytes": 1936,
+      "sha256": "6075eb0c2d536ea9fce975623a80946fa570569448c41f558f8526520ca9a497"
+    },
+    "IOAcceleratorFamily2.plist.txt": {
+      "bytes": 2389,
+      "sha256": "7aa82a7505c7e49a115ba1beda77121c290072460ce0796fbc42193174d0d98d"
+    },
+    "IOGraphicsFamily.plist.txt": {
+      "bytes": 49,
+      "sha256": "169abef01922e9367c806ac10811c0757f16841717c5638974d7d119912dc993"
+    },
+    "IOPCIFamily.exports.txt": {
+      "bytes": 17470,
+      "sha256": "97a9f76d102f57a297a252e3d29f6e7abccd233e3f3e7681d2a78799ffc07fbe"
+    },
+    "IOPCIFamily.plist.txt": {
+      "bytes": 3032,
+      "sha256": "b98c093371bd167799f2a4922c54997b17586163050279df95dd0e3622664c8c"
+    },
+    "IOSurface.plist.txt": {
+      "bytes": 2422,
+      "sha256": "be78a2e2eb030e79cc70b1078093c267dbb8a575dbf70eacd7da322d86dc430a"
+    },
+    "NVAccel-Info.plist.txt": {
+      "bytes": 1995,
+      "sha256": "bc0a5ab6303e1ac0dd2b3f613fba6bd6223cdf087eab5e5cf0a1b0465dc53df2"
+    },
+    "NVAccel-compile.txt": {
+      "bytes": 30256,
+      "sha256": "0347db77161a5eb7a29409f1bbb879f5372184f4e8fb11b4704cb32ef7d9281b"
+    },
+    "NVAccel-deps.txt": {
+      "bytes": 4203,
+      "sha256": "2c9f48137061c271b2d20617a1fedff52f373dd99db35f62988b8f2ef382a622"
+    },
+    "NVAccel-kextutil.txt": {
+      "bytes": 161,
+      "sha256": "e2a2b848e4a9282096d4b3d522b169db3b798828ae82edc3d6603e401b02c965"
+    },
+    "NVAccel-ld.txt": {
+      "bytes": 434,
+      "sha256": "292028fb069f1e94fc1273cc7045ffa6d239f99d86d93db3ff4197fa95abcb1d"
+    },
+    "NVAccel-nm.txt": {
+      "bytes": 139163,
+      "sha256": "8d2441de4e73d3608cd836f6b9c834ee6d8c6eb75de1fd98137fb7909d5258fd"
+    },
+    "NVAccel-otool.txt": {
+      "bytes": 3755,
+      "sha256": "a243c3865ff9bcc292284b1750e095f3979ca5b7f3f582591632137a7e3c8628"
+    },
+    "NVAccel-plutil.txt": {
+      "bytes": 235,
+      "sha256": "34bfc4b8487e5296e0b04f2db87910f0a3c83c11cd855a4cbbab101cc01897e4"
+    },
+    "NVAccel-post.d": {
+      "bytes": 61210,
+      "sha256": "bc5289639ad67160bae08c89a0cdd18d21d408eae7ebd638e663af12a1d6bd53"
+    },
+    "NVAccel-pre.d": {
+      "bytes": 61210,
+      "sha256": "bc5289639ad67160bae08c89a0cdd18d21d408eae7ebd638e663af12a1d6bd53"
+    },
+    "NVAccel-providers.json": {
+      "bytes": 413366,
+      "sha256": "36aaf6e4f740455dfd77e32ceec34b6d6566960d24920094c6301b2eba346925"
+    },
+    "NVRM-Info.plist.txt": {
+      "bytes": 2444,
+      "sha256": "934914c01b15ad266fa4ff2f62e03671e2bc6849660564710bbebfc429ac91b6"
+    },
+    "NVRM-kextutil.txt": {
+      "bytes": 158,
+      "sha256": "ed12d79c636fee0bf83de2a7a634dc7262c9b621f241392be1f84240d5ad201a"
+    },
+    "NVRM-nm.txt": {
+      "bytes": 2886017,
+      "sha256": "5918814e798ad4dc91f5dd54f065c2dd6c3e6a86fe6d552048dd30e295debd44"
+    },
+    "NVRM-otool.txt": {
+      "bytes": 4016,
+      "sha256": "9cc41543815ad0ddfe35e6837b98c559b4e073d0ab4175fb70dd63584fd45639"
+    },
+    "NVRM-plutil.txt": {
+      "bytes": 229,
+      "sha256": "842785d613974e3d296bafc7ce4e0e6b73e9224cdaa7f7d0c41490373047cfcb"
+    },
+    "NVRM-providers.json": {
+      "bytes": 204607,
+      "sha256": "89b50eaaab01ba85a0bd32ae7364e39b20537ccd44e796d65fd9b31aab7384d5"
+    },
+    "NVRMFB-Info.plist.txt": {
+      "bytes": 3145,
+      "sha256": "151db446df07fd3043038332f6fd080e8065d4118c285f6a6dcbc0d4dc8b9a1c"
+    },
+    "NVRMFB-compile.txt": {
+      "bytes": 17911,
+      "sha256": "f6f46ce855ba53ac64884fc885f686bb1d74c1b786e08f54bb18c70f95f31ad1"
+    },
+    "NVRMFB-deps.txt": {
+      "bytes": 4198,
+      "sha256": "38631d4b3afb61a7c0283f6d08f4066f18fa8345361dd70f1e414ea4e8ab3fb9"
+    },
+    "NVRMFB-kextutil.txt": {
+      "bytes": 160,
+      "sha256": "2ec51339d5ccd2b19b213598caeb6a7ad390feaad260b971ec8cd1065332ada0"
+    },
+    "NVRMFB-ld.txt": {
+      "bytes": 432,
+      "sha256": "e0d48669cc77dcea9f875ea337edd75eeb15b19f75a394fbf2b44d65a0d518d8"
+    },
+    "NVRMFB-nm.txt": {
+      "bytes": 73834,
+      "sha256": "5b972a94f2c0c73312e7cfe840ddd4f24fb16ba27827e19f69098f58aec1eea7"
+    },
+    "NVRMFB-otool.txt": {
+      "bytes": 3759,
+      "sha256": "af089776bfdb2a6f81b8edf16e751086f801c4a5215339ea639fad4aba1b3c69"
+    },
+    "NVRMFB-plutil.txt": {
+      "bytes": 233,
+      "sha256": "b351ca213e9e3e2c34c560035c671d65f330c9968f21459f21cb9b8a19098053"
+    },
+    "NVRMFB-post.d": {
+      "bytes": 59913,
+      "sha256": "74c807999199bc1586aff74fc07c8c702c332e93c2a0521dd8e7503fa041dcc7"
+    },
+    "NVRMFB-pre.d": {
+      "bytes": 59913,
+      "sha256": "74c807999199bc1586aff74fc07c8c702c332e93c2a0521dd8e7503fa041dcc7"
+    },
+    "NVRMFB-providers.json": {
+      "bytes": 216571,
+      "sha256": "0a1a59c00de6e71531161f92b7cad384a1cbadb34f179240cfaf2f22fccfe2bf"
+    },
+    "family-kc.json": {
+      "bytes": 1889934,
+      "sha256": "d5297ae8a915ac331cfd720da3ca63ad0e2dc0fe8539c9463185256559d7a354"
+    },
+    "iofam-types-apply.txt": {
+      "bytes": 174,
+      "sha256": "d06930d0390a1336734a8c2792c16445bc803dae1b5ea82bf8c83c30d1de8678"
+    },
+    "iofam-types-check.txt": {
+      "bytes": 185,
+      "sha256": "08fabfd4f96d4c08eeb17eb53deeabfb964c22754509f3383cee358bf94445bc"
+    },
+    "kernel-nm.txt": {
+      "bytes": 1085969,
+      "sha256": "83b92eb0b4d318ef7d7d48ab2c90e8bbff0ed4c4fa9a4b3dc4c93f7dd072c1e6"
+    },
+    "kernel-otool.txt": {
+      "bytes": 16697,
+      "sha256": "f1107e378e6b182d1eeaa9d280f59d43e1fbb8c637962eb2cce6f0846d83a118"
+    },
+    "package-report.json": {
+      "bytes": 1296104,
+      "sha256": "e1e73c3d232681948627be8da1142665ec709ce769b94f9cf763c11ef6f6d599"
+    },
+    "provider-binding.json": {
+      "bytes": 1193,
+      "sha256": "f854505e3c615e88ea4a755ecd3783f552cfd8a37ad57038aa1b9228f6ec3ff1"
+    },
+    "symbolsets.plist.txt": {
+      "bytes": 674625,
+      "sha256": "e0c44d1fde615d04a595edfb5e3a0ecc2bec3d1e1dba797407e0103bcdf183f7"
+    }
+  },
+  "driver_execution": "NOT_RUN"
+}

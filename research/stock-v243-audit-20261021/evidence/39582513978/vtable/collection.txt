@@ -1,0 +1,1 @@
+-rwxr-xr-x  1 root  wheel  365887488 Aug  1 16:31 /System/Library/KernelCollections/SystemKernelExtensions.kc

@@ -1,0 +1,970 @@
+{
+ "collection": "/System/Library/KernelCollections/SystemKernelExtensions.kc",
+ "bundle": "com.apple.iokit.IOAcceleratorFamily2",
+ "member_fileoff": 344207360,
+ "pointer_formats": [
+  11
+ ],
+ "member_segments": [
+  {
+   "name": "__TEXT",
+   "vmaddr": 344207360,
+   "vmsize": 434176,
+   "fileoff": 344207360,
+   "filesize": 434176
+  },
+  {
+   "name": "__DATA",
+   "vmaddr": 344641536,
+   "vmsize": 98304,
+   "fileoff": 344641536,
+   "filesize": 94208
+  },
+  {
+   "name": "__DATA_CONST",
+   "vmaddr": 344739840,
+   "vmsize": 12288,
+   "fileoff": 344739840,
+   "filesize": 12288
+  },
+  {
+   "name": "__LINKEDIT",
+   "vmaddr": 353058816,
+   "vmsize": 12677718,
+   "fileoff": 353058816,
+   "filesize": 12677718
+  }
+ ],
+ "chain_segments": [
+  {
+   "segment_offset": 434176,
+   "page_size": 4096,
+   "page_count": 24
+  },
+  {
+   "segment_offset": 532480,
+   "page_size": 4096,
+   "page_count": 3
+  }
+ ],
+ "classes": [
+  {
+   "class_name": "IOAccelContext2",
+   "vtable": "0x148b0760",
+   "vtable_section": {
+    "name": "__const",
+    "segment": "__DATA",
+    "address": "0x148ad3e0",
+    "offset": 344642528,
+    "size": 92656
+   },
+   "kernel_symbols": 0,
+   "text_range": [
+    "0x14843000",
+    "0x148ad000"
+   ],
+   "scan": [
+    {
+     "word": 2,
+     "raw": "0x40000054849a42",
+     "bits": 30,
+     "target": "0x14849a42",
+     "symbol": "__ZN15IOAccelContext2D1Ev"
+    },
+    {
+     "word": 3,
+     "raw": "0x40000054849a4c",
+     "bits": 30,
+     "target": "0x14849a4c",
+     "symbol": "__ZN15IOAccelContext2D0Ev"
+    },
+    {
+     "word": 9,
+     "raw": "0x40000054849a8c",
+     "bits": 30,
+     "target": "0x14849a8c",
+     "symbol": "__ZNK15IOAccelContext212getMetaClassEv"
+    },
+    {
+     "word": 20,
+     "raw": "0x4000005484b6c6",
+     "bits": 30,
+     "target": "0x1484b6c6",
+     "symbol": "__ZN15IOAccelContext24freeEv"
+    },
+    {
+     "word": 186,
+     "raw": "0x4000005484aa24",
+     "bits": 30,
+     "target": "0x1484aa24",
+     "symbol": "__ZN15IOAccelContext25startEP9IOService"
+    },
+    {
+     "word": 187,
+     "raw": "0x4000005484abbe",
+     "bits": 30,
+     "target": "0x1484abbe",
+     "symbol": "__ZN15IOAccelContext24stopEP9IOService"
+    },
+    {
+     "word": 195,
+     "raw": "0x4000005484acc6",
+     "bits": 30,
+     "target": "0x1484acc6",
+     "symbol": "__ZN15IOAccelContext28finalizeEj"
+    },
+    {
+     "word": 208,
+     "raw": "0x4000005484a9dc",
+     "bits": 30,
+     "target": "0x1484a9dc",
+     "symbol": "__ZN15IOAccelContext26attachEP9IOService"
+    },
+    {
+     "word": 268,
+     "raw": "0x4000005484b998",
+     "bits": 30,
+     "target": "0x1484b998",
+     "symbol": "__ZN15IOAccelContext214externalMethodEjP25IOExternalMethodArgumentsP24IOExternalMethodDispatchP8OSObjectPv"
+    },
+    {
+     "word": 288,
+     "raw": "0x4000005484ac92",
+     "bits": 30,
+     "target": "0x1484ac92",
+     "symbol": "__ZN15IOAccelContext211clientCloseEv"
+    },
+    {
+     "word": 293,
+     "raw": "0x4000005484b6f6",
+     "bits": 30,
+     "target": "0x1484b6f6",
+     "symbol": "__ZN15IOAccelContext213connectClientEP12IOUserClient"
+    },
+    {
+     "word": 294,
+     "raw": "0x4000005484ba0c",
+     "bits": 30,
+     "target": "0x1484ba0c",
+     "symbol": "__ZN15IOAccelContext219clientMemoryForTypeEjPjPP18IOMemoryDescriptor"
+    },
+    {
+     "word": 298,
+     "raw": "0x4000005484b94c",
+     "bits": 30,
+     "target": "0x1484b94c",
+     "symbol": "__ZN15IOAccelContext226getTargetAndMethodForIndexEPP9IOServicej"
+    },
+    {
+     "word": 302,
+     "raw": "0x4000005484e6ec",
+     "bits": 30,
+     "target": "0x1484e6ec",
+     "symbol": "__ZNK15IOAccelContext213getOwningTaskEv"
+    },
+    {
+     "word": 303,
+     "raw": "0x4000005484e6fa",
+     "bits": 30,
+     "target": "0x1484e6fa",
+     "symbol": "__ZNK15IOAccelContext210getGPUTaskEv"
+    },
+    {
+     "word": 304,
+     "raw": "0x4000005484e708",
+     "bits": 30,
+     "target": "0x1484e708",
+     "symbol": "__ZNK15IOAccelContext216getOwningTaskPidEv"
+    },
+    {
+     "word": 305,
+     "raw": "0x4000005484e1c4",
+     "bits": 30,
+     "target": "0x1484e1c4",
+     "symbol": "__ZN15IOAccelContext223affectedByHardwareResetEbj"
+    },
+    {
+     "word": 306,
+     "raw": "0x4000005484e714",
+     "bits": 30,
+     "target": "0x1484e714",
+     "symbol": "__ZN17IOAccelSubmitter219retireCommandBufferEP17IOAccelEventFence"
+    },
+    {
+     "word": 307,
+     "raw": "0x4000005484e222",
+     "bits": 30,
+     "target": "0x1484e222",
+     "symbol": "__ZN15IOAccelContext227shouldHardwareCommandNoopedEv"
+    },
+    {
+     "word": 308,
+     "raw": "0x4000005484adc2",
+     "bits": 30,
+     "target": "0x1484adc2",
+     "symbol": "__ZN15IOAccelContext220orphanClientMappingsEP5OSSet"
+    },
+    {
+     "word": 309,
+     "raw": "0x4000005485b916",
+     "bits": 30,
+     "target": "0x1485b916",
+     "symbol": "__ZN17IOAccelSubmitter220setProtectionOptionsEy"
+    },
+    {
+     "word": 310,
+     "raw": "0x4000005484e71a",
+     "bits": 30,
+     "target": "0x1484e71a",
+     "symbol": "__ZN17IOAccelSubmitter218setSubmissionErrorEj"
+    },
+    {
+     "word": 311,
+     "raw": "0x4000005485b79e",
+     "bits": 30,
+     "target": "0x1485b79e",
+     "symbol": "__ZN17IOAccelSubmitter226_RESERVEDIOAccelSubmitter0Ev"
+    },
+    {
+     "word": 312,
+     "raw": "0x4000005485b7b2",
+     "bits": 30,
+     "target": "0x1485b7b2",
+     "symbol": "__ZN17IOAccelSubmitter226_RESERVEDIOAccelSubmitter1Ev"
+    },
+    {
+     "word": 313,
+     "raw": "0x4000005485b7c8",
+     "bits": 30,
+     "target": "0x1485b7c8",
+     "symbol": "__ZN17IOAccelSubmitter226_RESERVEDIOAccelSubmitter2Ev"
+    },
+    {
+     "word": 314,
+     "raw": "0x4000005485b7de",
+     "bits": 30,
+     "target": "0x1485b7de",
+     "symbol": "__ZN17IOAccelSubmitter226_RESERVEDIOAccelSubmitter3Ev"
+    },
+    {
+     "word": 315,
+     "raw": "0x4000005485b7f4",
+     "bits": 30,
+     "target": "0x1485b7f4",
+     "symbol": "__ZN17IOAccelSubmitter226_RESERVEDIOAccelSubmitter4Ev"
+    },
+    {
+     "word": 316,
+     "raw": "0x4000005485b80a",
+     "bits": 30,
+     "target": "0x1485b80a",
+     "symbol": "__ZN17IOAccelSubmitter226_RESERVEDIOAccelSubmitter5Ev"
+    },
+    {
+     "word": 317,
+     "raw": "0x4000005484e720",
+     "bits": 30,
+     "target": "0x1484e720",
+     "symbol": "__ZNK17IOAccelSubmitter223isOpportunisticWorkloadEv"
+    },
+    {
+     "word": 318,
+     "raw": "0x4000005484adda",
+     "bits": 30,
+     "target": "0x1484adda",
+     "symbol": "__ZN15IOAccelContext212contextStartEv"
+    },
+    {
+     "word": 319,
+     "raw": "0x4000005484b228",
+     "bits": 30,
+     "target": "0x1484b228",
+     "symbol": "__ZN15IOAccelContext211contextStopEv"
+    },
+    {
+     "word": 320,
+     "raw": "0x4000005484e142",
+     "bits": 30,
+     "target": "0x1484e142",
+     "symbol": "__ZN15IOAccelContext219getDataBufferLimitsEv"
+    },
+    {
+     "word": 321,
+     "raw": "0x4000005484e0e0",
+     "bits": 30,
+     "target": "0x1484e0e0",
+     "symbol": "__ZN15IOAccelContext214context_finishEv"
+    },
+    {
+     "word": 322,
+     "raw": "0x4000005484c186",
+     "bits": 30,
+     "target": "0x1484c186",
+     "symbol": "__ZN15IOAccelContext224initSidebandBufferHeaderEP27IOAccelSidebandBufferHeaderyy"
+    },
+    {
+     "word": 323,
+     "raw": "0x4000005484caa4",
+     "bits": 30,
+     "target": "0x1484caa4",
+     "symbol": "__ZN15IOAccelContext221processSidebandBufferEP24IOAccelCommandDescriptorb"
+    },
+    {
+     "word": 324,
+     "raw": "0x4000005484c304",
+     "bits": 30,
+     "target": "0x1484c304",
+     "symbol": "__ZN15IOAccelContext220processSidebandTokenER24IOAccelCommandStreamInfo"
+    },
+    {
+     "word": 325,
+     "raw": "0x4000005484ca72",
+     "bits": 30,
+     "target": "0x1484ca72",
+     "symbol": "__ZN15IOAccelContext220discardSidebandTokenER24IOAccelCommandStreamInfo"
+    },
+    {
+     "word": 326,
+     "raw": "0x4000005484e728",
+     "bits": 30,
+     "target": "0x1484e728",
+     "symbol": "__ZN15IOAccelContext220postTokenSanityCheckER24IOAccelCommandStreamInfo"
+    },
+    {
+     "word": 327,
+     "raw": "0x4000005484d06c",
+     "bits": 30,
+     "target": "0x1484d06c",
+     "symbol": "__ZN15IOAccelContext218processDataBuffersEj"
+    },
+    {
+     "word": 328,
+     "raw": "0x4000005484c168",
+     "bits": 30,
+     "target": "0x1484c168",
+     "symbol": "__ZN15IOAccelContext218beginCommandStreamER24IOAccelCommandStreamInfo"
+    },
+    {
+     "word": 329,
+     "raw": "0x4000005484c16e",
+     "bits": 30,
+     "target": "0x1484c16e",
+     "symbol": "__ZN15IOAccelContext216endCommandStreamER24IOAccelCommandStreamInfo"
+    },
+    {
+     "word": 330,
+     "raw": "0x4000005484df60",
+     "bits": 30,
+     "target": "0x1484df60",
+     "symbol": "__ZN15IOAccelContext212bindResourceER24IOAccelCommandStreamInfoP16IOAccelResource2bP15IOAccelChannel2jb"
+    },
+    {
+     "word": 331,
+     "raw": "0x4000005484e022",
+     "bits": 30,
+     "target": "0x1484e022",
+     "symbol": "__ZN15IOAccelContext214unbindResourceER24IOAccelCommandStreamInfoP16IOAccelResource2P15IOAccelChannel2"
+    },
+    {
+     "word": 332,
+     "raw": "0x4000005484cde0",
+     "bits": 30,
+     "target": "0x1484cde0",
+     "symbol": "__ZN15IOAccelContext223compactCurrentVidMemoryEv"
+    },
+    {
+     "word": 333,
+     "raw": "0x4000005484e04c",
+     "bits": 30,
+     "target": "0x1484e04c",
+     "symbol": "__ZN15IOAccelContext216prepareResourcesEPP16IOAccelResource2i"
+    },
+    {
+     "word": 334,
+     "raw": "0x4000005484cf98",
+     "bits": 30,
+     "target": "0x1484cf98",
+     "symbol": "__ZN15IOAccelContext222compactCurrentMappingsEP16IOAccelMemoryMap"
+    },
+    {
+     "word": 335,
+     "raw": "0x4000005484d2b8",
+     "bits": 30,
+     "target": "0x1484d2b8",
+     "symbol": "__ZN15IOAccelContext213getDataBufferEP29IOAccelContextGetDataBufferInP30IOAccelContextGetDataBufferOutP22IOAccelResourcePrivatey"
+    },
+    {
+     "word": 336,
+     "raw": "0x4000005484dcea",
+     "bits": 30,
+     "target": "0x1484dcea",
+     "symbol": "__ZN15IOAccelContext218allocOneDataBufferEbj"
+    },
+    {
+     "word": 337,
+     "raw": "0x4000005484e72e",
+     "bits": 30,
+     "target": "0x1484e72e",
+     "symbol": "__ZN15IOAccelContext220getDataBufferPrivateEP16IOAccelResource2P22IOAccelResourcePrivatey"
+    },
+    {
+     "word": 338,
+     "raw": "0x4000005484e734",
+     "bits": 30,
+     "target": "0x1484e734",
+     "symbol": "__ZN15IOAccelContext218validateDataBufferEyP24IOBufferMemoryDescriptorP16IOAccelResource2"
+    },
+    {
+     "word": 339,
+     "raw": "0x4000005484b946",
+     "bits": 30,
+     "target": "0x1484b946",
+     "symbol": "__ZN15IOAccelContext221populateContextConfigEP20IOAccelContextConfig"
+    },
+    {
+     "word": 340,
+     "raw": "0x4000005484c174",
+     "bits": 30,
+     "target": "0x1484c174",
+     "symbol": "__ZN15IOAccelContext222addDataBufferToChannelEP16IOAccelResource2j"
+    },
+    {
+     "word": 341,
+     "raw": "0x4000005484c17a",
+     "bits": 30,
+     "target": "0x1484c17a",
+     "symbol": "__ZN15IOAccelContext227removeDataBufferFromChannelEP16IOAccelResource2j"
+    },
+    {
+     "word": 342,
+     "raw": "0x4000005484c180",
+     "bits": 30,
+     "target": "0x1484c180",
+     "symbol": "__ZN15IOAccelContext232removeCurrentResourceFromChannelEP16IOAccelResource2j"
+    },
+    {
+     "word": 343,
+     "raw": "0x4000005484e73c",
+     "bits": 30,
+     "target": "0x1484e73c",
+     "symbol": "__ZN15IOAccelContext210invalidateEv"
+    },
+    {
+     "word": 344,
+     "raw": "0x4000005484e742",
+     "bits": 30,
+     "target": "0x1484e742",
+     "symbol": "__ZN15IOAccelContext217getFrameDelimiterEv"
+    },
+    {
+     "word": 345,
+     "raw": "0x4000005484e63c",
+     "bits": 30,
+     "target": "0x1484e63c",
+     "symbol": "__ZN15IOAccelContext222canSubmitCommandBufferEv"
+    },
+    {
+     "word": 346,
+     "raw": "0x4000005484e644",
+     "bits": 30,
+     "target": "0x1484e644",
+     "symbol": "__ZN15IOAccelContext224pauseSubmitCommandBufferEv"
+    },
+    {
+     "word": 347,
+     "raw": "0x4000005484e654",
+     "bits": 30,
+     "target": "0x1484e654",
+     "symbol": "__ZN15IOAccelContext215getPriorityInfoEv"
+    },
+    {
+     "word": 348,
+     "raw": "0x4000005484e660",
+     "bits": 30,
+     "target": "0x1484e660",
+     "symbol": "__ZN15IOAccelContext224_RESERVEDIOAccelContext0Ev"
+    },
+    {
+     "word": 349,
+     "raw": "0x4000005484e674",
+     "bits": 30,
+     "target": "0x1484e674",
+     "symbol": "__ZN15IOAccelContext224_RESERVEDIOAccelContext1Ev"
+    },
+    {
+     "word": 350,
+     "raw": "0x4000005484e68a",
+     "bits": 30,
+     "target": "0x1484e68a",
+     "symbol": "__ZN15IOAccelContext224_RESERVEDIOAccelContext2Ev"
+    },
+    {
+     "word": 351,
+     "raw": "0x4000005484e6a0",
+     "bits": 30,
+     "target": "0x1484e6a0",
+     "symbol": "__ZN15IOAccelContext224_RESERVEDIOAccelContext3Ev"
+    },
+    {
+     "word": 352,
+     "raw": "0x4000005484e6b6",
+     "bits": 30,
+     "target": "0x1484e6b6",
+     "symbol": "__ZN15IOAccelContext224_RESERVEDIOAccelContext4Ev"
+    },
+    {
+     "word": 353,
+     "raw": "0x4000005484e6cc",
+     "bits": 30,
+     "target": "0x1484e6cc",
+     "symbol": "__ZN15IOAccelContext224_RESERVEDIOAccelContext5Ev"
+    },
+    {
+     "word": 354,
+     "raw": "0x4000005484e230",
+     "bits": 30,
+     "target": "0x1484e230",
+     "symbol": "__ZNK15IOAccelContext217getSurfaceReqBitsEv"
+    },
+    {
+     "word": 355,
+     "raw": "0x4000005484e238",
+     "bits": 30,
+     "target": "0x1484e238",
+     "symbol": "__ZNK15IOAccelContext220requiresBackingStoreEv"
+    },
+    {
+     "word": 356,
+     "raw": "0x4000005484e3a0",
+     "bits": 30,
+     "target": "0x1484e3a0",
+     "symbol": "__ZN15IOAccelContext227set_compatible_surface_modeEPyyj"
+    },
+    {
+     "word": 357,
+     "raw": "0x4000005484e3c2",
+     "bits": 30,
+     "target": "0x1484e3c2",
+     "symbol": "__ZN15IOAccelContext213removeSurfaceEv"
+    },
+    {
+     "word": 358,
+     "raw": "0x4000005484e3d4",
+     "bits": 30,
+     "target": "0x1484e3d4",
+     "symbol": "__ZNK15IOAccelContext219allowsExclusiveModeEv"
+    },
+    {
+     "word": 359,
+     "raw": "0x4000005484e3dc",
+     "bits": 30,
+     "target": "0x1484e3dc",
+     "symbol": "__ZNK15IOAccelContext216isTripleBufferedEv"
+    },
+    {
+     "word": 360,
+     "raw": "0x4000005484e3e4",
+     "bits": 30,
+     "target": "0x1484e3e4",
+     "symbol": "__ZNK15IOAccelContext215contextModeBitsEv"
+    },
+    {
+     "word": 361,
+     "raw": "0x10000005484e3ec",
+     "bits": 30,
+     "target": "0x1484e3ec",
+     "symbol": "__ZN15IOAccelContext225describeDriverAllocationsEP21IOAccelAllocationInfo"
+    },
+    {
+     "word": 365,
+     "raw": "0x400000548499ee",
+     "bits": 30,
+     "target": "0x148499ee",
+     "symbol": "__ZN15IOAccelContext29MetaClassD1Ev"
+    },
+    {
+     "word": 366,
+     "raw": "0x4000005484e6e2",
+     "bits": 30,
+     "target": "0x1484e6e2",
+     "symbol": "__ZN15IOAccelContext29MetaClassD0Ev"
+    },
+    {
+     "word": 382,
+     "raw": "0x40000054849acc",
+     "bits": 30,
+     "target": "0x14849acc",
+     "symbol": "__ZNK15IOAccelContext29MetaClass5allocEv"
+    },
+    {
+     "word": 393,
+     "raw": "0x180000054849ae8",
+     "bits": 30,
+     "target": "0x14849ae8",
+     "symbol": "__ZN15IOAccelContext26finishEv"
+    },
+    {
+     "word": 399,
+     "raw": "0x180000054849af6",
+     "bits": 30,
+     "target": "0x14849af6",
+     "symbol": "__ZN15IOAccelContext215set_client_infoEP17IOAccelClientInfoy"
+    },
+    {
+     "word": 405,
+     "raw": "0x180000054849b1e",
+     "bits": 30,
+     "target": "0x14849b1e",
+     "symbol": "__ZN15IOAccelContext219submit_data_buffersEP33IOAccelContextSubmitDataBuffersInP34IOAccelContextSubmitDataBuffersOutyPy"
+    },
+    {
+     "word": 411,
+     "raw": "0x18000005484a490",
+     "bits": 30,
+     "target": "0x1484a490",
+     "symbol": "__ZN15IOAccelContext215get_data_bufferEP29IOAccelContextGetDataBufferInP30IOAccelContextGetDataBufferOutyPy"
+    },
+    {
+     "word": 417,
+     "raw": "0x18000005484a5dc",
+     "bits": 30,
+     "target": "0x1484a5dc",
+     "symbol": "__ZN15IOAccelContext217reclaim_resourcesEv"
+    },
+    {
+     "word": 423,
+     "raw": "0x30000005484a790",
+     "bits": 30,
+     "target": "0x1484a790",
+     "symbol": "__ZN15IOAccelContext218finish_fence_eventEj"
+    },
+    {
+     "word": 435,
+     "raw": "0x18000005484a968",
+     "bits": 30,
+     "target": "0x1484a968",
+     "symbol": "__ZN15IOAccelContext224set_background_renderingEj"
+    },
+    {
+     "word": 441,
+     "raw": "0x140000054849b1e",
+     "bits": 30,
+     "target": "0x14849b1e",
+     "symbol": "__ZN15IOAccelContext219submit_data_buffersEP33IOAccelContextSubmitDataBuffersInP34IOAccelContextSubmitDataBuffersOutyPy"
+    },
+    {
+     "word": 446,
+     "raw": "0x10000005484b9cc",
+     "bits": 30,
+     "target": "0x1484b9cc",
+     "symbol": "__ZN15IOAccelContext221s_enable_block_fencesEPS_PvP25IOExternalMethodArguments"
+    },
+    {
+     "word": 450,
+     "raw": "0xc000005484e78e",
+     "bits": 30,
+     "target": "0x1484e78e",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient13s_set_surfaceEPS_PvP25IOExternalMethodArguments"
+    },
+    {
+     "word": 453,
+     "raw": "0xc000005484e79c",
+     "bits": 30,
+     "target": "0x1484e79c",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient31s_set_surface_get_config_statusEPS_PvP25IOExternalMethodArguments"
+    },
+    {
+     "word": 456,
+     "raw": "0xc000005484e7ae",
+     "bits": 30,
+     "target": "0x1484e7ae",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient15s_set_swap_rectEPS_PvP25IOExternalMethodArguments"
+    },
+    {
+     "word": 459,
+     "raw": "0xc000005484e7e6",
+     "bits": 30,
+     "target": "0x1484e7e6",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient19s_set_swap_intervalEPS_PvP25IOExternalMethodArguments"
+    },
+    {
+     "word": 462,
+     "raw": "0xc000005484e808",
+     "bits": 30,
+     "target": "0x1484e808",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient21s_signal_shared_eventEPS_PvP25IOExternalMethodArguments"
+    },
+    {
+     "word": 465,
+     "raw": "0xc000005484e828",
+     "bits": 30,
+     "target": "0x1484e828",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient33s_create_mach_port_from_iosurfaceEPS_PvP25IOExternalMethodArguments"
+    },
+    {
+     "word": 472,
+     "raw": "0x4000005484e8c4",
+     "bits": 30,
+     "target": "0x1484e8c4",
+     "symbol": "__ZN27IOAccelGLDrawableUserClientD1Ev"
+    },
+    {
+     "word": 473,
+     "raw": "0x4000005484e8ce",
+     "bits": 30,
+     "target": "0x1484e8ce",
+     "symbol": "__ZN27IOAccelGLDrawableUserClientD0Ev"
+    },
+    {
+     "word": 479,
+     "raw": "0x4000005484e90e",
+     "bits": 30,
+     "target": "0x1484e90e",
+     "symbol": "__ZNK27IOAccelGLDrawableUserClient12getMetaClassEv"
+    },
+    {
+     "word": 490,
+     "raw": "0x4000005484ed54",
+     "bits": 30,
+     "target": "0x1484ed54",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient4freeEv"
+    },
+    {
+     "word": 656,
+     "raw": "0x4000005484ea98",
+     "bits": 30,
+     "target": "0x1484ea98",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient5startEP9IOService"
+    },
+    {
+     "word": 657,
+     "raw": "0x4000005484ebe0",
+     "bits": 30,
+     "target": "0x1484ebe0",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient4stopEP9IOService"
+    },
+    {
+     "word": 678,
+     "raw": "0x4000005484ea6e",
+     "bits": 30,
+     "target": "0x1484ea6e",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient6attachEP9IOService"
+    },
+    {
+     "word": 738,
+     "raw": "0x4000005484ed84",
+     "bits": 30,
+     "target": "0x1484ed84",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient14externalMethodEjP25IOExternalMethodArgumentsP24IOExternalMethodDispatchP8OSObjectPv"
+    },
+    {
+     "word": 758,
+     "raw": "0x4000005484ecb4",
+     "bits": 30,
+     "target": "0x1484ecb4",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient11clientCloseEv"
+    },
+    {
+     "word": 772,
+     "raw": "0x4000005484ece8",
+     "bits": 30,
+     "target": "0x1484ece8",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient13drawableStartEv"
+    },
+    {
+     "word": 773,
+     "raw": "0x4000005484ed14",
+     "bits": 30,
+     "target": "0x1484ed14",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient12drawableStopEv"
+    },
+    {
+     "word": 774,
+     "raw": "0x4000005484fc9e",
+     "bits": 30,
+     "target": "0x1484fc9e",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient37_RESERVEDIOAccelGLDrawableUserClient0Ev"
+    },
+    {
+     "word": 775,
+     "raw": "0x4000005484fcb2",
+     "bits": 30,
+     "target": "0x1484fcb2",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient37_RESERVEDIOAccelGLDrawableUserClient1Ev"
+    },
+    {
+     "word": 776,
+     "raw": "0x4000005484fcc8",
+     "bits": 30,
+     "target": "0x1484fcc8",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient37_RESERVEDIOAccelGLDrawableUserClient2Ev"
+    },
+    {
+     "word": 777,
+     "raw": "0x4000005484fcde",
+     "bits": 30,
+     "target": "0x1484fcde",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient37_RESERVEDIOAccelGLDrawableUserClient3Ev"
+    },
+    {
+     "word": 778,
+     "raw": "0x4000005484fcf4",
+     "bits": 30,
+     "target": "0x1484fcf4",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient37_RESERVEDIOAccelGLDrawableUserClient4Ev"
+    },
+    {
+     "word": 779,
+     "raw": "0x4000005484fd0a",
+     "bits": 30,
+     "target": "0x1484fd0a",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient37_RESERVEDIOAccelGLDrawableUserClient5Ev"
+    },
+    {
+     "word": 780,
+     "raw": "0x4000005484ee0a",
+     "bits": 30,
+     "target": "0x1484ee0a",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient17getSurfaceReqBitsEv"
+    },
+    {
+     "word": 781,
+     "raw": "0x4000005484ee16",
+     "bits": 30,
+     "target": "0x1484ee16",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient20requiresBackingStoreEv"
+    },
+    {
+     "word": 782,
+     "raw": "0x4000005484ef5c",
+     "bits": 30,
+     "target": "0x1484ef5c",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient27set_compatible_surface_modeEPyyj"
+    },
+    {
+     "word": 783,
+     "raw": "0x4000005484ef84",
+     "bits": 30,
+     "target": "0x1484ef84",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient13removeSurfaceEv"
+    },
+    {
+     "word": 784,
+     "raw": "0x4000005484ef96",
+     "bits": 30,
+     "target": "0x1484ef96",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient19allowsExclusiveModeEv"
+    },
+    {
+     "word": 785,
+     "raw": "0x4000005484ef9e",
+     "bits": 30,
+     "target": "0x1484ef9e",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient16isTripleBufferedEv"
+    },
+    {
+     "word": 786,
+     "raw": "0x5484edfa",
+     "bits": 30,
+     "target": "0x1484edfa",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient15contextModeBitsEv"
+    },
+    {
+     "word": 790,
+     "raw": "0x4000005484e870",
+     "bits": 30,
+     "target": "0x1484e870",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient9MetaClassD1Ev"
+    },
+    {
+     "word": 791,
+     "raw": "0x4000005484fd20",
+     "bits": 30,
+     "target": "0x1484fd20",
+     "symbol": "__ZN27IOAccelGLDrawableUserClient9MetaClassD0Ev"
+    },
+    {
+     "word": 807,
+     "raw": "0x4000005484e94e",
+     "bits": 30,
+     "target": "0x1484e94e",
+     "symbol": "__ZNK27IOAccelGLDrawableUserClient9MetaClass5allocEv"
+    },
+    {
+     "word": 822,
+     "raw": "0x4000005484fdf4",
+     "bits": 30,
+     "target": "0x1484fdf4",
+     "symbol": "__ZN14IOAccelDevice2D1Ev"
+    },
+    {
+     "word": 823,
+     "raw": "0x4000005484fdfe",
+     "bits": 30,
+     "target": "0x1484fdfe",
+     "symbol": "__ZN14IOAccelDevice2D0Ev"
+    },
+    {
+     "word": 829,
+     "raw": "0x4000005484fe3e",
+     "bits": 30,
+     "target": "0x1484fe3e",
+     "symbol": "__ZNK14IOAccelDevice212getMetaClassEv"
+    },
+    {
+     "word": 840,
+     "raw": "0x40000054850094",
+     "bits": 30,
+     "target": "0x14850094",
+     "symbol": "__ZN14IOAccelDevice24freeEv"
+    }
+   ],
+   "probe": [
+    {
+     "slot": 0,
+     "raw": "0x40000054849a42",
+     "raw_symbol": "UNRESOLVED",
+     "nearby": [],
+     "decoded": null
+    },
+    {
+     "slot": 1,
+     "raw": "0x40000054849a4c",
+     "raw_symbol": "UNRESOLVED",
+     "nearby": [],
+     "decoded": null
+    },
+    {
+     "slot": 2,
+     "raw": "0x4000000094b860",
+     "raw_symbol": "UNRESOLVED",
+     "nearby": [],
+     "decoded": null
+    },
+    {
+     "slot": 3,
+     "raw": "0x4000000094b880",
+     "raw_symbol": "UNRESOLVED",
+     "nearby": [],
+     "decoded": null
+    },
+    {
+     "slot": 4,
+     "raw": "0x4000000094b890",
+     "raw_symbol": "UNRESOLVED",
+     "nearby": [],
+     "decoded": null
+    },
+    {
+     "slot": 5,
+     "raw": "0x4000000094b8a0",
+     "raw_symbol": "UNRESOLVED",
+     "nearby": [],
+     "decoded": null
+    }
+   ],
+   "status": "CHAIN_FAILED",
+   "slots": []
+  }
+ ]
+}

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/runner/work/honor-hackintosh-lab/honor-hackintosh-lab/tools/g1_kc_chain.py", line 230, in <module>
+    main()
+    ~~~~^^
+  File "/Users/runner/work/honor-hackintosh-lab/honor-hackintosh-lab/tools/g1_kc_chain.py", line 217, in main
+    raw=hex(raw_value), raw_symbol=plain or 'UNRESOLVED',
+                                   ^^^^^
+NameError: name 'plain' is not defined. Did you mean: 'chain'?

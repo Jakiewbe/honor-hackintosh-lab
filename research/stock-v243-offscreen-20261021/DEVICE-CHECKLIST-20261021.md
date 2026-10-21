@@ -1,173 +1,68 @@
-# 实机执行清单（A → B → C）
+# 设备前检查与后续准入（2026-10-21 审计修订）
 
-> **2026-10-21 独立审计后的修订**：B、C 两步**暂停**，直到满足下面"B 的前置条件"。
-> 当前允许的只有第 0、1 步与 A 步（全部只读、不加载、不改 KC）。
-> 所有命令必须用 **bash** 执行（macOS 默认 zsh 的 `pipestatus` 索引与 bash 不同），
-> 建议把每段存成 `.sh` 文件后 `bash 文件.sh` 运行，脚本首行写 `#!/bin/bash` 与 `set -euo pipefail`。
+当前里程碑：`PRE-DEVICE STATIC INTEGRATION — CONDITIONAL PASS`。
+设备加载、KC 写入、GPU 运行仍为 **NO-GO**。本文件不是设备授权或执行记录。
+旧版 A→B→C 中安装、删除、清 staging、恢复 KC 文件和运行 GPU 的命令已撤下；
+这些操作没有可验收的恢复证明，不能照旧稿执行。
 
-## B 的前置条件（未满足前不要执行 B/C）
+## A：只读观察（脚本已准备，设备上未执行）
 
-1. 证明存在可独立启动的恢复路径（第二块可引导盘或快照），并实测一次完整恢复；
-2. 完整备份当前扩展集合与 AuxKC 状态，而不只是两个 `.kc` 文件；
-3. 记录 SIP/AMFI/签名策略，确认候选未签名 kext 能被现有策略接受；
-4. 明确 `kmutil install --update-all` 失败时的逐条回退命令，并证明能回到执行前的
-   `kextstat` 与启动状态；
-5. 审计这一流程之后，再单独授权首次加载。
+目标：记录实际 macOS/内核版本、已加载扩展及目标 PCI ID，并把诊断严格绑定到三个候选的
+可执行文件与 plist 哈希。Windows 主机和 CI 不能替代 GLO-FX6P 的这些事实。
+如果设备上尚无合法取得的三个候选及其同次构建报告，候选诊断保持 BLOCKED，不能误用已安装同名驱动。
+本项目目前仍只发布文本证据，没有因此授权下载、传输或部署驱动。
 
-在此之前，`kextutil -n` 已经是能拿到的最强证据；它不加载、不改系统。
-
-
-逐段做，上一段不通过就停，不要跳步。所有命令都在 macOS 侧（外接 SSD 上的系统）执行。
-不涉及 Windows、内置盘、ESP、OpenCore、BIOS；不做睡眠测试；不改显示所有权。
-
----
-
-## 0. 前置检查（只读，5 分钟）
+使用已有 Python3，在 **macOS 设备侧另行安排只读观察** 时：
 
 ```bash
-mkdir -p ~/Desktop/g1-run
-sw_vers | tee ~/Desktop/g1-run/sw_vers.txt
-csrutil status | tee -a ~/Desktop/g1-run/sw_vers.txt
-kextstat | grep -Ei 'NVRM|NVAccel|NVRMFB|NVMTL' | tee ~/Desktop/g1-run/kextstat.txt
-ls -l /Library/Extensions | grep -Ei 'NVRM|NVAccel|NVRMFB' | tee -a ~/Desktop/g1-run/kextstat.txt
-system_profiler SPDisplaysDataType | tee ~/Desktop/g1-run/displays.txt
+python3 scripts/g1/predevice_diagnostics.py --execute-readonly \
+  --bundles /ABSOLUTE/PATH/TO/package-products \
+  --build-report /ABSOLUTE/PATH/TO/package-report.json \
+  --out "$HOME/Desktop/g1-readonly-NEW"
 ```
 
-判据：`displays.txt` 里能看到 `10de:25a9` 对应的设备（哪怕没有加速）。
-如果已安装的 kext 版本不是 v2.4.x，先记录版本，不要覆盖。
+不要原样使用占位路径；输出目录必须不存在。脚本不安装软件、不编译驱动、不提权、
+不调用 Metal 枚举、不签名/安装/加载/卸载、不写 KC。退出码直接来自 Python 子进程，
+没有 Bash/zsh 的管道数组依赖；任一命令或身份核对失败即停止并保留阶段。
+PCI 原始属性仅在内存中解析，只保存 10DE:25A9、8086:46A6，不保存序列号或完整 ioreg 输出。
+无目标条目只能报告未观察到，不能补 0 或说设备不存在。
 
----
+`kextutil -n` 只作诊断：即使 exit0、没有未解析文本，也不证明依赖搜索仅用了这三个候选，
+更不证明认证、导出、完整 ABI、签名或加载成功。工具曾接受缺可执行文件及不存在依赖的坏 bundle。
+新脚本记录候选路径、可执行和 plist SHA，但将排他依赖绑定始终记为 UNVERIFIED。
+结果需要按实际 OS/build 与 CI 的 macOS15.7.9/24G830、SDK15.5 分开比较；不覆盖15.0–15.4。
+观察结果不自动上传，分享前只提供所需脱敏文本。
 
-## 1. 构建候选（约 20–40 分钟，不加载）
+## B：恢复方案设计，禁止实施
 
-```bash
-cd ~/honor-hackintosh-lab
-git fetch origin && git checkout 2b02575
-bash research/stock-v243-offscreen-20261021/device-kextutil.sh
-```
+必须先具备以下逐项证据，才能提交一个具体的设备行动申请：
 
-产物在 `~/Desktop/g1-kextutil/`：
+1. 已存在且不依赖待修改启动环境的恢复入口，能在候选导致无法启动时独立进入。
+   创建或测试启动路径本身是设备动作，须另行授权；不得为本任务修改 EFI/启动项或内置 Windows。
+2. 记录原始扩展目录、版本、权限、实际使用的 Boot/System/AuxKC 与相关启动选择状态，
+   明确完整恢复对象和备份一致性。仅拷贝两个 kc 文件不能证明可恢复原环境。
+3. 记录真实 SIP/AMFI/签名策略及候选认证结果，不自动修改系统安全策略。
+4. 设计并在隔离环境验证失败后完整恢复的流程：恢复前后扩展集合、实际启动来源、
+   原始系统可启动性均一致。`clear-staging` 只清 staging，不是恢复方法。
+5. 关闭或明确审查20项导出、家族版本/完整ABI、stop/全部使用者排空、PM及在途工作清理的阻塞。
+   恢复能力不能替代驱动安全性；绿色构建或无 panic 五分钟也不是安全加载证明。
 
-- `internal-products/package-products/NVRM.kext`、`NVRMFB.kext`、`NVAccel.kext`
-- `package-text/package-report.json`（应含 `"unresolved": {}`、`loader_dry_run` 三项 `exit: 0`）
-- `kextutil-NVRM.txt` / `kextutil-NVRMFB.txt` / `kextutil-NVAccel.txt`
+这些证据尚未具备。没有安装/KC 写入/首次加载/热卸载命令，也没有回退成功记录。
+加载可触发 IOKit 自动匹配并初始化 GPU，不能设计“加载但不触碰 GPU”的虚假隔离阶段。
 
-**先把 `package-report.json` 与三个 `kextutil-*.txt` 发回来**，确认后再做 A。
+## C：首次 GPU 计算/渲染的验收合同，禁止执行
 
----
+只有 B 的证据及单独设备授权成立后才重新审查 C；不把睡眠/唤醒作为初始化前置测试。
+Metal 程序已原生编译，未运行。进程准入必须按固定插件源码明确核对，不能把准入失败改报GPU失败，
+也不在本阶段写 allow-list、设置全局放行或更改显示所有权。
 
-## A. 加载前解析（只读，不改系统状态）
+输入必须是 **所选 MTLDevice 的 registryID**；PCI 父节点的 registry ID 不能直接替代。
+程序还需沿父链验证10DE:25A9。计算64项、真实 draw 后64像素、着色器错误传递、
+超时后停止新提交等合同均需真实结果及相配的命令提交证据；单条 APP_TEST_PASS 不足以证明硬件执行。
+超时仍在途工作、进程退出清理、驱动安全结束、固件和用户态配对仍是开放问题。
+不安排热卸载、睡眠唤醒、显示接管或内屏加速实验。
 
-A1 基线（已安装的发行版）：
+## 当前证据与复审入口
 
-```bash
-for k in NVRM NVRMFB NVAccel; do
-  sudo xcrun kextutil -n "/Library/Extensions/$k.kext" 2>&1 | tee ~/Desktop/g1-run/base-$k.txt
-  echo "exit=${PIPESTATUS[0]}" | tee -a ~/Desktop/g1-run/base-$k.txt
-done
-```
-
-A2 候选（刚构建的）：
-
-```bash
-for k in NVRM NVRMFB NVAccel; do
-  bundle=~/Desktop/g1-kextutil/internal-products/package-products/$k.kext
-  sudo xcrun kextutil -n "$bundle" 2>&1 | tee ~/Desktop/g1-run/cand-$k.txt
-  echo "exit=${PIPESTATUS[0]}" | tee -a ~/Desktop/g1-run/cand-$k.txt
-done
-```
-
-判据：六个文件全部 `exit=0`，且没有 `can't resolve symbol` / `unresolved`。
-出现未解析就停，把文件发回来——不要加参数绕过。
-
----
-
-## B. 装入（会改启动内核集合，先备份）
-
-前置：外接 SSD 可回退、有快照或 Time Machine；内置盘与 ESP 不参与。
-
-1. 备份当前 KC 并记录哈希：
-
-```bash
-sudo cp -a /System/Library/KernelCollections ~/Desktop/g1-run/KernelCollections.bak
-shasum -a 256 /System/Library/KernelCollections/*.kc | tee ~/Desktop/g1-run/kc-before.txt
-```
-
-2. 用候选替换（沿用你此前安装该驱动的方式；若是 `/Library/Extensions`）：
-
-```bash
-for k in NVRM NVRMFB NVAccel; do
-  sudo rm -rf "/Library/Extensions/$k.kext"
-  sudo cp -R ~/Desktop/g1-kextutil/internal-products/package-products/$k.kext "/Library/Extensions/$k.kext"
-  sudo chown -R root:wheel "/Library/Extensions/$k.kext"
-done
-sudo kmutil install --update-all 2>&1 | tee ~/Desktop/g1-run/kmutil-install.txt
-```
-
-3. 重启，然后：
-
-```bash
-kextstat | grep -Ei 'NVRM|NVAccel|NVRMFB' | tee ~/Desktop/g1-run/kextstat-after.txt
-log show --last 5m --predicate 'eventMessage CONTAINS "NVRM" OR eventMessage CONTAINS "NVAccel"' \
-  | tee ~/Desktop/g1-run/log-after.txt
-```
-
-判据：三个 kext 都出现在 `kextstat`；5 分钟内无 panic、无 `Kernel trap`、无 `can't load`。
-**失败即回退**：把 `KernelCollections.bak` 放回、`sudo kmutil clear-staging`、重启。
-
----
-
-## C. 离屏 Metal 验收（GPU 第一次真实执行）
-
-前置：驱动与 Metal 插件已装好；插件只放行 `mtlprobe`/`nvmtltest`/`nvmtlrender`、
-设了 `NVMTL_ENABLE` 的进程，或 allow-list 文件里的进程。
-
-1. 构建验收程序（与 CI 同参数）：
-
-```bash
-cd ~/honor-hackintosh-lab
-xcrun clang -arch x86_64 -mmacosx-version-min=15.5 -fobjc-arc -fblocks -O1 \
-  -Wall -Wextra -Werror -Werror=unguarded-availability-new \
-  research/stock-v243-offscreen-20261021/metal-offscreen.m \
-  -framework Foundation -framework Metal -framework IOKit -framework CoreFoundation \
-  -o ~/Desktop/g1-run/nvmtltest
-shasum -a 256 ~/Desktop/g1-run/nvmtltest | tee ~/Desktop/g1-run/validator-sha.txt
-```
-
-2. 取 RTX 2050 的 registryID（两种方式，任选）：
-
-```bash
-swift -e 'import Metal; for d in MTLCopyAllDevices() { print(d.name, String(d.registryID, radix: 16)) }'
-# 或
-ioreg -rn IOPCIDevice -d 1 -l | grep -E 'IORegistryEntryID|"device-id"' | head -40
-```
-
-3. 运行（把 `<HEX>` 换成上一步 NVIDIA 设备的 ID）：
-
-```bash
-cd ~/Desktop/g1-run
-sudo NVMTL_ENABLE=1 ./nvmtltest --execute-authorized --registry-id <HEX> 2>&1 | tee run.txt
-echo "exit=${PIPESTATUS[0]}" | tee -a run.txt
-log show --last 2m --predicate 'process == "kernel"' | tee kernel-during-run.txt
-```
-
-判据（程序内已实现，全部满足才打印 `APP_TEST_PASS`）：
-registryID 唯一匹配且向上找到 `10DE:25A9`；64 个 uint32 与 CPU 预期逐项相等；
-RGBA8 三角形绘制后像素逐项正确；无效着色器必须编译失败并带 NSError；
-每条命令 10 s 超时、任何状态错误立即非零退出。
-
-回退：删掉 `/Library/GPUBundles` 里的插件或 allow-list 行，重启。
-
----
-
-## 回传清单
-
-`~/Desktop/g1-run/` 下：`sw_vers.txt`、`kextstat*.txt`、`base-*.txt`、`cand-*.txt`、
-`kernutil-install.txt`、`log-after.txt`、`run.txt`、`kernel-during-run.txt`、`validator-sha.txt`。
-
-## 停止条件（任一出现就停，不要继续下一步）
-
-- `kextutil -n` 出现未解析符号；
-- 装入后 5 分钟内 panic 或 kext 未出现在 `kextstat`；
-- 验收程序报 `RTX2050-registry-and-PCI-binding`（说明设备没被 Metal 暴露）；
-- 内核日志出现 GPU 固件/MMU/超时错误。
+见 ../stock-v243-audit-20261021/REVIEW.md、local-only-binding.json、enum-native-binding.json，
+以及已归档原始文本。新门禁与逐类槽位取证的实际结果必须按其 run/SHA 单独验收。

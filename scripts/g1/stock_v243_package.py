@@ -52,8 +52,30 @@ def compatible(required, provider):
     return version(lower) <= version(required) <= version(current)
 
 
-def required_of(declared, bid):
-    return declared.get(bid, '0')
+def declared_dependencies(declared, symbolsets, families):
+    """Every declaration matters, even when no current import uses that dependency."""
+    groups = {g['CFBundleIdentifier']: g for g in symbolsets['SymbolsSets']}
+    rows = []
+    for bid, required in declared.items():
+        version(required)
+        f = families.get(bid)
+        info = groups.get(bid) or (f.get('info') if f else None)
+        if info:
+            status = 'VERSION_COMPATIBLE' if compatible(required, info) else 'VERSION_INCOMPATIBLE'
+        elif f and f.get('present_in_collection'):
+            status = 'IDENTITY_OBSERVED_VERSION_UNVERIFIED'
+        else:
+            status = 'DEPENDENCY_ABSENT'
+        rows.append(dict(bundle=bid, required=required, status=status))
+    return dict(rows=rows, rejected=[r for r in rows if r['status'] in ('VERSION_INCOMPATIBLE', 'DEPENDENCY_ABSENT')],
+        unverified=[r for r in rows if r['status'] == 'IDENTITY_OBSERVED_VERSION_UNVERIFIED'])
+
+
+def accept_declared_dependencies(declared, symbolsets, families):
+    result = declared_dependencies(declared, symbolsets, families)
+    if result['rejected']:
+        raise ValueError('declared dependency rejected: '+str(result['rejected']))
+    return result
 
 
 VTABLE_HELPERS = None
@@ -103,20 +125,19 @@ def audit_imports(names, declared, symbolsets, actual_kernel, families, exports)
                     evidence='KC_EXTERNAL_DEFINITION',
                     explicit_export=(name in allow) if allow is not None else 'UNVERIFIED'))
         if not providers:
-            slot = vtable_evidence().get(name)
-            if slot is not None:
-                rows.append(dict(symbol=name, providers=[], vtable_slot=slot,
-                    status='VTABLE_SLOT_OBSERVED_LOCAL_NAME_STRIPPED'))
-                continue
             local = [bid for bid, f in families.items()
-                     if f and (f['info'] is None or compatible(required_of(declared, bid), f['info']))
+                     if bid in declared and f and (f['info'] is None or compatible(declared[bid], f['info']))
                      and name in f.get('local_definitions', ())]
             if local:
                 rows.append(dict(symbol=name, providers=[], local_definitions=local,
                     status='LOCAL_DEFINITION_OBSERVED_EXPORT_UNVERIFIED'))
                 continue
-        rows.append(dict(symbol=name, providers=providers,
-            status='DECLARED_VERSION_AND_DEFINITION' if providers else 'UNRESOLVED'))
+        row = dict(symbol=name, providers=providers,
+            status='DECLARED_VERSION_AND_DEFINITION' if providers else 'UNRESOLVED')
+        if not providers and name in vtable_evidence():
+            # A virtual dispatch target does not establish an external linkable symbol.
+            row['historical_vtable_observation'] = vtable_evidence()[name]
+        rows.append(row)
     return dict(count=len(rows), unresolved=[r['symbol'] for r in rows if not r['providers']
                 and r['status'] == 'UNRESOLVED'],
         local_only=[r['symbol'] for r in rows if r['status'] == 'LOCAL_DEFINITION_OBSERVED_EXPORT_UNVERIFIED'],
@@ -240,6 +261,8 @@ def native_providers(names, logs):
             families[bid] = dict(info=None, definitions=definitions, local_definitions=local_definitions,
                 plist_sha256=None, identity_source='KC_FILESET_ENTRY_ID_DISK_PLIST_ABSENT')
             (logs/(short+'.plist.txt')).write_text('INFO_PLIST_ABSENT_OBSERVED_IN_KERNEL_COLLECTION\\n')
+        families[bid]['present_in_collection'] = any(m['bundle_id'] == bid
+            for observation in observations for m in observation['members'])
         if short in ('IOPCIFamily', 'IOACPIFamily'):
             rel = 'config/' if short == 'IOPCIFamily' else ''
             text = (path.parent/'Resources'/rel/(short+'.exports')).read_text()
@@ -259,6 +282,69 @@ def _add_missing_dependency(bundle):
     info_path.write_bytes(plistlib.dumps(info))
 
 
+def bundle_identity(bundle):
+    """Bind a diagnostic to both exact bundle inputs; never search installed names."""
+    bundle = Path(bundle).resolve()
+    info_path = bundle/'Contents/Info.plist'
+    info = plistlib.loads(info_path.read_bytes())
+    name = info['CFBundleExecutable']
+    if not isinstance(name, str) or Path(name).name != name or name in ('', '.', '..'):
+        raise ValueError('unsafe bundle executable')
+    executable = bundle/'Contents/MacOS'/name
+    return dict(bundle=str(bundle), executable=str(executable),
+        bundle_sha256=base.digest(executable), plist_sha256=base.digest(info_path),
+        bundle_id=info['CFBundleIdentifier'])
+
+
+def accept_loader_diagnostics(loaders, expected):
+    """Reject diagnostic failures, without promoting exit 0 into loader acceptance."""
+    if set(loaders) != set(SPECS) or set(expected) != set(SPECS):
+        raise ValueError('kextutil diagnostic inventory differs')
+    for name, record in loaders.items():
+        if type(record.get('exit')) is not int or record['exit'] != 0 or record.get('unresolved') != []:
+            raise ValueError('kextutil diagnostic failed: '+name)
+        for key in ('bundle', 'executable', 'bundle_sha256', 'plist_sha256', 'bundle_id'):
+            if not record.get(key) or record[key] != expected[name].get(key):
+                raise ValueError('kextutil candidate identity differs: '+name+' '+key)
+    return dict(status='DIAGNOSTICS_ONLY_NO_LOADER_ACCEPTANCE',
+        exclusive_candidate_dependency_binding='UNVERIFIED',
+        authentication='NOT_TESTED_BY_KEXTUTIL_N', loader_acceptance='UNVERIFIED')
+
+
+def loader_diagnostics(products, out, records=None, runner=None, bindings=None):
+    """Same production path for real native calls and subprocess fault injection."""
+    runner = runner or base.run
+    expected = {name:bundle_identity(products/(name+'.kext')) for name in SPECS}
+    if bindings is not None:
+        if set(bindings) != set(SPECS):
+            raise ValueError('compiled bundle inventory differs')
+        for name, identity in expected.items():
+            if identity['bundle_sha256'] != bindings[name]['sha256'] or identity['plist_sha256'] != bindings[name]['plist_sha256']:
+                raise ValueError('diagnostic target differs from compiled bundle: '+name)
+    records = {} if records is None else records
+    for name, identity in expected.items():
+        log = out/(name+'-kextutil.txt')
+        rc = runner(['xcrun', 'kextutil', '-n', identity['bundle']], products, log)
+        text = log.read_text(encoding='utf-8', errors='replace')
+        unresolved = sorted({line.strip() for line in text.splitlines() if re.search(
+            r"can't\s+resolve|cannot\s+resolve|unresolved|undefined\s+symbol", line, re.I)})
+        records[name] = dict(exit=rc, unresolved=unresolved, log=log.name, **identity)
+        after = bundle_identity(identity['bundle'])
+        if after != identity:
+            raise ValueError('candidate changed during kextutil diagnostic: '+name)
+    verdict = accept_loader_diagnostics(records, expected)
+    return records, verdict
+
+
+def static_status(report):
+    # Capability probes never establish authentication, dependency binding or ABI.
+    return (PASS_LOCAL_ONLY if report.get('local_only_imports') else PASS) + '_KEXTUTIL_INFORMATIONAL_ONLY'
+
+
+def accepted_status(status):
+    return status in (PASS+'_KEXTUTIL_INFORMATIONAL_ONLY', PASS_LOCAL_ONLY+'_KEXTUTIL_INFORMATIONAL_ONLY')
+
+
 def run(args, report):
     previous = json.loads((args.internal_text/'report.json').read_text())
     if previous['status'] != INTERNAL_PASS:
@@ -276,8 +362,7 @@ def run(args, report):
     # A first hypothesis removed seven IOAccel virtuals as "macOS 26 only". The kernel-collection
     # reverse engineering disproved it: slots 322-325 of IOAccelSurface carry set_shape,
     # set_shape_backing_length_ext, surface_lock_options and surface_unlock_options in this exact order,
-    # and the remaining three exist on their own classes. The declarations stay; the import audit gets
-    # the vtable evidence instead of deleting layout.
+    # The declarations stay. Local slot evidence must not substitute for an external provider.
     # The vtable observation kept the layout and moved the fix to the type declarations: the IOFamily
     # enum types were typedefs to unsigned int, so the base-class imports mangled as 'j' while the real
     # symbols carry the enum names. Apply that narrow patch and verify it against its lock.
@@ -340,34 +425,12 @@ def run(args, report):
         (args.out/(name+'-Info.plist.txt')).write_bytes(info_raw)
         report['bundles'][name] = dict(info=info, plist_sha256=base.digest(bundle/'Info.plist'), **metadata)
     report['compiler_target']='15.5_FROM_EXPLICIT_SAME_RUN_ARGUMENTS_NOT_INFERRED_BINARY_MINIMUM'
-    # Loader-resolution dry run: kextutil -n resolves the bundle against the running kernel without loading
-    # it. This is the closest static check to the loader and it needs no device and no kext load.
-    report['stage'] = 'loader-dry-run'
+    # kextutil -n is an informational diagnostic. Observed exit 0 on malformed bundles
+    # means it cannot certify loader resolution, authentication, or exclusive dependency binding.
+    report['stage'] = 'loader-diagnostics'
     report['loader_dry_run'] = {}
-    for name in built:
-        bundle = products/(name+'.kext')
-        log = args.out/(name+'-kextutil.txt')
-        with log.open('w', encoding='utf-8') as stream:
-            stream.write('ARGV='+repr(['xcrun', 'kextutil', '-n', str(bundle)])+'\n'); stream.flush()
-            result = subprocess.run(['xcrun', 'kextutil', '-n', str(bundle)], cwd=tree,
-                                    stdout=stream, stderr=subprocess.STDOUT, timeout=300)
-            stream.write('\nEXIT='+str(result.returncode)+'\n')
-        text = log.read_text(encoding='utf-8', errors='replace')
-        unresolved = sorted({line.strip() for line in text.splitlines()
-                             if 'can\'t resolve' in line or 'unresolved' in line.lower()})
-        report['loader_dry_run'][name] = dict(exit=result.returncode, unresolved=unresolved,
-                                              log=log.name, bundle=str(bundle),
-                                              bundle_sha256=report['bundles'][name]['sha256'])
-    # Hard gate: recording the exit codes is not enough. All three bundles must have been exercised,
-    # must exit 0 and must show no unresolved symbol. This is the fail-closed form the audit asked for.
-    report['stage'] = 'loader-acceptance'
-    loaders = report['loader_dry_run']
-    missing_runs = sorted(set(built) - set(loaders))
-    bad_exit = {k: v['exit'] for k, v in loaders.items() if v['exit'] != 0}
-    bad_text = {k: v['unresolved'] for k, v in loaders.items() if v['unresolved']}
-    if missing_runs or bad_exit or bad_text:
-        raise ValueError('kextutil -n did not pass: missing=%r exits=%r unresolved=%r'
-                         % (missing_runs, bad_exit, bad_text))
+    _, report['loader_diagnostic_acceptance'] = loader_diagnostics(
+        products, args.out, report['loader_dry_run'], bindings=report['bundles'])
 
     # Capability probe, not a negative control: kextutil -n turned out to accept both a bundle whose
     # executable is missing and one that declares a dependency which does not exist. It therefore cannot
@@ -389,7 +452,14 @@ def run(args, report):
             stream.write('\nEXIT='+str(result.returncode)+'\n')
         probe[case] = dict(exit=result.returncode, accepted=result.returncode == 0, log=log.name)
     report['kextutil_capability_probe'] = probe
-    report['kextutil_is_a_validation_gate'] = not all(v['accepted'] for v in probe.values())
+    report['kextutil_is_a_validation_gate'] = False
+    try:
+        bundle_identity(products/'NVAccel-probe-0.kext')
+    except FileNotFoundError:
+        report['missing_executable_control'] = dict(rejected=True,
+            checker='PRODUCTION_BUNDLE_IDENTITY_CHECK_NOT_KEXTUTIL')
+    else:
+        raise ValueError('missing-executable control was accepted by identity checker')
     for name, record in report['loader_dry_run'].items():
         if record['unresolved']:
             raise ValueError('kextutil -n reported unresolved symbols for %s: %r'
@@ -398,6 +468,25 @@ def run(args, report):
     report['stage'] = 'runner-dependencies'
     all_names = {n for b in report['bundles'].values() for n in b['imports']}
     sets, actual, families, exports = native_providers(all_names, args.out)
+    report['declared_dependencies'] = {name:declared_dependencies(
+        bundle['info']['OSBundleLibraries'], sets, families) for name,bundle in report['bundles'].items()}
+    report['dependency_versions'] = ('PARTIALLY_UNVERIFIED' if any(r['unverified']
+        for r in report['declared_dependencies'].values()) else 'RUNNER_METADATA_MATCHED_NOT_USER_SYSTEM')
+    if any(r['rejected'] for r in report['declared_dependencies'].values()):
+        raise ValueError('declared dependency absent or version incompatible; see report')
+    # This is a negative control of our production checker, irrespective of kextutil's limitations.
+    missing_info = plistlib.loads((products/'NVAccel-probe-1.kext/Contents/Info.plist').read_bytes())
+    observed = declared_dependencies(missing_info['OSBundleLibraries'], sets, families)
+    absent = [r for r in observed['rejected'] if r['bundle'] == 'com.example.g1-missing']
+    if len(absent) != 1 or absent[0]['status'] != 'DEPENDENCY_ABSENT':
+        raise ValueError('missing-dependency control did not identify the injected dependency')
+    try:
+        accept_declared_dependencies(missing_info['OSBundleLibraries'], sets, families)
+    except ValueError:
+        report['missing_dependency_control'] = dict(rejected=True, injected=absent[0],
+            checker='PRODUCTION_DECLARED_DEPENDENCY_CHECK_NOT_KEXTUTIL')
+    else:
+        raise ValueError('missing-dependency control was accepted')
     for name, bundle in report['bundles'].items():
         audit = audit_imports(bundle['imports'], bundle['info']['OSBundleLibraries'], sets, actual, families, exports)
         bundle['providers'] = audit
@@ -416,11 +505,12 @@ def run(args, report):
             raise ValueError('companion dependency changed after link')
     if base.digest(original) != previous['integrated_link']['sha256']:
         raise ValueError('integrated binary changed after inspection')
-    base_status = PASS if not report['local_only_imports'] else PASS_LOCAL_ONLY
-    final_status = base_status + ('_KEXTUTIL_INFORMATIONAL_ONLY'
-                                  if not report['kextutil_is_a_validation_gate'] else '')
+    final_status = static_status(report)
     report.update(status=final_status, stage='complete', internal_binary_sha256=base.digest(original),
         user_system='UNVERIFIED', full_abi='UNVERIFIED', gpu='NOT_RUN', kext_load='NO_GO',
+        milestone='PRE_DEVICE_STATIC_INTEGRATION_CONDITIONAL_PASS',
+        loader_resolution='UNVERIFIED', exports_acceptance='UNVERIFIED',
+        exclusive_candidate_dependency_binding='UNVERIFIED',
         metal_plugin='NOT_BUILT_OR_EXECUTED', gsp='NOT_EXECUTED', signing='NOT_RUN')
 
 
@@ -439,7 +529,7 @@ def main():
     finally:
         base.save(args.out/'package-report.json', report)
     print(report['status'], report['stage'], report.get('error',''))
-    return 0 if report['status'].startswith(PASS) else 2
+    return 0 if accepted_status(report['status']) else 2
 
 
 if __name__ == '__main__':

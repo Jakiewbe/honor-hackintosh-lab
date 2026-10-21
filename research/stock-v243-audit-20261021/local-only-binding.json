@@ -1,0 +1,908 @@
+{
+  "source_run": 39585922948,
+  "source_commit": "a25d2f54b22a71d4f1dbfec0778d0792a00c068d",
+  "count": 20,
+  "rows": [
+    {
+      "symbol": "__ZN15IOAccelContext210invalidateEv",
+      "declared_provider": "com.apple.iokit.IOAcceleratorFamily2",
+      "required_version": "2.0.0",
+      "observations": [
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358404976,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x14846d04",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        },
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358405472,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x14848d8c",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        },
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358405808,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x1484e73c",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        },
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358406800,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x1485ec98",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        },
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358408544,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x1487d6cc",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        }
+      ],
+      "distinct_addresses": 5,
+      "external_export": "UNVERIFIED",
+      "full_abi": "UNVERIFIED",
+      "admission": "BLOCKED_FOR_DEVICE"
+    },
+    {
+      "symbol": "__ZN15IOAccelContext217getFrameDelimiterEv",
+      "declared_provider": "com.apple.iokit.IOAcceleratorFamily2",
+      "required_version": "2.0.0",
+      "observations": [
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358404992,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x14846d0a",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        },
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358405488,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x14848d92",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        },
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358405824,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x1484e742",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        },
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358406816,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x1485ec9e",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        },
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358408560,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x1487d6d2",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        }
+      ],
+      "distinct_addresses": 5,
+      "external_export": "UNVERIFIED",
+      "full_abi": "UNVERIFIED",
+      "admission": "BLOCKED_FOR_DEVICE"
+    },
+    {
+      "symbol": "__ZN15IOAccelContext218validateDataBufferEyP24IOBufferMemoryDescriptorP16IOAccelResource2",
+      "declared_provider": "com.apple.iokit.IOAcceleratorFamily2",
+      "required_version": "2.0.0",
+      "observations": [
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358404960,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x14846cfc",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        },
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358405456,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x14848d84",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        },
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358405792,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x1484e734",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        },
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358406784,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x1485ec90",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        },
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358408528,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x1487d6c4",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        }
+      ],
+      "distinct_addresses": 5,
+      "external_export": "UNVERIFIED",
+      "full_abi": "UNVERIFIED",
+      "admission": "BLOCKED_FOR_DEVICE"
+    },
+    {
+      "symbol": "__ZN15IOAccelContext220getDataBufferPrivateEP16IOAccelResource2P22IOAccelResourcePrivatey",
+      "declared_provider": "com.apple.iokit.IOAcceleratorFamily2",
+      "required_version": "2.0.0",
+      "observations": [
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358404944,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x14846cf6",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        },
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358405440,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x14848d7e",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        },
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358405776,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x1484e72e",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        },
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358406768,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x1485ec8a",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        },
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358408512,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x1487d6be",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        }
+      ],
+      "distinct_addresses": 5,
+      "external_export": "UNVERIFIED",
+      "full_abi": "UNVERIFIED",
+      "admission": "BLOCKED_FOR_DEVICE"
+    },
+    {
+      "symbol": "__ZN16IOAccelMemoryMap15matchOptionBitsEj",
+      "declared_provider": "com.apple.iokit.IOAcceleratorFamily2",
+      "required_version": "2.0.0",
+      "observations": [
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358409472,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x14896084",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        }
+      ],
+      "distinct_addresses": 1,
+      "external_export": "UNVERIFIED",
+      "full_abi": "UNVERIFIED",
+      "admission": "BLOCKED_FOR_DEVICE"
+    },
+    {
+      "symbol": "__ZN16IOAccelResource223getMemoryAllocParameterEv",
+      "declared_provider": "com.apple.iokit.IOAcceleratorFamily2",
+      "required_version": "2.0.0",
+      "observations": [
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358407584,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x1486b4d6",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        }
+      ],
+      "distinct_addresses": 1,
+      "external_export": "UNVERIFIED",
+      "full_abi": "UNVERIFIED",
+      "admission": "BLOCKED_FOR_DEVICE"
+    },
+    {
+      "symbol": "__ZN16IOAccelResource26pageonEP12IOAccelEventb",
+      "declared_provider": "com.apple.iokit.IOAcceleratorFamily2",
+      "required_version": "2.0.0",
+      "observations": [
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358407520,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x1486b4a6",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        }
+      ],
+      "distinct_addresses": 1,
+      "external_export": "UNVERIFIED",
+      "full_abi": "UNVERIFIED",
+      "admission": "BLOCKED_FOR_DEVICE"
+    },
+    {
+      "symbol": "__ZN16IOAccelResource26pageonEP12IOAccelEventby",
+      "declared_provider": "com.apple.iokit.IOAcceleratorFamily2",
+      "required_version": "2.0.0",
+      "observations": [
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358407536,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x1486b4ac",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        }
+      ],
+      "distinct_addresses": 1,
+      "external_export": "UNVERIFIED",
+      "full_abi": "UNVERIFIED",
+      "admission": "BLOCKED_FOR_DEVICE"
+    },
+    {
+      "symbol": "__ZN16IOAccelResource27pageoffEP12IOAccelEventbPb",
+      "declared_provider": "com.apple.iokit.IOAcceleratorFamily2",
+      "required_version": "2.0.0",
+      "observations": [
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358407552,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x1486b4be",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        }
+      ],
+      "distinct_addresses": 1,
+      "external_export": "UNVERIFIED",
+      "full_abi": "UNVERIFIED",
+      "admission": "BLOCKED_FOR_DEVICE"
+    },
+    {
+      "symbol": "__ZN16IOAccelSysMemory6getTagEv",
+      "declared_provider": "com.apple.iokit.IOAcceleratorFamily2",
+      "required_version": "2.0.0",
+      "observations": [
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358409696,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x14898ed6",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        }
+      ],
+      "distinct_addresses": 1,
+      "external_export": "UNVERIFIED",
+      "full_abi": "UNVERIFIED",
+      "admission": "BLOCKED_FOR_DEVICE"
+    },
+    {
+      "symbol": "__ZN16IOAccelSysMemory6setTagEj",
+      "declared_provider": "com.apple.iokit.IOAcceleratorFamily2",
+      "required_version": "2.0.0",
+      "observations": [
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358409680,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x14898ebe",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        }
+      ],
+      "distinct_addresses": 1,
+      "external_export": "UNVERIFIED",
+      "full_abi": "UNVERIFIED",
+      "admission": "BLOCKED_FOR_DEVICE"
+    },
+    {
+      "symbol": "__ZN16IOAccelVidMemory6getTagEv",
+      "declared_provider": "com.apple.iokit.IOAcceleratorFamily2",
+      "required_version": "2.0.0",
+      "observations": [
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358409808,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x148996e6",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        }
+      ],
+      "distinct_addresses": 1,
+      "external_export": "UNVERIFIED",
+      "full_abi": "UNVERIFIED",
+      "admission": "BLOCKED_FOR_DEVICE"
+    },
+    {
+      "symbol": "__ZN16IOAccelVidMemory6setTagEj",
+      "declared_provider": "com.apple.iokit.IOAcceleratorFamily2",
+      "required_version": "2.0.0",
+      "observations": [
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358409792,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x148996da",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        }
+      ],
+      "distinct_addresses": 1,
+      "external_export": "UNVERIFIED",
+      "full_abi": "UNVERIFIED",
+      "admission": "BLOCKED_FOR_DEVICE"
+    },
+    {
+      "symbol": "__ZN20IOAccelEventMachine227collectAllLiveEventIfNeededEv",
+      "declared_provider": "com.apple.iokit.IOAcceleratorFamily2",
+      "required_version": "2.0.0",
+      "observations": [
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358406320,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x148566ec",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        },
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358408032,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x1487524e",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        }
+      ],
+      "distinct_addresses": 2,
+      "external_export": "UNVERIFIED",
+      "full_abi": "UNVERIFIED",
+      "admission": "BLOCKED_FOR_DEVICE"
+    },
+    {
+      "symbol": "__ZN20IOAccelLegacySurface12submitUpdateEjP13IOAccelBoundsj",
+      "declared_provider": "com.apple.iokit.IOAcceleratorFamily2",
+      "required_version": "2.0.0",
+      "observations": [
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358406432,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x1485b668",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        }
+      ],
+      "distinct_addresses": 1,
+      "external_export": "UNVERIFIED",
+      "full_abi": "UNVERIFIED",
+      "admission": "BLOCKED_FOR_DEVICE"
+    },
+    {
+      "symbol": "__ZN20IOAccelLegacySurface17submitCopyForwardEP12IOAccelEventjP16IOAccelResource2S3_PK13IOAccelBoundsj",
+      "declared_provider": "com.apple.iokit.IOAcceleratorFamily2",
+      "required_version": "2.0.0",
+      "observations": [
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358406416,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x1485b65c",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        }
+      ],
+      "distinct_addresses": 1,
+      "external_export": "UNVERIFIED",
+      "full_abi": "UNVERIFIED",
+      "admission": "BLOCKED_FOR_DEVICE"
+    },
+    {
+      "symbol": "__ZN22IOGraphicsAccelerator212tmpTotalVRAMEv",
+      "declared_provider": "com.apple.iokit.IOAcceleratorFamily2",
+      "required_version": "2.0.0",
+      "observations": [
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358408736,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x1488696c",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        }
+      ],
+      "distinct_addresses": 1,
+      "external_export": "UNVERIFIED",
+      "full_abi": "UNVERIFIED",
+      "admission": "BLOCKED_FOR_DEVICE"
+    },
+    {
+      "symbol": "__ZN22IOGraphicsAccelerator218totalTextureMemoryEv",
+      "declared_provider": "com.apple.iokit.IOAcceleratorFamily2",
+      "required_version": "2.0.0",
+      "observations": [
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358408752,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x14886978",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        }
+      ],
+      "distinct_addresses": 1,
+      "external_export": "UNVERIFIED",
+      "full_abi": "UNVERIFIED",
+      "admission": "BLOCKED_FOR_DEVICE"
+    },
+    {
+      "symbol": "__ZNK13IOAccelMemory9getLengthEv",
+      "declared_provider": "com.apple.iokit.IOAcceleratorFamily2",
+      "required_version": "2.0.0",
+      "observations": [
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358404752,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x14845d4c",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        },
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358407680,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x1486bc1e",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        },
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358409664,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x14898eb4",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        },
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358409776,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x148996d0",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        }
+      ],
+      "distinct_addresses": 4,
+      "external_export": "UNVERIFIED",
+      "full_abi": "UNVERIFIED",
+      "admission": "BLOCKED_FOR_DEVICE"
+    },
+    {
+      "symbol": "__ZNK16IOAccelMemoryMap9getLengthEv",
+      "declared_provider": "com.apple.iokit.IOAcceleratorFamily2",
+      "required_version": "2.0.0",
+      "observations": [
+        {
+          "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+          "member_uuid": "65ceb805d3263f159595f6ec0a6d78da",
+          "nlist_offset": 358409488,
+          "n_type": 14,
+          "n_sect": 1,
+          "value": "0x1489608c",
+          "section": {
+            "ordinal": 1,
+            "name": "__text",
+            "segment": "__TEXT",
+            "address": 344209696,
+            "size": 359054,
+            "offset": 344209696,
+            "flags": 2147484672
+          }
+        }
+      ],
+      "distinct_addresses": 1,
+      "external_export": "UNVERIFIED",
+      "full_abi": "UNVERIFIED",
+      "admission": "BLOCKED_FOR_DEVICE"
+    }
+  ],
+  "claim": "LOCAL_DEFINITIONS_ONLY_NOT_EXTERNAL_LINK_PROVIDERS"
+}

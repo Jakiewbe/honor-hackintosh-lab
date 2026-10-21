@@ -1,0 +1,125 @@
+{
+  "source_run": 39585922948,
+  "commit": "a25d2f54b22a71d4f1dbfec0778d0792a00c068d",
+  "overlay": {
+    "applied": true,
+    "sha256": "718f2a2c2076af4df74d58b6efccdbbd4c66639f33c5c482734cfd042d32f553",
+    "scope": "kexts/NVRM/accel/iofam/iofam_types.h",
+    "reason": "The reconstructed IOFamily types were typedefs to unsigned int, so the base-class method imports mangled as 'j' while the running kernel's vtable symbols use the enum names (slots 322-325 of IOAccelSurface). Declaring them as enums restores the real signatures without changing any vtable slot.",
+    "vtable_evidence": "research/stock-v243-offscreen-20261021/iogfx-vtable-20261021.json"
+  },
+  "nvaccel": {
+    "sha256": "04b13d7f38710bd61a189b3c2ca1c417bfb081c86cf16f95856f976cdb959884",
+    "bytes": 244664,
+    "source_sha256": "b75dc5b4519deb26b85e88734c94c08b59c4386d6d9896ef6416a22049031dbe"
+  },
+  "methods": [
+    {
+      "symbol": "__ZN14IOAccelSurface20surface_lock_optionsE9eLockTypejP25IOAccelSurfaceInformationy",
+      "providers": [
+        {
+          "bundle": "com.apple.iokit.IOAcceleratorFamily2",
+          "target": "__ZN14IOAccelSurface20surface_lock_optionsE9eLockTypejP25IOAccelSurfaceInformationy",
+          "version": "485",
+          "required": "2.0.0",
+          "compatible": "2.0.0",
+          "evidence": "KC_EXTERNAL_DEFINITION",
+          "explicit_export": "UNVERIFIED"
+        }
+      ],
+      "status": "DECLARED_VERSION_AND_DEFINITION"
+    },
+    {
+      "symbol": "__ZN14IOAccelSurface22surface_unlock_optionsE9eLockTypej",
+      "providers": [
+        {
+          "bundle": "com.apple.iokit.IOAcceleratorFamily2",
+          "target": "__ZN14IOAccelSurface22surface_unlock_optionsE9eLockTypej",
+          "version": "485",
+          "required": "2.0.0",
+          "compatible": "2.0.0",
+          "evidence": "KC_EXTERNAL_DEFINITION",
+          "explicit_export": "UNVERIFIED"
+        }
+      ],
+      "status": "DECLARED_VERSION_AND_DEFINITION"
+    },
+    {
+      "symbol": "__ZN14IOAccelSurface28set_shape_backing_length_extE24eIOAccelSurfaceShapeBitsjyjyP19IOAccelDeviceRegiony",
+      "providers": [
+        {
+          "bundle": "com.apple.iokit.IOAcceleratorFamily2",
+          "target": "__ZN14IOAccelSurface28set_shape_backing_length_extE24eIOAccelSurfaceShapeBitsjyjyP19IOAccelDeviceRegiony",
+          "version": "485",
+          "required": "2.0.0",
+          "compatible": "2.0.0",
+          "evidence": "KC_EXTERNAL_DEFINITION",
+          "explicit_export": "UNVERIFIED"
+        }
+      ],
+      "status": "DECLARED_VERSION_AND_DEFINITION"
+    },
+    {
+      "symbol": "__ZN14IOAccelSurface9set_shapeE24eIOAccelSurfaceShapeBitsjP19IOAccelDeviceRegiony",
+      "providers": [
+        {
+          "bundle": "com.apple.iokit.IOAcceleratorFamily2",
+          "target": "__ZN14IOAccelSurface9set_shapeE24eIOAccelSurfaceShapeBitsjP19IOAccelDeviceRegiony",
+          "version": "485",
+          "required": "2.0.0",
+          "compatible": "2.0.0",
+          "evidence": "KC_EXTERNAL_DEFINITION",
+          "explicit_export": "UNVERIFIED"
+        }
+      ],
+      "status": "DECLARED_VERSION_AND_DEFINITION"
+    },
+    {
+      "symbol": "__ZN17IOAccelGLContext211processSwapE7eDoSwap",
+      "providers": [
+        {
+          "bundle": "com.apple.iokit.IOAcceleratorFamily2",
+          "target": "__ZN17IOAccelGLContext211processSwapE7eDoSwap",
+          "version": "485",
+          "required": "2.0.0",
+          "compatible": "2.0.0",
+          "evidence": "KC_EXTERNAL_DEFINITION",
+          "explicit_export": "UNVERIFIED"
+        }
+      ],
+      "status": "DECLARED_VERSION_AND_DEFINITION"
+    },
+    {
+      "symbol": "__ZN24IOAccelLegacyDisplayPipe9setStereoE17IOAccelStereoMode",
+      "providers": [
+        {
+          "bundle": "com.apple.iokit.IOAcceleratorFamily2",
+          "target": "__ZN24IOAccelLegacyDisplayPipe9setStereoE17IOAccelStereoMode",
+          "version": "485",
+          "required": "2.0.0",
+          "compatible": "2.0.0",
+          "evidence": "KC_EXTERNAL_DEFINITION",
+          "explicit_export": "UNVERIFIED"
+        }
+      ],
+      "status": "DECLARED_VERSION_AND_DEFINITION"
+    },
+    {
+      "symbol": "__ZN27IOAccelLegacyDisplayMachine9setStereoEj17IOAccelStereoMode",
+      "providers": [
+        {
+          "bundle": "com.apple.iokit.IOAcceleratorFamily2",
+          "target": "__ZN27IOAccelLegacyDisplayMachine9setStereoEj17IOAccelStereoMode",
+          "version": "485",
+          "required": "2.0.0",
+          "compatible": "2.0.0",
+          "evidence": "KC_EXTERNAL_DEFINITION",
+          "explicit_export": "UNVERIFIED"
+        }
+      ],
+      "status": "DECLARED_VERSION_AND_DEFINITION"
+    }
+  ],
+  "full_abi": "UNVERIFIED",
+  "vtable_layout": "PARTIAL_NOT_FULL_LAYOUT"
+}

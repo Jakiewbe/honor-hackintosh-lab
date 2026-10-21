@@ -3,17 +3,6 @@ name: HONOR G1 stock v243 kernel package audit
 # Compile/link only: same-run baseline, source-paired NVKMS, real NVLink locks.
 on:
   workflow_dispatch:
-  # Fallback trigger while api.github.com stays unreachable from the development host: a push to the
-  # audited inputs starts the gate, and every run remains bound to the pushed commit SHA.
-  push:
-    paths:
-      - 'tools/g1_kc8.py'
-      - 'scripts/g1/stock_v243_package.py'
-      - 'scripts/g1/stock_v243_import_audit.py'
-      - 'tests/test_stock_v24*.py'
-      - 'research/stock-v243-offscreen-20261021/iofam-macos15-layout.patch'
-      - 'research/stock-v243-offscreen-20261021/iofam-lock.json'
-      - '.github/workflows/g1-stock-v243-package.yml'
 
 permissions:
   contents: read
@@ -80,6 +69,26 @@ jobs:
           python3 scripts/g1/stock_v243_package.py \
             --internal-text "$RUNNER_TEMP/internal-text" \
             --work "$RUNNER_TEMP/internal-products" --out "$RUNNER_TEMP/package-text"
+
+      - name: Read-only per-class ABI observations with KC identity
+        if: ${{ !cancelled() && steps.internal.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir "$RUNNER_TEMP/abi-observation-text"
+          python3 tools/g1_kc_vtable_bounded.py \
+            /System/Library/KernelCollections/SystemKernelExtensions.kc \
+            --out "$RUNNER_TEMP/abi-observation-text/per-class-vtable.json"
+          sw_vers > "$RUNNER_TEMP/abi-observation-text/system.txt"
+
+      - name: Upload bounded ABI text observations
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g1-stock-v243-abi-observation-text
+          path: ${{ runner.temp }}/abi-observation-text/*.json
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: RM busy guard actual-function contract and same-run native relink
         if: ${{ !cancelled() && steps.internal.outcome == 'success' }}

@@ -1,0 +1,956 @@
+{
+ "collection": "/System/Library/KernelCollections/SystemKernelExtensions.kc",
+ "bundle": "com.apple.iokit.IOAcceleratorFamily2",
+ "member_fileoff": 344207360,
+ "pointer_formats": [
+  11
+ ],
+ "member_segments": [
+  {
+   "name": "__TEXT",
+   "vmaddr": 344207360,
+   "vmsize": 434176,
+   "fileoff": 344207360,
+   "filesize": 434176
+  },
+  {
+   "name": "__DATA",
+   "vmaddr": 344641536,
+   "vmsize": 98304,
+   "fileoff": 344641536,
+   "filesize": 94208
+  },
+  {
+   "name": "__DATA_CONST",
+   "vmaddr": 344739840,
+   "vmsize": 12288,
+   "fileoff": 344739840,
+   "filesize": 12288
+  },
+  {
+   "name": "__LINKEDIT",
+   "vmaddr": 353058816,
+   "vmsize": 12677718,
+   "fileoff": 353058816,
+   "filesize": 12677718
+  }
+ ],
+ "chain_segments": [
+  {
+   "segment_offset": 434176,
+   "page_size": 4096,
+   "page_count": 24
+  },
+  {
+   "segment_offset": 532480,
+   "page_size": 4096,
+   "page_count": 3
+  }
+ ],
+ "classes": [
+  {
+   "class_name": "IOAccelSurface",
+   "vtable": "0x148bcab0",
+   "vtable_section": {
+    "name": "__const",
+    "segment": "__DATA",
+    "address": "0x148ad3e0",
+    "offset": 344642528,
+    "size": 92656
+   },
+   "kernel_symbols": 0,
+   "text_range": [
+    "0x14843000",
+    "0x148ad000"
+   ],
+   "scan": [
+    {
+     "word": 2,
+     "raw": "0x400000548772de",
+     "bits": 30,
+     "target": "0x148772de",
+     "symbol": "__ZN14IOAccelSurfaceD1Ev"
+    },
+    {
+     "word": 3,
+     "raw": "0x400000548772e4",
+     "bits": 30,
+     "target": "0x148772e4",
+     "symbol": "__ZN14IOAccelSurfaceD0Ev"
+    },
+    {
+     "word": 9,
+     "raw": "0x400000548772ea",
+     "bits": 30,
+     "target": "0x148772ea",
+     "symbol": "__ZNK14IOAccelSurface12getMetaClassEv"
+    },
+    {
+     "word": 20,
+     "raw": "0x40000054878874",
+     "bits": 30,
+     "target": "0x14878874",
+     "symbol": "__ZN14IOAccelSurface4freeEv"
+    },
+    {
+     "word": 129,
+     "raw": "0x40000054877da4",
+     "bits": 30,
+     "target": "0x14877da4",
+     "symbol": "__ZN14IOAccelSurface16requestTerminateEP9IOServicej"
+    },
+    {
+     "word": 131,
+     "raw": "0x40000054877dac",
+     "bits": 30,
+     "target": "0x14877dac",
+     "symbol": "__ZN14IOAccelSurface12didTerminateEP9IOServicejPb"
+    },
+    {
+     "word": 186,
+     "raw": "0x40000054877afc",
+     "bits": 30,
+     "target": "0x14877afc",
+     "symbol": "__ZN14IOAccelSurface5startEP9IOService"
+    },
+    {
+     "word": 187,
+     "raw": "0x40000054877cb2",
+     "bits": 30,
+     "target": "0x14877cb2",
+     "symbol": "__ZN14IOAccelSurface4stopEP9IOService"
+    },
+    {
+     "word": 268,
+     "raw": "0x40000054879d6a",
+     "bits": 30,
+     "target": "0x14879d6a",
+     "symbol": "__ZN14IOAccelSurface14externalMethodEjP25IOExternalMethodArgumentsP24IOExternalMethodDispatchP8OSObjectPv"
+    },
+    {
+     "word": 288,
+     "raw": "0x40000054878064",
+     "bits": 30,
+     "target": "0x14878064",
+     "symbol": "__ZN14IOAccelSurface11clientCloseEv"
+    },
+    {
+     "word": 298,
+     "raw": "0x400000548788d8",
+     "bits": 30,
+     "target": "0x148788d8",
+     "symbol": "__ZN14IOAccelSurface26getTargetAndMethodForIndexEPP9IOServicej"
+    },
+    {
+     "word": 305,
+     "raw": "0x400000548781be",
+     "bits": 30,
+     "target": "0x148781be",
+     "symbol": "__ZN14IOAccelSurface12surfaceStartEv"
+    },
+    {
+     "word": 306,
+     "raw": "0x40000054878462",
+     "bits": 30,
+     "target": "0x14878462",
+     "symbol": "__ZN14IOAccelSurface11surfaceStopEv"
+    },
+    {
+     "word": 307,
+     "raw": "0x4000005487b6f2",
+     "bits": 30,
+     "target": "0x1487b6f2",
+     "symbol": "__ZN14IOAccelSurface22isSurfaceSizeSupportedEss"
+    },
+    {
+     "word": 310,
+     "raw": "0x40000054877ff0",
+     "bits": 30,
+     "target": "0x14877ff0",
+     "symbol": "__ZN14IOAccelSurface20orphanClientMappingsEP5OSSet"
+    },
+    {
+     "word": 311,
+     "raw": "0x4000005487c01c",
+     "bits": 30,
+     "target": "0x1487c01c",
+     "symbol": "__ZN14IOAccelSurface24_RESERVEDIOAccelSurface0Ev"
+    },
+    {
+     "word": 312,
+     "raw": "0x4000005487c030",
+     "bits": 30,
+     "target": "0x1487c030",
+     "symbol": "__ZN14IOAccelSurface24_RESERVEDIOAccelSurface1Ev"
+    },
+    {
+     "word": 313,
+     "raw": "0x4000005487c046",
+     "bits": 30,
+     "target": "0x1487c046",
+     "symbol": "__ZN14IOAccelSurface24_RESERVEDIOAccelSurface2Ev"
+    },
+    {
+     "word": 314,
+     "raw": "0x4000005487c05c",
+     "bits": 30,
+     "target": "0x1487c05c",
+     "symbol": "__ZN14IOAccelSurface24_RESERVEDIOAccelSurface3Ev"
+    },
+    {
+     "word": 315,
+     "raw": "0x4000005487c072",
+     "bits": 30,
+     "target": "0x1487c072",
+     "symbol": "__ZN14IOAccelSurface24_RESERVEDIOAccelSurface4Ev"
+    },
+    {
+     "word": 316,
+     "raw": "0x4000005487c088",
+     "bits": 30,
+     "target": "0x1487c088",
+     "symbol": "__ZN14IOAccelSurface24_RESERVEDIOAccelSurface5Ev"
+    },
+    {
+     "word": 317,
+     "raw": "0x4000005487b81e",
+     "bits": 30,
+     "target": "0x1487b81e",
+     "symbol": "__ZN14IOAccelSurface12update_shapeEv"
+    },
+    {
+     "word": 318,
+     "raw": "0x4000005487b47e",
+     "bits": 30,
+     "target": "0x1487b47e",
+     "symbol": "__ZN14IOAccelSurface13prune_buffersEv"
+    },
+    {
+     "word": 319,
+     "raw": "0x4000005487b32c",
+     "bits": 30,
+     "target": "0x1487b32c",
+     "symbol": "__ZN14IOAccelSurface14reset_req_bitsEv"
+    },
+    {
+     "word": 320,
+     "raw": "0x4000005487ac78",
+     "bits": 30,
+     "target": "0x1487ac78",
+     "symbol": "__ZN14IOAccelSurface11set_scalingEjP21IOAccelSurfaceScaling"
+    },
+    {
+     "word": 321,
+     "raw": "0x400000548788fe",
+     "bits": 30,
+     "target": "0x148788fe",
+     "symbol": "__ZN14IOAccelSurface19add_context_to_listEP15IOAccelContext2"
+    },
+    {
+     "word": 322,
+     "raw": "0x40000054878940",
+     "bits": 30,
+     "target": "0x14878940",
+     "symbol": "__ZN14IOAccelSurface24remove_context_from_listEP15IOAccelContext2"
+    },
+    {
+     "word": 323,
+     "raw": "0x40000054878d4c",
+     "bits": 30,
+     "target": "0x14878d4c",
+     "symbol": "__ZN14IOAccelSurface11set_id_modeEjj"
+    },
+    {
+     "word": 324,
+     "raw": "0x40000054879c8e",
+     "bits": 30,
+     "target": "0x14879c8e",
+     "symbol": "__ZN14IOAccelSurface9set_shapeE24eIOAccelSurfaceShapeBitsjP19IOAccelDeviceRegiony"
+    },
+    {
+     "word": 325,
+     "raw": "0x4000005487a0b4",
+     "bits": 30,
+     "target": "0x1487a0b4",
+     "symbol": "__ZN14IOAccelSurface28set_shape_backing_length_extE24eIOAccelSurfaceShapeBitsjyjyP19IOAccelDeviceRegiony"
+    },
+    {
+     "word": 326,
+     "raw": "0x400000548796c6",
+     "bits": 30,
+     "target": "0x148796c6",
+     "symbol": "__ZN14IOAccelSurface20surface_lock_optionsE9eLockTypejP25IOAccelSurfaceInformationy"
+    },
+    {
+     "word": 327,
+     "raw": "0x40000054879b02",
+     "bits": 30,
+     "target": "0x14879b02",
+     "symbol": "__ZN14IOAccelSurface22surface_unlock_optionsE9eLockTypej"
+    },
+    {
+     "word": 328,
+     "raw": "0x10000005487ae2a",
+     "bits": 30,
+     "target": "0x1487ae2a",
+     "symbol": "__ZN14IOAccelSurface25surface_control_with_lockEjjPj"
+    },
+    {
+     "word": 332,
+     "raw": "0x400000548772aa",
+     "bits": 30,
+     "target": "0x148772aa",
+     "symbol": "__ZN14IOAccelSurface9MetaClassD1Ev"
+    },
+    {
+     "word": 333,
+     "raw": "0x4000005487c09e",
+     "bits": 30,
+     "target": "0x1487c09e",
+     "symbol": "__ZN14IOAccelSurface9MetaClassD0Ev"
+    },
+    {
+     "word": 349,
+     "raw": "0x4000005487732a",
+     "bits": 30,
+     "target": "0x1487732a",
+     "symbol": "__ZNK14IOAccelSurface9MetaClass5allocEv"
+    },
+    {
+     "word": 359,
+     "raw": "0x10000005487735e",
+     "bits": 30,
+     "target": "0x1487735e",
+     "symbol": "__ZN14IOAccelSurface21s_signal_shared_eventEPS_PvP25IOExternalMethodArguments"
+    },
+    {
+     "word": 363,
+     "raw": "0x180000054877376",
+     "bits": 30,
+     "target": "0x14877376",
+     "symbol": "__ZN14IOAccelSurface25surface_read_lock_optionsEjP25IOAccelSurfaceInformationy"
+    },
+    {
+     "word": 369,
+     "raw": "0x180000054877394",
+     "bits": 30,
+     "target": "0x14877394",
+     "symbol": "__ZN14IOAccelSurface27surface_read_unlock_optionsEj"
+    },
+    {
+     "word": 375,
+     "raw": "0x1800000548773ac",
+     "bits": 30,
+     "target": "0x148773ac",
+     "symbol": "__ZN14IOAccelSurface9get_stateEP24eIOAccelSurfaceStateBits"
+    },
+    {
+     "word": 381,
+     "raw": "0x1800000548773d4",
+     "bits": 30,
+     "target": "0x148773d4",
+     "symbol": "__ZN14IOAccelSurface26surface_write_lock_optionsEjP25IOAccelSurfaceInformationy"
+    },
+    {
+     "word": 387,
+     "raw": "0x1800000548773f2",
+     "bits": 30,
+     "target": "0x148773f2",
+     "symbol": "__ZN14IOAccelSurface28surface_write_unlock_optionsEj"
+    },
+    {
+     "word": 393,
+     "raw": "0x48000005487740a",
+     "bits": 30,
+     "target": "0x1487740a",
+     "symbol": "__ZN14IOAccelSurface12surface_readEP22IOAccelSurfaceReadDatay"
+    },
+    {
+     "word": 411,
+     "raw": "0x480000054877896",
+     "bits": 30,
+     "target": "0x14877896",
+     "symbol": "__ZN14IOAccelSurface9set_scaleEjP21IOAccelSurfaceScalingy"
+    },
+    {
+     "word": 429,
+     "raw": "0x18000005487796c",
+     "bits": 30,
+     "target": "0x1487796c",
+     "symbol": "__ZN14IOAccelSurface18surface_query_lockEv"
+    },
+    {
+     "word": 435,
+     "raw": "0x180000054877974",
+     "bits": 30,
+     "target": "0x14877974",
+     "symbol": "__ZN14IOAccelSurface17surface_read_lockEP25IOAccelSurfaceInformationy"
+    },
+    {
+     "word": 441,
+     "raw": "0x180000054877996",
+     "bits": 30,
+     "target": "0x14877996",
+     "symbol": "__ZN14IOAccelSurface19surface_read_unlockEv"
+    },
+    {
+     "word": 447,
+     "raw": "0x1800000548779b2",
+     "bits": 30,
+     "target": "0x148779b2",
+     "symbol": "__ZN14IOAccelSurface18surface_write_lockEP25IOAccelSurfaceInformationy"
+    },
+    {
+     "word": 453,
+     "raw": "0x1800000548779d4",
+     "bits": 30,
+     "target": "0x148779d4",
+     "symbol": "__ZN14IOAccelSurface20surface_write_unlockEv"
+    },
+    {
+     "word": 459,
+     "raw": "0x4400000548779f0",
+     "bits": 30,
+     "target": "0x148779f0",
+     "symbol": "__ZN14IOAccelSurface15surface_controlEjjPj"
+    },
+    {
+     "word": 476,
+     "raw": "0xc0000054879cb6",
+     "bits": 30,
+     "target": "0x14879cb6",
+     "symbol": "__ZN14IOAccelSurface11s_set_shapeEPS_PvP25IOExternalMethodArguments"
+    },
+    {
+     "word": 483,
+     "raw": "0x4000005487c172",
+     "bits": 30,
+     "target": "0x1487c172",
+     "symbol": "__ZN11IOAccelTaskD1Ev"
+    },
+    {
+     "word": 484,
+     "raw": "0x4000005487c17c",
+     "bits": 30,
+     "target": "0x1487c17c",
+     "symbol": "__ZN11IOAccelTaskD0Ev"
+    },
+    {
+     "word": 488,
+     "raw": "0x4000005487c534",
+     "bits": 30,
+     "target": "0x1487c534",
+     "symbol": "__ZNK11IOAccelTask7releaseEv"
+    },
+    {
+     "word": 490,
+     "raw": "0x4000005487c1bc",
+     "bits": 30,
+     "target": "0x1487c1bc",
+     "symbol": "__ZNK11IOAccelTask12getMetaClassEv"
+    },
+    {
+     "word": 501,
+     "raw": "0x4000005487c3f0",
+     "bits": 30,
+     "target": "0x1487c3f0",
+     "symbol": "__ZN11IOAccelTask4freeEv"
+    },
+    {
+     "word": 518,
+     "raw": "0x4000005487c2b8",
+     "bits": 30,
+     "target": "0x1487c2b8",
+     "symbol": "__ZN11IOAccelTask4initEP22IOGraphicsAccelerator2jPP16IORangeAllocator"
+    },
+    {
+     "word": 519,
+     "raw": "0x4000005487c92e",
+     "bits": 30,
+     "target": "0x1487c92e",
+     "symbol": "__ZN11IOAccelTask21freeToAllocGPUAddressEP16IOAccelMemoryMap"
+    },
+    {
+     "word": 520,
+     "raw": "0x4000005487cbd2",
+     "bits": 30,
+     "target": "0x1487cbd2",
+     "symbol": "__ZN11IOAccelTask18freeAllGPUMappingsEv"
+    },
+    {
+     "word": 521,
+     "raw": "0x4000005487ce14",
+     "bits": 30,
+     "target": "0x1487ce14",
+     "symbol": "__ZN11IOAccelTask24freeAllSysMemoryMappingsEv"
+    },
+    {
+     "word": 522,
+     "raw": "0x4000005487cd3a",
+     "bits": 30,
+     "target": "0x1487cd3a",
+     "symbol": "__ZN11IOAccelTask24freeAllVidMemoryMappingsEv"
+    },
+    {
+     "word": 523,
+     "raw": "0x4000005487c754",
+     "bits": 30,
+     "target": "0x1487c754",
+     "symbol": "__ZN11IOAccelTask8allocateEPK16IOAccelMemoryMap"
+    },
+    {
+     "word": 524,
+     "raw": "0x4000005487c81c",
+     "bits": 30,
+     "target": "0x1487c81c",
+     "symbol": "__ZN11IOAccelTask10deallocateEPK16IOAccelMemoryMapy"
+    },
+    {
+     "word": 525,
+     "raw": "0x4000005487c88a",
+     "bits": 30,
+     "target": "0x1487c88a",
+     "symbol": "__ZN11IOAccelTask7reserveEjyy"
+    },
+    {
+     "word": 526,
+     "raw": "0x4000005487d2c6",
+     "bits": 30,
+     "target": "0x1487d2c6",
+     "symbol": "__ZN11IOAccelTask25describeDriverAllocationsEP21IOAccelAllocationInfo"
+    },
+    {
+     "word": 527,
+     "raw": "0x4000005487d2cc",
+     "bits": 30,
+     "target": "0x1487d2cc",
+     "symbol": "__ZN11IOAccelTask21_RESERVEDIOAccelTask0Ev"
+    },
+    {
+     "word": 528,
+     "raw": "0x4000005487d2e0",
+     "bits": 30,
+     "target": "0x1487d2e0",
+     "symbol": "__ZN11IOAccelTask21_RESERVEDIOAccelTask1Ev"
+    },
+    {
+     "word": 529,
+     "raw": "0x4000005487d2f6",
+     "bits": 30,
+     "target": "0x1487d2f6",
+     "symbol": "__ZN11IOAccelTask21_RESERVEDIOAccelTask2Ev"
+    },
+    {
+     "word": 530,
+     "raw": "0x4000005487d30c",
+     "bits": 30,
+     "target": "0x1487d30c",
+     "symbol": "__ZN11IOAccelTask21_RESERVEDIOAccelTask3Ev"
+    },
+    {
+     "word": 531,
+     "raw": "0x4000005487d322",
+     "bits": 30,
+     "target": "0x1487d322",
+     "symbol": "__ZN11IOAccelTask21_RESERVEDIOAccelTask4Ev"
+    },
+    {
+     "word": 532,
+     "raw": "0x4000005487d338",
+     "bits": 30,
+     "target": "0x1487d338",
+     "symbol": "__ZN11IOAccelTask21_RESERVEDIOAccelTask5Ev"
+    },
+    {
+     "word": 533,
+     "raw": "0x10000005487ca4e",
+     "bits": 30,
+     "target": "0x1487ca4e",
+     "symbol": "__ZN11IOAccelTask25freeWaitToAllocGPUAddressEP16IOAccelMemoryMapb"
+    },
+    {
+     "word": 537,
+     "raw": "0x4000005487c11e",
+     "bits": 30,
+     "target": "0x1487c11e",
+     "symbol": "__ZN11IOAccelTask9MetaClassD1Ev"
+    },
+    {
+     "word": 538,
+     "raw": "0x4000005487d34e",
+     "bits": 30,
+     "target": "0x1487d34e",
+     "symbol": "__ZN11IOAccelTask9MetaClassD0Ev"
+    },
+    {
+     "word": 554,
+     "raw": "0x4000005487c1fc",
+     "bits": 30,
+     "target": "0x1487c1fc",
+     "symbol": "__ZNK11IOAccelTask9MetaClass5allocEv"
+    },
+    {
+     "word": 568,
+     "raw": "0x4000005487d422",
+     "bits": 30,
+     "target": "0x1487d422",
+     "symbol": "__ZN20IOAccelVideoContext2D1Ev"
+    },
+    {
+     "word": 569,
+     "raw": "0x4000005487d42c",
+     "bits": 30,
+     "target": "0x1487d42c",
+     "symbol": "__ZN20IOAccelVideoContext2D0Ev"
+    },
+    {
+     "word": 575,
+     "raw": "0x4000005487d46c",
+     "bits": 30,
+     "target": "0x1487d46c",
+     "symbol": "__ZNK20IOAccelVideoContext212getMetaClassEv"
+    },
+    {
+     "word": 586,
+     "raw": "0x4000005484b6c6",
+     "bits": 30,
+     "target": "0x1484b6c6",
+     "symbol": "__ZN15IOAccelContext24freeEv"
+    },
+    {
+     "word": 752,
+     "raw": "0x4000005484aa24",
+     "bits": 30,
+     "target": "0x1484aa24",
+     "symbol": "__ZN15IOAccelContext25startEP9IOService"
+    },
+    {
+     "word": 753,
+     "raw": "0x4000005484abbe",
+     "bits": 30,
+     "target": "0x1484abbe",
+     "symbol": "__ZN15IOAccelContext24stopEP9IOService"
+    },
+    {
+     "word": 761,
+     "raw": "0x4000005484acc6",
+     "bits": 30,
+     "target": "0x1484acc6",
+     "symbol": "__ZN15IOAccelContext28finalizeEj"
+    },
+    {
+     "word": 774,
+     "raw": "0x4000005484a9dc",
+     "bits": 30,
+     "target": "0x1484a9dc",
+     "symbol": "__ZN15IOAccelContext26attachEP9IOService"
+    },
+    {
+     "word": 834,
+     "raw": "0x4000005484b998",
+     "bits": 30,
+     "target": "0x1484b998",
+     "symbol": "__ZN15IOAccelContext214externalMethodEjP25IOExternalMethodArgumentsP24IOExternalMethodDispatchP8OSObjectPv"
+    },
+    {
+     "word": 854,
+     "raw": "0x4000005484ac92",
+     "bits": 30,
+     "target": "0x1484ac92",
+     "symbol": "__ZN15IOAccelContext211clientCloseEv"
+    },
+    {
+     "word": 859,
+     "raw": "0x4000005484b6f6",
+     "bits": 30,
+     "target": "0x1484b6f6",
+     "symbol": "__ZN15IOAccelContext213connectClientEP12IOUserClient"
+    },
+    {
+     "word": 860,
+     "raw": "0x4000005484ba0c",
+     "bits": 30,
+     "target": "0x1484ba0c",
+     "symbol": "__ZN15IOAccelContext219clientMemoryForTypeEjPjPP18IOMemoryDescriptor"
+    },
+    {
+     "word": 864,
+     "raw": "0x4000005484b94c",
+     "bits": 30,
+     "target": "0x1484b94c",
+     "symbol": "__ZN15IOAccelContext226getTargetAndMethodForIndexEPP9IOServicej"
+    },
+    {
+     "word": 868,
+     "raw": "0x4000005487d67c",
+     "bits": 30,
+     "target": "0x1487d67c",
+     "symbol": "__ZNK15IOAccelContext213getOwningTaskEv"
+    },
+    {
+     "word": 869,
+     "raw": "0x4000005487d68a",
+     "bits": 30,
+     "target": "0x1487d68a",
+     "symbol": "__ZNK15IOAccelContext210getGPUTaskEv"
+    },
+    {
+     "word": 870,
+     "raw": "0x4000005487d698",
+     "bits": 30,
+     "target": "0x1487d698",
+     "symbol": "__ZNK15IOAccelContext216getOwningTaskPidEv"
+    },
+    {
+     "word": 871,
+     "raw": "0x4000005484e1c4",
+     "bits": 30,
+     "target": "0x1484e1c4",
+     "symbol": "__ZN15IOAccelContext223affectedByHardwareResetEbj"
+    },
+    {
+     "word": 872,
+     "raw": "0x4000005487d6a4",
+     "bits": 30,
+     "target": "0x1487d6a4",
+     "symbol": "__ZN17IOAccelSubmitter219retireCommandBufferEP17IOAccelEventFence"
+    },
+    {
+     "word": 873,
+     "raw": "0x4000005484e222",
+     "bits": 30,
+     "target": "0x1484e222",
+     "symbol": "__ZN15IOAccelContext227shouldHardwareCommandNoopedEv"
+    },
+    {
+     "word": 874,
+     "raw": "0x4000005484adc2",
+     "bits": 30,
+     "target": "0x1484adc2",
+     "symbol": "__ZN15IOAccelContext220orphanClientMappingsEP5OSSet"
+    },
+    {
+     "word": 875,
+     "raw": "0x4000005485b916",
+     "bits": 30,
+     "target": "0x1485b916",
+     "symbol": "__ZN17IOAccelSubmitter220setProtectionOptionsEy"
+    },
+    {
+     "word": 876,
+     "raw": "0x4000005487d6aa",
+     "bits": 30,
+     "target": "0x1487d6aa",
+     "symbol": "__ZN17IOAccelSubmitter218setSubmissionErrorEj"
+    },
+    {
+     "word": 877,
+     "raw": "0x4000005485b79e",
+     "bits": 30,
+     "target": "0x1485b79e",
+     "symbol": "__ZN17IOAccelSubmitter226_RESERVEDIOAccelSubmitter0Ev"
+    },
+    {
+     "word": 878,
+     "raw": "0x4000005485b7b2",
+     "bits": 30,
+     "target": "0x1485b7b2",
+     "symbol": "__ZN17IOAccelSubmitter226_RESERVEDIOAccelSubmitter1Ev"
+    },
+    {
+     "word": 879,
+     "raw": "0x4000005485b7c8",
+     "bits": 30,
+     "target": "0x1485b7c8",
+     "symbol": "__ZN17IOAccelSubmitter226_RESERVEDIOAccelSubmitter2Ev"
+    },
+    {
+     "word": 880,
+     "raw": "0x4000005485b7de",
+     "bits": 30,
+     "target": "0x1485b7de",
+     "symbol": "__ZN17IOAccelSubmitter226_RESERVEDIOAccelSubmitter3Ev"
+    },
+    {
+     "word": 881,
+     "raw": "0x4000005485b7f4",
+     "bits": 30,
+     "target": "0x1485b7f4",
+     "symbol": "__ZN17IOAccelSubmitter226_RESERVEDIOAccelSubmitter4Ev"
+    },
+    {
+     "word": 882,
+     "raw": "0x4000005485b80a",
+     "bits": 30,
+     "target": "0x1485b80a",
+     "symbol": "__ZN17IOAccelSubmitter226_RESERVEDIOAccelSubmitter5Ev"
+    },
+    {
+     "word": 883,
+     "raw": "0x4000005487d6b0",
+     "bits": 30,
+     "target": "0x1487d6b0",
+     "symbol": "__ZNK17IOAccelSubmitter223isOpportunisticWorkloadEv"
+    },
+    {
+     "word": 884,
+     "raw": "0x4000005487d4c8",
+     "bits": 30,
+     "target": "0x1487d4c8",
+     "symbol": "__ZN20IOAccelVideoContext212contextStartEv"
+    },
+    {
+     "word": 885,
+     "raw": "0x4000005487d514",
+     "bits": 30,
+     "target": "0x1487d514",
+     "symbol": "__ZN20IOAccelVideoContext211contextStopEv"
+    },
+    {
+     "word": 886,
+     "raw": "0x4000005484e142",
+     "bits": 30,
+     "target": "0x1484e142",
+     "symbol": "__ZN15IOAccelContext219getDataBufferLimitsEv"
+    },
+    {
+     "word": 887,
+     "raw": "0x4000005484e0e0",
+     "bits": 30,
+     "target": "0x1484e0e0",
+     "symbol": "__ZN15IOAccelContext214context_finishEv"
+    },
+    {
+     "word": 888,
+     "raw": "0x4000005484c186",
+     "bits": 30,
+     "target": "0x1484c186",
+     "symbol": "__ZN15IOAccelContext224initSidebandBufferHeaderEP27IOAccelSidebandBufferHeaderyy"
+    },
+    {
+     "word": 889,
+     "raw": "0x4000005484caa4",
+     "bits": 30,
+     "target": "0x1484caa4",
+     "symbol": "__ZN15IOAccelContext221processSidebandBufferEP24IOAccelCommandDescriptorb"
+    },
+    {
+     "word": 890,
+     "raw": "0x4000005487d55c",
+     "bits": 30,
+     "target": "0x1487d55c",
+     "symbol": "__ZN20IOAccelVideoContext220processSidebandTokenER24IOAccelCommandStreamInfo"
+    },
+    {
+     "word": 891,
+     "raw": "0x4000005487d56e",
+     "bits": 30,
+     "target": "0x1487d56e",
+     "symbol": "__ZN20IOAccelVideoContext220discardSidebandTokenER24IOAccelCommandStreamInfo"
+    },
+    {
+     "word": 892,
+     "raw": "0x4000005487d6b8",
+     "bits": 30,
+     "target": "0x1487d6b8",
+     "symbol": "__ZN15IOAccelContext220postTokenSanityCheckER24IOAccelCommandStreamInfo"
+    },
+    {
+     "word": 893,
+     "raw": "0x4000005487d580",
+     "bits": 30,
+     "target": "0x1487d580",
+     "symbol": "__ZN20IOAccelVideoContext218processDataBuffersEj"
+    },
+    {
+     "word": 894,
+     "raw": "0x4000005484c168",
+     "bits": 30,
+     "target": "0x1484c168",
+     "symbol": "__ZN15IOAccelContext218beginCommandStreamER24IOAccelCommandStreamInfo"
+    },
+    {
+     "word": 895,
+     "raw": "0x4000005484c16e",
+     "bits": 30,
+     "target": "0x1484c16e",
+     "symbol": "__ZN15IOAccelContext216endCommandStreamER24IOAccelCommandStreamInfo"
+    },
+    {
+     "word": 896,
+     "raw": "0x4000005484df60",
+     "bits": 30,
+     "target": "0x1484df60",
+     "symbol": "__ZN15IOAccelContext212bindResourceER24IOAccelCommandStreamInfoP16IOAccelResource2bP15IOAccelChannel2jb"
+    },
+    {
+     "word": 897,
+     "raw": "0x4000005484e022",
+     "bits": 30,
+     "target": "0x1484e022",
+     "symbol": "__ZN15IOAccelContext214unbindResourceER24IOAccelCommandStreamInfoP16IOAccelResource2P15IOAccelChannel2"
+    },
+    {
+     "word": 898,
+     "raw": "0x4000005484cde0",
+     "bits": 30,
+     "target": "0x1484cde0",
+     "symbol": "__ZN15IOAccelContext223compactCurrentVidMemoryEv"
+    },
+    {
+     "word": 899,
+     "raw": "0x4000005484e04c",
+     "bits": 30,
+     "target": "0x1484e04c",
+     "symbol": "__ZN15IOAccelContext216prepareResourcesEPP16IOAccelResource2i"
+    }
+   ],
+   "probe": [
+    {
+     "slot": 0,
+     "raw": "0x400000548772de",
+     "raw_symbol": "UNRESOLVED",
+     "nearby": [],
+     "decoded": null
+    },
+    {
+     "slot": 1,
+     "raw": "0x400000548772e4",
+     "raw_symbol": "UNRESOLVED",
+     "nearby": [],
+     "decoded": null
+    },
+    {
+     "slot": 2,
+     "raw": "0x4000000094b860",
+     "raw_symbol": "UNRESOLVED",
+     "nearby": [],
+     "decoded": null
+    },
+    {
+     "slot": 3,
+     "raw": "0x4000000094b880",
+     "raw_symbol": "UNRESOLVED",
+     "nearby": [],
+     "decoded": null
+    },
+    {
+     "slot": 4,
+     "raw": "0x4000000094b890",
+     "raw_symbol": "UNRESOLVED",
+     "nearby": [],
+     "decoded": null
+    },
+    {
+     "slot": 5,
+     "raw": "0x4000000094b8a0",
+     "raw_symbol": "UNRESOLVED",
+     "nearby": [],
+     "decoded": null
+    }
+   ],
+   "status": "CHAIN_FAILED",
+   "slots": []
+  }
+ ]
+}

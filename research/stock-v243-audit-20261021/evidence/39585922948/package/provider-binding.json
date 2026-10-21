@@ -1,0 +1,31 @@
+{
+  "kernel_sha256": "04a501246caf768356f4090a8fd662daf5bbc949993353526c66771f5ba1d8e4",
+  "symbolsets_sha256": "0cee84f8619a19348cbdb380ffe265252ce0450b4385fa4023f2298f79d22939",
+  "families": {
+    "com.apple.iokit.IOPCIFamily": {
+      "plist_sha256": "b98c093371bd167799f2a4922c54997b17586163050279df95dd0e3622664c8c",
+      "identity_source": "DISK_INFO_PLIST",
+      "defined_count": 7
+    },
+    "com.apple.iokit.IOACPIFamily": {
+      "plist_sha256": "6075eb0c2d536ea9fce975623a80946fa570569448c41f558f8526520ca9a497",
+      "identity_source": "DISK_INFO_PLIST",
+      "defined_count": 1
+    },
+    "com.apple.iokit.IOGraphicsFamily": {
+      "plist_sha256": null,
+      "identity_source": "KC_FILESET_ENTRY_ID_DISK_PLIST_ABSENT",
+      "defined_count": 115
+    },
+    "com.apple.iokit.IOAcceleratorFamily2": {
+      "plist_sha256": "7aa82a7505c7e49a115ba1beda77121c290072460ce0796fbc42193174d0d98d",
+      "identity_source": "DISK_INFO_PLIST",
+      "defined_count": 456
+    },
+    "com.apple.iokit.IOSurface": {
+      "plist_sha256": "be78a2e2eb030e79cc70b1078093c267dbb8a575dbf70eacd7da322d86dc430a",
+      "identity_source": "DISK_INFO_PLIST",
+      "defined_count": 8
+    }
+  }
+}
