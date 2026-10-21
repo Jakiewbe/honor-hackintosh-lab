@@ -31,7 +31,8 @@ esac
 NM_SRC=${NM_SRC:-}
 NV_SRC=${NV_SRC:-}
 HERE=$(cd "$(dirname "$0")" && pwd)
-for base in "$HERE/g1-src" "$HERE/../g1-src" "$HOME/Desktop/HONOR-G1-FIRST-TOUCH/g1-src"; do
+for base in "$HERE/g1-src" "$HERE/../g1-src" "$HOME/Desktop/HONOR-G1-FIRST-TOUCH/g1-src" \
+            /Volumes/*/g1-src /Volumes/*/HONOR-G1-FIRST-TOUCH/g1-src; do
   if [ -d "$base/nm/.git" ] && [ -z "$NM_SRC" ]; then NM_SRC="$base/nm"; fi
   if [ -d "$base/nv/.git" ] && [ -z "$NV_SRC" ]; then NV_SRC="$base/nv"; fi
 done
