@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "pins": {
+    "nm": "272ccd9da04ff5de95c2791b902fe17a3fa77ce7",
+    "nv": "e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb"
+  },
+  "recipes": {
+    "src/nvidia-modeset/Makefile": "53c348ba9664239e6edc262226a85c7a6c10b7567ccf3bd8d0eda31a7363d796",
+    "src/nvidia-modeset/srcs.mk": "fd16c3010f7391789d1f896bd467afc94cdc74f9da074d774a22d23fc5be6b96",
+    "utils.mk": "d1371cf992e486b6863e1d6200727a6f5591e2ff298db08cf79981b90dfdd047",
+    "version.mk": "258cb2dd31f02dc95c651fb39f87f5085d1dcfcd5257c4b319e15cfff9a741d5"
+  },
+  "patches": [
+    {
+      "patch": "kexts/NVRM/patches/610-display-completion.patch",
+      "directory": "",
+      "sha256": "729216b44c0f1dc31223d971d5aadf2e5531a1f8cf69b12ede8e41da3a7971eb",
+      "before": {
+        "src/nvidia-modeset/kapi/src/nvkms-kapi.c": "66437bc38d96d3b4f15546c3e6f7a8c0caccc158b35893c2406f80f2e6e8816b"
+      },
+      "after": {
+        "src/nvidia-modeset/kapi/src/nvkms-kapi.c": "80845947f2dfca2187f9eb8eaa74486920f361583fa17123335289fd01799509"
+      }
+    },
+    {
+      "patch": "kexts/NVRM/patches/610-setmode-reason.patch",
+      "directory": "src/nvidia-modeset",
+      "sha256": "622e99e70a52310ef4c8a9bae4b20f10dfe3c78b300a594267cb4dfcc6f50ffb",
+      "before": {
+        "src/nvidia-modeset/kapi/src/nvkms-kapi.c": "80845947f2dfca2187f9eb8eaa74486920f361583fa17123335289fd01799509"
+      },
+      "after": {
+        "src/nvidia-modeset/kapi/src/nvkms-kapi.c": "9cb2fd4a8c434328d71a3851b67a7d44e2fdf2e2a09fabdadc66d5cb350d1bd2"
+      }
+    },
+    {
+      "patch": "kexts/NVRM/patches/610-backlight-register-log.patch",
+      "directory": "src/nvidia-modeset",
+      "sha256": "97b7028ed45789895906615f1417103e728d8e5b86cde6fef3137c28d5a6a64d",
+      "before": {
+        "src/nvidia-modeset/src/nvkms-rm.c": "a6f3d22effe226de5a407ba48c0464e108c395dbb3ea8a4493eb7b63762d124b"
+      },
+      "after": {
+        "src/nvidia-modeset/src/nvkms-rm.c": "d86f1b6ef50da1ed33c9257319df84e53bcea3d043bd6f7f62713bd685ccef09"
+      }
+    },
+    {
+      "patch": "kexts/NVRM/patches/610-fsp-timer-double-destroy.patch",
+      "directory": "",
+      "sha256": "2998eb54ae95310724b12d24f99e92b34cd4f6812bf9236cd0ba8249832784f0",
+      "before": {
+        "src/nvidia/src/kernel/gpu/fsp/kern_fsp.c": "26194c3309d87c93b391bc5f4d35f0cab63781f1532f2af23993bbdcc1c271ec",
+        "src/nvidia/src/kernel/gpu/timer/timer_ostimer.c": "9710b89d0725d433b993ba803983bde1262096e7f62b81d39d0bc8f816ff5bb3"
+      },
+      "after": {
+        "src/nvidia/src/kernel/gpu/fsp/kern_fsp.c": "26194c3309d87c93b391bc5f4d35f0cab63781f1532f2af23993bbdcc1c271ec",
+        "src/nvidia/src/kernel/gpu/timer/timer_ostimer.c": "9710b89d0725d433b993ba803983bde1262096e7f62b81d39d0bc8f816ff5bb3"
+      }
+    }
+  ],
+  "nvlink_sha256": "cb063c81030cc7616f1a55e259865fbbab2a24f3c60e63a88b89d40922d638cc",
+  "allowed_modeset_new_imports": [],
+  "shader_policy": "225 C/C++ objects in paired archive; SHADER_OBJS= disables only duplicate ELF packaging; five real payloads retained in stock TU and verified byte-for-byte before link"
+}

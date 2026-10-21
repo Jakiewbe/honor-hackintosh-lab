@@ -1,0 +1,71 @@
+name: HONOR G1 stock v243 internal link integration
+
+# Compile/link only: same-run baseline, source-paired NVKMS, real NVLink locks.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: honor-g1-stock-v243-internal-link-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  NM_PIN: 272ccd9da04ff5de95c2791b902fe17a3fa77ce7
+  NV_PIN: e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb
+  DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+
+jobs:
+  integrate:
+    runs-on: macos-15-intel
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Fixed toolchain and offline rejection contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$(uname -m)" == x86_64 ]]
+          [[ -d "$DEVELOPER_DIR" ]]
+          [[ "$(xcrun --show-sdk-version)" == 15.5 ]]
+          command -v gmake >/dev/null || brew install make
+          python3 -m unittest discover -s tests -p 'test_stock_v24*.py' -v
+
+      - name: Fetch fixed sources into new directories
+        shell: bash
+        run: |
+          set -euo pipefail
+          for spec in "nm https://github.com/nullmoth/nvidia-macos-driver.git $NM_PIN" \
+                      "nv https://github.com/NVIDIA/open-gpu-kernel-modules.git $NV_PIN"; do
+            read -r name url pin <<< "$spec"
+            dir="$RUNNER_TEMP/$name"
+            [[ ! -e "$dir" ]]
+            git -c core.autocrlf=false init -q "$dir"
+            git -C "$dir" config core.autocrlf false
+            git -C "$dir" remote add origin "$url"
+            git -C "$dir" fetch --no-tags --depth 1 origin "$pin"
+            git -C "$dir" checkout --detach -q FETCH_HEAD
+            [[ "$(git -C "$dir" rev-parse HEAD)" == "$pin" ]]
+          done
+
+      - name: Baseline and paired internal link in the same run
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/g1/stock_v243_internal_link.py \
+            --nm "$RUNNER_TEMP/nm" --nv "$RUNNER_TEMP/nv" \
+            --assets research/stock-v243-once-20261021 \
+            --out "$RUNNER_TEMP/internal-text" --work "$RUNNER_TEMP/internal-products"
+
+      - name: Upload text evidence even after failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g1-stock-v243-internal-link-text
+          path: ${{ runner.temp }}/internal-text/
+          if-no-files-found: error
+          retention-days: 14

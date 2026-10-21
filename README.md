@@ -1,3 +1,5 @@
+> **2026-10-21 内部链接集成待原生验收**：新增同 run RM-only → 配对 NVKMS → 真实 Darwin NVLink 门禁；四份固定上游补丁仅在命名候选副本应用，精确225项 modeset清单，两个RM清理对象替换。五份stock shader已解压核对与固定OGKM相等，保留原TU避免重复包装。本地72项检查和补丁往返通过；新的Darwin编译/内部差分尚未执行，旧run39526958107不覆盖本轮集成。设备NO-GO，不改.agent。见[实现与验收边界](research/stock-v243-once-20261021/INTERNAL-LINK-20261021.md)。
+
 > **2026-10-21 修复后原生验收通过**：run [39526958107](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39526958107) / `6c8783b`：对象目标make=0，1055/1055 RM、12/12 NVRM对象，真实编译/链接失败负控均拒绝且无旧产物；链接exit0，16185000 B，SHA256 `562b365a…`。493导入中的12 NVKMS和4 NVLink OS接口仍待集成；未加载或执行GPU，设备NO-GO。另撤回“cancel无法清除RESCHEDULE”的旧推断：固定XNU L1347–1352明确清除并返回true，文档与模型已纠正。详情见 [修复与证据](research/stock-v243-once-20261021/GATE-REPAIR-20261021.md)。
 
 > **2026-10-21 链接门禁独立审计修复（新 Darwin 结果待验收）**：历史 run39498653458
