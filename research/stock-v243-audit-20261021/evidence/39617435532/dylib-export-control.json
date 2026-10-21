@@ -1,0 +1,41 @@
+{
+ "collection": "out/libprobe.dylib",
+ "bundle": "libprobe",
+ "member_fileoff": 0,
+ "load_command_ids": [
+  "0x2",
+  "0xb",
+  "0xc",
+  "0xd",
+  "0x19",
+  "0x1b",
+  "0x26",
+  "0x29",
+  "0x2a",
+  "0x32",
+  "0x80000033",
+  "0x80000034"
+ ],
+ "export_commands": [
+  {
+   "command": "LC_DYLD_EXPORTS_TRIE",
+   "fileoff": 4144,
+   "size": 32
+  }
+ ],
+ "linkinfo_sections": [],
+ "trie_present": true,
+ "trie_names": 1,
+ "trie_sample": [
+  "_g1_export_probe"
+ ],
+ "requested": {},
+ "controls": {
+  "g1_definitely_absent_symbol": false
+ },
+ "required": {
+  "g1_export_probe": true
+ },
+ "requested_exported": 0,
+ "verdict": "EXPORT_TRIE_PRESENT"
+}

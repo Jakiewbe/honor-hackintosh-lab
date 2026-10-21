@@ -1,0 +1,27 @@
+{
+ "run_id": 39617435532,
+ "commit": "d37efcd",
+ "members": {
+  "export-probe.json": {
+   "bytes": 2217,
+   "sha256": "1fbc24f9b1a0481013be5f359a675e1ca26e3a1369b15be93b23d58387e6caa1"
+  },
+  "dylib-export-control.json": {
+   "bytes": 637,
+   "sha256": "72560ac9d878fbc0eebd6f874e1b4f3cf028e173d4ba221a52766791f866a044"
+  },
+  "requested-names.json": {
+   "bytes": 1476,
+   "sha256": "7838ba6fed839a37965f0deac775dc801d0b75a02a6942a3754c7b62dc10d1e6"
+  },
+  "collection-sha256.txt": {
+   "bytes": 236,
+   "sha256": "74541f1a870115d464106dafff8be7122e0736ac15cf82cf5161a578891fe812"
+  },
+  "sw_vers.txt": {
+   "bytes": 66,
+   "sha256": "31fd674ddb951680692d7b68cafdeab5baa6b3e82aae843269dad73b53f25fc5"
+  }
+ },
+ "note": "Read-only export-metadata probe: a self-built dylib proves the trie parser works; the IOAcceleratorFamily2 member of SystemKernelExtensions.kc has no LC_DYLD_EXPORTS_TRIE and no LC_DYLD_INFO, so external export status of the 27 local-only names is not observable."
+}
