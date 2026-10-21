@@ -166,6 +166,23 @@ def main():
             # while the chained segment_offset is member-relative. Keep the two spaces apart.
             delta = section['offset'] - section['address']
             slots = []
+            text = next((s for s in member['segments'] if s['name'] == '__TEXT'), None)
+            scan = []
+            if text:
+                text_lo, text_hi = text['vmaddr'], text['vmaddr'] + text['vmsize']
+                for index in range(0, 96):
+                    filepos = address + index * 8 + delta
+                    value = _u64(raw, filepos)
+                    if value is None:
+                        break
+                    target30 = value & 0x3FFFFFFF
+                    target36 = value & 0xFFFFFFFFF
+                    hit30 = text_lo <= target30 < text_hi
+                    hit36 = text_lo <= target36 < text_hi
+                    if hit30 or hit36:
+                        chosen = target30 if hit30 else target36
+                        scan.append(dict(word=index, raw=hex(value), bits=30 if hit30 else 36,
+                                         target=hex(chosen), symbol=names.get(chosen, 'UNRESOLVED')))
             probe = []
             for index in range(min(6, args.slots)):
                 filepos = address + 16 + index * 8 + delta
@@ -193,7 +210,8 @@ def main():
                                   nearby=[names[v] for v in nearby],
                                   first_byte=decoded['first_byte'], stride=decoded['stride']))
             report['classes'].append(dict(class_name=cls, vtable=hex(address), vtable_section=vtable_section,
-                                          probe=probe,
+                                          text_range=[hex(text_lo), hex(text_hi)] if text else None,
+                                          scan=scan, probe=probe,
                                           status='CHAIN_DECODED' if slots else 'CHAIN_FAILED',
                                           slots=slots))
         print(json.dumps(report, indent=1))
