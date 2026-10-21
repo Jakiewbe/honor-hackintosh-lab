@@ -125,12 +125,26 @@ def main():
         if len(entries) != 1:
             raise SystemExit('expected one fileset entry')
         member = kc.header(raw, entries[0]['fileoff'])
-        chain = chained_header(raw, member) or chained_header(raw, outer)
+        member_chain = chained_header(raw, member)
+        outer_chain = chained_header(raw, outer)
+        diagnostics = {}
+        for label, chain in (('member', member_chain), ('outer', outer_chain)):
+            if not chain:
+                diagnostics[label] = dict(present=False)
+                continue
+            seg_count = struct.unpack_from('<I', chain['head'], 0)[0] if chain['size'] >= 4 else -1
+            offsets = [struct.unpack_from('<I', chain['head'], 4 + 4 * i)[0]
+                       for i in range(min(seg_count, 8))] if seg_count > 0 else []
+            diagnostics[label] = dict(present=True, dataoff=chain['base'], datasize=chain['size'],
+                                      version=chain['version'], starts=chain['starts'],
+                                      seg_count=seg_count, first_offsets=offsets)
+        chain = member_chain or outer_chain
         if not chain:
             raise SystemExit('no LC_DYLD_CHAINED_FIXUPS')
         starts = segment_starts(chain['head'], raw, chain['base'])
         names = symbols(raw, member)
         report = dict(collection=args.collection, bundle=args.bundle,
+                      diagnostics=diagnostics,
                       pointer_formats=sorted({s['pointer_format'] for s in starts if s}),
                       classes=[])
         for cls in args.classes:
