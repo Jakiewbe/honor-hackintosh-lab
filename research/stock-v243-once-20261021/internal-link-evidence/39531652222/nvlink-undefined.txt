@@ -1,0 +1,11 @@
+ARGV=["xcrun", "nm", "-u", "/Users/runner/work/_temp/internal-products/nvlink-darwin.o"]
+_IOFree
+_IOMalloc
+_kernel_task
+_panic
+_semaphore_create
+_semaphore_destroy
+_semaphore_signal
+_semaphore_wait
+
+EXIT=0

@@ -1,0 +1,46 @@
+{
+  "policy": "KEEP_VERIFIED_STOCK_TU_NO_DUPLICATE_PAYLOAD_OBJECTS",
+  "object_sha256": "7d0a0031beb9ce2606a88ce12ee5b0cc00823e4e7980727ebab4ceba81e656a0",
+  "payloads": [
+    {
+      "arch": "turing",
+      "compressed_size": 16732,
+      "decompressed_size": 247296,
+      "compressed_sha256": "daf632a7516c0802421ac2c634cefe39ec055202f329887d4839f350c476d9d9",
+      "source_sha256": "4004e888b2be8d867fbd448ac1f655157027eea5226e8dc3366f93d7410d0b92",
+      "raw_bytes_equal": true
+    },
+    {
+      "arch": "ampere",
+      "compressed_size": 17500,
+      "decompressed_size": 244480,
+      "compressed_sha256": "ce373a233cdffc56f79adcf5afca351eecb2d0bdbf36d5ad9ae9244bc2884df2",
+      "source_sha256": "1ece380881f8ec14a4906da60b18f72ab5853dc24258c22d19cec626d5e3601f",
+      "raw_bytes_equal": true
+    },
+    {
+      "arch": "hopper",
+      "compressed_size": 16992,
+      "decompressed_size": 244224,
+      "compressed_sha256": "065f4c8686bfe48c62242e4a2d8e6c84d3752ba2680d769527253dc952568588",
+      "source_sha256": "a15e1d0ed70bf1d66b659a0cdeaf72fe089be1df1553f2aba6f25179fa4b8ab3",
+      "raw_bytes_equal": true
+    },
+    {
+      "arch": "blackwell",
+      "compressed_size": 16600,
+      "decompressed_size": 253184,
+      "compressed_sha256": "9486902b1c6f50a4d69e935684475c226fc1f51259d57e711f7b26246a1c6776",
+      "source_sha256": "20bba59a17ece34ce8cc4705f0a95bf253eca0ae43b076c209aa3f6e75c68c73",
+      "raw_bytes_equal": true
+    },
+    {
+      "arch": "gb20x",
+      "compressed_size": 19240,
+      "decompressed_size": 252288,
+      "compressed_sha256": "3d869c317e2148f8a61f67151735edb8dea12b67cbb6ac9d8a5d81b9834ee4f1",
+      "source_sha256": "fd8094ddc71f35cf7a4220c7fd7b56a815d0c51f2f4860c6ebb9f7f0de68d587",
+      "raw_bytes_equal": true
+    }
+  ]
+}

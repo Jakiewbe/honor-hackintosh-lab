@@ -1,0 +1,44 @@
+{
+  "level": "INDEPENDENT_TEXT_CONSISTENCY_NOT_BINARY_LOAD_OR_ABI_ACCEPTANCE",
+  "run": 39531652222,
+  "baseline_imports": 493,
+  "paired_imports": 481,
+  "final_imports": 478,
+  "nvkms_stage_removed": [
+    "_nvKmsClose",
+    "_nvKmsGetBacklight",
+    "_nvKmsIoctl",
+    "_nvKmsKapiGetFunctionsTableInternal",
+    "_nvKmsKapiHandleEventQueueChange",
+    "_nvKmsKapiProbe",
+    "_nvKmsKapiSuspendResume",
+    "_nvKmsModuleLoad",
+    "_nvKmsOpen",
+    "_nvKmsResume",
+    "_nvKmsSetBacklight",
+    "_nvKmsSuspend"
+  ],
+  "nvlink_stage_removed": [
+    "_nvlink_acquireLock",
+    "_nvlink_allocLock",
+    "_nvlink_freeLock",
+    "_nvlink_releaseLock"
+  ],
+  "nvlink_stage_added": [
+    "_panic"
+  ],
+  "archive_indexes": [
+    "__.SYMDEF"
+  ],
+  "source_objects": 225,
+  "rm_replacements": 2,
+  "all_16_final_definitions_observed": true,
+  "all_16_unresolved_absent": true,
+  "final_attribution_counts": {
+    "HISTORICAL_RUNNER_KPI_AND_DEFINITION": 470,
+    "HISTORICAL_FAMILY_ALLOWLIST_ONLY": 8
+  },
+  "actual_link_argv_delta_exact": true,
+  "driver_execution": "NOT_RUN",
+  "device": "NO_GO"
+}

@@ -1,0 +1,2027 @@
+[
+  {
+    "source": "../common/shared/nvstatus/nvstatus.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvstatus.o",
+    "source_sha256": "712c99bc6b17cd888d2b21dab3ee17948468a3676de2777331ec2c96505952ea",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvstatus.o",
+    "size": 22264,
+    "sha256": "34f0d72bfc0e464cbb7a743daf0ecce72cd3d5f07869a3f15d1317b7064741e2",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/8086-SSE/s_commonNaNToF16UI.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_commonNaNToF16UI.o",
+    "source_sha256": "a7c8cf14fac12bb175568048263b50298cca7e621ea97535cb43bc27484947e5",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_commonNaNToF16UI.o",
+    "size": 392,
+    "sha256": "caaf613bbdd8c33dc186c1a723e5121e2549e0fbf7e332b232933f010e15b6b5",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/8086-SSE/s_commonNaNToF32UI.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_commonNaNToF32UI.o",
+    "source_sha256": "8079c18a9686eaf89665d5e690f0f7b4fae4c52fad150fbc3c19fd02b5c718dd",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_commonNaNToF32UI.o",
+    "size": 392,
+    "sha256": "e761d886b576394868429d1fde260037104e460fc14c8a907a331eec99a6a119",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/8086-SSE/s_commonNaNToF64UI.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_commonNaNToF64UI.o",
+    "source_sha256": "ef38a458f9ca91a7a84d6b1d8b2c472587a59beaef2f2d3da7d22e58ae7b9db3",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_commonNaNToF64UI.o",
+    "size": 400,
+    "sha256": "fbce99ed539688a8c5deeb95297055dd6f25c442daeecdf8fcc838d39228bfb5",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/8086-SSE/s_f16UIToCommonNaN.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_f16UIToCommonNaN.o",
+    "source_sha256": "bf69c7e18a70e137b9649312158b67589687f469cad02a49ca8b4ea4fc668358",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_f16UIToCommonNaN.o",
+    "size": 496,
+    "sha256": "779ba369e9b17dd50e5b8b50b37c56971c85e8f443540d2a9e4a08d6d559db46",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/8086-SSE/s_f32UIToCommonNaN.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_f32UIToCommonNaN.o",
+    "source_sha256": "87d7dec110ae931dd0eb20396cf323ca771a697566fe719293622cf34ba479b0",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_f32UIToCommonNaN.o",
+    "size": 496,
+    "sha256": "8c2f1afe57e04963050b11f83dcade6eeef83624a1baaa7c9351062c6ed24167",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/8086-SSE/s_f64UIToCommonNaN.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_f64UIToCommonNaN.o",
+    "source_sha256": "560a84f72e402010e415e49bdfe5f2957f11b8c624b492d2fc0b5f6284aa689c",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_f64UIToCommonNaN.o",
+    "size": 512,
+    "sha256": "63b42bdf86fe8f5efba7a4ddf6f307fddd65ef1784a6e0d3d41e94b100a11a56",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/8086-SSE/s_propagateNaNF32UI.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_propagateNaNF32UI.o",
+    "source_sha256": "0f25fe2228dcf8b4a5bea7ca59ecfab58623cee4c5109b47e25b20d7f4edcf54",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_propagateNaNF32UI.o",
+    "size": 544,
+    "sha256": "02d5b3a50049a9e5ef09db3efa6381cab693f2d3758cf459978c3465ae7521d4",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/8086-SSE/s_propagateNaNF64UI.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_propagateNaNF64UI.o",
+    "source_sha256": "17bf25332865dbc4b8060bc15f78dc2a0181db655846d85a6c296d65ffc7f322",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_propagateNaNF64UI.o",
+    "size": 584,
+    "sha256": "8c8756e8c4eaa0d48a49062e7e76ea7536c9cfa062e9906a6775ae86fee48703",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/8086-SSE/softfloat_raiseFlags.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/softfloat_raiseFlags.o",
+    "source_sha256": "57ec93b3ba971593d7c9b4d1f05c62914de91936286e84745a18300b4692fd03",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/softfloat_raiseFlags.o",
+    "size": 424,
+    "sha256": "551d4c550314ab7285fd49d3a49b1ea7b7c0351e33ec933353c267c767e50b53",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f16_to_f32.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f16_to_f32.o",
+    "source_sha256": "e5ad394a014223183183fdd9702a8e9d0df7e10242f06c8374995134496821c0",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f16_to_f32.o",
+    "size": 664,
+    "sha256": "b7021770c7c0a20ef4059ba82f87b1d015cfbb45f03e6f4dd56401ffc4431cc8",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f32_add.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_add.o",
+    "source_sha256": "dbcddc7f7e02418503689c4c13d58da50d572dcbbd71660e8883173454dc2ba4",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_add.o",
+    "size": 456,
+    "sha256": "66cb78d458b84cc2fb17521f8aaa08ad2959d3dfb16c8175b0e494707c50212f",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f32_div.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_div.o",
+    "source_sha256": "23f4a743b8a199dbab0ce66df448a45237da033237408d2d2f238ee9c6e05d0f",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_div.o",
+    "size": 944,
+    "sha256": "73036e31185f77a91cbbf8642d4be8952484ccf2a6cec9c0807eaa3538e45f7d",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f32_eq.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_eq.o",
+    "source_sha256": "7d345d305b94de0bf66a36a9217d3a014fb7b493f90f3d2c33e1488305deeaf3",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_eq.o",
+    "size": 536,
+    "sha256": "65e05ea59241d5522b5a4ff3642b766b045b53d76cf829816d88b2270b2b14c1",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f32_eq_signaling.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_eq_signaling.o",
+    "source_sha256": "a0995ba56cfd997945617beac319ee5fd8268fa61c874138754bc704b4c5f16e",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_eq_signaling.o",
+    "size": 496,
+    "sha256": "0f51877e9df15783702134cc95bd07acacbd877c4ce0d0bf1577791a19629420",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f32_isSignalingNaN.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_isSignalingNaN.o",
+    "source_sha256": "1572b5b1d2296ae9ebfe9acc153e58926a2863a4e38bbdaa9830bf8c51cbf5ab",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_isSignalingNaN.o",
+    "size": 384,
+    "sha256": "343df429fdfa5b4959721d3b93459882d58c63cb67db619865e793949a74a30f",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f32_le.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_le.o",
+    "source_sha256": "5eabe6bfcc8a947ee4dedf0ef2a384bd6210a784348f0ae40eb8c3060cc4d10e",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_le.o",
+    "size": 504,
+    "sha256": "3b72d84938b7cbf1cf12bccb241dbfeec9f46a2a1e2732b7f3ee3814d2621351",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f32_le_quiet.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_le_quiet.o",
+    "source_sha256": "1cb6dc73d1cce42bc5426aefa4282740b8ceac1210c813546ac2dd9dabfa7855",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_le_quiet.o",
+    "size": 568,
+    "sha256": "7cc1fcc96953c8bb57bfb6f6a0bf1808698aec0324f9d6278b60256f3757a70a",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f32_lt.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_lt.o",
+    "source_sha256": "fa9a743ebe826e734df8c4b32568b6d8af064144482ac4b6b5e789581b1c64c8",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_lt.o",
+    "size": 504,
+    "sha256": "cf38c7f7450b853739982658a54b11ea659d32756cd62a1a0c2670c91855d816",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f32_lt_quiet.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_lt_quiet.o",
+    "source_sha256": "1da6e93f8981c9c33e33b8a89a3eb5a59b6b003b31a52cfe7aad87e5da89ae29",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_lt_quiet.o",
+    "size": 568,
+    "sha256": "84473c77fad3d7ab0242c5cf12540d5e92e8504cf2d525e592602315ead16a00",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f32_mul.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_mul.o",
+    "source_sha256": "ddd925d4a83ccede935d4095aee4da5c90bac2ea98c9c8763da055b3ba4aedd7",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_mul.o",
+    "size": 904,
+    "sha256": "62adcd4466ad01f31843ce2276412a5a9fe80f484f5f5faa2c566246ae488ef6",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f32_mulAdd.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_mulAdd.o",
+    "source_sha256": "0c55f1cccb4661ac76f5379e1ae6ab71f0b9744ef62319716ef2dcaad3c04b85",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_mulAdd.o",
+    "size": 408,
+    "sha256": "ef8c33e410a3f8d793209de6caca068389cc9a07dde42fee2d6d29184ea6ad52",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f32_rem.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_rem.o",
+    "source_sha256": "325fe8158fbf7d588204390021f99dc12e0f703491ee25b35dfdb39a1750f342",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_rem.o",
+    "size": 1056,
+    "sha256": "404f3554277766175ef2db6007e0784d4762d8439b73f9a512494638d9e80e3d",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f32_roundToInt.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_roundToInt.o",
+    "source_sha256": "64677aa2f6413891526b20ec25a24b16972d64b7866c44e98fdb7f83580dd13a",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_roundToInt.o",
+    "size": 744,
+    "sha256": "2908b4f7cb19f9e41be6566e006d4f2662b89e84aec5a69cbb8de09ad408eacf",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f32_sqrt.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_sqrt.o",
+    "source_sha256": "d13ab78712ce3a7b484fc157f12d037f1e3d06d664b9e08c7e7b1e61b0d86cf6",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_sqrt.o",
+    "size": 816,
+    "sha256": "a543261cd3fc8e2429fcf18362e57ed1019ad1ae44104212b0f2b5940181d85c",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f32_sub.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_sub.o",
+    "source_sha256": "0b55dedd35c964ff3dca8cca6753dcdf2b41b676f49c0f7a821009ad9001914a",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_sub.o",
+    "size": 456,
+    "sha256": "d3592699f83f43e3d2790632c1c8abd4e5f42656b4e9d99ade89111a101760e7",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f32_to_f16.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_to_f16.o",
+    "source_sha256": "a0f6d5aea3dadac9d0bfe1d87602a8bc3cefe5a9e9105812f37815939b8cad38",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_to_f16.o",
+    "size": 632,
+    "sha256": "5881dfa97cd492868cde021ad4de67e9ba12c2c97f488b0f5d2e1c390a4ca610",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f32_to_f64.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_to_f64.o",
+    "source_sha256": "d85b4db1b4c93ddc868496d4d43281411a0702958aadcd9d2c14979a2d212378",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_to_f64.o",
+    "size": 680,
+    "sha256": "dcc0181f6e2a0aef9cf6e4a38d3a236baee8e076f8c49243ef63c3f2d0edba47",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f32_to_i32.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_to_i32.o",
+    "source_sha256": "31116d33b59cc24c503c45327f7761c1fb0a40e0c5db5c94a1b121d39474abb1",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_to_i32.o",
+    "size": 552,
+    "sha256": "6c6ba1b4a7db1b38de2651292a991e7d023f725e9800132838fe1e05a07e5b42",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f32_to_i32_r_minMag.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_to_i32_r_minMag.o",
+    "source_sha256": "779b8ee1bc7ecbb1ecb816e8e617634fdc72349228c28c47fa3c03c88d1b03f2",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_to_i32_r_minMag.o",
+    "size": 648,
+    "sha256": "4e87518b66fe246063de362b567acfc4ca156eeacf1da303e736c4d31cd2e6a4",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f32_to_i64.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_to_i64.o",
+    "source_sha256": "f20f43b7d5abebea0e637983a5db41acffe6991e9241e80fb43bc3682bb1720d",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_to_i64.o",
+    "size": 648,
+    "sha256": "25b7b73217157af7c63a0838d6528ed25dc939207955707f3fff36d9404f03d9",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f32_to_i64_r_minMag.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_to_i64_r_minMag.o",
+    "source_sha256": "3eb69189227e7deb6c883569e1ddd3a701434cf9619831a2c7cd329872141b69",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_to_i64_r_minMag.o",
+    "size": 688,
+    "sha256": "3427e05af3767d53d3fcd5f17ff3a11a37253a1a559a9959a7108c48eb986992",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f32_to_ui32.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_to_ui32.o",
+    "source_sha256": "c7f7dd61e2d3f8f5900323c9f7820f92e250cb5c19c6beddd901721ab66f8c55",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_to_ui32.o",
+    "size": 552,
+    "sha256": "259ed37dd17f3e9109e7557ae9e9b9d6a9ee45cb37daf68a50ec8a9756578455",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f32_to_ui32_r_minMag.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_to_ui32_r_minMag.o",
+    "source_sha256": "90ee8290905c81d5fb9f26b9a884581e7b5265ea5d34b36ef40a6587352c5ef9",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_to_ui32_r_minMag.o",
+    "size": 608,
+    "sha256": "360c6dc9236ede0d868be07bc1345627a6d0fe6c10060339ec6355a2c369fc67",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f32_to_ui64.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_to_ui64.o",
+    "source_sha256": "04d03508a1fef0c74731f4b44982bb5ce5aac25b622d818415fcd55b138d278d",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_to_ui64.o",
+    "size": 640,
+    "sha256": "22ea0185dbb593decfbc04e52ebf60cbe3911c77295c065b7d00f7e2cec61cfb",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f32_to_ui64_r_minMag.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_to_ui64_r_minMag.o",
+    "source_sha256": "9edc3b812927c70cae3deef1f3d82d0d9ba3f08018c830188c0f97d62d7281f7",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f32_to_ui64_r_minMag.o",
+    "size": 648,
+    "sha256": "9da65befe4d338febaf681bb66cae4a200c08ccfd07d698e4f4c69fa7a8a8e8d",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f64_add.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_add.o",
+    "source_sha256": "36a0bf0ad3d032d87a6c4d0a2f6bcf0b92deea75f16f9bc0a180cd5e54a4f00b",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_add.o",
+    "size": 464,
+    "sha256": "55279ce31bdc0fe3c2111848dec7dc3fbf140203c00cdb25784070a82a437cbe",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f64_div.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_div.o",
+    "source_sha256": "6c2687b2607af209a9a301af1495b716e6b5cf72f2bd1fba1144fd85a939d6f2",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_div.o",
+    "size": 1104,
+    "sha256": "41776b1c9cc1883ba0321fd436323f773f3a40a50290c1619806bcccb84dd37a",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f64_eq.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_eq.o",
+    "source_sha256": "b3090ff7ad3d73b66d4b80013df56b6e55b90c29a77ed66a768668ac87c3f879",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_eq.o",
+    "size": 568,
+    "sha256": "6dc70a5ab7616311703f601e020485571d5d44641bcb2ea45ce31a67fe451004",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f64_eq_signaling.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_eq_signaling.o",
+    "source_sha256": "20fd10ab8abe7de6a1477b95a4897182760572ff4c8666731fa66b51f368e54a",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_eq_signaling.o",
+    "size": 512,
+    "sha256": "e2b8dbc75b8efbadc56e4ec634b6cfcd534f03418861813a4ccb751e65f9511c",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f64_isSignalingNaN.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_isSignalingNaN.o",
+    "source_sha256": "4bad0519e7c66c642197ed675ddd1b2b2fb111518e8bde8ee7ae970aceb20812",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_isSignalingNaN.o",
+    "size": 400,
+    "sha256": "c8346ba05bf6fe70cafe79ca63209864a31993693e807d0bcf7aa78b17decd90",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f64_le.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_le.o",
+    "source_sha256": "d082371d2e5f30814516ead1e9af52c29da014369724e34b6f4918e2369a5b68",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_le.o",
+    "size": 536,
+    "sha256": "3fd42b1b1858f1a1a87e3649c6413a760cb64f6ca00a911509cfebe34462af51",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f64_le_quiet.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_le_quiet.o",
+    "source_sha256": "f6447502e1e2825034fd3f08fcc3475cfd9b67d3bf84192d69a528901c6577f3",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_le_quiet.o",
+    "size": 608,
+    "sha256": "ede32efe86f913eb106429cef6d95ae197bdf4f82120305e66b64816128a6ab2",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f64_lt.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_lt.o",
+    "source_sha256": "672430cc06aeb71d09b1c24fe619147ebc152511c0d578649e7821d6df59248c",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_lt.o",
+    "size": 528,
+    "sha256": "9320767f64c218583aef92c0f435912da3d15b661e09607a39aaa04d36134b59",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f64_lt_quiet.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_lt_quiet.o",
+    "source_sha256": "56297e49ac006ab2fbfc96ab83fb8e902cb213fe87e59562ca1f9c492b700124",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_lt_quiet.o",
+    "size": 600,
+    "sha256": "4d190a66aa5d8184080b19ee77fe9305f1db0e8bcbaed698d68fa917051c3c83",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f64_mul.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_mul.o",
+    "source_sha256": "62bb95f7892d372a557f6808e8507e08afa7e1c2b239ca6af48ca529ec37d4b7",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_mul.o",
+    "size": 1000,
+    "sha256": "11c0420d48f8b13586054b9e074eb55ecb9395d926293fa955e003558959d32a",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f64_mulAdd.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_mulAdd.o",
+    "source_sha256": "99109f29d2f5ecb3f74ed7be525e54818540404a347c1894eb6001913f534db8",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_mulAdd.o",
+    "size": 408,
+    "sha256": "84a2024b02bcacfc8bd804055dd4ccaf6083a8be2a5b614331acc5850d346234",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f64_rem.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_rem.o",
+    "source_sha256": "fb955ef9f188baccb009bff3226d43a74b9f663bbf0e26f863d4c55469904acf",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_rem.o",
+    "size": 1096,
+    "sha256": "b08228a1e6dab9059331c88c46c076e83a5cf046f5ef7148bb11f6ccb6b673ed",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f64_roundToInt.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_roundToInt.o",
+    "source_sha256": "57222a2fd04048c2f2f1a69b1ed6a7feb924f55f1c08dcb6eccc98edd0dbde0e",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_roundToInt.o",
+    "size": 816,
+    "sha256": "4aa520730fa7a4594271a22b64b7933b5dec513699619bdc364b886c1168bc0c",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f64_sqrt.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_sqrt.o",
+    "source_sha256": "f2527032f075d47325e9e22f2f4c38fc9452396e5aba0e4e7b623f5b2406dbc5",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_sqrt.o",
+    "size": 944,
+    "sha256": "cb1d5d1456753f8cdc2317a247644203611662a9bf66e9b4615331d0347e6856",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f64_sub.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_sub.o",
+    "source_sha256": "410a2484d435eadc4a782ff1cf05ab5046acafa76b562322f9e87f4dd0df9822",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_sub.o",
+    "size": 464,
+    "sha256": "17ef2376c79154bb73c1f46f899048c7765680f4dceccb8904b5b96f05be1819",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f64_to_f32.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_to_f32.o",
+    "source_sha256": "da0cf6334f0c668587d6059f95eede668cdd8354cc10bdcb8d9d42cbcbeb85ce",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_to_f32.o",
+    "size": 648,
+    "sha256": "2f6b4aaf0770a1a50d30153fb4eb6023f1389c12d7af0b484f1b8d60435e5848",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f64_to_i32.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_to_i32.o",
+    "source_sha256": "6c72447a7172a9474a34a3d6ca2ec1ba5c378371117098c971f5524ba0a4da75",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_to_i32.o",
+    "size": 568,
+    "sha256": "f6cb5cdf286fc86a7032004357c38767b0da6196345475454bfd22c83cb086af",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f64_to_i32_r_minMag.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_to_i32_r_minMag.o",
+    "source_sha256": "9e9953914e8d54404e042d13a2dd2a4c6eae231d297bf67157a014283bfda88d",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_to_i32_r_minMag.o",
+    "size": 712,
+    "sha256": "a41faf3ab1c43deabcd871de2f54f8e5744cc94dd5d8a9ec7acef309a7012749",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f64_to_i64.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_to_i64.o",
+    "source_sha256": "c25a2f0edb02880701af38e6bd3eca5b7e89b827ebf5d9ec90dccf7828190eb7",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_to_i64.o",
+    "size": 672,
+    "sha256": "e9498133f993d67d3c979d042a22e4acac39424ec5b32a1d9d51786062a19afb",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f64_to_i64_r_minMag.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_to_i64_r_minMag.o",
+    "source_sha256": "59144f22b868f3aadf4c128a3563776c80291f03b6ba3fcd2cf61ea48986e943",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_to_i64_r_minMag.o",
+    "size": 736,
+    "sha256": "40687febb7a8a084a497df8a886f4cd57522167f2af39fd1d1f34495cec02fdb",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f64_to_ui32.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_to_ui32.o",
+    "source_sha256": "0e4a66c630a219bc2317126f4fd9f53eac289ffb35058c0547cb79068f6e9ebb",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_to_ui32.o",
+    "size": 568,
+    "sha256": "8a8e32ef4a3d3313ec79e7a8eeb8e352121990e16f183cae31bd2a7053c5b093",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f64_to_ui32_r_minMag.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_to_ui32_r_minMag.o",
+    "source_sha256": "01dd41ee11273218fcb9185e624a91ae5dd9cd83a60b5abfb0f5df12a77cb70d",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_to_ui32_r_minMag.o",
+    "size": 648,
+    "sha256": "799b965fae8dc6c53d7f2dc35a279ab7e2fb15cf61879b7272c72a9b32413dfe",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f64_to_ui64.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_to_ui64.o",
+    "source_sha256": "5e4859950c2d830d6fcc3d7ccd1641947d09f67a84e17e99a51021e1553f5bd6",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_to_ui64.o",
+    "size": 664,
+    "sha256": "fcde3afd93a5255c50cf8f495b1e4147007f36123feeaafbe42bf8401938ddef",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/f64_to_ui64_r_minMag.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_to_ui64_r_minMag.o",
+    "source_sha256": "6d4d938d934bbf2503b84fe3d19a086ddc2901a406968b0fe76509e5feb3355f",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/f64_to_ui64_r_minMag.o",
+    "size": 672,
+    "sha256": "bd93f4c843b291aa0ef4ca3c3b2daf0708d8c12346ba33c1f6ad19753efb707f",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/i32_to_f32.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/i32_to_f32.o",
+    "source_sha256": "e96652c17547ed1d0621707f041aeed593fc9dee5631dd06c3996b732aee7f75",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/i32_to_f32.o",
+    "size": 448,
+    "sha256": "798f420fc175a87e1197cc332a439e4583afec07c3a0fa6a60d5d2aef20a2a01",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/i32_to_f64.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/i32_to_f64.o",
+    "source_sha256": "71a8942feecd5f95bf9ea5f3dbaf54f63af58c25f3381fd8e26468f3552c6ac9",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/i32_to_f64.o",
+    "size": 520,
+    "sha256": "c1c70efb809b4621e83c58635bf0ec9e63200d9bc49d4835cd62cd7d2af4bc39",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/i64_to_f32.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/i64_to_f32.o",
+    "source_sha256": "752c0b0fe00280309012da47dce6feb73aaf8ba7acc712fcf4bb8390b0728619",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/i64_to_f32.o",
+    "size": 616,
+    "sha256": "de36ad15c855b18682fa3196fee6850e9011e4736e7e4131657862d3653743bd",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/i64_to_f64.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/i64_to_f64.o",
+    "source_sha256": "f88958bb1f8cede118d7ef9b7c28c10f0cf5d467a50e88aba0bd13cab17fac63",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/i64_to_f64.o",
+    "size": 464,
+    "sha256": "58a76840b4aae9793d5d632a37dc6040161a37db7b66ecf21d8877aa9098f585",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/s_addMagsF32.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_addMagsF32.o",
+    "source_sha256": "22c9177a17834ed4761e3769e047a8e1ca46ae854c9fdbb985e230a16618b32f",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_addMagsF32.o",
+    "size": 824,
+    "sha256": "2788be4b72a7526592d6c2a8b8f364000f315c981fcc203e95d1ce2e071710a4",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/s_addMagsF64.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_addMagsF64.o",
+    "source_sha256": "837226430a7cd9bcfea87c96d3b2d924cd62064946bfc62144b05d739ed4351d",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_addMagsF64.o",
+    "size": 880,
+    "sha256": "91fb4b542c36f96fe54fa0fd33d95bbdfcd1285d59e5c94f522be1dc5122e476",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/s_approxRecipSqrt32_1.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_approxRecipSqrt32_1.o",
+    "source_sha256": "8a85dfde87f4a04a39ea9edee976af45b884eba83964e6903fbd5e329ce54e5e",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_approxRecipSqrt32_1.o",
+    "size": 624,
+    "sha256": "441a417e8a2086f5949762e1d5855b972a8e59e69a36383013b545d7481f1c55",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/s_approxRecipSqrt_1Ks.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_approxRecipSqrt_1Ks.o",
+    "source_sha256": "c857b99d64557ba57c78cad839a2bf8f7ce86c66e0dceff30b0395c88ebc42fe",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_approxRecipSqrt_1Ks.o",
+    "size": 560,
+    "sha256": "c6a8dd13dbdc25411f414e93cc817e5c61570ad9fda41a3ffb944912edecb822",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/s_countLeadingZeros64.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_countLeadingZeros64.o",
+    "source_sha256": "312c74aebb8b9454f0a460306b15bcd2bde73e17824f2e229f2a7b71d75ce1db",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_countLeadingZeros64.o",
+    "size": 504,
+    "sha256": "162eb2dd1854346a8b0d9634b745b628c718c862093ab845852f61a1e567d017",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/s_countLeadingZeros8.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_countLeadingZeros8.o",
+    "source_sha256": "ddcc24ab97647d2806800e81c14f1a8216c71dcf4863637a04413fec429ba6fa",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_countLeadingZeros8.o",
+    "size": 696,
+    "sha256": "f972027f021ebea84c7460f91dd082a0008d109175d82b2df2f1564d20956543",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/s_mul64To128.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_mul64To128.o",
+    "source_sha256": "1dbfaf4f239ff6064e249174a4a930e716dc8e1daee4bd67f6188b6ad54c1e49",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_mul64To128.o",
+    "size": 432,
+    "sha256": "5260e6bf71538fdbf75b1c3e0f0bab89e4c2354a22d3e6fe5b7de599970d5e1b",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/s_mulAddF32.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_mulAddF32.o",
+    "source_sha256": "a8d11382c02b274958ee8f5d7a0bbe5c840acd878f2f78836fadda1b6e847f3e",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_mulAddF32.o",
+    "size": 1680,
+    "sha256": "5c8260ecd48019a2837a41233cadbd7baa5575b7717f37fcf6cae71990c7b143",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/s_mulAddF64.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_mulAddF64.o",
+    "source_sha256": "819830dd95131c4053ece4178e234304b4a6cde66cd9894c903ef65e859a04af",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_mulAddF64.o",
+    "size": 1880,
+    "sha256": "8ec8c4d264a6cff8f83ccf2d2b752cb2c3b726b3a34f06e55c1c06be86398511",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/s_normRoundPackToF32.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_normRoundPackToF32.o",
+    "source_sha256": "b55d160b1d64d30d26b38876b81a67161bbecd1b84a0e68618475328d0cb92c1",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_normRoundPackToF32.o",
+    "size": 608,
+    "sha256": "50ba06ca96e00fe016107acfc31be6fd25022312d8f399b40373925817d95695",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/s_normRoundPackToF64.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_normRoundPackToF64.o",
+    "source_sha256": "b25e2f56472232e91887881abc886b766974ff6a969a5231ba4c6d5c2e7d5e1b",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_normRoundPackToF64.o",
+    "size": 592,
+    "sha256": "27287aa5055f2c2b7f1c62cb10d107358a7bd7bafb37c1fc3bf2d7537aeb769b",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/s_normSubnormalF16Sig.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_normSubnormalF16Sig.o",
+    "source_sha256": "0a3cb4d3dbd9a4f6daa090efe065382cc0e30013e461b13667bb7b0da5b86a58",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_normSubnormalF16Sig.o",
+    "size": 472,
+    "sha256": "bb4d2f52d016aa8576a1480874511c6383b0b03ee7cbbf15936f6330bb74ffb7",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/s_normSubnormalF32Sig.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_normSubnormalF32Sig.o",
+    "source_sha256": "e1c4ea7a1809c60779aceb6ab31eb466efc821e635adc61b25a6f2144cf5e31c",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_normSubnormalF32Sig.o",
+    "size": 504,
+    "sha256": "a04df5f6e9187b924117481337abc18e86395ee6e3bd1f9d5b994634e7dcdd51",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/s_normSubnormalF64Sig.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_normSubnormalF64Sig.o",
+    "source_sha256": "a79c58dd051c3beee6cc62e02630e187406d2a7bc5413131263513870ece9dc9",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_normSubnormalF64Sig.o",
+    "size": 456,
+    "sha256": "223bfa033263d228dda424887b223f2617f254ed3744dbe83f51de9be1b21df0",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/s_roundPackToF16.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_roundPackToF16.o",
+    "source_sha256": "342d30550f15f4933f04cda35f2a545ec7194978679d2f4a3b6b25f785643ace",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_roundPackToF16.o",
+    "size": 912,
+    "sha256": "26d5f10ebea0af45cce3d5f83bf4e77c4e7597a2d16df66935c7e5068d7ef750",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/s_roundPackToF32.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_roundPackToF32.o",
+    "source_sha256": "4cf6c727fd5fc56383a8bc21a3b5426619dea8ca76035462e3c1ec1f5790cbff",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_roundPackToF32.o",
+    "size": 912,
+    "sha256": "882c5d1dac8bdfcb6da7d3e0dc69c34c8b5bdeaa9e22735fb03d6fb1d6177b33",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/s_roundPackToF64.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_roundPackToF64.o",
+    "source_sha256": "b787cdb1a7fd6291c658e7061ff97d701f7861d220896968933e7e49bd48bbab",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_roundPackToF64.o",
+    "size": 968,
+    "sha256": "9d767a21d913193465533e0bbcf4d1267073cdb9cc982f4d2858e100a89ef11b",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/s_roundToI32.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_roundToI32.o",
+    "source_sha256": "4f892d8616b25da3994440d2827359e6e62db613ddc574177771ba866b8bede2",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_roundToI32.o",
+    "size": 632,
+    "sha256": "395c78ab6f41bff635e212c0d81e766754f8c3022acb4c190f796e75ed3879de",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/s_roundToI64.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_roundToI64.o",
+    "source_sha256": "50187517fea56b15d8b6f84406db9fdcf53985a8a4a4f90e846f96b2f6b2adb6",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_roundToI64.o",
+    "size": 632,
+    "sha256": "f7886652c3939283fb5689b0aa4b44879f689bdc08433ccde10b216aead3731c",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/s_roundToUI32.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_roundToUI32.o",
+    "source_sha256": "d70b5a9a986a9291798848f5adbefe814c16d8474a19553127e065fd61fcfec4",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_roundToUI32.o",
+    "size": 600,
+    "sha256": "2542f40dee8b20df97a597decc9b81d24970d08a5dfa99b9989c5ae2e9060c59",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/s_roundToUI64.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_roundToUI64.o",
+    "source_sha256": "ba4842a86a89fa891534aa94a4360bb7810d69dcda9f83af1bc4c6c78afd01a9",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_roundToUI64.o",
+    "size": 600,
+    "sha256": "9baa160e5e673a2198b2a5a12fb08eef8c8b327226d5cf8f325ed4a0a8908719",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/s_shiftRightJam128.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_shiftRightJam128.o",
+    "source_sha256": "2f93d1036a4ebd4a8b0b2203999a8833e4a4c70bdd2b448882c724c6762c3008",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_shiftRightJam128.o",
+    "size": 480,
+    "sha256": "6462e327e3d0307e48c2500a1416a522af7446fb3e84a3e2833ed8cc615da70d",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/s_subMagsF32.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_subMagsF32.o",
+    "source_sha256": "2e0d23b78992a4a0b1f731c82c442eabaafdc7953fa1bb912d7baeb39fd2c331",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_subMagsF32.o",
+    "size": 1064,
+    "sha256": "74c875761d456e03a0f0a4f7e1210a46410ecdd0efa3cb9a9c180105d88154c0",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/s_subMagsF64.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_subMagsF64.o",
+    "source_sha256": "eff2c2f7be6db99ace6ad7b5723c72ec95da7ead5e17044fcead19bcff83de21",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/s_subMagsF64.o",
+    "size": 1144,
+    "sha256": "532c15b4e4e37efe64c76220f64f2e4dfee5d8c7f623ace6e99f2adc5e1bea7e",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/softfloat_state.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/softfloat_state.o",
+    "source_sha256": "de354d4fb2a90cb7367e05d200e0d600889be0c21e409e16e08c1ace02306b4b",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/softfloat_state.o",
+    "size": 608,
+    "sha256": "a7b68e16b2236afad28bcfc2f9f2c31ba3af7d2b90cbe688cf76d86286b50aa1",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/ui32_to_f32.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/ui32_to_f32.o",
+    "source_sha256": "76b5c87c61a6435034e5d2099d5ea0b2a2fcbc723d67123459fddeca8b1abb4f",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/ui32_to_f32.o",
+    "size": 496,
+    "sha256": "869073719f07fe08156a8d679088629bad44930fc4bbd97ccbbf8b21758e7491",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/ui32_to_f64.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/ui32_to_f64.o",
+    "source_sha256": "57058543afa8cd2f4319d3e8ad55d5d18a1b7dafb73a8b5d3234c2017079f32b",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/ui32_to_f64.o",
+    "size": 496,
+    "sha256": "9cb8074aa044503e55342a768a5265c829852142caa60d8e68f91b5ddbcc2979",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/ui64_to_f32.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/ui64_to_f32.o",
+    "source_sha256": "8264fa8b2b8896ad675e2426d7536ff1b6e52bf1167747718b0b49c52d7f2a73",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/ui64_to_f32.o",
+    "size": 568,
+    "sha256": "8733ab28688da30edaecc72db763417b687ba116606aa81d85af5a9081c64ee6",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/softfloat/source/ui64_to_f64.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/ui64_to_f64.o",
+    "source_sha256": "29460454653510cc2c64cf4b582d76f815ea066cdad2be008aa4ee43d13fc6de",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/ui64_to_f64.o",
+    "size": 504,
+    "sha256": "c84718d57a843c8aa63fef51020615215c8d5381d6165cce519322c9a85e5a23",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/src/nv_smg.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nv_smg.o",
+    "source_sha256": "a459f91abfca0a08469553b1c31e393f16ed1b71136eb1c9121ec5e297b3144f",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nv_smg.o",
+    "size": 3408,
+    "sha256": "828c5b626017df38258da6506f7b7340bbb228941986f56f687160b187812aa5",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/modeset/hdmipacket/nvhdmipkt.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvhdmipkt.o",
+    "source_sha256": "ceba0ef0c97e4419ad4d466ee3d721cbdaebce89d64b2fd74b5b3f0e3c6dca34",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvhdmipkt.o",
+    "size": 5488,
+    "sha256": "311e181bfbde77e6d28a6fd9ab970249463771042dac72f61a02385cdbd88708",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/modeset/hdmipacket/nvhdmipkt_0073.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvhdmipkt_0073.o",
+    "source_sha256": "18e68e671a9418d1c7b5c2382032cae085bc3b7028958671b6b5317944831b3d",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvhdmipkt_0073.o",
+    "size": 3480,
+    "sha256": "0c21fda47083441f276b2ca2fd98736fc809a32d65f35df85d24843adf2cd0ec",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/modeset/hdmipacket/nvhdmipkt_9171.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvhdmipkt_9171.o",
+    "source_sha256": "0c6e31ac5fe83ce404bcb7c0170e4b0e61e2945d0d2efda7aa24de9a9f44bee0",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvhdmipkt_9171.o",
+    "size": 4768,
+    "sha256": "4fbf2d0c2de7f16052f5b23881b1a2bb61ac6a613f49bfd2a1e9ffb3f93a9be0",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/modeset/hdmipacket/nvhdmipkt_C371.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvhdmipkt_C371.o",
+    "source_sha256": "720f3693ef4ea9322cede659a8ab76b963ea78ad3848e6d082176a49a3ca9332",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvhdmipkt_C371.o",
+    "size": 496,
+    "sha256": "85fc9c2f9da1b4b81272d5f7a72082963213cc89c367c06df0ed4b58b64e82c2",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/modeset/hdmipacket/nvhdmipkt_C671.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvhdmipkt_C671.o",
+    "source_sha256": "78fcc4b192fd945f4ffd633f48ad9e96a1d707d39781e7acffbaae0855c3cc81",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvhdmipkt_C671.o",
+    "size": 9440,
+    "sha256": "17c414b936fd01a25d729b81040e57260548ba52f8a851eb0fc8138abaf8f365",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/modeset/hdmipacket/nvhdmipkt_C771.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvhdmipkt_C771.o",
+    "source_sha256": "8116802daa8aa7e2f5d21f7c087509323099178a2d63c71121dbb308045ffb3e",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvhdmipkt_C771.o",
+    "size": 1856,
+    "sha256": "a07c64dfe7297a51ab67f43252fd641646cebaab854c7263ae5099eeebffbbe7",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/modeset/hdmipacket/nvhdmipkt_C871.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvhdmipkt_C871.o",
+    "source_sha256": "c8320fd8b5c828a1d9125fc64cb5ead23560863f94dbf34a89bf78cc32842c47",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvhdmipkt_C871.o",
+    "size": 6112,
+    "sha256": "859936a9b48522741c962f14b070db90dc3ef9a66a710e2835043b68e1842ad9",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/modeset/hdmipacket/nvhdmipkt_C971.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvhdmipkt_C971.o",
+    "source_sha256": "f09db3793af41b18ccadc3a9103dac998d27dc2da6de137dfa60119371476f9d",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvhdmipkt_C971.o",
+    "size": 1528,
+    "sha256": "83e1b1e8a3c80bbf4aa663864e908640f4d2b37fcffb5ddcea3628dd5bbf09ce",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/modeset/hdmipacket/nvhdmipkt_CA71.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvhdmipkt_CA71.o",
+    "source_sha256": "9c332223915fe8a2e53c8a2a1c183e4009c032f8dea7dc76d07bafb290f1d25e",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvhdmipkt_CA71.o",
+    "size": 496,
+    "sha256": "8016196e2635a3ca85bc33d3eb9f84ac2d209939164a289e9afc6a207454c282",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/modeset/hdmipacket/nvhdmipkt_CB71.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvhdmipkt_CB71.o",
+    "source_sha256": "ac24e0eb9af2962edc007520bf78f17a1d9f193828b6e50cda344a7a849fc5c1",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvhdmipkt_CB71.o",
+    "size": 392,
+    "sha256": "07009be4af4ccfee52abaf35677a07604b96ff6ed1b64fc6d84a4b12aa0de232",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/modeset/hdmipacket/nvhdmipkt_CC71.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvhdmipkt_CC71.o",
+    "source_sha256": "e70b658191acea4ca8745c69154458f087946073bbb65f6a87f535f2b115dc40",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvhdmipkt_CC71.o",
+    "size": 392,
+    "sha256": "93016979e55176c60e7cf1f7859bff72067e6127e6f527d2b8148497b69a11c8",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/modeset/timing/nvt_cvt.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvt_cvt.o",
+    "source_sha256": "24fad1fb8971288c615061b44efb85de27135b2e60e7f69789cd34b4ab2e5a80",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvt_cvt.o",
+    "size": 4400,
+    "sha256": "53638a50bd98bef56f613effcff94ba2b08375c28934f86f32a04026524040a8",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/modeset/timing/nvt_displayid20.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvt_displayid20.o",
+    "source_sha256": "01c3556b37f91de3dd5a45b71c6299a0fa459a5c633b6d1366c2c7b6d6fc4b93",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvt_displayid20.o",
+    "size": 15152,
+    "sha256": "8f11bdfc2ba586285c32518d52b726fe5465e8a9c8db184398fcfa53aac8e0e0",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/modeset/timing/nvt_dmt.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvt_dmt.o",
+    "source_sha256": "8de9074dd4e630f4b1602ef0d4426243a2866fccb1161531deea3b6a941e35dd",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvt_dmt.o",
+    "size": 13280,
+    "sha256": "b06817cacc30f9eb67e2d63fe6d82b30d71d0df9708cd5d0621b903bbd00f131",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/modeset/timing/nvt_dsc_pps.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvt_dsc_pps.o",
+    "source_sha256": "2adb1ba71341e6d7d78c77a6fe2a16ea56336594ff37a3d025c7f257230c5234",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvt_dsc_pps.o",
+    "size": 22384,
+    "sha256": "1a4070da32963d21840adeb5e84a2f0694e299edaf5bdc5cee1eeb0677e9ecf7",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/modeset/timing/nvt_edid.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvt_edid.o",
+    "source_sha256": "53ea18574b3406c78f26ceae5502499e9e982e6e39da28725ffc0cab334659e0",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvt_edid.o",
+    "size": 51264,
+    "sha256": "b0850677c36781937d729449d1a5c9d6b5d7549d682b21872599e3e012cd47b5",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/modeset/timing/nvt_edidext_861.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvt_edidext_861.o",
+    "source_sha256": "108821c6524d428aa41d0cd52198ebcc2521ad3bcbf2088c7c1d3fbb4695f810",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvt_edidext_861.o",
+    "size": 57704,
+    "sha256": "f6b0da1c63e0644b2289af45b32b8d442f305b040ab2dd33b6962f946fc562e8",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/modeset/timing/nvt_edidext_displayid.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvt_edidext_displayid.o",
+    "source_sha256": "7f0c38e10f50aa3b285bd5da7ef4449d923c6dd5cdd32ac85942dc7c7e8ae2bc",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvt_edidext_displayid.o",
+    "size": 11024,
+    "sha256": "0ca637c747c5a820aa2d7701dac3525c2b6f0cfd858a8e1cc5309daee3f23728",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/modeset/timing/nvt_edidext_displayid20.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvt_edidext_displayid20.o",
+    "source_sha256": "0ba079548de4e0f4d1628c43409ef783e6d2a76539c13d45defabf054ed0cac6",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvt_edidext_displayid20.o",
+    "size": 3072,
+    "sha256": "5cfa6c984b1e2805ae0abe75479da8f0e78d9830aee6a52949de2f4756ff9080",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/modeset/timing/nvt_gtf.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvt_gtf.o",
+    "source_sha256": "24ade1c87164edfa5ceac583001a1b3a72b4ba2caca5518a68536215e747cbf3",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvt_gtf.o",
+    "size": 1512,
+    "sha256": "8533ddf10784d3de27a8678bdc7670e616674feac2551fad0814580cb9eb2355",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/modeset/timing/nvt_ovt.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvt_ovt.o",
+    "source_sha256": "6f24c55e490c80a30c7dd929909af2aedefc9bac44ab4baaa900c6a71510a333",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvt_ovt.o",
+    "size": 2848,
+    "sha256": "ccf75d5d0720b286ad617a419d14dfb122a8a5bea75a210b5450fad70e13f555",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/modeset/timing/nvt_tv.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvt_tv.o",
+    "source_sha256": "96cc2fc49180b001450c9295d2f1c313200fa79ebf2e3b1beb0dbf670fcea07a",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvt_tv.o",
+    "size": 4168,
+    "sha256": "a1d50cac0caaafd0a0e3bcda1ce4ad5e6ba777e0add3507189f77f33c9c7f9d5",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/modeset/timing/nvt_util.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvt_util.o",
+    "source_sha256": "ad8bb5fe6f0ce299cb7fedc7b1590a2e336d79a9b9f304eda2593122b4bd5c4d",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvt_util.o",
+    "size": 4792,
+    "sha256": "543cb3598f55039f37a7d2b923cb4eb9862cc97dcf3c3287014e2025b38b6639",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/unix/common/utils/nv_memory_tracker.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nv_memory_tracker.o",
+    "source_sha256": "90cf99e2b0e1d3ec179e931956b0f718b948962e95abb315213904ecb209ac5c",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nv_memory_tracker.o",
+    "size": 208,
+    "sha256": "7b512086adebe8ceba12016d95ba3d820a166c09def18f7bae9d2a2114c13bde",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/unix/common/utils/nv_mode_timings_utils.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nv_mode_timings_utils.o",
+    "source_sha256": "b61520e8f09016215509999a63af231fd60ca06aa8e65bde092c0f4f8053dc66",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nv_mode_timings_utils.o",
+    "size": 1344,
+    "sha256": "9d0f3bcb57cefb0e415913094ddabf0e4905c5389f5fe129b2cef86f08bf8b05",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/unix/common/utils/nv_vasprintf.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nv_vasprintf.o",
+    "source_sha256": "3512ba2f8c45a8b5b3f8a51c9c426ab3e463f7e2ed9c97bd7ed13e9a623d0cb7",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nv_vasprintf.o",
+    "size": 672,
+    "sha256": "e42ad0a8a8c63c427e2215f7e6637e8b7051ef091df237e51761f47147b41cd3",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/unix/common/utils/unix_rm_handle.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/unix_rm_handle.o",
+    "source_sha256": "0639b336575d41d7dfceadbf19c5e400c4b4949bc544844196101ab93f57f2b4",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/unix_rm_handle.o",
+    "size": 1376,
+    "sha256": "648ee8d4108ed22312538b265c8c548ad077eb0e12371f9ff8f79365a7bedaa2",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/unix/nvidia-3d/src/nvidia-3d-core.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvidia-3d-core.o",
+    "source_sha256": "470a2ad2a94bffcd78096d221f9ab6687d75c8662fe281a1754dd891d5ffcaa1",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvidia-3d-core.o",
+    "size": 1648,
+    "sha256": "53ba3ce9a133617447dd7dd2448a67998f61a7f7004a833779bee40958f1d4a4",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/unix/nvidia-3d/src/nvidia-3d-fermi.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvidia-3d-fermi.o",
+    "source_sha256": "a846f3b9791b01143d9df40e6a5babf123c7479f63b55e1210a9be74ce821360",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvidia-3d-fermi.o",
+    "size": 5512,
+    "sha256": "16b3a2c16690a59e808cd8de4a8decf868f47c5d8e8374e5f6bc356d3fba869d",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/unix/nvidia-3d/src/nvidia-3d-hopper.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvidia-3d-hopper.o",
+    "source_sha256": "0e43fd7ba2d79dce6285d5fa219c162058986fa46e819e31d1002bf2085f6c85",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvidia-3d-hopper.o",
+    "size": 1944,
+    "sha256": "56c5c8c064227efedadb552b81659402a491c73aa4be96ab3d8c8ef0e9b611e3",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/unix/nvidia-3d/src/nvidia-3d-init.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvidia-3d-init.o",
+    "source_sha256": "6ae2a253473ad5d4f9544d25118addd6bf16f9c7efe84a7a929f6eb91a9572f9",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvidia-3d-init.o",
+    "size": 6432,
+    "sha256": "3416fc111128e4648641ef8f4b02f600b3dd42f61cd1b3c1e949d61ea12b53f5",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/unix/nvidia-3d/src/nvidia-3d-surface.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvidia-3d-surface.o",
+    "source_sha256": "6cccbb1f26d9c3bbd46ebae8b8084ffcdc31c8d8cdd4e90f71b68a7591ba3180",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvidia-3d-surface.o",
+    "size": 2464,
+    "sha256": "afd0ee9ce944d5b8276fdf97bf91c9a58dd958dd8b31291a18523fd4211f0e29",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/unix/nvidia-3d/src/nvidia-3d-turing.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvidia-3d-turing.o",
+    "source_sha256": "100bdfa79e0bd5df8c596f9228634ad8271a67bf225d78476a9c09a887388899",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvidia-3d-turing.o",
+    "size": 2904,
+    "sha256": "0f4a39423ce5809bc585188f3cde3b3acb67cb93a9135b80783c144fbeaff3bc",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/unix/nvidia-3d/src/nvidia-3d-vertex-arrays.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvidia-3d-vertex-arrays.o",
+    "source_sha256": "7a3efab4bb380492185a4432817d2dc25081cad27a993217f3bf4966c4498bbe",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvidia-3d-vertex-arrays.o",
+    "size": 3368,
+    "sha256": "59fe4298099673332c4c97100b3d58c08c0d9889f71c7cd460bddf3aba31d212",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/unix/nvidia-push/src/nvidia-push-init.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvidia-push-init.o",
+    "source_sha256": "9306da75362ff6cec4765c12748c62fbb29364e54511a96096218aebb0773eaf",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvidia-push-init.o",
+    "size": 9168,
+    "sha256": "e5d2581c87bc26c8b5c86adfed3a2ed982e4e39f39ad565b2d30f84b0f3638eb",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/unix/nvidia-push/src/nvidia-push.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvidia-push.o",
+    "source_sha256": "1f5f7e09b9137f45fed39d75dc90c374bd5d8614603a5341ecfb56942c9c2112",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvidia-push.o",
+    "size": 6056,
+    "sha256": "f76a51c80e3c9379e767d41e43f3f196adb9c16447e82f42b3202313b68e9c0d",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "kapi/src/nvkms-kapi-notifiers.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-kapi-notifiers.o",
+    "source_sha256": "78d310ca74ab282beec5c18d2c208ab4862d1344566f3db088017c9fe972c641",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-kapi-notifiers.o",
+    "size": 2632,
+    "sha256": "ae17b5fa59786b8b919b43b7d931cdc1c96804d0aa5e7c50c1cb5af0e4f89b86",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "kapi/src/nvkms-kapi-sync.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-kapi-sync.o",
+    "source_sha256": "09fa351c8202e78e790d8d903ac48caaa3360d20210a5151f9ddf97cbdb1b499",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-kapi-sync.o",
+    "size": 3272,
+    "sha256": "03c9d25f0b45b035ba5b6f1dbccbde5fda2a06aa7a419851aea7bcefd5df2172",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "kapi/src/nvkms-kapi.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-kapi.o",
+    "source_sha256": "9cb2fd4a8c434328d71a3851b67a7d44e2fdf2e2a09fabdadc66d5cb350d1bd2",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-kapi.o",
+    "size": 30048,
+    "sha256": "7852cb0c350a8fc8b424c37e3787bf109cff3ef28f882283f6b5e5e02ed99ae8",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "lib/nvkms-format.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-format.o",
+    "source_sha256": "f2a95ee5507ac73c81849e97e0b68c0c8e26e529e0851cf25bc7ea1a8f44e594",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-format.o",
+    "size": 2576,
+    "sha256": "6ad16b65089c68d1f11815cc7b35f7103961d1d8435a213c37cff37f3b537a3e",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "lib/nvkms-sync.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-sync.o",
+    "source_sha256": "02ccdfd4299c37e44828bbbbe5ec784aae899a5667f398e38d46ffc703619b3b",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-sync.o",
+    "size": 832,
+    "sha256": "10c9716dbcc4d67e4b33495445bb294b07b7dedb9e9d874860be7c194864e527",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/g_nvkms-evo-states.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/g_nvkms-evo-states.o",
+    "source_sha256": "5d1b4e9f3e58a14d3611aa928d031dba2f4ee3fdb0061ca161102762b1f02e40",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/g_nvkms-evo-states.o",
+    "size": 19392,
+    "sha256": "40f56a480930b7c7cca0b251fcf99a5028e6814b9099769d77cb07106ab8eea6",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-3dvision.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-3dvision.o",
+    "source_sha256": "25e320911b53aaa2d8445c420d5fa7530ada91b35781d617d40a88a42a5d60f4",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-3dvision.o",
+    "size": 608,
+    "sha256": "eab0a9e8c66248a1927eabc1ac2d185e13545881d77c6e0a2aae117d06a034b3",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-attributes.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-attributes.o",
+    "source_sha256": "bb51d2a94badaf710435ae3696767c2f8ae82fa57932098f9d8f569993873a8a",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-attributes.o",
+    "size": 11568,
+    "sha256": "f04e762d31fc33a19d8aa0c6a0282978bc29f33a1ccb548552b97d83871ddd0e",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-conf.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-conf.o",
+    "source_sha256": "a97fec3422490f795965db838bdb23135534d54a5c60010a84ce19c21620df8b",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-conf.o",
+    "size": 6960,
+    "sha256": "4cd63a606e594c5eb25bf623de30ea6536b90931b69a61857d875f5a1a4e71dc",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-console-restore.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-console-restore.o",
+    "source_sha256": "6dc05f8a35baa0574c4eef884c649bd4b3e9bfb917ff54328c01727040c4edcb",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-console-restore.o",
+    "size": 6760,
+    "sha256": "a1aee2053cbab85121e3cda6e8c061fdbb23f6888bdd6a46dad9726569c89a66",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-ctxdma.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-ctxdma.o",
+    "source_sha256": "a622e6459cfec7d4e3e4d8b3c945cf0276afc29467fbc40d63839e8428df07d3",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-ctxdma.o",
+    "size": 1736,
+    "sha256": "26e1ef9ad378b56c70ada0bf937fb54a8cc0d6370c8193768678d031b280724f",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-cursor.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-cursor.o",
+    "source_sha256": "a205a9997524dc8bf0876ec65156144e1e88d10f23da3a24d274fa99af0b00f8",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-cursor.o",
+    "size": 5304,
+    "sha256": "d306252adcb868be66895a02efd2034917132374ccd682ec07e6a675a9514ef1",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-cursor3.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-cursor3.o",
+    "source_sha256": "1817cc1c866e8ace73c99ec5d4e7525d71b55f49fe6800ad06ddcd8810aaff70",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-cursor3.o",
+    "size": 1456,
+    "sha256": "7fb0de695f53c9b413357c59563f283bafcac61e0225407c9971c423bb94cf56",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-difr.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-difr.o",
+    "source_sha256": "fb26da87d399f9f8f06f4c236d10107ff0b14f930cb068a296c13c4b8b9e6d83",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-difr.o",
+    "size": 5472,
+    "sha256": "db35141176a172e48cb564ded10423e8d972dac0a980429ccd0a7cf4e49c4038",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-displayless.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-displayless.o",
+    "source_sha256": "af3e0f311eee082c9f187b52a68dde070d3f96c19783327708c4f14dcf6239b8",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-displayless.o",
+    "size": 8072,
+    "sha256": "f8b0cb27b91904c89b691078c7fb4b846fafb9b5d5309d2963693d1f28e7aabb",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-dma.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-dma.o",
+    "source_sha256": "a94ed1cfee0e8ade22d3fadad068ddb17be4196fdaad743713d8eff42c0dbaa3",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-dma.o",
+    "size": 3112,
+    "sha256": "7d3528f70d08dfa4182fc3f087825c88648277d54c036079085c3acb39cb1ab5",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-dpy-override.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-dpy-override.o",
+    "source_sha256": "a4942f262342947ac81e898a9f0e2a19c39a06d55148b335bd5ee90e5997166c",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-dpy-override.o",
+    "size": 2256,
+    "sha256": "58d30cdc0390ad9544a7f959d151548db3bfb29ab42f4cdf771523181e798cef",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-dpy.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-dpy.o",
+    "source_sha256": "d25eafc321b92b0eb528bde6e167d0b2164f573e65b20211468fcd4093214560",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-dpy.o",
+    "size": 31904,
+    "sha256": "a1008d57d228dc256e86fcd48909b9609aabeba1f15aa7ed9da092b7b58a07a6",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-event.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-event.o",
+    "source_sha256": "d6692817dd6230e29899d00b11ef954a0676d7353c74e588573fb8b94ae37ce2",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-event.o",
+    "size": 2072,
+    "sha256": "aa798e3daf033b7dce2bda7c5dfdb4dfa5d17c01e56b32a5324d92a5c12f4597",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-evo.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-evo.o",
+    "source_sha256": "bb9b8d648f9d4a79cea4c67df1cdd9a048fa8f8a15c46effc4a50a9d02595510",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-evo.o",
+    "size": 72304,
+    "sha256": "3c71fa03aebfdc4c582183aa679738124950fd7fe8e0a815abd2b824b87cf7ad",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-evo1.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-evo1.o",
+    "source_sha256": "83bed46a73f132104ce6b034fea21b307c083b69ceea43597fbb1ea55ea58e5f",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-evo1.o",
+    "size": 2152,
+    "sha256": "0e2bf716670e66f9c6e06d32a3d9ce6c2b9e2c487c53cec12696b90a78b959d1",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-evo3.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-evo3.o",
+    "source_sha256": "1247479b37f4240dfe4d7536bb4eafbf2e187f3c1e97ea8253d13cea66ba3745",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-evo3.o",
+    "size": 70352,
+    "sha256": "2cb798cf203f8680953f38072623aee9ba46e9e82c9a150d280c596654bc2ce7",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-evo4.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-evo4.o",
+    "source_sha256": "3033bce1efaf8fe99560397db3a2b0b3bc0ee9f7ecb7fb75717ba1c6e766f370",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-evo4.o",
+    "size": 34616,
+    "sha256": "c0138408b3ac69f9d4801d951031f815995e6691c6710a93294a6c661985dd11",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-flip.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-flip.o",
+    "source_sha256": "712c07a0fe9a763208522c22c4d468286dbce1c3e1f4fa553f19ac9785f211eb",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-flip.o",
+    "size": 12640,
+    "sha256": "526402ed769b0c2706537e076c61e9debfb7e66ddac4bfd492b3c496eec1986d",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-framelock.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-framelock.o",
+    "source_sha256": "111dd2b18ba65adeb3dfb2a9351720ede65c2ad03454eff5486ea4840f0b7856",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-framelock.o",
+    "size": 15792,
+    "sha256": "e0e24c01fcdb604ab9dbfc50ad4899ecf565b2db0b148dd78eda79f412b2dece",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-hal.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-hal.o",
+    "source_sha256": "9ac0bd98dae69032192f86fe9da9a4c868691e1d8e3f45ba4b8ba18dcfbab0f4",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-hal.o",
+    "size": 8352,
+    "sha256": "e0f8c40c1ed358b6b84ed00a1f48dbe10be85d586ac412451d830653a41af559",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-hdmi.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-hdmi.o",
+    "source_sha256": "519961b8cb8290bb265a32636c7c447d3209d07742fa1b604d0c114453c4b60b",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-hdmi.o",
+    "size": 19824,
+    "sha256": "8dcf533fe41e109802269a672be388023fc3380b86ad7dde889c3ee5a0cc6875",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-headsurface-3d.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-headsurface-3d.o",
+    "source_sha256": "f5417274acf5947526ccf78e1780fdea9665e3276af9e00a2d05d5f0a0a77ffe",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-headsurface-3d.o",
+    "size": 12296,
+    "sha256": "d7bcade39641042b83eb509c4334b7a20104de3ffcc7bd93470e0c872eebf4b4",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-headsurface-config.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-headsurface-config.o",
+    "source_sha256": "0b32df8515d777427b9cf69ba346c02a04a8751d73359898d63ddb535bef3e81",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-headsurface-config.o",
+    "size": 19088,
+    "sha256": "6b1c34c33646542c05c29a2c4dffd9997e8f85ed3f3f8fb89066013f9c219e80",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-headsurface-ioctl.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-headsurface-ioctl.o",
+    "source_sha256": "9ae14936aabdf9ae1ff4e2765bc939ade7fcb34dae134673fde82b6c34c626fe",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-headsurface-ioctl.o",
+    "size": 4120,
+    "sha256": "a68296991b0a8a64fd99afb71db4c82072f6a07f0b08c75fd565f1f1ca2f1fb3",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-headsurface-matrix.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-headsurface-matrix.o",
+    "source_sha256": "e78b0e024715abfdd012d5a0797ca56b51970f5707dc0877965dac313155fe87",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-headsurface-matrix.o",
+    "size": 6672,
+    "sha256": "cf34939d0d6c53777696276cfabcdbb7f2b754cb0b9d68642b2e5f53e6446689",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-headsurface-swapgroup.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-headsurface-swapgroup.o",
+    "source_sha256": "388679fe6bec5e4faeab0d239135674db29b53b21e468ffeaaf4950eac0f07a0",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-headsurface-swapgroup.o",
+    "size": 4464,
+    "sha256": "714aab5fc553b5148238b311a0d43b54d80b373b2efd43e46f1821761cb40e60",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-headsurface.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-headsurface.o",
+    "source_sha256": "a5aa46b7a6a2f240aa78af82a5125e8bec647716085f538413421e1f82a1762b",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-headsurface.o",
+    "size": 13432,
+    "sha256": "052e2ccae36ccf8f9d1542d2d48d5d389e1425d68eb3248cf0599184a104985c",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-hw-flip.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-hw-flip.o",
+    "source_sha256": "15e4420ba4f1a2c2cdb967f7ebc7ed1af3bf0cb3e86a5901fe8705b4903306ab",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-hw-flip.o",
+    "size": 26560,
+    "sha256": "7b956eb0068c6dab53bfc65043cf98216334ce235790b4d1fd4517887426f128",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-hw-states.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-hw-states.o",
+    "source_sha256": "219034a4f7d43424e07f8af5279fdf41458f3819d25af0d4cc92d60e32635114",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-hw-states.o",
+    "size": 9016,
+    "sha256": "19ed63b852d44c610d4d5cbc79c3b31ffd38bc7af84b8e771c0751b5791c4abd",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-lut.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-lut.o",
+    "source_sha256": "796b9d9c06dff3becd4f5a9a1ae15fa95ea75859b53dc078d2b3343bc74748a0",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-lut.o",
+    "size": 4312,
+    "sha256": "eefbee9a222ead3443c6a8450d064079d1a2cb83aaec22dfa6a4e5893b2d8fb0",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-modepool.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-modepool.o",
+    "source_sha256": "9cda03538e20f0cec0cd3b276f87871a815cd3daabdd227d3758146b41a0674b",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-modepool.o",
+    "size": 18424,
+    "sha256": "64825f940a0c4ea26d8ff85593fd46cbbee82688118226de24095e364897d611",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-modeset.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-modeset.o",
+    "source_sha256": "81e3edc04ab4a20a437627a633856d10c9a6ebd736e61cff1a99713dc4c07c3c",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-modeset.o",
+    "size": 38608,
+    "sha256": "d6e810859258e19ee3c6fa4f595e1ab254b12a952528d4f4f4c9568d9bae0853",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-pow.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-pow.o",
+    "source_sha256": "63e9ad280de6d01e1a850fbbd873d5875741051618f607b4136f188849b39ff2",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-pow.o",
+    "size": 5136,
+    "sha256": "35926dbc6daa98c2b9fe763cd398eee30f53a486601e7eeec3c89e33f2d241a4",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-prealloc.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-prealloc.o",
+    "source_sha256": "8f8238576c43b2d86c025444ec14ddf8ee6edd89bde8cc3abcdb14ec68701ffc",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-prealloc.o",
+    "size": 1896,
+    "sha256": "88e0abdd8a2cbcc2334a1dc55f2ee272013946df069bbe80bd320bf3417beed6",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-push.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-push.o",
+    "source_sha256": "9366266593e35da4c483b5f4280d10b88a2641f3866ef5863bc1466ef37e00d3",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-push.o",
+    "size": 3712,
+    "sha256": "44571b1ac4dfdc7ed018e9a7c2d08a1cd54272048b041afac9cf4389ee93e06c",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-rm.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-rm.o",
+    "source_sha256": "d86f1b6ef50da1ed33c9257319df84e53bcea3d043bd6f7f62713bd685ccef09",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-rm.o",
+    "size": 46600,
+    "sha256": "99f4d829ab22c0cf7e1c59a7d5fd3f7f263ef0148ab53262da2a8a3d3228a7f6",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-rmapi-dgpu.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-rmapi-dgpu.o",
+    "source_sha256": "f0e85e2336b532226b8563d62968b9b5284c947cc0bcf3750ced86abf57ba74c",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-rmapi-dgpu.o",
+    "size": 2392,
+    "sha256": "206681573bede309c4f42d47976dd49c4b691a1758eb7f9450521d71a71f08da",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-stereo.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-stereo.o",
+    "source_sha256": "88f8d0d6327acd788630098bb855cae9160550ecfe90debbcc8cefbfad5b4e9a",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-stereo.o",
+    "size": 880,
+    "sha256": "c286b51aa412f4d1ee04f9fc391b8956dc0c124d1df307d5f4af1047170a0f97",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-surface.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-surface.o",
+    "source_sha256": "ef52b032fef98d9908f690d3d7b7c4fb0268a1d22776318898a5d573d366b03a",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-surface.o",
+    "size": 9696,
+    "sha256": "b02569a374b7dfddca1b5b29ce25433b1d4a8d8f86f3197e3d59a4f44d727e85",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-utils-flip.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-utils-flip.o",
+    "source_sha256": "834b06687fbe088f1396f1b73302850595c003c5b02f4c8dd22c678ed152e4e2",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-utils-flip.o",
+    "size": 2072,
+    "sha256": "d7c7c43b9dba79d5e425a779b7a4b1b705878f9f61b66245b5f7b4d75c2bd5a0",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-utils.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-utils.o",
+    "source_sha256": "cc8a56f93b14573197a5e56b05d0bd926cff0d1f688a89c07ceae662c74e61cd",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-utils.o",
+    "size": 5184,
+    "sha256": "bf474242ae22da88e2b21ec3f1402361b96025959741d0cec8d3e79a1e2a4b70",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-vblank-sem-control.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-vblank-sem-control.o",
+    "source_sha256": "0ed80578f11644a23e8aadaca6d488dd0f99f4953b311d3a5b45e4393d9e8e04",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-vblank-sem-control.o",
+    "size": 2664,
+    "sha256": "3568581ee6b24b2b7ffdbf4f4757090c1b62cd49abdfd50f7a7cc5f18249b523",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms-vrr.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-vrr.o",
+    "source_sha256": "d042f89876556bc1b36850a11012cfd85495c1c0794ee93e79cb766398da7d88",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms-vrr.o",
+    "size": 8816,
+    "sha256": "99126b3956f40fad26c6ee1dd852a513718dc717366a52b420f0e54c30e69b9e",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/nvkms.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms.o",
+    "source_sha256": "9378da2e64db847802b6db11133edad506a3f921acdb0f25a721b6e34bd0134e",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvkms.o",
+    "size": 49400,
+    "sha256": "994ec01f2cf14ab39d359e59522c15f6bed491870805e4e8783d52823df0a350",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/unix/xzminidec/src/xz_crc32.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/xz_crc32.o",
+    "source_sha256": "592780dd781985b4d250c0851d00ce93d790e92e09b4c31c1a1d7f2fcb085d53",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/xz_crc32.o",
+    "size": 856,
+    "sha256": "96805d67f88c826014c52be8327e8eda700e29b57f6bbb85646c1154ecf6747c",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/unix/xzminidec/src/xz_dec_bcj.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/xz_dec_bcj.o",
+    "source_sha256": "da718b4a377be48e815098f9a65cbb38b4bc45ea7edf8e82b4299f1e21f0959e",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/xz_dec_bcj.o",
+    "size": 208,
+    "sha256": "7b512086adebe8ceba12016d95ba3d820a166c09def18f7bae9d2a2114c13bde",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/unix/xzminidec/src/xz_dec_lzma2.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/xz_dec_lzma2.o",
+    "source_sha256": "c8b49e3ff96dc01669a1582b5f967413a17ad4f04a623056675cc0a4d476d608",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/xz_dec_lzma2.o",
+    "size": 6584,
+    "sha256": "547ffd3046108c9e7c4745e3787864d028569282ee49a29568336942255bd934",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/unix/xzminidec/src/xz_dec_stream.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/xz_dec_stream.o",
+    "source_sha256": "e4c2f3d1dd4ca2c1bf5f499f148d91edb62ea4031b9762e075c6ec12f004316b",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/xz_dec_stream.o",
+    "size": 4456,
+    "sha256": "4e285cf3b3a257d6db6152b62d7063ca72bea45c1618d9579582f5fd8a202937",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_auxretry.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_auxretry.o",
+    "source_sha256": "64c8a3d348e3ab60acc967c94beaeedd1f1865a695378480f76a50caaa059384",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_auxretry.o",
+    "size": 4728,
+    "sha256": "600891b32837466b7bfd2e35c2342c46a6e1b8548c4a99e930b920add0d29de2",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_bitstream.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_bitstream.o",
+    "source_sha256": "3d786d98d892227bbc6fbd4ebe55a11f2e516961bf652e6a03e59dbc8d543c0a",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_bitstream.o",
+    "size": 1832,
+    "sha256": "67f5318946ba4841c7c1fa4e5a04b6a7582315a4fc3b6cf5f0ef4e65ddc15f58",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_buffer.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_buffer.o",
+    "source_sha256": "a4cf375477f75e4ed5caf165d90bf99ff1523886f7f7139c721ba8de9de34e49",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_buffer.o",
+    "size": 4304,
+    "sha256": "5ee37b040ee438e9901899d8daf605f5b6dfde4c7ca1250777e9b2a366a45cea",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_configcaps.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_configcaps.o",
+    "source_sha256": "fc46c4b07a80f416554ada888c999d10a35088b8d3a056bf00ee974438a79c0f",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_configcaps.o",
+    "size": 58552,
+    "sha256": "bb317f3bc2f81c35b1ee9cd542418b994a38683bfbe66d5a1fc017a7fd42b16a",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_configcaps2x.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_configcaps2x.o",
+    "source_sha256": "a656405ee5f7204c803ae037741da86b796a08a4ffb8ab78cd91152e302d2392",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_configcaps2x.o",
+    "size": 39584,
+    "sha256": "038706a6255e5df187e6c22b21fbe4e32c89471907bc6fc4fd06546b91ca439c",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_connectorimpl.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_connectorimpl.o",
+    "source_sha256": "fc8ec206a84db9a5768dc1b6c5c4f3f9c0a9d2c544efc01860da1880ee3c8736",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_connectorimpl.o",
+    "size": 149528,
+    "sha256": "1c6d943470968d4c1215620aea90c16dc980b7f5ca146fb962d532a00769c852",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_connectorimpl2x.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_connectorimpl2x.o",
+    "source_sha256": "edda460c9adf080e3da3fd3985ee22dab9d3c8e1300637e3c7b03be799ee5db1",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_connectorimpl2x.o",
+    "size": 60544,
+    "sha256": "a72d9272015bfb98eda367ac7aa367743f1add86993126aed6770c796853cd99",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_crc.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_crc.o",
+    "source_sha256": "e58826166b3951aec517c554a8ed4d31bcddfa44e27993faac1a5e62931b1dcd",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_crc.o",
+    "size": 984,
+    "sha256": "1a66111483fdc964c8a8cac7a93759130563b6049afd146477797fb02ca0a49a",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_deviceimpl.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_deviceimpl.o",
+    "source_sha256": "0010c471bc11c828531f5f15a784458eef82f3fff56cc02d6b0c736f978fc8a7",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_deviceimpl.o",
+    "size": 70952,
+    "sha256": "7af7de222818a341a4e39cf27deea6048caab7dd5a9fb81b2c41568527714ee1",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_discovery.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_discovery.o",
+    "source_sha256": "05a92e5eb4ee5fc18e54053be96e649c9aa2141a81f70af5d2a393af0b8587cd",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_discovery.o",
+    "size": 44776,
+    "sha256": "d0293121198dbb9fab74fad8c2b03b371560adc0a3779ea97571bb0f1bd24247",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_displayid2.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_displayid2.o",
+    "source_sha256": "fd3582c9edafb03f668bd4810913e3af6df4af34548fc53bcd6f0afdbbabfe43",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_displayid2.o",
+    "size": 840,
+    "sha256": "e322cc03290117900e60a2c89c8954feecd8ed55602aa005dcc600daa2402580",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_edid.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_edid.o",
+    "source_sha256": "94925d45883682e91f61f23937b800c887705d943381a7649a572ef4880b93a9",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_edid.o",
+    "size": 7312,
+    "sha256": "344a46329a3bda688724181b7dca3aca04c12e1c5ae03a506ebcddc09d7b2262",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_evoadapter.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_evoadapter.o",
+    "source_sha256": "865a011148abae8fbd5202ee82569507e64649b199b574b6f6909c17f3653f6f",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_evoadapter.o",
+    "size": 34336,
+    "sha256": "50beb1c71d67f07b31695ff9287a06eb96eaa8da2479386db8a3c7907c652576",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_evoadapter2x.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_evoadapter2x.o",
+    "source_sha256": "06480478afd4132e2cc562175308d2ac2de85d8d4b555650787ddb8605e7b9dc",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_evoadapter2x.o",
+    "size": 29048,
+    "sha256": "adf350873883e6e64419d5c788b5f90d4ef488f2704bc38a10bd4c2799a1c28b",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_groupimpl.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_groupimpl.o",
+    "source_sha256": "7173fddd04a386c1c802b99023e67376e8f90c54418c3cce81b1f3f0a33b7194",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_groupimpl.o",
+    "size": 16504,
+    "sha256": "61627cdaa088a1985a223e8c286ddfe7992b5a10b3d3667e9952386f9d0128c5",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_guid.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_guid.o",
+    "source_sha256": "9a0fe83cfd66f3f15e0c8f32fefba754d5bc4a93cc141f3e641e035b683e76d8",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_guid.o",
+    "size": 928,
+    "sha256": "4568652e664cc9497c90263d9a4906922c0c5fab87f2ad120342c4fcea0b6f72",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_hashmap.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_hashmap.o",
+    "source_sha256": "0fcbb2ce680d1b2e56ee846103c326a40d6e7f77c51a16c3975ee74c36a2a6ef",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_hashmap.o",
+    "size": 2808,
+    "sha256": "05c9666587ddb61d6291976e5b0c868fbb4b1ef0d44ce4b6504763ccfd3eacff",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_linkconfig.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_linkconfig.o",
+    "source_sha256": "b702d6720cdb1073d801656eb420651fc99665e764a3801a83c6079ceb4dbbd4",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_linkconfig.o",
+    "size": 4088,
+    "sha256": "d6202b8cc7ee6666215104316a541307da78f04cf6fe8840180f7c58c94ebed1",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_list.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_list.o",
+    "source_sha256": "c6261e015683244fa33d302d382afa466edd8734b20b6bec943001f3738a2ff2",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_list.o",
+    "size": 3920,
+    "sha256": "51a259c93bd3c8b0bfa1e05b3b9354f0ba6005767e2dde0906dcc44dd7e4d13c",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_merger.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_merger.o",
+    "source_sha256": "f1830213bcabd58e327055ec6b931faf2e713bed340930b8dd307d9bb2f3ea64",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_merger.o",
+    "size": 9416,
+    "sha256": "30a3710334a9b33aa2c37ff94fb74b6ba818cd7eab9251e7ce164ce955dfccdc",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_messagecodings.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_messagecodings.o",
+    "source_sha256": "879b9c6d220dfdebb3c27be06457a00dec7d190a64fa6400df0af49b7ce4e465",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_messagecodings.o",
+    "size": 42080,
+    "sha256": "5a2cf2775fa6154fb97330a62fa8e9822dce2470f4c232830d802b35944efa99",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_messageheader.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_messageheader.o",
+    "source_sha256": "f0666864e589d528d939f5b6f690025674e74aaffd74f81df0703f41b83d9b02",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_messageheader.o",
+    "size": 1896,
+    "sha256": "c99fb46d43b16e17cc6714ec286dcdeb3299a7157ef5c1ab42f606d68ab371b3",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_messages.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_messages.o",
+    "source_sha256": "c34b09cccea6d3875ee37af1dad58f478778923c8ae2bbe991a7cf79aa7bec2e",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_messages.o",
+    "size": 15384,
+    "sha256": "edea5b2536ccfc2a370cfd67ed02715a3358e679ddb8f1786b679df769c98b95",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_mst_displayid2.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_mst_displayid2.o",
+    "source_sha256": "017f7481da9b4d3a8372a088839ecea67d1eef84a7160e5b4b302ef6e8b20c5a",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_mst_displayid2.o",
+    "size": 7792,
+    "sha256": "2d9a1bdfaa9ec86275ee323a1da1366ec6a1d33841b6b1dc028e52c3adb2bfb2",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_mst_edid.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_mst_edid.o",
+    "source_sha256": "dcadc4e92d5bf59369bf013237c68c2db0b1a4c5602dc16dc70ff3b62213add9",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_mst_edid.o",
+    "size": 8200,
+    "sha256": "6187d3e5ea69385222a2c693de64f2eb9879e14482228e655c40dc60aa2cddde",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_qse.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_qse.o",
+    "source_sha256": "92a8bb6b17162e0fc590a4365589f6b01458623499820cd150f8762522168beb",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_qse.o",
+    "size": 7048,
+    "sha256": "e331baab2dbd3cb6d9483a609d4a5ceb571eb60693b40c283e394c3b69f844dd",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_splitter.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_splitter.o",
+    "source_sha256": "1b6b38879702a2cffa9b719ac31edcfaa86ff62178ae9309ae5f03a94b04f498",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_splitter.o",
+    "size": 10768,
+    "sha256": "aa7ed81e1c5d3375d2d31f988e3e580d7c7d80c9b8143724d9ae7ea10f652c04",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_sst_displayid2.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_sst_displayid2.o",
+    "source_sha256": "72ff321d2d92de3f8371b9ca6e2d55a8044d00c3806849ae828a1f3d364fafcf",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_sst_displayid2.o",
+    "size": 2952,
+    "sha256": "1bf0febd50af9fa4cefae7d59c7b8a15b2e309e4cfbfe3152425448985cc7554",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_sst_edid.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_sst_edid.o",
+    "source_sha256": "1589c379d7ccd5a7076a2dbb4d424ea9d7d9461f634f4665d63d9fd34f38e462",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_sst_edid.o",
+    "size": 3968,
+    "sha256": "075defee2bfa0b8f78c2c64bfd4208982595af9b55a0cfc9a260d365ea5c5eb0",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_timer.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_timer.o",
+    "source_sha256": "372a6da13fc6c36fa1088741070e073eb87e400a935a64117a611382ff314566",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_timer.o",
+    "size": 5248,
+    "sha256": "c98a7af297a4027caa2412ccab62ff4d200d12ec70dbf780563cfcd80370fbc8",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_vrr.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_vrr.o",
+    "source_sha256": "b54f83ba670825ff2e502958693106f58d3ad5e7caef2bac674163eed757f0b0",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_vrr.o",
+    "size": 3536,
+    "sha256": "90e57748bae818f960d7b6b09f624fe89414967c58844cceb6921ce69f075ecd",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_wardatabase.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_wardatabase.o",
+    "source_sha256": "edcea6dcea21fbe884f394484bfb71ec46bfbeb6e9077f54fb87742bd82a8c1f",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_wardatabase.o",
+    "size": 8008,
+    "sha256": "853bb95953b6d925c368957a4cc67e502b67c95903810dcd2c329799879aee29",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dp_watermark.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_watermark.o",
+    "source_sha256": "2f375f22d759ddeba212813595465a5b5fe68928f4c3eea438b98aa57f5a7cab",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_watermark.o",
+    "size": 5592,
+    "sha256": "db0104dc47285e2ac1c4b0dbd0d361fbe8107805435fc01f15cc34b561769ebc",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "../common/displayport/src/dptestutil/dp_testmessage.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_testmessage.o",
+    "source_sha256": "1a013613c96bc07a096b1c7182c66a1966a1326c9a0beb3ccd218bf785b719a4",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/dp_testmessage.o",
+    "size": 3552,
+    "sha256": "1234e5a40b096a62ecc43c7d89f7fb5992ef8111cb520f3a27a96c9f9f63fba1",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/dp/nvdp-connector-event-sink.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvdp-connector-event-sink.o",
+    "source_sha256": "b18d29e8bbbf8ca988bd67f1e942b9a14f9054e3d249a7559028fb07447b614c",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvdp-connector-event-sink.o",
+    "size": 8424,
+    "sha256": "96ac3d7a244db8533a45ee26e5abbb7c98eda8cbaeb7bdffaaad356069a73e0b",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/dp/nvdp-connector.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvdp-connector.o",
+    "source_sha256": "032051f20c703c1ded45bafa08a9c04919e0918893b6adeacf6925360bd18485",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvdp-connector.o",
+    "size": 8864,
+    "sha256": "a246fcc2404c50f2394f2a01e790a131067ff7413665057352a79bedc11871ca",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/dp/nvdp-device.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvdp-device.o",
+    "source_sha256": "0808ae571bf482858b0972c4ea30aa01661df6b28c8c2d2f1ea20eca8feee087",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvdp-device.o",
+    "size": 1688,
+    "sha256": "ef9aaebe1ad2b38a9093ab999151a73bd3ea189af6eecf6750a185347fe485ef",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/dp/nvdp-evo-interface.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvdp-evo-interface.o",
+    "source_sha256": "8608c453301baca2787aafdd6f48b2bb26c56fb4e336c44cdd8aa049a8a500fe",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvdp-evo-interface.o",
+    "size": 4056,
+    "sha256": "56c490e9f6931ef07dd4d8fae703133dd165116a5dde7df7fa44bfe6781ffc01",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/dp/nvdp-host.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvdp-host.o",
+    "source_sha256": "816183cf8f29440b9fa08c32c2b88bd1b04457b1e2ad6ef50d2120cec67a565b",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvdp-host.o",
+    "size": 832,
+    "sha256": "39ac65b8f97c9e27d17fa1b140da4560e2f70cabe7d6539ac5c96ab17a3e9d71",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "src/dp/nvdp-timer.cpp",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvdp-timer.o",
+    "source_sha256": "58b97c9831e0e7921a6024363a5466939e6108d7bb8f989d1a67add4dd9a7196",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/nvdp-timer.o",
+    "size": 6608,
+    "sha256": "d59167f90438c0d099f39842cac562c72228822b08e3f893eede50df36d01933",
+    "format": "x86_64_MH_OBJECT"
+  },
+  {
+    "source": "_out/Darwin_x86_64/g_nvid_string.c",
+    "object": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/g_nvid_string.o",
+    "source_sha256": "46a246f908f187c6df0af91e62fec4fa0abf453b7ff72ddcb0f38e5d73144d77",
+    "path": "/Users/runner/work/_temp/internal-products/ogkm-paired-candidate/src/nvidia-modeset/_out/Darwin_x86_64/g_nvid_string.o",
+    "size": 744,
+    "sha256": "01fc90a043d3787a3abac02c0d4978a700778da40f607cb69fcbeda40734af62",
+    "format": "x86_64_MH_OBJECT"
+  }
+]
