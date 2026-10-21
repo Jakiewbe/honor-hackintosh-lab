@@ -25,10 +25,48 @@ case "$SDK" in
   15.[5-9]*|15.[5-9]|1[6-9].*|2[0-9].*) : ;;
   *) echo "STOP: need SDK >= 15.5 (found $SDK); select Xcode 16.4 with xcode-select"; exit 2 ;;
 esac
-command -v gmake >/dev/null || { echo "STOP: install gmake (brew install make)"; exit 2; }
+# Offline mode: the two pinned source trees can be carried on the install stick instead of fetched.
+NM_SRC=${NM_SRC:-}
+NV_SRC=${NV_SRC:-}
+HERE=$(cd "$(dirname "$0")" && pwd)
+for base in "$HERE/g1-src" "$HERE/../g1-src" "$HOME/Desktop/HONOR-G1-FIRST-TOUCH/g1-src"; do
+  if [ -d "$base/nm/.git" ] && [ -z "$NM_SRC" ]; then NM_SRC="$base/nm"; fi
+  if [ -d "$base/nv/.git" ] && [ -z "$NV_SRC" ]; then NV_SRC="$base/nv"; fi
+done
+[ -n "$NM_SRC" ] && echo "pre-staged NullMoth: $NM_SRC"
+[ -n "$NV_SRC" ] && echo "pre-staged OGKM:     $NV_SRC"
+
+# gmake is only needed because the OGKM makefiles use GNU make 4 syntax. Without network, fall back to
+# the system make and say so; a syntax error later will name the reason.
+if ! command -v gmake >/dev/null; then
+  if command -v make >/dev/null; then
+    mkdir -p "$WORK/bin"
+    ln -sf "$(command -v make)" "$WORK/bin/gmake"
+    export PATH="$WORK/bin:$PATH"
+    echo "WARN: gmake missing, using $(make --version | head -1) via a shim"
+  else
+    echo "STOP: need gmake (brew install make) or make"; exit 2
+  fi
+fi
 
 fetch() {
-  local name=$1 url=$2 pin=$3 dir=$WORK/$name
+  local name=$1 url=$2 pin=$3 dir=$WORK/$name pre=""
+  case "$name" in
+    nm) pre="$NM_SRC" ;;
+    nv) pre="$NV_SRC" ;;
+  esac
+  if [[ -n "$pre" && -d "$pre/.git" ]]; then
+    [[ "$(git -C "$pre" rev-parse HEAD)" == "$pin" ]] || { echo "STOP: $pre is not at $pin"; exit 2; }
+    if [[ -z "$(git -C "$pre" status --porcelain --untracked-files=all)" ]]; then
+      rm -rf "$dir"
+      mkdir -p "$(dirname "$dir")"
+      cp -R "$pre" "$dir"
+      echo "using pre-staged $name from $pre"
+      [[ "$(git -C "$dir" rev-parse HEAD)" == "$pin" ]] || { echo "STOP: copy of $name is at the wrong commit"; exit 2; }
+      return 0
+    fi
+    echo "WARN: $pre has local changes; fetching $name from the network instead"
+  fi
   if [[ ! -d "$dir/.git" ]]; then
     git -c core.autocrlf=false init -q "$dir"
     git -C "$dir" config core.autocrlf false
