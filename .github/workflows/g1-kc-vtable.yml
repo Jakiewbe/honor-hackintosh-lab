@@ -10,6 +10,7 @@ on:
     paths:
       - 'tools/g1_kc_vtable.py'
       - 'tools/g1_kc8.py'
+      - 'tools/g1_kc_chain.py'
       - '.github/workflows/g1-kc-vtable.yml'
 
 permissions:
