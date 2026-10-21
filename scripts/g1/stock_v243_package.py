@@ -271,9 +271,20 @@ def run(args, report):
     # set_shape_backing_length_ext, surface_lock_options and surface_unlock_options in this exact order,
     # and the remaining three exist on their own classes. The declarations stay; the import audit gets
     # the vtable evidence instead of deleting layout.
-    report['iofam_overlay'] = dict(applied=False,
-        reason='rejected: vtable slots 322-325 observed in SystemKernelExtensions.kc',
-        evidence='research/stock-v243-offscreen-20261021/iogfx-vtable-20261021.json')
+    # The vtable observation kept the layout and moved the fix to the type declarations: the IOFamily
+    # enum types were typedefs to unsigned int, so the base-class imports mangled as 'j' while the real
+    # symbols carry the enum names. Apply that narrow patch and verify it against its lock.
+    overlay = ROOT/'research/stock-v243-offscreen-20261021/iofam-enum-types.patch'
+    overlay_lock = json.loads((ROOT/'research/stock-v243-offscreen-20261021/iofam-lock.json').read_text())
+    if base.digest(overlay) != overlay_lock['sha256']:
+        raise ValueError('io_fam type patch differs from its lock')
+    for argv, name in ((['git','apply','--check','--unsafe-paths',overlay], 'iofam-types-check.txt'),
+                       (['git','apply','--unsafe-paths',overlay], 'iofam-types-apply.txt')):
+        if patch_run([str(v) for v in argv], tree, args.out/name):
+            raise ValueError('io_fam type patch failed: ' + name)
+    report['iofam_overlay'] = dict(applied=True, sha256=overlay_lock['sha256'],
+        scope=overlay_lock['scope'], reason=overlay_lock['reason'],
+        vtable_evidence='research/stock-v243-offscreen-20261021/iogfx-vtable-20261021.json')
     products = args.work/'package-products'; products.mkdir(exist_ok=False)
     # Reuse the exact accepted NVRM compile flags, changing only local include paths
     # and language macros as in the fixed stock accelerator recipe (not executing it).

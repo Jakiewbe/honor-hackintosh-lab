@@ -1,0 +1,17 @@
+--- a/kexts/NVRM/accel/iofam/iofam_types.h
++++ b/kexts/NVRM/accel/iofam/iofam_types.h
+@@ -7,10 +7,10 @@
+ #pragma once
+ #include <libkern/c++/OSObject.h>
+ #include <IOKit/IOService.h>
+-typedef unsigned int IOAccelStereoMode;
+-typedef unsigned int eDoSwap;
+-typedef unsigned int eIOAccelSurfaceShapeBits;
+-typedef unsigned int eLockType;
++enum IOAccelStereoMode : unsigned int { IOAccelStereoMode_none = 0 };
++enum eDoSwap : unsigned int { eDoSwap_none = 0 };
++enum eIOAccelSurfaceShapeBits : unsigned int { eIOAccelSurfaceShapeBits_none = 0 };
++enum eLockType : unsigned int { eLockType_none = 0 };
+ class IOAccelAllocationInfo;
+ class IOAccelBounds;
+ class IOAccelChannel2;
