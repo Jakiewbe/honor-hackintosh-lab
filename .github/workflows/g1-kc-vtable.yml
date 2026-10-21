@@ -52,6 +52,34 @@ jobs:
           print('\n'.join(lines))
           PY
 
+      - name: Decode the vtable slots through the chained fixups
+        shell: bash
+        run: |
+          set -uo pipefail
+          kc=/System/Library/KernelCollections/SystemKernelExtensions.kc
+          for cls in IOAccelSurface IOAccelContext2 IOAccelGLContext2 IOAccelLegacyDisplayPipe IOAccelLegacyDisplayMachine; do
+            python3 tools/g1_kc_chain.py "$kc" com.apple.iokit.IOAcceleratorFamily2 "$cls" \
+              > "out/chain-$cls.json" 2> "out/chain-$cls.err" || true
+          done
+          python3 - <<'PY'
+          import json, pathlib
+          lines = []
+          for path in sorted(pathlib.Path('out').glob('chain-*.json')):
+              try:
+                  data = json.loads(path.read_text())
+              except Exception as error:
+                  lines.append('%s: UNREADABLE %s' % (path.name, error)); continue
+              for entry in data['classes']:
+                  lines.append('%s: %s' % (entry['class_name'], entry['status']))
+                  for slot in entry.get('slots', []):
+                      lines.append('  %3d %s' % (slot['slot'], slot['symbol']))
+          pathlib.Path('out/chain-summary.txt').write_text('
+'.join(lines) + '
+')
+          print('
+'.join(lines))
+          PY
+
       - name: Dump the chained-fixup records near each vtable
         shell: bash
         run: |
