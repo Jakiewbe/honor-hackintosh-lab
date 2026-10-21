@@ -25,6 +25,7 @@ import g1_kc8 as kc
 from g1_target_providers import section_bounds
 
 PASS = 'PASS_STATIC_KERNEL_BUNDLES_NOT_LOADER_ABI_OR_GPU_ACCEPTANCE'
+PASS_LOCAL_ONLY = PASS + '_LOCAL_ONLY_EXPORTS_UNVERIFIED'
 SPECS = {
     'NVRM': ('kexts/NVRM/Info.plist', None),
     'NVRMFB': ('kexts/NVRMFB/fb/Info.plist', 'kexts/NVRMFB/fb/nvrm-fb.cpp'),
@@ -48,6 +49,10 @@ def compatible(required, provider):
     current = provider['CFBundleVersion']
     lower = provider.get('OSBundleCompatibleVersion', current)
     return version(lower) <= version(required) <= version(current)
+
+
+def required_of(declared, bid):
+    return declared.get(bid, '0')
 
 
 def audit_imports(names, declared, symbolsets, actual_kernel, families, exports):
@@ -79,9 +84,19 @@ def audit_imports(names, declared, symbolsets, actual_kernel, families, exports)
                                 if f['info'] else 'UNVERIFIED_NO_DISK_INFO_PLIST'),
                     evidence='KC_EXTERNAL_DEFINITION',
                     explicit_export=(name in allow) if allow is not None else 'UNVERIFIED'))
+        if not providers:
+            local = [bid for bid, f in families.items()
+                     if f and (f['info'] is None or compatible(required_of(declared, bid), f['info']))
+                     and name in f.get('local_definitions', ())]
+            if local:
+                rows.append(dict(symbol=name, providers=[], local_definitions=local,
+                    status='LOCAL_DEFINITION_OBSERVED_EXPORT_UNVERIFIED'))
+                continue
         rows.append(dict(symbol=name, providers=providers,
             status='DECLARED_VERSION_AND_DEFINITION' if providers else 'UNRESOLVED'))
-    return dict(count=len(rows), unresolved=[r['symbol'] for r in rows if not r['providers']],
+    return dict(count=len(rows), unresolved=[r['symbol'] for r in rows if not r['providers']
+                and r['status'] == 'UNRESOLVED'],
+        local_only=[r['symbol'] for r in rows if r['status'] == 'LOCAL_DEFINITION_OBSERVED_EXPORT_UNVERIFIED'],
         rows=rows, level='STATIC_RUNNER_PROVIDER_MATCH_NOT_LOADER_OR_FULL_ABI')
 
 
@@ -182,19 +197,24 @@ def native_providers(names, logs):
         definitions = sorted({r['macho_symbol'] for o in observations for m in o['members']
             if m['bundle_id'] == bid for r in m['symbols']['records']
             if r['status'] == 'KC_EXTERNAL_SECTION_DEFINITION_OBSERVED_NOT_EXPORT_OR_ABI'})
+        # Local (non-N_EXT) section definitions: the code is present in the family image, but the static
+        # export status is unverified. Kept apart from exported definitions so no provider is invented.
+        local_definitions = sorted({r['macho_symbol'] for o in observations for m in o['members']
+            if m['bundle_id'] == bid for r in m['symbols']['records']
+            if r['status'] == 'NOT_A_PUBLIC_SECTION_DEFINITION' and (r['n_type'] & 0x0e) == 0x0e})
         if path.is_file():
             info = plistlib.loads(path.read_bytes())
             if info['CFBundleIdentifier'] != bid:
                 raise ValueError('family identity differs')
-            families[bid] = dict(info=info, definitions=definitions, plist_sha256=base.digest(path),
-                identity_source='DISK_INFO_PLIST')
+            families[bid] = dict(info=info, definitions=definitions, local_definitions=local_definitions,
+                plist_sha256=base.digest(path), identity_source='DISK_INFO_PLIST')
             (logs/(short+'.plist.txt')).write_bytes(plistlib.dumps(info))
         else:
             # macOS 15 ships these families inside the kernel collections; there is no kext directory to
             # read. Identity comes from the collection's fileset entry id, and version compatibility is
             # recorded as unverified instead of being invented.
-            families[bid] = dict(info=None, definitions=definitions, plist_sha256=None,
-                identity_source='KC_FILESET_ENTRY_ID_DISK_PLIST_ABSENT')
+            families[bid] = dict(info=None, definitions=definitions, local_definitions=local_definitions,
+                plist_sha256=None, identity_source='KC_FILESET_ENTRY_ID_DISK_PLIST_ABSENT')
             (logs/(short+'.plist.txt')).write_text('INFO_PLIST_ABSENT_OBSERVED_IN_KERNEL_COLLECTION\\n')
         if short in ('IOPCIFamily', 'IOACPIFamily'):
             rel = 'config/' if short == 'IOPCIFamily' else ''
@@ -278,15 +298,21 @@ def run(args, report):
         bundle['providers'] = audit
         base.save(args.out/(name+'-providers.json'), audit)
     report['unresolved'] = {name:b['providers']['unresolved'] for name,b in report['bundles'].items() if b['providers']['unresolved']}
+    report['local_only_imports'] = {name:b['providers']['local_only'] for name,b in report['bundles'].items()
+                                    if b['providers'].get('local_only')}
     if report['unresolved']:
         raise ValueError('declared provider/version/definition unresolved; see per-bundle provider reports')
+    if report['local_only_imports']:
+        print('STATIC_LOCAL_ONLY_IMPORTS ' + ','.join(
+            '%s=%d' % (k, len(v)) for k, v in sorted(report['local_only_imports'].items())), flush=True)
     # Bind before/after hashes and exact consumed compilation dependencies.
     for record in report.get('compiled', {}).values():
         if any(base.digest(p) != sha for p,sha in record['dependencies'].items()):
             raise ValueError('companion dependency changed after link')
     if base.digest(original) != previous['integrated_link']['sha256']:
         raise ValueError('integrated binary changed after inspection')
-    report.update(status=PASS, stage='complete', internal_binary_sha256=base.digest(original),
+    final_status = PASS if not report['local_only_imports'] else PASS_LOCAL_ONLY
+    report.update(status=final_status, stage='complete', internal_binary_sha256=base.digest(original),
         user_system='UNVERIFIED', full_abi='UNVERIFIED', gpu='NOT_RUN', kext_load='NO_GO',
         metal_plugin='NOT_BUILT_OR_EXECUTED', gsp='NOT_EXECUTED', signing='NOT_RUN')
 
@@ -306,7 +332,7 @@ def main():
     finally:
         base.save(args.out/'package-report.json', report)
     print(report['status'], report['stage'], report.get('error',''))
-    return 0 if report['status'] == PASS else 2
+    return 0 if report['status'] in (PASS, PASS_LOCAL_ONLY) else 2
 
 
 if __name__ == '__main__':
