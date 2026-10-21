@@ -45,8 +45,8 @@ class LoaderGateTests(unittest.TestCase):
         text = SOURCE.read_text(encoding="utf-8")
         self.assertIn("loader-acceptance", text)
         self.assertIn("kextutil -n did not pass", text)
-        self.assertIn("loader_negative_control", text)
-        self.assertIn("loader negative control accepted", text)
+        self.assertIn("kextutil_capability_probe", text)
+        self.assertIn("kextutil_is_a_validation_gate", text)
 
     def test_script_parses(self):
         ast.parse(SOURCE.read_text(encoding="utf-8"))
