@@ -1,0 +1,7 @@
+{
+  "patch": "iofam-macos15-layout.patch",
+  "sha256": "c85196277c1d980de6b8b19d92dd6e0b3d047954d9b33180dd3787fb5e71d7ee",
+  "scope": "kexts/NVRM/accel/iofam/{IOAccelSurface,IOAccelGLContext2,IOAccelLegacyDisplayPipe,IOAccelLegacyDisplayMachine}.h",
+  "reason": "macOS 15.7.9's IOAcceleratorFamily2 does not expose the four IOAccelSurface virtuals, IOAccelGLContext2::processSwap or the two Legacy setStereo methods; the NVAccel subclass never overrides them, so declaring them on a 15 build only creates unresolvable imports.",
+  "applies_to": "package workflow only; NM_TAHOE builds keep the declarations"
+}

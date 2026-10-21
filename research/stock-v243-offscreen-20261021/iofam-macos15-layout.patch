@@ -1,0 +1,51 @@
+--- a/kexts/NVRM/accel/iofam/IOAccelSurface.h
++++ b/kexts/NVRM/accel/iofam/IOAccelSurface.h
+@@ -33,10 +33,12 @@
+     virtual void add_context_to_list(IOAccelContext2*);
+     virtual void remove_context_from_list(IOAccelContext2*);
+     virtual void set_id_mode(unsigned int, unsigned int);
++#ifdef NM_TAHOE  // macOS 26 adds these four virtuals; macOS 15 does not carry them (see PACKAGE audit)
+     virtual void set_shape(eIOAccelSurfaceShapeBits, unsigned int, IOAccelDeviceRegion*, unsigned long long);
+     virtual void set_shape_backing_length_ext(eIOAccelSurfaceShapeBits, unsigned int, unsigned long long, unsigned int, unsigned long long, IOAccelDeviceRegion*, unsigned long long);
+     virtual void surface_lock_options(eLockType, unsigned int, IOAccelSurfaceInformation*, unsigned long long);
+     virtual void surface_unlock_options(eLockType, unsigned int);
++#endif
+     virtual void surface_control_with_lock(unsigned int, unsigned int, unsigned int*);
+ private:
+     uint8_t _opaque[kIOAccelSurfaceSize - sizeof(IOUserClient)];
+--- a/kexts/NVRM/accel/iofam/IOAccelGLContext2.h
++++ b/kexts/NVRM/accel/iofam/IOAccelGLContext2.h
+@@ -17,7 +17,9 @@
+     virtual void sleepForSwapCompleteNoLock(unsigned int);
+     virtual void addVendorSurfaceRequiredBits(unsigned long long);
+     virtual void _pure367() = 0;
++#ifdef NM_TAHOE  // macOS 26 only, see PACKAGE audit
+     virtual void processSwap(eDoSwap);
++#endif
+     virtual void _RESERVEDIOAccelGLContext0();
+     virtual void _RESERVEDIOAccelGLContext1();
+     virtual void _RESERVEDIOAccelGLContext2();
+--- a/kexts/NVRM/accel/iofam/IOAccelLegacyDisplayPipe.h
++++ b/kexts/NVRM/accel/iofam/IOAccelLegacyDisplayPipe.h
+@@ -13,7 +13,9 @@
+ public:
+     virtual bool initScanoutResource(unsigned int, IOAccelResource2*);
+     virtual void destroyScanoutResource(unsigned int, IOAccelResource2*);
++#ifdef NM_TAHOE  // macOS 26 only, see PACKAGE audit
+     virtual void setStereo(IOAccelStereoMode);
++#endif
+     virtual void needsSecondaryFramebufferResources();
+     virtual bool isHardwareMirrorOfPipe(IOAccelLegacyDisplayPipe*);
+     virtual void submitScanoutFlipBuffer(IOAccelEvent*, unsigned int, IOAccelResource2*, IOAccelResource2*);
+--- a/kexts/NVRM/accel/iofam/IOAccelLegacyDisplayMachine.h
++++ b/kexts/NVRM/accel/iofam/IOAccelLegacyDisplayMachine.h
+@@ -20,7 +20,9 @@
+     virtual void found_framebuffer(IOFramebuffer *) APPLE_KEXT_OVERRIDE;
+     virtual bool initScanoutResource(unsigned int, unsigned int, IOFramebuffer *, IOAccelResource2 *);
+     virtual void destroyScanoutResource(unsigned int, unsigned int, IOFramebuffer *, IOAccelResource2 *);
++#ifdef NM_TAHOE  // macOS 26 only, see PACKAGE audit
+     virtual void setStereo(unsigned int, IOAccelStereoMode);
++#endif
+     virtual void setupFullScreen(unsigned int, IOAccelResource2 *, IOAccelResource2 *);
+     virtual void resetFullScreen(IOAccelEvent *, unsigned int, IOAccelResource2 *, IOAccelResource2 *);
+     virtual void submitFlipBuffer(IOAccelEvent *, unsigned int, unsigned int, IOAccelResource2 *, IOAccelResource2 *);
