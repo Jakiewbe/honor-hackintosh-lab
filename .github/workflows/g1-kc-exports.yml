@@ -41,6 +41,13 @@ jobs:
           pathlib.Path('out/requested-names.json').write_text(json.dumps(sorted(names), indent=1))
           print('requested names:', len(names))
           PY
+          # Positive control: the kernel does have an export trie, so the parser must find a known
+          # exported symbol there and must not find a name that cannot exist.
+          python3 tools/g1_kc_exports.py /System/Library/Kernels/kernel com.apple.kernel --plain \
+            --require _IOServiceOpen \
+            --controls _g1_definitely_absent_symbol \
+            > out/kernel-export-control.json 2> out/kernel-export-control.err || true
+          cat out/kernel-export-control.err || true
           python3 tools/g1_kc_exports.py "$kc" com.apple.iokit.IOAcceleratorFamily2 \
             --names out/requested-names.json \
             --require _IOServiceOpen,_IOFree \
