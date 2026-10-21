@@ -34,6 +34,21 @@ def require_identity(path, expected):
         raise ValueError('locked input differs: '+str(path))
 
 
+def patch_run(argv, cwd, log, timeout=600):
+    """Prevent enclosing repositories and inherited Git paths filtering a patch."""
+    env = dict(os.environ)
+    for key in ('GIT_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE', 'GIT_PREFIX'):
+        env.pop(key, None)
+    env['GIT_CEILING_DIRECTORIES'] = str(Path(cwd).resolve().parent)
+    argv = list(map(str, argv))
+    with log.open('w', encoding='utf-8') as stream:
+        stream.write('ARGV='+json.dumps(argv)+'\n'); stream.flush()
+        result = subprocess.run(argv, cwd=cwd, env=env, stdout=stream,
+            stderr=subprocess.STDOUT, timeout=timeout)
+        stream.write('\nEXIT='+str(result.returncode)+'\n')
+    return result.returncode
+
+
 def paired_candidate(nm, nv, dest, logs, lock):
     """Only named copies change; forward/reverse/replay must restore exact trees."""
     before = base.tracked_snapshot(nv)
@@ -45,17 +60,21 @@ def paired_candidate(nm, nv, dest, logs, lock):
     def apply(spec, reverse, phase):
         patch = nm/spec['patch']
         require_identity(patch, spec['sha256'])
+        if set(spec['before']) != set(spec['after']) or any(
+                spec['before'][p] == spec['after'][p] for p in spec['before']):
+            raise ValueError('paired patch has no declared change or mismatched source inventory')
         expected = spec['after'] if reverse else spec['before']
         for rel, sha in expected.items():
             require_identity(dest/rel, sha)
-        argv = ['git', '-c', 'core.autocrlf=false', 'apply', '--whitespace=error-all', '-p1']
+        # Do not let an enclosing unrelated Git worktree filter out diff --git paths.
+        argv = ['git', '-c', 'core.autocrlf=false', 'apply', '--no-index', '--whitespace=error-all', '-p1']
         if spec['directory']:
             argv += ['--directory='+spec['directory']]
         if reverse:
             argv += ['-R']
         for suffix, flags in (('check', ['--check']), ('apply', [])):
             base.checked_run([*argv, *flags, patch], dest,
-                logs/(phase+'-'+Path(spec['patch']).stem+'-'+suffix+'.txt'))
+                logs/(phase+'-'+Path(spec['patch']).stem+'-'+suffix+'.txt'), runner=patch_run)
         for rel, sha in (spec['before'] if reverse else spec['after']).items():
             require_identity(dest/rel, sha)
         steps.append(dict(phase=phase, patch=spec['patch'], reverse=reverse))

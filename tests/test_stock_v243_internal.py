@@ -6,6 +6,7 @@ import json
 import lzma
 from pathlib import Path
 import sys
+import subprocess
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -56,6 +57,30 @@ class InternalLinkContract(unittest.TestCase):
         source = self.root/'input'; source.write_bytes(b'tampered')
         with self.assertRaisesRegex(ValueError, 'locked input'):
             gate.require_identity(source, '0'*64)
+
+    def test_patch_cannot_be_skipped_by_an_enclosing_repository(self):
+        subprocess.run(['git', 'init', '-q', str(self.root)], check=True, capture_output=True)
+        child = self.root/'owned-candidate'; child.mkdir()
+        source = child/'source.c'; source.write_bytes(b'old\n')
+        patchfile = self.root/'change.patch'
+        patchfile.write_bytes(b'diff --git a/source.c b/source.c\n--- a/source.c\n+++ b/source.c\n@@ -1 +1 @@\n-old\n+new\n')
+        gate.base.checked_run(['git', '-c', 'core.autocrlf=false', 'apply', '--no-index', patchfile],
+            child, self.root/'apply.txt', runner=gate.patch_run)
+        self.assertEqual(source.read_bytes(), b'new\n')
+        gate.base.checked_run(['git', '-c', 'core.autocrlf=false', 'apply', '--no-index', '-R', patchfile],
+            child, self.root/'reverse.txt', runner=gate.patch_run)
+        self.assertEqual(source.read_bytes(), b'old\n')
+
+    def test_unchanged_patch_lock_is_rejected(self):
+        original = self.root/'original'; original.mkdir()
+        (original/'source.c').write_bytes(b'old\n')
+        patchfile = self.root/'patch'; patchfile.write_bytes(b'unused')
+        snapshot = {'source.c':gate.base.digest(original/'source.c')}
+        lock = dict(recipes={}, patches=[dict(patch='patch', directory='',
+            sha256=gate.base.digest(patchfile), before=snapshot, after=snapshot)])
+        with patch.object(gate.base, 'tracked_snapshot', return_value=snapshot):
+            with self.assertRaisesRegex(ValueError, 'no declared change'):
+                gate.paired_candidate(self.root, original, self.root/'copy', self.root, lock)
 
     def test_manifest_requires_every_source_and_no_duplicate_object(self):
         component = self.root/'src/nvidia-modeset'; component.mkdir(parents=True)
