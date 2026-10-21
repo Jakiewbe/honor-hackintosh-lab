@@ -39,15 +39,19 @@ def chained_header(raw, mach):
     return None
 
 
-def segment_starts(head, raw, base):
-    seg_count = struct.unpack_from('<I', head, 0)[0]
-    offsets = [struct.unpack_from('<I', head, 4 + 4 * i)[0] for i in range(seg_count)]
+def segment_starts(raw, base, starts_offset):
+    # The starts table begins at dataoff + starts_offset, not at dataoff.
+    start = base + starts_offset
+    seg_count = struct.unpack_from('<I', raw, start)[0]
+    if seg_count > 64:
+        raise ValueError('unreasonable segment count %d' % seg_count)
+    offsets = [struct.unpack_from('<I', raw, start + 4 + 4 * i)[0] for i in range(seg_count)]
     out = []
     for offset in offsets:
         if not offset:
             out.append(None)
             continue
-        address = base + offset
+        address = base + starts_offset + offset
         size = struct.unpack_from('<I', raw, address)[0]
         page_size = struct.unpack_from('<H', raw, address + 4)[0]
         pointer_format = struct.unpack_from('<H', raw, address + 6)[0]
@@ -132,16 +136,16 @@ def main():
             if not chain:
                 diagnostics[label] = dict(present=False)
                 continue
-            seg_count = struct.unpack_from('<I', chain['head'], 0)[0] if chain['size'] >= 4 else -1
-            offsets = [struct.unpack_from('<I', chain['head'], 4 + 4 * i)[0]
-                       for i in range(min(seg_count, 8))] if seg_count > 0 else []
+            seg_count = struct.unpack_from('<I', raw, chain['base'] + chain['starts'])[0]
+            offsets = [struct.unpack_from('<I', raw, chain['base'] + chain['starts'] + 4 + 4 * i)[0]
+                       for i in range(min(seg_count, 8))] if 0 < seg_count <= 64 else []
             diagnostics[label] = dict(present=True, dataoff=chain['base'], datasize=chain['size'],
                                       version=chain['version'], starts=chain['starts'],
                                       seg_count=seg_count, first_offsets=offsets)
         chain = member_chain or outer_chain
         if not chain:
             raise SystemExit('no LC_DYLD_CHAINED_FIXUPS')
-        starts = segment_starts(chain['head'], raw, chain['base'])
+        starts = segment_starts(raw, chain['base'], chain['starts'])
         names = symbols(raw, member)
         report = dict(collection=args.collection, bundle=args.bundle,
                       diagnostics=diagnostics,
