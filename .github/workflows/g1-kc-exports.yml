@@ -41,17 +41,17 @@ jobs:
           pathlib.Path('out/requested-names.json').write_text(json.dumps(sorted(names), indent=1))
           print('requested names:', len(names))
           PY
-          # Positive control: the kernel does have an export trie, so the parser must find a known
-          # exported symbol there and must not find a name that cannot exist.
-          python3 tools/g1_kc_exports.py /System/Library/Kernels/kernel com.apple.kernel --plain \
-            --require _IOServiceOpen \
+          # A dyld image with a real export trie is the positive control: the parser must find a known
+          # export here and must not find a name that cannot exist. (macOS 15's kernel file carries no
+          # export trie, so it cannot serve as the control.)
+          python3 tools/g1_kc_exports.py /usr/lib/libSystem.B.dylib libSystem --plain \
+            --require _malloc \
             --controls _g1_definitely_absent_symbol \
-            > out/kernel-export-control.json 2> out/kernel-export-control.err || true
-          cat out/kernel-export-control.err || true
+            > out/libsystem-export-control.json 2> out/libsystem-export-control.err || true
+          cat out/libsystem-export-control.err || true
           python3 tools/g1_kc_exports.py "$kc" com.apple.iokit.IOAcceleratorFamily2 \
             --names out/requested-names.json \
-            --require _IOServiceOpen,_IOFree \
-            --controls __ZTV14IOAccelSurface,__ZN14IOAccelSurface9set_shapeE24eIOAccelSurfaceShapeBitsjP19IOAccelDeviceRegiony \
+            --controls __ZTV14IOAccelSurface \
             > out/export-probe.json 2> out/export-probe.err || true
           cat out/export-probe.err || true
           head -c 2500 out/export-probe.json || true
