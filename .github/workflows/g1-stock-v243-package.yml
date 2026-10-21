@@ -3,6 +3,14 @@ name: HONOR G1 stock v243 kernel package audit
 # Compile/link only: same-run baseline, source-paired NVKMS, real NVLink locks.
 on:
   workflow_dispatch:
+  # Fallback trigger while api.github.com stays unreachable from the development host: a push to the
+  # audited inputs starts the gate, and every run remains bound to the pushed commit SHA.
+  push:
+    paths:
+      - 'tools/g1_kc8.py'
+      - 'scripts/g1/stock_v243_package.py'
+      - 'scripts/g1/stock_v243_import_audit.py'
+      - '.github/workflows/g1-stock-v243-package.yml'
 
 permissions:
   contents: read

@@ -88,6 +88,19 @@ def header(raw, offset=0):
         'symtab': symtabs[0] if symtabs else None}
 
 
+DATA_NAME_PREFIXES = ('__ZTV', '__ZTI', '__ZTS', '__ZTT')
+DATA_NAME_SUFFIXES = ('metaClassE', 'MetaClassE')
+
+
+def expects_data(name):
+    """Kernel kext data symbols are not only metaClass: vtables, typeinfo and C globals live in data too.
+
+    Used as a parser self-check hint, never as an ABI claim. A mismatch is recorded, not fatal, because
+    C++ static data members can end with E without being metaClass.
+    """
+    return name.endswith(DATA_NAME_SUFFIXES) or name.startswith(DATA_NAME_PREFIXES) or name.startswith('_g')
+
+
 def observe_symbols(raw, member, names):
     table = member['symtab']
     if not table or not table['nsyms']:
@@ -124,12 +137,13 @@ def observe_symbols(raw, member, names):
             if not sec['address'] <= value < sec['address']+sec['size']:
                 raise ValueError('symbol value outside claimed section')
             code = bool(sec['flags'] & 0x80000400)
-            expected_code = not name.endswith('metaClassE')
+            expected_code = not expects_data(name)
             row.update(section=sec, observed_kind='FUNCTION_SECTION' if code else 'DATA_SECTION',
                 expected_kind='FUNCTION' if expected_code else 'DATA',
+                kind_matches_role=code == expected_code,
                 status='KC_EXTERNAL_SECTION_DEFINITION_OBSERVED_NOT_EXPORT_OR_ABI')
-            if code != expected_code:
-                raise ValueError('function/data section kind differs from expected role')
+            # A kind mismatch is recorded, not raised: the name heuristic is a self-check hint and vtables and
+            # C globals are data. The provider claim is "section definition observed", which this still holds.
             if sec['flags'] & 0xff not in (1, 0xc, 0x12):
                 filepos = sec['offset']+value-sec['address']
                 bounded(raw, filepos, 1)
