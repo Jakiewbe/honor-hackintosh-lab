@@ -178,7 +178,7 @@ def main():
             scan = []
             if text:
                 text_lo, text_hi = text['vmaddr'], text['vmaddr'] + text['vmsize']
-                for index in range(0, 256):
+                for index in range(0, 900):
                     filepos = address + index * 8 + delta
                     value = _u64(raw, filepos)
                     if value is None:
