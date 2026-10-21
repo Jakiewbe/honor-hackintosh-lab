@@ -362,15 +362,12 @@ def run(args, report):
         raise ValueError('kextutil -n did not pass: missing=%r exits=%r unresolved=%r'
                          % (missing_runs, bad_exit, bad_text))
 
-    # Negative control: a bundle with a declared dependency that does not exist must be rejected.
-    # Without this, a checker that never fails could still look green.
+    # Negative control A: an invalid bundle must be rejected. A missing dependency in Info.plist turned
+    # out NOT to be detected by kextutil -n, which is recorded as a tool limitation rather than assumed.
     report['stage'] = 'loader-negative-control'
     broken = products/'NVAccel-broken.kext'
     shutil.copytree(products/'NVAccel.kext', broken)
-    info_path = broken/'Contents/Info.plist'
-    broken_info = plistlib.loads(info_path.read_bytes())
-    broken_info.setdefault('OSBundleLibraries', {})['com.example.g1-missing'] = '9.9.9'
-    info_path.write_bytes(plistlib.dumps(broken_info))
+    (broken/'Contents'/'MacOS'/'NVAccel').unlink()
     control_log = args.out/'loader-negative-control.txt'
     with control_log.open('w', encoding='utf-8') as stream:
         stream.write('ARGV='+repr(['xcrun', 'kextutil', '-n', str(broken)])+'\n'); stream.flush()
@@ -378,11 +375,33 @@ def run(args, report):
                                  stdout=stream, stderr=subprocess.STDOUT, timeout=300)
         stream.write('\nEXIT='+str(control.returncode)+'\n')
     control_text = control_log.read_text(encoding='utf-8', errors='replace')
-    rejected = control.returncode != 0 or "can't resolve" in control_text or 'missing' in control_text.lower()
+    rejected = control.returncode != 0
     report['loader_negative_control'] = dict(executed=True, exit=control.returncode,
-                                             rejected=rejected, log=control_log.name)
+                                             rejected=rejected, log=control_log.name,
+                                             case='missing executable')
     if not rejected:
-        raise ValueError('loader negative control accepted a bundle with a missing dependency')
+        raise ValueError('loader negative control accepted a bundle without its executable')
+
+    # Negative control B (recorded, not gating): does kextutil -n notice a declared dependency that does
+    # not exist? It does not, so dependency completeness is enforced by the static audit instead.
+    missing_dep = products/'NVAccel-missingdep.kext'
+    shutil.copytree(products/'NVAccel.kext', missing_dep)
+    dep_info_path = missing_dep/'Contents/Info.plist'
+    dep_info = plistlib.loads(dep_info_path.read_bytes())
+    dep_info.setdefault('OSBundleLibraries', {})['com.example.g1-missing'] = '9.9.9'
+    dep_info_path.write_bytes(plistlib.dumps(dep_info))
+    dep_log = args.out/'loader-missing-dependency.txt'
+    with dep_log.open('w', encoding='utf-8') as stream:
+        stream.write('ARGV='+repr(['xcrun', 'kextutil', '-n', str(missing_dep)])+'\n'); stream.flush()
+        dep_control = subprocess.run(['xcrun', 'kextutil', '-n', str(missing_dep)], cwd=tree,
+                                     stdout=stream, stderr=subprocess.STDOUT, timeout=300)
+        stream.write('\nEXIT='+str(dep_control.returncode)+'\n')
+    report['loader_missing_dependency_control'] = dict(
+        executed=True, exit=dep_control.returncode,
+        detected=dep_control.returncode != 0,
+        note='kextutil -n does not fail on a declared dependency that does not exist; '
+             'declared-dependency completeness is enforced by the static provider audit, not by kextutil.',
+        log=dep_log.name)
 
     report['stage'] = 'runner-dependencies'
     all_names = {n for b in report['bundles'].values() for n in b['imports']}

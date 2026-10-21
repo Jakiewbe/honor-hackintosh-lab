@@ -52,5 +52,19 @@ class LoaderGateTests(unittest.TestCase):
         ast.parse(SOURCE.read_text(encoding="utf-8"))
 
 
+class LoaderNegativeControlContract(unittest.TestCase):
+    """The negative control must exercise a case kextutil actually rejects, and record the one it does not."""
+
+    def test_script_has_a_really_rejected_case(self):
+        source = (Path(__file__).resolve().parents[1] / "scripts/g1/stock_v243_package.py").read_text(encoding="utf-8")
+        self.assertIn("missing executable", source)
+        self.assertIn("without its executable", source)
+
+    def test_script_records_the_missing_dependency_limitation(self):
+        source = (Path(__file__).resolve().parents[1] / "scripts/g1/stock_v243_package.py").read_text(encoding="utf-8")
+        self.assertIn("loader_missing_dependency_control", source)
+        self.assertIn("does not fail on a declared dependency", source)
+
+
 if __name__ == "__main__":
     unittest.main()
