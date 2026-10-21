@@ -74,3 +74,24 @@ xcrun kextutil -n /path/to/NVRM.kext    2>&1 | tee ~/Desktop/NVRM-kextutil.txt
   再与 nlist 的 `N_EXT|N_SECT` 符号对齐；或者用 `kmutil` 导出的 per-member 信息交叉验证。
 - 在拿到真实槽位之前，"裁掉 7 个虚函数"只有 `kextutil -n` 0 未解析这一层证据，**不等于** vtable
   ABI 正确。
+
+### D.1 反解进展与卡点（2026-10-21 续）
+
+- `LC_DYLD_CHAINED_FIXUPS` 已能定位：member 的 `dataoff=365877548`、`seg_count=4`，
+  两个有效段 `segment_offset=434176`（24 页）与 `532480`（3 页），`page_size=4096`，
+  `pointer_format=11`（`DYLD_CHAINED_PTR_X86_64_KERNEL_CACHE`）。
+- vtable 位置：`IOAccelSurface` 的 `__ZTV` 在 `0x148bcab0`，落在 `__DATA,__const`
+  （section address `0x148ad3e0`、offset 344642528、size 92656），在链段覆盖范围内。
+- 直接读出的槽位原文（slot 0..5）：
+
+```
+0x400000548772de  0x400000548772e4  0x4000000094b860
+0x4000000094b880  0x4000000094b890  0x4000000094b8a0
+```
+
+这些字不是明文地址：高位固定 `0x40…`，符合 chained-fixup 编码；按 format 11 解出的 `target`
+落在 9.7 MB 附近，与 member 的地址空间（344 MB 起）不符；按 PTR_64 / PTR_64_OFFSET 解也不符。
+因此还缺一步：kernel-cache 的 target 基数（或 imports 表）处理正确——**布局仍未解出**。
+
+下一步只有两条：把 chained fixups 按 dyld 的 kernel-cache 语义完整实现（含 imports 表与基数），
+或从 macOS 15 的共享缓存/头文件取得真实类声明做对照。
