@@ -1,0 +1,4 @@
+ARGV=["/usr/bin/plutil", "-lint", "/Users/runner/work/_temp/internal-products/package-products/NVRM.kext/Contents/Info.plist"]
+/Users/runner/work/_temp/internal-products/package-products/NVRM.kext/Contents/Info.plist: OK
+
+EXIT=0

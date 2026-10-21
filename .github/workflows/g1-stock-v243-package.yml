@@ -84,7 +84,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: g1-stock-v243-pm-guard-text
-          path: ${{ runner.temp }}/pm-guard-text/
+          path: |
+            ${{ runner.temp }}/pm-guard-text/*.txt
+            ${{ runner.temp }}/pm-guard-text/*.json
+            ${{ runner.temp }}/pm-guard-text/*.cpp
+            ${{ runner.temp }}/pm-guard-text/*.d
           if-no-files-found: warn
           retention-days: 14
 

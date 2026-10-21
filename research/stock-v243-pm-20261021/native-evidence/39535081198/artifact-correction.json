@@ -1,0 +1,11 @@
+{
+  "artifact_id": 12316948994,
+  "run": 39535081198,
+  "head_sha": "a8d63488aff4b4cd5556b3a780a08a907e17d66e",
+  "name": "g1-stock-v243-pm-guard-text",
+  "sha256": "sha256:918747474fe409a7f464ddf993e16c155c7bc34b760a2b4e02c53a60b9374bff",
+  "action": "DELETED_ACCIDENTAL_CPU_FIXTURE_AND_DSYM_ARTIFACT",
+  "http_status": 204,
+  "text_evidence_preserved": true,
+  "driver_binary": false
+}

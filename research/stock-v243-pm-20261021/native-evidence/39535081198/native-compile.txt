@@ -1,0 +1,446 @@
+ARGV=["xcrun", "clang++", "-arch", "x86_64", "-mmacosx-version-min=15.5", "-isysroot", "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk", "-fapple-kext", "-mkernel", "-nostdinc", "-I/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers", "-DKERNEL", "-DKERNEL_PRIVATE", "-DDRIVER_PRIVATE", "-DAPPLE", "-DNeXT", "-DNVRM", "-fno-builtin", "-fno-common", "-O2", "-Wall", "-Wno-unused-parameter", "-Wno-unused-function", "-DNV_UNIX", "-DNV_LINUX", "-DNV_X86_64", "-DNV_ARCH_BITS=64", "-DMBEDTLS_USER_CONFIG_FILE=<nvrm_mbedtls_config.h>", "-D__NO_CTYPE", "-DLOCK_VAL_ENABLED=0", "-DPORT_ATOMIC_64_BIT_SUPPORTED=1", "-DPORT_IS_KERNEL_BUILD=1", "-DPORT_IS_CHECKED_BUILD=0", "-DPORT_MODULE_atomic=1", "-DPORT_MODULE_core=1", "-DPORT_MODULE_cpu=1", "-DPORT_MODULE_crypto=1", "-DPORT_MODULE_debug=1", "-DPORT_MODULE_memory=1", "-DPORT_MODULE_safe=1", "-DPORT_MODULE_string=1", "-DPORT_MODULE_sync=1", "-DPORT_MODULE_thread=1", "-DPORT_MODULE_time=1", "-DPORT_MODULE_util=1", "-DPORT_MODULE_example=0", "-DPORT_MODULE_mmio=0", "-DRS_STANDALONE=0", "-DRS_STANDALONE_TEST=0", "-DRS_COMPATABILITY_MODE=1", "-DRS_PROVIDES_API_STATE=0", "-DNV_CONTAINERS_NO_TEMPLATES", "-DINCLUDE_NVLINK_LIB", "-DINCLUDE_NVSWITCH_LIB", "-DNV_PRINTF_STRINGS_ALLOWED=1", "-DNV_ASSERT_FAILED_USES_STRINGS=1", "-DPORT_ASSERT_FAILED_USES_STRINGS=1", "-I/Users/runner/work/_temp/nv/src/nvidia/arch/nvalloc/unix/include", "-I/Users/runner/work/_temp/nv/src/nvidia/arch/nvalloc/common/inc", "-I/Users/runner/work/_temp/nv/src/nvidia/arch/nvalloc/common/inc/gsp", "-I/Users/runner/work/_temp/nv/src/nvidia/inc", "-I/Users/runner/work/_temp/nv/src/nvidia/inc/os", "-I/Users/runner/work/_temp/nv/src/nvidia/inc/kernel", "-I/Users/runner/work/_temp/nv/src/nvidia/kernel/inc", "-I/Users/runner/work/_temp/nv/src/nvidia/interface", "-I/Users/runner/work/_temp/nv/src/nvidia/inc/libraries", "-I/Users/runner/work/_temp/nv/src/nvidia/src/libraries", "-I/Users/runner/work/_temp/nv/src/nvidia/generated", "-I/Users/runner/work/_temp/nv/src/nvidia/src/mm/uvm/interface", "-I/Users/runner/work/_temp/nv/src/common/sdk/nvidia/inc", "-I/Users/runner/work/_temp/nv/src/common/sdk/nvidia/inc/hw", "-I/Users/runner/work/_temp/nv/src/common/inc", "-I/Users/runner/work/_temp/nv/src/common/shared/inc", "-I/Users/runner/work/_temp/nv/src/common/nvlink/interface", "-I/Users/runner/work/_temp/nv/src/common/inc/swref", "-I/Users/runner/work/_temp/nv/src/common/inc/swref/published", "-I/Users/runner/work/_temp/nv/src/common/uproc/os/libos-v2.0.0/include", "-I/Users/runner/work/_temp/nv/src/common/uproc/os/common/include", "-I/Users/runner/work/_temp/nv/src/common/inc/displayport", "-I/Users/runner/work/_temp/nv/src/common/nvlink/inband/interface", "-I/Users/runner/work/_temp/nv/src/common/unix/nvidia-push/interface", "-I/Users/runner/work/_temp/nv/src/common/unix/common/inc", "-I/Users/runner/work/_temp/nv/src/common/modeset", "-I/Users/runner/work/_temp/nv/src/common/unix/common/utils/interface", "-I/Users/runner/work/_temp/nv/src/nvidia-modeset/os-interface/include", "-I/Users/runner/work/_temp/nv/src/nvidia-modeset/kapi/interface", "-I/Users/runner/work/_temp/nv/src/nvidia-modeset/kapi/include", "-I/Users/runner/work/_temp/nv/src/nvidia-modeset/interface", "-I/Users/runner/work/_temp/nv/src/nvidia-modeset/include", "-I/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM", "-I/Users/runner/work/_temp/internal-products/nm-pm-guard", "-std=c++17", "-fno-rtti", "-fno-exceptions", "-Wno-inconsistent-missing-override", "-MD", "-MT", "bound", "-MF", "/Users/runner/work/_temp/pm-guard-text/native-post.d", "-c", "/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp", "-o", "/Users/runner/work/_temp/internal-products/NVRM-pm-guard.o"]
+In file included from /Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:8:
+In file included from /Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/nv-xnu.h:18:
+In file included from /Users/runner/work/_temp/nv/src/nvidia/arch/nvalloc/unix/include/nv.h:50:
+In file included from /Users/runner/work/_temp/nv/src/nvidia/inc/libraries/nvport/nvport.h:217:
+In file included from /Users/runner/work/_temp/nv/src/nvidia/inc/libraries/nvport/util.h:270:
+In file included from /Users/runner/work/_temp/nv/src/nvidia/inc/libraries/nvport/inline/util_generic.h:184:
+/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/nvport/inline/util_gcc_clang.h:111:12: warning: implicit conversion changes signedness: 'int' to 'NvU32' (aka 'unsigned int') [-Wsign-conversion]
+  111 |     return __builtin_clzll(n);
+      |     ~~~~~~ ^~~~~~~~~~~~~~~~~~
+/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/nvport/inline/util_gcc_clang.h:118:12: warning: implicit conversion changes signedness: 'int' to 'NvU32' (aka 'unsigned int') [-Wsign-conversion]
+  118 |     return __builtin_clz(n);
+      |     ~~~~~~ ^~~~~~~~~~~~~~~~
+/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/nvport/inline/util_gcc_clang.h:127:12: warning: implicit conversion changes signedness: 'int' to 'NvU32' (aka 'unsigned int') [-Wsign-conversion]
+  127 |     return __builtin_ctzll(n);
+      |     ~~~~~~ ^~~~~~~~~~~~~~~~~~
+/Users/runner/work/_temp/nv/src/nvidia/inc/libraries/nvport/inline/util_gcc_clang.h:134:12: warning: implicit conversion changes signedness: 'int' to 'NvU32' (aka 'unsigned int') [-Wsign-conversion]
+  134 |     return __builtin_ctz(n);
+      |     ~~~~~~ ^~~~~~~~~~~~~~~~
+In file included from /Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:8:
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/nv-xnu.h:27:5: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+   27 |     IOPCIDevice *pci;
+      |     ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+In file included from /Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:8:
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/nv-xnu.h:31:26: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+   31 | void nv_xnu_register_pci(IOPCIDevice *pci, NvU32 domain, NvU8 bus, NvU8 slot, NvU8 function);
+      |                          ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:144:9: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+  144 |         IOPCIDevice *rp; UInt32 rpWin[6]; UInt16 rpCmd;   // root port 0x18..0x2c and command
+      |         ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:152:5: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+  152 |     IOPCIDevice *fPCI = NULL;
+      |     ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:399:5: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+  399 |     IOPCIDevice *pci = OSDynamicCast(IOPCIDevice, provider);
+      |     ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:399:38: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+  399 |     IOPCIDevice *pci = OSDynamicCast(IOPCIDevice, provider);
+      |                                      ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:399:24: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+  399 |     IOPCIDevice *pci = OSDynamicCast(IOPCIDevice, provider);
+      |                        ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSMetaClass.h:385:53: note: expanded from macro 'OSDynamicCast'
+  385 |     ((type *) OSMetaClassBase::safeMetaCast((inst), OSTypeID(type)))
+      |                                                     ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSMetaClass.h:325:31: note: expanded from macro 'OSTypeID'
+  325 | #define OSTypeID(type)   (type::metaClass)
+      |                               ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:571:26: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+  571 |     fPCI = OSDynamicCast(IOPCIDevice, provider);
+      |                          ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:571:12: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+  571 |     fPCI = OSDynamicCast(IOPCIDevice, provider);
+      |            ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSMetaClass.h:385:53: note: expanded from macro 'OSDynamicCast'
+  385 |     ((type *) OSMetaClassBase::safeMetaCast((inst), OSTypeID(type)))
+      |                                                     ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSMetaClass.h:325:31: note: expanded from macro 'OSTypeID'
+  325 | #define OSTypeID(type)   (type::metaClass)
+      |                               ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:701:40: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+  701 | static const char *otherDisplayHolding(IOPCIDevice *self, uint64_t phys, uint64_t size)
+      |                                        ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:709:9: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+  709 |         IOPCIDevice *d = OSDynamicCast(IOPCIDevice, o);
+      |         ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:709:40: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+  709 |         IOPCIDevice *d = OSDynamicCast(IOPCIDevice, o);
+      |                                        ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:709:26: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+  709 |         IOPCIDevice *d = OSDynamicCast(IOPCIDevice, o);
+      |                          ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSMetaClass.h:385:53: note: expanded from macro 'OSDynamicCast'
+  385 |     ((type *) OSMetaClassBase::safeMetaCast((inst), OSTypeID(type)))
+      |                                                     ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSMetaClass.h:325:31: note: expanded from macro 'OSTypeID'
+  325 | #define OSTypeID(type)   (type::metaClass)
+      |                               ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:811:83: warning: implicit conversion changes signedness: 'int' to 'unsigned long' [-Wsign-conversion]
+  811 |         if (ok && o < (int)sizeof(out) - 40) o += snprintf(out + o, sizeof(out) - o, "%shead%u %u.%03uHz", o ? " " : "", h, mhz / 1000, mhz % 1000);
+      |                                                                                 ~ ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:1109:49: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+ 1109 | static bool nvrmRangeBusy(UInt64 lo, UInt64 hi, IOPCIDevice *self, IOPCIDevice *ourPort)
+      |                                                 ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:1109:68: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+ 1109 | static bool nvrmRangeBusy(UInt64 lo, UInt64 hi, IOPCIDevice *self, IOPCIDevice *ourPort)
+      |                                                                    ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:1115:9: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+ 1115 |         IOPCIDevice *d = OSDynamicCast(IOPCIDevice, e);
+      |         ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:1115:40: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+ 1115 |         IOPCIDevice *d = OSDynamicCast(IOPCIDevice, e);
+      |                                        ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:1115:26: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+ 1115 |         IOPCIDevice *d = OSDynamicCast(IOPCIDevice, e);
+      |                          ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSMetaClass.h:385:53: note: expanded from macro 'OSDynamicCast'
+  385 |     ((type *) OSMetaClassBase::safeMetaCast((inst), OSTypeID(type)))
+      |                                                     ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSMetaClass.h:325:31: note: expanded from macro 'OSTypeID'
+  325 | #define OSTypeID(type)   (type::metaClass)
+      |                               ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:1159:66: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+ 1159 | static bool nvrmBusRangeHasOtherDevices(UInt8 first, UInt8 last, IOPCIDevice *self)
+      |                                                                  ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:1165:9: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+ 1165 |         IOPCIDevice *d = OSDynamicCast(IOPCIDevice, e);
+      |         ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:1165:40: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+ 1165 |         IOPCIDevice *d = OSDynamicCast(IOPCIDevice, e);
+      |                                        ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:1165:26: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+ 1165 |         IOPCIDevice *d = OSDynamicCast(IOPCIDevice, e);
+      |                          ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSMetaClass.h:385:53: note: expanded from macro 'OSDynamicCast'
+  385 |     ((type *) OSMetaClassBase::safeMetaCast((inst), OSTypeID(type)))
+      |                                                     ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSMetaClass.h:325:31: note: expanded from macro 'OSTypeID'
+  325 | #define OSTypeID(type)   (type::metaClass)
+      |                               ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:1322:5: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+ 1322 |     IOPCIDevice *rp = pp ? OSDynamicCast(IOPCIDevice, pp->getProvider()) : NULL;
+      |     ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:1322:42: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+ 1322 |     IOPCIDevice *rp = pp ? OSDynamicCast(IOPCIDevice, pp->getProvider()) : NULL;
+      |                                          ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:1322:28: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+ 1322 |     IOPCIDevice *rp = pp ? OSDynamicCast(IOPCIDevice, pp->getProvider()) : NULL;
+      |                            ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSMetaClass.h:385:53: note: expanded from macro 'OSDynamicCast'
+  385 |     ((type *) OSMetaClassBase::safeMetaCast((inst), OSTypeID(type)))
+      |                                                     ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSMetaClass.h:325:31: note: expanded from macro 'OSTypeID'
+  325 | #define OSTypeID(type)   (type::metaClass)
+      |                               ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:1456:99: warning: implicit conversion changes signedness: 'int' to 'unsigned int' [-Wsign-conversion]
+ 1456 |     auto num = [&](const char *k, UInt64 v, int bits) { if (OSNumber *o = OSNumber::withNumber(v, bits)) { d->setObject(k, o); o->release(); } };
+      |                                                                           ~~~~~~~~                ^~~~
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:1492:53: warning: implicit conversion loses integer precision: 'unsigned int' to 'UInt8' (aka 'unsigned char') [-Wimplicit-int-conversion]
+ 1492 |             if (a == (phys & ~0xFULL)) { off = 0x10 + bar * 4; break; }
+      |                                              ~ ~~~~~^~~~~~~~~
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:1504:15: warning: implicit conversion changes signedness: 'int' to 'unsigned int' [-Wsign-conversion]
+ 1504 |         tn += snprintf(table + tn, sizeof table - tn, "bar%u@0x%02x:0x%llx+0x%llx ", curNvBar, off, phys, size);
+      |            ~~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:1579:13: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+ 1579 |             IOPCIDevice *pci;
+      |             ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:1587:43: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+ 1587 |             AdapterAttempt(nv_state_t *n, IOPCIDevice *p)
+      |                                           ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:1599:22: warning: 'setBusMasterEnable' is deprecated: first deprecated in macOS 12.4 [-Wdeprecated-declarations]
+ 1599 |                 pci->setBusMasterEnable((savedCommand & 0x0004) != 0);
+      |                      ^~~~~~~~~~~~~~~~~~
+      |                      setBusLeadEnable
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:572:18: note: 'setBusMasterEnable' has been explicitly marked deprecated here
+  572 |     virtual bool setBusMasterEnable( bool enable ) API_DEPRECATED_WITH_REPLACEMENT("setBusLeadEnable", macos(10.0, 12.4), ios(1.0, 15.4), watchos(1.0, 8.5), tvos(1.0, 15.4));
+      |                  ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:1605:15: warning: 'setBusMasterEnable' is deprecated: first deprecated in macOS 12.4 [-Wdeprecated-declarations]
+ 1605 |         fPCI->setBusMasterEnable(true);
+      |               ^~~~~~~~~~~~~~~~~~
+      |               setBusLeadEnable
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:572:18: note: 'setBusMasterEnable' has been explicitly marked deprecated here
+  572 |     virtual bool setBusMasterEnable( bool enable ) API_DEPRECATED_WITH_REPLACEMENT("setBusLeadEnable", macos(10.0, 12.4), ios(1.0, 15.4), watchos(1.0, 8.5), tvos(1.0, 15.4));
+      |                  ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:1801:31: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+ 1801 |     s.rp = pp ? OSDynamicCast(IOPCIDevice, pp->getProvider()) : NULL;
+      |                               ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:1801:17: warning: 'IOPCIDevice' is deprecated: Use PCIDriverKit [-Wdeprecated-declarations]
+ 1801 |     s.rp = pp ? OSDynamicCast(IOPCIDevice, pp->getProvider()) : NULL;
+      |                 ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSMetaClass.h:385:53: note: expanded from macro 'OSDynamicCast'
+  385 |     ((type *) OSMetaClassBase::safeMetaCast((inst), OSTypeID(type)))
+      |                                                     ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/libkern/c++/OSMetaClass.h:325:31: note: expanded from macro 'OSTypeID'
+  325 | #define OSTypeID(type)   (type::metaClass)
+      |                               ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/IOKit/pci/IOPCIDevice.h:367:7: note: 'IOPCIDevice' has been explicitly marked deprecated here
+  367 | class __kpi_deprecated("Use PCIDriverKit") IOPCIDevice : public IOService
+      |       ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:229:32: note: expanded from macro '__kpi_deprecated'
+  229 | #define __kpi_deprecated(_msg) __deprecated_msg(_msg)
+      |                                ^
+/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/sys/cdefs.h:218:48: note: expanded from macro '__deprecated_msg'
+  218 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+      |                                                       ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:2259:21: warning: declaration shadows a local variable [-Wshadow]
+ 2259 |         nv_state_t *g = &fOwner->fNv;
+      |                     ^
+/Users/runner/work/_temp/internal-products/nm-pm-guard/kexts/NVRM/NVRM.cpp:2250:10: note: previous declaration is here
+ 2250 |     Gate g(fGate);
+      |          ^
+40 warnings generated.
+
+EXIT=0

@@ -1,0 +1,97 @@
+{
+  "run": 39535081198,
+  "commit": "a8d63488aff4b4cd5556b3a780a08a907e17d66e",
+  "event": "workflow_dispatch",
+  "conclusion": "failure",
+  "artifact_id": 12317018917,
+  "artifact_sha256": "77401945e96a36c7158a43749e8393e6d5d83c31fe7a28cbeeeb59cf6edaf1d6",
+  "artifact_bytes": 63639,
+  "raw_member_sha256": {
+    "NVAccel-compile.txt": "0347db77161a5eb7a29409f1bbb879f5372184f4e8fb11b4704cb32ef7d9281b",
+    "NVAccel-ld.txt": "292028fb069f1e94fc1273cc7045ffa6d239f99d86d93db3ff4197fa95abcb1d",
+    "NVAccel-deps.txt": "2c9f48137061c271b2d20617a1fedff52f373dd99db35f62988b8f2ef382a622",
+    "NVAccel-post.d": "bc5289639ad67160bae08c89a0cdd18d21d408eae7ebd638e663af12a1d6bd53",
+    "NVAccel-pre.d": "bc5289639ad67160bae08c89a0cdd18d21d408eae7ebd638e663af12a1d6bd53",
+    "NVRM-Info.plist.txt": "934914c01b15ad266fa4ff2f62e03671e2bc6849660564710bbebfc429ac91b6",
+    "NVRM-otool.txt": "10b4f7915033275554c6d22d28f1742f1b59fea95f50396d22bd7e710d779f12",
+    "NVRM-plutil.txt": "842785d613974e3d296bafc7ce4e0e6b73e9224cdaa7f7d0c41490373047cfcb",
+    "NVRMFB-compile.txt": "f6f46ce855ba53ac64884fc885f686bb1d74c1b786e08f54bb18c70f95f31ad1",
+    "NVRMFB-deps.txt": "38631d4b3afb61a7c0283f6d08f4066f18fa8345361dd70f1e414ea4e8ab3fb9",
+    "NVRMFB-ld.txt": "e0d48669cc77dcea9f875ea337edd75eeb15b19f75a394fbf2b44d65a0d518d8",
+    "NVRMFB-otool.txt": "af089776bfdb2a6f81b8edf16e751086f801c4a5215339ea639fad4aba1b3c69",
+    "NVRMFB-post.d": "74c807999199bc1586aff74fc07c8c702c332e93c2a0521dd8e7503fa041dcc7",
+    "NVRMFB-pre.d": "74c807999199bc1586aff74fc07c8c702c332e93c2a0521dd8e7503fa041dcc7",
+    "package-report.json": "38d4946e2a2e2fdf6a770147209112701d0412003f283a631f96c1102c684581"
+  },
+  "status": "FAILED",
+  "stage": "bundle-format",
+  "error": "missing or duplicate KMOD definition: __realmain",
+  "install_sign_load": "NOT_RUN",
+  "gpu_execution": "NOT_RUN",
+  "archive_sha256": "77401945e96a36c7158a43749e8393e6d5d83c31fe7a28cbeeeb59cf6edaf1d6",
+  "archive_bytes": 63639,
+  "raw_member_manifest": {
+    "NVAccel-compile.txt": {
+      "bytes": 30256,
+      "sha256": "0347db77161a5eb7a29409f1bbb879f5372184f4e8fb11b4704cb32ef7d9281b"
+    },
+    "NVAccel-ld.txt": {
+      "bytes": 434,
+      "sha256": "292028fb069f1e94fc1273cc7045ffa6d239f99d86d93db3ff4197fa95abcb1d"
+    },
+    "NVAccel-deps.txt": {
+      "bytes": 4203,
+      "sha256": "2c9f48137061c271b2d20617a1fedff52f373dd99db35f62988b8f2ef382a622"
+    },
+    "NVAccel-post.d": {
+      "bytes": 61210,
+      "sha256": "bc5289639ad67160bae08c89a0cdd18d21d408eae7ebd638e663af12a1d6bd53"
+    },
+    "NVAccel-pre.d": {
+      "bytes": 61210,
+      "sha256": "bc5289639ad67160bae08c89a0cdd18d21d408eae7ebd638e663af12a1d6bd53"
+    },
+    "NVRM-Info.plist.txt": {
+      "bytes": 2444,
+      "sha256": "934914c01b15ad266fa4ff2f62e03671e2bc6849660564710bbebfc429ac91b6"
+    },
+    "NVRM-otool.txt": {
+      "bytes": 4016,
+      "sha256": "10b4f7915033275554c6d22d28f1742f1b59fea95f50396d22bd7e710d779f12"
+    },
+    "NVRM-plutil.txt": {
+      "bytes": 229,
+      "sha256": "842785d613974e3d296bafc7ce4e0e6b73e9224cdaa7f7d0c41490373047cfcb"
+    },
+    "NVRMFB-compile.txt": {
+      "bytes": 17911,
+      "sha256": "f6f46ce855ba53ac64884fc885f686bb1d74c1b786e08f54bb18c70f95f31ad1"
+    },
+    "NVRMFB-deps.txt": {
+      "bytes": 4198,
+      "sha256": "38631d4b3afb61a7c0283f6d08f4066f18fa8345361dd70f1e414ea4e8ab3fb9"
+    },
+    "NVRMFB-ld.txt": {
+      "bytes": 432,
+      "sha256": "e0d48669cc77dcea9f875ea337edd75eeb15b19f75a394fbf2b44d65a0d518d8"
+    },
+    "NVRMFB-otool.txt": {
+      "bytes": 3759,
+      "sha256": "af089776bfdb2a6f81b8edf16e751086f801c4a5215339ea639fad4aba1b3c69"
+    },
+    "NVRMFB-post.d": {
+      "bytes": 59913,
+      "sha256": "74c807999199bc1586aff74fc07c8c702c332e93c2a0521dd8e7503fa041dcc7"
+    },
+    "NVRMFB-pre.d": {
+      "bytes": 59913,
+      "sha256": "74c807999199bc1586aff74fc07c8c702c332e93c2a0521dd8e7503fa041dcc7"
+    },
+    "package-report.json": {
+      "bytes": 212258,
+      "sha256": "38d4946e2a2e2fdf6a770147209112701d0412003f283a631f96c1102c684581"
+    }
+  },
+  "omitted_members": [],
+  "driver_execution": "NOT_RUN"
+}

@@ -16,12 +16,12 @@ def fixture(name='com.nullmoth.test', version='0.1', minimum=0x000f0500):
     struct.pack_into('<8I', data, 0, 0xfeedfacf, 0x01000007, 3, 11, 3, 192, 0, 0)
     struct.pack_into('<II16sQQQQIIII', data, 32, 0x19, 152, b'__DATA', 0, 1024, 0, 1024, 3, 3, 1, 0)
     struct.pack_into('<16s16sQQIIIIIIII', data, 104, b'__data', b'__DATA', 256, 200, 256, 3, 0, 0, 0, 0, 0, 0)
-    names = b'\0_kmod_info\0__realmain\0__antimain\0'
+    names = b'\0_kmod_info\0__start\0__stop\0'
     struct.pack_into('<6I', data, 184, 2, 24, 480, 3, 560, len(names))
     struct.pack_into('<4I', data, 208, 0x24, 16, minimum, 0x000f0500)
     data[272:272+len(name)] = name.encode()
     data[336:336+len(version)] = version.encode()
-    for i,(index,value) in enumerate(((1,256),(12,408),(23,416))):
+    for i,(index,value) in enumerate(((1,256),(12,408),(20,416))):
         struct.pack_into('<IBBHQ', data, 480+i*16, index, 0xf, 1, 0, value)
     data[560:560+len(names)] = names
     return data
@@ -63,6 +63,11 @@ class PackageContracts(unittest.TestCase):
     def test_symbol_bounds_rejected(self):
         data = fixture(); struct.pack_into('<I', data, 480, 1000)
         with self.assertRaisesRegex(ValueError, 'string bounds'):
+            self.parse(data)
+
+    def test_actual_kmod_entry_definition_required(self):
+        data=fixture();struct.pack_into('<B',data,480+16+4,0)
+        with self.assertRaisesRegex(ValueError,'__start'):
             self.parse(data)
 
     def test_version_order_and_missing_compatibility(self):

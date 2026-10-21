@@ -1,0 +1,196 @@
+ARGV=["xcrun", "otool", "-l", "/Users/runner/work/_temp/internal-products/package-products/NVRMFB.kext/Contents/MacOS/NVRMFB"]
+/Users/runner/work/_temp/internal-products/package-products/NVRMFB.kext/Contents/MacOS/NVRMFB:
+Load command 0
+      cmd LC_SEGMENT_64
+  cmdsize 312
+  segname __TEXT
+   vmaddr 0x0000000000000000
+   vmsize 0x0000000000022000
+  fileoff 0
+ filesize 139264
+  maxprot 0x00000005
+ initprot 0x00000005
+   nsects 3
+    flags 0x0
+Section
+  sectname __text
+   segname __TEXT
+      addr 0x0000000000000a60
+      size 0x0000000000018f0e
+    offset 2656
+     align 2^4 (16)
+    reloff 0
+    nreloc 0
+     flags 0x80000400
+ reserved1 0
+ reserved2 0
+Section
+  sectname __cstring
+   segname __TEXT
+      addr 0x000000000001996e
+      size 0x0000000000008444
+    offset 104814
+     align 2^0 (1)
+    reloff 0
+    nreloc 0
+     flags 0x00000002
+ reserved1 0
+ reserved2 0
+Section
+  sectname __const
+   segname __TEXT
+      addr 0x0000000000021dc0
+      size 0x0000000000000232
+    offset 138688
+     align 2^4 (16)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Load command 1
+      cmd LC_SEGMENT_64
+  cmdsize 632
+  segname __DATA
+   vmaddr 0x0000000000022000
+   vmsize 0x000000000003a000
+  fileoff 139264
+ filesize 114688
+  maxprot 0x00000003
+ initprot 0x00000003
+   nsects 7
+    flags 0x0
+Section
+  sectname __got
+   segname __DATA
+      addr 0x0000000000022000
+      size 0x0000000000000080
+    offset 139264
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __mod_init_func
+   segname __DATA
+      addr 0x0000000000022080
+      size 0x0000000000000008
+    offset 139392
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000009
+ reserved1 0
+ reserved2 0
+Section
+  sectname __mod_term_func
+   segname __DATA
+      addr 0x0000000000022088
+      size 0x0000000000000008
+    offset 139400
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x0000000a
+ reserved1 0
+ reserved2 0
+Section
+  sectname __const
+   segname __DATA
+      addr 0x0000000000022090
+      size 0x0000000000002b30
+    offset 139408
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __data
+   segname __DATA
+      addr 0x0000000000024bc0
+      size 0x0000000000018860
+    offset 150464
+     align 2^4 (16)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Section
+  sectname __common
+   segname __DATA
+      addr 0x000000000003d420
+      size 0x00000000000000a0
+    offset 0
+     align 2^3 (8)
+    reloff 0
+    nreloc 0
+     flags 0x00000001
+ reserved1 0
+ reserved2 0
+Section
+  sectname __bss
+   segname __DATA
+      addr 0x000000000003d4c0
+      size 0x000000000001ddc6
+    offset 0
+     align 2^4 (16)
+    reloff 0
+    nreloc 0
+     flags 0x00000001
+ reserved1 0
+ reserved2 0
+Load command 2
+      cmd LC_SEGMENT_64
+  cmdsize 72
+  segname __LINKEDIT
+   vmaddr 0x000000000005c000
+   vmsize 0x0000000000011000
+  fileoff 253952
+ filesize 66888
+  maxprot 0x00000001
+ initprot 0x00000001
+   nsects 0
+    flags 0x0
+Load command 3
+     cmd LC_SYMTAB
+ cmdsize 24
+  symoff 255368
+   nsyms 779
+  stroff 289888
+ strsize 30952
+Load command 4
+            cmd LC_DYSYMTAB
+        cmdsize 80
+      ilocalsym 0
+      nlocalsym 124
+     iextdefsym 124
+     nextdefsym 177
+      iundefsym 301
+      nundefsym 478
+         tocoff 0
+           ntoc 0
+      modtaboff 0
+        nmodtab 0
+   extrefsymoff 0
+    nextrefsyms 0
+ indirectsymoff 0
+  nindirectsyms 0
+      extreloff 267832
+        nextrel 2757
+      locreloff 253952
+        nlocrel 177
+Load command 5
+     cmd LC_UUID
+ cmdsize 24
+    uuid 901166A2-EAA4-3466-9B47-40DD5CBA5061
+Load command 6
+      cmd LC_SOURCE_VERSION
+  cmdsize 16
+  version 0.0
+
+EXIT=0

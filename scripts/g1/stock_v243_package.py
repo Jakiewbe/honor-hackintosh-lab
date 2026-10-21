@@ -117,7 +117,9 @@ def binary_metadata(path, info):
             if value:
                 raise ValueError('unallocated common symbol')
             imports.add(name)
-    for name in ('_kmod_info', '__realmain', '__antimain'):
+    # _realmain/_antimain are optional null globals explicitly added by NVRM,
+    # not the KMOD entry points generated for every companion.
+    for name in ('_kmod_info', '__start', '__stop'):
         if len(definitions[name]) != 1:
             raise ValueError('missing or duplicate KMOD definition: '+name)
     ordinal, addr = definitions['_kmod_info'][0]
@@ -248,6 +250,7 @@ def run(args, report):
         shutil.copyfile(binary, bundle/'MacOS'/name)
         (bundle/'Info.plist').write_bytes(info_raw)
         base.checked_run(['xcrun', 'otool', '-l', bundle/'MacOS'/name], tree, args.out/(name+'-otool.txt'))
+        base.checked_run(['xcrun', 'nm', '-am', bundle/'MacOS'/name], tree, args.out/(name+'-nm.txt'))
         metadata = binary_metadata(bundle/'MacOS'/name, info)
         if metadata['sha256'] != base.digest(binary):
             raise ValueError('bundle copy differs')

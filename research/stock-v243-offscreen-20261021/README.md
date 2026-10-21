@@ -1,5 +1,12 @@
 # RTX 2050 离屏 Metal 验收程序候选
 
+原生编译已通过：run [39535625079](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39535625079)，
+源码e05d8e9，Xcode16.4/16F6、SDK15.5、x86_64；Wall/Wextra/Werror及availability检查exit0。
+源SHA256 `539e9ae69706ea19634a8e438233a37bd18836d025b27af05e3e94e99c62b9bc`；
+runner产物SHA256 `aa65a54f0a385076b3c845ba95f148b4b1a7ef58715f269b9371a655576ba2a8`，
+最低版本/SDK命令15.5，程序未执行，产物未下载或上传，只有文本。
+原始证据在native-evidence/39535625079/。这只关闭原生编译层，以下运行合同全部待验收。
+
 目标是第一次真实设备验证时有可读、可拒绝、可复算的程序。
 当前只允许编译，设备 NO-GO。CI 只调用编译器和静态工具，不运行该程序，不上传二进制。
 本程序不安装、加载或卸载驱动，不测试系统睡眠，不改变显示所有权。
@@ -23,7 +30,7 @@ API完成、正确结果和设备绑定仍须结合固定驱动/NVK的实际命�
 超时后仍在途的 GPU 工作/进程退出清理是待审查项；当前程序不具备放行这类设备实验的资格。
 
 基线：公开 Metal/IOKit API、macOS SDK15.5、x86_64、部署参数15.5；不依赖 Vulkan SDK、现成驱动二进制或上游安装器。
-新原生编译尚未执行。运行、实际计算、真实渲染、像素、错误与退出均未验证。
+原生编译见顶部真实结果。运行、实际计算、真实渲染、像素、错误与退出均未验证。
 
 后续验收看 `.github/workflows/g1-metal-offscreen-compile.yml` 的真实 compile exit、工具链、
 源/产物 SHA、Mach-O load commands 和依赖；编译成功仅为原生程序构建层。

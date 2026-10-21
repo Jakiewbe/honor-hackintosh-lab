@@ -1,0 +1,116 @@
+ARGV=["xcrun", "clang++", "-arch", "x86_64", "-mmacosx-version-min=15.5", "-isysroot", "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk", "-fapple-kext", "-mkernel", "-nostdinc", "-I/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers", "-DKERNEL", "-DKERNEL_PRIVATE", "-DDRIVER_PRIVATE", "-DAPPLE", "-DNeXT", "-fno-builtin", "-fno-common", "-O2", "-Wall", "-Wno-unused-parameter", "-Wno-unused-function", "-DNV_UNIX", "-DNV_LINUX", "-DNV_X86_64", "-DNV_ARCH_BITS=64", "-DMBEDTLS_USER_CONFIG_FILE=<nvrm_mbedtls_config.h>", "-D__NO_CTYPE", "-DLOCK_VAL_ENABLED=0", "-DPORT_ATOMIC_64_BIT_SUPPORTED=1", "-DPORT_IS_KERNEL_BUILD=1", "-DPORT_IS_CHECKED_BUILD=0", "-DPORT_MODULE_atomic=1", "-DPORT_MODULE_core=1", "-DPORT_MODULE_cpu=1", "-DPORT_MODULE_crypto=1", "-DPORT_MODULE_debug=1", "-DPORT_MODULE_memory=1", "-DPORT_MODULE_safe=1", "-DPORT_MODULE_string=1", "-DPORT_MODULE_sync=1", "-DPORT_MODULE_thread=1", "-DPORT_MODULE_time=1", "-DPORT_MODULE_util=1", "-DPORT_MODULE_example=0", "-DPORT_MODULE_mmio=0", "-DRS_STANDALONE=0", "-DRS_STANDALONE_TEST=0", "-DRS_COMPATABILITY_MODE=1", "-DRS_PROVIDES_API_STATE=0", "-DNV_CONTAINERS_NO_TEMPLATES", "-DINCLUDE_NVLINK_LIB", "-DINCLUDE_NVSWITCH_LIB", "-DNV_PRINTF_STRINGS_ALLOWED=1", "-DNV_ASSERT_FAILED_USES_STRINGS=1", "-DPORT_ASSERT_FAILED_USES_STRINGS=1", "-I/Users/runner/work/_temp/nv/src/nvidia/arch/nvalloc/unix/include", "-I/Users/runner/work/_temp/nv/src/nvidia/arch/nvalloc/common/inc", "-I/Users/runner/work/_temp/nv/src/nvidia/arch/nvalloc/common/inc/gsp", "-I/Users/runner/work/_temp/nv/src/nvidia/inc", "-I/Users/runner/work/_temp/nv/src/nvidia/inc/os", "-I/Users/runner/work/_temp/nv/src/nvidia/inc/kernel", "-I/Users/runner/work/_temp/nv/src/nvidia/kernel/inc", "-I/Users/runner/work/_temp/nv/src/nvidia/interface", "-I/Users/runner/work/_temp/nv/src/nvidia/inc/libraries", "-I/Users/runner/work/_temp/nv/src/nvidia/src/libraries", "-I/Users/runner/work/_temp/nv/src/nvidia/generated", "-I/Users/runner/work/_temp/nv/src/nvidia/src/mm/uvm/interface", "-I/Users/runner/work/_temp/nv/src/common/sdk/nvidia/inc", "-I/Users/runner/work/_temp/nv/src/common/sdk/nvidia/inc/hw", "-I/Users/runner/work/_temp/nv/src/common/inc", "-I/Users/runner/work/_temp/nv/src/common/shared/inc", "-I/Users/runner/work/_temp/nv/src/common/nvlink/interface", "-I/Users/runner/work/_temp/nv/src/common/inc/swref", "-I/Users/runner/work/_temp/nv/src/common/inc/swref/published", "-I/Users/runner/work/_temp/nv/src/common/uproc/os/libos-v2.0.0/include", "-I/Users/runner/work/_temp/nv/src/common/uproc/os/common/include", "-I/Users/runner/work/_temp/nv/src/common/inc/displayport", "-I/Users/runner/work/_temp/nv/src/common/nvlink/inband/interface", "-I/Users/runner/work/_temp/nv/src/common/unix/nvidia-push/interface", "-I/Users/runner/work/_temp/nv/src/common/unix/common/inc", "-I/Users/runner/work/_temp/nv/src/common/modeset", "-I/Users/runner/work/_temp/nv/src/common/unix/common/utils/interface", "-I/Users/runner/work/_temp/nv/src/nvidia-modeset/os-interface/include", "-I/Users/runner/work/_temp/nv/src/nvidia-modeset/kapi/interface", "-I/Users/runner/work/_temp/nv/src/nvidia-modeset/kapi/include", "-I/Users/runner/work/_temp/nv/src/nvidia-modeset/interface", "-I/Users/runner/work/_temp/nv/src/nvidia-modeset/include", "-I/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRM", "-I/Users/runner/work/_temp/internal-products/nm-candidate", "-std=c++17", "-fno-rtti", "-fno-exceptions", "-Wno-inconsistent-missing-override", "-I/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRM", "-I/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB", "-I/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRM/accel", "-I/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRM/accel/iofam", "-I/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRM/accel/re", "-MD", "-MT", "bound", "-MF", "/Users/runner/work/_temp/package-text/NVRMFB-post.d", "-c", "/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp", "-o", "/Users/runner/work/_temp/internal-products/package-products/NVRMFB.o"]
+In file included from /Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:29:
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/../nvrm_eld.h:49:43: warning: implicit conversion changes signedness: 'int' to 'size_t' (aka 'unsigned long') [-Wsign-conversion]
+   49 |                 uint8_t ch = edid[o + 5 + i];
+      |                                         ~ ^
+In file included from /Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:49:
+In file included from /Users/runner/work/_temp/nv/src/nvidia-modeset/os-interface/include/nvkms.h:34:
+In file included from /Users/runner/work/_temp/nv/src/nvidia-modeset/kapi/interface/nvkms-kapi.h:30:
+In file included from /Users/runner/work/_temp/nv/src/common/unix/common/inc/nv_dpy_id.h:35:
+/Users/runner/work/_temp/nv/src/common/unix/common/inc/nv_common_utils.h:89:49: warning: implicit conversion changes signedness: 'int' to 'unsigned int' [-Wsign-conversion]
+   89 |     return (val << (result_size - source_size)) |
+      |     ~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+   90 |         (val >> ((source_size << 1) - result_size));
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/runner/work/_temp/nv/src/common/unix/common/inc/nv_common_utils.h:96:12: warning: implicit conversion loses integer precision: 'unsigned int' to 'unsigned short' [-Wimplicit-int-conversion]
+   96 |     return NV_UNDER_REPLICATE(val, depth, 8);
+      |     ~~~~~~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:49:
+In file included from /Users/runner/work/_temp/nv/src/nvidia-modeset/os-interface/include/nvkms.h:34:
+In file included from /Users/runner/work/_temp/nv/src/nvidia-modeset/kapi/interface/nvkms-kapi.h:30:
+/Users/runner/work/_temp/nv/src/common/unix/common/inc/nv_dpy_id.h:272:12: warning: implicit conversion changes signedness: 'NvU32' (aka 'unsigned int') to 'int' [-Wsign-conversion]
+  272 |     return nvPopCount32(dpyIdList.opaqueDpyIdList);
+      |     ~~~~~~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/runner/work/_temp/nv/src/common/unix/common/inc/nv_dpy_id.h:310:33: warning: implicit conversion changes signedness: 'int' to 'NvU32' (aka 'unsigned int') [-Wsign-conversion]
+  310 |     dpyIdList.opaqueDpyIdList = val;
+      |                               ~ ^~~
+/Users/runner/work/_temp/nv/src/common/unix/common/inc/nv_dpy_id.h:320:55: warning: implicit conversion changes signedness: 'NvU32' (aka 'unsigned int') to 'int' [-Wsign-conversion]
+  320 |     dpyId.opaqueDpyId = (val == 0) ? 0 : 1 << (nv_ffs(val)-1);
+      |                                                ~~~~~~ ^~~
+/Users/runner/work/_temp/nv/src/common/unix/common/inc/nv_dpy_id.h:344:38: warning: implicit conversion changes signedness: 'int' to 'NvU32' (aka 'unsigned int') [-Wsign-conversion]
+  344 |     return nv_ffs(dpyId.opaqueDpyId) - 1;
+      |     ~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~
+/Users/runner/work/_temp/nv/src/common/unix/common/inc/nv_dpy_id.h:344:25: warning: implicit conversion changes signedness: 'NvU32' (aka 'unsigned int') to 'int' [-Wsign-conversion]
+  344 |     return nv_ffs(dpyId.opaqueDpyId) - 1;
+      |            ~~~~~~ ~~~~~~^~~~~~~~~~~
+/Users/runner/work/_temp/nv/src/common/unix/common/inc/nv_dpy_id.h:356:23: warning: implicit conversion changes signedness: 'NvU32' (aka 'unsigned int') to 'int' [-Wsign-conversion]
+  356 |         1U << (nv_ffs(~excludeList.opaqueDpyIdList) - 1);
+      |                ~~~~~~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:1360:40: warning: implicit conversion changes signedness: 'SInt32' (aka 'int') to 'size_t' (aka 'unsigned long') [-Wsign-conversion]
+ 1360 |     memcpy(gTrace + off, s, n); gTrace[off + n] = '\n';
+      |                                        ^~~ ~
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:1664:27: warning: implicit conversion loses integer precision: 'NvU32' (aka 'unsigned int') to 'NvU16' (aka 'unsigned short') [-Wimplicit-int-conversion]
+ 1664 |     lr->config.srcWidth = fW; lr->config.srcHeight = fH;
+      |                         ~ ^~
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:1664:54: warning: implicit conversion loses integer precision: 'NvU32' (aka 'unsigned int') to 'NvU16' (aka 'unsigned short') [-Wimplicit-int-conversion]
+ 1664 |     lr->config.srcWidth = fW; lr->config.srcHeight = fH;
+      |                                                    ~ ^~
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:1665:27: warning: implicit conversion loses integer precision: 'NvU32' (aka 'unsigned int') to 'NvU16' (aka 'unsigned short') [-Wimplicit-int-conversion]
+ 1665 |     lr->config.dstWidth = fRasterW; lr->config.dstHeight = fRasterH;
+      |                         ~ ^~~~~~~~
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:1665:60: warning: implicit conversion loses integer precision: 'NvU32' (aka 'unsigned int') to 'NvU16' (aka 'unsigned short') [-Wimplicit-int-conversion]
+ 1665 |     lr->config.dstWidth = fRasterW; lr->config.dstHeight = fRasterH;
+      |                                                          ~ ^~~~~~~~
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:2091:31: warning: implicit conversion loses integer precision: 'NvU32' (aka 'unsigned int') to 'NvU16' (aka 'unsigned short') [-Wimplicit-int-conversion]
+ 2091 |         lr->config.srcWidth = fW; lr->config.srcHeight = fH;
+      |                             ~ ^~
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:2091:58: warning: implicit conversion loses integer precision: 'NvU32' (aka 'unsigned int') to 'NvU16' (aka 'unsigned short') [-Wimplicit-int-conversion]
+ 2091 |         lr->config.srcWidth = fW; lr->config.srcHeight = fH;
+      |                                                        ~ ^~
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:2092:31: warning: implicit conversion loses integer precision: 'NvU32' (aka 'unsigned int') to 'NvU16' (aka 'unsigned short') [-Wimplicit-int-conversion]
+ 2092 |         lr->config.dstWidth = fRasterW; lr->config.dstHeight = fRasterH;
+      |                             ~ ^~~~~~~~
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:2092:64: warning: implicit conversion loses integer precision: 'NvU32' (aka 'unsigned int') to 'NvU16' (aka 'unsigned short') [-Wimplicit-int-conversion]
+ 2092 |         lr->config.dstWidth = fRasterW; lr->config.dstHeight = fRasterH;
+      |                                                              ~ ^~~~~~~~
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:2140:55: warning: implicit conversion loses integer precision: 'NvU32' (aka 'unsigned int') to 'NvU16' (aka 'unsigned short') [-Wimplicit-int-conversion]
+ 2140 |     lr->config.surface = fSurf; lr->config.srcWidth = fW; lr->config.srcHeight = fH; lr->config.dstWidth = fRasterW; lr->config.dstHeight = fRasterH;
+      |                                                     ~ ^~
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:2140:82: warning: implicit conversion loses integer precision: 'NvU32' (aka 'unsigned int') to 'NvU16' (aka 'unsigned short') [-Wimplicit-int-conversion]
+ 2140 |     lr->config.surface = fSurf; lr->config.srcWidth = fW; lr->config.srcHeight = fH; lr->config.dstWidth = fRasterW; lr->config.dstHeight = fRasterH;
+      |                                                                                ~ ^~
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:2140:108: warning: implicit conversion loses integer precision: 'NvU32' (aka 'unsigned int') to 'NvU16' (aka 'unsigned short') [-Wimplicit-int-conversion]
+ 2140 |     lr->config.surface = fSurf; lr->config.srcWidth = fW; lr->config.srcHeight = fH; lr->config.dstWidth = fRasterW; lr->config.dstHeight = fRasterH;
+      |                                                                                                          ~ ^~~~~~~~
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:2140:141: warning: implicit conversion loses integer precision: 'NvU32' (aka 'unsigned int') to 'NvU16' (aka 'unsigned short') [-Wimplicit-int-conversion]
+ 2140 |     lr->config.surface = fSurf; lr->config.srcWidth = fW; lr->config.srcHeight = fH; lr->config.dstWidth = fRasterW; lr->config.dstHeight = fRasterH;
+      |                                                                                                                                           ~ ^~~~~~~~
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:2168:59: warning: implicit conversion loses integer precision: 'NvU32' (aka 'unsigned int') to 'NvU16' (aka 'unsigned short') [-Wimplicit-int-conversion]
+ 2168 |         lr->config.surface = fSurf; lr->config.srcWidth = fW; lr->config.srcHeight = fH;
+      |                                                         ~ ^~
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:2168:86: warning: implicit conversion loses integer precision: 'NvU32' (aka 'unsigned int') to 'NvU16' (aka 'unsigned short') [-Wimplicit-int-conversion]
+ 2168 |         lr->config.surface = fSurf; lr->config.srcWidth = fW; lr->config.srcHeight = fH;
+      |                                                                                    ~ ^~
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:2169:31: warning: implicit conversion loses integer precision: 'NvU32' (aka 'unsigned int') to 'NvU16' (aka 'unsigned short') [-Wimplicit-int-conversion]
+ 2169 |         lr->config.dstWidth = fRasterW; lr->config.dstHeight = fRasterH;
+      |                             ~ ^~~~~~~~
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:2169:64: warning: implicit conversion loses integer precision: 'NvU32' (aka 'unsigned int') to 'NvU16' (aka 'unsigned short') [-Wimplicit-int-conversion]
+ 2169 |         lr->config.dstWidth = fRasterW; lr->config.dstHeight = fRasterH;
+      |                                                              ~ ^~~~~~~~
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:2663:56: warning: implicit conversion loses integer precision: 'NvU32' (aka 'unsigned int') to 'NvU16' (aka 'unsigned short') [-Wimplicit-int-conversion]
+ 2663 |         lr->config.surface = ns; lr->config.srcWidth = w; lr->config.srcHeight = h;
+      |                                                      ~ ^
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:2663:82: warning: implicit conversion loses integer precision: 'NvU32' (aka 'unsigned int') to 'NvU16' (aka 'unsigned short') [-Wimplicit-int-conversion]
+ 2663 |         lr->config.surface = ns; lr->config.srcWidth = w; lr->config.srcHeight = h;
+      |                                                                                ~ ^
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:2664:41: warning: implicit conversion loses integer precision: 'const NvU32' (aka 'const unsigned int') to 'NvU16' (aka 'unsigned short') [-Wimplicit-int-conversion]
+ 2664 |         lr->config.dstWidth = m.timings.hVisible; lr->config.dstHeight = m.timings.vVisible;
+      |                             ~ ~~~~~~~~~~^~~~~~~~
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:2664:84: warning: implicit conversion loses integer precision: 'const NvU32' (aka 'const unsigned int') to 'NvU16' (aka 'unsigned short') [-Wimplicit-int-conversion]
+ 2664 |         lr->config.dstWidth = m.timings.hVisible; lr->config.dstHeight = m.timings.vVisible;
+      |                                                                        ~ ~~~~~~~~~~^~~~~~~~
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:3403:27: warning: implicit conversion loses integer precision: 'unsigned int' to 'NvU16' (aka 'unsigned short') [-Wimplicit-int-conversion]
+ 3403 |     lr->config.srcWidth = w; lr->config.srcHeight = h;
+      |                         ~ ^
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:3403:53: warning: implicit conversion loses integer precision: 'unsigned int' to 'NvU16' (aka 'unsigned short') [-Wimplicit-int-conversion]
+ 3403 |     lr->config.srcWidth = w; lr->config.srcHeight = h;
+      |                                                   ~ ^
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:3404:27: warning: implicit conversion loses integer precision: 'NvU32' (aka 'unsigned int') to 'NvU16' (aka 'unsigned short') [-Wimplicit-int-conversion]
+ 3404 |     lr->config.dstWidth = fRasterW; lr->config.dstHeight = fRasterH;
+      |                         ~ ^~~~~~~~
+/Users/runner/work/_temp/internal-products/nm-candidate/kexts/NVRMFB/fb/nvrm-fb.cpp:3404:60: warning: implicit conversion loses integer precision: 'NvU32' (aka 'unsigned int') to 'NvU16' (aka 'unsigned short') [-Wimplicit-int-conversion]
+ 3404 |     lr->config.dstWidth = fRasterW; lr->config.dstHeight = fRasterH;
+      |                                                          ~ ^~~~~~~~
+34 warnings generated.
+
+EXIT=0

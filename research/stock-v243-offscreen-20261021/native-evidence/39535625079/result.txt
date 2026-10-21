@@ -1,0 +1,4 @@
+exit=0
+program_executed=NO
+gpu_executed=NO
+device=NO_GO

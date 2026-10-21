@@ -1,0 +1,42 @@
+{
+  "baseline-cpu": {
+    "bytes": 53040,
+    "sha256": "cd09e57905579dab6f53f5075bbc513c1c1f573d29a89bca00a0b48d6f172484",
+    "reason": "ACCIDENTAL_HOST_CPU_FIXTURE_OR_DSYM_NOT_DRIVER_NOT_EXTRACTED"
+  },
+  "baseline-cpu.dSYM/Contents/Info.plist": {
+    "bytes": 641,
+    "sha256": "c7bcb6eb70d286b6fd2cc657d7f1ddd5f2c7c59ac96d11f124ced0c573989067",
+    "reason": "ACCIDENTAL_HOST_CPU_FIXTURE_OR_DSYM_NOT_DRIVER_NOT_EXTRACTED"
+  },
+  "baseline-cpu.dSYM/Contents/Resources/DWARF/baseline-cpu": {
+    "bytes": 148200,
+    "sha256": "2c8277a2b76d17885d535aeff6f84a12d640a94fc0e2361a5c67dd67ec2a3f32",
+    "reason": "ACCIDENTAL_HOST_CPU_FIXTURE_OR_DSYM_NOT_DRIVER_NOT_EXTRACTED"
+  },
+  "baseline-cpu.dSYM/Contents/Resources/Relocations/x86_64/baseline-cpu.yml": {
+    "bytes": 138,
+    "sha256": "f74aa4af2a3e3b5907c85dfadfa35426476b6313dbb1a9ff031932664a1b7078",
+    "reason": "ACCIDENTAL_HOST_CPU_FIXTURE_OR_DSYM_NOT_DRIVER_NOT_EXTRACTED"
+  },
+  "candidate-cpu": {
+    "bytes": 57664,
+    "sha256": "06fdd6929d779aca89c96d7abccb95ed12b13789242f67364238830070321cf7",
+    "reason": "ACCIDENTAL_HOST_CPU_FIXTURE_OR_DSYM_NOT_DRIVER_NOT_EXTRACTED"
+  },
+  "candidate-cpu.dSYM/Contents/Info.plist": {
+    "bytes": 642,
+    "sha256": "e8a07d52d8cd4db5839c9afcb833198007cd254908caf1d8a5b94815576aff43",
+    "reason": "ACCIDENTAL_HOST_CPU_FIXTURE_OR_DSYM_NOT_DRIVER_NOT_EXTRACTED"
+  },
+  "candidate-cpu.dSYM/Contents/Resources/DWARF/candidate-cpu": {
+    "bytes": 149588,
+    "sha256": "aba658f44d8ec5ec51255af946041106476ffce4105cfaf3dfa5dc40b7a6425f",
+    "reason": "ACCIDENTAL_HOST_CPU_FIXTURE_OR_DSYM_NOT_DRIVER_NOT_EXTRACTED"
+  },
+  "candidate-cpu.dSYM/Contents/Resources/Relocations/x86_64/candidate-cpu.yml": {
+    "bytes": 139,
+    "sha256": "279b84b58614ea95d90655d7691b2d495ea8f5d965f76a55c6384bc2ce8624d7",
+    "reason": "ACCIDENTAL_HOST_CPU_FIXTURE_OR_DSYM_NOT_DRIVER_NOT_EXTRACTED"
+  }
+}

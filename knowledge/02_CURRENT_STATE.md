@@ -1,3 +1,5 @@
+> **2026-10-21 PM原生及Metal编译已验收**：run39535081198 / a8d6348 的PM步骤通过，真实函数CPU8/8（基线2/8），Darwin对象及同run唯一对象替换重链通过，1069个输入、478导入不变；整包run仍因检查器误要求可选global而红，已改验真实KMOD入口，90项本地检查通过，整包重跑待验收。run39535625079 / e05d8e9 的Metal离屏程序compile-only成功，未执行。PM附件误包CPU夹具/dSYM，文本与哈希已保留，经用户明确授权删除唯一误包附件；新上传限制文本。**不证明睡眠否决、恢复或安全关闭；GPU未执行，设备NO-GO**。见[整包](../research/stock-v243-once-20261021/PACKAGE-20261021.md)、[PM](../research/stock-v243-pm-20261021/REVIEW.md)、[Metal](../research/stock-v243-offscreen-20261021/README.md)。
+
 > **2026-10-21 整包首次结果与 PM 保护候选**：run39533781713 的内部集成及 NVRMFB/NVAccel 编译链接通过；格式检查因无最低版本命令拒收，现改为缺失记未知，89项本地检查通过，新原生未跑。新增 RM-busy 单点保护，真实完整函数 CPU 合同8/8、原候选2/8，ASan/UBSan与非法编译负控通过；Darwin保护候选尚未编译。没有睡眠否决或安全恢复证明，设备NO-GO。见[整包记录](../research/stock-v243-once-20261021/PACKAGE-20261021.md)与[PM候选](../research/stock-v243-pm-20261021/REVIEW.md)。
 
 > **2026-10-21 下一层：三个内核组件静态整包验收**。新增 NVRMFB/NVAccel 独立编译链接、KMOD/plist/部署目标和已声明提供者版本检查；85项本地检查通过。既有内部链接与候选固定不变，新 Darwin 门禁未执行；关闭/PM、用户态及设备仍未验收，NO-GO。见[方案与证据](../research/stock-v243-once-20261021/PACKAGE-20261021.md)。

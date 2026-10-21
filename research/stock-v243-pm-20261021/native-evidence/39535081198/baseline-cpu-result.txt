@@ -1,0 +1,12 @@
+ARGV=["/Users/runner/work/_temp/pm-guard-text/baseline-cpu"]
+busy=0 ordered-effects=PASS
+busy=0 state-and-marker=PASS
+busy=1 ordered-effects=FAIL
+busy=1 state-and-marker=FAIL
+busy=2 ordered-effects=FAIL
+busy=2 state-and-marker=FAIL
+busy=17 ordered-effects=FAIL
+busy=17 state-and-marker=FAIL
+2/8 CPU call contracts; no device; no sleep-veto proof
+
+EXIT=1

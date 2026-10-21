@@ -1,0 +1,17 @@
+{
+  "baseline": {
+    "exit": 1,
+    "generated_sha256": "cce8ac00f7140db72ca4adb0f77caabe1fc96ac77774f9295a444cee2a3bd28c",
+    "source_sha256": "ac0c75180a36a9b17b9350b4e39cd68e19496c7af276f3267060a1b9a0db9404"
+  },
+  "candidate": {
+    "exit": 0,
+    "generated_sha256": "511a1a1e7b398b3d01f0bf28c1a7dd3dd5c9feaaf93bccc2a532602903339bc2",
+    "source_sha256": "7ce28054014406d515736ac71ccac406cc64b27f4be1ef0a70547db83af01015"
+  },
+  "invalid": {
+    "exit": 1,
+    "binary_exists": false,
+    "executed": false
+  }
+}

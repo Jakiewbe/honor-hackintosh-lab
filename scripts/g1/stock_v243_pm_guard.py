@@ -118,9 +118,10 @@ def prepare(tree, dest, logs):
 
 def cpu_contract(tree, candidate, out, compiler):
     results = {}
+    products=out.parent/(out.name+'-cpu-products');products.mkdir(exist_ok=False)
     for role, source in (('baseline',tree),('candidate',candidate)):
         text = (source/'kexts/NVRM/NVRM.cpp').read_text()
-        src=out/(role+'-cpu.cpp'); obj=out/(role+'-cpu')
+        src=out/(role+'-cpu.cpp'); obj=products/(role+'-cpu')
         src.write_text(harness(function(text)), encoding='utf-8', newline='\n')
         obj.unlink(missing_ok=True)
         base.checked_run([*compiler,'-std=c++17','-O1','-g','-fsanitize=address,undefined',src,'-o',obj],out,out/(role+'-cpu-compile.txt'))
@@ -129,7 +130,7 @@ def cpu_contract(tree, candidate, out, compiler):
         results[role]=dict(exit=rc, generated_sha256=base.digest(src),
             source_sha256=base.digest(source/'kexts/NVRM/NVRM.cpp'))
     # Real compiler failure: clear an old output and never run it.
-    src=out/'invalid-cpu.cpp'; obj=out/'invalid-cpu'
+    src=out/'invalid-cpu.cpp'; obj=products/'invalid-cpu'
     src.write_text('DELIBERATELY_INVALID_SOURCE !!!\n'); obj.write_bytes(b'STALE')
     obj.unlink()
     rc=base.run([*compiler,'-std=c++17',src,'-o',obj],out,out/'invalid-cpu-compile.txt')

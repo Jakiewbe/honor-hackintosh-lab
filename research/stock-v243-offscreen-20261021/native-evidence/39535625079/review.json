@@ -1,0 +1,67 @@
+{
+  "run": 39535625079,
+  "commit": "e05d8e98536b6f0c17b028db1779dd3916e82045",
+  "event": "workflow_dispatch",
+  "conclusion": "success",
+  "artifact_id": 12317370357,
+  "artifact_sha256": "0f07e38a460d094f0b90c7c4c083c237d81c621800adf47eedbe32c6c6bf718f",
+  "artifact_bytes": 3236,
+  "raw_member_sha256": {
+    "binary-sha256.txt": "50d06dbceefa1c054a3ebeadb989a65d139d3481f3830ebed3427281a4e4dcb0",
+    "clang.txt": "2837c5948b45916f519912ef23256ae973af42c72decd6185aec65f45b804d3f",
+    "compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file.txt": "c38e964c1438edbc5ccf40b54d405ca33bfb052ab28655b566e6c809704ef16e",
+    "libraries.txt": "b66d2a93c55d3cf23ffac0294b38b5cb70c61edc6a75f7028898dc62885c1598",
+    "load-commands.txt": "52410128a3373894c9675a6e73f7fe08e9f89f481382e6f66c10a3317f60b679",
+    "result.txt": "bbc205c078e5f245129569f046af9b7bb9dd61ca826dcb3ce5c0536726fae1ae",
+    "source-sha256.txt": "ce0109284a7093c94f8955755d0d3b11f97a4ae1f10e86b98942269df14721e6",
+    "xcode.txt": "a8be4f9af0a29137fe7e59b9928056d4a0df297bb46ba40f80eaa6b0ae982f12"
+  },
+  "status": "COMPILE_RESULT_CAPTURED_NOT_RUNTIME",
+  "stage": "compile-only",
+  "error": null,
+  "install_sign_load": "NOT_RUN",
+  "gpu_execution": "NOT_RUN",
+  "archive_sha256": "0f07e38a460d094f0b90c7c4c083c237d81c621800adf47eedbe32c6c6bf718f",
+  "archive_bytes": 3236,
+  "raw_member_manifest": {
+    "binary-sha256.txt": {
+      "bytes": 107,
+      "sha256": "50d06dbceefa1c054a3ebeadb989a65d139d3481f3830ebed3427281a4e4dcb0"
+    },
+    "clang.txt": {
+      "bytes": 207,
+      "sha256": "2837c5948b45916f519912ef23256ae973af42c72decd6185aec65f45b804d3f"
+    },
+    "compile.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "file.txt": {
+      "bytes": 74,
+      "sha256": "c38e964c1438edbc5ccf40b54d405ca33bfb052ab28655b566e6c809704ef16e"
+    },
+    "libraries.txt": {
+      "bytes": 710,
+      "sha256": "b66d2a93c55d3cf23ffac0294b38b5cb70c61edc6a75f7028898dc62885c1598"
+    },
+    "load-commands.txt": {
+      "bytes": 6472,
+      "sha256": "52410128a3373894c9675a6e73f7fe08e9f89f481382e6f66c10a3317f60b679"
+    },
+    "result.txt": {
+      "bytes": 56,
+      "sha256": "bbc205c078e5f245129569f046af9b7bb9dd61ca826dcb3ce5c0536726fae1ae"
+    },
+    "source-sha256.txt": {
+      "bytes": 123,
+      "sha256": "ce0109284a7093c94f8955755d0d3b11f97a4ae1f10e86b98942269df14721e6"
+    },
+    "xcode.txt": {
+      "bytes": 30,
+      "sha256": "a8be4f9af0a29137fe7e59b9928056d4a0df297bb46ba40f80eaa6b0ae982f12"
+    }
+  },
+  "omitted_members": [],
+  "driver_execution": "NOT_RUN"
+}
