@@ -50,20 +50,22 @@ def vtable(raw, member, by_value, class_name):
     section = next((s for s in member['sections'] if s['address'] <= address < s['address'] + s['size']), None)
     if not section:
         return dict(class_name=class_name, mangled=mangled, status='VTABLE_OUTSIDE_SECTION')
-    filepos = section['offset'] + (address - section['address'])
-    end = section['offset'] + section['size']
+    # A vtable has no terminator. Its extent is the distance to the next symbol in the same section;
+    # that gives an exact slot count, which is what decides whether a header layout matches the image.
+    following = sorted(v for v in by_value
+                       if v > address and section['address'] <= v < section['address'] + section['size'])
+    extent_end = following[0] if following else section['address'] + section['size']
+    slot_bytes = extent_end - address - 16
+    if slot_bytes < 0 or slot_bytes % 8:
+        return dict(class_name=class_name, mangled=mangled, status='VTABLE_EXTENT_UNCLEAR',
+                    address=hex(address), next_symbol=hex(extent_end))
     slots = []
-    position = filepos + 16  # first two words are the vtable header (offset-to-top, typeinfo)
-    while position + 8 <= end and position + 8 <= len(raw):
-        pointer = struct.unpack('<Q', raw[position:position + 8])[0]
-        if not pointer:
-            break
-        slots.append(dict(slot=len(slots), address=hex(pointer), symbol=by_value.get(pointer, 'UNRESOLVED')))
-        position += 8
-        if len(slots) > 512:
-            break
-    return dict(class_name=class_name, mangled=mangled, status='VTABLE_DUMPED',
-                address=hex(address), slots=slots)
+    for index in range(slot_bytes // 8):
+        pointer = struct.unpack('<Q', raw[address + 16 + index * 8 - (section['address'] - section['offset']):
+                                     address + 16 + index * 8 - (section['address'] - section['offset']) + 8])[0]
+        slots.append(dict(slot=index, address=hex(pointer), symbol=by_value.get(pointer, 'UNRESOLVED')))
+    return dict(class_name=class_name, mangled=mangled, status='VTABLE_DUMPED', address=hex(address),
+                next_symbol=hex(extent_end), slot_count=len(slots), slots=slots)
 
 
 def main():
