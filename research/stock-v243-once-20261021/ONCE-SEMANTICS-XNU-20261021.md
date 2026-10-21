@@ -41,8 +41,9 @@ thread_call_finish(...)                                     // L1563
     }
 ```
 
-结论 2：ONCE 的效果是**当前这次运行结束后再跑一次**，不是"同一时刻只运行一个"、
-也不是"进入时等待运行中的回调结束"。运行中的回调不会被取消、不会被等待。
+结论 2：ONCE 保证**同一个 call 的回调执行不重叠**。运行中再次提交只记录一次
+RESCHEDULE，在当前调用结束后重新入队；不同 call 之间没有这项串行保证。
+提交操作不会等待运行中的回调结束，也不会取消它；这不是 stop 排空屏障。
 
 ## 3. 参数覆盖：latest-wins
 
@@ -92,7 +93,7 @@ thread_call_finish: if (!signal && alloc && refs == 0) zfree(call);          // 
 2. `thread_call_cancel_wait()` 仅对**不是** `thread_call_allocate()` 分配的 call panic（L1417）。
    本驱动的 call 全部由 `thread_call_allocate*` 分配，`THREAD_CALL_ALLOC` 为真（L1024），
    所以 `cancel_wait` 在类型上是允许的；但它会阻塞等待，stop 路径没有采用。
-3. `thread_call_free()` 在 call **仍在运行时并不等待**：ALLOC call 的引用计数是"客户端 1 + 运行线程 1"，
+3. 本项目的普通 ALLOC/ONCE call（不含 SIGNAL 特例），`thread_call_free()` 在 call **仍在运行时并不等待**：引用计数是"客户端 1 + 运行线程 1"，
    free 把它减到 1 就返回 TRUE，真正的 `zfree` 由运行线程在 `thread_call_finish` 里完成（L1620-1640）。
    因此 `while (!thread_call_free(call)) { ... }` 这种循环**排不掉正在运行的回调**，
    它只在 "队列里还有 pending 项或 RESCHEDULE 未清" 时返回 FALSE。
@@ -102,8 +103,9 @@ thread_call_finish: if (!signal && alloc && refs == 0) zfree(call);          // 
 
 ## 5. 对回移的直接含义
 
-1. **ONCE 不是串行化、不是 stop 屏障**：现有候选在每个回调入口用 `NStopping`/`fStopping` 提前返回，
-   这正是让 `RESCHEDULE` 的额外运行不至于重新武装的关键；文档不得把 ONCE 写成关闭安全。
+1. **ONCE 串行化同一 call 的执行，但不是 stop 屏障**：入口停止检查可阻止部分回调重新武装；
+   不能声称每个回调都有该检查（例如 applyFire、gHotplug 的缺口见逐点审计）。
+   更不能由入口检查推导运行中回调已结束、对象或参数仍存活。
 2. **gConnectNotify 的两个点没有理由排除**：plain 模式下同一个 call 对象也是唯一队列元素，
    重复 enter 在 pending 时同样覆盖参数、合并通知；运行中 enter 在 plain 下会入队一次、
    在 ONCE 下记一次 RESCHEDULE，两者最终都只多跑一次。ONCE 只是把并发运行变成顺序运行，

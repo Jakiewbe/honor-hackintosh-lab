@@ -128,7 +128,7 @@ run [39485250953](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/
 | 项 | 值 |
 |---|---|
 | 补丁应用与身份校验 | 通过（SHA 来自 lock，不写死在 workflow 里） |
-| OGKM RM 对象（`gmake TARGET_OS=Darwin`） | 3167 个 `.o`，`errors=0`（`make_rc=2`，末尾 ELF 链接步骤在 macOS 上不可用，属预期） |
+| OGKM RM 对象（`gmake TARGET_OS=Darwin`） | 1055 个实际链接 `.o`（3167 为目录条目数），`errors=0`（`make_rc=2`，末尾 ELF 链接步骤在 macOS 上不可用，属预期） |
 | NullMoth NVRM TU 编译 | **12/12 OK**（含本轮修改的 `NVRM.cpp`） |
 | 链接 | `-Xlinker -kext`，12 个 TU 对象 + 1055 个 RM 对象 |
 | 链接结果 | **exit 0**，16,185,000 B，SHA256 `28e9386a4b72f15899b4d51fb49356de89eac7b9c48893cfa7cf5a983b382f5e` |
@@ -141,6 +141,33 @@ run [39485250953](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/
 仍不是发布等价物，也不能加载：
 
 - 只链接了 `nvidia` 的 RM 对象，**没有** `nvidia-modeset` 的对象；493 个未定义导入里包含
-  NVKMS 侧的符号，加载时由其它 kext 或内核解析——这条没有验证；
+  NVKMS 侧的符号，提供对象尚未集成；不能假定系统会自动解析，见 §9；
 - 二进制没有签名、没有做 kext 格式校验、没有加载、没有执行；
 - NVRMFB 是另一个 kext，其整包链接未做（它的单 TU 链接已在门禁里 exit 0）。
+
+## 9. 独立审计后的准确边界与门禁修复
+
+run39498653458 的真实 link_exit=0、大小、SHA256 已独立核对；本轮不撤销这一成果。
+但旧工作流的 make/TU 阶段容忍失败，ld 失败分支也可能返回 0，故 success 不能单独充当门禁验收。
+新专用脚本直接请求固定 Makefile 的 1055 个对象目标，不执行末端 ELF 链接，不再容忍 make=2；
+编译或链接失败、对象集合不一致、错误 Mach-O 类型或旧产物残留均拒绝。负控使用相同验收函数。
+
+上文 468/478 是单 TU 的名称归属，不是整包 493 项导入的闭包。493 项逐项记录见
+[FINAL-IMPORTS-BASELINE-20261021.json](FINAL-IMPORTS-BASELINE-20261021.json)，绑定原始文本产物哈希：
+
+| 类别 | 数量 | 证据边界 |
+|---|---|---|
+| 历史 runner KPI 条目及目标定义 | 469 | 非用户设备、非完整 ABI；仍需绑定 OSBundleLibraries/版本 |
+| IOFamily 导出名单 | 8 | 名称允许，不代表当前二进制定义/完整 ABI 已验收 |
+| NVKMS 未集成入口 | 12 | 需要固定 modeset 对象集；不能假定系统提供 |
+| NVLink OS 锁后端缺失 | 4 | nvlink_os.h 的真实实现合同，不可用空桩补齐 |
+
+`SystemKernelExtensions.kc` 中找到同名定义，只说明 runner 上存在；不独立证明
+目标 kext 的依赖声明、可绑定性、版本和 ABI。上述两类内部缺口应先做明确的同 run
+链接增量，不能以导入数量接近发布版作为验收。
+
+新构建配方固定 SDK15.5 / deployment target15.5，与旧链接的15.0目标不同；
+新结果必须单独记录，也不覆盖 macOS15.0–15.4 的加载兼容性。
+本轮恢复三个工作流为 workflow_dispatch，不再用文档 push 启动全量构建。
+原始候选、补丁、上游 pin 均未改变。新 Darwin 结果与下一断点见
+[GATE-REPAIR-20261021.md](GATE-REPAIR-20261021.md)。设备 NO-GO。

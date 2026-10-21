@@ -7,9 +7,6 @@ name: HONOR G1 IOGraphics exports capture
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - '.github/workflows/g1-iographics-exports.yml'
 
 permissions:
   contents: read

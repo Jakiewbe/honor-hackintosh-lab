@@ -1,19 +1,11 @@
 name: HONOR G1 stock v243 ONCE two-TU native gate
 
 # Manual only. Compiles the two changed translation units at the fixed 272ccd9
-# pin plus the scoped v2.4.3 ONCE backport. Never links, installs, loads or runs
-# a driver, and never accesses a device.
+# pin plus the scoped v2.4.3 ONCE backport. Includes separate single-TU kext-style
+# link probes; never installs, loads or runs a driver or accesses a device.
 
 on:
   workflow_dispatch:
-  # Fallback trigger: api.github.com is unreachable from the development host for long stretches,
-  # so a push to exactly these reviewed inputs is what starts the gate. Every run is still bound to
-  # the pushed commit SHA, and unrelated pushes do not trigger it.
-  push:
-    paths:
-      - 'scripts/g1/stock_v243_once_native.py'
-      - 'research/stock-v243-once-20261021/**'
-      - '.github/workflows/g1-stock-v243-once-native.yml'
 
 permissions:
   contents: read

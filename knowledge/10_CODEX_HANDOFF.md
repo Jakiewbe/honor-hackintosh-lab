@@ -1,3 +1,5 @@
+> **2026-10-21 链接门禁审计修复**：历史12 TU+1055 RM对象链接确实成功；旧工作流失败可报绿，新门禁改为对象目标make必须0、精确清单、编译/链接失败非零、同路径负控。最终493项导入重新归属为469历史KPI+定义/8名单/12缺NVKMS/4缺NVLink OS后端；尚非可加载闭包。候选源码未改，三个工作流恢复手动，新Darwin结果待验收，设备NO-GO。详情见 [修复记录](../research/stock-v243-once-20261021/GATE-REPAIR-20261021.md)。
+
 > **2026-10-19 R36 当前断点：R35 原生失败定位为 KAPI 缺字段（1279/1280），且 free 后查询被真实heap＋ASan负控证伪；旧夹具验收入口已退役。R36直接返回关闭结果，12/12本地ASan、40工具检查、三组10＋5＋7回归、完整补丁往返通过；新Darwin/链接尚未运行，导入数未知。callback静默先于NISO销毁、NISO错误传播、legacy/allocate owner、normal busy join与RM busy→STANDBY仍OPEN，GPU未运行、设备NO-GO。** [审计与下一断点](../research/gpu-safety-r5/R36-R35-AUDIT-TRY-FREE-20261019.md)。
 
 > **2026-10-19：R33官方1280TU及两项OGKM补丁最终来源已原生独立验收（run39189188122）。R34新增真实FB→OGKM→OS合同：5条正常/保留路径PASS，2条关闭拒绝路径FAIL（整体exit1），确认gDev/creator也被丢弃；编译失败无旧二进制执行。R34没有新驱动修复。P0-4、normal busy join、RM busy→STANDBY仍FAIL，GPU未运行、设备NO-GO。** [当前断点](../research/gpu-safety-r5/R34-DEVICE-CALLER-CONTRACT-20261019.md)。

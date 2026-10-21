@@ -108,7 +108,7 @@
         "symbol": "_thread_call_allocate_with_options",
         "provided_by": "kernel (XNU)",
         "evidence": "research/gpu-safety-r5/target-provider-evidence/native/runner-kernel-nm-raw.txt:20704",
-        "reason": "thread_call_allocate is a real imported C function in this build (the v2.4.2 object imports _thread_call_allocate). The ONCE backport converts ten sites to thread_call_allocate_with_options; the kernel exports it at ffffff800034dc20. The two gConnectNotify sites stay on the old import, so no existing undefined symbol is removed."
+        "reason": "All twelve allocation sites, including both gConnectNotify sites, use thread_call_allocate_with_options. The kernel exports it at ffffff800034dc20. The old _thread_call_allocate import disappears, as recorded in approved_removed_undefined."
       }
     ],
     "approved_new_defined": [
@@ -157,9 +157,7 @@
       "#318"
     ],
     "upstream_change": "PR #294 NVMTLDriver AIR digest (plugin/NVMTLLibraryLoad.m) is not part of this candidate",
-    "sites": [
-      "kexts/NVRMFB/fb/nvrm-fb.cpp:gConnectNotify (both allocation sites)"
-    ]
+    "sites": []
   },
   "notice": "This lock describes the v2.4.2 two-file candidate PLUS a scoped v2.4.3 ONCE backport. It does not move the upstream pin and does not include PR #294/#317/#318. All twelve allocation sites carry ONCE, matching release 47f818b; it is a semantic reconstruction, not a byte-for-byte cherry-pick.",
   "apply_order": "Apply stock-v243-converged.patch to the official 272ccd9 pin. It already contains the stock-v242-converged changes and the ONCE overlay; do not apply the base patch first."

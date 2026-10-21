@@ -109,22 +109,25 @@ class OnceBackportContract(unittest.TestCase):
         for marker in ("#317", "#318", "PR 317", "PR 318"):
             self.assertNotIn(marker, text)
 
-    def test_once_is_not_serialization(self):
-        # Minimal model of one thread call. ONCE caps the pending set at one;
-        # it does not forbid a pending run while another invocation is running.
-        state = dict(pending=False, running=0, retains=0, stopping=False)
+    def test_once_serializes_same_call_but_does_not_drain_on_cancel(self):
+        # Fixed XNU: running enter sets RESCHEDULE, not a cancellable queue item.
+        # This is a reference model, not execution of XNU or proof of driver safety.
+        state = dict(pending=False, reschedule=False, running=0, retains=0, stopping=False)
 
         def schedule():
             if state["stopping"]:
                 return
             state["retains"] += 1
-            if state["pending"]:
+            if state["pending"] or state["reschedule"]:
                 state["retains"] -= 1   # folded into the one pending run
+            elif state["running"]:
+                state["reschedule"] = True
             else:
                 state["pending"] = True
 
         def start():
             assert state["pending"]
+            assert state["running"] == 0
             state["pending"] = False
             state["running"] += 1
 
@@ -132,6 +135,9 @@ class OnceBackportContract(unittest.TestCase):
             assert state["running"] > 0
             state["running"] -= 1
             state["retains"] -= 1       # NVRMCallReference
+            if state["reschedule"]:
+                state["reschedule"] = False
+                state["pending"] = True
 
         def cancel():
             if state["pending"]:
@@ -144,11 +150,16 @@ class OnceBackportContract(unittest.TestCase):
         schedule()                       # folded, R2 released
         self.assertEqual(state["retains"], 1)
         start()                           # running, pending cleared
-        schedule()                       # R2, a second run may be pending
-        self.assertEqual((state["running"], state["pending"], state["retains"]), (1, True, 2))
-        self.assertTrue(cancel())         # cancel the pending run, release R2
-        self.assertEqual((state["running"], state["pending"], state["retains"]), (1, False, 1))
+        schedule()                       # R2 is deferred until finish
+        schedule()                       # further enter folds, no extra retain
+        self.assertEqual((state["running"], state["pending"], state["reschedule"],
+                          state["retains"]), (1, False, True, 2))
+        self.assertFalse(cancel())        # cancel does not clear RESCHEDULE
+        self.assertEqual(state["retains"], 2)
         finish()                          # release R1
+        self.assertEqual((state["running"], state["pending"], state["retains"]), (0, True, 1))
+        start()
+        finish()
         self.assertEqual(state["retains"], 0)
         schedule()                       # ordinary pending run
         state["stopping"] = True          # scheduleCall refuses after this

@@ -1,8 +1,15 @@
+> **2026-10-21 链接门禁独立审计修复（新 Darwin 结果待验收）**：历史 run39498653458
+> 的 12 TU + 1055 RM 对象真实链接成功保留；旧工作流存在失败报绿路径，不能单看其 success 验收。
+> 新门禁直接构建 Makefile 的全部对象目标，要求 make=0、精确对象集和有效 Mach-O，任一失败返回非零。
+> 493 项最终导入已逐项归属：469 历史 runner KPI+定义、8 IOFamily 名单、12 NVKMS 未集成、4 NVLink OS 后端缺失。
+> 这些是名称归属，不是 loader/ABI 验收。三个相关工作流恢复为手动触发；源码候选未变，设备 NO-GO。
+> [修复与验收记录](research/stock-v243-once-20261021/GATE-REPAIR-20261021.md)。
+
 > **2026-10-21 stock v2.4.3 ONCE（门禁 + 整包 kext 链接均通过）**：12 点 ONCE 与上游 47f818b 一致。
 > 门禁 run [39486606187](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39486606187)（`917e6f5`）success；
 > 四对象编译 0 退出、NVRM 3 条例外、FB 34→34、符号 +3/−1（已登记）、11 项自检、负控通过。
 > **整包链接** run [39498653458](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39498653458)（`584abcf`）：
-> 3167 个 OGKM RM 对象 + **12/12 NVRM TU**（含改过的 NVRM.cpp）用 `-Xlinker -kext` 链接 **exit 0**，
+> 1055 个 OGKM RM 对象（3167 是当时目录条目数） + **12/12 NVRM TU**（含改过的 NVRM.cpp）用 `-Xlinker -kext` 链接 **exit 0**，
 > 16,185,000 B，SHA256 `28e9386a…`，493 个未定义导入。
 > 闭包：NVRM 468 / NVRMFB 478 个未定义符号全部有提供者（IOGraphics 115 个在 `SystemKernelExtensions.kc` 里找到）。
 > 边界：未链 modeset、未签名、未做 kext 格式校验、未加载、未执行；设备 NO-GO。

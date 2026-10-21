@@ -33,7 +33,7 @@
 `thread_call_cancel()` 只做 `_call_dequeue`（L1330-1379），不清 `THREAD_CALL_RESCHEDULE`；
 `thread_call_finish` 看到 RESCHEDULE 就在 L1590-1617 重新入队。因此：
 
-> 运行中的 ONCE call 被再次 enter 之后，**即使 stop 里 cancel 成功返回 FALSE，
+> 运行中的 ONCE call 被再次 enter 之后，**即使 stop 调用了 cancel（返回 FALSE，表示没有取消队列项），
 > 那次额外运行仍然会发生**。
 
 plain 模式下同样的 enter 会排进队列，`cancel` 能把它取走。这是 ONCE **新增**的、
@@ -51,7 +51,7 @@ plain 模式下同样的 enter 会排进队列，`cancel` 能把它取走。这�
 
 ### 2.3 被暴露而不是新增：`free` 不等待运行中的回调
 
-`thread_call_free` 在 call 仍在运行时 **不等待**：ALLOC call 的引用计数是"客户端 1 + 运行线程 1"
+本项目普通 ALLOC/ONCE call（不含 SIGNAL 特例）的 `thread_call_free` 在 call 仍在运行时 **不等待**：ALLOC call 的引用计数是"客户端 1 + 运行线程 1"
 （L1778-1780），free 减到 1 就返回 TRUE，真正的 `zfree` 由运行线程在 finish 里做（L1620-1640）。
 所以 `while (!thread_call_free(call)) { IOSleep(1); }` 并**不是**排空屏障：
 
@@ -77,4 +77,4 @@ plain 模式下同样的 enter 会排进队列，`cancel` 能把它取走。这�
 立即 `release()`；回调里的 `NVRMCallReference` 在析构时 `release()` 一次。
 ONCE 下：运行中第一次 enter 返回 FALSE（保留 retain），后续 enter 返回 TRUE（立即 release），
 对应"只多跑一次、只多一次 release"，记账平衡。这一点已在 `tests/test_stock_v243_once.py`
-的模型测试里覆盖。
+的参考模型测试里覆盖；该模型不执行 XNU，也不验收 stop 安全。
