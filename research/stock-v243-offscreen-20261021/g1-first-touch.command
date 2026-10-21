@@ -92,6 +92,12 @@ check_env() {
   printf '\n-- boot-args\n'
   nvram boot-args 2>/dev/null || echo "(none)"
   printf '\n-- toolchain\n'
+  if ! xcode-select -p >/dev/null 2>&1; then
+    warn "no developer tools at all (xcode-select has no path). The build needs Command Line Tools:"
+    echo "   offline: install Xcode 16.4 / CLT from media you already have"
+    echo "   online : sudo xcode-select --install   (or install Xcode 16.4 from the App Store)"
+    echo "   without it there is no clang, no python3, no git, no make -> no build."
+  fi
   xcodebuild -version 2>/dev/null | head -2 || warn "xcodebuild missing"
   printf 'SDK: %s\n' "$(xcrun --show-sdk-version 2>/dev/null || echo missing)"
   command -v python3 >/dev/null && printf 'python3: %s\n' "$(python3 -V 2>&1)" || warn "python3 missing"
