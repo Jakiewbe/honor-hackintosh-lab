@@ -16,7 +16,9 @@ NV_PIN=e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb
 mkdir -p "$WORK"
 echo "repo=$REPO work=$WORK"
 sw_vers | tee "$WORK/sw_vers.txt"
-xcodebuild -version | tee -a "$WORK/sw_vers.txt"
+# Command Line Tools alone provide clang, make, git, python3 and the SDK, but not xcodebuild. Do not let
+# its absence abort the build on a CLT-only machine.
+{ xcodebuild -version 2>/dev/null || echo "xcodebuild: absent (Command Line Tools only)"; } | tee -a "$WORK/sw_vers.txt"
 SDK=$(xcrun --show-sdk-version)
 # The compile flags set -mmacosx-version-min=15.5, so any SDK at or above 15.5 works; Xcode 16.4's 15.5
 # is simply the version the CI evidence used. Only an older SDK is a hard stop.
