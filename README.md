@@ -1,3 +1,5 @@
+> **2026-10-21 修复后原生验收通过**：run [39526958107](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39526958107) / `6c8783b`：对象目标make=0，1055/1055 RM、12/12 NVRM对象，真实编译/链接失败负控均拒绝且无旧产物；链接exit0，16185000 B，SHA256 `562b365a…`。493导入中的12 NVKMS和4 NVLink OS接口仍待集成；未加载或执行GPU，设备NO-GO。另撤回“cancel无法清除RESCHEDULE”的旧推断：固定XNU L1347–1352明确清除并返回true，文档与模型已纠正。详情见 [修复与证据](research/stock-v243-once-20261021/GATE-REPAIR-20261021.md)。
+
 > **2026-10-21 链接门禁独立审计修复（新 Darwin 结果待验收）**：历史 run39498653458
 > 的 12 TU + 1055 RM 对象真实链接成功保留；旧工作流存在失败报绿路径，不能单看其 success 验收。
 > 新门禁直接构建 Makefile 的全部对象目标，要求 make=0、精确对象集和有效 Mach-O，任一失败返回非零。

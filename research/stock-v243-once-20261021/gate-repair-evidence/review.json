@@ -1,0 +1,238 @@
+{
+  "status": "PASS_NVRM_LINK_PROBE_EXTERNAL_IMPORTS_UNVERIFIED",
+  "stage": "complete",
+  "level": "NVRM_LINK_PROBE_ONLY",
+  "toolchain": {
+    "sdk": "/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+    "sdk_version": "15.5",
+    "deployment_target": "15.5",
+    "clang": "Apple clang version 17.0.0 (clang-1700.0.13.5)\nTarget: x86_64-apple-darwin24.6.0\nThread model: posix\nInstalledDir: /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+    "xcode": "Xcode 16.4\nBuild version 16F6",
+    "system": "ProductName:\t\tmacOS\nProductVersion:\t\t15.7.9\nBuildVersion:\t\t24G830"
+  },
+  "negative_controls": {
+    "compiler_failure": {
+      "rejected": true,
+      "error": "negative-compile.txt: exit=1",
+      "stale_removed": true
+    },
+    "missing_object": {
+      "rejected": true,
+      "error": "object set mismatch: missing=['/Users/runner/work/_temp/link-products/negative/invalid.o'], extra=[]"
+    },
+    "linker_failure": {
+      "rejected": true,
+      "error": "negative-link.txt: exit=1",
+      "stale_removed": true
+    }
+  },
+  "link": {
+    "exit": 0,
+    "size": 16185000,
+    "sha256": "562b365a9c7233d165e14f1fb52243670937b41264f3b12de0bd7d3fecf8445c",
+    "format": "x86_64_MH_KEXT_BUNDLE",
+    "undefined": 493
+  },
+  "nvkms_unresolved": [
+    "_nvKmsClose",
+    "_nvKmsGetBacklight",
+    "_nvKmsIoctl",
+    "_nvKmsKapiGetFunctionsTableInternal",
+    "_nvKmsKapiHandleEventQueueChange",
+    "_nvKmsKapiProbe",
+    "_nvKmsKapiSuspendResume",
+    "_nvKmsModuleLoad",
+    "_nvKmsOpen",
+    "_nvKmsResume",
+    "_nvKmsSetBacklight",
+    "_nvKmsSuspend"
+  ],
+  "kext_load": "NO_GO",
+  "gpu_execution": "NOT_RUN",
+  "modeset": "NOT_LINKED",
+  "external_imports": "UNVERIFIED",
+  "safety_acceptance": "NOT_ESTABLISHED",
+  "run": 39526958107,
+  "commit": "6c8783be4470efe74637ef3fef71013914af1342",
+  "artifact_id": 12312664213,
+  "artifact_sha256": "0da1e48e05354154b801509e329ada2bb1bbf9d802876d7bfde49aa74eac894a",
+  "artifact_bytes": 896099,
+  "rm_make_exit": 0,
+  "rm_object_count": 1055,
+  "tu_count": 12,
+  "ci_offline_tests": 14,
+  "local_tests": 56,
+  "binary_execution": "NOT_RUN",
+  "driver_install_sign_load": "NOT_RUN",
+  "import_counts": {
+    "HISTORICAL_RUNNER_KPI_AND_DEFINITION": 469,
+    "HISTORICAL_FAMILY_ALLOWLIST_ONLY": 8,
+    "INTERNAL_NVKMS_NOT_LINKED": 12,
+    "INTERNAL_NVLINK_OS_BACKEND_MISSING": 4
+  },
+  "tu_objects": [
+    {
+      "source": "kexts/NVRM/NVRM.cpp",
+      "source_sha256": "ac0c75180a36a9b17b9350b4e39cd68e19496c7af276f3267060a1b9a0db9404",
+      "path": "/Users/runner/work/_temp/link-products/tu-objects/NVRM.o",
+      "compile_exit": 0,
+      "sha256": "c2c44cc23009fa64b5d57fca043587a4ba2eccdb809b4c32c6d23cf4b54e311c",
+      "size": 139736
+    },
+    {
+      "source": "kexts/NVRM/nv_xnu_power.cpp",
+      "source_sha256": "9b70ede199788c3109e2daafc8710879ce466df26798ae18bbc762e20501d0a6",
+      "path": "/Users/runner/work/_temp/link-products/tu-objects/nv_xnu_power.o",
+      "compile_exit": 0,
+      "sha256": "bc72f2f764382257e17d0bf5d0efe661c947c7474a7aec3c1ba52e467319b58b",
+      "size": 2040
+    },
+    {
+      "source": "kexts/NVRM/nv_xnu_stubs.cpp",
+      "source_sha256": "b68e1d8528f62e5fe2f1f478af1061f52aff9800fc60669ac7cd6c0e0b868b95",
+      "path": "/Users/runner/work/_temp/link-products/tu-objects/nv_xnu_stubs.o",
+      "compile_exit": 0,
+      "sha256": "18a6f76b1ed35bd1d7dd71336e21cf356792d1ff7dbec1c9584ff1c08d4b5b9a",
+      "size": 78168
+    },
+    {
+      "source": "kexts/NVRM/nvkms_shaders.cpp",
+      "source_sha256": "fe9c7632069abd3085e2f9468fb4a4e6cb46e8b01f135a0411e0cf1016c80e8b",
+      "path": "/Users/runner/work/_temp/link-products/tu-objects/nvkms_shaders.o",
+      "compile_exit": 0,
+      "sha256": "7d0a0031beb9ce2606a88ce12ee5b0cc00823e4e7980727ebab4ceba81e656a0",
+      "size": 87968
+    },
+    {
+      "source": "kexts/NVRM/nvrm_fbinfo.cpp",
+      "source_sha256": "71b41a15be38281f3b834c944559f462194e48201b30a4a7a799c0718e03be7c",
+      "path": "/Users/runner/work/_temp/link-products/tu-objects/nvrm_fbinfo.o",
+      "compile_exit": 0,
+      "sha256": "8601dd6e1ab1886b72c8a8b74b3008b61c254cb06077572d61e5b0f6dd9bfae5",
+      "size": 5848
+    },
+    {
+      "source": "kexts/NVRM/nvrm_gpuva.cpp",
+      "source_sha256": "4767c1b727679bf361d4e7462670ed0bbbb5b82033af0fb29520734abd65d340",
+      "path": "/Users/runner/work/_temp/link-products/tu-objects/nvrm_gpuva.o",
+      "compile_exit": 0,
+      "sha256": "52ea971c4e3c401c2c5c162c7befb364a4923d3e40ccd2b4a3e5db6d8de1ed46",
+      "size": 5792
+    },
+    {
+      "source": "kexts/NVRM/nvrm_surfshare.cpp",
+      "source_sha256": "8565047e29ae72acf5855a39e697ca04cf7d55dc1008944460ca376d2aa6079e",
+      "path": "/Users/runner/work/_temp/link-products/tu-objects/nvrm_surfshare.o",
+      "compile_exit": 0,
+      "sha256": "4c5c5942753202fb425a54e0bb06548cf4ccff94fd2cdf8f061844c92a5e4e02",
+      "size": 3128
+    },
+    {
+      "source": "kexts/NVRM/os-nvkms-xnu.cpp",
+      "source_sha256": "e77953575b5563d47731808f2a0411a2f52b35c2db40d9c83b4ecb12b29381c6",
+      "path": "/Users/runner/work/_temp/link-products/tu-objects/os-nvkms-xnu.o",
+      "compile_exit": 0,
+      "sha256": "087a343158810bf6ccdfbfcb768ecfaf96932ef39c3c1cbab7ad078aae7e552b",
+      "size": 15568
+    },
+    {
+      "source": "kexts/NVRM/os-xnu.cpp",
+      "source_sha256": "ef44571b69c4d4549a9a7a65268700ef88e547a541e1983daf9d8843d61bb1b4",
+      "path": "/Users/runner/work/_temp/link-products/tu-objects/os-xnu.o",
+      "compile_exit": 0,
+      "sha256": "def93f03ec423dfad5b569ac0f8448e4e0d4492ea45dcda55d2b36b74677e135",
+      "size": 28136
+    },
+    {
+      "source": "kexts/NVRM/os-xnu2.cpp",
+      "source_sha256": "6feefaa254f9d2ca18b063f0a12d39b65dea61c8f8210232f0bd9bc9fcaf75c3",
+      "path": "/Users/runner/work/_temp/link-products/tu-objects/os-xnu2.o",
+      "compile_exit": 0,
+      "sha256": "9657e8fe4e44ee013032a508bf65f6b80b5e07cef7fd9bd2a2227af871623af5",
+      "size": 53600
+    },
+    {
+      "source": "kexts/NVRM/nvrm_kapi_fields.c",
+      "source_sha256": "f26a7231cef8c9a4fa3895e673f59260276e92adff2352e94f3dfa6697d68af4",
+      "path": "/Users/runner/work/_temp/link-products/tu-objects/nvrm_kapi_fields.o",
+      "compile_exit": 0,
+      "sha256": "8ace58867a116f4901b2fc162d3be18eeb825c35c3e665a3f65d0ee2bc6a254a",
+      "size": 480
+    },
+    {
+      "source": "kexts/NVRM/nvrm_pageoff.c",
+      "source_sha256": "09097452da2d5b0eeed086f2fea50c90f7b31b756666dc19f4b9bda9993a7f9d",
+      "path": "/Users/runner/work/_temp/link-products/tu-objects/nvrm_pageoff.o",
+      "compile_exit": 0,
+      "sha256": "4ec16f2aae6271ca3820571cfaf4f8d38080db8d86ccc939dfcd465316c41d98",
+      "size": 3056
+    }
+  ],
+  "raw_report_sha256": "024b01bc4e406b9160c5d6ded1c8710543ffe9d401c52dc6ea3fd4432b0df38e",
+  "artifact_member_sha256": {
+    "NVRM-undefined.txt": "052bf381096d2a6689924a07512870b5344ac38b5b1489cdca808d86526a9d43",
+    "NVRM.cpp-deps.txt": "d5dda5a1737584f1bf7706a03394d6794d24d582d93a2dc9373d676c16de2626",
+    "NVRM.cpp-post.d": "bdf390a2c230dfd5a80958fbd8d31591c5c4c2091b139a072f32e06f7f669baf",
+    "NVRM.cpp-pre.d": "bdf390a2c230dfd5a80958fbd8d31591c5c4c2091b139a072f32e06f7f669baf",
+    "candidate-input-snapshots.json": "892b74360a0bb7ad5108be265eeb09bb2d0a0e6e26266ca66bcbfb2fe626525c",
+    "external-imports.json": "8ff4bbbf1129f8152fe0208fe7d8b78dffeb796cefee863e6812e8a5ecb173aa",
+    "fixed-input-snapshots.json": "b26253343327e6428867c17b88588d5580f632ed603453793798bceae0fa2f7f",
+    "ld.txt": "6487db821ecaa0b9215baa9d4795250616062cfc2e7ddc9dcc3befb752a90626",
+    "link-inputs.json": "fc72102471471467a5ad9f387d15274755f70fbc3959cbf5a233920fc263ca42",
+    "make-nvidia.log": "1273a38b100c64f7c2869a8a37be0a964efe01a7286fcf0b93733bae242bdc5b",
+    "negative-compile.txt": "accc83d3fc1fc6871c942ddbea092fbd1864e13cd2c012c628dd1d154d9daa18",
+    "negative-link-input.txt": "25ef5d9c9f1e2c0a9a389eceb8f9b110300ecbd5649f235087ef5484b33847a8",
+    "negative-link.txt": "04da6611da20f54afce3d0a4f90293bf450289cf9ee7b812613041fb7887fb86",
+    "nv_xnu_power.cpp-deps.txt": "c13cea3888b4d0baf9da46a07d542382fe5488cf7763fe49a4d14ede62090b42",
+    "nv_xnu_power.cpp-post.d": "84a1a3365604683d3c0b25819ece25154e60f8aa9ef3114a4c0f348deb52bf7c",
+    "nv_xnu_power.cpp-pre.d": "84a1a3365604683d3c0b25819ece25154e60f8aa9ef3114a4c0f348deb52bf7c",
+    "nv_xnu_stubs.cpp-deps.txt": "5da3253f540e4bb56e6a8ba77255139e558bd8eb493c86c9502ed5199b4e895a",
+    "nv_xnu_stubs.cpp-post.d": "f88907c539163253a7dd5e0014dae369da8edce6da2c45aefd943ce6faa24e35",
+    "nv_xnu_stubs.cpp-pre.d": "f88907c539163253a7dd5e0014dae369da8edce6da2c45aefd943ce6faa24e35",
+    "nvkms_shaders.cpp-deps.txt": "49f1ec177aa07bb3d3bff9df0b21565f020038436b9f607548701071efed1a41",
+    "nvkms_shaders.cpp-post.d": "75fac735495fb371369e35bfa2406881af59e0e07b6ec6da96ecfb98de8b106a",
+    "nvkms_shaders.cpp-pre.d": "75fac735495fb371369e35bfa2406881af59e0e07b6ec6da96ecfb98de8b106a",
+    "nvrm_fbinfo.cpp-deps.txt": "4971158528e4f8e494618ddf36782cdccf4e0074a04fd67ee74a780132db7f86",
+    "nvrm_fbinfo.cpp-post.d": "9958bd636fa16b74f6f8da8e1fd4085c5f02b2e811c9a2bb571290cea46aa7c5",
+    "nvrm_fbinfo.cpp-pre.d": "9958bd636fa16b74f6f8da8e1fd4085c5f02b2e811c9a2bb571290cea46aa7c5",
+    "nvrm_gpuva.cpp-deps.txt": "64d07e052c5649fc1bb49512be8a1b74210283ed799ae47a2d11e58d759527b6",
+    "nvrm_gpuva.cpp-post.d": "f64fee90141ac719f81851049c04e59101dda17882b4c657c91388e94071b4f8",
+    "nvrm_gpuva.cpp-pre.d": "f64fee90141ac719f81851049c04e59101dda17882b4c657c91388e94071b4f8",
+    "nvrm_kapi_fields.c-deps.txt": "aea32bdfe5ace6e3ddb921bac675f0d981d39cba7ce36c4f4d5981e990abf070",
+    "nvrm_kapi_fields.c-post.d": "60d23cab8a1f87ebc1ba4a017c28b2badded4a04108fcde273a472da1f21e33b",
+    "nvrm_kapi_fields.c-pre.d": "60d23cab8a1f87ebc1ba4a017c28b2badded4a04108fcde273a472da1f21e33b",
+    "nvrm_pageoff.c-deps.txt": "5763afe0dfdc11d76b1a964612cbef93ce53bc15719532c5c3b610eeca51342c",
+    "nvrm_pageoff.c-post.d": "e20a6cc975d124c7821af13bef6cafba45026491bbf90a014f949e3cf64ac064",
+    "nvrm_pageoff.c-pre.d": "e20a6cc975d124c7821af13bef6cafba45026491bbf90a014f949e3cf64ac064",
+    "nvrm_surfshare.cpp-deps.txt": "48c80ae902d039fda9315df451393d4289d334512a2c86890b496ba1614101cd",
+    "nvrm_surfshare.cpp-post.d": "516673332195b1ef883bffd11053c77a20f71de582f816cc783d28492ce3dc7f",
+    "nvrm_surfshare.cpp-pre.d": "516673332195b1ef883bffd11053c77a20f71de582f816cc783d28492ce3dc7f",
+    "os-nvkms-xnu.cpp-deps.txt": "a93b186e9c67a615dbb76f5fe55eb827cb8150c2ae7e4b2a9f4117654e54086e",
+    "os-nvkms-xnu.cpp-post.d": "0d1f1f90c99548238cdc2d3b1b3fd27cd41af51a885638f942e21ff78595d189",
+    "os-nvkms-xnu.cpp-pre.d": "0d1f1f90c99548238cdc2d3b1b3fd27cd41af51a885638f942e21ff78595d189",
+    "os-xnu.cpp-deps.txt": "979d15642a0f35f994c8046f44f09d6ee0ebf2ba8884e5910713bbc21ef8914a",
+    "os-xnu.cpp-post.d": "eaf3c381ff377f2343993785529ed018a52b8a55340bf55c31a388fb04430482",
+    "os-xnu.cpp-pre.d": "eaf3c381ff377f2343993785529ed018a52b8a55340bf55c31a388fb04430482",
+    "os-xnu2.cpp-deps.txt": "fb07144e666a2bdeee743baad0ec9de36226e395d79b1a865cde073e1d871f06",
+    "os-xnu2.cpp-post.d": "6202cc944e68e1e7d053ce48a40d34554c964d40de78ec881f7f0e27b5053163",
+    "os-xnu2.cpp-pre.d": "6202cc944e68e1e7d053ce48a40d34554c964d40de78ec881f7f0e27b5053163",
+    "patch-apply.txt": "4a821401f83d3dd5e604cf74f74bae8e03d5c13a486b4f6a0ed087d4e2bf4c60",
+    "patch-check.txt": "2d06efcfa35033bab3a6128919a4e30a80ff22c123ff1b1da824a597b34f70ee",
+    "report.json": "024b01bc4e406b9160c5d6ded1c8710543ffe9d401c52dc6ea3fd4432b0df38e",
+    "rm-dryrun.txt": "222fc71e82470748bcb64160106dc9b481998f025a03d821a72c366822cf8053",
+    "rm-manifest.txt": "1b0d9cc8477b86e4e5929b2049d078dae1d5a40119eac093b31118086325ea80",
+    "rm-objects.json": "92992a4254ee065172e811e7718152fbe1f6ea59931fec045319374dcf07674e",
+    "tu-NVRM.cpp.txt": "58ecdcd0610cf99e732b481e31d38c157edb92e2d7c506cdef97bd6e9eef0939",
+    "tu-nv_xnu_power.cpp.txt": "317491b57b8300ca96dc0229288fe4e12d20780284c82c339ffbf765f5527c98",
+    "tu-nv_xnu_stubs.cpp.txt": "b56bba9026e50726d90d09dc94a36e7c452cf91c959a70d69aeaa79e10eac60b",
+    "tu-nvkms_shaders.cpp.txt": "a208f5433d5363fb616b94dbbcd490a3fd71330febe13bd2cba0ee082877d539",
+    "tu-nvrm_fbinfo.cpp.txt": "6252b5591344111c0e9d5adbf18eb145e80e26530a2d71a9b579878ab2d10416",
+    "tu-nvrm_gpuva.cpp.txt": "926c11f3ec892ac699645f6bad23c153031c1780791bba12e6f88b58a38c14ea",
+    "tu-nvrm_kapi_fields.c.txt": "0e8b2fb1b1271109ba9d3a1f3a8c21ff898eeb1062fef93390243b2836968e17",
+    "tu-nvrm_pageoff.c.txt": "79b6a4e88392ebd6e4379c9a6c1d39d04a01649f84cb99903c5340d531cc752d",
+    "tu-nvrm_surfshare.cpp.txt": "ca987e8fddc1930c7810d5d69d26ab4ea9f0ff69e66fe7c820629c94a484eccc",
+    "tu-os-nvkms-xnu.cpp.txt": "8330cf692935cbc58f6ac9717d8080f80808b5ea63f4bd433d571e90ea4e8cb5",
+    "tu-os-xnu.cpp.txt": "427637c1cff6f47eeaf4af6a26de739560e3dd8c7270228c7387f8ff6c421ac6",
+    "tu-os-xnu2.cpp.txt": "b956818395b2eb5bbe3cc13c47dc024ddd0d84cd6f1359e7a5fd865a0440c362"
+  }
+}

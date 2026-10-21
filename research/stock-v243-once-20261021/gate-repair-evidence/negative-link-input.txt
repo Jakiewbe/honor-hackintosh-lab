@@ -1,0 +1,3 @@
+ARGV=["xcrun", "clang", "-arch", "x86_64", "-c", "/Users/runner/work/_temp/link-products/negative/link-input.c", "-o", "/Users/runner/work/_temp/link-products/negative/link-input.o"]
+
+EXIT=0

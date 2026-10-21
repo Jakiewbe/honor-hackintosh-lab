@@ -1,0 +1,99 @@
+{
+  "level": "DIAGNOSTIC_MESSAGE_CATEGORY_MULTISETS_ONLY_NOT_FULL_WARNING_GATE",
+  "before_run": 39498653458,
+  "after_run": 39526958107,
+  "before_zip_sha256": "9cec9d6f8e138ecbeeb9dc610a5c26ac5e94c9a464c6db2cf03ede6481f40717",
+  "after_zip_sha256": "0da1e48e05354154b801509e329ada2bb1bbf9d802876d7bfde49aa74eac894a",
+  "units": {
+    "make-nvidia.log": {
+      "before": 406,
+      "after": 406,
+      "new": {
+        "1 warning generated.": 1
+      },
+      "removed": {
+        "variable 'aggregate_mask' set but not used [-Wunused-but-set-variable]": 1
+      }
+    },
+    "tu-NVRM.cpp": {
+      "before": 40,
+      "after": 40,
+      "new": {},
+      "removed": {}
+    },
+    "tu-compile": {
+      "before": 0,
+      "after": 0,
+      "new": {},
+      "removed": {}
+    },
+    "tu-nv_xnu_power.cpp": {
+      "before": 6,
+      "after": 6,
+      "new": {},
+      "removed": {}
+    },
+    "tu-nv_xnu_stubs.cpp": {
+      "before": 6,
+      "after": 6,
+      "new": {},
+      "removed": {}
+    },
+    "tu-nvkms_shaders.cpp": {
+      "before": 0,
+      "after": 0,
+      "new": {},
+      "removed": {}
+    },
+    "tu-nvrm_fbinfo.cpp": {
+      "before": 6,
+      "after": 6,
+      "new": {},
+      "removed": {}
+    },
+    "tu-nvrm_gpuva.cpp": {
+      "before": 10,
+      "after": 10,
+      "new": {},
+      "removed": {}
+    },
+    "tu-nvrm_kapi_fields.c": {
+      "before": 14,
+      "after": 14,
+      "new": {},
+      "removed": {}
+    },
+    "tu-nvrm_pageoff.c": {
+      "before": 10,
+      "after": 10,
+      "new": {},
+      "removed": {}
+    },
+    "tu-nvrm_surfshare.cpp": {
+      "before": 6,
+      "after": 6,
+      "new": {},
+      "removed": {}
+    },
+    "tu-os-nvkms-xnu.cpp": {
+      "before": 14,
+      "after": 14,
+      "new": {},
+      "removed": {}
+    },
+    "tu-os-xnu.cpp": {
+      "before": 11,
+      "after": 11,
+      "new": {},
+      "removed": {}
+    },
+    "tu-os-xnu2.cpp": {
+      "before": 8,
+      "after": 8,
+      "new": {},
+      "removed": {}
+    }
+  },
+  "rm_log_interleaved": true,
+  "rm_diagnostic_increment": "UNVERIFIED_DUE_TO_INTERLEAVED_PARALLEL_OUTPUT"
+}

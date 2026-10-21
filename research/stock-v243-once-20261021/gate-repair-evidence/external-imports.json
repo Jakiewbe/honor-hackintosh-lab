@@ -1,0 +1,5842 @@
+{
+  "level": "HISTORICAL_SYMBOL_NAME_ATTRIBUTION_NOT_LOADER_OR_ABI_ACCEPTANCE",
+  "count": 493,
+  "counts": {
+    "HISTORICAL_RUNNER_KPI_AND_DEFINITION": 469,
+    "HISTORICAL_FAMILY_ALLOWLIST_ONLY": 8,
+    "INTERNAL_NVKMS_NOT_LINKED": 12,
+    "INTERNAL_NVLINK_OS_BACKEND_MISSING": 4
+  },
+  "rows": [
+    {
+      "symbol": "_IODelay",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_IODelay"
+        }
+      ]
+    },
+    {
+      "symbol": "_IOFree",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_IOFree"
+        }
+      ]
+    },
+    {
+      "symbol": "_IOFreeAligned",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_IOFreeAligned"
+        }
+      ]
+    },
+    {
+      "symbol": "_IOFreePageable",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_IOFreePageable"
+        }
+      ]
+    },
+    {
+      "symbol": "_IOLockAlloc",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_IOLockAlloc"
+        }
+      ]
+    },
+    {
+      "symbol": "_IOLockFree",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_IOLockFree"
+        }
+      ]
+    },
+    {
+      "symbol": "_IOLockLock",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_lck_mtx_lock"
+        }
+      ]
+    },
+    {
+      "symbol": "_IOLockSleepDeadline_darwin14",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_IOLockSleepDeadline_darwin14"
+        }
+      ]
+    },
+    {
+      "symbol": "_IOLockSleep_darwin14",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_IOLockSleep_darwin14"
+        }
+      ]
+    },
+    {
+      "symbol": "_IOLockTryLock",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_lck_mtx_try_lock"
+        }
+      ]
+    },
+    {
+      "symbol": "_IOLockUnlock",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_lck_mtx_unlock"
+        }
+      ]
+    },
+    {
+      "symbol": "_IOLockWakeup_darwin14",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_IOLockWakeup_darwin14"
+        }
+      ]
+    },
+    {
+      "symbol": "_IOLog",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_IOLog"
+        }
+      ]
+    },
+    {
+      "symbol": "_IOMalloc",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_IOMalloc_external"
+        }
+      ]
+    },
+    {
+      "symbol": "_IOMallocAligned",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_IOMallocAligned_external"
+        }
+      ]
+    },
+    {
+      "symbol": "_IOMallocPageable",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_IOMallocPageable"
+        }
+      ]
+    },
+    {
+      "symbol": "_IOMallocZero",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_IOMallocZero_external"
+        }
+      ]
+    },
+    {
+      "symbol": "_IORWLockAlloc",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_IORWLockAlloc"
+        }
+      ]
+    },
+    {
+      "symbol": "_IORWLockFree",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_IORWLockFree"
+        }
+      ]
+    },
+    {
+      "symbol": "_IORWLockGetMachLock",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_IORWLockGetMachLock"
+        }
+      ]
+    },
+    {
+      "symbol": "_IORWLockRead",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_lck_rw_lock_shared"
+        }
+      ]
+    },
+    {
+      "symbol": "_IORWLockUnlock",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_lck_rw_done"
+        }
+      ]
+    },
+    {
+      "symbol": "_IORWLockWrite",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_lck_rw_lock_exclusive"
+        }
+      ]
+    },
+    {
+      "symbol": "_IOSimpleLockAlloc",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_IOSimpleLockAlloc"
+        }
+      ]
+    },
+    {
+      "symbol": "_IOSimpleLockFree",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_IOSimpleLockFree"
+        }
+      ]
+    },
+    {
+      "symbol": "_IOSimpleLockLock",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_lck_spin_lock"
+        }
+      ]
+    },
+    {
+      "symbol": "_IOSimpleLockUnlock",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_lck_spin_unlock"
+        }
+      ]
+    },
+    {
+      "symbol": "_IOSleep",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_IOSleep"
+        }
+      ]
+    },
+    {
+      "symbol": "_OSAddAtomic",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_OSAddAtomic"
+        }
+      ]
+    },
+    {
+      "symbol": "_OSAddAtomic64",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_OSAddAtomic64"
+        }
+      ]
+    },
+    {
+      "symbol": "_OSCompareAndSwap",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_OSCompareAndSwap"
+        }
+      ]
+    },
+    {
+      "symbol": "_OSCompareAndSwapPtr",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_OSCompareAndSwapPtr"
+        }
+      ]
+    },
+    {
+      "symbol": "_OSDecrementAtomic",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_OSDecrementAtomic"
+        }
+      ]
+    },
+    {
+      "symbol": "_OSIncrementAtomic",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_OSIncrementAtomic"
+        }
+      ]
+    },
+    {
+      "symbol": "_OSReportWithBacktrace",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_OSReportWithBacktrace"
+        }
+      ]
+    },
+    {
+      "symbol": "_PE_parse_boot_argn",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_PE_parse_boot_argn"
+        }
+      ]
+    },
+    {
+      "symbol": "_SHA1Final",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_SHA1Final"
+        }
+      ]
+    },
+    {
+      "symbol": "_SHA1Init",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_SHA1Init"
+        }
+      ]
+    },
+    {
+      "symbol": "_SHA1Update",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_SHA1Update"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN10IOWorkLoop8workLoopEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN10IOWorkLoop8workLoopEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN11IOPCIDevice19extendedConfigRead8Ey",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_FAMILY_ALLOWLIST_ONLY",
+      "providers": [
+        "IOPCIFamily"
+      ]
+    },
+    {
+      "symbol": "__ZN11IOPCIDevice20extendedConfigRead16Ey",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_FAMILY_ALLOWLIST_ONLY",
+      "providers": [
+        "IOPCIFamily"
+      ]
+    },
+    {
+      "symbol": "__ZN11IOPCIDevice20extendedConfigRead32Ey",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_FAMILY_ALLOWLIST_ONLY",
+      "providers": [
+        "IOPCIFamily"
+      ]
+    },
+    {
+      "symbol": "__ZN11IOPCIDevice20extendedConfigWrite8Eyh",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_FAMILY_ALLOWLIST_ONLY",
+      "providers": [
+        "IOPCIFamily"
+      ]
+    },
+    {
+      "symbol": "__ZN11IOPCIDevice21extendedConfigWrite16Eyt",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_FAMILY_ALLOWLIST_ONLY",
+      "providers": [
+        "IOPCIFamily"
+      ]
+    },
+    {
+      "symbol": "__ZN11IOPCIDevice21extendedConfigWrite32Eyj",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_FAMILY_ALLOWLIST_ONLY",
+      "providers": [
+        "IOPCIFamily"
+      ]
+    },
+    {
+      "symbol": "__ZN11IOPCIDevice9metaClassE",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_FAMILY_ALLOWLIST_ONLY",
+      "providers": [
+        "IOPCIFamily"
+      ]
+    },
+    {
+      "symbol": "__ZN11OSMetaClass21_RESERVEDOSMetaClass0Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN11OSMetaClass21_RESERVEDOSMetaClass0Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN11OSMetaClass21_RESERVEDOSMetaClass1Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN11OSMetaClass21_RESERVEDOSMetaClass1Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN11OSMetaClass21_RESERVEDOSMetaClass2Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN11OSMetaClass21_RESERVEDOSMetaClass2Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN11OSMetaClass21_RESERVEDOSMetaClass3Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN11OSMetaClass21_RESERVEDOSMetaClass3Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN11OSMetaClass21_RESERVEDOSMetaClass4Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN11OSMetaClass21_RESERVEDOSMetaClass4Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN11OSMetaClass21_RESERVEDOSMetaClass5Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN11OSMetaClass21_RESERVEDOSMetaClass5Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN11OSMetaClass21_RESERVEDOSMetaClass6Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN11OSMetaClass21_RESERVEDOSMetaClass6Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN11OSMetaClass21_RESERVEDOSMetaClass7Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN11OSMetaClass21_RESERVEDOSMetaClass7Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN11OSMetaClassC2EPKcPKS_j",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN11OSMetaClassC2EPKcPKS_j"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN11OSMetaClassD2Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN11OSMetaClassD2Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient10clientDiedEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient10clientDiedEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient10gMetaClassE",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient10gMetaClassE"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient10getServiceEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient10getServiceEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient12initWithTaskEP4taskPvj",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient12initWithTaskEP4taskPvj"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient13connectClientEPS_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient13connectClientEPS_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient20exportObjectToClientEP4taskP8OSObjectPS3_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient20exportObjectToClientEP4taskP8OSObjectPS3_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient22_RESERVEDIOUserClient0Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient22_RESERVEDIOUserClient0Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient22_RESERVEDIOUserClient1Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient22_RESERVEDIOUserClient1Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient22_RESERVEDIOUserClient2Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient22_RESERVEDIOUserClient2Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient22_RESERVEDIOUserClient3Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient22_RESERVEDIOUserClient3Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient22_RESERVEDIOUserClient4Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient22_RESERVEDIOUserClient4Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient22_RESERVEDIOUserClient5Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient22_RESERVEDIOUserClient5Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient22_RESERVEDIOUserClient6Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient22_RESERVEDIOUserClient6Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient22_RESERVEDIOUserClient7Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient22_RESERVEDIOUserClient7Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient22_RESERVEDIOUserClient8Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient22_RESERVEDIOUserClient8Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient22_RESERVEDIOUserClient9Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient22_RESERVEDIOUserClient9Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient23_RESERVEDIOUserClient10Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient23_RESERVEDIOUserClient10Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient23_RESERVEDIOUserClient11Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient23_RESERVEDIOUserClient11Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient23_RESERVEDIOUserClient12Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient23_RESERVEDIOUserClient12Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient23_RESERVEDIOUserClient13Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient23_RESERVEDIOUserClient13Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient23_RESERVEDIOUserClient14Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient23_RESERVEDIOUserClient14Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient23_RESERVEDIOUserClient15Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient23_RESERVEDIOUserClient15Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient23getExternalTrapForIndexEj",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient23getExternalTrapForIndexEj"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient24getNotificationSemaphoreEjPP9semaphore",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient24getNotificationSemaphoreEjPP9semaphore"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient24getTargetAndTrapForIndexEPP9IOServicej",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient24getTargetAndTrapForIndexEPP9IOServicej"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient24registerNotificationPortEP8ipc_portjj",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient24registerNotificationPortEP8ipc_portjj"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient24registerNotificationPortEP8ipc_portjy",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient24registerNotificationPortEP8ipc_portjy"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient25getExternalMethodForIndexEj",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient25getExternalMethodForIndexEj"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient26getTargetAndMethodForIndexEPP9IOServicej",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient26getTargetAndMethodForIndexEPP9IOServicej"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient30getExternalAsyncMethodForIndexEj",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient30getExternalAsyncMethodForIndexEj"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient31getAsyncTargetAndMethodForIndexEPP9IOServicej",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient31getAsyncTargetAndMethodForIndexEPP9IOServicej"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient4initEP12OSDictionary",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient4initEP12OSDictionary"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient4initEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient4initEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClient8DispatchE5IORPC",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClient8DispatchE5IORPC"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClientC2EPK11OSMetaClass",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClientC2EPK11OSMetaClass"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12IOUserClientD2Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN12IOUserClientD2Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN12OSDictionary12withCapacityEj",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN12OSDictionary12withCapacityEj"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN14IODeviceMemory9withRangeEyy",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN14IODeviceMemory9withRangeEyy"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry11detachAboveEPK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry11detachAboveEPK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry11setLocationEPK8OSSymbolPK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry11setLocationEPK8OSSymbolPK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry11setLocationEPKcPK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry11setLocationEPKcPK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry11setPropertyEPK8OSStringP8OSObject",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry11setPropertyEPK8OSStringP8OSObject"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry11setPropertyEPK8OSSymbolP8OSObject",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry11setPropertyEPK8OSSymbolP8OSObject"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry11setPropertyEPKcP8OSObject",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry11setPropertyEPKcP8OSObject"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry11setPropertyEPKcPvj",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry11setPropertyEPKcPvj"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry11setPropertyEPKcS1_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry11setPropertyEPKcS1_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry11setPropertyEPKcb",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry11setPropertyEPKcb"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry11setPropertyEPKcyj",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry11setPropertyEPKcyj"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry13attachToChildEPS_PK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry13attachToChildEPS_PK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry13childFromPathEPKcPK15IORegistryPlanePcPi",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry13childFromPathEPKcPK15IORegistryPlanePcPi"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry13setPropertiesEP8OSObject",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry13setPropertiesEP8OSObject"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry14attachToParentEPS_PK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry14attachToParentEPS_PK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry14removePropertyEPK8OSString",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry14removePropertyEPK8OSString"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry14removePropertyEPK8OSSymbol",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry14removePropertyEPK8OSSymbol"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry14removePropertyEPKc",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry14removePropertyEPKc"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry15detachFromChildEPS_PK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry15detachFromChildEPS_PK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry16detachFromParentEPS_PK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry16detachFromParentEPS_PK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry16setPropertyTableEP12OSDictionary",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry16setPropertyTableEP12OSDictionary"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry17runPropertyActionEPFiP8OSObjectPvS2_S2_S2_ES1_S2_S2_S2_S2_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry17runPropertyActionEPFiP8OSObjectPvS2_S2_S2_ES1_S2_S2_S2_S2_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry0Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry0Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry1Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry1Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry2Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry2Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry3Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry3Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry4Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry4Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry5Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry5Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry6Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry6Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry7Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry7Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry8Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry8Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry9Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry25_RESERVEDIORegistryEntry9Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry10Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry10Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry11Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry11Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry12Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry12Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry13Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry13Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry14Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry14Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry15Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry15Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry16Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry16Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry17Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry17Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry18Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry18Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry19Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry19Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry20Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry20Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry21Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry21Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry22Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry22Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry23Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry23Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry24Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry24Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry25Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry25Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry26Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry26Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry27Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry27Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry28Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry28Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry29Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry29Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry30Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry30Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry31Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry26_RESERVEDIORegistryEntry31Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry7setNameEPK8OSSymbolPK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry7setNameEPK8OSSymbolPK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry7setNameEPKcPK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry7setNameEPKcPK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry8fromPathEPKcPK15IORegistryPlanePcPiPS_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry8fromPathEPKcPK15IORegistryPlanePcPiPS_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry9detachAllEPK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry9detachAllEPK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15IORegistryEntry9metaClassE",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN15IORegistryEntry9metaClassE"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15OSMetaClassBase12safeMetaCastEPKS_PK11OSMetaClass",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN15OSMetaClassBase12safeMetaCastEPKS_PK11OSMetaClass"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15OSMetaClassBase25_RESERVEDOSMetaClassBase4Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN15OSMetaClassBase25_RESERVEDOSMetaClassBase4Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15OSMetaClassBase25_RESERVEDOSMetaClassBase5Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN15OSMetaClassBase25_RESERVEDOSMetaClassBase5Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15OSMetaClassBase25_RESERVEDOSMetaClassBase6Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN15OSMetaClassBase25_RESERVEDOSMetaClassBase6Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15OSMetaClassBase25_RESERVEDOSMetaClassBase7Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN15OSMetaClassBase25_RESERVEDOSMetaClassBase7Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN15OSMetaClassBase8DispatchE5IORPC",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN15OSMetaClassBase8DispatchE5IORPC"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN18IOMemoryDescriptor11withOptionsEPvjjP4taskjP8IOMapper",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN18IOMemoryDescriptor11withOptionsEPvjjP4taskjP8IOMapper"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN18IOMemoryDescriptor16withAddressRangeEyyjP4task",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN18IOMemoryDescriptor16withAddressRangeEyyjP4task"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN18IOMemoryDescriptor18getPhysicalAddressEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN18IOMemoryDescriptor18getPhysicalAddressEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN18IOMemoryDescriptor19withPhysicalAddressEyyj",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN18IOMemoryDescriptor19withPhysicalAddressEyyj"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN18IOMemoryDescriptor9metaClassE",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN18IOMemoryDescriptor9metaClassE"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN18IORegistryIterator11iterateOverEPK15IORegistryPlanej",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN18IORegistryIterator11iterateOverEPK15IORegistryPlanej"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN20IOACPIPlatformDevice9metaClassE",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_FAMILY_ALLOWLIST_ONLY",
+      "providers": [
+        "IOACPIFamily"
+      ]
+    },
+    {
+      "symbol": "__ZN21IOSubMemoryDescriptor12withSubRangeEP18IOMemoryDescriptoryyj",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN21IOSubMemoryDescriptor12withSubRangeEP18IOMemoryDescriptoryyj"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN24IOBufferMemoryDescriptor17inTaskWithOptionsEP4taskjmm",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN24IOBufferMemoryDescriptor17inTaskWithOptionsEP4taskjmm"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN24IOBufferMemoryDescriptor22inTaskWithPhysicalMaskEP4taskjyy",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN24IOBufferMemoryDescriptor22inTaskWithPhysicalMaskEP4taskjyy"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN28IOFilterInterruptEventSource26filterInterruptEventSourceEP8OSObjectPFvS1_P22IOInterruptEventSourceiEPFbS1_PS_EP9IOServicei",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN28IOFilterInterruptEventSource26filterInterruptEventSourceEP8OSObjectPFvS1_P22IOInterruptEventSourceiEPFbS1_PS_EP9IOServicei"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN6OSData12withCapacityEj",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN6OSData12withCapacityEj"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN6OSData9metaClassE",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN6OSData9metaClassE"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN6OSData9withBytesEPKvj",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN6OSData9withBytesEPKvj"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN7OSArray12withCapacityEj",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN7OSArray12withCapacityEj"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN7OSArray9metaClassE",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN7OSArray9metaClassE"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSNumber10withNumberEyj",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN8OSNumber10withNumberEyj"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSNumber9metaClassE",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN8OSNumber9metaClassE"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject18_RESERVEDOSObject0Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN8OSObject18_RESERVEDOSObject0Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject18_RESERVEDOSObject1Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN8OSObject18_RESERVEDOSObject1Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject18_RESERVEDOSObject2Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN8OSObject18_RESERVEDOSObject2Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject18_RESERVEDOSObject3Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN8OSObject18_RESERVEDOSObject3Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject18_RESERVEDOSObject4Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN8OSObject18_RESERVEDOSObject4Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject18_RESERVEDOSObject5Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN8OSObject18_RESERVEDOSObject5Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject18_RESERVEDOSObject6Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN8OSObject18_RESERVEDOSObject6Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject18_RESERVEDOSObject7Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN8OSObject18_RESERVEDOSObject7Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject18_RESERVEDOSObject8Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN8OSObject18_RESERVEDOSObject8Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject18_RESERVEDOSObject9Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN8OSObject18_RESERVEDOSObject9Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject19_RESERVEDOSObject10Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN8OSObject19_RESERVEDOSObject10Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject19_RESERVEDOSObject11Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN8OSObject19_RESERVEDOSObject11Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject19_RESERVEDOSObject12Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN8OSObject19_RESERVEDOSObject12Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject19_RESERVEDOSObject13Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN8OSObject19_RESERVEDOSObject13Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject19_RESERVEDOSObject14Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN8OSObject19_RESERVEDOSObject14Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject19_RESERVEDOSObject15Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN8OSObject19_RESERVEDOSObject15Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObject4initEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN8OSObject4initEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObjectdlEPvm",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN8OSObjectdlEPvm"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSObjectnwEm",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN8OSObjectnwEm"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSString11withCStringEPKc",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN8OSString11withCStringEPKc"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSString9metaClassE",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN8OSString9metaClassE"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSSymbol11withCStringEPKc",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN8OSSymbol11withCStringEPKc"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN8OSSymbol17withCStringNoCopyEPKc",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN8OSSymbol17withCStringNoCopyEPKc"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService10adjustBusyEi",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService10adjustBusyEi"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService10gMetaClassE",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService10gMetaClassE"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService10handleOpenEPS_jPv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService10handleOpenEPS_jPv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService10joinPMtreeEPS_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService10joinPMtreeEPS_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService11getPlatformEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService11getPlatformEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService11handleCloseEPS_j",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService11handleCloseEPS_j"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService12didTerminateEPS_jPb",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService12didTerminateEPS_jPb"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService12getBusyStateEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService12getBusyStateEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService12getResourcesEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService12getResourcesEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService12requestProbeEj",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService12requestProbeEj"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService12tellChangeUpEm",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService12tellChangeUpEm"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService12updateReportEP19IOReportChannelListjPvS2_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService12updateReportEP19IOReportChannelListjPvS2_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService13addPowerChildEPS_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService13addPowerChildEPS_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService13askChangeDownEm",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService13askChangeDownEm"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService13matchLocationEPS_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService13matchLocationEPS_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService13messageClientEjP8OSObjectPvm",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService13messageClientEjP8OSObjectPvm"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService13newUserClientEP4taskPvjP12OSDictionaryPP12IOUserClient",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService13newUserClientEP4taskPvjP12OSDictionaryPP12IOUserClient"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService13newUserClientEP4taskPvjPP12IOUserClient",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService13newUserClientEP4taskPvjPP12IOUserClient"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService13setPowerStateEmPS_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService13setPowerStateEmPS_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService13willTerminateEPS_j",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService13willTerminateEPS_j"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService14activityTickleEmm",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService14activityTickleEmm"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService14applyToClientsEPFvPS_PvES1_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService14applyToClientsEPFvPS_PvES1_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService14causeInterruptEi",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService14causeInterruptEi"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService14messageClientsEjPvm",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService14messageClientsEjPvm"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService14tellChangeDownEm",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService14tellChangeDownEm"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService15comparePropertyEP12OSDictionaryPK8OSString",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService15comparePropertyEP12OSDictionaryPK8OSString"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService15comparePropertyEP12OSDictionaryPKc",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService15comparePropertyEP12OSDictionaryPKc"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService15configureReportEP19IOReportChannelListjPvS2_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService15configureReportEP19IOReportChannelListjPvS2_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService15enableInterruptEi",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService15enableInterruptEi"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService15errnoFromReturnEi",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService15errnoFromReturnEi"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService15getDeviceMemoryEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService15getDeviceMemoryEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService15nextIdleTimeoutEyyj",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService15nextIdleTimeoutEyyj"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService15powerChangeDoneEm",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService15powerChangeDoneEm"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService15registerServiceEj",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService15registerServiceEj"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService15serviceMatchingEPKcP12OSDictionary",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService15serviceMatchingEPKcP12OSDictionary"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService15setDeviceMemoryEP7OSArray",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService15setDeviceMemoryEP7OSArray"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService15terminateClientEPS_j",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService15terminateClientEPS_j"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService16allowPowerChangeEm",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService16allowPowerChangeEm"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService16applyToProvidersEPFvPS_PvES1_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService16applyToProvidersEPFvPS_PvES1_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService16disableInterruptEi",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService16disableInterruptEi"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService16getInterruptTypeEiPi",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService16getInterruptTypeEiPi"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService16registerInterestEPK8OSSymbolPFiPvS3_jPS_S3_mES3_S3_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService16registerInterestEPK8OSSymbolPFiPvS3_jPS_S3_mES3_S3_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService16removePowerChildEP17IOPowerConnection",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService16removePowerChildEP17IOPowerConnection"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService16requestTerminateEPS_j",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService16requestTerminateEPS_j"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService16stringFromReturnEi",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService16stringFromReturnEi"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService16tellNoChangeDownEm",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService16tellNoChangeDownEm"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService17addNeededResourceEPKc",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService17addNeededResourceEPKc"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService17applyToInterestedEPK8OSSymbolPFvP8OSObjectPvES5_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService17applyToInterestedEPK8OSSymbolPFvP8OSObjectPvES5_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService17cancelPowerChangeEm",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService17cancelPowerChangeEm"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService17comparePropertiesEP12OSDictionaryP12OSCollection",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService17comparePropertiesEP12OSDictionaryP12OSCollection"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService17getAggressivenessEmPm",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService17getAggressivenessEmPm"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService17registerInterruptEiP8OSObjectPFvS1_PvPS_iES2_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService17registerInterruptEiP8OSObjectPFvS1_PvPS_iES2_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService17setAggressivenessEmm",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService17setAggressivenessEmm"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService18changePowerStateToEm",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService18changePowerStateToEm"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService18lockForArbitrationEb",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService18lockForArbitrationEb"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService18matchPropertyTableEP12OSDictionary",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService18matchPropertyTableEP12OSDictionary"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService18matchPropertyTableEP12OSDictionaryPi",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService18matchPropertyTableEP12OSDictionaryPi"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService18setIdleTimerPeriodEm",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService18setIdleTimerPeriodEm"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService18systemWillShutdownEj",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService18systemWillShutdownEj"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService19_RESERVEDIOService2Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService19_RESERVEDIOService2Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService19_RESERVEDIOService3Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService19_RESERVEDIOService3Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService19_RESERVEDIOService4Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService19_RESERVEDIOService4Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService19_RESERVEDIOService5Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService19_RESERVEDIOService5Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService19_RESERVEDIOService6Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService19_RESERVEDIOService6Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService19_RESERVEDIOService7Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService19_RESERVEDIOService7Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService19_RESERVEDIOService8Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService19_RESERVEDIOService8Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService19_RESERVEDIOService9Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService19_RESERVEDIOService9Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService19getMatchingServicesEP12OSDictionary",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService19getMatchingServicesEP12OSDictionary"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService19registerPowerDriverEPS_P14IOPMPowerStatem",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService19registerPowerDriverEPS_P14IOPMPowerStatem"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService19unregisterInterruptEi",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService19unregisterInterruptEi"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService10Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService10Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService11Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService11Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService12Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService12Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService13Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService13Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService14Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService14Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService15Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService15Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService16Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService16Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService17Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService17Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService18Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService18Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService19Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService19Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService20Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService20Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService21Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService21Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService22Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService22Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService23Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService23Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService24Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService24Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService25Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService25Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService26Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService26Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService27Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService27Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService28Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService28Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService29Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService29Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService30Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService30Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService31Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService31Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService32Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService32Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService33Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService33Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService34Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService34Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService35Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService35Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService36Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService36Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService37Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService37Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService38Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService38Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService39Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService39Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService40Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService40Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService41Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService41Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService42Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService42Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService43Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService43Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService44Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService44Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService45Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService45Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService46Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService46Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20_RESERVEDIOService47Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20_RESERVEDIOService47Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20callPlatformFunctionEPK8OSSymbolbPvS3_S3_S3_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20callPlatformFunctionEPK8OSSymbolbPvS3_S3_S3_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20callPlatformFunctionEPKcbPvS2_S2_S2_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20callPlatformFunctionEPKcbPvS2_S2_S2_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20getDeviceMemoryCountEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20getDeviceMemoryCountEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService20unlockForArbitrationEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService20unlockForArbitrationEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService21powerStateDidChangeToEmmPS_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService21powerStateDidChangeToEmmPS_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService22copyClientWithCategoryEPK8OSSymbol",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService22copyClientWithCategoryEPK8OSSymbol"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService22powerStateWillChangeToEmmPS_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService22powerStateWillChangeToEmmPS_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService22waitForMatchingServiceEP12OSDictionaryy",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService22waitForMatchingServiceEP12OSDictionaryy"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService23acknowledgeNotificationEPvj",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService23acknowledgeNotificationEPvj"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService23requestPowerDomainStateEmP17IOPowerConnectionm",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService23requestPowerDomainStateEmP17IOPowerConnectionm"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService24getDeviceMemoryWithIndexEj",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService24getDeviceMemoryWithIndexEj"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService24mapDeviceMemoryWithIndexEjj",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService24mapDeviceMemoryWithIndexEjj"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService24powerStateForDomainStateEm",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService24powerStateForDomainStateEm"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService27maxCapabilityForDomainStateEm",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService27maxCapabilityForDomainStateEm"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService31initialPowerStateForDomainStateEm",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService31initialPowerStateForDomainStateEm"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService4freeEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService4freeEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService4initEP12OSDictionary",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService4initEP12OSDictionary"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService4initEP15IORegistryEntryPK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService4initEP15IORegistryEntryPK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService4openEPS_jPv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService4openEPS_jPv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService4stopEPS_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService4stopEPS_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService5closeEPS_j",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService5closeEPS_j"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService5probeEPS_Pi",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService5probeEPS_Pi"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService5startEPS_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService5startEPS_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService6PMinitEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService6PMinitEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService6PMstopEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService6PMstopEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService6attachEPS_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService6attachEPS_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService6detachEPS_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService6detachEPS_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService7messageEjPS_Pv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService7messageEjPS_Pv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService8DispatchE5IORPC",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN9IOService8DispatchE5IORPC"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService8finalizeEj",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService8finalizeEj"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService9metaClassE",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService9metaClassE"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService9terminateEj",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService9terminateEj"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOService9waitQuietEy",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOService9waitQuietEy"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOServiceC2EPK11OSMetaClass",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOServiceC2EPK11OSMetaClass"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9IOServiceD2Ev",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZN9IOServiceD2Ev"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN9OSBoolean9metaClassE",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZN9OSBoolean9metaClassE"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK11OSMetaClass12getClassNameEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZNK11OSMetaClass12getClassNameEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK11OSMetaClass12getMetaClassEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZNK11OSMetaClass12getMetaClassEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK11OSMetaClass12taggedRetainEPKv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZNK11OSMetaClass12taggedRetainEPKv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK11OSMetaClass13taggedReleaseEPKv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZNK11OSMetaClass13taggedReleaseEPKv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK11OSMetaClass13taggedReleaseEPKvi",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZNK11OSMetaClass13taggedReleaseEPKvi"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK11OSMetaClass14getRetainCountEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZNK11OSMetaClass14getRetainCountEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK11OSMetaClass19instanceConstructedEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZNK11OSMetaClass19instanceConstructedEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK11OSMetaClass6retainEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZNK11OSMetaClass6retainEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK11OSMetaClass7releaseEi",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZNK11OSMetaClass7releaseEi"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK11OSMetaClass7releaseEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZNK11OSMetaClass7releaseEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK11OSMetaClass9serializeEP11OSSerialize",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZNK11OSMetaClass9serializeEP11OSSerialize"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry11compareNameEP8OSStringPS1_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry11compareNameEP8OSStringPS1_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry11getLocationEPK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry11getLocationEPK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry11getPropertyEPK8OSString",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry11getPropertyEPK8OSString"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry11getPropertyEPK8OSStringPK15IORegistryPlanej",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry11getPropertyEPK8OSStringPK15IORegistryPlanej"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry11getPropertyEPK8OSSymbol",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry11getPropertyEPK8OSSymbol"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry11getPropertyEPK8OSSymbolPK15IORegistryPlanej",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry11getPropertyEPK8OSSymbolPK15IORegistryPlanej"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry11getPropertyEPKc",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry11getPropertyEPKc"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry11getPropertyEPKcPK15IORegistryPlanej",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry11getPropertyEPKcPK15IORegistryPlanej"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry12compareNamesEP8OSObjectPP8OSString",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry12compareNamesEP8OSObjectPP8OSString"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry12copyLocationEPK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry12copyLocationEPK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry12copyPropertyEPK8OSString",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry12copyPropertyEPK8OSString"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry12copyPropertyEPK8OSStringPK15IORegistryPlanej",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry12copyPropertyEPK8OSStringPK15IORegistryPlanej"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry12copyPropertyEPK8OSSymbol",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry12copyPropertyEPK8OSSymbol"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry12copyPropertyEPK8OSSymbolPK15IORegistryPlanej",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry12copyPropertyEPK8OSSymbolPK15IORegistryPlanej"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry12copyPropertyEPKc",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry12copyPropertyEPKc"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry12copyPropertyEPKcPK15IORegistryPlanej",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry12copyPropertyEPKcPK15IORegistryPlanej"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry13getChildEntryEPK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry13getChildEntryEPK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry14applyToParentsEPFvPS_PvES1_PK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry14applyToParentsEPFvPS_PvES1_PK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry14copyChildEntryEPK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry14copyChildEntryEPK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry14getParentEntryEPK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry14getParentEntryEPK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry15applyToChildrenEPFvPS_PvES1_PK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry15applyToChildrenEPFvPS_PvES1_PK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry15copyParentEntryEPK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry15copyParentEntryEPK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry16getChildIteratorEPK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry16getChildIteratorEPK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry16getPathComponentEPcPiPK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry16getPathComponentEPcPiPK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry17getParentIteratorEPK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry17getParentIteratorEPK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry24dictionaryWithPropertiesEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry24dictionaryWithPropertiesEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry7getNameEPK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry7getNameEPK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry7getPathEPcPiPK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry7getPathEPcPiPK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry7inPlaneEPK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry7inPlaneEPK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry7isChildEPS_PK15IORegistryPlaneb",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry7isChildEPS_PK15IORegistryPlaneb"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry8copyNameEPK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry8copyNameEPK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry8getDepthEPK15IORegistryPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry8getDepthEPK15IORegistryPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15IORegistryEntry8isParentEPS_PK15IORegistryPlaneb",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK15IORegistryEntry8isParentEPS_PK15IORegistryPlaneb"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK15OSMetaClassBase9isEqualToEPKS_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZNK15OSMetaClassBase9isEqualToEPKS_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK8OSObject12taggedRetainEPKv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZNK8OSObject12taggedRetainEPKv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK8OSObject13taggedReleaseEPKv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZNK8OSObject13taggedReleaseEPKv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK8OSObject13taggedReleaseEPKvi",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZNK8OSObject13taggedReleaseEPKvi"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK8OSObject14getRetainCountEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZNK8OSObject14getRetainCountEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK8OSObject6retainEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZNK8OSObject6retainEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK8OSObject7releaseEi",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZNK8OSObject7releaseEi"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK8OSObject7releaseEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZNK8OSObject7releaseEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK8OSObject9serializeEP11OSSerialize",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "__ZNK8OSObject9serializeEP11OSSerialize"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK9IOService10isInactiveEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK9IOService10isInactiveEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK9IOService11getProviderEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK9IOService11getProviderEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK9IOService11getWorkLoopEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK9IOService11getWorkLoopEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK9IOService12handleIsOpenEPKS_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK9IOService12handleIsOpenEPKS_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK9IOService17getClientIteratorEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK9IOService17getClientIteratorEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK9IOService19getProviderIteratorEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK9IOService19getProviderIteratorEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK9IOService19serializePropertiesEP11OSSerialize",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK9IOService19serializePropertiesEP11OSSerialize"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK9IOService21getOpenClientIteratorEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK9IOService21getOpenClientIteratorEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK9IOService23getOpenProviderIteratorEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK9IOService23getOpenProviderIteratorEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK9IOService6isOpenEPKS_",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK9IOService6isOpenEPKS_"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK9IOService8getStateEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK9IOService8getStateEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZNK9IOService9getClientEv",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZNK9IOService9getClientEv"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZTV12IOUserClient",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZTV12IOUserClient"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZTV9IOService",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "__ZTV9IOService"
+        }
+      ]
+    },
+    {
+      "symbol": "___bzero",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "___bzero"
+        }
+      ]
+    },
+    {
+      "symbol": "___stack_chk_fail",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "___stack_chk_fail"
+        }
+      ]
+    },
+    {
+      "symbol": "___stack_chk_guard",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "___stack_chk_guard"
+        }
+      ]
+    },
+    {
+      "symbol": "_absolutetime_to_nanoseconds",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_absolutetime_to_nanoseconds"
+        }
+      ]
+    },
+    {
+      "symbol": "_assert_wait_timeout",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_assert_wait_timeout"
+        }
+      ]
+    },
+    {
+      "symbol": "_clock_get_calendar_microtime",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_clock_get_calendar_microtime"
+        }
+      ]
+    },
+    {
+      "symbol": "_clock_interval_to_absolutetime_interval",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_clock_interval_to_absolutetime_interval"
+        }
+      ]
+    },
+    {
+      "symbol": "_clock_interval_to_deadline",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_clock_interval_to_deadline"
+        }
+      ]
+    },
+    {
+      "symbol": "_copyin",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_copyin"
+        }
+      ]
+    },
+    {
+      "symbol": "_copyout",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_copyout"
+        }
+      ]
+    },
+    {
+      "symbol": "_current_task",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_current_task"
+        }
+      ]
+    },
+    {
+      "symbol": "_current_thread",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_current_thread"
+        }
+      ]
+    },
+    {
+      "symbol": "_gIODTPlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_gIODTPlane"
+        }
+      ]
+    },
+    {
+      "symbol": "_gIOServicePlane",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.iokit",
+          "alias_target": "_gIOServicePlane"
+        }
+      ]
+    },
+    {
+      "symbol": "_get_task_pmap",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.unsupported",
+          "alias_target": "_get_task_pmap"
+        }
+      ]
+    },
+    {
+      "symbol": "_kOSBooleanTrue",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_kOSBooleanTrue"
+        }
+      ]
+    },
+    {
+      "symbol": "_kauth_cred_get",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.bsd",
+          "alias_target": "_kauth_cred_get"
+        }
+      ]
+    },
+    {
+      "symbol": "_kauth_cred_issuser",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.unsupported",
+          "alias_target": "_kauth_cred_issuser"
+        },
+        {
+          "bundle": "com.apple.kpi.private",
+          "alias_target": "_kauth_cred_issuser"
+        }
+      ]
+    },
+    {
+      "symbol": "_kauth_getuid",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.bsd",
+          "alias_target": "_kauth_getuid"
+        }
+      ]
+    },
+    {
+      "symbol": "_kern_os_free",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_kern_os_free_external"
+        }
+      ]
+    },
+    {
+      "symbol": "_kern_os_malloc",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_kern_os_malloc_external"
+        }
+      ]
+    },
+    {
+      "symbol": "_kernel_task",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_kernel_task"
+        }
+      ]
+    },
+    {
+      "symbol": "_kernel_thread_start",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_kernel_thread_start"
+        }
+      ]
+    },
+    {
+      "symbol": "_kprintf",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_kprintf"
+        }
+      ]
+    },
+    {
+      "symbol": "_lck_rw_try_lock",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_lck_rw_try_lock"
+        }
+      ]
+    },
+    {
+      "symbol": "_mach_absolute_time",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_mach_absolute_time"
+        }
+      ]
+    },
+    {
+      "symbol": "_memcmp",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_memcmp"
+        }
+      ]
+    },
+    {
+      "symbol": "_memmove",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_memmove"
+        }
+      ]
+    },
+    {
+      "symbol": "_ml_set_interrupts_enabled",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_ml_set_interrupts_enabled"
+        }
+      ]
+    },
+    {
+      "symbol": "_nvKmsClose",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "INTERNAL_NVKMS_NOT_LINKED",
+      "next_evidence": "Compile/link fixed nvidia-modeset; prefix alone is not provider proof"
+    },
+    {
+      "symbol": "_nvKmsGetBacklight",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "INTERNAL_NVKMS_NOT_LINKED",
+      "next_evidence": "Compile/link fixed nvidia-modeset; prefix alone is not provider proof"
+    },
+    {
+      "symbol": "_nvKmsIoctl",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "INTERNAL_NVKMS_NOT_LINKED",
+      "next_evidence": "Compile/link fixed nvidia-modeset; prefix alone is not provider proof"
+    },
+    {
+      "symbol": "_nvKmsKapiGetFunctionsTableInternal",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "INTERNAL_NVKMS_NOT_LINKED",
+      "next_evidence": "Compile/link fixed nvidia-modeset; prefix alone is not provider proof"
+    },
+    {
+      "symbol": "_nvKmsKapiHandleEventQueueChange",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "INTERNAL_NVKMS_NOT_LINKED",
+      "next_evidence": "Compile/link fixed nvidia-modeset; prefix alone is not provider proof"
+    },
+    {
+      "symbol": "_nvKmsKapiProbe",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "INTERNAL_NVKMS_NOT_LINKED",
+      "next_evidence": "Compile/link fixed nvidia-modeset; prefix alone is not provider proof"
+    },
+    {
+      "symbol": "_nvKmsKapiSuspendResume",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "INTERNAL_NVKMS_NOT_LINKED",
+      "next_evidence": "Compile/link fixed nvidia-modeset; prefix alone is not provider proof"
+    },
+    {
+      "symbol": "_nvKmsModuleLoad",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "INTERNAL_NVKMS_NOT_LINKED",
+      "next_evidence": "Compile/link fixed nvidia-modeset; prefix alone is not provider proof"
+    },
+    {
+      "symbol": "_nvKmsOpen",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "INTERNAL_NVKMS_NOT_LINKED",
+      "next_evidence": "Compile/link fixed nvidia-modeset; prefix alone is not provider proof"
+    },
+    {
+      "symbol": "_nvKmsResume",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "INTERNAL_NVKMS_NOT_LINKED",
+      "next_evidence": "Compile/link fixed nvidia-modeset; prefix alone is not provider proof"
+    },
+    {
+      "symbol": "_nvKmsSetBacklight",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "INTERNAL_NVKMS_NOT_LINKED",
+      "next_evidence": "Compile/link fixed nvidia-modeset; prefix alone is not provider proof"
+    },
+    {
+      "symbol": "_nvKmsSuspend",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "INTERNAL_NVKMS_NOT_LINKED",
+      "next_evidence": "Compile/link fixed nvidia-modeset; prefix alone is not provider proof"
+    },
+    {
+      "symbol": "_nvlink_acquireLock",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "INTERNAL_NVLINK_OS_BACKEND_MISSING",
+      "contract": "OGKM src/common/nvlink/interface/nvlink_os.h:56-60",
+      "next_evidence": "Explicit real Darwin backend plus same-run definition/import delta"
+    },
+    {
+      "symbol": "_nvlink_allocLock",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "INTERNAL_NVLINK_OS_BACKEND_MISSING",
+      "contract": "OGKM src/common/nvlink/interface/nvlink_os.h:56-60",
+      "next_evidence": "Explicit real Darwin backend plus same-run definition/import delta"
+    },
+    {
+      "symbol": "_nvlink_freeLock",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "INTERNAL_NVLINK_OS_BACKEND_MISSING",
+      "contract": "OGKM src/common/nvlink/interface/nvlink_os.h:56-60",
+      "next_evidence": "Explicit real Darwin backend plus same-run definition/import delta"
+    },
+    {
+      "symbol": "_nvlink_releaseLock",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "INTERNAL_NVLINK_OS_BACKEND_MISSING",
+      "contract": "OGKM src/common/nvlink/interface/nvlink_os.h:56-60",
+      "next_evidence": "Explicit real Darwin backend plus same-run definition/import delta"
+    },
+    {
+      "symbol": "_page_size",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_page_size"
+        }
+      ]
+    },
+    {
+      "symbol": "_proc_name",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.bsd",
+          "alias_target": "_proc_name"
+        }
+      ]
+    },
+    {
+      "symbol": "_proc_selfname",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.bsd",
+          "alias_target": "_proc_selfname"
+        }
+      ]
+    },
+    {
+      "symbol": "_proc_selfpid",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.bsd",
+          "alias_target": "_proc_selfpid"
+        }
+      ]
+    },
+    {
+      "symbol": "_read_random",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_read_random"
+        }
+      ]
+    },
+    {
+      "symbol": "_semaphore_create",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_semaphore_create"
+        }
+      ]
+    },
+    {
+      "symbol": "_semaphore_destroy",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_semaphore_destroy"
+        }
+      ]
+    },
+    {
+      "symbol": "_semaphore_signal",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_semaphore_signal"
+        }
+      ]
+    },
+    {
+      "symbol": "_semaphore_wait",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_semaphore_wait"
+        }
+      ]
+    },
+    {
+      "symbol": "_semaphore_wait_noblock",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_semaphore_wait_noblock"
+        }
+      ]
+    },
+    {
+      "symbol": "_snprintf",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_snprintf"
+        }
+      ]
+    },
+    {
+      "symbol": "_strcmp",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_strcmp"
+        }
+      ]
+    },
+    {
+      "symbol": "_strlcpy",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_strlcpy"
+        }
+      ]
+    },
+    {
+      "symbol": "_strlen",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_strlen"
+        }
+      ]
+    },
+    {
+      "symbol": "_strncmp",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_strncmp"
+        }
+      ]
+    },
+    {
+      "symbol": "_sysctl__debug_children",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.bsd",
+          "alias_target": "_sysctl__debug_children"
+        }
+      ]
+    },
+    {
+      "symbol": "_sysctl_handle_quad",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.bsd",
+          "alias_target": "_sysctl_handle_quad"
+        }
+      ]
+    },
+    {
+      "symbol": "_sysctl_register_oid",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.bsd",
+          "alias_target": "_sysctl_register_oid"
+        }
+      ]
+    },
+    {
+      "symbol": "_sysctlbyname",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_kernel_sysctlbyname"
+        }
+      ]
+    },
+    {
+      "symbol": "_thread_block",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_thread_block"
+        }
+      ]
+    },
+    {
+      "symbol": "_thread_call_allocate",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_thread_call_allocate"
+        }
+      ]
+    },
+    {
+      "symbol": "_thread_call_allocate_with_options",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_thread_call_allocate_with_options"
+        }
+      ]
+    },
+    {
+      "symbol": "_thread_call_cancel",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_thread_call_cancel"
+        }
+      ]
+    },
+    {
+      "symbol": "_thread_call_enter",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_thread_call_enter"
+        }
+      ]
+    },
+    {
+      "symbol": "_thread_call_enter_delayed",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_thread_call_enter_delayed"
+        }
+      ]
+    },
+    {
+      "symbol": "_thread_call_free",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_thread_call_free"
+        }
+      ]
+    },
+    {
+      "symbol": "_thread_deallocate",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_thread_deallocate"
+        }
+      ]
+    },
+    {
+      "symbol": "_thread_terminate",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_thread_terminate"
+        }
+      ]
+    },
+    {
+      "symbol": "_thread_wakeup_prim",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.mach",
+          "alias_target": "_thread_wakeup_prim"
+        }
+      ]
+    },
+    {
+      "symbol": "_vfs_context_current",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.unsupported",
+          "alias_target": "_vfs_context_current"
+        },
+        {
+          "bundle": "com.apple.kpi.private",
+          "alias_target": "_vfs_context_current"
+        }
+      ]
+    },
+    {
+      "symbol": "_vfs_context_proc",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.bsd",
+          "alias_target": "_vfs_context_proc"
+        }
+      ]
+    },
+    {
+      "symbol": "_vfs_context_ucred",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.bsd",
+          "alias_target": "_vfs_context_ucred"
+        }
+      ]
+    },
+    {
+      "symbol": "_vn_rdwr",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.bsd",
+          "alias_target": "_vn_rdwr"
+        }
+      ]
+    },
+    {
+      "symbol": "_vnode_close",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.bsd",
+          "alias_target": "_vnode_close"
+        }
+      ]
+    },
+    {
+      "symbol": "_vnode_getattr",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.bsd",
+          "alias_target": "_vnode_getattr"
+        }
+      ]
+    },
+    {
+      "symbol": "_vnode_open",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.bsd",
+          "alias_target": "_vnode_open"
+        }
+      ]
+    },
+    {
+      "symbol": "_vsnprintf",
+      "abi": "UNVERIFIED",
+      "user_device_binding": "UNVERIFIED",
+      "category": "HISTORICAL_RUNNER_KPI_AND_DEFINITION",
+      "providers": [
+        {
+          "bundle": "com.apple.kpi.libkern",
+          "alias_target": "_vsnprintf"
+        }
+      ]
+    }
+  ],
+  "provider_evidence_sha256": {
+    "kernel-symbolsets-decoded.txt": "f06cea5dce3c808fa5363a11b03b6174c0d02fbbcc2e7e9059b53402273db18f",
+    "runner-kernel-nm-raw.txt": "90ca2a0c8303013546db35636185fa32ab1c4fec830f7b04380f91dc4532ba2b",
+    "IOPCIFamily-kext-allowlist-raw.txt": "97a9f76d102f57a297a252e3d29f6e7abccd233e3f3e7681d2a78799ffc07fbe",
+    "IOACPIFamily-kext-allowlist-raw.txt": "c7552a9cc6b3448a4a3bb0e7625206289486dd3adc8b3443a7ae960c3a02a93b"
+  }
+}

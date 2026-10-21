@@ -28,16 +28,12 @@
 
 ## 2. ONCE 到底新增了什么、暴露了什么
 
-### 2.1 新增：一次不可取消的额外运行
+### 2.1 运行中的重复提交延后，且可取消
 
-`thread_call_cancel()` 只做 `_call_dequeue`（L1330-1379），不清 `THREAD_CALL_RESCHEDULE`；
-`thread_call_finish` 看到 RESCHEDULE 就在 L1590-1617 重新入队。因此：
-
-> 运行中的 ONCE call 被再次 enter 之后，**即使 stop 调用了 cancel（返回 FALSE，表示没有取消队列项），
-> 那次额外运行仍然会发生**。
-
-plain 模式下同样的 enter 会排进队列，`cancel` 能把它取走。这是 ONCE **新增**的、
-且只影响"运行中被重新 enter"的场景。
+固定 XNU `thread_call_cancel_locked` L1347–1352 首先检查 RESCHEDULE，清除后返回 true。
+若未取消，finish 在当前回调结束后才重新排入该次工作；若取消，额外调用不再因该标志发生。
+cancel 不等待当前回调，取消后并发重新 enter 也需要独立准入控制。
+旧文“额外运行不可取消”的推断撤回，详见 ONCE-SEMANTICS-XNU-20261021.md 的纠错记录。
 
 ### 2.2 被暴露而不是新增：`gConnectNotify` 的合并与参数生命周期
 
@@ -56,10 +52,10 @@ plain 模式下同样的 enter 会排进队列，`cancel` 能把它取走。这�
 所以 `while (!thread_call_free(call)) { IOSleep(1); }` 并**不是**排空屏障：
 
 - plain：`cancel` 能把 pending 项取走，循环立刻退出，但正在执行的这次回调仍在栈上；
-- ONCE：连那次额外运行也取不走，会更晚才跑，窗口更大。
+- ONCE：cancel 可清除额外的 RESCHEDULE；但当前回调仍可能在运行，free 不构成排空。
 
 `applyFire` 同时没有 `fStopping` 检查和对象持有，是这条风险最明显的点（背光 handler 的
-`free()` 之后仍可能有一次调用）。这条**不是 ONCE 引入**，但 ONCE 加重了它；
+`free()` 之后仍可能有运行中的调用）。这条**不是 ONCE 引入**；
 按任务边界，登记为设备阻塞，不在本轮扩大范围去改 stop 语义。
 
 ## 3. 若要修，最小方案已经具备的原料

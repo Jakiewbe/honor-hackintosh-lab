@@ -109,8 +109,8 @@ class OnceBackportContract(unittest.TestCase):
         for marker in ("#317", "#318", "PR 317", "PR 318"):
             self.assertNotIn(marker, text)
 
-    def test_once_serializes_same_call_but_does_not_drain_on_cancel(self):
-        # Fixed XNU: running enter sets RESCHEDULE, not a cancellable queue item.
+    def test_once_serializes_same_call_cancel_clears_reschedule_without_waiting(self):
+        # Fixed XNU: running enter sets RESCHEDULE; cancel clears it and returns true.
         # This is a reference model, not execution of XNU or proof of driver safety.
         state = dict(pending=False, reschedule=False, running=0, retains=0, stopping=False)
 
@@ -140,6 +140,10 @@ class OnceBackportContract(unittest.TestCase):
                 state["pending"] = True
 
         def cancel():
+            if state["reschedule"]:
+                state["reschedule"] = False
+                state["retains"] -= 1
+                return True
             if state["pending"]:
                 state["pending"] = False
                 state["retains"] -= 1   # stop()'s compensation
@@ -154,9 +158,15 @@ class OnceBackportContract(unittest.TestCase):
         schedule()                       # further enter folds, no extra retain
         self.assertEqual((state["running"], state["pending"], state["reschedule"],
                           state["retains"]), (1, False, True, 2))
-        self.assertFalse(cancel())        # cancel does not clear RESCHEDULE
-        self.assertEqual(state["retains"], 2)
+        self.assertTrue(cancel())         # cancels deferred invocation, not the running callback
+        self.assertFalse(cancel())
+        self.assertEqual((state["running"], state["reschedule"], state["retains"]), (1, False, 1))
         finish()                          # release R1
+        self.assertEqual((state["running"], state["pending"], state["retains"]), (0, False, 0))
+        schedule()
+        start()
+        schedule()                       # without cancellation, finish re-enqueues once
+        finish()
         self.assertEqual((state["running"], state["pending"], state["retains"]), (0, True, 1))
         start()
         finish()

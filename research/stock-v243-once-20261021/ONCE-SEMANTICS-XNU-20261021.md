@@ -1,120 +1,68 @@
-# ONCE 语义复核（依据固定 XNU 源码）
+# ONCE 语义：固定 XNU 逐分支核对
 
-证据来源：`apple-oss-distributions/xnu`，固定 commit
-`43a90889846e00bfb5cf1d255cdc0a701a1e05a4`（= `rel/xnu-11417`，与目标 macOS 15 对应系列），
-文件 `osfmk/kern/thread_call.c`。行号为该 commit 中的实际行号；本轮通过 git 从该 commit 取出文本
-（67,209 B）后逐段阅读。
+固定输入：XNU `43a90889846e00bfb5cf1d255cdc0a701a1e05a4`，
+[thread_call.c](https://github.com/apple-oss-distributions/xnu/blob/43a90889846e00bfb5cf1d255cdc0a701a1e05a4/osfmk/kern/thread_call.c)。
+这是对应系列的源码合同，不是用户设备实际内核二进制验收。
 
-## 1. ONCE 在哪一层生效
+## 1. 同一 call 的执行不会重叠
 
-```c
-thread_call_allocate_with_options(func, param, group, options)   // L1062
-    if (options & THREAD_CALL_OPTIONS_ONCE) call->tc_flags |= THREAD_CALL_ONCE;   // L1062-1063
-```
+`_pending_call_enqueue` L714–723、`_delayed_call_enqueue` L760–770：
+ONCE 且 RUNNING 时不重新入队，只置 RESCHEDULE；重复提交折叠成一次额外运行。
+`thread_call_finish` L1588–1617 在当前执行结束后清 RUNNING，再按 RESCHEDULE 重新入队。
 
-真正改变行为的只有两处入队函数：
+因此 **同一个 ONCE call 的回调执行串行**，不同 call 之间没有此保证。
+enter 不会等待回调完成，ONCE 也不是 stop 排空屏障。
+同一 call 已 pending 时，plain 与 ONCE 都只有一个队列元素，重复 enter 会合并。
+`tc_param1` 被最新提交覆盖；已开始执行的调用使用已取出的参数快照。
 
-```c
-_pending_call_enqueue(...)                                  // L709-730
-    if ((THREAD_CALL_ONCE | THREAD_CALL_RUNNING)            // L714-715
-        == (call->tc_flags & (THREAD_CALL_ONCE | THREAD_CALL_RUNNING))) {
-        call->tc_pqlink.deadline = 0;                       // L716
-        call->tc_flags |= THREAD_CALL_RESCHEDULE;           // L719
-        return flags & THREAD_CALL_RESCHEDULE;              // L723
-    }
-_delayed_call_enqueue(...)                                  // L753-781
-    ... 同样条件：记录最新 deadline、置 RESCHEDULE、返回旧 RESCHEDULE 位   // L760-771
-```
+## 2. cancel 会清除 RESCHEDULE，返回 true，但不等待当前回调
 
-结论 1：**ONCE 只在"该 call 正在运行"时改变行为**——不再往队列放第二个元素，而是记一个
-`THREAD_CALL_RESCHEDULE`。当 call 只是 pending（未运行）时，ONCE 与 plain 走同一条入队路径，
-因为 **call 对象本身就是队列元素**，重复 enter 只会覆盖参数/截止时间，不会产生第二个元素。
-
-## 2. "折叠成一次额外运行"发生在 finish
+`thread_call_cancel_locked` L1343–1353 的实际首分支：
 
 ```c
-thread_call_finish(...)                                     // L1563
-    call->tc_flags &= ~(RESCHEDULE | RUNNING | WAIT);       // L1588
-    if ((!alloc || call->tc_refs != 0) && (old_flags & RESCHEDULE)) {   // L1590-1591
-        assert(old_flags & THREAD_CALL_ONCE);               // L1592
-        ... _delayed_call_enqueue(...) 或 _pending_call_enqueue(...)     // L1607-1617
-    }
+if (call->tc_flags & THREAD_CALL_RESCHEDULE) {
+    call->tc_flags &= ~THREAD_CALL_RESCHEDULE;
+    canceled = true;
+    assert(call->tc_queue == NULL);
+} else {
+    /* 检查延迟队列并调用 _call_dequeue */
+}
 ```
 
-结论 2：ONCE 保证**同一个 call 的回调执行不重叠**。运行中再次提交只记录一次
-RESCHEDULE，在当前调用结束后重新入队；不同 call 之间没有这项串行保证。
-提交操作不会等待运行中的回调结束，也不会取消它；这不是 stop 排空屏障。
+`thread_call_cancel` L1391–1402 在锁内调用它，直接返回 canceled。
+故运行中已设置 RESCHEDULE 时，cancel 可以取消额外那次调用，返回 true；
+当前运行中的回调仍然存在。没有 RESCHEDULE 或 pending 项时可返回 false。
+若取消之后另一个线程重新提交，仍可能出现新的工作，需另外关闭准入。
 
-## 3. 参数覆盖：latest-wins
+**纠错记录：** 原文“只 _call_dequeue、不清 RESCHEDULE、额外运行不可取消”错误。
+本轮第一次审计及提交 `6c8783b` 的参考模型也沿用了该错误；现撤回这一推断。
+保留 Git 历史以便复核，测试已同时覆盖取消 deferred 调用与未取消时 finish 重排。
 
-```c
-thread_call_enter1(...)                                     // L1185-1190
-    if (call->tc_queue != &group->pending_queue)
-        result = _pending_call_enqueue(...);                // L1185-1187
-    call->tc_param1 = param1;                               // L1189  ← 无条件覆盖
+## 3. free 的客户端引用释放不等于回调排空
 
-thread_call_enter_delayed_internal(...)                     // L1260
-    call->tc_param1 = param1;                               // L1319
-    _delayed_call_enqueue(...)                              // L1323
-```
+`thread_call_free` L1105–1113：有队列项或 RESCHEDULE 时返回 false；否则减客户端引用。
+运行线程 L1778–1780 已为 ALLOC call 增加引用，回调完成后才释放该运行引用。
+因此，本项目普通 ALLOC/ONCE（非 SIGNAL）call 仍运行时，free 可减掉客户端引用并返回 true，
+真正的 call 存储在 finish 中释放。SIGNAL+RUNNING 的等待特例见 L1118–1121，不能泛化。
 
-结论 3：无论 ONCE 与否，重复 enter 都覆盖 `tc_param1`；被折叠的那次运行的参数是**最后一次**的值。
-调用进入 `thread_call_invoke(func, param0, param1, call)`（L1674-1693）时参数已按值快照，
-因此并发运行之间不会互相改写对方的参数，但**合并后的那次运行只会看到最后一个参数**。
+所以 cancel+free 成功不证明回调已结束，也不证明回调访问的对象/参数仍活着。
+这项设备阻塞不依赖上述被撤回的“RESCHEDULE 不可取消”说法。
 
-## 4. cancel / free：不是排空屏障
+## 4. cancel_wait 的条件与边界
 
-```c
-thread_call_cancel(call)                                    // L1390-1402
-    thread_call_cancel_locked(call)                         // L1330-1379：只 _call_dequeue，不清 RESCHEDULE
-thread_call_cancel_wait(call)                               // L1412
-    if ((call->tc_flags & THREAD_CALL_ALLOC) == 0)          // L1417
-        panic("can't wait on thread call whose storage I don't own");   // L1418
-    if (ONCE) { thread_call_cancel_locked(); thread_call_wait_once_locked(); }   // L1437-1445
-thread_call_free(call)                                      // L1097
-    if (call->tc_queue != NULL || (flags & RESCHEDULE)) return FALSE;       // L1105-1110
-    int32_t refs = --call->tc_refs;                         // L1113
-    if (refs == 0) { ... zfree(call); }                     // L1126-1149
-    return TRUE;                                            // L1151
-```
+`thread_call_cancel_wait` L1413–1466：要求 ALLOC、开中断，且不能在同一 call 回调中等待自己。
+ONCE 分支先取消 pending/deferred 调用，再等待在飞回调；普通 call 的等待行为不同。
+函数注释还明确：返回前先前请求已完成，不保证并发重新提交的工作不存在。
+是否可用于本驱动 stop 的锁上下文、对象/调用寿命，仍需独立论证；本轮不修改驱动。
 
-派发侧的资源账：
+## 5. 回移与 retain 记账
 
-```c
-if (call->tc_flags & THREAD_CALL_ALLOC) call->tc_refs++;    // L1778-1780  运行期间线程持有一个引用
-if (alloc || ONCE) { needs_finish = true; RUNNING; }        // L1781-1793
-thread_call_finish: if (!signal && alloc && refs == 0) zfree(call);          // L1620-1640
-```
+12 个分配点均采用 ONCE，与上游 47f818b 覆盖一致。gConnectNotify 的 pending 合并原版已存在；
+不能凭该合并单独排除两点，也不能据此证明参数生命周期安全。
 
-结论 4（逐条，均可复核）：
+scheduleCall 每次先 retain，enter 报告已存在工作时立即归还；运行中首次 RESCHEDULE
+对应额外一次 retain。cancel 成功时调用者的补偿 release 可归还该次引用，当前回调仍独立持有引用。
+参考模型仅说明账目，不执行 XNU，也不证明每个回调都经过该包装或具有停止检查。
+gConnectNotify 参数寿命、gHotplug/applyFire 停止检查与 stop 排空仍是设备阻塞。
 
-1. `thread_call_cancel()` 只取消**队列里的 pending 项**；运行中的 ONCE call 没有队列项，
-   `cancel` 返回 FALSE，且**清不掉 RESCHEDULE**，所以那次额外运行仍会发生（在 finish L1590 处入队）。
-2. `thread_call_cancel_wait()` 仅对**不是** `thread_call_allocate()` 分配的 call panic（L1417）。
-   本驱动的 call 全部由 `thread_call_allocate*` 分配，`THREAD_CALL_ALLOC` 为真（L1024），
-   所以 `cancel_wait` 在类型上是允许的；但它会阻塞等待，stop 路径没有采用。
-3. 本项目的普通 ALLOC/ONCE call（不含 SIGNAL 特例），`thread_call_free()` 在 call **仍在运行时并不等待**：引用计数是"客户端 1 + 运行线程 1"，
-   free 把它减到 1 就返回 TRUE，真正的 `zfree` 由运行线程在 `thread_call_finish` 里完成（L1620-1640）。
-   因此 `while (!thread_call_free(call)) { ... }` 这种循环**排不掉正在运行的回调**，
-   它只在 "队列里还有 pending 项或 RESCHEDULE 未清" 时返回 FALSE。
-4. 结论：停止路径不能把 `cancel` + `free` 的循环当作"回调已结束"的证明。回调能否安全返回，
-   取决于它自己在入口看到 `fStopping` 后立刻返回，以及 stop 在回调可能仍在栈上时推迟释放其访问的状态。
-   ONCE 不改变这一条：它只把"运行中再次 enter"变成"结束后再跑一次"。
-
-## 5. 对回移的直接含义
-
-1. **ONCE 串行化同一 call 的执行，但不是 stop 屏障**：入口停止检查可阻止部分回调重新武装；
-   不能声称每个回调都有该检查（例如 applyFire、gHotplug 的缺口见逐点审计）。
-   更不能由入口检查推导运行中回调已结束、对象或参数仍存活。
-2. **gConnectNotify 的两个点没有理由排除**：plain 模式下同一个 call 对象也是唯一队列元素，
-   重复 enter 在 pending 时同样覆盖参数、合并通知；运行中 enter 在 plain 下会入队一次、
-   在 ONCE 下记一次 RESCHEDULE，两者最终都只多跑一次。ONCE 只是把并发运行变成顺序运行，
-   对"另一个 framebuffer 的通知是否会丢"没有新增损失。上游 47f818b 也是把 12 个分配点
-   全部走 `nvrmfbCall()`（含两处 gConnectNotify），本轮回移已改为同样 12 点。
-3. **retain 记账**：`scheduleCall()` 每次 retain，`thread_call_enter*` 返回"已存在待运行项"时立即
-   release；`NVRMCallReference` 在回调结束时 release 一次。ONCE 下"第一次折叠"返回 FALSE
-   （保留 retain）、后续折叠返回 TRUE（立即 release），与"只多跑一次"一一对应，记账仍平衡。
-4. **参数生命周期**（`gConnectNotify` 携带 per-framebuffer 指针）是**独立于 ONCE 的既有风险**：
-   `thread_call_enter1_delayed(gConnectNotify, fb, d)` 之后调用方立即 `fb->release()`，
-   回调里 `p0` 的解引用依赖 framebuffer 对象本身仍被 IOKit/gFBs 持有。ONCE 不改变这一点，
-   继续登记为设备阶段阻塞。
+源码/对象/链接证据不提升为安全关闭或 GPU 运行证据。设备 NO-GO。

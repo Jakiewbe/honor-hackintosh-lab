@@ -1,3 +1,5 @@
+> **2026-10-21 修复后原生验收通过**：run [39526958107](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39526958107) / `6c8783b`：对象目标make=0，1055/1055 RM、12/12 NVRM对象，真实编译/链接失败负控均拒绝且无旧产物；链接exit0，16185000 B，SHA256 `562b365a…`。493导入中的12 NVKMS和4 NVLink OS接口仍待集成；未加载或执行GPU，设备NO-GO。另撤回“cancel无法清除RESCHEDULE”的旧推断：固定XNU L1347–1352明确清除并返回true，文档与模型已纠正。详情见 [修复与证据](../research/stock-v243-once-20261021/GATE-REPAIR-20261021.md)。
+
 > **2026-10-21 链接门禁审计修复**：历史12 TU+1055 RM对象链接确实成功；旧工作流失败可报绿，新门禁改为对象目标make必须0、精确清单、编译/链接失败非零、同路径负控。最终493项导入重新归属为469历史KPI+定义/8名单/12缺NVKMS/4缺NVLink OS后端；尚非可加载闭包。候选源码未改，三个工作流恢复手动，新Darwin结果待验收，设备NO-GO。详情见 [修复记录](../research/stock-v243-once-20261021/GATE-REPAIR-20261021.md)。
 
 > **本轮决定：** 保留已验证的完整重建候选路线，退休不完整988探针；不写占位PORT层、不因部分编译失败转实机。只补PCI真实调用侧、loader/版本及PM合同。用户已授权相关main快进和源码/编译Actions，设备与.agent禁区不变。见[独立审计](../research/gpu-safety-r5/HARNESS-AUDIT-20261018.md)。
