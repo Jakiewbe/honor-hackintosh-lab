@@ -162,8 +162,9 @@ def main():
             if not section:
                 report['classes'].append(dict(class_name=cls, status='VTABLE_OUTSIDE_SECTION'))
                 continue
-            # member-relative offset to absolute file position
-            delta = member_fileoff + section['offset'] - section['address']
+            # section.offset and section.address are absolute (they already include the member base),
+            # while the chained segment_offset is member-relative. Keep the two spaces apart.
+            delta = section['offset'] - section['address']
             slots = []
             for index in range(args.slots):
                 filepos = address + 16 + index * 8 + delta
