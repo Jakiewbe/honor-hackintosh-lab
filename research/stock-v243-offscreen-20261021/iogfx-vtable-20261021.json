@@ -1,610 +1,889 @@
 {
- "source": "SystemKernelExtensions.kc",
+ "collection": "SystemKernelExtensions.kc",
+ "collection_sha256": "12913116a90b3875e42f17ab42261875205e3cd5463fb7744b1a488b24df67c2",
+ "collection_bytes": 365887488,
  "bundle": "com.apple.iokit.IOAcceleratorFamily2",
- "collection_sha": null,
- "method": "scan of the __ZTV region; word=n-2 is the vtable slot",
- "class_name": "IOAccelSurface",
+ "source_run": 39582513978,
+ "method": "Scan the __ZTV14IOAccelSurface region for 8-byte words whose 30-bit chained-fixup target falls inside the member __TEXT; word index n corresponds to vtable slot n-2 (16-byte header). Encoding is DYLD_CHAINED_PTR_X86_64_KERNEL_CACHE (11).",
+ "scope": "Only the IOAccelSurface interval is interpreted: slots 303-326 are its own methods and the order 322 set_shape / 323 set_shape_backing_length_ext / 324 surface_lock_options / 325 surface_unlock_options / 326 surface_control_with_lock is the ABI-relevant part. Hits beyond slot 327 belong to other classes (IOAccelTask, IOAccelVideoContext2, ...) and are recorded as raw observations, not as IOAccelSurface slots.",
+ "limitations": [
+  "The scan names entries by their target address; entries pointing into the kernel (inherited methods) are not in this member's __TEXT and are missing from the list.",
+  "Member offsets and calling conventions are not established by this record.",
+  "It is static evidence about one macOS build (15.7.9), not a load or ABI acceptance."
+ ],
  "hits": 120,
+ "classes": {
+  "IOAccelContext2": {
+   "observed_slots": [
+    584,
+    750,
+    751,
+    759,
+    772,
+    832,
+    852,
+    857,
+    858,
+    862,
+    869,
+    871,
+    872,
+    884,
+    885,
+    886,
+    887,
+    890,
+    892,
+    893,
+    894,
+    895,
+    896,
+    897
+   ],
+   "count": 24
+  },
+  "IOAccelSubmitter2": {
+   "observed_slots": [
+    870,
+    873,
+    874,
+    875,
+    876,
+    877,
+    878,
+    879,
+    880
+   ],
+   "count": 9
+  },
+  "IOAccelSurface": {
+   "observed_slots": [
+    0,
+    1,
+    18,
+    127,
+    129,
+    184,
+    185,
+    266,
+    286,
+    296,
+    303,
+    304,
+    305,
+    308,
+    309,
+    310,
+    311,
+    312,
+    313,
+    314,
+    315,
+    316,
+    317,
+    318,
+    319,
+    320,
+    321,
+    322,
+    323,
+    324,
+    325,
+    326,
+    330,
+    331,
+    357,
+    361,
+    367,
+    373,
+    379,
+    385,
+    391,
+    409,
+    427,
+    433,
+    439,
+    445,
+    451,
+    457,
+    474
+   ],
+   "count": 49
+  },
+  "IOAccelTask": {
+   "observed_slots": [
+    481,
+    482,
+    499,
+    516,
+    517,
+    518,
+    519,
+    520,
+    521,
+    522,
+    523,
+    524,
+    525,
+    526,
+    527,
+    528,
+    529,
+    530,
+    531,
+    535,
+    536
+   ],
+   "count": 21
+  },
+  "IOAccelVideoContext2": {
+   "observed_slots": [
+    566,
+    567,
+    882,
+    883,
+    888,
+    889,
+    891
+   ],
+   "count": 7
+  },
+  "UNATTRIBUTED": {
+   "observed_slots": [
+    7,
+    347,
+    486,
+    488,
+    552,
+    573,
+    866,
+    867,
+    868,
+    881
+   ],
+   "count": 10
+  }
+ },
  "slots": [
   {
    "slot": 0,
    "symbol": "__ZN14IOAccelSurfaceD1Ev",
-   "target": "0x148772de"
+   "target": "0x148772de",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 1,
    "symbol": "__ZN14IOAccelSurfaceD0Ev",
-   "target": "0x148772e4"
+   "target": "0x148772e4",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 7,
    "symbol": "__ZNK14IOAccelSurface12getMetaClassEv",
-   "target": "0x148772ea"
+   "target": "0x148772ea",
+   "observed_class": "UNATTRIBUTED"
   },
   {
    "slot": 18,
    "symbol": "__ZN14IOAccelSurface4freeEv",
-   "target": "0x14878874"
+   "target": "0x14878874",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 127,
    "symbol": "__ZN14IOAccelSurface16requestTerminateEP9IOServicej",
-   "target": "0x14877da4"
+   "target": "0x14877da4",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 129,
    "symbol": "__ZN14IOAccelSurface12didTerminateEP9IOServicejPb",
-   "target": "0x14877dac"
+   "target": "0x14877dac",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 184,
    "symbol": "__ZN14IOAccelSurface5startEP9IOService",
-   "target": "0x14877afc"
+   "target": "0x14877afc",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 185,
    "symbol": "__ZN14IOAccelSurface4stopEP9IOService",
-   "target": "0x14877cb2"
+   "target": "0x14877cb2",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 266,
    "symbol": "__ZN14IOAccelSurface14externalMethodEjP25IOExternalMethodArgumentsP24IOExternalMethodDispatchP8OSObjectPv",
-   "target": "0x14879d6a"
+   "target": "0x14879d6a",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 286,
    "symbol": "__ZN14IOAccelSurface11clientCloseEv",
-   "target": "0x14878064"
+   "target": "0x14878064",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 296,
    "symbol": "__ZN14IOAccelSurface26getTargetAndMethodForIndexEPP9IOServicej",
-   "target": "0x148788d8"
+   "target": "0x148788d8",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 303,
    "symbol": "__ZN14IOAccelSurface12surfaceStartEv",
-   "target": "0x148781be"
+   "target": "0x148781be",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 304,
    "symbol": "__ZN14IOAccelSurface11surfaceStopEv",
-   "target": "0x14878462"
+   "target": "0x14878462",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 305,
    "symbol": "__ZN14IOAccelSurface22isSurfaceSizeSupportedEss",
-   "target": "0x1487b6f2"
+   "target": "0x1487b6f2",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 308,
    "symbol": "__ZN14IOAccelSurface20orphanClientMappingsEP5OSSet",
-   "target": "0x14877ff0"
+   "target": "0x14877ff0",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 309,
    "symbol": "__ZN14IOAccelSurface24_RESERVEDIOAccelSurface0Ev",
-   "target": "0x1487c01c"
+   "target": "0x1487c01c",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 310,
    "symbol": "__ZN14IOAccelSurface24_RESERVEDIOAccelSurface1Ev",
-   "target": "0x1487c030"
+   "target": "0x1487c030",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 311,
    "symbol": "__ZN14IOAccelSurface24_RESERVEDIOAccelSurface2Ev",
-   "target": "0x1487c046"
+   "target": "0x1487c046",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 312,
    "symbol": "__ZN14IOAccelSurface24_RESERVEDIOAccelSurface3Ev",
-   "target": "0x1487c05c"
+   "target": "0x1487c05c",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 313,
    "symbol": "__ZN14IOAccelSurface24_RESERVEDIOAccelSurface4Ev",
-   "target": "0x1487c072"
+   "target": "0x1487c072",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 314,
    "symbol": "__ZN14IOAccelSurface24_RESERVEDIOAccelSurface5Ev",
-   "target": "0x1487c088"
+   "target": "0x1487c088",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 315,
    "symbol": "__ZN14IOAccelSurface12update_shapeEv",
-   "target": "0x1487b81e"
+   "target": "0x1487b81e",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 316,
    "symbol": "__ZN14IOAccelSurface13prune_buffersEv",
-   "target": "0x1487b47e"
+   "target": "0x1487b47e",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 317,
    "symbol": "__ZN14IOAccelSurface14reset_req_bitsEv",
-   "target": "0x1487b32c"
+   "target": "0x1487b32c",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 318,
    "symbol": "__ZN14IOAccelSurface11set_scalingEjP21IOAccelSurfaceScaling",
-   "target": "0x1487ac78"
+   "target": "0x1487ac78",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 319,
    "symbol": "__ZN14IOAccelSurface19add_context_to_listEP15IOAccelContext2",
-   "target": "0x148788fe"
+   "target": "0x148788fe",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 320,
    "symbol": "__ZN14IOAccelSurface24remove_context_from_listEP15IOAccelContext2",
-   "target": "0x14878940"
+   "target": "0x14878940",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 321,
    "symbol": "__ZN14IOAccelSurface11set_id_modeEjj",
-   "target": "0x14878d4c"
+   "target": "0x14878d4c",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 322,
    "symbol": "__ZN14IOAccelSurface9set_shapeE24eIOAccelSurfaceShapeBitsjP19IOAccelDeviceRegiony",
-   "target": "0x14879c8e"
+   "target": "0x14879c8e",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 323,
    "symbol": "__ZN14IOAccelSurface28set_shape_backing_length_extE24eIOAccelSurfaceShapeBitsjyjyP19IOAccelDeviceRegiony",
-   "target": "0x1487a0b4"
+   "target": "0x1487a0b4",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 324,
    "symbol": "__ZN14IOAccelSurface20surface_lock_optionsE9eLockTypejP25IOAccelSurfaceInformationy",
-   "target": "0x148796c6"
+   "target": "0x148796c6",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 325,
    "symbol": "__ZN14IOAccelSurface22surface_unlock_optionsE9eLockTypej",
-   "target": "0x14879b02"
+   "target": "0x14879b02",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 326,
    "symbol": "__ZN14IOAccelSurface25surface_control_with_lockEjjPj",
-   "target": "0x1487ae2a"
+   "target": "0x1487ae2a",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 330,
    "symbol": "__ZN14IOAccelSurface9MetaClassD1Ev",
-   "target": "0x148772aa"
+   "target": "0x148772aa",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 331,
    "symbol": "__ZN14IOAccelSurface9MetaClassD0Ev",
-   "target": "0x1487c09e"
+   "target": "0x1487c09e",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 347,
    "symbol": "__ZNK14IOAccelSurface9MetaClass5allocEv",
-   "target": "0x1487732a"
+   "target": "0x1487732a",
+   "observed_class": "UNATTRIBUTED"
   },
   {
    "slot": 357,
    "symbol": "__ZN14IOAccelSurface21s_signal_shared_eventEPS_PvP25IOExternalMethodArguments",
-   "target": "0x1487735e"
+   "target": "0x1487735e",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 361,
    "symbol": "__ZN14IOAccelSurface25surface_read_lock_optionsEjP25IOAccelSurfaceInformationy",
-   "target": "0x14877376"
+   "target": "0x14877376",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 367,
    "symbol": "__ZN14IOAccelSurface27surface_read_unlock_optionsEj",
-   "target": "0x14877394"
+   "target": "0x14877394",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 373,
    "symbol": "__ZN14IOAccelSurface9get_stateEP24eIOAccelSurfaceStateBits",
-   "target": "0x148773ac"
+   "target": "0x148773ac",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 379,
    "symbol": "__ZN14IOAccelSurface26surface_write_lock_optionsEjP25IOAccelSurfaceInformationy",
-   "target": "0x148773d4"
+   "target": "0x148773d4",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 385,
    "symbol": "__ZN14IOAccelSurface28surface_write_unlock_optionsEj",
-   "target": "0x148773f2"
+   "target": "0x148773f2",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 391,
    "symbol": "__ZN14IOAccelSurface12surface_readEP22IOAccelSurfaceReadDatay",
-   "target": "0x1487740a"
+   "target": "0x1487740a",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 409,
    "symbol": "__ZN14IOAccelSurface9set_scaleEjP21IOAccelSurfaceScalingy",
-   "target": "0x14877896"
+   "target": "0x14877896",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 427,
    "symbol": "__ZN14IOAccelSurface18surface_query_lockEv",
-   "target": "0x1487796c"
+   "target": "0x1487796c",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 433,
    "symbol": "__ZN14IOAccelSurface17surface_read_lockEP25IOAccelSurfaceInformationy",
-   "target": "0x14877974"
+   "target": "0x14877974",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 439,
    "symbol": "__ZN14IOAccelSurface19surface_read_unlockEv",
-   "target": "0x14877996"
+   "target": "0x14877996",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 445,
    "symbol": "__ZN14IOAccelSurface18surface_write_lockEP25IOAccelSurfaceInformationy",
-   "target": "0x148779b2"
+   "target": "0x148779b2",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 451,
    "symbol": "__ZN14IOAccelSurface20surface_write_unlockEv",
-   "target": "0x148779d4"
+   "target": "0x148779d4",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 457,
    "symbol": "__ZN14IOAccelSurface15surface_controlEjjPj",
-   "target": "0x148779f0"
+   "target": "0x148779f0",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 474,
    "symbol": "__ZN14IOAccelSurface11s_set_shapeEPS_PvP25IOExternalMethodArguments",
-   "target": "0x14879cb6"
+   "target": "0x14879cb6",
+   "observed_class": "IOAccelSurface"
   },
   {
    "slot": 481,
    "symbol": "__ZN11IOAccelTaskD1Ev",
-   "target": "0x1487c172"
+   "target": "0x1487c172",
+   "observed_class": "IOAccelTask"
   },
   {
    "slot": 482,
    "symbol": "__ZN11IOAccelTaskD0Ev",
-   "target": "0x1487c17c"
+   "target": "0x1487c17c",
+   "observed_class": "IOAccelTask"
   },
   {
    "slot": 486,
    "symbol": "__ZNK11IOAccelTask7releaseEv",
-   "target": "0x1487c534"
+   "target": "0x1487c534",
+   "observed_class": "UNATTRIBUTED"
   },
   {
    "slot": 488,
    "symbol": "__ZNK11IOAccelTask12getMetaClassEv",
-   "target": "0x1487c1bc"
+   "target": "0x1487c1bc",
+   "observed_class": "UNATTRIBUTED"
   },
   {
    "slot": 499,
    "symbol": "__ZN11IOAccelTask4freeEv",
-   "target": "0x1487c3f0"
+   "target": "0x1487c3f0",
+   "observed_class": "IOAccelTask"
   },
   {
    "slot": 516,
    "symbol": "__ZN11IOAccelTask4initEP22IOGraphicsAccelerator2jPP16IORangeAllocator",
-   "target": "0x1487c2b8"
+   "target": "0x1487c2b8",
+   "observed_class": "IOAccelTask"
   },
   {
    "slot": 517,
    "symbol": "__ZN11IOAccelTask21freeToAllocGPUAddressEP16IOAccelMemoryMap",
-   "target": "0x1487c92e"
+   "target": "0x1487c92e",
+   "observed_class": "IOAccelTask"
   },
   {
    "slot": 518,
    "symbol": "__ZN11IOAccelTask18freeAllGPUMappingsEv",
-   "target": "0x1487cbd2"
+   "target": "0x1487cbd2",
+   "observed_class": "IOAccelTask"
   },
   {
    "slot": 519,
    "symbol": "__ZN11IOAccelTask24freeAllSysMemoryMappingsEv",
-   "target": "0x1487ce14"
+   "target": "0x1487ce14",
+   "observed_class": "IOAccelTask"
   },
   {
    "slot": 520,
    "symbol": "__ZN11IOAccelTask24freeAllVidMemoryMappingsEv",
-   "target": "0x1487cd3a"
+   "target": "0x1487cd3a",
+   "observed_class": "IOAccelTask"
   },
   {
    "slot": 521,
    "symbol": "__ZN11IOAccelTask8allocateEPK16IOAccelMemoryMap",
-   "target": "0x1487c754"
+   "target": "0x1487c754",
+   "observed_class": "IOAccelTask"
   },
   {
    "slot": 522,
    "symbol": "__ZN11IOAccelTask10deallocateEPK16IOAccelMemoryMapy",
-   "target": "0x1487c81c"
+   "target": "0x1487c81c",
+   "observed_class": "IOAccelTask"
   },
   {
    "slot": 523,
    "symbol": "__ZN11IOAccelTask7reserveEjyy",
-   "target": "0x1487c88a"
+   "target": "0x1487c88a",
+   "observed_class": "IOAccelTask"
   },
   {
    "slot": 524,
    "symbol": "__ZN11IOAccelTask25describeDriverAllocationsEP21IOAccelAllocationInfo",
-   "target": "0x1487d2c6"
+   "target": "0x1487d2c6",
+   "observed_class": "IOAccelTask"
   },
   {
    "slot": 525,
    "symbol": "__ZN11IOAccelTask21_RESERVEDIOAccelTask0Ev",
-   "target": "0x1487d2cc"
+   "target": "0x1487d2cc",
+   "observed_class": "IOAccelTask"
   },
   {
    "slot": 526,
    "symbol": "__ZN11IOAccelTask21_RESERVEDIOAccelTask1Ev",
-   "target": "0x1487d2e0"
+   "target": "0x1487d2e0",
+   "observed_class": "IOAccelTask"
   },
   {
    "slot": 527,
    "symbol": "__ZN11IOAccelTask21_RESERVEDIOAccelTask2Ev",
-   "target": "0x1487d2f6"
+   "target": "0x1487d2f6",
+   "observed_class": "IOAccelTask"
   },
   {
    "slot": 528,
    "symbol": "__ZN11IOAccelTask21_RESERVEDIOAccelTask3Ev",
-   "target": "0x1487d30c"
+   "target": "0x1487d30c",
+   "observed_class": "IOAccelTask"
   },
   {
    "slot": 529,
    "symbol": "__ZN11IOAccelTask21_RESERVEDIOAccelTask4Ev",
-   "target": "0x1487d322"
+   "target": "0x1487d322",
+   "observed_class": "IOAccelTask"
   },
   {
    "slot": 530,
    "symbol": "__ZN11IOAccelTask21_RESERVEDIOAccelTask5Ev",
-   "target": "0x1487d338"
+   "target": "0x1487d338",
+   "observed_class": "IOAccelTask"
   },
   {
    "slot": 531,
    "symbol": "__ZN11IOAccelTask25freeWaitToAllocGPUAddressEP16IOAccelMemoryMapb",
-   "target": "0x1487ca4e"
+   "target": "0x1487ca4e",
+   "observed_class": "IOAccelTask"
   },
   {
    "slot": 535,
    "symbol": "__ZN11IOAccelTask9MetaClassD1Ev",
-   "target": "0x1487c11e"
+   "target": "0x1487c11e",
+   "observed_class": "IOAccelTask"
   },
   {
    "slot": 536,
    "symbol": "__ZN11IOAccelTask9MetaClassD0Ev",
-   "target": "0x1487d34e"
+   "target": "0x1487d34e",
+   "observed_class": "IOAccelTask"
   },
   {
    "slot": 552,
    "symbol": "__ZNK11IOAccelTask9MetaClass5allocEv",
-   "target": "0x1487c1fc"
+   "target": "0x1487c1fc",
+   "observed_class": "UNATTRIBUTED"
   },
   {
    "slot": 566,
    "symbol": "__ZN20IOAccelVideoContext2D1Ev",
-   "target": "0x1487d422"
+   "target": "0x1487d422",
+   "observed_class": "IOAccelVideoContext2"
   },
   {
    "slot": 567,
    "symbol": "__ZN20IOAccelVideoContext2D0Ev",
-   "target": "0x1487d42c"
+   "target": "0x1487d42c",
+   "observed_class": "IOAccelVideoContext2"
   },
   {
    "slot": 573,
    "symbol": "__ZNK20IOAccelVideoContext212getMetaClassEv",
-   "target": "0x1487d46c"
+   "target": "0x1487d46c",
+   "observed_class": "UNATTRIBUTED"
   },
   {
    "slot": 584,
    "symbol": "__ZN15IOAccelContext24freeEv",
-   "target": "0x1484b6c6"
+   "target": "0x1484b6c6",
+   "observed_class": "IOAccelContext2"
   },
   {
    "slot": 750,
    "symbol": "__ZN15IOAccelContext25startEP9IOService",
-   "target": "0x1484aa24"
+   "target": "0x1484aa24",
+   "observed_class": "IOAccelContext2"
   },
   {
    "slot": 751,
    "symbol": "__ZN15IOAccelContext24stopEP9IOService",
-   "target": "0x1484abbe"
+   "target": "0x1484abbe",
+   "observed_class": "IOAccelContext2"
   },
   {
    "slot": 759,
    "symbol": "__ZN15IOAccelContext28finalizeEj",
-   "target": "0x1484acc6"
+   "target": "0x1484acc6",
+   "observed_class": "IOAccelContext2"
   },
   {
    "slot": 772,
    "symbol": "__ZN15IOAccelContext26attachEP9IOService",
-   "target": "0x1484a9dc"
+   "target": "0x1484a9dc",
+   "observed_class": "IOAccelContext2"
   },
   {
    "slot": 832,
    "symbol": "__ZN15IOAccelContext214externalMethodEjP25IOExternalMethodArgumentsP24IOExternalMethodDispatchP8OSObjectPv",
-   "target": "0x1484b998"
+   "target": "0x1484b998",
+   "observed_class": "IOAccelContext2"
   },
   {
    "slot": 852,
    "symbol": "__ZN15IOAccelContext211clientCloseEv",
-   "target": "0x1484ac92"
+   "target": "0x1484ac92",
+   "observed_class": "IOAccelContext2"
   },
   {
    "slot": 857,
    "symbol": "__ZN15IOAccelContext213connectClientEP12IOUserClient",
-   "target": "0x1484b6f6"
+   "target": "0x1484b6f6",
+   "observed_class": "IOAccelContext2"
   },
   {
    "slot": 858,
    "symbol": "__ZN15IOAccelContext219clientMemoryForTypeEjPjPP18IOMemoryDescriptor",
-   "target": "0x1484ba0c"
+   "target": "0x1484ba0c",
+   "observed_class": "IOAccelContext2"
   },
   {
    "slot": 862,
    "symbol": "__ZN15IOAccelContext226getTargetAndMethodForIndexEPP9IOServicej",
-   "target": "0x1484b94c"
+   "target": "0x1484b94c",
+   "observed_class": "IOAccelContext2"
   },
   {
    "slot": 866,
    "symbol": "__ZNK15IOAccelContext213getOwningTaskEv",
-   "target": "0x1487d67c"
+   "target": "0x1487d67c",
+   "observed_class": "UNATTRIBUTED"
   },
   {
    "slot": 867,
    "symbol": "__ZNK15IOAccelContext210getGPUTaskEv",
-   "target": "0x1487d68a"
+   "target": "0x1487d68a",
+   "observed_class": "UNATTRIBUTED"
   },
   {
    "slot": 868,
    "symbol": "__ZNK15IOAccelContext216getOwningTaskPidEv",
-   "target": "0x1487d698"
+   "target": "0x1487d698",
+   "observed_class": "UNATTRIBUTED"
   },
   {
    "slot": 869,
    "symbol": "__ZN15IOAccelContext223affectedByHardwareResetEbj",
-   "target": "0x1484e1c4"
+   "target": "0x1484e1c4",
+   "observed_class": "IOAccelContext2"
   },
   {
    "slot": 870,
    "symbol": "__ZN17IOAccelSubmitter219retireCommandBufferEP17IOAccelEventFence",
-   "target": "0x1487d6a4"
+   "target": "0x1487d6a4",
+   "observed_class": "IOAccelSubmitter2"
   },
   {
    "slot": 871,
    "symbol": "__ZN15IOAccelContext227shouldHardwareCommandNoopedEv",
-   "target": "0x1484e222"
+   "target": "0x1484e222",
+   "observed_class": "IOAccelContext2"
   },
   {
    "slot": 872,
    "symbol": "__ZN15IOAccelContext220orphanClientMappingsEP5OSSet",
-   "target": "0x1484adc2"
+   "target": "0x1484adc2",
+   "observed_class": "IOAccelContext2"
   },
   {
    "slot": 873,
    "symbol": "__ZN17IOAccelSubmitter220setProtectionOptionsEy",
-   "target": "0x1485b916"
+   "target": "0x1485b916",
+   "observed_class": "IOAccelSubmitter2"
   },
   {
    "slot": 874,
    "symbol": "__ZN17IOAccelSubmitter218setSubmissionErrorEj",
-   "target": "0x1487d6aa"
+   "target": "0x1487d6aa",
+   "observed_class": "IOAccelSubmitter2"
   },
   {
    "slot": 875,
    "symbol": "__ZN17IOAccelSubmitter226_RESERVEDIOAccelSubmitter0Ev",
-   "target": "0x1485b79e"
+   "target": "0x1485b79e",
+   "observed_class": "IOAccelSubmitter2"
   },
   {
    "slot": 876,
    "symbol": "__ZN17IOAccelSubmitter226_RESERVEDIOAccelSubmitter1Ev",
-   "target": "0x1485b7b2"
+   "target": "0x1485b7b2",
+   "observed_class": "IOAccelSubmitter2"
   },
   {
    "slot": 877,
    "symbol": "__ZN17IOAccelSubmitter226_RESERVEDIOAccelSubmitter2Ev",
-   "target": "0x1485b7c8"
+   "target": "0x1485b7c8",
+   "observed_class": "IOAccelSubmitter2"
   },
   {
    "slot": 878,
    "symbol": "__ZN17IOAccelSubmitter226_RESERVEDIOAccelSubmitter3Ev",
-   "target": "0x1485b7de"
+   "target": "0x1485b7de",
+   "observed_class": "IOAccelSubmitter2"
   },
   {
    "slot": 879,
    "symbol": "__ZN17IOAccelSubmitter226_RESERVEDIOAccelSubmitter4Ev",
-   "target": "0x1485b7f4"
+   "target": "0x1485b7f4",
+   "observed_class": "IOAccelSubmitter2"
   },
   {
    "slot": 880,
    "symbol": "__ZN17IOAccelSubmitter226_RESERVEDIOAccelSubmitter5Ev",
-   "target": "0x1485b80a"
+   "target": "0x1485b80a",
+   "observed_class": "IOAccelSubmitter2"
   },
   {
    "slot": 881,
    "symbol": "__ZNK17IOAccelSubmitter223isOpportunisticWorkloadEv",
-   "target": "0x1487d6b0"
+   "target": "0x1487d6b0",
+   "observed_class": "UNATTRIBUTED"
   },
   {
    "slot": 882,
    "symbol": "__ZN20IOAccelVideoContext212contextStartEv",
-   "target": "0x1487d4c8"
+   "target": "0x1487d4c8",
+   "observed_class": "IOAccelVideoContext2"
   },
   {
    "slot": 883,
    "symbol": "__ZN20IOAccelVideoContext211contextStopEv",
-   "target": "0x1487d514"
+   "target": "0x1487d514",
+   "observed_class": "IOAccelVideoContext2"
   },
   {
    "slot": 884,
    "symbol": "__ZN15IOAccelContext219getDataBufferLimitsEv",
-   "target": "0x1484e142"
+   "target": "0x1484e142",
+   "observed_class": "IOAccelContext2"
   },
   {
    "slot": 885,
    "symbol": "__ZN15IOAccelContext214context_finishEv",
-   "target": "0x1484e0e0"
+   "target": "0x1484e0e0",
+   "observed_class": "IOAccelContext2"
   },
   {
    "slot": 886,
    "symbol": "__ZN15IOAccelContext224initSidebandBufferHeaderEP27IOAccelSidebandBufferHeaderyy",
-   "target": "0x1484c186"
+   "target": "0x1484c186",
+   "observed_class": "IOAccelContext2"
   },
   {
    "slot": 887,
    "symbol": "__ZN15IOAccelContext221processSidebandBufferEP24IOAccelCommandDescriptorb",
-   "target": "0x1484caa4"
+   "target": "0x1484caa4",
+   "observed_class": "IOAccelContext2"
   },
   {
    "slot": 888,
    "symbol": "__ZN20IOAccelVideoContext220processSidebandTokenER24IOAccelCommandStreamInfo",
-   "target": "0x1487d55c"
+   "target": "0x1487d55c",
+   "observed_class": "IOAccelVideoContext2"
   },
   {
    "slot": 889,
    "symbol": "__ZN20IOAccelVideoContext220discardSidebandTokenER24IOAccelCommandStreamInfo",
-   "target": "0x1487d56e"
+   "target": "0x1487d56e",
+   "observed_class": "IOAccelVideoContext2"
   },
   {
    "slot": 890,
    "symbol": "__ZN15IOAccelContext220postTokenSanityCheckER24IOAccelCommandStreamInfo",
-   "target": "0x1487d6b8"
+   "target": "0x1487d6b8",
+   "observed_class": "IOAccelContext2"
   },
   {
    "slot": 891,
    "symbol": "__ZN20IOAccelVideoContext218processDataBuffersEj",
-   "target": "0x1487d580"
+   "target": "0x1487d580",
+   "observed_class": "IOAccelVideoContext2"
   },
   {
    "slot": 892,
    "symbol": "__ZN15IOAccelContext218beginCommandStreamER24IOAccelCommandStreamInfo",
-   "target": "0x1484c168"
+   "target": "0x1484c168",
+   "observed_class": "IOAccelContext2"
   },
   {
    "slot": 893,
    "symbol": "__ZN15IOAccelContext216endCommandStreamER24IOAccelCommandStreamInfo",
-   "target": "0x1484c16e"
+   "target": "0x1484c16e",
+   "observed_class": "IOAccelContext2"
   },
   {
    "slot": 894,
    "symbol": "__ZN15IOAccelContext212bindResourceER24IOAccelCommandStreamInfoP16IOAccelResource2bP15IOAccelChannel2jb",
-   "target": "0x1484df60"
+   "target": "0x1484df60",
+   "observed_class": "IOAccelContext2"
   },
   {
    "slot": 895,
    "symbol": "__ZN15IOAccelContext214unbindResourceER24IOAccelCommandStreamInfoP16IOAccelResource2P15IOAccelChannel2",
-   "target": "0x1484e022"
+   "target": "0x1484e022",
+   "observed_class": "IOAccelContext2"
   },
   {
    "slot": 896,
    "symbol": "__ZN15IOAccelContext223compactCurrentVidMemoryEv",
-   "target": "0x1484cde0"
+   "target": "0x1484cde0",
+   "observed_class": "IOAccelContext2"
   },
   {
    "slot": 897,
    "symbol": "__ZN15IOAccelContext216prepareResourcesEPP16IOAccelResource2i",
-   "target": "0x1484e04c"
+   "target": "0x1484e04c",
+   "observed_class": "IOAccelContext2"
   }
  ]
 }

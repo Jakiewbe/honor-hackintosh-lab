@@ -348,8 +348,42 @@ def run(args, report):
         text = log.read_text(encoding='utf-8', errors='replace')
         unresolved = sorted({line.strip() for line in text.splitlines()
                              if 'can\'t resolve' in line or 'unresolved' in line.lower()})
-        report['loader_dry_run'][name] = dict(exit=result.returncode,
-                                              unresolved=unresolved, log=log.name)
+        report['loader_dry_run'][name] = dict(exit=result.returncode, unresolved=unresolved,
+                                              log=log.name, bundle=str(bundle),
+                                              bundle_sha256=report['bundles'][name]['sha256'])
+    # Hard gate: recording the exit codes is not enough. All three bundles must have been exercised,
+    # must exit 0 and must show no unresolved symbol. This is the fail-closed form the audit asked for.
+    report['stage'] = 'loader-acceptance'
+    loaders = report['loader_dry_run']
+    missing_runs = sorted(set(built) - set(loaders))
+    bad_exit = {k: v['exit'] for k, v in loaders.items() if v['exit'] != 0}
+    bad_text = {k: v['unresolved'] for k, v in loaders.items() if v['unresolved']}
+    if missing_runs or bad_exit or bad_text:
+        raise ValueError('kextutil -n did not pass: missing=%r exits=%r unresolved=%r'
+                         % (missing_runs, bad_exit, bad_text))
+
+    # Negative control: a bundle with a declared dependency that does not exist must be rejected.
+    # Without this, a checker that never fails could still look green.
+    report['stage'] = 'loader-negative-control'
+    broken = products/'NVAccel-broken.kext'
+    shutil.copytree(products/'NVAccel.kext', broken)
+    info_path = broken/'Contents/Info.plist'
+    broken_info = plistlib.loads(info_path.read_bytes())
+    broken_info.setdefault('OSBundleLibraries', {})['com.example.g1-missing'] = '9.9.9'
+    info_path.write_bytes(plistlib.dumps(broken_info))
+    control_log = args.out/'loader-negative-control.txt'
+    with control_log.open('w', encoding='utf-8') as stream:
+        stream.write('ARGV='+repr(['xcrun', 'kextutil', '-n', str(broken)])+'\n'); stream.flush()
+        control = subprocess.run(['xcrun', 'kextutil', '-n', str(broken)], cwd=tree,
+                                 stdout=stream, stderr=subprocess.STDOUT, timeout=300)
+        stream.write('\nEXIT='+str(control.returncode)+'\n')
+    control_text = control_log.read_text(encoding='utf-8', errors='replace')
+    rejected = control.returncode != 0 or "can't resolve" in control_text or 'missing' in control_text.lower()
+    report['loader_negative_control'] = dict(executed=True, exit=control.returncode,
+                                             rejected=rejected, log=control_log.name)
+    if not rejected:
+        raise ValueError('loader negative control accepted a bundle with a missing dependency')
+
     report['stage'] = 'runner-dependencies'
     all_names = {n for b in report['bundles'].values() for n in b['imports']}
     sets, actual, families, exports = native_providers(all_names, args.out)

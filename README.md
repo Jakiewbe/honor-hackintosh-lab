@@ -1,3 +1,12 @@
+> **2026-10-21 当前里程碑：`PRE-DEVICE STATIC INTEGRATION — CONDITIONAL PASS`**（独立审计后修订）。
+> 编译、链接、符号归因、`kextutil -n`、`IOAccelSurface` vtable 关键区间（303-326）都有原生证据；
+> 但 20 个 local-only 导入的导出状态、完整 ABI、加载器门禁的 fail-closed 性质、以及 KC 回退能力未关闭，
+> 因此**设备加载 NO-GO**，B/C 步骤暂停。审计发现的两处门禁缺陷已修：
+> `loader_dry_run` 三个退出码现在硬性要求为 0（附缺失依赖负控），vtable 证据改为按类归属并补 KC SHA256。
+> 详见 [PACKAGE-20261021](research/stock-v243-once-20261021/PACKAGE-20261021.md) 与
+> [DEVICE-CHECKLIST-20261021](research/stock-v243-offscreen-20261021/DEVICE-CHECKLIST-20261021.md)。
+
+
 > **2026-10-21 三组件静态门禁通过（方案 1：按 macOS 15 布局裁剪 IOAccel 虚函数）**：
 > run [39549098741](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39549098741) / 提交 `98ab736`，
 > 状态 `PASS_STATIC_KERNEL_BUNDLES_NOT_LOADER_ABI_OR_GPU_ACCEPTANCE_LOCAL_ONLY_EXPORTS_UNVERIFIED`。
