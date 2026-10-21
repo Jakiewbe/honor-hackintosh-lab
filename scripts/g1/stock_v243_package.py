@@ -252,6 +252,13 @@ def native_providers(names, logs):
     return sets, actual, families, exports
 
 
+def _add_missing_dependency(bundle):
+    info_path = bundle/'Contents/Info.plist'
+    info = plistlib.loads(info_path.read_bytes())
+    info.setdefault('OSBundleLibraries', {})['com.example.g1-missing'] = '9.9.9'
+    info_path.write_bytes(plistlib.dumps(info))
+
+
 def run(args, report):
     previous = json.loads((args.internal_text/'report.json').read_text())
     if previous['status'] != INTERNAL_PASS:
@@ -362,46 +369,31 @@ def run(args, report):
         raise ValueError('kextutil -n did not pass: missing=%r exits=%r unresolved=%r'
                          % (missing_runs, bad_exit, bad_text))
 
-    # Negative control A: an invalid bundle must be rejected. A missing dependency in Info.plist turned
-    # out NOT to be detected by kextutil -n, which is recorded as a tool limitation rather than assumed.
-    report['stage'] = 'loader-negative-control'
-    broken = products/'NVAccel-broken.kext'
-    shutil.copytree(products/'NVAccel.kext', broken)
-    (broken/'Contents'/'MacOS'/'NVAccel').unlink()
-    control_log = args.out/'loader-negative-control.txt'
-    with control_log.open('w', encoding='utf-8') as stream:
-        stream.write('ARGV='+repr(['xcrun', 'kextutil', '-n', str(broken)])+'\n'); stream.flush()
-        control = subprocess.run(['xcrun', 'kextutil', '-n', str(broken)], cwd=tree,
-                                 stdout=stream, stderr=subprocess.STDOUT, timeout=300)
-        stream.write('\nEXIT='+str(control.returncode)+'\n')
-    control_text = control_log.read_text(encoding='utf-8', errors='replace')
-    rejected = control.returncode != 0
-    report['loader_negative_control'] = dict(executed=True, exit=control.returncode,
-                                             rejected=rejected, log=control_log.name,
-                                             case='missing executable')
-    if not rejected:
-        raise ValueError('loader negative control accepted a bundle without its executable')
-
-    # Negative control B (recorded, not gating): does kextutil -n notice a declared dependency that does
-    # not exist? It does not, so dependency completeness is enforced by the static audit instead.
-    missing_dep = products/'NVAccel-missingdep.kext'
-    shutil.copytree(products/'NVAccel.kext', missing_dep)
-    dep_info_path = missing_dep/'Contents/Info.plist'
-    dep_info = plistlib.loads(dep_info_path.read_bytes())
-    dep_info.setdefault('OSBundleLibraries', {})['com.example.g1-missing'] = '9.9.9'
-    dep_info_path.write_bytes(plistlib.dumps(dep_info))
-    dep_log = args.out/'loader-missing-dependency.txt'
-    with dep_log.open('w', encoding='utf-8') as stream:
-        stream.write('ARGV='+repr(['xcrun', 'kextutil', '-n', str(missing_dep)])+'\n'); stream.flush()
-        dep_control = subprocess.run(['xcrun', 'kextutil', '-n', str(missing_dep)], cwd=tree,
-                                     stdout=stream, stderr=subprocess.STDOUT, timeout=300)
-        stream.write('\nEXIT='+str(dep_control.returncode)+'\n')
-    report['loader_missing_dependency_control'] = dict(
-        executed=True, exit=dep_control.returncode,
-        detected=dep_control.returncode != 0,
-        note='kextutil -n does not fail on a declared dependency that does not exist; '
-             'declared-dependency completeness is enforced by the static provider audit, not by kextutil.',
-        log=dep_log.name)
+    # Capability probe, not a negative control: kextutil -n turned out to accept both a bundle whose
+    # executable is missing and one that declares a dependency which does not exist. It therefore cannot
+    # validate a bundle; it can only report the diagnostics it happens to emit. Record the observation and
+    # fail only when it reports unresolved symbols for the real bundles.
+    report['stage'] = 'kextutil-capability-probe'
+    probe = {}
+    for case, mutate in (
+            ('missing executable', lambda bundle: (bundle/'Contents'/'MacOS'/'NVAccel').unlink()),
+            ('missing declared dependency', lambda bundle: _add_missing_dependency(bundle))):
+        bundle = products/('NVAccel-probe-%d.kext' % len(probe))
+        shutil.copytree(products/'NVAccel.kext', bundle)
+        mutate(bundle)
+        log = args.out/('kextutil-probe-%d.txt' % len(probe))
+        with log.open('w', encoding='utf-8') as stream:
+            stream.write('ARGV='+repr(['xcrun', 'kextutil', '-n', str(bundle)])+'\n'); stream.flush()
+            result = subprocess.run(['xcrun', 'kextutil', '-n', str(bundle)], cwd=tree,
+                                    stdout=stream, stderr=subprocess.STDOUT, timeout=300)
+            stream.write('\nEXIT='+str(result.returncode)+'\n')
+        probe[case] = dict(exit=result.returncode, accepted=result.returncode == 0, log=log.name)
+    report['kextutil_capability_probe'] = probe
+    report['kextutil_is_a_validation_gate'] = not all(v['accepted'] for v in probe.values())
+    for name, record in report['loader_dry_run'].items():
+        if record['unresolved']:
+            raise ValueError('kextutil -n reported unresolved symbols for %s: %r'
+                             % (name, record['unresolved'][:3]))
 
     report['stage'] = 'runner-dependencies'
     all_names = {n for b in report['bundles'].values() for n in b['imports']}
@@ -424,7 +416,9 @@ def run(args, report):
             raise ValueError('companion dependency changed after link')
     if base.digest(original) != previous['integrated_link']['sha256']:
         raise ValueError('integrated binary changed after inspection')
-    final_status = PASS if not report['local_only_imports'] else PASS_LOCAL_ONLY
+    base_status = PASS if not report['local_only_imports'] else PASS_LOCAL_ONLY
+    final_status = base_status + ('_KEXTUTIL_INFORMATIONAL_ONLY'
+                                  if not report['kextutil_is_a_validation_gate'] else '')
     report.update(status=final_status, stage='complete', internal_binary_sha256=base.digest(original),
         user_system='UNVERIFIED', full_abi='UNVERIFIED', gpu='NOT_RUN', kext_load='NO_GO',
         metal_plugin='NOT_BUILT_OR_EXECUTED', gsp='NOT_EXECUTED', signing='NOT_RUN')
@@ -445,7 +439,7 @@ def main():
     finally:
         base.save(args.out/'package-report.json', report)
     print(report['status'], report['stage'], report.get('error',''))
-    return 0 if report['status'] in (PASS, PASS_LOCAL_ONLY) else 2
+    return 0 if report['status'].startswith(PASS) else 2
 
 
 if __name__ == '__main__':

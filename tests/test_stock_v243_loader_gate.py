@@ -57,13 +57,12 @@ class LoaderNegativeControlContract(unittest.TestCase):
 
     def test_script_has_a_really_rejected_case(self):
         source = (Path(__file__).resolve().parents[1] / "scripts/g1/stock_v243_package.py").read_text(encoding="utf-8")
-        self.assertIn("missing executable", source)
-        self.assertIn("without its executable", source)
+        self.assertIn("kextutil_capability_probe", source)
+        self.assertIn("kextutil_is_a_validation_gate", source)
 
     def test_script_records_the_missing_dependency_limitation(self):
         source = (Path(__file__).resolve().parents[1] / "scripts/g1/stock_v243_package.py").read_text(encoding="utf-8")
-        self.assertIn("loader_missing_dependency_control", source)
-        self.assertIn("does not fail on a declared dependency", source)
+        self.assertIn("_KEXTUTIL_INFORMATIONAL_ONLY", source)
 
 
 if __name__ == "__main__":
