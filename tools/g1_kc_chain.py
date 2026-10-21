@@ -156,7 +156,8 @@ def main():
             if not section:
                 report['classes'].append(dict(class_name=cls, status='VTABLE_OUTSIDE_SECTION'))
                 continue
-            delta = section['offset'] - section['address']
+            # member-relative offset to absolute file position
+            delta = member_fileoff + section['offset'] - section['address']
             slots = []
             for index in range(args.slots):
                 filepos = address + 16 + index * 8 + delta
@@ -172,6 +173,7 @@ def main():
                                   first_byte=decoded['first_byte'], stride=decoded['stride']))
             report['classes'].append(dict(class_name=cls,
                                           status='CHAIN_DECODED' if slots else 'CHAIN_FAILED',
+                                          segments=[{k: s[k] for k in ('page_size','page_count','pointer_format','segment_offset')} for s in starts if s],
                                           slots=slots))
         print(json.dumps(report, indent=1))
 
