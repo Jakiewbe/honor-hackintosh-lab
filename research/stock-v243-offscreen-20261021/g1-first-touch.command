@@ -114,6 +114,11 @@ build_candidate() {
   ensure_repo
   local script="${REPO}/research/stock-v243-offscreen-20261021/device-kextutil.sh"
   [ -f "${script}" ] || die "missing ${script}; run: git -C ${REPO} fetch origin && git -C ${REPO} checkout main"
+  # A repository cloned on Windows can carry CRLF, which makes bash read "pipefail\r" as an option.
+  if LC_ALL=C grep -q $'\r' "${script}" 2>/dev/null; then
+    warn "${script} has CRLF line endings; converting the copy in place"
+    LC_ALL=C sed -i '' $'s/\r$//' "${script}"
+  fi
   local sdk
   sdk="$(xcrun --show-sdk-version 2>/dev/null || echo missing)"
   printf 'SDK: %s\n' "${sdk}"
