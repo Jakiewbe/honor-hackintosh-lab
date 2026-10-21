@@ -145,6 +145,10 @@ def main():
         names = symbols(raw, member)
         report = dict(collection=args.collection, bundle=args.bundle, member_fileoff=member_fileoff,
                       pointer_formats=sorted({s['pointer_format'] for s in starts if s}),
+                      member_segments=[{k: s[k] for k in ('name','vmaddr','vmsize','fileoff','filesize')}
+                                       for s in member['segments']],
+                      chain_segments=[{k: s[k] for k in ('segment_offset','page_size','page_count')}
+                                      for s in starts if s],
                       classes=[])
         for cls in args.classes:
             mangled = '__ZTV%d%s' % (len(cls), cls)
@@ -153,6 +157,8 @@ def main():
                 report['classes'].append(dict(class_name=cls, status='VTABLE_SYMBOL_ABSENT'))
                 continue
             section = next((s for s in member['sections'] if s['address'] <= address < s['address'] + s['size']), None)
+            vtable_section = dict(name=section['name'], segment=section['segment'], address=hex(section['address']),
+                                  offset=section['offset'], size=section['size']) if section else None
             if not section:
                 report['classes'].append(dict(class_name=cls, status='VTABLE_OUTSIDE_SECTION'))
                 continue
@@ -171,9 +177,8 @@ def main():
                 slots.append(dict(slot=index, target=hex(decoded['target']),
                                   symbol=names.get(decoded['target'], 'UNRESOLVED'),
                                   first_byte=decoded['first_byte'], stride=decoded['stride']))
-            report['classes'].append(dict(class_name=cls,
+            report['classes'].append(dict(class_name=cls, vtable=hex(address), vtable_section=vtable_section,
                                           status='CHAIN_DECODED' if slots else 'CHAIN_FAILED',
-                                          segments=[{k: s[k] for k in ('page_size','page_count','pointer_format','segment_offset')} for s in starts if s],
                                           slots=slots))
         print(json.dumps(report, indent=1))
 
