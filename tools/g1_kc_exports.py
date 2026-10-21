@@ -73,16 +73,25 @@ def main():
     parser.add_argument('--names', help='JSON file with a list of symbol names to look up')
     parser.add_argument('--controls', default='', help='comma-separated names that must be ABSENT')
     parser.add_argument('--require', default='', help='comma-separated names that must be PRESENT')
+    parser.add_argument('--plain', action='store_true', help='treat the input as a standalone Mach-O')
     args = parser.parse_args()
 
     with open(args.collection, 'rb') as file, mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_READ) as raw:
         outer = kc.header(raw)
-        if outer['filetype'] != 12:
-            raise SystemExit('not a MH_FILESET collection')
-        entries = [e for e in outer['entries'] if e['id'] == args.bundle]
-        if len(entries) != 1:
-            raise SystemExit('expected one fileset entry for %s' % args.bundle)
-        member = kc.header(raw, entries[0]['fileoff'])
+        if getattr(args, 'plain', False):
+            # Positive control path: a standalone Mach-O (the kernel) whose export trie is known to exist.
+            if outer['filetype'] not in (2, 6):
+                raise SystemExit('not a standalone Mach-O executable')
+            member = outer
+            member_fileoff = 0
+        else:
+            if outer['filetype'] != 12:
+                raise SystemExit('not a MH_FILESET collection')
+            entries = [e for e in outer['entries'] if e['id'] == args.bundle]
+            if len(entries) != 1:
+                raise SystemExit('expected one fileset entry for %s' % args.bundle)
+            member_fileoff = entries[0]['fileoff']
+            member = kc.header(raw, member_fileoff)
         command_ids = sorted({int(c['cmd'], 16) for c in member['load_commands']})
         export_commands = []
         for command in member['load_commands']:
@@ -100,7 +109,7 @@ def main():
                     for s in member['sections'] if s['name'] in ('__symbolsets', '__info_plist',
                                                                  '__kmod', '__constants')]
         report = dict(collection=args.collection, bundle=args.bundle,
-                      member_fileoff=entries[0]['fileoff'],
+                      member_fileoff=member_fileoff,
                       load_command_ids=['0x%x' % c for c in command_ids],
                       export_commands=export_commands,
                       linkinfo_sections=sections,
