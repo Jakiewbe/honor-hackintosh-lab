@@ -1,0 +1,53 @@
+name: HONOR G1 Metal offscreen validator compile only
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  compile:
+    runs-on: macos-15-intel
+    timeout-minutes: 10
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Compile public Metal API validator without executing
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$(uname -m)" == x86_64 ]]
+          [[ "$(xcrun --show-sdk-version)" == 15.5 ]]
+          mkdir "$RUNNER_TEMP/validator-text"
+          out="$RUNNER_TEMP/validator-text"
+          src=research/stock-v243-offscreen-20261021/metal-offscreen.m
+          binary="$RUNNER_TEMP/metal-offscreen"
+          test ! -e "$binary"
+          xcrun clang --version > "$out/clang.txt"
+          xcodebuild -version > "$out/xcode.txt"
+          shasum -a 256 "$src" > "$out/source-sha256.txt"
+          set +e
+          xcrun clang -arch x86_64 -mmacosx-version-min=15.5 -fobjc-arc -fblocks -O1 \
+            -Wall -Wextra -Werror -Werror=unguarded-availability-new \
+            "$src" -framework Foundation -framework Metal -framework IOKit -framework CoreFoundation \
+            -o "$binary" > "$out/compile.txt" 2>&1
+          code=$?
+          set -e
+          printf 'exit=%s\n' "$code" > "$out/result.txt"
+          printf 'program_executed=NO\ngpu_executed=NO\ndevice=NO_GO\n' >> "$out/result.txt"
+          if [[ "$code" != 0 ]]; then cat "$out/compile.txt"; exit "$code"; fi
+          test -s "$binary"
+          file "$binary" > "$out/file.txt"
+          shasum -a 256 "$binary" > "$out/binary-sha256.txt"
+          xcrun otool -l "$binary" > "$out/load-commands.txt"
+          xcrun otool -L "$binary" > "$out/libraries.txt"
+          # No binary invocation, signing, installation, driver loading or GPU APIs.
+      - name: Upload text diagnostics only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g1-metal-offscreen-compile-text
+          path: ${{ runner.temp }}/validator-text/
+          if-no-files-found: error
+          retention-days: 14
