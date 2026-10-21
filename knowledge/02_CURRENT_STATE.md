@@ -1,3 +1,5 @@
+> **2026-10-21 下一层：三个内核组件静态整包验收**。新增 NVRMFB/NVAccel 独立编译链接、KMOD/plist/部署目标和已声明提供者版本检查；85项本地检查通过。既有内部链接与候选固定不变，新 Darwin 门禁未执行；关闭/PM、用户态及设备仍未验收，NO-GO。见[方案与证据](../research/stock-v243-once-20261021/PACKAGE-20261021.md)。
+
 > **2026-10-21 内部链接集成已原生验收**：run [39531652222](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39531652222) / `3e383c5` success；1055 RM、12 NVRM、225 modeset对象，配对归档及真实NVLink后端链接通过。同run导入 **493→481→478**，12+4内部接口全部消除并有最终定义，仅新增已登记`_panic`；实际ARGV差分、归档225对象及`__.SYMDEF`元数据已复算。最终17528944 B，SHA256 `b873afbe…`。478项仍为470历史KPI+定义/8家族名单，loader/完整ABI、用户设备及关闭安全未验收；GPU未执行，设备NO-GO。本地/CI76项通过，未签名/安装/加载，不改.agent。见[真实结果与下一断点](../research/stock-v243-once-20261021/INTERNAL-LINK-20261021.md)。
 
 > **2026-10-21 修复后原生验收通过**：run [39526958107](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39526958107) / `6c8783b`：对象目标make=0，1055/1055 RM、12/12 NVRM对象，真实编译/链接失败负控均拒绝且无旧产物；链接exit0，16185000 B，SHA256 `562b365a…`。493导入中的12 NVKMS和4 NVLink OS接口仍待集成；未加载或执行GPU，设备NO-GO。另撤回“cancel无法清除RESCHEDULE”的旧推断：固定XNU L1347–1352明确清除并返回true，文档与模型已纠正。详情见 [修复与证据](../research/stock-v243-once-20261021/GATE-REPAIR-20261021.md)。
