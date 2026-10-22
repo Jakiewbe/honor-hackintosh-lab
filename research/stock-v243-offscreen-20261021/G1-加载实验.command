@@ -60,6 +60,8 @@ status() {
   fi
   printf '备份目录: %s\n' "${BACKUP:-（尚未备份）}"
   printf '阶段: %s\n' "${STAGE_NAME:-未开始}"
+  printf '\n已安装的 KDK:\n'
+  ls -1 /Library/Developer/KDKs 2>/dev/null || echo '  （无 —— 没有 KDK 就无法重建内核集合）'
   printf '\n当前已加载的 NV kext:\n'
   kextstat | grep -Ei 'NVRM|NVAccel|NVRMFB' || echo '  （无）'
   printf '\nboot-args:\n'
@@ -127,9 +129,24 @@ do_install() {
     *) sudo nvram boot-args="${current} -nvrmnogo" ;;
   esac
   sudo kmutil install --update-all 2>&1 | tee "$BACKUP/kmutil-install.txt"
+  local rc=$?
+  if [ "$rc" -ne 0 ] || grep -q 'Missing Developer Kit' "$BACKUP/kmutil-install.txt" 2>/dev/null; then
+    STAGE_NAME="install-failed"
+    save_state
+    bad "内核集合没有重建成功，这次安装不生效（rc=$rc）"
+    if grep -q 'Missing Developer Kit' "$BACKUP/kmutil-install.txt" 2>/dev/null; then
+      printf '原因：缺 KDK（Kernel Debug Kit）。macOS 13 起重建内核集合必须有与当前 build 匹配的 KDK。\n'
+      printf '当前 build: %s\n' "$(sw_vers -buildVersion)"
+      printf '已安装的 KDK:\n'
+      ls -1 /Library/Developer/KDKs 2>/dev/null || echo '  （无）'
+      printf '\n处理：把对应 build 的 KDK 从别的机器拷进 U 盘装上，再重跑本脚本；\n'
+      printf '或者先撤销这次改动：bash G1-加载实验.command rollback\n'
+    fi
+    exit 3
+  fi
   STAGE_NAME="install-done"
   save_state
-  say "安装完成。现在重启，然后运行：bash G1-加载实验.command verify"
+  say "安装完成（内核集合已重建）。现在重启，然后运行：bash G1-加载实验.command verify"
 }
 
 do_verify() {
