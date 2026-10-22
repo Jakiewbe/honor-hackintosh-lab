@@ -39,21 +39,52 @@ done
 [ -n "$NM_SRC" ] && echo "pre-staged NullMoth: $NM_SRC"
 [ -n "$NV_SRC" ] && echo "pre-staged OGKM:     $NV_SRC"
 
-# gmake is only needed because the OGKM makefiles use GNU make 4 syntax. Without network, fall back to
-# the system make and say so; a syntax error later will name the reason.
-if ! command -v gmake >/dev/null; then
-  if command -v make >/dev/null; then
+# The OGKM makefiles want GNU make 4. Homebrew needs a network, so when no gmake 4 is present build one
+# from the tarball carried on the stick. Only if that tarball is missing fall back to the system make.
+need_gmake=1
+if command -v gmake >/dev/null && gmake --version 2>/dev/null | head -1 | grep -q 'GNU Make 4'; then
+  need_gmake=0
+fi
+if [ "$need_gmake" = 1 ]; then
+  tarball=""
+  for base in "$HERE/g1-tools" "$HERE/../g1-tools" "$HOME/Desktop/HONOR-G1-FIRST-TOUCH/g1-tools" \
+              /Volumes/*/g1-tools /Volumes/*/HONOR-G1-FIRST-TOUCH/g1-tools; do
+    if [ -z "$tarball" ] && [ -f "$base/make-4.4.1.tar.gz" ]; then
+      tarball="$base/make-4.4.1.tar.gz"
+    fi
+  done
+  if [ -n "$tarball" ]; then
+    echo "building GNU make 4.4.1 from $tarball (offline, about 1-2 min)"
+    mkdir -p "$WORK/tools"
+    rm -rf "$WORK/tools/make-4.4.1"
+    tar -xzf "$tarball" -C "$WORK/tools" || { echo "STOP: cannot unpack $tarball"; exit 2; }
+    (
+      cd "$WORK/tools/make-4.4.1" &&
+      ./configure --prefix="$WORK/tools/make" >"$WORK/tools/make-configure.log" 2>&1 &&
+      make -j4 >"$WORK/tools/make-build.log" 2>&1 &&
+      make install >>"$WORK/tools/make-build.log" 2>&1
+    ) || { echo "STOP: building GNU make failed; see $WORK/tools/make-build.log"; exit 2; }
+    export PATH="$WORK/tools/make/bin:$PATH"
+    echo "gmake: $("$WORK/tools/make/bin/gmake" --version | head -1)"
+  elif command -v make >/dev/null; then
     mkdir -p "$WORK/bin"
     ln -sf "$(command -v make)" "$WORK/bin/gmake"
     export PATH="$WORK/bin:$PATH"
-    echo "WARN: gmake missing, using $(make --version | head -1) via a shim"
+    echo "WARN: no gmake 4 and no bundled source; using $(make --version | head -1) via a shim"
   else
-    echo "STOP: need gmake (brew install make) or make"; exit 2
+    echo "STOP: need gmake 4 (brew install make) or the bundled make-4.4.1.tar.gz"; exit 2
   fi
 fi
 
+
 fetch() {
-  local name=$1 url=$2 pin=$3 dir=$WORK/$name pre=""
+  # bash 3.2 declares every name in one `local` before assigning any of them, so a later assignment in
+  # the same statement cannot read an earlier one under `set -u`. Keep them separate.
+  local name="$1"
+  local url="$2"
+  local pin="$3"
+  local dir="${WORK}/${name}"
+  local pre=""
   case "$name" in
     nm) pre="$NM_SRC" ;;
     nv) pre="$NV_SRC" ;;
