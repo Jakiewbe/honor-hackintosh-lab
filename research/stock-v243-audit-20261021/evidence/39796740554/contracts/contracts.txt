@@ -1,0 +1,21 @@
+test_all_failed_preconditions_block_the_real_build_entry (test_stock_v243_offline.OfflineContracts) ... ok
+test_command_nonzero_with_empty_stdout_is_not_clean (test_stock_v243_offline.OfflineContracts) ... ok
+test_crlf_entry_and_patch_hash_corruption_rejected (test_stock_v243_offline.OfflineContracts) ... ok
+test_disk_empty_or_insufficient_is_failed (test_stock_v243_offline.OfflineContracts) ... ok
+test_gnu_archive_hash_and_path_or_link_controls (test_stock_v243_offline.OfflineContracts) ... ok
+test_make4_needs_no_archive_old_make_cannot_be_shimmed (test_stock_v243_offline.OfflineContracts) ... ok
+test_missing_tools_empty_sdk_and_command_errors_rejected (test_stock_v243_offline.OfflineContracts) ... ok
+test_preflight_is_readonly_and_has_stable_14_checks (test_stock_v243_offline.OfflineContracts) ... ok
+test_python39_report_save_and_exception_report (test_stock_v243_offline.OfflineContracts) ... ok
+test_repeat_build_uses_fresh_sessions_and_failure_report_survives (test_stock_v243_offline.OfflineContracts) ... ok
+test_sdk_version_cannot_be_waived (test_stock_v243_offline.OfflineContracts) ... ok
+test_shell_menu_direct_entry_and_install_cannot_bypass_gate (test_stock_v243_offline.OfflineContracts) ... ok
+test_tracked_input_change_and_untracked_file_rejected (test_stock_v243_offline.OfflineContracts) ... ok
+test_unowned_overlap_or_input_ancestor_work_rejected_without_deletion (test_stock_v243_offline.OfflineContracts) ... ok
+test_work_symlink_and_managed_marker_symlink_rejected (test_stock_v243_offline.OfflineContracts) ... ok
+test_wrong_or_missing_expected_commit_and_dirty_repo_rejected (test_stock_v243_offline.OfflineContracts) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 24.959s
+
+OK

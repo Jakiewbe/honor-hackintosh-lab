@@ -1,0 +1,37 @@
+{
+  "run_id": 39796740554,
+  "commit": "2473ae6df2cd784ff78c58d041922c8f9c1f10a4",
+  "event": "workflow_dispatch",
+  "scope": "NATIVE_TOOL_CONTRACTS_ONLY",
+  "full_device_build": "NOT_RUN",
+  "load": "NO_GO",
+  "gpu": "NOT_RUN",
+  "environment": "Python 3.9.25 / GNU bash 3.2.57 (x86_64-apple-darwin24)",
+  "results": {
+    "contracts": "16 tests OK",
+    "wrapper": "10 tests OK, no skips",
+    "regression": "128 tests OK"
+  },
+  "members": {
+    "environment.txt": {
+      "bytes": 124,
+      "sha256": "f7e4770c61292dcadb5a1924ad8cbc5e08741ad7db6bc721d6cd79a8d3023c8c"
+    },
+    "regression.txt": {
+      "bytes": 12681,
+      "sha256": "e4449853aa13b60fdbcf753de2232f0e472ce91cc8a3f283ab25d5f6cdd7f794"
+    },
+    "source-binding.json": {
+      "bytes": 15686,
+      "sha256": "7e31318fc02dcab76008dffc03b1e492cbb52a64abfef9f8ee9c1a7dc51f9bfb"
+    },
+    "contracts.txt": {
+      "bytes": 1761,
+      "sha256": "1714b0481631f13cb9179b2cfb2b93550c4f69d3a014906e122233a7b4b0616d"
+    },
+    "wrapper.txt": {
+      "bytes": 1049,
+      "sha256": "cd91e821cbb4280537444bf94c9ae1d40731b0978fce134134494f2903c319b0"
+    }
+  }
+}

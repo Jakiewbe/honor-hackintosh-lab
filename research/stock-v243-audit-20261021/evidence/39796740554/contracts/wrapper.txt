@@ -1,0 +1,15 @@
+test_build_json_without_artifacts_is_failure (test_g1_oneclick_wrapper.OneClickFailClosed) ... ok
+test_full_pass_offers_build_and_quit_is_zero (test_g1_oneclick_wrapper.OneClickFailClosed) ... ok
+test_malformed_expected_commit_stops (test_g1_oneclick_wrapper.OneClickFailClosed) ... ok
+test_missing_expected_commit_file_stops (test_g1_oneclick_wrapper.OneClickFailClosed) ... ok
+test_nonzero_exit_with_pass_json_is_failure (test_g1_oneclick_wrapper.OneClickFailClosed) ... ok
+test_partial_check_list_is_failure (test_g1_oneclick_wrapper.OneClickFailClosed) ... ok
+test_repo_commit_binding_in_json_is_required (test_g1_oneclick_wrapper.OneClickFailClosed) ... ok
+test_repo_head_mismatch_stops (test_g1_oneclick_wrapper.OneClickFailClosed) ... ok
+test_zero_exit_with_failed_json_is_failure (test_g1_oneclick_wrapper.OneClickFailClosed) ... ok
+test_tracked_metadata_survives_and_untracked_is_removed (test_g1_oneclick_wrapper.WrapperScrubScope) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 11.292s
+
+OK
