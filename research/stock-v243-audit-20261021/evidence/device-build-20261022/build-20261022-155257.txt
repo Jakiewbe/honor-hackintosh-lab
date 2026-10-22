@@ -1,0 +1,121 @@
+{
+  "status": "PASS_COMPILE_LINK_ONLY_NOT_LOAD_OR_GPU",
+  "checks": [
+    {
+      "id": "host-os",
+      "status": "PASS",
+      "detail": "Darwin"
+    },
+    {
+      "id": "host-arch",
+      "status": "PASS",
+      "detail": "x86_64"
+    },
+    {
+      "id": "python",
+      "status": "PASS",
+      "detail": true
+    },
+    {
+      "id": "developer-tools",
+      "status": "PASS",
+      "detail": {
+        "developer": "/Library/Developer/CommandLineTools",
+        "sdk": "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk"
+      }
+    },
+    {
+      "id": "sdk",
+      "status": "PASS",
+      "detail": "15.5"
+    },
+    {
+      "id": "clang",
+      "status": "PASS",
+      "detail": "Apple clang version 17.0.0 (clang-1700.0.13.5)\nTarget: x86_64-apple-darwin24.6.0\nThread model: posix\nInstalledDir: /Library/Developer/CommandLineTools/usr/bin"
+    },
+    {
+      "id": "repository",
+      "status": "PASS",
+      "detail": {
+        "path": "/Users/chs/Desktop/HONOR-G1-FIRST-TOUCH/g1-repo",
+        "commit": "1cf61667b1046831033a77f4d64df045f1796f63"
+      }
+    },
+    {
+      "id": "nullmoth",
+      "status": "PASS",
+      "detail": {
+        "path": "/Users/chs/Desktop/HONOR-G1-FIRST-TOUCH/g1-src/nm",
+        "commit": "272ccd9da04ff5de95c2791b902fe17a3fa77ce7"
+      }
+    },
+    {
+      "id": "ogkm",
+      "status": "PASS",
+      "detail": {
+        "path": "/Users/chs/Desktop/HONOR-G1-FIRST-TOUCH/g1-src/nv",
+        "commit": "e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb"
+      }
+    },
+    {
+      "id": "shell-lf",
+      "status": "PASS",
+      "detail": [
+        "research/stock-v243-offscreen-20261021/g1-first-touch.command",
+        "research/stock-v243-offscreen-20261021/device-kextutil.sh",
+        "research/stock-v243-offscreen-20261021/first-touch.sh"
+      ]
+    },
+    {
+      "id": "assets",
+      "status": "PASS",
+      "detail": "candidate patches match locks"
+    },
+    {
+      "id": "gnu-make",
+      "status": "PASS",
+      "detail": {
+        "archive": "/Users/chs/Desktop/HONOR-G1-FIRST-TOUCH/g1-tools/make-4.4.1.tar.gz",
+        "sha256": "dd16fb1d67bfab79a72f5e8390735c49e3e8e70b4945a15ab1f81ddb78658fb3"
+      }
+    },
+    {
+      "id": "workspace",
+      "status": "PASS",
+      "detail": "/Users/chs/Desktop/g1-runs/20261022-155257"
+    },
+    {
+      "id": "disk-space",
+      "status": "PASS",
+      "detail": 445799211008
+    }
+  ],
+  "check_count": 14,
+  "selected_make": {
+    "archive": "/Users/chs/Desktop/HONOR-G1-FIRST-TOUCH/g1-tools/make-4.4.1.tar.gz",
+    "sha256": "dd16fb1d67bfab79a72f5e8390735c49e3e8e70b4945a15ab1f81ddb78658fb3"
+  },
+  "repo_commit": "1cf61667b1046831033a77f4d64df045f1796f63",
+  "python": "3.9.6 (default, Apr 30 2025, 02:07:18) \n[Clang 17.0.0 (clang-1700.0.13.5)]",
+  "entry_sha256": "c8fd267fef57d08d2e407cd2e90624df9c0967743788e99e27cfe8bfa6515eb6",
+  "device": "NO_GO",
+  "gpu": "NOT_RUN",
+  "stage": "complete",
+  "session": "/Users/chs/Desktop/g1-runs/20261022-155257/run-uxzvi9p8",
+  "artifacts": {
+    "NVRM": {
+      "sha256": "4a38ea572e3b66e39e6a2ce62e7e74701c4a092a6a83b9e7f5a862dcd4711eba",
+      "plist_sha256": "934914c01b15ad266fa4ff2f62e03671e2bc6849660564710bbebfc429ac91b6"
+    },
+    "NVRMFB": {
+      "sha256": "93617dc41855ba4a6f828b0567c83ab9a0b45cb20f0c14a3bedd789ee242e70d",
+      "plist_sha256": "151db446df07fd3043038332f6fd080e8065d4118c285f6a6dcbc0d4dc8b9a1c"
+    },
+    "NVAccel": {
+      "sha256": "04b13d7f38710bd61a189b3c2ca1c417bfb081c86cf16f95856f976cdb959884",
+      "plist_sha256": "bc0a5ab6303e1ac0dd2b3f613fba6bd6223cdf087eab5e5cf0a1b0465dc53df2"
+    }
+  },
+  "package_report_sha256": "4687028099326e534a2f58d72a2ad5a83f478bd945b820c11ab84157fc85fe8b"
+}

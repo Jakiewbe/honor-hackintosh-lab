@@ -1,0 +1,52 @@
+{
+  "origin": "GLO-FX6P target machine, offline",
+  "delivered_commit": "1cf61667b1046831033a77f4d64df045f1796f63",
+  "host": {
+    "model": "unknown",
+    "python": "3.9.6",
+    "clang": "Apple clang 17.0.0 (clang-1700.0.13.5)",
+    "developer_tools": "/Library/Developer/CommandLineTools",
+    "sdk": "15.5",
+    "bash": "3.2.57 (preflight runner)"
+  },
+  "preflight": {
+    "status": "PASS",
+    "checks": 14,
+    "workspace": "/Users/chs/Desktop/g1-runs/20261022-155257"
+  },
+  "build": {
+    "status": "PASS_COMPILE_LINK_ONLY_NOT_LOAD_OR_GPU",
+    "artifacts": {
+      "NVRM": "4a38ea572e3b66e39e6a2ce62e7e74701c4a092a6a83b9e7f5a862dcd4711eba",
+      "NVRMFB": "93617dc41855ba4a6f828b0567c83ab9a0b45cb20f0c14a3bedd789ee242e70d",
+      "NVAccel": "04b13d7f38710bd61a189b3c2ca1c417bfb081c86cf16f95856f976cdb959884"
+    },
+    "package_report_sha256": "4687028099326e534a2f58d72a2ad5a83f478bd945b820c11ab84157fc85fe8b",
+    "session": "/Users/chs/Desktop/g1-runs/20261022-155257/run-uxzvi9p8"
+  },
+  "nvrm_reproducibility": {
+    "observed": [
+      "7d109e417548c1237e696adc823f55f2afdd1a2e7aa83de625e976e65bcfc257",
+      "b0e20deb11ec836311d324f153508be215e54c1690d757496f935d8fc48d5fe6",
+      "4a38ea572e3b66e39e6a2ce62e7e74701c4a092a6a83b9e7f5a862dcd4711eba"
+    ],
+    "stable": [
+      "NVRMFB 93617dc4...",
+      "NVAccel 04b13d7f..."
+    ],
+    "conclusion": "NVRM bytes differ between hosts; the hash binds one build, not a source state"
+  },
+  "scope": "COMPILE_LINK_ONLY",
+  "load": "NO_GO",
+  "gpu": "NOT_RUN",
+  "members": {
+    "preflight-20261022-155257.json": {
+      "bytes": 2848,
+      "sha256": "8ffec93ffb98c00b99bcd7956d852f5f68bf7562b22b3dc6f91d2206f2eab4f6"
+    },
+    "build-20261022-155257.txt": {
+      "bytes": 3680,
+      "sha256": "1867fd263bdc581e40f611d67b3279680615d8591f90d013550f11f8b575a665"
+    }
+  }
+}
