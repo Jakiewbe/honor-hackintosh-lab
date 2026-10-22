@@ -108,7 +108,11 @@ do_install() {
   say "安装（只装 NVRM，加 -nvrmnogo）"
   CANDIDATE="$(find_candidate)"
   [ -n "${CANDIDATE:-}" ] || { bad "没找到候选 NVRM.kext，先完成一次构建"; exit 2; }
-  [ -f "$BACKUP/kextstat-before.txt" ] || { bad "还没备份，先跑 backup"; exit 2; }
+  # 一键：没有备份就先自动备份，而不是让用户再记一条命令。
+  if [ ! -f "$BACKUP/kextstat-before.txt" ]; then
+    say "还没有备份，先自动备份"
+    do_backup
+  fi
   printf '候选: %s\n' "$CANDIDATE"
   printf '将执行: 替换 /Library/Extensions/NVRM.kext、追加 -nvrmnogo、重建内核集合\n'
   [ "$(ask '输入 INSTALL 继续:')" = "INSTALL" ] || { bad "已取消"; exit 1; }
@@ -143,11 +147,26 @@ do_verify() {
     STAGE_NAME="verify-pass"
     save_state
     say "NVRM 已加载且 auto-go 关闭。GPU 仍未初始化、未执行任何计算。"
+    VERDICT="PASS_LOADED_AUTOGO_OFF"
   else
     STAGE_NAME="verify-failed"
     save_state
     bad "未满足判据；不要继续，直接 rollback"
+    VERDICT="FAILED_NOT_LOADED"
   fi
+  {
+    printf '{\n'
+    printf '  "verdict": "%s",\n' "$VERDICT"
+    printf '  "loaded_nvrm": %s,\n' "$loaded"
+    printf '  "nvrm_autogo_property": %s,\n' "$nogo"
+    printf '  "candidate": "%s",\n' "${CANDIDATE:-unknown}"
+    printf '  "backup": "%s",\n' "$BACKUP"
+    printf '  "delivered_commit": "%s",\n' "$DELIVERED_COMMIT"
+    printf '  "gpu": "NOT_RUN",\n'
+    printf '  "scope": "KEXT_LOAD_ONLY"\n'
+    printf '}\n'
+  } > "$BACKUP/result.json"
+  printf '结果: %s\n' "$BACKUP/result.json"
 }
 
 do_rollback() {
@@ -181,7 +200,7 @@ case "$STAGE" in
   status)   status ;;
   plan)     plan ;;
   backup)   do_backup ;;
-  install)  do_install ;;
+  install|go) do_install ;;
   verify)   do_verify ;;
   rollback) do_rollback ;;
   *)
