@@ -37,6 +37,7 @@ jobs:
           out.write_text(json.dumps(data,indent=2),encoding='utf-8')
           PY
           python -m unittest discover -s tests -p 'test_stock_v243_offline.py' -v > "$RUNNER_TEMP/offline-contract-text/contracts.txt" 2>&1
+          python -m unittest discover -s tests -p 'test_g1_oneclick_wrapper.py' -v > "$RUNNER_TEMP/offline-contract-text/wrapper.txt" 2>&1
           python -m unittest discover -s tests -p 'test_stock_v24*.py' -v > "$RUNNER_TEMP/offline-contract-text/regression.txt" 2>&1
       - uses: actions/upload-artifact@v4
         if: always()
