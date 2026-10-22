@@ -10,3 +10,7 @@ research/stock-v243-pm-20261021/native-evidence/** -text
 research/stock-v243-offscreen-20261021/native-evidence/** -text
 
 research/stock-v243-audit-20261021/evidence/** -text
+
+# Finder/bash entries must be executable as LF files on a transported checkout.
+research/stock-v243-offscreen-20261021/*.sh text eol=lf
+research/stock-v243-offscreen-20261021/*.command text eol=lf

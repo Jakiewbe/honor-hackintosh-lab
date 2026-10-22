@@ -12,8 +12,11 @@ It reports, for one fileset member:
 Read-only. It never loads anything and never treats a missing trie as a pass.
 """
 import argparse
+import hashlib
 import json
 import mmap
+import os
+from pathlib import Path
 import struct
 import sys
 
@@ -119,6 +122,9 @@ def main():
                     for s in member['sections'] if s['name'] in ('__symbolsets', '__info_plist',
                                                                  '__kmod', '__constants')]
         report = dict(collection=args.collection, bundle=args.bundle,
+                      collection_sha256=hashlib.sha256(raw).hexdigest(),
+                      member_uuid=member['uuid'], source_commit=os.environ.get('GITHUB_SHA'),
+                      parser_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                       member_fileoff=member_fileoff,
                       load_command_ids=['0x%x' % c for c in command_ids],
                       export_commands=export_commands,
@@ -141,7 +147,8 @@ def main():
             report['trie_names'] = len(found)
             report['trie_sample'] = sorted(found)[:5]
         def hit(name):
-            return name in found or name.lstrip('_') in found or ('_' + name) in found
+            # Requested Mach-O symbols are exact. Only bare C control names get the ABI prefix.
+            return (name if name.startswith('_') else '_'+name) in found
 
         for name in names:
             report['requested'][name] = hit(name)
@@ -153,7 +160,14 @@ def main():
         report['verdict'] = (
             'EXPORT_TRIE_ABSENT_NOT_OBSERVABLE' if not report['trie_present'] else
             'EXPORT_TRIE_PRESENT')
+        failed = (any('error' in e for e in export_commands) or
+                  not all(report['required'].values()) or any(report['controls'].values()))
+        report['controls_passed'] = not failed
+        report['external_runtime_resolution'] = 'UNVERIFIED'
+        if failed:
+            report['verdict'] = 'FAILED_PARSE_OR_REQUIRED_CONTROLS'
         print(json.dumps(report, indent=1))
+        return 2 if failed else 0
 
 
 if __name__ == '__main__':

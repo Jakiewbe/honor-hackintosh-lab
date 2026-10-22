@@ -122,7 +122,8 @@ def cpu_contract(tree, candidate, out, compiler):
     for role, source in (('baseline',tree),('candidate',candidate)):
         text = (source/'kexts/NVRM/NVRM.cpp').read_text()
         src=out/(role+'-cpu.cpp'); obj=products/(role+'-cpu')
-        src.write_text(harness(function(text)), encoding='utf-8', newline='\n')
+        with src.open('w', encoding='utf-8', newline='\n') as stream:
+            stream.write(harness(function(text)))
         obj.unlink(missing_ok=True)
         base.checked_run([*compiler,'-std=c++17','-O1','-g','-fsanitize=address,undefined',src,'-o',obj],out,out/(role+'-cpu-compile.txt'))
         rc=base.run([obj],out,out/(role+'-cpu-result.txt'))

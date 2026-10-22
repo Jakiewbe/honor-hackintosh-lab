@@ -32,7 +32,9 @@ def digest(path):
 
 
 def save(path, value):
-    path.write_text(json.dumps(value, indent=2) + '\n', encoding='utf-8', newline='\n')
+    # Path.write_text(newline=...) needs Python >=3.10; CLT ships Python 3.9.
+    with path.open('w', encoding='utf-8', newline='\n') as stream:
+        stream.write(json.dumps(value, indent=2) + '\n')
 
 
 def output(argv, cwd=None, missing_ok=False):

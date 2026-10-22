@@ -45,8 +45,13 @@ def run(argv, cwd, log):
     return r.returncode
 
 
-def output(argv, cwd=None):
-    return subprocess.check_output(list(map(str, argv)), cwd=cwd, text=True).strip()
+def output(argv, cwd=None, missing_ok=False):
+    try:
+        return subprocess.check_output(list(map(str, argv)), cwd=cwd, text=True).strip()
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        if missing_ok:
+            return ''
+        raise
 
 
 def parse_diagnostics(text):
@@ -423,7 +428,7 @@ def main():
             if output(['git', '-C', tree, 'status', '--porcelain', '--untracked-files=no']):
                 raise ValueError(name + ' tracked source has local changes')
         report['toolchain'] = dict(clang=output(['xcrun', 'clang++', '--version']),
-            xcode=output(['xcodebuild', '-version']), system=output(['sw_vers']),
+            xcode=output(['xcodebuild', '-version'], missing_ok=True) or 'xcodebuild absent (CLT only)', system=output(['sw_vers']),
             sdk=output(['xcrun', '--show-sdk-path']), sdk_version=output(['xcrun', '--show-sdk-version']))
         khdr = Path(report['toolchain']['sdk']) / 'System/Library/Frameworks/Kernel.framework/Headers'
         if not (khdr / 'IOKit/IOService.h').is_file(): raise ValueError('Kernel.framework headers missing')

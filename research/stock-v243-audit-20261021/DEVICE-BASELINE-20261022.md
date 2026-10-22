@@ -1,3 +1,8 @@
+> **2026-10-22 独立审计更正**：以下设备数据来自既有备份/记录，不能扩大为完整ABI或恢复验收。
+> 原安装与回退入口已禁用，Recovery稿已撤回。-nvrmnogo判断前可调用placeLargeBar1并写PCI/BAR/Root Port配置，
+> 只抑制自动autoGo，不能称只读或零初始化。27名称未见所查导出形式，不代表运行时必然不可用。
+> 本轮不执行设备操作；LOAD NO-GO / GPU NOT RUN。最新构建整改见[AUDIT-RESULT](AUDIT-RESULT-20261022.md)。
+
 # 设备基线（GLO-FX6P，2026-10-22 备份）
 
 来源：用户在真机执行 `first-touch.sh backup`，把 `~/Desktop/g1-first-touch` 拷到 `F:\g1-first-touch`。
@@ -47,8 +52,8 @@
 
 **这意味着：**
 
-- 首次接触实验没有"发行版 NVRM"可作回退；回退方式是**删除候选**，而不是恢复旧包。
-  `first-touch.sh` 已按此修正（备份时记录 `nvrm-was-installed.txt`，回退时按情况处理）。
+- 首次接触实验没有"发行版 NVRM"可作回退；候选删除只是恢复设计的一部分，不能称完整回退。
+  旧`first-touch.sh`的删除/安装路径已撤回；没有恢复验收。
 - 装上去的三个 kext 会是系统上第一次出现的 NullMoth 驱动。
 
 ## 5. 安全策略与 boot-args
@@ -66,16 +71,15 @@ boot-args  -v debug=0x100 keepsyms=1 -vi2c-force-polling ctrsmt=full nvfb=1 nvac
            ipc_control_port_options=0 cpus=8
 ```
 
-`nvfb=1 nvaccel=1 nvfbheads=4 -nvkmsnosmooth` 已经是为这套驱动准备的；首次接触只需在其后追加 `-nvrmnogo`，
-回退时还原为上面这串原文。
+`nvfb=1 nvaccel=1 nvfbheads=4 -nvkmsnosmooth` 已经是为这套驱动准备的；这些是历史环境记录，不是追加、还原或修改boot-args的操作指令。
 
 ## 6. 对首次接触实验的影响
 
 | 项 | 状态 |
 |---|---|
-| 回退方式 | 改为"删除候选"，已修脚本 |
+| 回退方式 | 未验收；安装/删除/回退入口均已禁用 |
 | ABI 槽位证据 | ✅ 设备绑定，与 CI 一致 |
-| 27 项导出 | ⛔ 设备上同样不可观测（结构如此） |
+| 27 项导出 | 所查成员nlist无N_EXT、所查trie未见；其他机制及运行时解析未知 |
 | 设备 KC 哈希 | 已记录，可作为实验前后的对照 |
 | 仍缺 | 可独立启动的第二条引导路径（脚本无法替你做） |
 

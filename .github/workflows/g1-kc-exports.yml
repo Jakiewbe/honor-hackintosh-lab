@@ -19,6 +19,8 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Probe the family member's export metadata
         shell: bash
@@ -48,19 +50,23 @@ jobs:
           python3 tools/g1_kc_exports.py out/libprobe.dylib libprobe --plain \
             --require g1_export_probe \
             --controls g1_definitely_absent_symbol \
-            > out/dylib-export-control.json 2> out/dylib-export-control.err || true
-          cat out/dylib-export-control.err || true
+            > out/dylib-export-control.json 2> out/dylib-export-control.err
+          cat out/dylib-export-control.err
           python3 tools/g1_kc_exports.py "$kc" com.apple.iokit.IOAcceleratorFamily2 \
             --names out/requested-names.json \
             --controls __ZTV14IOAccelSurface \
-            > out/export-probe.json 2> out/export-probe.err || true
-          cat out/export-probe.err || true
-          head -c 2500 out/export-probe.json || true
+            > out/export-probe.json 2> out/export-probe.err
+          cat out/export-probe.err
+          head -c 2500 out/export-probe.json
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: g1-kc-export-probe
-          path: out/
+          path: |
+            out/*.json
+            out/*.err
+            out/*.txt
+            out/*.c
           if-no-files-found: error
           retention-days: 14

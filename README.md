@@ -1,3 +1,5 @@
+> **2026-10-22 离线构建链整改**：独立审计7fa7fdc的Python3.9、preflight绕过与删除风险成立。共用入口现强制14项准入、固定完整提交与干净输入，取消联网/旧make伪装及旧目录删除；安装/回退入口均禁用，Recovery命令稿撤回。Windows128项（3跳过）、WSL离线16项通过；新Python3.9/Bash3.2原生合同及目标机完整构建尚未验收。LOAD NO-GO / GPU NOT RUN。见[整改与证据](research/stock-v243-audit-20261021/AUDIT-RESULT-20261022.md)。
+
 > **2026-10-21 独立审计整改已原生验收**：手动run [39609383942](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39609383942) / `da20a56` 全部success；三组件导入478/478/884，生产诊断拒收与候选哈希绑定、真实缺依赖/缺executable负控、四类有界KC观察和PM单对象重链已复核。当前NVAccel导出未知为**27名称/78原始nlist记录**（历史20项加7项原vtable替代分类；二进制未变）。七enum方法已在四类自身候选槽位定位；完整ABI、loader/导出、恢复及stop/PM仍开放。本地109项；GPU未执行、A未实机采集、B/C暂停，设备NO-GO。里程碑仍为PRE-DEVICE STATIC INTEGRATION—CONDITIONAL PASS。见[本轮结果](research/stock-v243-audit-20261021/REVIEW.md)。
 
 > **以下为此前阶段记录；最新27项口径及验收以顶部和本轮REVIEW为准。**

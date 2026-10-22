@@ -1,3 +1,12 @@
+最新补充（2026-10-22）：先读AUDIT-PROMPT-20261022.md和AUDIT-RESULT-20261022.md。
+审计7fa7fdc的离线链问题已整改；只验收新g1-offline-contract.yml的Python3.9/Bash3.2合同与文本日志，
+不要用此前原生整包run替代。菜单和直接入口共用offline_build.py；必须提供外部已审完整G1_EXPECTED_COMMIT，
+不能自动把当前HEAD当期望值。所有14项通过才可进入编译；新建run目录，不删除旧数据，不联网兜底。
+先关闭合同失败，再决定是否值得目标机完整构建；合同通过不等于设备驱动构建通过。
+安装/rollback入口已禁用；不得重新加入sudo/KC/NVRAM命令或原Recovery稿。
+-nvrmnogo不是硬件只读保证。27项导出结论仅限所查静态形式，不能认定运行时一定不可用。
+继续保留下面主目标与安全限制；最新阶段按本补充和实际CI产物判断。
+
 继续HONOR GLO-FX6P / RTX2050 10DE:25A9首次真实离屏计算与渲染主线，全程中文。
 先读README顶部及research/stock-v243-audit-20261021/REVIEW.md、local-only-binding.json、
 enum-native-binding.json，再读最新同SHA原生门禁的文本产物；不要按旧DEVICE-RUNBOOK执行。
