@@ -92,14 +92,21 @@ class WrapperFixture:
 
     def write_stubs(self):
         (self.bin / 'uname').write_text('#!/bin/bash\nprintf "Darwin\\n"\n')
+        # The payloads travel in files: a JSON document inside ${VAR:-default} is not reliably
+        # re-expanded by every shell, and the resulting malformed text made the pass case look broken.
+        self.preflight_payload = self.root / 'fake-preflight.json'
+        self.build_payload = self.root / 'fake-build.json'
+        self.preflight_payload.write_text('{}')
+        self.build_payload.write_text('{}')
         (self.bin / 'python3').write_text(
             '#!/bin/bash\n'
             'if [ "${1:-}" = "-" ]; then exec "%s" "$@"; fi\n'
             'case "${2:-}" in\n'
-            '  preflight) printf "%%s\\n" "${G1_FAKE_PREFLIGHT_JSON:-{}}"; exit "${G1_FAKE_PREFLIGHT_RC:-0}" ;;\n'
-            '  build) printf "%%s\\n" "${G1_FAKE_BUILD_JSON:-{}}"; exit "${G1_FAKE_BUILD_RC:-0}" ;;\n'
+            '  preflight) cat "%s"; exit "${G1_FAKE_PREFLIGHT_RC:-0}" ;;\n'
+            '  build) cat "%s"; exit "${G1_FAKE_BUILD_RC:-0}" ;;\n'
             'esac\n'
-            'exec "%s" "$@"\n' % (Path(sys.executable).as_posix(), Path(sys.executable).as_posix()))
+            'exec "%s" "$@"\n' % (Path(sys.executable).as_posix(), self.preflight_payload.as_posix(),
+                                  self.build_payload.as_posix(), Path(sys.executable).as_posix()))
         for name in ('uname', 'python3'):
             (self.bin / name).chmod(0o755)
 
@@ -116,6 +123,14 @@ class WrapperFixture:
         return subprocess.run([BASH, str(self.app / 'G1-一键运行.command')],
                               input=stdin, capture_output=True, text=True,
                               encoding='utf-8', errors='replace', env=env, timeout=120)
+
+    def set_preflight(self, payload, rc=0):
+        self.preflight_payload.write_text(payload, encoding='utf-8')
+        os.environ['G1_FAKE_PREFLIGHT_RC'] = str(rc)
+
+    def set_build(self, payload, rc=0):
+        self.build_payload.write_text(payload, encoding='utf-8')
+        os.environ['G1_FAKE_BUILD_RC'] = str(rc)
 
     def preflight_json(self, checks=14, status='PASS', repo_commit=None, per_check='PASS'):
         head = repo_commit if repo_commit is not None else git(self.repo, 'rev-parse', 'HEAD')
@@ -148,10 +163,7 @@ class OneClickFailClosed(unittest.TestCase):
 
     @NEEDS_DARWIN
     def test_nonzero_exit_with_pass_json_is_failure(self):
-        env_json = self.fx.preflight_json()
-        os.environ['G1_FAKE_PREFLIGHT_JSON'] = env_json
-        os.environ['G1_FAKE_PREFLIGHT_RC'] = '7'
-        self.addCleanup(os.environ.pop, 'G1_FAKE_PREFLIGHT_JSON', None)
+        self.fx.set_preflight(self.fx.preflight_json(), rc=7)
         self.addCleanup(os.environ.pop, 'G1_FAKE_PREFLIGHT_RC', None)
         result = self.fx.run()
         self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
@@ -159,36 +171,28 @@ class OneClickFailClosed(unittest.TestCase):
 
     @NEEDS_DARWIN
     def test_zero_exit_with_failed_json_is_failure(self):
-        os.environ['G1_FAKE_PREFLIGHT_JSON'] = self.fx.preflight_json(status='FAILED', per_check='FAIL')
-        os.environ['G1_FAKE_PREFLIGHT_RC'] = '0'
-        self.addCleanup(os.environ.pop, 'G1_FAKE_PREFLIGHT_JSON', None)
+        self.fx.set_preflight(self.fx.preflight_json(status='FAILED', per_check='FAIL'))
         self.addCleanup(os.environ.pop, 'G1_FAKE_PREFLIGHT_RC', None)
         result = self.fx.run()
         self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
 
     @NEEDS_DARWIN
     def test_partial_check_list_is_failure(self):
-        os.environ['G1_FAKE_PREFLIGHT_JSON'] = self.fx.preflight_json(checks=13)
-        os.environ['G1_FAKE_PREFLIGHT_RC'] = '0'
-        self.addCleanup(os.environ.pop, 'G1_FAKE_PREFLIGHT_JSON', None)
+        self.fx.set_preflight(self.fx.preflight_json(checks=13))
         self.addCleanup(os.environ.pop, 'G1_FAKE_PREFLIGHT_RC', None)
         result = self.fx.run()
         self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
 
     @NEEDS_DARWIN
     def test_repo_commit_binding_in_json_is_required(self):
-        os.environ['G1_FAKE_PREFLIGHT_JSON'] = self.fx.preflight_json(repo_commit='f' * 40)
-        os.environ['G1_FAKE_PREFLIGHT_RC'] = '0'
-        self.addCleanup(os.environ.pop, 'G1_FAKE_PREFLIGHT_JSON', None)
+        self.fx.set_preflight(self.fx.preflight_json(repo_commit='f' * 40))
         self.addCleanup(os.environ.pop, 'G1_FAKE_PREFLIGHT_RC', None)
         result = self.fx.run()
         self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
 
     @NEEDS_DARWIN
     def test_full_pass_offers_build_and_quit_is_zero(self):
-        os.environ['G1_FAKE_PREFLIGHT_JSON'] = self.fx.preflight_json()
-        os.environ['G1_FAKE_PREFLIGHT_RC'] = '0'
-        self.addCleanup(os.environ.pop, 'G1_FAKE_PREFLIGHT_JSON', None)
+        self.fx.set_preflight(self.fx.preflight_json())
         self.addCleanup(os.environ.pop, 'G1_FAKE_PREFLIGHT_RC', None)
         result = self.fx.run(stdin='\n')
         self.assertIn('要继续编译吗', result.stdout)
@@ -196,12 +200,9 @@ class OneClickFailClosed(unittest.TestCase):
 
     @NEEDS_DARWIN
     def test_build_json_without_artifacts_is_failure(self):
-        os.environ['G1_FAKE_PREFLIGHT_JSON'] = self.fx.preflight_json()
-        os.environ['G1_FAKE_PREFLIGHT_RC'] = '0'
-        os.environ['G1_FAKE_BUILD_JSON'] = json.dumps(dict(
-            status='PASS_COMPILE_LINK_ONLY_NOT_LOAD_OR_GPU', artifacts={}))
-        os.environ['G1_FAKE_BUILD_RC'] = '0'
-        for key in ('G1_FAKE_PREFLIGHT_JSON', 'G1_FAKE_PREFLIGHT_RC', 'G1_FAKE_BUILD_JSON', 'G1_FAKE_BUILD_RC'):
+        self.fx.set_preflight(self.fx.preflight_json())
+        self.fx.set_build(json.dumps(dict(status='PASS_COMPILE_LINK_ONLY_NOT_LOAD_OR_GPU', artifacts={})))
+        for key in ('G1_FAKE_PREFLIGHT_RC', 'G1_FAKE_BUILD_RC'):
             self.addCleanup(os.environ.pop, key, None)
         result = self.fx.run(stdin='BUILD\n')
         self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
@@ -222,9 +223,7 @@ class WrapperScrubScope(unittest.TestCase):
         untracked = self.fx.repo / 'nested/.DS_Store'
         untracked.parent.mkdir()
         untracked.write_bytes(b'finder junk')
-        os.environ['G1_FAKE_PREFLIGHT_JSON'] = self.fx.preflight_json(status='FAILED', per_check='FAIL')
-        os.environ['G1_FAKE_PREFLIGHT_RC'] = '1'
-        self.addCleanup(os.environ.pop, 'G1_FAKE_PREFLIGHT_JSON', None)
+        self.fx.set_preflight(self.fx.preflight_json(status='FAILED', per_check='FAIL'), rc=1)
         self.addCleanup(os.environ.pop, 'G1_FAKE_PREFLIGHT_RC', None)
         result = self.fx.run()
         self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
