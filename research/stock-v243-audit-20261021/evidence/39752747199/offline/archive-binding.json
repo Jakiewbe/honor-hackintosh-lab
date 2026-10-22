@@ -1,0 +1,29 @@
+{
+  "run_id": 39752747199,
+  "head_sha": "ea9c688e216f753ec030f3db2f7ba99d54c9cdc1",
+  "event": "workflow_dispatch",
+  "conclusion": "success",
+  "artifact_id": 12413953735,
+  "name": "g1-offline-contract-text",
+  "archive_sha256": "c471c8ff5aa797471060936a1e7f047d3669895265a75843ca38e65baa1f1d76",
+  "archive_bytes": 10470,
+  "members": {
+    "contracts.txt": {
+      "bytes": 1761,
+      "sha256": "3dc948b2061889df4037e852dc5e980de7c0a483d70e292475727a79f5348d94"
+    },
+    "environment.txt": {
+      "bytes": 124,
+      "sha256": "f7e4770c61292dcadb5a1924ad8cbc5e08741ad7db6bc721d6cd79a8d3023c8c"
+    },
+    "regression.txt": {
+      "bytes": 12681,
+      "sha256": "1584fbf268f31215ad04e0665f39bc19e7fcf11a6ee5ec03fc40b1367332a92e"
+    },
+    "source-binding.json": {
+      "bytes": 15427,
+      "sha256": "12abfc6099a53e8ba5e84614469c38f827948b029d4f47e6da7334eeec2917b7"
+    }
+  },
+  "driver_execution": "NOT_RUN"
+}

@@ -1,13 +1,14 @@
 # 离线构建链审计整改（2026-10-22）
 
 固定被审基线：7fa7fdc9b44f035329c4d36a17d3025f34f87e7c。用户提交的BUILD/LOAD NO-GO裁定成立。
-本轮只修构建准入及证据，不执行设备动作；原生兼容合同结果尚待新CI。
+本轮只修构建准入及证据，不执行设备动作。原生兼容合同已在run39752747199验收；
+目标机完整离线驱动构建未执行，BUILD仍不作整链通过裁定，LOAD NO-GO / GPU NOT RUN。
 
 ## 修复与证据等级
 
 | 项 | 实现与限制 |
 |---|---|
-| Python3.9 | 共用save改为Path.open(newline=...)；PM生成夹具同改；基础及失败报告路径测试。真正3.9等待CI |
+| Python3.9 | 共用save改为Path.open(newline=...)；PM生成夹具同改；基础及失败报告路径已在真实3.9.25合同中通过 |
 | xcodebuild | 原生once入口也可选；仍强制实际SDK15.5及Kernel头，不把任意新SDK当等价输入 |
 | preflight | offline_build.py共用14个固定ID；菜单2和直接shell都调用build()，build()必先检查，失败不创建构建工作目录 |
 | 仓库身份 | 要求外部提供完整G1_EXPECTED_COMMIT，核对当前HEAD与干净度；不自动把当前HEAD赋给期望值 |
@@ -33,7 +34,7 @@ shell-lf、assets、gnu-make、workspace、disk-space。空间直接调用disk_u
 - 现有WSL Python3.12/Bash5.2：离线合同16/16通过，含真实shell入口拒收和同一生产build()的失败保存。
 - 导出工具实际CLI夹具3/3通过：正控、负控、破损trie；没有执行本地生成的Mach-O数据。
 - 新CI `g1-offline-contract.yml`：仅workflow_dispatch，macos-15-intel，Python3.9、/bin/bash3.2。
-  只运行合同及工具回归，不编译完整驱动、不加载、不执行GPU；结果待验收。
+  只运行合同及工具回归，不编译完整驱动、不加载、不执行GPU；最终结果见下方新run。
 
 测试中的微型Git仓库、工具版本/SDK文件夹具和昂贵管线替代只用于验证准入与失败控制流，
 成功标记为`PASS_ORCHESTRATION_FIXTURE_NO_NATIVE_BUILD`，没有把夹具当真实原生编译。
@@ -45,7 +46,19 @@ run39749482514 / `0b92d0e2fdfcc5f7711422001b051f1d9d783abb`，workflow_dispatch�
 实际Python3.9.25与Apple Bash3.2.57；离线合同15/16通过，只有归档夹具的路径断言失败：
 生产archive()返回规范化的`/private/var/...`，测试错误地与`/var/...`未规范化路径比较。
 更正为比较`path.resolve()`；未放宽归档哈希、成员限制或任何生产准入条件。
-完整日志、环境及执行源码SHA清单在`evidence/39749482514/offline/`，修正后等待新run。
+完整日志、环境及执行源码SHA清单在`evidence/39749482514/offline/`；失败原文保持不变。
+
+### 修正后原生合同：已验收
+
+[run39752747199](https://github.com/Jakiewbe/honor-hackintosh-lab/actions/runs/39752747199)，
+执行提交`ea9c688e216f753ec030f3db2f7ba99d54c9cdc1`，workflow_dispatch，success。
+Python3.9.25 / Apple Bash3.2.57，入口合同16/16、相关回归128/128，全部无跳过。
+两组测试有重叠，不能相加声称144项独立测试。
+artifact12413953735，10470字节，四个成员全部UTF-8文本；API digest及下载字节SHA一致：
+`c471c8ff5aa797471060936a1e7f047d3669895265a75843ca38e65baa1f1d76`。
+`verify_offline_evidence.py`复算四个成员长度/SHA、执行身份、两个测试计数及无跳过结果，
+并把source-binding中144个源码SHA逐个与执行提交的Git blob比较，全部一致。
+归档位于`evidence/39752747199/offline/`。这是原生工具合同，不是完整驱动编译或设备构建。
 
 ### 导出探针：真实正控与有限观察
 
@@ -88,8 +101,13 @@ preflight通过只说明可进入固定参数的编译/链接，不证明离线�
 Recovery独立入口、卷组识别、AuxKC与扩展状态恢复及重新启动均没有本轮实测。
 原始四次设备崩溃未重现，30分钟目标机驱动构建未执行，加载/GPU未执行。
 
-构建层：整改与合同测试已进行，Python3.9/Bash3.2原生及完整设备构建尚未验收。
+构建层：Python3.9/Bash3.2原生工具合同通过；目标机完整离线驱动构建尚未执行/验收。
 设备层：**LOAD NO-GO / GPU NOT RUN**。不以脚本可运行代替设备授权。
+
+下一断点：复用当前合同与已暂存固定输入，单独审查/验收目标机CLT完整离线编译链，
+先只做preflight，失败就停止，不再盲跑30分钟；本轮不执行任何设备构建命令。
+导出/完整ABI、全部使用者与回调排空、PM及独立恢复能力仍各自开放；合同通过不解除设备禁令。
+不恢复安装/回退入口，不把原Recovery稿或-nvrmnogo当作安全保证。
 
 复盘：去掉不必要的删除与部署入口，比给未经验证的恢复流程加“成功”提示更可靠；
 执行检查必须连接真实入口，并明确区分工具合同、原生驱动构建和设备行为。
