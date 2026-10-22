@@ -1,0 +1,47 @@
+{
+ "collection": "out/libprobe.dylib",
+ "bundle": "libprobe",
+ "collection_sha256": "5bce7e04b621a83b8e2f327e0a5194be21cec2138eae652110a9518273672dd4",
+ "member_uuid": "974ae8151ac03a57a34e77e18100bc42",
+ "source_commit": "0b92d0e2fdfcc5f7711422001b051f1d9d783abb",
+ "parser_sha256": "c0f3bbdeeb231554eb997a178d247c6fef8bb6b3f7eea75e149a44c022e22a25",
+ "member_fileoff": 0,
+ "load_command_ids": [
+  "0x2",
+  "0xb",
+  "0xc",
+  "0xd",
+  "0x19",
+  "0x1b",
+  "0x26",
+  "0x29",
+  "0x2a",
+  "0x32",
+  "0x80000033",
+  "0x80000034"
+ ],
+ "export_commands": [
+  {
+   "command": "LC_DYLD_EXPORTS_TRIE",
+   "fileoff": 4144,
+   "size": 32
+  }
+ ],
+ "linkinfo_sections": [],
+ "trie_present": true,
+ "trie_names": 1,
+ "trie_sample": [
+  "_g1_export_probe"
+ ],
+ "requested": {},
+ "controls": {
+  "g1_definitely_absent_symbol": false
+ },
+ "required": {
+  "g1_export_probe": true
+ },
+ "requested_exported": 0,
+ "verdict": "EXPORT_TRIE_PRESENT",
+ "controls_passed": true,
+ "external_runtime_resolution": "UNVERIFIED"
+}

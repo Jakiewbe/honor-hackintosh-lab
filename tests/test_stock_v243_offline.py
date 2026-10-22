@@ -177,7 +177,7 @@ class OfflineContracts(unittest.TestCase):
                 member=tarfile.TarInfo(name);member.type=typ
                 if typ==tarfile.REGTYPE:member.size=1;out.addfile(member,io.BytesIO(b'x'))
                 else:member.linkname='/outside';out.addfile(member)
-            if name.endswith('good'):self.assertEqual(gate.archive(path,gate.sha(path)),path)
+            if name.endswith('good'):self.assertEqual(gate.archive(path,gate.sha(path)),path.resolve())
             else:
                 with self.assertRaises(ValueError):gate.archive(path,gate.sha(path))
             with self.assertRaisesRegex(ValueError,'SHA256'):gate.archive(path,'0'*64)

@@ -1,0 +1,67 @@
+{
+  "input_sha256": "98cb257b1dd945213fcd74b0e1e8a1ec47f99ce267445aeba683cd88861f9c7a",
+  "scope": "SUPPLIED_JSON_IDENTITIES_AND_ARITHMETIC_ONLY_NOT_KC_BINARY_RECOMPUTATION",
+  "collection_sha256_reported": "2296155f1f12471e7b774020ba70d9fb487d02224c1f85d373130511969c2243",
+  "collection_bytes_reported": 373112832,
+  "member_uuid_reported": "97a7305cfb1439fcbc20ed834abceb2d",
+  "source_commit_reported": null,
+  "source_run_reported": null,
+  "parser_blob_matches_audit_baseline": true,
+  "binary_collection_rehashed_in_this_round": false,
+  "classes": [
+    {
+      "name": "IOAccelSurface",
+      "observed_words": 328,
+      "methods": [
+        {
+          "symbol": "__ZN14IOAccelSurface20surface_lock_optionsE9eLockTypejP25IOAccelSurfaceInformationy",
+          "slot": 324
+        },
+        {
+          "symbol": "__ZN14IOAccelSurface22surface_unlock_optionsE9eLockTypej",
+          "slot": 325
+        },
+        {
+          "symbol": "__ZN14IOAccelSurface28set_shape_backing_length_extE24eIOAccelSurfaceShapeBitsjyjyP19IOAccelDeviceRegiony",
+          "slot": 323
+        },
+        {
+          "symbol": "__ZN14IOAccelSurface9set_shapeE24eIOAccelSurfaceShapeBitsjP19IOAccelDeviceRegiony",
+          "slot": 322
+        }
+      ]
+    },
+    {
+      "name": "IOAccelGLContext2",
+      "observed_words": 374,
+      "methods": [
+        {
+          "symbol": "__ZN17IOAccelGLContext211processSwapE7eDoSwap",
+          "slot": 366
+        }
+      ]
+    },
+    {
+      "name": "IOAccelLegacyDisplayPipe",
+      "observed_words": 319,
+      "methods": [
+        {
+          "symbol": "__ZN24IOAccelLegacyDisplayPipe9setStereoE17IOAccelStereoMode",
+          "slot": 308
+        }
+      ]
+    },
+    {
+      "name": "IOAccelLegacyDisplayMachine",
+      "observed_words": 299,
+      "methods": [
+        {
+          "symbol": "__ZN27IOAccelLegacyDisplayMachine9setStereoEj17IOAccelStereoMode",
+          "slot": 286
+        }
+      ]
+    }
+  ],
+  "full_abi": "UNVERIFIED",
+  "device": "NO_GO"
+}

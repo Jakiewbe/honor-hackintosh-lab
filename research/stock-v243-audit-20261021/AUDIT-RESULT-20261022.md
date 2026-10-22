@@ -39,6 +39,31 @@ shell-lf、assets、gnu-make、workspace、disk-space。空间直接调用disk_u
 成功标记为`PASS_ORCHESTRATION_FIXTURE_NO_NATIVE_BUILD`，没有把夹具当真实原生编译。
 CI源文件哈希清单将绑定执行SHA，不以工作流success代替日志验收。
 
+### 第一轮原生合同：保留失败证据
+
+run39749482514 / `0b92d0e2fdfcc5f7711422001b051f1d9d783abb`，workflow_dispatch，failure。
+实际Python3.9.25与Apple Bash3.2.57；离线合同15/16通过，只有归档夹具的路径断言失败：
+生产archive()返回规范化的`/private/var/...`，测试错误地与`/var/...`未规范化路径比较。
+更正为比较`path.resolve()`；未放宽归档哈希、成员限制或任何生产准入条件。
+完整日志、环境及执行源码SHA清单在`evidence/39749482514/offline/`，修正后等待新run。
+
+### 导出探针：真实正控与有限观察
+
+run39749607753 / 同一`0b92d0e`，workflow_dispatch，success。artifact12412269543，
+原始8个成员全部为文本，归档SHA/成员SHA在`evidence/39749607753/export/archive-binding.json`。
+同run新编译的非驱动dylib未执行、未上传；解析器找到`_g1_export_probe`且反控不命中，controls_passed=true。
+KC观察绑定`12913116…67c2`及IOAccel成员UUID，27请求、未见所检查导出命令、观察命中0；
+仍为`EXPORT_TRIE_ABSENT_NOT_OBSERVABLE`，不是全部导出机制不存在或运行时必然失败。
+
+### 补齐原始设备JSON供复算
+
+在既有本地工作缓存找到`device-vtable.json`，按原始字节归档至`evidence/device-text-20261022/`。
+其文本SHA为`98cb257b1dd945213fcd74b0e1e8a1ec47f99ce267445aeba683cd88861f9c7a`；
+`verify_device_text.py`复算字数、文件偏移、目标候选及七方法槽号，并与已归档CI观察比较，一致。
+其中parser SHA匹配7fa7fdc的工具Git blob；source_commit/source_run原值均null，继续保留未知。
+本轮没有读取设备KC二进制，KC SHA/字节数/UUID只是该JSON报告的身份，不能称本轮重新哈希过设备KC。
+不上传KC二进制、不宣称完整指针链/继承/成员偏移/调用约定或完整ABI已通过。
+
 ## 可审查的使用边界
 
 新的离线入口不需要修改已暂存源码或系统策略。先从本轮已审交付取完整SHA，明确设置：
