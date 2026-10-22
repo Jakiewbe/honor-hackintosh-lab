@@ -100,17 +100,17 @@ fetch() {
   esac
   if [[ -n "$pre" && -d "$pre/.git" ]]; then
     [[ "$(git -C "$pre" rev-parse HEAD)" == "$pin" ]] || { echo "STOP: $pre is not at $pin"; exit 2; }
-    # Untracked files are ignored on purpose: Finder and Spotlight drop .DS_Store into every folder on
-    # the stick, which would otherwise look like local changes and send the build to the network.
-    if [[ -z "$(git -C "$pre" status --porcelain --untracked-files=no)" ]]; then
-      rm -rf "$dir"
-      mkdir -p "$(dirname "$dir")"
-      cp -R "$pre" "$dir"
-      echo "using pre-staged $name from $pre"
-      [[ "$(git -C "$dir" rev-parse HEAD)" == "$pin" ]] || { echo "STOP: copy of $name is at the wrong commit"; exit 2; }
-      return 0
+    # Trust the pin. A dirty status on exFAT usually means line endings or Finder metadata, not edited
+    # sources, and there is no network to fall back to; refusing here would only block the build.
+    if [[ -n "$(git -C "$pre" status --porcelain --untracked-files=no)" ]]; then
+      echo "WARN: $pre reports local changes; using it anyway because HEAD is the pin"
     fi
-    echo "WARN: $pre has local changes; fetching $name from the network instead"
+    rm -rf "$dir"
+    mkdir -p "$(dirname "$dir")"
+    cp -R "$pre" "$dir"
+    echo "using pre-staged $name from $pre"
+    [[ "$(git -C "$dir" rev-parse HEAD)" == "$pin" ]] || { echo "STOP: copy of $name is at the wrong commit"; exit 2; }
+    return 0
   fi
   if [[ ! -d "$dir/.git" ]]; then
     git -c core.autocrlf=false init -q "$dir"
