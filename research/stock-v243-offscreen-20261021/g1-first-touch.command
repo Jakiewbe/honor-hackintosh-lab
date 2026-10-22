@@ -109,9 +109,93 @@ check_env() {
   ensure_repo
 }
 
+# Fast preflight: every precondition the 20-40 minute build depends on, checked in seconds.
+self_check() {
+  say "preflight (no build, no changes)"
+  local fails=0
+  ok()   { printf '  OK   %s\n' "$*"; }
+  bad()  { printf '  FAIL %s\n' "$*"; fails=$((fails+1)); }
+  note() { printf '  ..   %s\n' "$*"; }
+
+  [ "$(uname -s)" = "Darwin" ] && ok "macOS" || bad "not macOS"
+  [ "$(uname -m)" = "x86_64" ] && ok "x86_64" || bad "architecture is $(uname -m), the build expects x86_64"
+
+  if xcode-select -p >/dev/null 2>&1; then ok "developer tools at $(xcode-select -p)"; else bad "no developer tools (xcode-select --install)"; fi
+  local sdk; sdk="$(xcrun --show-sdk-version 2>/dev/null || echo missing)"
+  case "$sdk" in 15.[5-9]*|1[6-9].*|2[0-9].*) ok "SDK $sdk";; *) bad "SDK $sdk (need >= 15.5)";; esac
+  command -v clang   >/dev/null && ok "clang $(clang --version 2>/dev/null | head -1)" || bad "clang missing"
+  command -v python3 >/dev/null && ok "python3 $(python3 -V 2>&1)" || bad "python3 missing"
+  command -v git     >/dev/null && ok "git $(git --version 2>/dev/null | awk '{print $3}')" || bad "git missing"
+  command -v tar     >/dev/null && ok "tar" || bad "tar missing"
+  if command -v gmake >/dev/null && gmake --version 2>/dev/null | head -1 | grep -q 'GNU Make 4'; then
+    ok "gmake 4 present: $(gmake --version | head -1)"
+  else
+    note "no gmake 4; the build will compile GNU make 4.4.1 from the bundled tarball"
+  fi
+
+  local here; here="$(cd "$(dirname "$0")" && pwd)"
+  local tools=""
+  for t in "${here}/g1-tools" "${here}/../g1-tools" /Volumes/*/g1-tools /Volumes/*/HONOR-G1-FIRST-TOUCH/g1-tools; do
+    [ -z "$tools" ] && [ -f "${t}/make-4.4.1.tar.gz" ] && tools="$t"
+  done
+  [ -n "$tools" ] && ok "make tarball: ${tools}/make-4.4.1.tar.gz" || bad "make-4.4.1.tar.gz not found (gmake 4 is then required)"
+
+  if ensure_repo >/dev/null 2>&1 && [ -d "${REPO}/.git" ]; then
+    ok "repo ${REPO} at $(git -C "${REPO}" rev-parse --short HEAD 2>/dev/null)"
+    [ -f "${REPO}/research/stock-v243-offscreen-20261021/device-kextutil.sh" ] \
+      && ok "build script present" || bad "device-kextutil.sh missing in the repo"
+    [ -f "${REPO}/research/stock-v243-once-20261021/stock-v243-converged.patch" ] \
+      && ok "patch assets present" || bad "patch assets missing in the repo copy"
+  else
+    bad "repository not found (expected g1-repo beside this script)"
+  fi
+
+  local nm="" nv=""
+  for base in "${here}/g1-src" "${here}/../g1-src" /Volumes/*/g1-src /Volumes/*/HONOR-G1-FIRST-TOUCH/g1-src; do
+    [ -z "$nm" ] && [ -d "${base}/nm/.git" ] && nm="${base}/nm"
+    [ -z "$nv" ] && [ -d "${base}/nv/.git" ] && nv="${base}/nv"
+  done
+  if [ -n "$nm" ]; then
+    local h; h="$(git -C "${nm}" rev-parse HEAD 2>/dev/null)"
+    [ "$h" = "272ccd9da04ff5de95c2791b902fe17a3fa77ce7" ] && ok "NullMoth at pin" || bad "NullMoth at ${h:-unknown}, expected 272ccd9"
+    local dirty; dirty="$(git -C "${nm}" status --porcelain --untracked-files=all 2>/dev/null | head -5)"
+    [ -z "$dirty" ] && ok "NullMoth tree clean" || bad "NullMoth tree has untracked/modified files: $(echo "$dirty" | head -2 | tr '\n' ' ')"
+  else
+    bad "NullMoth source tree not found"
+  fi
+  if [ -n "$nv" ]; then
+    local h2; h2="$(git -C "${nv}" rev-parse HEAD 2>/dev/null)"
+    [ "$h2" = "e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb" ] && ok "OGKM at pin" || bad "OGKM at ${h2:-unknown}, expected e4a5faa"
+    local dirty2; dirty2="$(git -C "${nv}" status --porcelain --untracked-files=all 2>/dev/null | head -5)"
+    [ -z "$dirty2" ] && ok "OGKM tree clean" || bad "OGKM tree has untracked/modified files: $(echo "$dirty2" | head -2 | tr '\n' ' ')"
+  else
+    bad "OGKM source tree not found"
+  fi
+
+  local free_gb
+  free_gb=$(df -g "${HOME}/Desktop" 2>/dev/null | awk 'NR==2 {print $4}')
+  if [ -n "${free_gb:-}" ]; then
+    [ "$free_gb" -ge 8 ] && ok "free space ${free_gb} GB" || bad "free space ${free_gb} GB (build needs ~8 GB)"
+  fi
+
+  printf '\n'
+  if [ "$fails" -eq 0 ]; then
+    say "preflight PASS - option 2 can run"
+  else
+    say "preflight FAIL - $fails problem(s) above; fix them before option 2"
+  fi
+  return 0
+}
+
 build_candidate() {
   say "build candidate (20-40 min)"
   ensure_repo
+  # Tell the build exactly where the carried assets are, instead of relying on its own guessing: the
+  # launcher is the only piece that knows where this folder currently lives.
+  local here; here="$(cd "$(dirname "$0")" && pwd)"
+  [ -d "${here}/g1-src/nm/.git" ] && export NM_SRC="${here}/g1-src/nm"
+  [ -d "${here}/g1-src/nv/.git" ] && export NV_SRC="${here}/g1-src/nv"
+  [ -d "${here}/g1-tools" ] && export G1_TOOLS="${here}/g1-tools"
   local script="${REPO}/research/stock-v243-offscreen-20261021/device-kextutil.sh"
   [ -f "${script}" ] || die "missing ${script}; run: git -C ${REPO} fetch origin && git -C ${REPO} checkout main"
   # A repository cloned on Windows can carry CRLF, which makes bash read "pipefail\r" as an option.
@@ -214,6 +298,7 @@ menu() {
   while true; do
     say "menu"
     cat <<'EOF'
+  0) preflight self-check (seconds, no build)
   1) check environment (read only)
   2) build the candidate (20-40 min)
   3) back up the current system (read only)
@@ -223,6 +308,7 @@ menu() {
   q) quit
 EOF
     case "$(ask 'choice:')" in
+      0) self_check ;;
       1) check_env ;;
       2) build_candidate ;;
       3) do_backup ;;

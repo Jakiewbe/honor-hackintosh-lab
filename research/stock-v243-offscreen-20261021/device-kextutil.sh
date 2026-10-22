@@ -15,6 +15,15 @@ NV_PIN=e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb
 
 mkdir -p "$WORK"
 echo "repo=$REPO work=$WORK"
+# The trees were created on another machine; scoped safe.directory keeps git from refusing them.
+export GIT_CONFIG_COUNT=1
+export GIT_CONFIG_KEY_0=safe.directory
+export GIT_CONFIG_VALUE_0='*'
+# The build copies the OGKM tree and produces RM objects; a full run needs a few GB.
+FREE_KB=$(df -Pk "$WORK" 2>/dev/null | awk 'NR==2 {print $4}')
+if [ -n "${FREE_KB:-}" ] && [ "$FREE_KB" -lt 8388608 ]; then
+  echo "WARN: only $((FREE_KB/1048576)) GB free under $WORK; a full build may need 4-8 GB"
+fi
 sw_vers | tee "$WORK/sw_vers.txt"
 # Command Line Tools alone provide clang, make, git, python3 and the SDK, but not xcodebuild. Do not let
 # its absence abort the build on a CLT-only machine.
@@ -28,10 +37,13 @@ case "$SDK" in
   *) echo "STOP: need SDK >= 15.5 (found $SDK); select Xcode 16.4 with xcode-select"; exit 2 ;;
 esac
 # Offline mode: the two pinned source trees can be carried on the install stick instead of fetched.
+# The launcher knows where it lives, so it exports G1_TOOLS/NM_SRC/NV_SRC and those win over guessing.
 NM_SRC=${NM_SRC:-}
 NV_SRC=${NV_SRC:-}
+G1_TOOLS=${G1_TOOLS:-}
 HERE=$(cd "$(dirname "$0")" && pwd)
-for base in "$HERE/g1-src" "$HERE/../g1-src" "$HOME/Desktop/HONOR-G1-FIRST-TOUCH/g1-src" \
+for base in "${G1_TOOLS:-/nonexistent}" "$HERE/g1-src" "$HERE/../g1-src" \
+            "$HOME/Desktop/HONOR-G1-FIRST-TOUCH/g1-src" \
             /Volumes/*/g1-src /Volumes/*/HONOR-G1-FIRST-TOUCH/g1-src; do
   if [ -d "$base/nm/.git" ] && [ -z "$NM_SRC" ]; then NM_SRC="$base/nm"; fi
   if [ -d "$base/nv/.git" ] && [ -z "$NV_SRC" ]; then NV_SRC="$base/nv"; fi
@@ -47,7 +59,8 @@ if command -v gmake >/dev/null && gmake --version 2>/dev/null | head -1 | grep -
 fi
 if [ "$need_gmake" = 1 ]; then
   tarball=""
-  for base in "$HERE/g1-tools" "$HERE/../g1-tools" "$HOME/Desktop/HONOR-G1-FIRST-TOUCH/g1-tools" \
+  for base in "${G1_TOOLS:-/nonexistent}" "$HERE/g1-tools" "$HERE/../g1-tools" \
+              "$HOME/Desktop/HONOR-G1-FIRST-TOUCH/g1-tools" \
               /Volumes/*/g1-tools /Volumes/*/HONOR-G1-FIRST-TOUCH/g1-tools; do
     if [ -z "$tarball" ] && [ -f "$base/make-4.4.1.tar.gz" ]; then
       tarball="$base/make-4.4.1.tar.gz"
@@ -109,6 +122,13 @@ fetch() {
     mkdir -p "$(dirname "$dir")"
     cp -R "$pre" "$dir"
     echo "using pre-staged $name from $pre"
+    # Finder and Spotlight drop .DS_Store into every folder they touch, and the Python gate below
+    # demands a clean tree with --untracked-files=all, so scrub them and keep them ignored.
+    find "$dir" -name .DS_Store -type f -delete 2>/dev/null || true
+    find "$dir" -name '._*' -type f -delete 2>/dev/null || true
+    if [ -d "$dir/.git/info" ]; then
+      printf '\n.DS_Store\n._*\n' >> "$dir/.git/info/exclude"
+    fi
     [[ "$(git -C "$dir" rev-parse HEAD)" == "$pin" ]] || { echo "STOP: copy of $name is at the wrong commit"; exit 2; }
     return 0
   fi
@@ -124,6 +144,12 @@ fetch() {
 
 fetch nm https://github.com/nullmoth/nvidia-macos-driver.git "$NM_PIN"
 fetch nv https://github.com/NVIDIA/open-gpu-kernel-modules.git "$NV_PIN"
+
+# A second run must not die on directories the first run created.
+for stale in internal-text internal-products package-text; do
+  rm -rf "$WORK/$stale"
+done
+mkdir -p "$WORK"
 
 echo "== internal link (applies the converged patch, builds RM and links the 12 TUs)"
 python3 "$REPO/scripts/g1/stock_v243_internal_link.py" \

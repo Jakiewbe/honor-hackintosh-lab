@@ -35,8 +35,15 @@ def save(path, value):
     path.write_text(json.dumps(value, indent=2) + '\n', encoding='utf-8', newline='\n')
 
 
-def output(argv, cwd=None):
-    return subprocess.check_output(list(map(str, argv)), cwd=cwd, text=True).strip()
+def output(argv, cwd=None, missing_ok=False):
+    # Command Line Tools provide clang, git, make and the SDK but not xcodebuild; a missing optional
+    # tool must not abort a build that does not need it.
+    try:
+        return subprocess.check_output(list(map(str, argv)), cwd=cwd, text=True).strip()
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        if missing_ok:
+            return ''
+        raise
 
 
 def run(argv, cwd, log, timeout=600):
@@ -183,7 +190,8 @@ def build(args, report):
     sdk = output(['xcrun', '--show-sdk-path'])
     report['toolchain'] = dict(sdk=sdk, sdk_version=output(['xcrun', '--show-sdk-version']),
         deployment_target='15.5', clang=output(['xcrun', 'clang', '--version']),
-        xcode=output(['xcodebuild', '-version']), system=output(['sw_vers']))
+        xcode=output(['xcodebuild', '-version'], missing_ok=True) or 'xcodebuild absent (Command Line Tools only)',
+        system=output(['sw_vers']))
     if report['toolchain']['sdk_version'] != '15.5':
         raise ValueError('SDK 15.5 required')
     work.mkdir(exist_ok=False)
