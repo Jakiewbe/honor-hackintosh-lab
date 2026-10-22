@@ -64,8 +64,17 @@ if [ "$need_gmake" = 1 ]; then
       make -j4 >"$WORK/tools/make-build.log" 2>&1 &&
       make install >>"$WORK/tools/make-build.log" 2>&1
     ) || { echo "STOP: building GNU make failed; see $WORK/tools/make-build.log"; exit 2; }
-    export PATH="$WORK/tools/make/bin:$PATH"
-    echo "gmake: $("$WORK/tools/make/bin/gmake" --version | head -1)"
+    # `make install` installs `make`; where the binary lands differs between releases, so find it.
+    gbin=""
+    for candidate in "$WORK/tools/make/bin/gmake" "$WORK/tools/make/bin/make" \
+                     "$WORK/tools/make-4.4.1/make"; do
+      if [ -z "$gbin" ] && [ -x "$candidate" ]; then gbin="$candidate"; fi
+    done
+    [ -n "$gbin" ] || { echo "STOP: GNU make built but no binary found"; exit 2; }
+    mkdir -p "$WORK/bin"
+    ln -sf "$gbin" "$WORK/bin/gmake"
+    export PATH="$WORK/bin:$WORK/tools/make/bin:$PATH"
+    echo "gmake: $("$gbin" --version | head -1)  ($gbin)"
   elif command -v make >/dev/null; then
     mkdir -p "$WORK/bin"
     ln -sf "$(command -v make)" "$WORK/bin/gmake"
@@ -91,7 +100,9 @@ fetch() {
   esac
   if [[ -n "$pre" && -d "$pre/.git" ]]; then
     [[ "$(git -C "$pre" rev-parse HEAD)" == "$pin" ]] || { echo "STOP: $pre is not at $pin"; exit 2; }
-    if [[ -z "$(git -C "$pre" status --porcelain --untracked-files=all)" ]]; then
+    # Untracked files are ignored on purpose: Finder and Spotlight drop .DS_Store into every folder on
+    # the stick, which would otherwise look like local changes and send the build to the network.
+    if [[ -z "$(git -C "$pre" status --porcelain --untracked-files=no)" ]]; then
       rm -rf "$dir"
       mkdir -p "$(dirname "$dir")"
       cp -R "$pre" "$dir"
