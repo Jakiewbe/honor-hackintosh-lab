@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================================
-#  G1 修复加载（v3.2）
+#  G1 修复加载（v3.3）
 #
 #  只重建辅助集合 /Library/KernelCollections/AuxiliaryKernelExtensions.kc，
 #  不写系统卷、不改 boot-args、不动 EFI。配方与上游 package/install.sh 一致：
@@ -14,7 +14,7 @@
 #  +--kdk / +-a x86_64 -V release 顺序升级重试。
 # ============================================================================
 set -uo pipefail
-VERSION=v3.2
+VERSION=v3.3
 echo "==== G1 修复加载 $VERSION ===="
 
 HERE="$(cd "$(dirname "$0")" && pwd -P)"
@@ -56,7 +56,7 @@ sudo chmod -R go-w "$EXT/NVRM.kext" 2>/dev/null
 ls -l "$EXT/NVRM.kext/Contents/MacOS/NVRM"
 
 T=$(sudo mktemp -d /tmp/g1-aux.XXXXXX) || { bad "建临时目录失败"; exit 5; }
-say "2. 建测试集合（$T，不动系统）"
+say "2. 建测试集合（${T}，不动系统）"
 sudo mkdir -p "$T/repo"
 sudo cp -R "$EXT/." "$T/repo/" || { bad "复制扩展目录失败"; exit 5; }
 sudo chown -R root:wheel "$T/repo"
@@ -65,6 +65,7 @@ sudo chmod -R go-w "$T/repo"
 BASE=(--volume-root / --allow-missing-kdk -B "$KB" -S "$KS")
 [ -f "$K" ] && BASE+=(--kernel "$K")
 KDKP=$(ls -d /Library/Developer/KDKs/*.kdk 2>/dev/null | head -1)
+BUILDNUM=$(sw_vers -buildVersion)
 
 build_test() {
   local tag="$1"; shift
@@ -76,13 +77,19 @@ build_test() {
   echo "   rc=$rc   目录："
   ls -l "$T" | sed 's/^/      /'
   sed 's/^/      | /' "$OUT/build-$tag.log"
+  if [ "$rc" -ne 0 ]; then
+    echo "   ---- kmutil 的 unified log（最后 6 分钟）:"
+    sudo log show --last 6m --predicate 'process == "kmutil"' --style compact \
+      >"$OUT/oslog-$tag.txt" 2>&1
+    tail -25 "$OUT/oslog-$tag.txt" | sed 's/^/      /'
+  fi
   return "$rc"
 }
 
 TEST_OK=0
 if build_test exact; then TEST_OK=1
-elif build_test kdk --kdk "$KDKP"; then TEST_OK=1
-elif build_test arch -a x86_64 -V release -v; then TEST_OK=1
+elif build_test kdk --kdk "$KDKP" --build "$BUILDNUM"; then TEST_OK=1
+elif build_test arch --kdk "$KDKP" --build "$BUILDNUM" -a x86_64 -V release -v; then TEST_OK=1
 fi
 
 if [ "$TEST_OK" -ne 1 ]; then
@@ -90,18 +97,18 @@ if [ "$TEST_OK" -ne 1 ]; then
   sudo log show --last 5m --predicate 'process == "kmutil"' --style compact \
     >"$OUT/kmutil-oslog.txt" 2>&1
   tail -40 "$OUT/kmutil-oslog.txt" | sed 's/^/   /'
-  bad "测试集合构建失败（日志 $LOG）"
+  bad "测试集合构建失败（日志 ${LOG}）"
   exit 5
 fi
 
-AUXFILE=$(ls -1 "$T"/aux-exact.kc "$T"/aux-kdk.kc "$T"/aux-arch.kc 2>/dev/null | head -1)
+AUXFILE=$(ls -1 "$T"/aux-*.kc 2>/dev/null | head -1)
 [ -n "$AUXFILE" ] && [ -s "$AUXFILE" ] || { bad "没有产物文件"; exit 5; }
 
 say "3. 验证测试集合含 $BUNDLE"
 sudo kmutil inspect -a x86_64 -A "$AUXFILE" >"$OUT/test-inspect.txt" 2>&1
 grep -i 'nullmoth' "$OUT/test-inspect.txt" | head -5
 grep -q "$BUNDLE" "$OUT/test-inspect.txt" || {
-  bad "测试集合里没有 $BUNDLE（kmutil 跳过了它）"
+  bad "测试集合里没有 ${BUNDLE}（kmutil 跳过了它）"
   grep -i 'highpoint\|iordma' "$OUT/test-inspect.txt" | head -5
   exit 5
 }
