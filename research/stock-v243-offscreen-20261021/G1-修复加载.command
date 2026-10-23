@@ -13,6 +13,8 @@
 #  本脚本完全照这个流程做，只重建辅助集合，不写系统卷、不改 boot-args、不动 EFI。
 # ============================================================================
 set -uo pipefail
+VERSION=v3.1
+echo "==== G1 修复加载 $VERSION ===="
 
 HERE="$(cd "$(dirname "$0")" && pwd -P)"
 STAMP="$(date +%Y%m%d-%H%M%S)"
@@ -24,10 +26,13 @@ KS=/System/Library/KernelCollections/SystemKernelExtensions.kc
 K=/System/Library/Kernels/kernel
 BUNDLE=com.nullmoth.NVRM
 mkdir -p "$OUT" 2>/dev/null || OUT="$HOME/Desktop/g1-fix3-$STAMP"
+mkdir -p "$OUT" 2>/dev/null
+# 全程再留一份 /tmp 日志，U 盘写不进去也不会丢
+exec > >(tee -a /tmp/g1-fix3-$STAMP.log) 2>&1
 
 say() { printf '\n== %s\n' "$*"; }
 bad() { printf '!! %s\n' "$*"; }
-die() { bad "$*"; printf '日志: %s\n' "$OUT"; exit 5; }
+die() { bad "$*"; printf '日志: %s\n' "$OUT"; printf '（也在 /tmp/g1-fix3-%s.log）\n' "$STAMP"; exit 5; }
 
 [ "$(uname -s)" = "Darwin" ] || { bad "只能在 macOS 上运行"; exit 2; }
 [ -d "$EXT/NVRM.kext" ] || { bad "$EXT/NVRM.kext 不存在，先装候选"; exit 2; }
@@ -69,8 +74,12 @@ sudo chmod -R go-w "$T/repo" || die "chmod 失败"
 sudo kmutil create -n aux --volume-root / $EXTRA \
   -B "$KB" -S "$KS" --repository "$T/repo" -A "$T/aux.kc" -z >"$OUT/test-build.log" 2>&1
 test_rc=$?
-tail -8 "$OUT/test-build.log" | sed 's/^/   /'
-[ "$test_rc" -eq 0 ] || die "测试集合构建失败"
+tail -20 "$OUT/test-build.log" | sed 's/^/   /'
+if [ "$test_rc" -ne 0 ]; then
+  grep -q 'Code=71\|KMErrorDomain' "$OUT/test-build.log" 2>/dev/null && \
+    printf '   —— Code 71 = kmutil 拒绝这次构建（多半是 KDK 不匹配或被授权策略挡住）\n'
+  die "测试集合构建失败"
+fi
 [ -s "$T/aux.kc" ] || die "测试集合没有产物"
 
 sudo kmutil inspect -a x86_64 -A "$T/aux.kc" >"$OUT/test-inspect.txt" 2>&1
@@ -88,7 +97,7 @@ sudo rm -f "$NEWKC"
 sudo kmutil create -n aux --volume-root / $EXTRA \
   -B "$KB" -S "$KS" --repository "$EXT" -A "$NEWKC" -z >"$OUT/live-build.log" 2>&1
 live_rc=$?
-tail -8 "$OUT/live-build.log" | sed 's/^/   /'
+tail -20 "$OUT/live-build.log" | sed 's/^/   /'
 [ "$live_rc" -eq 0 ] || die "正式集合构建失败"
 [ -s "$NEWKC" ] || die "正式集合没有产物"
 
