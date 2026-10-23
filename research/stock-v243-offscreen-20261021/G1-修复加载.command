@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================================
-#  G1 修复加载（v3.3）
+#  G1 修复加载（v3.4）
 #
 #  只重建辅助集合 /Library/KernelCollections/AuxiliaryKernelExtensions.kc，
 #  不写系统卷、不改 boot-args、不动 EFI。配方与上游 package/install.sh 一致：
@@ -14,7 +14,7 @@
 #  +--kdk / +-a x86_64 -V release 顺序升级重试。
 # ============================================================================
 set -uo pipefail
-VERSION=v3.3
+VERSION=v3.4
 echo "==== G1 修复加载 $VERSION ===="
 
 HERE="$(cd "$(dirname "$0")" && pwd -P)"
@@ -56,6 +56,7 @@ sudo chmod -R go-w "$EXT/NVRM.kext" 2>/dev/null
 ls -l "$EXT/NVRM.kext/Contents/MacOS/NVRM"
 
 T=$(sudo mktemp -d /tmp/g1-aux.XXXXXX) || { bad "建临时目录失败"; exit 5; }
+sudo chmod 0755 "$T"
 say "2. 建测试集合（${T}，不动系统）"
 sudo mkdir -p "$T/repo"
 sudo cp -R "$EXT/." "$T/repo/" || { bad "复制扩展目录失败"; exit 5; }
@@ -74,6 +75,7 @@ build_test() {
   sudo kmutil create -n aux "${BASE[@]}" --repository "$T/repo" -A "$out" -z \
     --no-variant-extension "$@" >"$OUT/build-$tag.log" 2>&1
   rc=$?
+  sudo chmod -R a+rX "$T" 2>/dev/null
   echo "   rc=$rc   目录："
   ls -l "$T" | sed 's/^/      /'
   sed 's/^/      | /' "$OUT/build-$tag.log"
@@ -101,8 +103,8 @@ if [ "$TEST_OK" -ne 1 ]; then
   exit 5
 fi
 
-AUXFILE=$(ls -1 "$T"/aux-*.kc 2>/dev/null | head -1)
-[ -n "$AUXFILE" ] && [ -s "$AUXFILE" ] || { bad "没有产物文件"; exit 5; }
+AUXFILE=$(sudo ls -1 "$T"/aux-*.kc 2>/dev/null | head -1)
+[ -n "$AUXFILE" ] && sudo test -s "$AUXFILE" || { bad "没有产物文件"; exit 5; }
 
 say "3. 验证测试集合含 $BUNDLE"
 sudo kmutil inspect -a x86_64 -A "$AUXFILE" >"$OUT/test-inspect.txt" 2>&1
@@ -124,7 +126,7 @@ sudo kmutil create -n aux "${BASE[@]}" --repository "$EXT" -A "$NEWKC" -z \
 live_rc=$?
 echo "   rc=$live_rc"
 sed 's/^/   | /' "$OUT/live-build.log"
-if [ "$live_rc" -ne 0 ] || [ ! -s "$NEWKC" ]; then
+if [ "$live_rc" -ne 0 ] || ! sudo test -s "$NEWKC"; then
   sudo log show --last 3m --predicate 'process == "kmutil"' --style compact \
     >"$OUT/kmutil-oslog.txt" 2>&1
   tail -40 "$OUT/kmutil-oslog.txt" | sed 's/^/   /'
