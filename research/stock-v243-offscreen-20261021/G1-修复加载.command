@@ -42,6 +42,16 @@ AUX_BEFORE=$(shasum -a 256 "$KC" 2>/dev/null | cut -d' ' -f1)
 
 sudo -v || { bad "需要 sudo"; exit 2; }
 
+# 从 U 盘/exFAT 拷过来的 kext 会丢掉可执行位（诊断里看到 Contents/MacOS/NVRM 是 0644）。
+# 先把已安装的 bundle 权限修正成标准形态，再建集合。
+say "0. 修正 bundle 权限"
+sudo chown -R root:wheel "$EXT/NVRM.kext" 2>/dev/null
+sudo chmod 0755 "$EXT/NVRM.kext/Contents/MacOS" 2>/dev/null
+sudo chmod 0755 "$EXT/NVRM.kext/Contents/MacOS/NVRM" 2>/dev/null
+sudo chmod 0644 "$EXT/NVRM.kext/Contents/Info.plist" 2>/dev/null
+sudo chmod -R go-w "$EXT/NVRM.kext" 2>/dev/null
+ls -l "$EXT/NVRM.kext/Contents/MacOS/NVRM" | sed 's/^/   /'
+
 # 与上游一致：允许缺 KDK；有 /System/Library/Kernels/kernel 就一并给出
 EXTRA="--allow-missing-kdk"
 [ -f "$K" ] && EXTRA="$EXTRA --kernel $K"
@@ -101,12 +111,19 @@ grep -i 'nullmoth\|NVRM' "$OUT/live-inspect.txt" | head -6 | sed 's/^/   /'
   printf 'aux_sha256_before: %s\n' "${AUX_BEFORE:-none}"
   printf 'aux_sha256_after: %s\n' "${AUX_AFTER:-none}"
   printf 'bundle: %s\n' "$BUNDLE"
+  printf 'boot_args: %s\n' "$(nvram boot-args 2>/dev/null | sed -n 's/.*boot-args[[:space:]]*//p')"
   printf 'recipe: kmutil create -n aux --volume-root / --allow-missing-kdk -B Boot -S System --repository %s -A <out> -z\n' "$EXT"
 } > "$OUT/fix-report.txt"
 
-say "现在重启：sudo reboot"
+say "集合已重建。重启方式二选一"
+printf '  保守（加载但不初始化 GPU）：\n'
+printf '    sudo nvram boot-args="$(nvram boot-args | sed -n "s/.*boot-args[[:space:]]*//p") -nvrmnogo"\n'
+printf '    sudo reboot\n'
+printf '  直接（auto-go 约 10 秒后尝试初始化 GPU）：\n'
+printf '    sudo reboot\n'
+printf '  说明：驱动自带启动守卫，连续两次启动没把显示拉起来会自己关掉并退回固件帧缓冲。\n'
+printf '\n回退：把 %s/AuxiliaryKernelExtensions.kc.before 拷回 %s\n' "$OUT" "$KC"
 printf '重启后跑 G1-一键诊断.command 确认加载。\n'
-printf '回退：把 %s/AuxiliaryKernelExtensions.kc.before 拷回 %s\n' "$OUT" "$KC"
 printf '\n日志: %s\n' "$OUT"
 cp -R "$OUT" "$HOME/Desktop/" 2>/dev/null || true
 exit 0
