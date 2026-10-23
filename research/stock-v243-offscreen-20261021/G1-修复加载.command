@@ -1,124 +1,112 @@
 #!/bin/bash
 # ============================================================================
-#  G1 修复加载（一键，v2）
+#  G1 修复加载（v3，按上游 install.sh 的做法重写）
 #
-#  前一次的失败与根因：
-#    * `kmutil install --update-all` 会重写 release 的 Boot/System 集合，
-#      而它们在只读系统卷上 → "Read-only file system"。
-#    * 真正需要重建的只有可写的辅助集合：
-#        /Library/KernelCollections/AuxiliaryKernelExtensions.kc
+#  上游 nullmoth/nvidia-macos-driver 的 package/install.sh 早就绕过了我们踩的坑：
+#    * 不调 `kmutil install --update-all`（那会重写只读系统卷上的 Boot/System 集合）
+#    * 只建辅助集合：kmutil create -n aux -B <BootKC> -S <SystemKC>
+#                      --repository <目录> -A <输出> -z --allow-missing-kdk
+#    * 先在临时目录建一份测试集合，用 `kmutil inspect -a x86_64 -A` 确认包含
+#      com.nullmoth.NVRM，再建正式集合、原子替换、替换前备份。
+#    * kext 必须 root:wheel 且不可被其他用户写，否则 kmutil 会静默跳过。
 #
-#  这一版用 `kmutil create` 的 `-n aux`（只做辅助集合）配合
-#  `-A/--auxiliary-path`、`-L/--no-system-collection`，不再碰系统卷。
-#
-#  成功判据：退出码 0，且辅助集合里确实出现 com.nullmoth.NVRM。
-#  建好后需要重启才生效（showloaded 读的是当前内核状态）。
+#  本脚本完全照这个流程做，只重建辅助集合，不写系统卷、不改 boot-args、不动 EFI。
 # ============================================================================
 set -uo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd -P)"
 STAMP="$(date +%Y%m%d-%H%M%S)"
-OUT="$HERE/results/fix2-$STAMP"
-AUX="/Library/KernelCollections/AuxiliaryKernelExtensions.kc"
-BUNDLE_ID="com.nullmoth.NVRM"
-mkdir -p "$OUT" 2>/dev/null || OUT="$HOME/Desktop/g1-fix2-$STAMP"
+OUT="$HERE/results/fix3-$STAMP"
+EXT=/Library/Extensions
+KC=/Library/KernelCollections/AuxiliaryKernelExtensions.kc
+KB=/System/Library/KernelCollections/BootKernelExtensions.kc
+KS=/System/Library/KernelCollections/SystemKernelExtensions.kc
+K=/System/Library/Kernels/kernel
+BUNDLE=com.nullmoth.NVRM
+mkdir -p "$OUT" 2>/dev/null || OUT="$HOME/Desktop/g1-fix3-$STAMP"
 
 say() { printf '\n== %s\n' "$*"; }
 bad() { printf '!! %s\n' "$*"; }
+die() { bad "$*"; printf '日志: %s\n' "$OUT"; exit 5; }
 
 [ "$(uname -s)" = "Darwin" ] || { bad "只能在 macOS 上运行"; exit 2; }
-[ -d /Library/Extensions/NVRM.kext ] || { bad "NVRM.kext 不在 /Library/Extensions"; exit 2; }
+[ -d "$EXT/NVRM.kext" ] || { bad "$EXT/NVRM.kext 不存在，先装候选"; exit 2; }
 if kextstat 2>/dev/null | grep -q NVRM; then say "NVRM 已经加载，不需要修"; exit 0; fi
 
 say "现状"
 printf 'build: %s\n' "$(sw_vers -buildVersion)"
 printf 'KDK:   %s\n' "$(ls -1 /Library/Developer/KDKs 2>/dev/null | tr '\n' ' ')"
-printf 'aux:   %s\n' "$(ls -l "$AUX" 2>/dev/null || echo '缺失')"
-AUX_BEFORE=$(shasum -a 256 "$AUX" 2>/dev/null | cut -d' ' -f1)
-printf 'aux sha256: %s\n' "${AUX_BEFORE:-none}"
+printf 'aux:   %s\n' "$(ls -l "$KC" 2>/dev/null || echo 缺失)"
+printf '输入集合: %s / %s\n' "$KB" "$KS"
+AUX_BEFORE=$(shasum -a 256 "$KC" 2>/dev/null | cut -d' ' -f1)
 
-say "取得权限"
 sudo -v || { bad "需要 sudo"; exit 2; }
 
-kmutil create --help >"$OUT/create-help.txt" 2>&1
-FLAGS=$(grep -oE '\-\-[a-z-]+' "$OUT/create-help.txt" | sort -u)
-has() { printf '%s\n' "$FLAGS" | grep -qx -- "$1"; }
-printf 'create 支持: aux-path=%s new=%s no-system=%s\n' \
-  "$(has --auxiliary-path && echo yes || echo no)" \
-  "$(has --new && echo yes || echo no)" \
-  "$(has --no-system-collection && echo yes || echo no)"
+# 与上游一致：允许缺 KDK；有 /System/Library/Kernels/kernel 就一并给出
+EXTRA="--allow-missing-kdk"
+[ -f "$K" ] && EXTRA="$EXTRA --kernel $K"
 
-# 辅助集合里是否真的有我们的 kext
-aux_has_nvrm() {
-  # 先试 kmutil 自己的列举（存在则最可靠），再退回字符串扫描
-  if sudo kmutil showloaded --collection auxiliary 2>/dev/null | grep -qi 'NVRM'; then return 0; fi
-  if strings "$AUX" 2>/dev/null | grep -q "$BUNDLE_ID"; then return 0; fi
-  return 1
-}
+T=$(sudo mktemp -d /tmp/g1-aux.XXXXXX) || die "建临时目录失败"
 
-attempt() {
-  local name="$1"; shift
-  say "尝试: $name"
-  printf '  sudo kmutil %s\n' "$*"
-  sudo kmutil "$@" >"$OUT/$name.log" 2>&1
-  local rc=$?
-  tail -5 "$OUT/$name.log" | sed 's/^/    /'
-  printf '  退出码 %s\n' "$rc"
-  [ "$rc" -eq 0 ] || return 1
-  if aux_has_nvrm; then
-    printf '  辅助集合里已出现 %s\n' "$BUNDLE_ID"
-    return 0
-  fi
-  bad "命令成功但辅助集合里没找到 $BUNDLE_ID"
-  return 1
-}
+# ---- 1. 测试集合 -----------------------------------------------------------
+say "1. 建测试集合（不动系统）"
+sudo mkdir -p "$T/repo"
+sudo cp -R "$EXT/." "$T/repo/" || die "复制扩展目录失败"
+# 上游注释：macOS 26 的 kmutil 会静默跳过非 root 拥有的 kext
+sudo chown -R root:wheel "$T/repo" || die "chown 失败"
+sudo chmod -R go-w "$T/repo" || die "chmod 失败"
 
-SUCCESS=""
-run() { local n="$1"; shift; if [ -z "$SUCCESS" ] && attempt "$n" "$@"; then SUCCESS="$n"; fi; }
+sudo kmutil create -n aux --volume-root / $EXTRA \
+  -B "$KB" -S "$KS" --repository "$T/repo" -A "$T/aux.kc" -z >"$OUT/test-build.log" 2>&1
+test_rc=$?
+tail -8 "$OUT/test-build.log" | sed 's/^/   /'
+[ "$test_rc" -eq 0 ] || die "测试集合构建失败"
+[ -s "$T/aux.kc" ] || die "测试集合没有产物"
 
-# 只做辅助集合：-n aux；显式给 aux 路径；-L 不生成 system 集合；-z 跳过本地签名检查
-if has --new && has --auxiliary-path; then
-  run S1-aux-explicit create -n aux -L -z --variant-suffix release -A "$AUX" -R /
-  run S2-aux-no-L  create -n aux -z --variant-suffix release -A "$AUX" -R /
-  run S3-aux-nosuffix create -n aux -L -z -A "$AUX" -R /
+sudo kmutil inspect -a x86_64 -A "$T/aux.kc" >"$OUT/test-inspect.txt" 2>&1
+if grep -q "$BUNDLE" "$OUT/test-inspect.txt"; then
+  printf '   测试集合里已包含 %s\n' "$BUNDLE"
+else
+  die "测试集合里没有 $BUNDLE（kmutil 可能跳过了它，看 test-build.log）"
 fi
-# 最后退回原命令，仅作对照
-run S4-install install --update-all
+
+# ---- 2. 备份 + 正式集合 ----------------------------------------------------
+say "2. 备份现有辅助集合并建正式集合"
+sudo cp -p "$KC" "$OUT/AuxiliaryKernelExtensions.kc.before" 2>/dev/null || printf '   （无旧集合可备份）\n'
+NEWKC="$KC.g1-new"
+sudo rm -f "$NEWKC"
+sudo kmutil create -n aux --volume-root / $EXTRA \
+  -B "$KB" -S "$KS" --repository "$EXT" -A "$NEWKC" -z >"$OUT/live-build.log" 2>&1
+live_rc=$?
+tail -8 "$OUT/live-build.log" | sed 's/^/   /'
+[ "$live_rc" -eq 0 ] || die "正式集合构建失败"
+[ -s "$NEWKC" ] || die "正式集合没有产物"
+
+sudo kmutil inspect -a x86_64 -A "$NEWKC" >"$OUT/live-inspect.txt" 2>&1
+grep -q "$BUNDLE" "$OUT/live-inspect.txt" || die "正式集合里没有 $BUNDLE"
+
+sudo mv -f "$NEWKC" "$KC" || die "发布新集合失败"
+sudo chmod 0644 "$KC" 2>/dev/null || true
+sudo rm -rf "$T"
+
+AUX_AFTER=$(shasum -a 256 "$KC" 2>/dev/null | cut -d' ' -f1)
 
 say "结果"
-AUX_AFTER=$(shasum -a 256 "$AUX" 2>/dev/null | cut -d' ' -f1)
 printf 'aux sha256: %s -> %s\n' "${AUX_BEFORE:-none}" "${AUX_AFTER:-none}"
+printf '集合内容（含 NVRM 的行）:\n'
+grep -i 'nullmoth\|NVRM' "$OUT/live-inspect.txt" | head -6 | sed 's/^/   /'
+{
+  printf 'verdict: AUX_REBUILT_UPSTREAM_RECIPE\n'
+  printf 'build: %s\n' "$(sw_vers -buildVersion)"
+  printf 'aux_sha256_before: %s\n' "${AUX_BEFORE:-none}"
+  printf 'aux_sha256_after: %s\n' "${AUX_AFTER:-none}"
+  printf 'bundle: %s\n' "$BUNDLE"
+  printf 'recipe: kmutil create -n aux --volume-root / --allow-missing-kdk -B Boot -S System --repository %s -A <out> -z\n' "$EXT"
+} > "$OUT/fix-report.txt"
 
-if [ -n "$SUCCESS" ]; then
-  printf '策略 %s 成功。\n' "$SUCCESS"
-  ls -l "$AUX" | sed 's/^/  /'
-  {
-    printf 'verdict: AUX_REBUILT\n'
-    printf 'strategy: %s\n' "$SUCCESS"
-    printf 'build: %s\n' "$(sw_vers -buildVersion)"
-    printf 'aux_sha256_before: %s\n' "${AUX_BEFORE:-none}"
-    printf 'aux_sha256_after: %s\n' "${AUX_AFTER:-none}"
-    printf 'bundle: %s\n' "$BUNDLE_ID"
-  } > "$OUT/fix-report.txt"
-  say "现在重启：sudo reboot"
-  printf '重启后运行 G1-一键诊断.command 确认加载。\n'
-  rc=0
-else
-  printf '所有策略都没成功。错误摘要：\n'
-  for f in "$OUT"/S*.log; do
-    [ -f "$f" ] || continue
-    printf '\n--- %s\n' "$(basename "$f")"
-    grep -E 'Error|failed|Could not|Read-only|unknown|Usage|not found' "$f" | head -6 | sed 's/^/  /'
-  done
-  {
-    printf 'verdict: ALL_STRATEGIES_FAILED\n'
-    printf 'build: %s\n' "$(sw_vers -buildVersion)"
-    printf 'aux_sha256_before: %s\n' "${AUX_BEFORE:-none}"
-    printf 'aux_sha256_after: %s\n' "${AUX_AFTER:-none}"
-  } > "$OUT/fix-report.txt"
-  rc=5
-fi
-
-printf '\n日志目录: %s\n' "$OUT"
+say "现在重启：sudo reboot"
+printf '重启后跑 G1-一键诊断.command 确认加载。\n'
+printf '回退：把 %s/AuxiliaryKernelExtensions.kc.before 拷回 %s\n' "$OUT" "$KC"
+printf '\n日志: %s\n' "$OUT"
 cp -R "$OUT" "$HOME/Desktop/" 2>/dev/null || true
-exit "$rc"
+exit 0
