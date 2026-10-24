@@ -34,11 +34,8 @@ if ! : >"$REPORT" 2>/dev/null; then
   : >"$REPORT" 2>/dev/null
 fi
 
-say() { printf '\n== %s\n' "$*"; }
-out() { printf '%s\n' "$*"; }
-tee_in() { # 一边显示一边进报告
-  tee -a "$REPORT"
-}
+say()  { printf '\n== %s\n' "$*"; printf '\n== %s\n' "$*" >>"$REPORT" 2>/dev/null; }
+out()  { printf '%s\n' "$*";    printf '%s\n' "$*"    >>"$REPORT" 2>/dev/null; }
 
 need_sudo() {
   if sudo -n true 2>/dev/null; then return 0; fi
