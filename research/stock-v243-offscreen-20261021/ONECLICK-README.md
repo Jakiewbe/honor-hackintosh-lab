@@ -11,7 +11,8 @@
 | `G1-装固件.command` | 把 GSP 固件装到 `/Library/NullMoth/nvfw/…` | 只加文件，按字节数+SHA-1 校验 |
 | `G1-清守卫.command` | 清 NVRM 开机守卫（`nullmoth-nv-starts` / `nullmoth-remove`），可选清残留 daemon | 只删 NVRAM 变量和临时文件，不重启、不动 kext |
 | `G1-自动实验.command` | 跨重启自动跑实验队列（`none`/`sign`/`rebuild`/`reinstall`） | 每次重启前自动清守卫，会重建 aux KC |
-| `G1-急救.command` | 反复自动重启时止损：写 `nullmoth-remove` 让 NVRM 完全不启动、拆掉自动实验 daemon、收集 panic 证据 | 只写 NVRAM 标志 + 删我们自己的 daemon，不重启、不动 kext |
+| `G1-急救.command` | 反复自动重启时止损：写 `nullmoth-remove` 让 NVRM 完全不启动、拆掉自动实验 daemon、收集 panic 证据；`logs [时长]` 从统一日志倒捞历史 NVRM 记录 | 只写 NVRAM 标志 + 删我们自己的 daemon + 只读查日志，不重启、不动 kext |
+| `G1-试跑一次.command` | 受控地让 NVRM 带固件跑**恰好一次**并自动采集：守卫计数预置 1（跑一次即自锁）、开机采集后自动写 `nullmoth-remove` 并自删 | 一次性 LaunchDaemon 只读日志、无任何重启代码；最坏情况 panic 后自锁不反复 |
 
 ### 开机守卫为什么是一个必须单独处理的东西
 
