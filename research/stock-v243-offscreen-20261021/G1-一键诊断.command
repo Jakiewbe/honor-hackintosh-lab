@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================================
-#  G1 一键诊断 v3（只读）
+#  G1 一键诊断 v5（只读）
 #
 #  双击运行，或：bash G1-一键诊断.command
 #
@@ -8,11 +8,12 @@
 #  本脚本旁边的 results/ 里，同时复制一份到桌面。
 #  不需要 sudo，不改任何东西，不联网。
 #
-#  v3 相对 v2 的改动：
-#    - 修了标题格式：v2 里 `echo "== x"; cmd` 会把命令输出接到标题同一行，
-#      所以 "== sw_vers" 后面直接跟着 "ProductName:"。
-#    - 结论从"加载了没有"细化到"RM 走到哪一步"：
-#      PASS 1（RM 初始化）/ 固件装载 / RmInitAdapter / headwatch。
+#  v3: 修标题格式；结论细化到 RM 的每一步（PASS 1 / 固件 / RmInitAdapter / headwatch）。
+#  v4: 加 NVRMFB/NVAccel 安装状态、GSP/FSP 定向日志、head 与 panic 结论行。
+#  v5: 加开机时刻与运行时长（判断"到底重启了没有"）、
+#      不带 process 过滤的 nvrm 日志（kext 没 attach 时唯一线索）、
+#      kextutil -n 诊断（不加载，只报 KMOD/依赖问题）、
+#      kmutil showloaded 明细；节点缺失单独给 rc=12 分支。
 # ============================================================================
 set -uo pipefail
 
@@ -30,13 +31,16 @@ OUT="$RESULTS/diag-$STAMP.txt"
 
 sec() { printf '\n== %s\n' "$*" >> "$OUT"; }
 
-printf 'G1 诊断 v3 %s\n' "$(date)"
+printf 'G1 诊断 v5 %s\n' "$(date)"
 printf '输出: %s\n' "$OUT"
 
 # ---- 1. 环境 ---------------------------------------------------------------
 sec collected;  date >> "$OUT"
 sec host;       uname -srm >> "$OUT"
 sec sw_vers;    sw_vers >> "$OUT" 2>&1; printf 'build: %s\n' "$(sw_vers -buildVersion 2>&1)" >> "$OUT"
+sec '开机时刻 / 运行时长（判断有没有真的重启）'
+sysctl -n kern.boottime >> "$OUT" 2>&1
+uptime >> "$OUT" 2>&1
 sec KDK;        ls -1 /Library/Developer/KDKs >> "$OUT" 2>&1 || echo '(none)' >> "$OUT"
 sec 'kmutil kdk help'; kmutil install --help 2>&1 | grep -i -A2 'kdk' >> "$OUT" || echo '(no kdk option)' >> "$OUT"
 
@@ -47,6 +51,12 @@ sec 'ioreg NVRM 关键属性'
 ioreg -rn NVRM -l 2>/dev/null | grep -E 'nvrm-(autogo|boot-hold|kext-version|pm-violation|boot-raster|bars)' >> "$OUT" \
   || echo '(no NVRM node)' >> "$OUT"
 sec boot-args;  nvram boot-args >> "$OUT" 2>&1
+sec 'kextutil -n 诊断（不加载，只报 KMOD / 依赖）'
+if [ -d /Library/Extensions/NVRM.kext ]; then
+  kextutil -n -v 2 /Library/Extensions/NVRM.kext 2>&1 | head -50 >> "$OUT"
+else
+  echo '(NVRM.kext is not installed)' >> "$OUT"
+fi
 
 # ---- 3. 装了什么 -----------------------------------------------------------
 sec '/Library/Extensions'; ls -1 /Library/Extensions >> "$OUT" 2>&1
@@ -98,6 +108,12 @@ log show --last 20m --predicate 'process == "kernel"' 2>/dev/null \
   | grep -iE 'NVRM|NullMoth|GSP|nvaccel' | tail -120 >> "$OUT"
 sec 'NVRM log (10m)'
 log show --last 10m --predicate 'eventMessage CONTAINS "NVRM"' 2>&1 | tail -60 >> "$OUT"
+sec 'nvrm 日志（30m，不带 process 过滤；kext 没 attach 时只有这里有线索）'
+log show --last 30m --predicate 'eventMessage CONTAINS[c] "nvrm" OR eventMessage CONTAINS[c] "nullmoth"' 2>&1 \
+  | grep -viE 'Boot args:' | tail -60 >> "$OUT" || echo '(none)' >> "$OUT"
+sec 'kernelmanagerd / syspolicyd 关于 NVRM 的行（30m）'
+log show --last 30m --predicate 'process == "kernelmanagerd" OR process == "syspolicyd"' 2>&1 \
+  | grep -i 'nvrm' | tail -30 >> "$OUT" || echo '(none)' >> "$OUT"
 sec 'panic files'
 ls -1 /Library/Logs/DiagnosticReports/*.panic 2>/dev/null | tail -3 >> "$OUT" || echo '(none)' >> "$OUT"
 sec 'GSP / FSP / head 关键行（只看这几类）'
@@ -169,6 +185,14 @@ elif [ "$node" = 1 ] && [ "$fwload" = 1 ] && [ "$adapter" = 1 ]; then
 elif [ "$loaded" = 1 ] && [ "$node" = 1 ]; then
   printf '\n判定: 已加载、设备节点在，但 RM 没到 PASS 1 —— 看「内核 NV log」最早那几行。\n'
   rc=4
+elif [ "$loaded" = 1 ] && [ "$node" = 0 ]; then
+  printf '\n判定: 扩展进内核了，但这次开机 NVRM 没有 attach 到 GPU（没有设备节点、没有 RM 日志）。\n'
+  printf '      这不是固件问题 —— 固件连读都没读到。先看两处：\n'
+  printf '        1) 「开机时刻」对得上你装固件之后吗？装完固件没重启，就是上一次开机留下的旧状态。\n'
+  printf '        2) 「kextutil -n 诊断」有没有报 KMOD / 依赖问题，以及\n'
+  printf '           「kernelmanagerd / syspolicyd 关于 NVRM 的行」里有没有 restricted lookup table 报错。\n'
+  printf '      处理: sudo reboot 后重跑本脚本；仍然没有节点再发回报告。\n'
+  rc=12
 elif [ "$inst" = 1 ] && [ "$kdk" = 1 ]; then
   printf '\n判定: 扩展在、KDK 在，但没加载 —— 内核集合可能没重建成功，或需要重启。\n'
   rc=5
