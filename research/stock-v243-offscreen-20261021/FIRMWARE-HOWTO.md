@@ -1,5 +1,8 @@
 # 怎么把 GSP 固件弄到机器上（2026-10-24）
 
+> **状态：已取到并放上 U 盘。** 详见下面「已完成的准备」一节。
+> Mac 上只剩两步：`bash G1-装固件.command`、`sudo reboot`。
+
 设备现状（已实测，见 `LOAD-RESULT-20261024.md`）：驱动进了内核、匹配了 GPU、RM 跑到
 `PASS 1`，唯一失败是固件文件不在盘上：
 
@@ -12,6 +15,36 @@ RmFetchGspRmImages: No firmware image found
 所以只需要一个文件：`gsp_ga10x.bin`（84,310,168 B，SHA-1
 `f11971026ccd86a7ea09ba525548c2e0615565ce`），外加建议放的 `ucodes_ga10x.bin`
 （31,744 B，`1daf70f4f9a256212dead6f1ba88c694c5ae3af9`）。
+
+---
+
+## 已完成的准备（2026-10-24，在 Windows 这一侧做完）
+
+从上游发行包 `nullmoth-nvidia-2.4.2.tar.gz`（Release v2.4.2，269,134,785 B）取出固件，
+**全部四个文件与驱动内建表逐字节相符**，已拷到 U 盘：
+
+```
+F:\HONOR-G1-FIRST-TOUCH\固件\gsp_ga10x.bin      84,310,168 B  f11971026ccd86a7ea09ba525548c2e0615565ce  OK
+F:\HONOR-G1-FIRST-TOUCH\固件\ucodes_ga10x.bin       31,744 B  1daf70f4f9a256212dead6f1ba88c694c5ae3af9  OK
+```
+
+（`gsp_tu10x.bin` 29,381,504 B / `f20b8dc5…` 与 `ucodes_tu10x.bin` 12,032 B / `fe009104…`
+也都核对通过，只是 RTX 2050 用不到，没往 U 盘放。）
+
+取包过程本身也校验过：`nullmoth-nvidia-2.4.2.tar.gz` 大小 269,134,785 B 与 GitHub API
+报告的 asset 大小一致；v2.5.3 的包另校验过 SHA-256
+`6ec9d23f8d7e0ab340b9e0a9753f7c48722b9930118fff648d545e0b95016884`（与 `SHA256SUMS.txt` 一致）。
+
+### 一个必须记住的坑：固件版本跟发行版本绑定
+
+| 发行包 | 包里的固件目录 | 说明 |
+|---|---|---|
+| `nullmoth-nvidia-2.4.2` | `nvfw/nvidia/**610.57.04**/` | 我们这套 kext 要的就是这个 |
+| `nullmoth-nvidia-2.5.3` | `nvfw/nvidia/**615.78.08**/` | 换这套就得整套换，不能只换固件 |
+
+我们的 kext 是从 pin `272ccd9`（v2.4.2）+ 我们的补丁编出来的，
+`os-xnu2.cpp:29` 写死 `610.57.04`，所以**必须用 2.4.x 的固件**。
+拿 2.5.3 的 blob 会同时踩两个坑：目录名不对（直接 ENOENT）、哈希也不对（`os-xnu2.cpp:1248` 拒绝）。
 
 ---
 
@@ -82,7 +115,7 @@ NVIDIA-Linux-x86_64-610.57.04/firmware/ucodes_ga10x.bin
 
 ## Mac 这边怎么做
 
-U 盘里那两个脚本已经更新（`a9782fd` 之后）：
+U 盘里那两个脚本已经更新（`c350ac5` 之后），固件也已经放在 `固件/` 里了：
 
 ```bash
 cd /Volumes/UNPLUGGED/HONOR-G1-FIRST-TOUCH
