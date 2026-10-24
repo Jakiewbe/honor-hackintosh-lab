@@ -19,6 +19,7 @@
 #   bash ./G1-急救.command panics     # 只看 panic 记录
 #   bash ./G1-急救.command status     # 只看当前开关 / daemon / 最近重启
 #   bash ./G1-急救.command daemons    # 只拆我们的自动实验 daemon
+#   bash ./G1-急救.command logs 24h   # 从系统日志倒捞历史 NVRM 记录（只读，不改状态）
 #
 # 报告写到 results/rescue-<时间>.txt（U 盘只读时退到 /var/tmp）。
 
@@ -30,6 +31,7 @@ REMOVE=nullmoth-remove
 PANIC_DIR=/Library/Logs/DiagnosticReports
 
 STAMP=$(date +%Y%m%d-%H%M%S)
+SUDO_ARGS="${*:-rescue}"
 mkdir -p "$HERE/results" 2>/dev/null
 REPORT="$HERE/results/rescue-$STAMP.txt"
 if ! : >"$REPORT" 2>/dev/null; then
@@ -41,9 +43,16 @@ say() { printf '\n== %s\n' "$*"; printf '\n== %s\n' "$*" >>"$REPORT" 2>/dev/null
 out() { printf '%s\n' "$*";    printf '%s\n' "$*"    >>"$REPORT" 2>/dev/null; }
 
 need_sudo() {
-  if sudo -n true 2>/dev/null; then return 0; fi
-  echo "需要 sudo 权限，先输密码："
-  sudo -v || { echo "拿不到 sudo，退出"; exit 2; }
+  [ "$(id -u)" = 0 ] && return 0
+  sudo -n true 2>/dev/null && return 0
+  echo
+  echo "这一步要管理员权限。请在下面输入开机密码（输入时屏幕不显示，是正常的）："
+  sudo -v && return 0
+  echo
+  echo "没拿到权限。用这条重跑："
+  echo "  sudo bash \"$0\" ${SUDO_ARGS:-rescue}"
+  echo "（刚才这个文件写出来是 0 字节，就是这个原因，不是脚本坏了。）"
+  exit 2
 }
 
 nvram_dump() {
@@ -174,8 +183,8 @@ kill_daemons() {
 #       日志还留在盘上，可以倒推当时走到哪一步、有没有崩。
 logs_dump() {
   local since="${1:-12h}" f n k c
-  need_sudo
   say "取回 NVRM 历史日志（最近 $since，只读）"
+  need_sudo
   f="$HERE/results/nvrm-log-$STAMP.txt"
   : >"$f" 2>/dev/null || f="/var/tmp/nvrm-log-$STAMP.txt"
   out "  可能要几十秒到几分钟，取决于日志量"
