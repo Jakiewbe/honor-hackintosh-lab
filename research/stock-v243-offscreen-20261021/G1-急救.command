@@ -169,6 +169,42 @@ kill_daemons() {
 }
 
 # --------------------------------------------------------------------------
+# 从统一日志里把历史 NVRM 记录捞出来。只读，不改任何状态。
+# 用途：那些没来得及采集的开机（尤其"固件装上之后驱动真的跑过的那两次"），
+#       日志还留在盘上，可以倒推当时走到哪一步、有没有崩。
+logs_dump() {
+  local since="${1:-12h}" f n k c
+  need_sudo
+  say "取回 NVRM 历史日志（最近 $since，只读）"
+  f="$HERE/results/nvrm-log-$STAMP.txt"
+  : >"$f" 2>/dev/null || f="/var/tmp/nvrm-log-$STAMP.txt"
+  out "  可能要几十秒到几分钟，取决于日志量"
+  sudo log show --last "$since" --style compact \
+    --predicate 'eventMessage CONTAINS[c] "NVRM" OR eventMessage CONTAINS[c] "NullMoth" OR eventMessage CONTAINS[c] "RmInit" OR eventMessage CONTAINS[c] "gsp" OR eventMessage CONTAINS[c] "nvaccel" OR eventMessage CONTAINS[c] "boot guard"' \
+    >"$f" 2>/dev/null
+  n=$(wc -l <"$f" 2>/dev/null | tr -d ' ')
+  out "  抓到 ${n:-0} 行 → $f"
+
+  say "关键标记"
+  for k in "probe 10de" "boot guard" "PASS 1 REACHED" "nv_get_firmware" \
+           "firmware loaded" "RmFetchGspRmImages" "RmInitAdapter" \
+           "rm_init_adapter ->" "bus master" "headwatch" "nvaccel" "panic("; do
+    c=$(grep -c -F "$k" "$f" 2>/dev/null)
+    [ "${c:-0}" -gt 0 ] 2>/dev/null && out "  [$c] $k"
+  done
+
+  say "最后 40 行（看它停在哪）"
+  tail -40 "$f" 2>/dev/null | cut -c1-200 | sed 's/^/  /'
+
+  say "怎么读"
+  out "  PASS 1 REACHED          → RM 起来了"
+  out "  nv_get_firmware + vnode_open failed → 固件没读到"
+  out "  firmware loaded         → 固件读到了（今天还没验证过这个边界）"
+  out "  RmInitAdapter failed    → 卡在 adapter 初始化，固件已过"
+  out "  panic(                  → 崩过，配合 panics 看调用栈"
+}
+
+# --------------------------------------------------------------------------
 # fast：只做最要紧的两件事，几秒内完成。机器活不过一分钟时用这个。
 fast() {
   kill_daemons || true     # 先拆会重启的 daemon，这一步最要紧
@@ -201,5 +237,6 @@ case "${1:-rescue}" in
   status)  status;  out "  报告: $REPORT" ;;
   panics)  panics;  out "  报告: $REPORT" ;;
   daemons) kill_daemons; out "  报告: $REPORT" ;;
-  *) echo "用法: bash $0 [rescue|fast|off|on|status|panics|daemons]"; exit 2 ;;
+  logs)    logs_dump "${2:-12h}"; out "  报告: $REPORT" ;;
+  *) echo "用法: bash $0 [rescue|fast|off|on|status|panics|daemons|logs [时长]]"; exit 2 ;;
 esac
