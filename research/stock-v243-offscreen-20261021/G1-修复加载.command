@@ -69,12 +69,33 @@ if [ "$FORCE" = 0 ] && kextstat 2>/dev/null | grep -q NVRM; then
 fi
 if [ "$FORCE" = 1 ]; then say "已指定 --force：忽略「已加载」，强制重建"; fi
 
+# v3.5: --sign 给未签名的 bundle 打 ad-hoc 签名。日志里 NVRM 是 "signed @none"，
+# 而 kernelmanagerd 在「直接加载」路径上把它判成 "invalid codeful kernel extension"
+# （restricted lookup table 插不进去），personality 因此没登记、probe 不被调用。
+SIGN=0
+for a in "$@"; do [ "$a" = "--sign" ] && SIGN=1; done
+
 say "1. 修正 bundle 权限（exFAT 拷贝会丢可执行位）"
 sudo chown -R root:wheel "$EXT/NVRM.kext" 2>/dev/null
 sudo chmod -R 755 "$EXT/NVRM.kext" 2>/dev/null
 sudo chmod 644 "$EXT/NVRM.kext/Contents/Info.plist" 2>/dev/null
 sudo chmod -R go-w "$EXT/NVRM.kext" 2>/dev/null
 ls -l "$EXT/NVRM.kext/Contents/MacOS/NVRM"
+
+say "1.5 签名状态"
+if codesign -dv "$EXT/NVRM.kext" 2>&1 | sed 's/^/   /'; then :; else echo "   (codesign 读不出：没有签名)"; fi
+
+if [ "$SIGN" = 1 ]; then
+  say "1.6 ad-hoc 签名（--sign）"
+  BK="$OUT/NVRM.kext.before-sign"
+  sudo rm -rf "$BK"
+  sudo cp -R "$EXT/NVRM.kext" "$BK" && sudo chown -R "$(id -un):$(id -gn)" "$BK" \
+    && echo "   已备份原 bundle: $BK"
+  sudo codesign --force --deep --sign - "$EXT/NVRM.kext" || { bad "codesign 失败"; exit 5; }
+  codesign -dv --verbose=4 "$EXT/NVRM.kext" 2>&1 | sed 's/^/   /'
+  codesign --verify --deep --strict "$EXT/NVRM.kext" 2>&1 | sed 's/^/   verify: /'
+  echo "   回退: sudo rm -rf $EXT/NVRM.kext && sudo cp -R $BK $EXT/NVRM.kext"
+fi
 
 T=$(sudo mktemp -d /tmp/g1-aux.XXXXXX) || { bad "建临时目录失败"; exit 5; }
 sudo chmod 0755 "$T"

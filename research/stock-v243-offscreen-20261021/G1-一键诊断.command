@@ -64,6 +64,12 @@ if [ -d /Library/Extensions/NVRM.kext ]; then
   shasum -a 256 /Library/Extensions/NVRM.kext/Contents/MacOS/NVRM >> "$OUT" 2>&1
   /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' /Library/Extensions/NVRM.kext/Contents/Info.plist >> "$OUT" 2>&1
   /usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' /Library/Extensions/NVRM.kext/Contents/Info.plist >> "$OUT" 2>&1
+  sec '签名状态（日志里的 signed @none 就是这里没签名）'
+  codesign -dv --verbose=4 /Library/Extensions/NVRM.kext >> "$OUT" 2>&1 \
+    || echo '(codesign 读不出：bundle 没有签名)' >> "$OUT"
+  codesign --verify --deep --strict /Library/Extensions/NVRM.kext >> "$OUT" 2>&1
+  sec 'personality（Info.plist 声明了什么）'
+  /usr/libexec/PlistBuddy -c 'Print :IOKitPersonalities' /Library/Extensions/NVRM.kext/Contents/Info.plist 2>&1 | head -40 >> "$OUT"
 else
   echo '(NVRM.kext is not installed)' >> "$OUT"
 fi
@@ -191,7 +197,8 @@ elif [ "$loaded" = 1 ] && [ "$node" = 0 ]; then
   printf '           IOKit 不会去匹配 personality，于是 probe/start 根本不被调用。\n'
   printf '        3) 「kernelmanagerd / syspolicyd 关于 NVRM 的行」里有没有\n'
   printf '           restricted lookup table 报错。\n'
-  printf '      处理: bash ./G1-修复加载.command --force，再 sudo reboot，然后重跑本脚本。\n'
+  printf '      处理: 若「签名状态」显示 bundle 没签名/TEAM 为空，就\n'
+  printf '           bash ./G1-修复加载.command --sign --force，再 sudo reboot，然后重跑本脚本。\n'
   rc=12
 elif [ "$inst" = 1 ] && [ "$kdk" = 1 ]; then
   printf '\n判定: 扩展在、KDK 在，但没加载 —— 内核集合可能没重建成功，或需要重启。\n'
