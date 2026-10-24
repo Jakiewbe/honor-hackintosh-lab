@@ -9,6 +9,27 @@
 | `G1-修复加载.command` | 重建 aux KC 让 NVRM 能加载 | 会改 `/Library/Extensions`、aux KC |
 | `G1-加载实验.command` | 装/验/回滚 NVRM（加载实验） | 会改 KC，有回滚 |
 | `G1-装固件.command` | 把 GSP 固件装到 `/Library/NullMoth/nvfw/…` | 只加文件，按字节数+SHA-1 校验 |
+| `G1-清守卫.command` | 清 NVRM 开机守卫（`nullmoth-nv-starts` / `nullmoth-remove`），可选清残留 daemon | 只删 NVRAM 变量和临时文件，不重启、不动 kext |
+| `G1-自动实验.command` | 跨重启自动跑实验队列（`none`/`sign`/`rebuild`/`reinstall`） | 每次重启前自动清守卫，会重建 aux KC |
+
+### 开机守卫为什么是一个必须单独处理的东西
+
+`kexts/NVRM/nvrm_off.h` 里：
+
+```c
+#define NVRM_GUARD_VAR "nullmoth-nv-starts"
+#define NVRM_GUARD_LIMIT 2
+// NVRM::probe() 第一行： if (nvrm_driver_off()) return NULL;
+```
+
+计数只在 `NVRM::start` 里 +1，只有 NVRMFB 把显示路径拉起来时才清
+（`kexts/NVRMFB/fb/nvrm-fb.cpp:2995`）。本机没装 NVRMFB，所以**每两次开机驱动就永久闭嘴**，
+而且是在打印任何日志之前就 `return NULL`，看起来就是"kext 装了但不 attach、日志零行"。
+
+- 只看当前状态：`bash ./G1-清守卫.command show`
+- 清掉：`bash ./G1-清守卫.command`（要 sudo，无重启）
+- 顺带清上一轮残留：`bash ./G1-清守卫.command all`
+- `-nvoff` 在 boot-args 里：`bash ./G1-清守卫.command bootargs`（先把原文记进报告）
 
 固件为什么需要：2026-10-24 实测驱动与 RM 全部走通，唯一失败点是
 `/Library/NullMoth/nvfw/nvidia/610.57.04/gsp_ga10x.bin` 不存在
