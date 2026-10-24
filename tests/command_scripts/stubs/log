@@ -1,0 +1,5 @@
+#!/bin/bash
+# 假 log —— 忽略参数，打印 $G1_LOG_FIXTURE 的内容（不存在则什么都不打）
+f=${G1_LOG_FIXTURE:-}
+[ -n "$f" ] && [ -f "$f" ] && cat "$f"
+exit 0

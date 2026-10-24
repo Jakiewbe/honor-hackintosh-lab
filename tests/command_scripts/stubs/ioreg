@@ -1,0 +1,3 @@
+#!/bin/bash
+echo '+-o pci10de,25a9 <class NVRM, id 0x1000005f2, registered, matched>'
+exit 0

@@ -1,280 +1,323 @@
 #!/bin/bash
-# G1-试跑一次.command — 受控地让 NVRM 带着 GSP 固件跑【恰好一次】，并自动把证据留下来。
+# G1-试跑一次.command — 让 NVRM 带 GSP 固件跑【恰好一次】，然后把那一次的日志完整取回来。
 #
-# 为什么需要它：
-#   固件 2026-10-24 07:47 就装好了，之后两次开机驱动确实启动过（守卫计数 0→2），
-#   但当时自动实验 daemon 在乱重启，日志没采到。现在要从"再跑一次"里拿到那一次完整日志。
-#
-# 三层自我限制（重要）：
-#   1. 守 卫 = 计数器。安装时把 nullmoth-nv-starts 预置成 1，
-#      驱动 start() 里先判断 <2 → 放行，再 +1 变 2；于是它只能启动这一回。
-#      即使这次开机就 panic，下次开机计数已是 2，驱动自锁，不会反复重启。
-#   2. 采集 daemon 只读日志，**没有任何 shutdown/reboot 代码**。
-#   3. 采集完成后立刻写 nullmoth-remove=1 把驱动关回去，并 bootout + 删除自己。
+# v3：不再安装任何 LaunchDaemon。
+#     理由：写 /Library/LaunchDaemons 是这条链上最脆的一环（SIP/权限/中途掉线都会失败），
+#     而它本来只为一件事存在——"开机时把日志抓下来"。但 macOS 的统一日志本身是落盘的，
+#     重启之后依然可以按时间窗查询。于是整个 daemon 可以删掉：
+#         go     → 只写两个 NVRAM 变量（守卫预置 1、解除闭嘴）
+#         重启   → 驱动只启动这一次，之后自锁
+#         report → 直接查日志 + 翻 panic 文件，什么都不用装
 #
 # 用法：
-#   bash ./G1-试跑一次.command            # 安装 + 清开关（然后你重启）
-#   bash ./G1-试跑一次.command report     # 重启后看结果（几十秒内自动采好）
-#   bash ./G1-试跑一次.command status     # 看现在的开关/任务状态
-#   bash ./G1-试跑一次.command cancel     # 反悔：拆任务、把驱动关回去
+#   bash ./G1-试跑一次.command            # = go，写开关；然后你手动重启
+#   bash ./G1-试跑一次.command report     # 重启后跑，取回那一次的完整记录
+#   bash ./G1-试跑一次.command status     # 当前开关 / 开机时长 / 上次试跑时间
+#   bash ./G1-试跑一次.command cancel     # 反悔：把驱动关回去、清计数
 #
-# 不删 kext、不动 /Library/Extensions、不动 aux KC、不重启、不改 boot-args。
+# 安全边界（写死，不接受参数改变）：
+#   * 绝不调用 shutdown / reboot / launchctl bootstrap；
+#   * 只写 nullmoth-nv-starts 与 nullmoth-remove 两个 NVRAM 变量；
+#   * 不碰 /Library/Extensions、不碰 aux KC、不改 boot-args；
+#   * 守卫预置 1 → 驱动这次开机启动一次后计数=2 → 永久自锁。即使 panic 也不会反复。
+#
+# 自锁原理（源码依据 kexts/NVRM/nvrm_off.h + NVRM.cpp）：
+#   nvrm_driver_off() = (-nvoff) || (/options 里 nullmoth-remove) || (nvrm_guard_starts() >= 2)
+#   NVRM::start() 先查 nvrm_driver_off()，放行后立刻 nvrm_guard_count_start()（+1）。
+#   所以预置 1 → 本次放行、计数变 2 → 下次开机被挡。
 
 set -u
+set -o pipefail
+
 HERE=$(cd "$(dirname "$0")" && pwd)
-LABEL=com.g1.once
-PLIST=/Library/LaunchDaemons/$LABEL.plist
-STATE=/var/tmp/g1-once
-SELF_STABLE=$STATE/self.sh
+LABEL=com.g1.trial
+STATE=${G1_STATE_DIR:-/var/tmp/g1-trial}
+PANIC_DIR=${G1_PANIC_DIR:-/Library/Logs/DiagnosticReports}
 GUARD=nullmoth-nv-starts
 REMOVE=nullmoth-remove
+WINDOW=${G1_WINDOW:-2h}
 STAMP=$(date +%Y%m%d-%H%M%S)
-SUDO_ARGS="${*:-install}"
 
 mkdir -p "$STATE" 2>/dev/null
-mkdir -p "$HERE/results" 2>/dev/null
-# 报告先写本地（U 盘可能中途掉线/只读），结束时再拷一份到 U 盘
-REPORT="$STATE/trial-$STAMP.txt"
-: >"$REPORT" 2>/dev/null
-STICK_REPORT="$HERE/results/trial-$STAMP.txt"
-sync_report() { [ -d "$HERE/results" ] && cp "$REPORT" "$STICK_REPORT" 2>/dev/null; }
+REPORT="$STATE/report-$STAMP.txt"
+: >"$REPORT" 2>/dev/null || { echo "无法写 $STATE"; exit 1; }
+# 先落一行头：这样即使后面 sudo 卡住/失败/被 Ctrl-C，报告也不会是 0 字节。
+printf '# G1 试跑报告 %s  动作=%s  主机=%s\n' \
+  "$STAMP" "${*:-go}" "$(hostname 2>/dev/null)" >>"$REPORT" 2>/dev/null
+STICK_RESULTS="$HERE/results"
+mkdir -p "$STICK_RESULTS" 2>/dev/null
+STICK_REPORT="$STICK_RESULTS/$(basename "$REPORT")"
 
 say() { printf '\n== %s\n' "$*"; printf '\n== %s\n' "$*" >>"$REPORT" 2>/dev/null; }
 out() { printf '%s\n' "$*";    printf '%s\n' "$*"    >>"$REPORT" 2>/dev/null; }
+sync_report() {
+  [ -d "$STICK_RESULTS" ] || return 0
+  cp "$REPORT" "$STICK_REPORT" 2>/dev/null
+}
 
-need_sudo() {
+die() { out "!! $*"; sync_report; exit "${2:-1}"; }
+
+# --------------------------------------------------------------------------
+# 权限：整体提到最前面，一次拿够，避免"跑到一半才问密码"
+elevate() {
+  [ "${G1_NO_ELEVATE:-0}" = 1 ] && return 0
   [ "$(id -u)" = 0 ] && return 0
-  sudo -n true 2>/dev/null && return 0
-  echo
-  echo "这一步要管理员权限。请在下面输入开机密码（输入时屏幕不显示，是正常的）："
-  sudo -v && return 0
-  echo
-  echo "没拿到权限。用这条重跑："
-  echo "  sudo bash \"$0\" ${SUDO_ARGS:-install}"
-  exit 2
+  echo "需要管理员权限，正在重新以 sudo 启动（会提示输入开机密码）..."
+  exec sudo -p '开机密码: ' bash "$0" "$@"
 }
 
-nv() { sudo nvram "$@" 2>/dev/null; }
-nv_get() { nvram -p 2>/dev/null | awk -v k="$1" '$1==k { $1=""; sub(/^[ \t]+/,""); print; exit }'; }
+have() { command -v "$1" >/dev/null 2>&1; }
 
-# --------------------------------------------------------------------------
-# 开机自动执行的采集器（由 launchd 以 root 调用，参数 --collect-once）
-collect_once() {
-  local d="$STATE"
-  local stamp dump log k c lb
-  stamp=$(date +%Y%m%d-%H%M%S)
-  log="$d/boot-$stamp.log"
-  dump="$d/nvrm-$stamp.txt"
-  lb=$(command -v log 2>/dev/null || echo /usr/bin/log)
-  mkdir -p "$d" 2>/dev/null
-  sleep 10                       # 给 NVRM/RM 一点时间跑到失败点
+LOG_BIN=$(command -v log 2>/dev/null || echo /usr/bin/log)
 
-  "$lb" show --last 5m --style compact \
-    --predicate 'eventMessage CONTAINS[c] "NVRM" OR eventMessage CONTAINS[c] "NullMoth" OR eventMessage CONTAINS[c] "RmInit" OR eventMessage CONTAINS[c] "nvaccel" OR eventMessage CONTAINS[c] "boot guard"' \
-    >"$dump" 2>/dev/null
+nvram_get() {
+  local dump
+  dump=$(nvram -p 2>/dev/null) || dump=""
+  if [ -z "$dump" ]; then dump=$(/usr/sbin/nvram -p 2>/dev/null); fi
+  printf '%s\n' "$dump" | awk -v k="$1" '$1==k { $1=""; sub(/^[ \t]+/,""); print; exit }'
+}
+nvram_set() { nvram "$1" 2>/dev/null || /usr/sbin/nvram "$1" 2>/dev/null; }
+nvram_del() { nvram -d "$1" 2>/dev/null || /usr/sbin/nvram -d "$1" 2>/dev/null; }
 
-  {
-    echo "== 一次性试跑采集"
-    echo "   采集时间: $(date)"
-    echo "   开机时间: $(sysctl -n kern.boottime 2>/dev/null)"
-    echo "   当前开关:"; nvram -p 2>/dev/null | grep -i nullmoth | sed 's/^/     /'
-    echo
-    echo "== 关键标记"
-    for k in "probe 10de" "boot guard" "PASS 1 REACHED" "nv_get_firmware" \
-             "vnode_open failed" "firmware loaded" "RmFetchGspRmImages" \
-             "RmInitAdapter" "rm_init_adapter ->" "bus master" "headwatch" \
-             "nvaccel" "FSP" "WPR" "panic("; do
-      c=$(grep -c -F "$k" "$dump" 2>/dev/null)
-      [ "${c:-0}" -gt 0 ] 2>/dev/null && echo "   [$c] $k"
-    done
-    echo
-    echo "== 结论草稿"
-    if grep -q "firmware loaded" "$dump" 2>/dev/null; then
-      echo "   固件读到了 —— 新边界，往下看 RmInitAdapter / FSP"
-    else
-      echo "   没看到 'firmware loaded'"
-    fi
-    if grep -q "PASS 1 REACHED" "$dump" 2>/dev/null; then
-      echo "   RM 初始化到了 PASS 1"
-    else
-      echo "   没到 PASS 1"
-    fi
-    if grep -q "RmInitAdapter failed\|rm_init_adapter -> FAILED" "$dump" 2>/dev/null; then
-      echo "   adapter 初始化失败（固件之后的那一关）"
-    fi
-    echo
-    echo "== NVRM / RM / GSP 日志原文（最近 5 分钟，$(wc -l <"$dump" 2>/dev/null | tr -d ' ') 行）"
-    cat "$dump" 2>/dev/null
-    echo
-    echo "== kextstat（nullmoth 相关）"
-    kextstat 2>/dev/null | grep -i nullmoth
-    echo
-    echo "== ioreg 设备节点"
-    ioreg -w0 -l -r -n "pci10de,25a9" -d 3 2>/dev/null | head -40
-    echo
-    echo "== panic 文件（最近 5 个）"
-    ls -lt /Library/Logs/DiagnosticReports/*.panic 2>/dev/null | head -5
-  } >"$log" 2>&1
-
-  # 拷一份到 U 盘（若能写）
-  if [ -d "$HERE/results" ] && [ -w "$HERE/results" ]; then
-    cp "$log" "$HERE/results/" 2>/dev/null
-  fi
-
-  # 立刻把驱动关回去 + 清计数（只此一次，之后彻底静默）
-  /usr/sbin/nvram "$REMOVE=1" 2>/dev/null
-  /usr/sbin/nvram -d "$GUARD" 2>/dev/null
-
-  # 自删，绝不留第二次
-  /bin/launchctl bootout "system/$LABEL" 2>/dev/null
-  /bin/rm -f "$PLIST" 2>/dev/null
-  echo "DONE $(date)" >>"$log"
-  exit 0
+boot_epoch() {
+  # 注意：kern.boottime 是 "{ sec = 1792883385, usec = 0 } ..."，
+  # 用 ".*sec = " 做贪婪匹配会先撞上 "usec = " 而抓到 0 —— 必须带前导空格。
+  sysctl -n kern.boottime 2>/dev/null | sed -n 's/.* sec = \([0-9][0-9]*\).*/\1/p'
+}
+# macOS: date -r <epoch>；GNU（仅本地测试用）: date -d @<epoch>
+epoch_to_str() {
+  date -r "$1" '+%Y-%m-%d %H:%M:%S' 2>/dev/null ||
+    date -d "@$1" '+%Y-%m-%d %H:%M:%S' 2>/dev/null
+}
+boot_start_str() {
+  local e
+  e=$(boot_epoch)
+  [ -n "$e" ] || return 1
+  epoch_to_str "$e"
+}
+uptime_short() {
+  local e now
+  e=$(boot_epoch); now=$(date +%s)
+  [ -n "$e" ] || { echo "?"; return; }
+  echo "$(( (now - e) / 60 )) 分钟"
 }
 
 # --------------------------------------------------------------------------
-do_install() {
-  need_sudo
-  if [ -f "$PLIST" ]; then
-    echo "已经有一个一次性任务在等待开机：$PLIST"
-    echo "先 bash \"$0\" cancel 再装，或直接 bash \"$0\" report 看结果。"
-    exit 3
+do_go() {
+  say "受控试跑：让驱动带固件跑恰好一次"
+  local cur
+  cur=$(nvram_get "$GUARD")
+  out "  试跑前状态："
+  out "    $GUARD = ${cur:-（未设置）}"
+  out "    $REMOVE  = $(nvram_get "$REMOVE")"
+
+  say "写入开关"
+  nvram_set "$GUARD=%01"
+  local after
+  after=$(nvram_get "$GUARD")
+  case "$after" in
+    *%01*|*01*) out "  [1/2] 守卫已预置为 1（只放行一次）：$after" ;;
+    *)          out "  !! [1/2] 守卫写入失败（读到：${after:-空}）。中止，未解除闭嘴。"; sync_report; exit 3 ;;
+  esac
+
+  nvram_del "$REMOVE"
+  if [ -n "$(nvram_get "$REMOVE")" ]; then
+    out "  !! [2/2] $REMOVE 删不掉，驱动仍是关闭状态。中止。"
+    out "     手动：sudo nvram -d $REMOVE"
+    sync_report; exit 4
   fi
+  out "  [2/2] 已解除闭嘴（$REMOVE 已删除）"
 
-  say "将要做的三件事"
-  out "  1) 守卫计数置 1 → 下次开机驱动只能启动【一次】，之后自锁"
-  out "  2) 清掉 $REMOVE（解除闭嘴）"
-  out "  3) 装一次性采集 daemon（只读日志，绝不重启），采完自动关驱动并自删"
-  out ""
-  out "  最坏情况：这次开机驱动 panic → 机器自动重启 → 计数已是 2 → 驱动永久自锁，不会反复重启。"
-  out "  想彻底反悔：bash \"$0\" cancel"
+  date +%s >"$STATE/go-at" 2>/dev/null
+  date '+%Y-%m-%d %H:%M:%S' >"$STATE/go-at-readable" 2>/dev/null
 
-  if [ "${ASSUME_YES:-0}" != 1 ]; then
-    printf '\n确认执行？[y/N] '
-    read -r ans
-    case "$ans" in y|Y|yes|YES) ;; *) echo "已取消，什么都没改。"; exit 1 ;; esac
-  fi
-
-  say "安装"
-  cp "$0" "$SELF_STABLE" 2>/dev/null
-  chmod +x "$SELF_STABLE" 2>/dev/null
-  [ -f "$SELF_STABLE" ] || { out "  !! 复制自身失败，中止"; exit 4; }
-  out "  [1/4] 采集器已就位: $SELF_STABLE"
-
-  cat >/tmp/g1-once.plist <<PLIST
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-  <key>Label</key><string>$LABEL</string>
-  <key>ProgramArguments</key>
-  <array>
-    <string>/bin/bash</string>
-    <string>$SELF_STABLE</string>
-    <string>--collect-once</string>
-  </array>
-  <key>RunAtLoad</key><true/>
-  <key>ProcessType</key><string>Background</string>
-  <key>StandardOutPath</key><string>$STATE/daemon.out</string>
-  <key>StandardErrorPath</key><string>$STATE/daemon.err</string>
-</dict>
-</plist>
-PLIST
-  sudo cp /tmp/g1-once.plist "$PLIST" && sudo chown root:wheel "$PLIST" && sudo chmod 644 "$PLIST"
-  rm -f /tmp/g1-once.plist
-  if [ ! -f "$PLIST" ]; then out "  !! [2/4] plist 没写进去，中止（什么都没改）"; exit 4; fi
-  out "  [2/4] 一次性采集任务已装: $PLIST"
-
-  nv "$GUARD=%01"
-  out "  [3/4] 守卫计数 = $(nv_get "$GUARD")  （期望 %01 = 只放行一次）"
-  nv -d "$REMOVE"
-  if [ -n "$(nv_get "$REMOVE")" ]; then
-    out "  !! [3/4] $REMOVE 没删掉 → 驱动仍是关的。手动: sudo nvram -d $REMOVE"; exit 5
-  fi
-  out "  [4/4] 已解除闭嘴（$REMOVE 已删除）"
-  date +%s >"$STATE/installed-at" 2>/dev/null
-
-  say "装好了，现在重启"
-  out "  重启后等 1 分钟，然后运行："
+  say "下一步：重启这台机器"
+  out "  重启后等 90 秒，然后在同一目录跑："
   out "    bash \"$0\" report"
-  out "  报告: $REPORT"
+  out ""
+  out "  说明：这次开机驱动会启动一次，然后计数变 2 自锁。"
+  out "        就算它 panic，下次开机也被挡住，不会反复重启。"
+  out "  反悔：bash \"$0\" cancel"
   sync_report
+  echo
+  echo "报告已存: $REPORT"
 }
 
 # --------------------------------------------------------------------------
 do_report() {
-  say "一次性试跑结果"
-  local boot_now inst_boot f
-  if [ -f "$PLIST" ]; then
-    out "  采集任务: 还在等待 → 说明【还没重启】，或这次开机它没跑起来"
-  elif [ -f "$STATE/installed-at" ]; then
-    out "  采集任务: 已自删 → 正常（说明它跑完并把自己删了）"
+  say "取回试跑记录"
+  local go_at="" cur_guard cur_remove bs
+  [ -f "$STATE/go-at-readable" ] && go_at=$(cat "$STATE/go-at-readable" 2>/dev/null)
+  cur_guard=$(nvram_get "$GUARD")
+  cur_remove=$(nvram_get "$REMOVE")
+  bs=$(boot_start_str)
+
+  out "  上次执行 go : ${go_at:-（没跑过 go）}"
+  out "  本次开机    : ${bs:-未知}（已运行 $(uptime_short)）"
+  out "    $GUARD = ${cur_guard:-（未设置）}"
+  out "    $REMOVE  = ${cur_remove:-（未设置）}"
+
+  # 判定"这次到底跑没跑"
+  local go_epoch="" be
+  [ -f "$STATE/go-at" ] && go_epoch=$(tr -dc '0-9' <"$STATE/go-at" 2>/dev/null)
+  be=$(boot_epoch)
+  if [ -z "$go_at" ]; then
+    out "  → 没跑过 go，下面看到的是历史日志，不代表本次实验。"
+  elif [ -z "$go_epoch" ] || [ -z "$be" ]; then
+    out "  → 时间戳对不上（取不到开机时间或标记损坏），按 A/B 两段的原始时间自行判断。"
+  elif [ "$go_epoch" -lt "$be" ]; then
+    out "  → 已重启过（开机时间晚于 go），下面的记录有效。"
   else
-    out "  采集任务: 从未安装过 → 说明 install 那一步没走完（没写 NVRAM、没装 daemon）"
+    out "  → 还没重启（开机时间早于 go），现在看到的仍是上一次的日志。"
   fi
-  local f
-  f=$(ls -t "$STATE"/boot-*.log 2>/dev/null | head -1)
-  [ -n "$f" ] || f=$(ls -t "$HERE"/results/boot-*.log 2>/dev/null | head -1)
-  if [ -z "$f" ]; then
-    out "  还没找到采集文件。"
-    out "  手动也能采：sudo log show --last 30m --style compact --predicate 'eventMessage CONTAINS[c] \"NVRM\"' | tail -60"
-    sync_report
-    exit 6
+
+  # A. 本次开机以来
+  say "A. 本次开机以来的 NVRM 记录"
+  if [ -n "$bs" ]; then
+    "$LOG_BIN" show --start "$bs" --style compact 2>/dev/null \
+      --predicate 'eventMessage CONTAINS[c] "NVRM" OR eventMessage CONTAINS[c] "NullMoth" OR eventMessage CONTAINS[c] "RmInit" OR eventMessage CONTAINS[c] "nvaccel" OR eventMessage CONTAINS[c] "boot guard"' \
+      | tail -120 | cut -c1-240 | sed 's/^/  /'
+  else
+    out "  （取不到开机时间，跳过）"
   fi
-  out "  采集文件: $f"
-  say "关键标记"
+
+  # B. 最近窗口（含上一次开机）
+  say "B. 最近 $WINDOW 的全部 NVRM 记录（含上一次开机）"
+  local wide
+  wide="$STATE/nvrm-$STAMP.txt"
+  "$LOG_BIN" show --last "$WINDOW" --style compact 2>/dev/null \
+    --predicate 'eventMessage CONTAINS[c] "NVRM" OR eventMessage CONTAINS[c] "NullMoth" OR eventMessage CONTAINS[c] "RmInit" OR eventMessage CONTAINS[c] "nvaccel" OR eventMessage CONTAINS[c] "boot guard"' \
+    >"$wide" 2>/dev/null
+  local n
+  n=$(wc -l <"$wide" 2>/dev/null | tr -d ' ')
+  out "  共 ${n:-0} 行，完整内容：$wide"
+  [ "${n:-0}" -gt 0 ] 2>/dev/null && tail -60 "$wide" | cut -c1-240 | sed 's/^/  /'
+  [ -d "$STICK_RESULTS" ] && cp "$wide" "$STICK_RESULTS/" 2>/dev/null
+
+  say "C. 关键标记"
   local k c
   for k in "probe 10de" "boot guard" "PASS 1 REACHED" "nv_get_firmware" \
            "vnode_open failed" "firmware loaded" "RmFetchGspRmImages" \
            "RmInitAdapter" "rm_init_adapter ->" "bus master" "headwatch" \
-           "nvaccel" "panic("; do
-    c=$(grep -c -F "$k" "$f" 2>/dev/null)
+           "nvaccel" "FSP" "WPR" "panic("; do
+    c=$(grep -c -F "$k" "$wide" 2>/dev/null)
     [ "${c:-0}" -gt 0 ] 2>/dev/null && out "  [$c] $k"
   done
-  say "NVRM 全部日志行（尾部 80 行）"
-  grep -i "NVRM\|NullMoth\|RmInit\|boot guard\|nvaccel" "$f" 2>/dev/null | tail -80 | cut -c1-220 | sed 's/^/  /'
-  say "报告"
-  out "  完整文件: $f  （发回这个文件即可）"
+
+  say "D. panic 记录"
+  if ls "$PANIC_DIR"/*.panic >/dev/null 2>&1; then
+    local p
+    p=$(ls -t "$PANIC_DIR"/*.panic 2>/dev/null | head -1)
+    out "  找到 panic 文件：$p"
+    out "  前 40 行（调用栈在这里）："
+    head -40 "$p" 2>/dev/null | cut -c1-240 | sed 's/^/  /'
+    [ -d "$STICK_RESULTS" ] && cp "$p" "$STICK_RESULTS/" 2>/dev/null
+  else
+    out "  没有 panic 文件。"
+  fi
+
+  say "E. 驱动/设备现状"
+  if kextstat 2>/dev/null | grep -qi nullmoth; then
+    kextstat 2>/dev/null | grep -i nullmoth | sed 's/^/  /'
+  else
+    out "  kextstat 里没有 NullMoth 相关项。"
+  fi
+  ioreg -w0 -l -r -n "pci10de,25a9" -d 3 2>/dev/null | head -20 | cut -c1-200 | sed 's/^/  /'
+
+  say "F. 结论"
+  local verdict
+  if grep -q "firmware loaded" "$wide" 2>/dev/null; then
+    verdict=firmware
+    out "  固件被读到了 —— 这是新边界。"
+    if grep -q "RmInitAdapter failed\|rm_init_adapter -> FAILED" "$wide" 2>/dev/null; then
+      out "  但 adapter 初始化失败 → 下一关是 GSP/FSP 启动序列。"
+    else
+      out "  且没看到 adapter 失败 → 可能比预期走得远，看 A 段最后几行。"
+    fi
+  elif grep -q "vnode_open failed" "$wide" 2>/dev/null; then
+    verdict=no-fw
+    out "  固件仍然没读到（vnode_open failed）→ 查 /Library/NullMoth 是否存在及权限。"
+  elif [ "$(grep -c 'probe 10de' "$wide" 2>/dev/null)" = "0" ] 2>/dev/null; then
+    verdict=no-probe
+    out "  日志里没有 probe 行 → 驱动这次没启动（守卫挡着，或还没重启）。"
+  else
+    verdict=partial
+    out "  有 probe 但没有固件相关行 → 看 B 段原文定位停在哪。"
+  fi
+
+  say "G. 下一步该做什么"
+  case "$verdict" in
+    firmware)
+      out "  1) 再做一次同样的试跑，确认结果可重复：bash \"$0\"（然后重启、report）"
+      out "  2) 重复稳定后，才轮到装 NVRMFB / NVAccel 并重建辅助集合（那是下一步，不是现在）"
+      ;;
+    no-probe)
+      out "  驱动这次没起来，多半是守卫已经锁住。重新跑一次 go 再重启："
+      out "    bash \"$0\""
+      out "  每次开机守卫都会 +1，一次机会用完就自锁 —— 所以每一轮实验都要先 go。"
+      ;;
+    no-fw)
+      out "  固件文件的问题。先确认文件在不在、对不对："
+      out "    ls -l /Library/NullMoth/nvfw/nvidia/610.57.04/"
+      out "    shasum -a 1 /Library/NullMoth/nvfw/nvidia/610.57.04/gsp_ga10x.bin"
+      out "  正确值是 f11971026ccd86a7ea09ba525548c2e0615565ce（84,310,168 字节）。"
+      ;;
+    *)
+      out "  把报告和 B 段原文发回来，按原文最后几行定位停在哪一步。"
+      ;;
+  esac
+  out ""
+  out "  反悔/收工：bash \"$0\" cancel   （驱动关回去，下次开机不启动）"
+
+  out ""
+  out "  报告: $REPORT"
+  sync_report
+  echo
+  echo "把这两个文件发回："
+  echo "  $REPORT"
+  echo "  $wide"
 }
 
 # --------------------------------------------------------------------------
 do_status() {
   say "当前状态"
-  out "  $GUARD : $(nv_get "$GUARD")   （%02 = 已自锁；%01 = 还允许启动一次；空 = 未设置）"
-  out "  $REMOVE : $(nv_get "$REMOVE")   （有值 = 驱动关闭）"
-  if [ -f "$PLIST" ]; then
-    out "  一次性任务: 已安装，等下次开机"
-  else
-    out "  一次性任务: 无"
-  fi
-  if [ -f "$STATE/installed-at" ]; then
-    out "  曾经安装过: $(date -r "$STATE/installed-at" '+%Y-%m-%d %H:%M:%S' 2>/dev/null)"
-  fi
-  ls -t "$STATE"/boot-*.log 2>/dev/null | head -3 | sed 's/^/  采集: /'
-  out "  本次开机: $(sysctl -n kern.boottime 2>/dev/null)"
+  out "  $GUARD = $(nvram_get "$GUARD")   （%02=已自锁  %01=还允许一次  空=未设置）"
+  out "  $REMOVE  = $(nvram_get "$REMOVE")   （有值=驱动关闭）"
+  out "  本次开机: $(boot_start_str 2>/dev/null)（已运行 $(uptime_short)）"
+  [ -f "$STATE/go-at-readable" ] \
+    && out "  上次 go : $(cat "$STATE/go-at-readable" 2>/dev/null)" \
+    || out "  上次 go : 没跑过"
+  kextstat 2>/dev/null | grep -i nullmoth | sed 's/^/  驱动: /' || out "  驱动: 未加载"
   out "  报告: $REPORT"
   sync_report
+  echo
+  echo "报告已存: $REPORT"
 }
 
 do_cancel() {
-  need_sudo
-  say "反悔：拆掉一次性任务并关掉驱动"
-  sudo launchctl bootout "system/$LABEL" 2>/dev/null
-  sudo rm -f "$PLIST"
-  out "  已移除 $LABEL"
-  nv "$REMOVE=1"; nv -d "$GUARD"
-  out "  驱动已关闭（$REMOVE=1），计数已清"
-  out "  报告: $REPORT"
+  say "反悔：把驱动关回去"
+  nvram_set "$REMOVE=1"
+  out "  $REMOVE = $(nvram_get "$REMOVE")"
+  nvram_del "$GUARD"
+  out "  $GUARD 已清（=$(nvram_get "$GUARD")）"
+  rm -f "$STATE/go-at" "$STATE/go-at-readable" 2>/dev/null
+  out "  下次开机驱动不会启动。"
   sync_report
+  echo
+  echo "报告已存: $REPORT"
 }
 
-ASSUME_YES=0
-case "${1:-install}" in
-  --collect-once) collect_once ;;
-  go|-y|--yes)    ASSUME_YES=1; do_install ;;
-  install|"")     do_install ;;
-  report)         do_report; out "  报告: $REPORT"; sync_report ;;
-  status)         do_status ;;
-  cancel)         do_cancel ;;
-  *) echo "用法: bash $0 [go|install|report|status|cancel]"; exit 2 ;;
-esac
+# --------------------------------------------------------------------------
+main() {
+  case "${1:-go}" in
+    go|install|"") elevate "$@"; do_go ;;
+    report)        elevate "$@"; do_report ;;
+    status)        do_status ;;          # 只读，不需要 root
+    cancel)        elevate "$@"; do_cancel ;;
+    -h|--help|help)
+      sed -n '2,30p' "$0" | sed 's/^# \{0,1\}//'
+      ;;
+    *) echo "用法: bash $0 [go|report|status|cancel]"; exit 2 ;;
+  esac
+}
+main "$@"

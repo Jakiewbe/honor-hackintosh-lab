@@ -1,0 +1,31 @@
+#!/bin/bash
+# 假 nvram —— 有状态，把变量存到 $G1_NVRAM_FILE（每行 "key<TAB>value"）。
+# 故障注入：G1_STUB_FAIL_SET=<key> 会让写该变量失败；G1_STUB_FAIL_DEL=<key> 让删除失败。
+set -u
+STORE=${G1_NVRAM_FILE:-/tmp/g1-nvram-store}
+touch "$STORE" 2>/dev/null
+
+case "${1:-}" in
+  -p|--print|"")
+    cat "$STORE"
+    exit 0
+    ;;
+  -d|--delete)
+    k=${2:-}
+    [ "${G1_STUB_FAIL_DEL:-}" = "$k" ] && { echo "nvram: delete failed" >&2; exit 1; }
+    grep -v "^$k	" "$STORE" >"$STORE.tmp" 2>/dev/null || : >"$STORE.tmp"
+    mv "$STORE.tmp" "$STORE"
+    exit 0
+    ;;
+  *)
+    arg=$1
+    k=${arg%%=*}
+    v=${arg#*=}
+    [ "$k" = "$arg" ] && { echo "nvram: bad arg $arg" >&2; exit 1; }
+    [ "${G1_STUB_FAIL_SET:-}" = "$k" ] && { echo "nvram: set failed" >&2; exit 1; }
+    grep -v "^$k	" "$STORE" >"$STORE.tmp" 2>/dev/null || : >"$STORE.tmp"
+    printf '%s\t%s\n' "$k" "$v" >>"$STORE.tmp"
+    mv "$STORE.tmp" "$STORE"
+    exit 0
+    ;;
+esac

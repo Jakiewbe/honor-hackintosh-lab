@@ -1,0 +1,6 @@
+#!/bin/bash
+# 假 sysctl —— 只支持 -n kern.boottime
+case "${1:-}${2:-}" in
+  "-nkern.boottime") printf '{ sec = %s, usec = 0 } Mon Jan  1 00:00:00 2026\n' "${G1_BOOT_EPOCH:-1792883385}" ;;
+  *) exit 1 ;;
+esac

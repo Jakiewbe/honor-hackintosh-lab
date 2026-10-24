@@ -1,0 +1,3 @@
+#!/bin/bash
+[ -n "${G1_KEXTSTAT_FIXTURE:-}" ] && [ -f "${G1_KEXTSTAT_FIXTURE}" ] && cat "${G1_KEXTSTAT_FIXTURE}"
+exit 0
