@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================================
-#  G1 一键诊断（只读）
+#  G1 一键诊断 v2（只读）
 #
 #  双击运行，或：bash G1-一键诊断.command
 #
@@ -43,6 +43,18 @@ printf '输出: %s\n' "$OUT"
   echo "== kernel collections"
   shasum -a 256 /System/Library/KernelCollections/*.kc* 2>&1
   [ -d /Library/KernelCollections ] && shasum -a 256 /Library/KernelCollections/*.kc* 2>&1
+  echo "== ioreg NVRM node (full)"
+  ioreg -l -w 0 -rc NVRM 2>/dev/null | head -80 || echo '(no NVRM node)'
+  echo "== ioreg NVRM instance count"
+  ioreg -c NVRM 2>/dev/null | grep -c '<class NVRM' || echo 0
+  echo "== NullMoth tree"
+  ls -lR /Library/NullMoth 2>/dev/null | head -60 || echo '(absent)'
+  echo "== nvfw firmware"
+  ls -l /Library/NullMoth/nvfw/nvidia/*/ 2>/dev/null | head -30 || echo '(absent)'
+  echo "== GPU PCI"
+  ioreg -l -w 0 -rc IOPCIDevice 2>/dev/null | grep -iE '"IOName" = "10de|25a9|pcidebug' | head -10
+  echo "== kernel NV log (20m)"
+  log show --last 20m --predicate 'process == "kernel"' 2>/dev/null | grep -iE 'NVRM|NullMoth|GSP|nvaccel' | tail -80
   echo "== NVRM log (10m)"
   log show --last 10m --predicate 'eventMessage CONTAINS "NVRM"' 2>&1 | tail -60
   echo "== panic files"
@@ -61,12 +73,16 @@ kdk=0;  ls /Library/Developer/KDKs >/dev/null 2>&1 && kdk=1
 inst=0; [ -d /Library/Extensions/NVRM.kext ] && inst=1
 loaded=0; kextstat 2>/dev/null | grep -q 'NVRM' && loaded=1
 auto=0; ioreg -rn NVRM -l 2>/dev/null | grep -q 'nvrm-autogo' && auto=1
+node=0; ioreg -c NVRM 2>/dev/null | grep -q '<class NVRM' && node=1
+fw=0;   ls /Library/NullMoth/nvfw/nvidia/*/* >/dev/null 2>&1 && fw=1
 
 printf '\n== 结论\n'
 printf 'KDK 已安装:        %s\n' "$([ "$kdk" = 1 ] && echo yes || echo NO)"
 printf 'NVRM 在扩展目录:   %s\n' "$([ "$inst" = 1 ] && echo yes || echo NO)"
 printf 'NVRM 已加载:       %s\n' "$([ "$loaded" = 1 ] && echo yes || echo NO)"
 printf 'nvrm-autogo 属性:  %s\n' "$([ "$auto" = 1 ] && echo yes || echo NO)"
+printf 'NVRM 设备节点:     %s\n' "$([ "$node" = 1 ] && echo yes || echo NO)"
+printf 'GSP 固件在盘上:    %s\n' "$([ "$fw" = 1 ] && echo yes || echo NO)"
 
 if [ "$loaded" = 1 ] && [ "$auto" = 1 ]; then
   printf '\n判定: 已加载且 auto-go 关闭（GPU 未初始化）。\n'
