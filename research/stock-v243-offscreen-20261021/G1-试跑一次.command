@@ -33,8 +33,11 @@ SUDO_ARGS="${*:-install}"
 
 mkdir -p "$STATE" 2>/dev/null
 mkdir -p "$HERE/results" 2>/dev/null
-REPORT="$HERE/results/trial-$STAMP.txt"
-: >"$REPORT" 2>/dev/null || REPORT="$STATE/trial-$STAMP.txt"
+# 报告先写本地（U 盘可能中途掉线/只读），结束时再拷一份到 U 盘
+REPORT="$STATE/trial-$STAMP.txt"
+: >"$REPORT" 2>/dev/null
+STICK_REPORT="$HERE/results/trial-$STAMP.txt"
+sync_report() { [ -d "$HERE/results" ] && cp "$REPORT" "$STICK_REPORT" 2>/dev/null; }
 
 say() { printf '\n== %s\n' "$*"; printf '\n== %s\n' "$*" >>"$REPORT" 2>/dev/null; }
 out() { printf '%s\n' "$*";    printf '%s\n' "$*"    >>"$REPORT" 2>/dev/null; }
@@ -146,15 +149,17 @@ do_install() {
   out "  最坏情况：这次开机驱动 panic → 机器自动重启 → 计数已是 2 → 驱动永久自锁，不会反复重启。"
   out "  想彻底反悔：bash \"$0\" cancel"
 
-  printf '\n确认执行？[y/N] '
-  read -r ans
-  case "$ans" in y|Y|yes|YES) ;; *) echo "已取消，什么都没改。"; exit 1 ;; esac
+  if [ "${ASSUME_YES:-0}" != 1 ]; then
+    printf '\n确认执行？[y/N] '
+    read -r ans
+    case "$ans" in y|Y|yes|YES) ;; *) echo "已取消，什么都没改。"; exit 1 ;; esac
+  fi
 
   say "安装"
   cp "$0" "$SELF_STABLE" 2>/dev/null
   chmod +x "$SELF_STABLE" 2>/dev/null
   [ -f "$SELF_STABLE" ] || { out "  !! 复制自身失败，中止"; exit 4; }
-  out "  采集器: $SELF_STABLE"
+  out "  [1/4] 采集器已就位: $SELF_STABLE"
 
   cat >/tmp/g1-once.plist <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
@@ -177,37 +182,43 @@ do_install() {
 PLIST
   sudo cp /tmp/g1-once.plist "$PLIST" && sudo chown root:wheel "$PLIST" && sudo chmod 644 "$PLIST"
   rm -f /tmp/g1-once.plist
-  if [ ! -f "$PLIST" ]; then out "  !! plist 没写进去，中止（什么都没改）"; exit 4; fi
-  out "  已装: $PLIST"
+  if [ ! -f "$PLIST" ]; then out "  !! [2/4] plist 没写进去，中止（什么都没改）"; exit 4; fi
+  out "  [2/4] 一次性采集任务已装: $PLIST"
 
   nv "$GUARD=%01"
-  out "  守卫计数 = $(nv_get "$GUARD")  （期望 %01 = 只放行一次）"
+  out "  [3/4] 守卫计数 = $(nv_get "$GUARD")  （期望 %01 = 只放行一次）"
   nv -d "$REMOVE"
   if [ -n "$(nv_get "$REMOVE")" ]; then
-    out "  !! $REMOVE 没删掉 → 驱动仍是关的。手动: sudo nvram -d $REMOVE"; exit 5
+    out "  !! [3/4] $REMOVE 没删掉 → 驱动仍是关的。手动: sudo nvram -d $REMOVE"; exit 5
   fi
-  out "  已解除闭嘴"
+  out "  [4/4] 已解除闭嘴（$REMOVE 已删除）"
+  date +%s >"$STATE/installed-at" 2>/dev/null
 
-  say "现在重启"
+  say "装好了，现在重启"
   out "  重启后等 1 分钟，然后运行："
   out "    bash \"$0\" report"
   out "  报告: $REPORT"
+  sync_report
 }
 
 # --------------------------------------------------------------------------
 do_report() {
   say "一次性试跑结果"
+  local boot_now inst_boot f
   if [ -f "$PLIST" ]; then
-    out "  注意：采集任务还在（说明这次开机它没跑成功，或还没重启）"
+    out "  采集任务: 还在等待 → 说明【还没重启】，或这次开机它没跑起来"
+  elif [ -f "$STATE/installed-at" ]; then
+    out "  采集任务: 已自删 → 正常（说明它跑完并把自己删了）"
   else
-    out "  采集任务已自删（正常：说明它跑完了）"
+    out "  采集任务: 从未安装过 → 说明 install 那一步没走完（没写 NVRAM、没装 daemon）"
   fi
   local f
   f=$(ls -t "$STATE"/boot-*.log 2>/dev/null | head -1)
   [ -n "$f" ] || f=$(ls -t "$HERE"/results/boot-*.log 2>/dev/null | head -1)
   if [ -z "$f" ]; then
-    out "  还没找到采集文件。先重启过吗？"
-    out "  也可以直接手动采：sudo log show --last 10m --predicate 'eventMessage CONTAINS \"NVRM\"' | tail -60"
+    out "  还没找到采集文件。"
+    out "  手动也能采：sudo log show --last 30m --style compact --predicate 'eventMessage CONTAINS[c] \"NVRM\"' | tail -60"
+    sync_report
     exit 6
   fi
   out "  采集文件: $f"
@@ -229,13 +240,20 @@ do_report() {
 # --------------------------------------------------------------------------
 do_status() {
   say "当前状态"
-  out "  $GUARD : $(nv_get "$GUARD")   （%02 = 已自锁；%01 = 还允许启动一次）"
+  out "  $GUARD : $(nv_get "$GUARD")   （%02 = 已自锁；%01 = 还允许启动一次；空 = 未设置）"
   out "  $REMOVE : $(nv_get "$REMOVE")   （有值 = 驱动关闭）"
-  if [ -f "$PLIST" ]; then out "  一次性任务: 已安装（等下次开机）"; else out "  一次性任务: 无"; fi
+  if [ -f "$PLIST" ]; then
+    out "  一次性任务: 已安装，等下次开机"
+  else
+    out "  一次性任务: 无"
+  fi
+  if [ -f "$STATE/installed-at" ]; then
+    out "  曾经安装过: $(date -r "$STATE/installed-at" '+%Y-%m-%d %H:%M:%S' 2>/dev/null)"
+  fi
   ls -t "$STATE"/boot-*.log 2>/dev/null | head -3 | sed 's/^/  采集: /'
-  sy=$(date -j -f "%Y-%m-%d %H:%M:%S" "$(date '+%Y-%m-%d %H:%M:%S')" +%s 2>/dev/null)
   out "  本次开机: $(sysctl -n kern.boottime 2>/dev/null)"
   out "  报告: $REPORT"
+  sync_report
 }
 
 do_cancel() {
@@ -247,13 +265,16 @@ do_cancel() {
   nv "$REMOVE=1"; nv -d "$GUARD"
   out "  驱动已关闭（$REMOVE=1），计数已清"
   out "  报告: $REPORT"
+  sync_report
 }
 
+ASSUME_YES=0
 case "${1:-install}" in
   --collect-once) collect_once ;;
+  go|-y|--yes)    ASSUME_YES=1; do_install ;;
   install|"")     do_install ;;
-  report)         do_report; out "  报告: $REPORT" ;;
+  report)         do_report; out "  报告: $REPORT"; sync_report ;;
   status)         do_status ;;
   cancel)         do_cancel ;;
-  *) echo "用法: bash $0 [install|report|status|cancel]"; exit 2 ;;
+  *) echo "用法: bash $0 [go|install|report|status|cancel]"; exit 2 ;;
 esac
