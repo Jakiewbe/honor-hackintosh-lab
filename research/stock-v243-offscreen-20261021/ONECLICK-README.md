@@ -31,6 +31,9 @@
 - 顺带清上一轮残留：`bash ./G1-清守卫.command all`
 - `-nvoff` 在 boot-args 里：`bash ./G1-清守卫.command bootargs`（先把原文记进报告）
 
+诊断 / 清守卫 / 自动实验 这三个都从 U 盘根目录直接跑，**不依赖** `expected-commit.txt` 的编译锚点；
+只有 `G1-一键运行.command`（编译）会检查仓库提交。`g1-repo` 里的克隆刻意留在已验证过的提交上。
+
 固件为什么需要：2026-10-24 实测驱动与 RM 全部走通，唯一失败点是
 `/Library/NullMoth/nvfw/nvidia/610.57.04/gsp_ga10x.bin` 不存在
 （`vnode_open failed 2` → `RmFetchGspRmImages: No firmware image found`）。
