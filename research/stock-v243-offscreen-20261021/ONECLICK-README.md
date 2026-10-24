@@ -1,5 +1,20 @@
 # 一键运行（目标机，离线）
 
+## 脚本清单
+
+| 脚本 | 干什么 | 风险 |
+|---|---|---|
+| `G1-一键运行.command` | preflight 14 项 + 编译（问 `BUILD` 才编） | 只读 + 写自己的输出目录 |
+| `G1-一键诊断.command` | 只读诊断，v3 起结论细化到 RM 走到哪一步 | 只读，不需要 sudo |
+| `G1-修复加载.command` | 重建 aux KC 让 NVRM 能加载 | 会改 `/Library/Extensions`、aux KC |
+| `G1-加载实验.command` | 装/验/回滚 NVRM（加载实验） | 会改 KC，有回滚 |
+| `G1-装固件.command` | 把 GSP 固件装到 `/Library/NullMoth/nvfw/…` | 只加文件，按字节数+SHA-1 校验 |
+
+固件为什么需要：2026-10-24 实测驱动与 RM 全部走通，唯一失败点是
+`/Library/NullMoth/nvfw/nvidia/610.57.04/gsp_ga10x.bin` 不存在
+（`vnode_open failed 2` → `RmFetchGspRmImages: No firmware image found`）。
+详见 `LOAD-RESULT-20261024.md`。
+
 双击 `G1-一键运行.command` 即可（或者终端里 `bash G1-一键运行.command`）。
 
 它做三件事：
