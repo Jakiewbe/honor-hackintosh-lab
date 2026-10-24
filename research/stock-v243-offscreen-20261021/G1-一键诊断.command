@@ -59,6 +59,14 @@ if [ -d /Library/Extensions/NVRM.kext ]; then
 else
   echo '(NVRM.kext is not installed)' >> "$OUT"
 fi
+sec 'NVRMFB / NVAccel 安装状态'
+for k in NVRMFB NVAccel NVRMAGDC; do
+  if [ -d "/Library/Extensions/$k.kext" ]; then
+    printf '%-10s installed  %s\n' "$k" "$(shasum -a 256 "/Library/Extensions/$k.kext/Contents/MacOS/$k" 2>/dev/null | cut -d' ' -f1)" >> "$OUT"
+  else
+    printf '%-10s (not installed)\n' "$k" >> "$OUT"
+  fi
+done
 sec 'kernel collections'
 shasum -a 256 /System/Library/KernelCollections/*.kc* >> "$OUT" 2>&1
 [ -d /Library/KernelCollections ] && shasum -a 256 /Library/KernelCollections/*.kc* >> "$OUT" 2>&1
@@ -92,6 +100,10 @@ sec 'NVRM log (10m)'
 log show --last 10m --predicate 'eventMessage CONTAINS "NVRM"' 2>&1 | tail -60 >> "$OUT"
 sec 'panic files'
 ls -1 /Library/Logs/DiagnosticReports/*.panic 2>/dev/null | tail -3 >> "$OUT" || echo '(none)' >> "$OUT"
+sec 'GSP / FSP / head 关键行（只看这几类）'
+log show --last 30m --predicate 'process == "kernel"' 2>/dev/null \
+  | grep -iE 'firmware loaded|RmFetchGspRmImages|RmInitAdapter|fsp|gsp boot|WPR|headwatch|NVRM-xnu: .*-> ' \
+  | tail -60 >> "$OUT" || echo '(none)' >> "$OUT"
 sec 'recent kmutil logs'
 ls -1t "$RESULTS"/load-*/kmutil-*.txt 2>/dev/null | head -3 >> "$OUT"
 for f in $(ls -1t "$RESULTS"/load-*/kmutil-*.txt 2>/dev/null | head -2); do
@@ -111,6 +123,10 @@ fwload=0; grep -q 'firmware loaded:' "$OUT" && fwload=1
 fwnone=0; grep -qE 'vnode_open failed|No firmware image' "$OUT" && fwnone=1
 adapter=0; grep -q 'rm_init_adapter -> FAILED' "$OUT" && adapter=1
 headrun=0; grep -q 'headwatch: done' "$OUT" && headrun=1
+headgo=0;  grep -q 'headwatch: head 0' "$OUT" && ! grep -q 'headwatch: head 0 STOPPED' "$OUT" && headgo=1
+panic=0;   ls /Library/Logs/DiagnosticReports/*.panic >/dev/null 2>&1 && panic=1
+fbk=0;     [ -d /Library/Extensions/NVRMFB.kext ] && fbk=1
+acck=0;    [ -d /Library/Extensions/NVAccel.kext ] && acck=1
 
 printf '\n== 结论\n'
 printf 'KDK 已安装:        %s\n' "$([ "$kdk" = 1 ] && echo yes || echo NO)"
@@ -122,17 +138,33 @@ printf 'GSP 固件在盘上:    %s\n' "$([ "$fwfile" = 1 ] && echo yes || echo N
 printf 'GSP 固件已装载:    %s\n' "$([ "$fwload" = 1 ] && echo yes || echo NO)"
 printf 'RmInitAdapter 失败:%s\n' "$([ "$adapter" = 1 ] && echo ' yes（看日志里的原因）' || echo NO)"
 printf 'headwatch 跑过:    %s\n' "$([ "$headrun" = 1 ] && echo yes || echo NO)"
+printf 'head 没停(STOPPED):%s\n' "$([ "$headgo" = 1 ] && echo ' yes' || echo NO)"
+printf 'NVRMFB 已安装:     %s\n' "$([ "$fbk" = 1 ] && echo yes || echo NO)"
+printf 'NVAccel 已安装:    %s\n' "$([ "$acck" = 1 ] && echo yes || echo NO)"
+printf 'panic 文件:        %s\n' "$([ "$panic" = 1 ] && echo '有（看 panic files）' || echo none)"
 
-if [ "$node" = 1 ] && [ "$pass1" = 1 ] && [ "$adapter" = 1 ] && [ "$fwnone" = 1 ]; then
+if [ "$panic" = 1 ]; then
+  printf '\n判定: 本轮重启后出现了 panic —— 先把 /Library/Logs/DiagnosticReports/*.panic 发回。\n'
+  printf '      已知风险点：GSP/FSP 启动失败清理路径的 tmrEventDestroy 二次销毁\n'
+  printf '      （nv_destroy_nano_timer 里 page fault 0x1010），上游补丁\n'
+  printf '      kexts/NVRM/patches/610-fsp-timer-double-destroy.patch。\n'
+  printf '      恢复：G1-加载实验.command 的 rollback，或 boot-args 加 -nvrmnogo。\n'
+  rc=10
+elif [ "$node" = 1 ] && [ "$pass1" = 1 ] && [ "$adapter" = 1 ] && [ "$fwnone" = 1 ]; then
   printf '\n判定: 驱动与 RM 都通了，卡在 GSP 固件不在盘上。\n'
   printf '      期望路径: /Library/NullMoth/nvfw/nvidia/610.57.04/gsp_ga10x.bin\n'
   printf '      用 G1-装固件.command 安装后重启。\n'
   rc=8
-elif [ "$node" = 1 ] && [ "$fwload" = 1 ] && [ "$adapter" = 0 ]; then
-  printf '\n判定: 固件装上了、RmAInitAdapter 没有报失败 —— 这一关过了，看 head/RM 后续日志。\n'
+elif [ "$node" = 1 ] && [ "$fwload" = 1 ] && [ "$adapter" = 0 ] && [ "$headgo" = 1 ]; then
+  printf '\n判定: 固件装载 + RmInitAdapter 通过 + head 在跑 —— 这一关过了。\n'
+  printf '      下一步: 装 NVRMFB / NVAccel（现在缺），重建 KC，再看显示与 Metal。\n'
   rc=0
+elif [ "$node" = 1 ] && [ "$fwload" = 1 ] && [ "$adapter" = 0 ]; then
+  printf '\n判定: 固件装载 + RmInitAdapter 通过，但 head 仍 STOPPED。\n'
+  printf '      下一步: 看「GSP / FSP / head 关键行」，再决定是 display pipe 还是 head 配置问题。\n'
+  rc=11
 elif [ "$node" = 1 ] && [ "$fwload" = 1 ] && [ "$adapter" = 1 ]; then
-  printf '\n判定: 固件装上了但 RmInitAdapter 仍然失败 —— 原因已不是固件缺失，看日志末尾。\n'
+  printf '\n判定: 固件装上了但 RmInitAdapter 仍然失败 —— 原因已不是固件缺失，看日志末尾的错误码。\n'
   rc=9
 elif [ "$loaded" = 1 ] && [ "$node" = 1 ]; then
   printf '\n判定: 已加载、设备节点在，但 RM 没到 PASS 1 —— 看「内核 NV log」最早那几行。\n'
