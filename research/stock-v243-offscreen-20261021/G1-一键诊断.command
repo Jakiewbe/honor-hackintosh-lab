@@ -51,12 +51,10 @@ sec 'ioreg NVRM 关键属性'
 ioreg -rn NVRM -l 2>/dev/null | grep -E 'nvrm-(autogo|boot-hold|kext-version|pm-violation|boot-raster|bars)' >> "$OUT" \
   || echo '(no NVRM node)' >> "$OUT"
 sec boot-args;  nvram boot-args >> "$OUT" 2>&1
-sec 'kextutil -n 诊断（不加载，只报 KMOD / 依赖）'
-if [ -d /Library/Extensions/NVRM.kext ]; then
-  kextutil -n -v 2 /Library/Extensions/NVRM.kext 2>&1 | head -50 >> "$OUT"
-else
-  echo '(NVRM.kext is not installed)' >> "$OUT"
-fi
+sec '在用辅助集合里能不能看到 NVRM（区分「已加载」和「已登记」）'
+sudo -n kmutil inspect -a x86_64 -A /Library/KernelCollections/AuxiliaryKernelExtensions.kc 2>&1 \
+  | grep -i -m 5 'nullmoth\|NVRM' >> "$OUT" \
+  || echo '(读不到：无 sudo 免密；请用 bash ./G1-修复加载.command 看 0.5 节)' >> "$OUT"
 
 # ---- 3. 装了什么 -----------------------------------------------------------
 sec '/Library/Extensions'; ls -1 /Library/Extensions >> "$OUT" 2>&1
@@ -187,11 +185,13 @@ elif [ "$loaded" = 1 ] && [ "$node" = 1 ]; then
   rc=4
 elif [ "$loaded" = 1 ] && [ "$node" = 0 ]; then
   printf '\n判定: 扩展进内核了，但这次开机 NVRM 没有 attach 到 GPU（没有设备节点、没有 RM 日志）。\n'
-  printf '      这不是固件问题 —— 固件连读都没读到。先看两处：\n'
+  printf '      这不是固件问题 —— 固件连读都没读到。先看三处：\n'
   printf '        1) 「开机时刻」对得上你装固件之后吗？装完固件没重启，就是上一次开机留下的旧状态。\n'
-  printf '        2) 「kextutil -n 诊断」有没有报 KMOD / 依赖问题，以及\n'
-  printf '           「kernelmanagerd / syspolicyd 关于 NVRM 的行」里有没有 restricted lookup table 报错。\n'
-  printf '      处理: sudo reboot 后重跑本脚本；仍然没有节点再发回报告。\n'
+  printf '        2) 「在用辅助集合里能不能看到 NVRM」——看不到就说明「加载了但没登记」，\n'
+  printf '           IOKit 不会去匹配 personality，于是 probe/start 根本不被调用。\n'
+  printf '        3) 「kernelmanagerd / syspolicyd 关于 NVRM 的行」里有没有\n'
+  printf '           restricted lookup table 报错。\n'
+  printf '      处理: bash ./G1-修复加载.command --force，再 sudo reboot，然后重跑本脚本。\n'
   rc=12
 elif [ "$inst" = 1 ] && [ "$kdk" = 1 ]; then
   printf '\n判定: 扩展在、KDK 在，但没加载 —— 内核集合可能没重建成功，或需要重启。\n'

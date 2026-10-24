@@ -44,9 +44,30 @@ ls -l "$KC" 2>/dev/null
 AUX_BEFORE=$(shasum -a 256 "$KC" 2>/dev/null | cut -d' ' -f1)
 
 [ -d "$EXT/NVRM.kext" ] || { bad "$EXT/NVRM.kext 不存在，先装候选"; exit 2; }
-if kextstat 2>/dev/null | grep -q NVRM; then say "NVRM 已经加载，不需要修"; exit 0; fi
+
+# v3.3: --force 跳过"已加载就不修"的早退；并且先查现在真正在用的辅助集合里到底有没有 NVRM。
+FORCE=0
+for a in "$@"; do [ "$a" = "--force" ] || [ "$a" = "-f" ] && FORCE=1; done
 
 sudo -v || { bad "sudo 没拿到授权"; exit 2; }
+
+say "0.5 现在生效的辅助集合里有没有 $BUNDLE"
+if sudo kmutil inspect -a x86_64 -A "$KC" 2>/dev/null | grep -q "$BUNDLE"; then
+  echo "   在用集合 $KC: 有 $BUNDLE"
+  AUX_HAS=1
+else
+  echo "   在用集合 $KC: 没有 $BUNDLE（或 inspect 读不出来）"
+  AUX_HAS=0
+fi
+echo "   在用集合 sha256: ${AUX_BEFORE:-unknown}"
+
+if [ "$AUX_HAS" = 1 ]; then AUX_TXT=有; else AUX_TXT=没有; fi
+
+if [ "$FORCE" = 0 ] && kextstat 2>/dev/null | grep -q NVRM; then
+  say "NVRM 已经加载（在用集合里: ${AUX_TXT}），加 --force 才会重建"
+  exit 0
+fi
+if [ "$FORCE" = 1 ]; then say "已指定 --force：忽略「已加载」，强制重建"; fi
 
 say "1. 修正 bundle 权限（exFAT 拷贝会丢可执行位）"
 sudo chown -R root:wheel "$EXT/NVRM.kext" 2>/dev/null
