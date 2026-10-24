@@ -13,6 +13,7 @@
 #
 # 用法：
 #   bash ./G1-急救.command            # 一键止损 + 收集证据（最常用）
+#   bash ./G1-急救.command fast       # 只拆 daemon + 让 NVRM 闭嘴，几秒完成（机器活不过 1 分钟时用）
 #   bash ./G1-急救.command off        # 只让 NVRM 闭嘴
 #   bash ./G1-急救.command on         # 解除闭嘴（要重新测驱动时）
 #   bash ./G1-急救.command panics     # 只看 panic 记录
@@ -168,10 +169,17 @@ kill_daemons() {
 }
 
 # --------------------------------------------------------------------------
-rescue() {
+# fast：只做最要紧的两件事，几秒内完成。机器活不过一分钟时用这个。
+fast() {
+  kill_daemons || true     # 先拆会重启的 daemon，这一步最要紧
+  drv_off || true          # 再让 NVRM 闭嘴
   status
-  drv_off || true
+}
+
+rescue() {
   kill_daemons || true
+  drv_off || true
+  status
   panics
   say "下一步"
   if ls "$PANIC_DIR"/*.panic >/dev/null 2>&1; then
@@ -187,10 +195,11 @@ rescue() {
 
 case "${1:-rescue}" in
   rescue|"") rescue ;;
+  fast)    fast;    out "  报告: $REPORT" ;;
   off)     drv_off; out "  报告: $REPORT" ;;
   on)      drv_on;  out "  报告: $REPORT" ;;
   status)  status;  out "  报告: $REPORT" ;;
   panics)  panics;  out "  报告: $REPORT" ;;
   daemons) kill_daemons; out "  报告: $REPORT" ;;
-  *) echo "用法: bash $0 [rescue|off|on|status|panics|daemons]"; exit 2 ;;
+  *) echo "用法: bash $0 [rescue|fast|off|on|status|panics|daemons]"; exit 2 ;;
 esac
