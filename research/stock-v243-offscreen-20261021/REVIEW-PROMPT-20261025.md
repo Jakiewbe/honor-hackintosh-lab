@@ -1,6 +1,6 @@
 # 外部审查请求（给 Codex）
 
-> 用法：把下面 `====` 之间的整段原样贴给 Codex。仓库是公开的，让它直接 `git clone` 后 checkout `b05550d` 再审（本文件所在提交；被审代码在 `d149e0d`）。
+> 用法：把下面 `====` 之间的整段原样贴给 Codex。仓库是公开的，让它直接 `git clone` 后 checkout `d149e0d` 再审（= 被审代码基线；此后的提交只改本文档）。
 
 ====
 
@@ -43,7 +43,7 @@
 
 ## 4. 代码与证据在哪
 
-- 仓库：`https://github.com/Jakiewbe/honor-hackintosh-lab`，`main` HEAD = `b05550d`（远端已确认一致，工作树干净）；**被审代码的基线是 `d149e0d`**（脚本 v3 + 43 条断言 + 恢复检测修复）。
+- 仓库：`https://github.com/Jakiewbe/honor-hackintosh-lab`，被审基线 = `d149e0d`（脚本 v3 + 43 条断言 + 重启判定修复），工作树干净；`main` 此后只追加文档。
 - 运行脚本（10 个，全部在 `research/stock-v243-offscreen-20261021/`）：
   `G1-试跑一次.command`、`G1-一键诊断.command`、`G1-急救.command`、`G1-清守卫.command`、`G1-修复加载.command`、`G1-装固件.command`、`G1-加载实验.command`、`G1-一键运行.command`、`G1-自动实验.command`（**已废弃，会重启机器**）、`g1-first-touch.command`。
 - 测试：`tests/command_scripts/test_trial.sh` + `tests/command_scripts/stubs/{nvram,sysctl,log,kextstat,ioreg}`（用假命令在 Linux/Windows 上模拟 macOS，**不需要真 Mac**）。
@@ -138,7 +138,7 @@ NVRMFB 是唯一能清零守卫的组件（`nvrm-fb.cpp:2995`），但它也是�
 
 ## 9. 一致性自查（可以拿来快速验我的数字）
 
-- `git rev-parse HEAD` = `b05550d`，`git status --porcelain` 为空；被审代码基线 `d149e0d`。
+- 基线提交 `d149e0d` 上 `git status --porcelain` 为空；`git diff d149e0d -- research/stock-v243-offscreen-20261021/*.command tests/` 应为空（即被审代码未变）。
 - `bash tests/command_scripts/test_trial.sh` → `合计: PASS=43 FAIL=0`。
 - `python -m unittest discover -s tests -p 'test_*.py'` → `Ran 290 tests ... failures=2, errors=2, skipped=21`。
 - 固件：`/Library/NullMoth/nvfw/nvidia/610.57.04/gsp_ga10x.bin`，84,310,168 B，SHA-1 `f11971026ccd86a7ea09ba525548c2e0615565ce`
@@ -149,7 +149,7 @@ NVRMFB 是唯一能清零守卫的组件（`nvrm-fb.cpp:2995`），但它也是�
 
 ## 给 Codex 的补充材料（贴的时候一起给）
 
-1. 仓库：`git clone https://github.com/Jakiewbe/honor-hackintosh-lab && cd honor-hackintosh-lab && git checkout b05550d`
+1. 仓库：`git clone https://github.com/Jakiewbe/honor-hackintosh-lab && cd honor-hackintosh-lab && git checkout d149e0d`
 2. 驱动源码（对照源码用）：`git clone https://github.com/nullmoth/nvidia-macos-driver && git checkout 272ccd9`
 3. 本机不需要 macOS：`bash tests/command_scripts/test_trial.sh` 在 Linux 上就能跑（用 `tests/command_scripts/stubs/`）。
 4. 真机日志原文在 U 盘，我会按文件名附上；没有原文时请只凭仓库内文档判断，并注明"未看到原始日志"。
