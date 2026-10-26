@@ -1,0 +1,78 @@
+name: HONOR G1 24H32 forwarder object and link gate
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native:
+    runs-on: macos-15-intel
+    timeout-minutes: 25
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify compiler environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir "$RUNNER_TEMP/24h32-preparation"
+          [[ "$(uname -m)" == x86_64 ]]
+          [[ "$(xcrun --show-sdk-version)" == 15.5 ]]
+          xcodebuild -version > "$RUNNER_TEMP/24h32-preparation/xcode.txt"
+          xcrun clang++ --version > "$RUNNER_TEMP/24h32-preparation/compiler.txt"
+      - name: Fetch fixed public source commits without running their scripts
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init "$RUNNER_TEMP/nm-24h32"
+          git -C "$RUNNER_TEMP/nm-24h32" remote add origin https://github.com/nullmoth/nvidia-macos-driver.git
+          git -C "$RUNNER_TEMP/nm-24h32" fetch --depth=1 origin 272ccd9da04ff5de95c2791b902fe17a3fa77ce7
+          git -C "$RUNNER_TEMP/nm-24h32" checkout --detach FETCH_HEAD
+          git init "$RUNNER_TEMP/ogkm-24h32"
+          git -C "$RUNNER_TEMP/ogkm-24h32" remote add origin https://github.com/NVIDIA/open-gpu-kernel-modules.git
+          git -C "$RUNNER_TEMP/ogkm-24h32" fetch --depth=1 origin e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb
+          git -C "$RUNNER_TEMP/ogkm-24h32" checkout --detach FETCH_HEAD
+      - name: Verify patch and prepare complete build inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -B scripts/g1_24h32/ci_prepare.py \
+            --nm "$RUNNER_TEMP/nm-24h32" --ogkm "$RUNNER_TEMP/ogkm-24h32" \
+            --package "$RUNNER_TEMP/24h32-package" \
+            > "$RUNNER_TEMP/24h32-preparation/package.txt" 2>&1
+          python3 -B "$RUNNER_TEMP/24h32-package/native_gate.py" --verify
+      - name: Compile baseline and candidate, compare actual imports and link locally
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir "$RUNNER_TEMP/24h32-text"
+          PYTHONPATH="$RUNNER_TEMP/24h32-package" python3 -B - <<'PY'
+          import json, os
+          from pathlib import Path
+          import native_gate
+          root=Path(os.environ['RUNNER_TEMP'])
+          out=root/'24h32-text'
+          report=native_gate.run_gate(root/'24h32-package',out,native_gate.NativeTools(out))
+          print(json.dumps({k:report[k] for k in ('status','compiler_failures','missing','errors','full_abi','loader','go_authorized')},indent=2))
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a',encoding='utf-8') as f:
+              f.write('## 24H32 source candidate\n\n'+report['status']+'\n\nGPU NOT RUN / NO-GO\n')
+          raise SystemExit(0 if report['status']=='OBJECT_LINK_AND_IMPORT_DELTA_PASS_NOT_GO' else 1)
+          PY
+      - name: Upload text diagnostics only, including failed builds
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g1-24h32-native-text
+          path: |
+            ${{ runner.temp }}/24h32-preparation/*.txt
+            ${{ runner.temp }}/24h32-text/native-build-result.zip
+            ${{ runner.temp }}/24h32-text/RESULT.json
+          if-no-files-found: error
+          retention-days: 14

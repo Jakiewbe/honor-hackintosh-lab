@@ -1,0 +1,2342 @@
+{
+  "level": "STATIC_EXACT_CHAIN_NODE_AND_METHOD_ONLY",
+  "collection": "D:\\Hactk\\g1-stock-work\\b1-review-20261026\\inputs\\SystemKernelExtensions.kc",
+  "collection_sha256": "2296155f1f12471e7b774020ba70d9fb487d02224c1f85d373130511969c2243",
+  "member_uuid": "97a7305cfb1439fcbc20ed834abceb2d",
+  "routes_input_sha256": "5c44fe732cae9988acf5b569b6acafb95cc60ed13931800a883e017923f782dc",
+  "source_path": "D:\\Hactk\\g1-stock-work\\nm-272ccd9\\kexts\\NVRM\\accel\\tahoe_fwd.h",
+  "source_sha256": "d9eb95e5502a16dbe76f531dacfe0c88e9a7c25f43a327f2ecaaa6d36d5b488b",
+  "parser_sha256": "a20a296ade12825457d6d395487e8b2ff56aa916f674fb9c932bd2c7c8eb4eac",
+  "chain_segments": [
+    {
+      "index": 1,
+      "name": "__DATA",
+      "page_size": 4096,
+      "page_count": 24,
+      "pointer_format": 11,
+      "stride": 1,
+      "nodes": 10697
+    },
+    {
+      "index": 2,
+      "name": "__DATA_CONST",
+      "page_size": 4096,
+      "page_count": 3,
+      "pointer_format": 11,
+      "stride": 1,
+      "nodes": 278
+    }
+  ],
+  "total_chain_nodes": 10975,
+  "routes": [
+    {
+      "symbol": "__ZN15IOAccelContext210invalidateEv",
+      "derived_class": "NVGLContext",
+      "base_vtable": "IOAccelGLContext2",
+      "vtable_symbol": "__ZTV17IOAccelGLContext2",
+      "vtable_address": 350774496,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350777504,
+      "byte_offset": 2744,
+      "slot_index_excluding_header": 341,
+      "file_offset": 350777240,
+      "source_line": 115,
+      "source_text": "__attribute__((naked)) void NVGLContext::invalidate() { __asm__(\"movq __ZTV17IOAccelGLContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2744(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e2eb4c",
+        "target_offset": 350415692,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 9,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN15IOAccelContext210invalidateEv",
+          "value": 350415692,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365119808
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN15IOAccelContext210invalidateEv",
+      "derived_class": "NV2DContext",
+      "base_vtable": "IOAccel2DContext2",
+      "vtable_symbol": "__ZTV17IOAccel2DContext2",
+      "vtable_address": 350740800,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350743768,
+      "byte_offset": 2744,
+      "slot_index_excluding_header": 341,
+      "file_offset": 350743544,
+      "source_line": 127,
+      "source_text": "__attribute__((naked)) void NV2DContext::invalidate() { __asm__(\"movq __ZTV17IOAccel2DContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2744(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e16bb8",
+        "target_offset": 350317496,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 1,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN15IOAccelContext210invalidateEv",
+          "value": 350317496,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365117984
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN15IOAccelContext210invalidateEv",
+      "derived_class": "NVCLContext",
+      "base_vtable": "IOAccelCLContext2",
+      "vtable_symbol": "__ZTV17IOAccelCLContext2",
+      "vtable_address": 350746752,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350749704,
+      "byte_offset": 2744,
+      "slot_index_excluding_header": 341,
+      "file_offset": 350749496,
+      "source_line": 138,
+      "source_text": "__attribute__((naked)) void NVCLContext::invalidate() { __asm__(\"movq __ZTV17IOAccelCLContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2744(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e18c40",
+        "target_offset": 350325824,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 3,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN15IOAccelContext210invalidateEv",
+          "value": 350325824,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365118480
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN15IOAccelContext210invalidateEv",
+      "derived_class": "NVVideoContext",
+      "base_vtable": "IOAccelVideoContext2",
+      "vtable_symbol": "__ZTV20IOAccelVideoContext2",
+      "vtable_address": 350805088,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350808040,
+      "byte_offset": 2744,
+      "slot_index_excluding_header": 341,
+      "file_offset": 350807832,
+      "source_line": 149,
+      "source_text": "__attribute__((naked)) void NVVideoContext::invalidate() { __asm__(\"movq __ZTV20IOAccelVideoContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2744(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e4d62c",
+        "target_offset": 350541356,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 17,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN15IOAccelContext210invalidateEv",
+          "value": 350541356,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365121552
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN15IOAccelContext217getFrameDelimiterEv",
+      "derived_class": "NVGLContext",
+      "base_vtable": "IOAccelGLContext2",
+      "vtable_symbol": "__ZTV17IOAccelGLContext2",
+      "vtable_address": 350774496,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350777504,
+      "byte_offset": 2752,
+      "slot_index_excluding_header": 342,
+      "file_offset": 350777248,
+      "source_line": 116,
+      "source_text": "__attribute__((naked)) void NVGLContext::getFrameDelimiter() { __asm__(\"movq __ZTV17IOAccelGLContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2752(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e2eb52",
+        "target_offset": 350415698,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 9,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN15IOAccelContext217getFrameDelimiterEv",
+          "value": 350415698,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365119824
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN15IOAccelContext217getFrameDelimiterEv",
+      "derived_class": "NV2DContext",
+      "base_vtable": "IOAccel2DContext2",
+      "vtable_symbol": "__ZTV17IOAccel2DContext2",
+      "vtable_address": 350740800,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350743768,
+      "byte_offset": 2752,
+      "slot_index_excluding_header": 342,
+      "file_offset": 350743552,
+      "source_line": 128,
+      "source_text": "__attribute__((naked)) void NV2DContext::getFrameDelimiter() { __asm__(\"movq __ZTV17IOAccel2DContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2752(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e16bbe",
+        "target_offset": 350317502,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 1,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN15IOAccelContext217getFrameDelimiterEv",
+          "value": 350317502,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365118000
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN15IOAccelContext217getFrameDelimiterEv",
+      "derived_class": "NVCLContext",
+      "base_vtable": "IOAccelCLContext2",
+      "vtable_symbol": "__ZTV17IOAccelCLContext2",
+      "vtable_address": 350746752,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350749704,
+      "byte_offset": 2752,
+      "slot_index_excluding_header": 342,
+      "file_offset": 350749504,
+      "source_line": 139,
+      "source_text": "__attribute__((naked)) void NVCLContext::getFrameDelimiter() { __asm__(\"movq __ZTV17IOAccelCLContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2752(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e18c46",
+        "target_offset": 350325830,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 3,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN15IOAccelContext217getFrameDelimiterEv",
+          "value": 350325830,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365118496
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN15IOAccelContext217getFrameDelimiterEv",
+      "derived_class": "NVVideoContext",
+      "base_vtable": "IOAccelVideoContext2",
+      "vtable_symbol": "__ZTV20IOAccelVideoContext2",
+      "vtable_address": 350805088,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350808040,
+      "byte_offset": 2752,
+      "slot_index_excluding_header": 342,
+      "file_offset": 350807840,
+      "source_line": 150,
+      "source_text": "__attribute__((naked)) void NVVideoContext::getFrameDelimiter() { __asm__(\"movq __ZTV20IOAccelVideoContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2752(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e4d632",
+        "target_offset": 350541362,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 17,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN15IOAccelContext217getFrameDelimiterEv",
+          "value": 350541362,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365121568
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN15IOAccelContext218validateDataBufferEyP24IOBufferMemoryDescriptorP16IOAccelResource2",
+      "derived_class": "NVGLContext",
+      "base_vtable": "IOAccelGLContext2",
+      "vtable_symbol": "__ZTV17IOAccelGLContext2",
+      "vtable_address": 350774496,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350777504,
+      "byte_offset": 2704,
+      "slot_index_excluding_header": 336,
+      "file_offset": 350777200,
+      "source_line": 114,
+      "source_text": "__attribute__((naked)) void NVGLContext::validateDataBuffer(unsigned long long a0, IOBufferMemoryDescriptor* a1, IOAccelResource2* a2) { __asm__(\"movq __ZTV17IOAccelGLContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2704(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e2eb44",
+        "target_offset": 350415684,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 9,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN15IOAccelContext218validateDataBufferEyP24IOBufferMemoryDescriptorP16IOAccelResource2",
+          "value": 350415684,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365119792
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN15IOAccelContext218validateDataBufferEyP24IOBufferMemoryDescriptorP16IOAccelResource2",
+      "derived_class": "NV2DContext",
+      "base_vtable": "IOAccel2DContext2",
+      "vtable_symbol": "__ZTV17IOAccel2DContext2",
+      "vtable_address": 350740800,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350743768,
+      "byte_offset": 2704,
+      "slot_index_excluding_header": 336,
+      "file_offset": 350743504,
+      "source_line": 126,
+      "source_text": "__attribute__((naked)) void NV2DContext::validateDataBuffer(unsigned long long a0, IOBufferMemoryDescriptor* a1, IOAccelResource2* a2) { __asm__(\"movq __ZTV17IOAccel2DContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2704(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e16bb0",
+        "target_offset": 350317488,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 1,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN15IOAccelContext218validateDataBufferEyP24IOBufferMemoryDescriptorP16IOAccelResource2",
+          "value": 350317488,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365117968
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN15IOAccelContext218validateDataBufferEyP24IOBufferMemoryDescriptorP16IOAccelResource2",
+      "derived_class": "NVCLContext",
+      "base_vtable": "IOAccelCLContext2",
+      "vtable_symbol": "__ZTV17IOAccelCLContext2",
+      "vtable_address": 350746752,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350749704,
+      "byte_offset": 2704,
+      "slot_index_excluding_header": 336,
+      "file_offset": 350749456,
+      "source_line": 137,
+      "source_text": "__attribute__((naked)) void NVCLContext::validateDataBuffer(unsigned long long a0, IOBufferMemoryDescriptor* a1, IOAccelResource2* a2) { __asm__(\"movq __ZTV17IOAccelCLContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2704(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e18c38",
+        "target_offset": 350325816,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 3,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN15IOAccelContext218validateDataBufferEyP24IOBufferMemoryDescriptorP16IOAccelResource2",
+          "value": 350325816,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365118464
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN15IOAccelContext218validateDataBufferEyP24IOBufferMemoryDescriptorP16IOAccelResource2",
+      "derived_class": "NVVideoContext",
+      "base_vtable": "IOAccelVideoContext2",
+      "vtable_symbol": "__ZTV20IOAccelVideoContext2",
+      "vtable_address": 350805088,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350808040,
+      "byte_offset": 2704,
+      "slot_index_excluding_header": 336,
+      "file_offset": 350807792,
+      "source_line": 148,
+      "source_text": "__attribute__((naked)) void NVVideoContext::validateDataBuffer(unsigned long long a0, IOBufferMemoryDescriptor* a1, IOAccelResource2* a2) { __asm__(\"movq __ZTV20IOAccelVideoContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2704(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e4d624",
+        "target_offset": 350541348,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 17,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN15IOAccelContext218validateDataBufferEyP24IOBufferMemoryDescriptorP16IOAccelResource2",
+          "value": 350541348,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365121536
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN15IOAccelContext220getDataBufferPrivateEP16IOAccelResource2P22IOAccelResourcePrivatey",
+      "derived_class": "NVGLContext",
+      "base_vtable": "IOAccelGLContext2",
+      "vtable_symbol": "__ZTV17IOAccelGLContext2",
+      "vtable_address": 350774496,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350777504,
+      "byte_offset": 2696,
+      "slot_index_excluding_header": 335,
+      "file_offset": 350777192,
+      "source_line": 113,
+      "source_text": "__attribute__((naked)) void NVGLContext::getDataBufferPrivate(IOAccelResource2* a0, IOAccelResourcePrivate* a1, unsigned long long a2) { __asm__(\"movq __ZTV17IOAccelGLContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2696(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e2eb3e",
+        "target_offset": 350415678,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 9,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN15IOAccelContext220getDataBufferPrivateEP16IOAccelResource2P22IOAccelResourcePrivatey",
+          "value": 350415678,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365119776
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN15IOAccelContext220getDataBufferPrivateEP16IOAccelResource2P22IOAccelResourcePrivatey",
+      "derived_class": "NV2DContext",
+      "base_vtable": "IOAccel2DContext2",
+      "vtable_symbol": "__ZTV17IOAccel2DContext2",
+      "vtable_address": 350740800,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350743768,
+      "byte_offset": 2696,
+      "slot_index_excluding_header": 335,
+      "file_offset": 350743496,
+      "source_line": 125,
+      "source_text": "__attribute__((naked)) void NV2DContext::getDataBufferPrivate(IOAccelResource2* a0, IOAccelResourcePrivate* a1, unsigned long long a2) { __asm__(\"movq __ZTV17IOAccel2DContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2696(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e16baa",
+        "target_offset": 350317482,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 1,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN15IOAccelContext220getDataBufferPrivateEP16IOAccelResource2P22IOAccelResourcePrivatey",
+          "value": 350317482,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365117952
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN15IOAccelContext220getDataBufferPrivateEP16IOAccelResource2P22IOAccelResourcePrivatey",
+      "derived_class": "NVCLContext",
+      "base_vtable": "IOAccelCLContext2",
+      "vtable_symbol": "__ZTV17IOAccelCLContext2",
+      "vtable_address": 350746752,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350749704,
+      "byte_offset": 2696,
+      "slot_index_excluding_header": 335,
+      "file_offset": 350749448,
+      "source_line": 136,
+      "source_text": "__attribute__((naked)) void NVCLContext::getDataBufferPrivate(IOAccelResource2* a0, IOAccelResourcePrivate* a1, unsigned long long a2) { __asm__(\"movq __ZTV17IOAccelCLContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2696(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e18c32",
+        "target_offset": 350325810,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 3,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN15IOAccelContext220getDataBufferPrivateEP16IOAccelResource2P22IOAccelResourcePrivatey",
+          "value": 350325810,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365118448
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN15IOAccelContext220getDataBufferPrivateEP16IOAccelResource2P22IOAccelResourcePrivatey",
+      "derived_class": "NVVideoContext",
+      "base_vtable": "IOAccelVideoContext2",
+      "vtable_symbol": "__ZTV20IOAccelVideoContext2",
+      "vtable_address": 350805088,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350808040,
+      "byte_offset": 2696,
+      "slot_index_excluding_header": 335,
+      "file_offset": 350807784,
+      "source_line": 147,
+      "source_text": "__attribute__((naked)) void NVVideoContext::getDataBufferPrivate(IOAccelResource2* a0, IOAccelResourcePrivate* a1, unsigned long long a2) { __asm__(\"movq __ZTV20IOAccelVideoContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2696(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e4d61e",
+        "target_offset": 350541342,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 17,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN15IOAccelContext220getDataBufferPrivateEP16IOAccelResource2P22IOAccelResourcePrivatey",
+          "value": 350541342,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365121520
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN15IOAccelContext220postTokenSanityCheckER24IOAccelCommandStreamInfo",
+      "derived_class": "NVGLContext",
+      "base_vtable": "IOAccelGLContext2",
+      "vtable_symbol": "__ZTV17IOAccelGLContext2",
+      "vtable_address": 350774496,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350777504,
+      "byte_offset": 2608,
+      "slot_index_excluding_header": 324,
+      "file_offset": 350777104,
+      "source_line": 112,
+      "source_text": "__attribute__((naked)) void NVGLContext::postTokenSanityCheck(IOAccelCommandStreamInfo& a0) { __asm__(\"movq __ZTV17IOAccelGLContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2608(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e2eb38",
+        "target_offset": 350415672,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 9,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN15IOAccelContext220postTokenSanityCheckER24IOAccelCommandStreamInfo",
+          "value": 350415672,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365119760
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN15IOAccelContext220postTokenSanityCheckER24IOAccelCommandStreamInfo",
+      "derived_class": "NV2DContext",
+      "base_vtable": "IOAccel2DContext2",
+      "vtable_symbol": "__ZTV17IOAccel2DContext2",
+      "vtable_address": 350740800,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350743768,
+      "byte_offset": 2608,
+      "slot_index_excluding_header": 324,
+      "file_offset": 350743408,
+      "source_line": 124,
+      "source_text": "__attribute__((naked)) void NV2DContext::postTokenSanityCheck(IOAccelCommandStreamInfo& a0) { __asm__(\"movq __ZTV17IOAccel2DContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2608(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e16ba4",
+        "target_offset": 350317476,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 1,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN15IOAccelContext220postTokenSanityCheckER24IOAccelCommandStreamInfo",
+          "value": 350317476,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365117936
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN15IOAccelContext220postTokenSanityCheckER24IOAccelCommandStreamInfo",
+      "derived_class": "NVCLContext",
+      "base_vtable": "IOAccelCLContext2",
+      "vtable_symbol": "__ZTV17IOAccelCLContext2",
+      "vtable_address": 350746752,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350749704,
+      "byte_offset": 2608,
+      "slot_index_excluding_header": 324,
+      "file_offset": 350749360,
+      "source_line": 135,
+      "source_text": "__attribute__((naked)) void NVCLContext::postTokenSanityCheck(IOAccelCommandStreamInfo& a0) { __asm__(\"movq __ZTV17IOAccelCLContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2608(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e18c2c",
+        "target_offset": 350325804,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 3,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN15IOAccelContext220postTokenSanityCheckER24IOAccelCommandStreamInfo",
+          "value": 350325804,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365118432
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN15IOAccelContext220postTokenSanityCheckER24IOAccelCommandStreamInfo",
+      "derived_class": "NVVideoContext",
+      "base_vtable": "IOAccelVideoContext2",
+      "vtable_symbol": "__ZTV20IOAccelVideoContext2",
+      "vtable_address": 350805088,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350808040,
+      "byte_offset": 2608,
+      "slot_index_excluding_header": 324,
+      "file_offset": 350807696,
+      "source_line": 146,
+      "source_text": "__attribute__((naked)) void NVVideoContext::postTokenSanityCheck(IOAccelCommandStreamInfo& a0) { __asm__(\"movq __ZTV20IOAccelVideoContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2608(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e4d618",
+        "target_offset": 350541336,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 17,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN15IOAccelContext220postTokenSanityCheckER24IOAccelCommandStreamInfo",
+          "value": 350541336,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365121504
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN16IOAccelMemoryMap15matchOptionBitsEj",
+      "derived_class": "NVMemoryMap",
+      "base_vtable": "IOAccelMemoryMap",
+      "vtable_symbol": "__ZTV16IOAccelMemoryMap",
+      "vtable_address": 350826456,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350826936,
+      "byte_offset": 304,
+      "slot_index_excluding_header": 36,
+      "file_offset": 350826760,
+      "source_line": 153,
+      "source_text": "__attribute__((naked)) bool NVMemoryMap::matchOptionBits(unsigned int a0) { __asm__(\"movq __ZTV16IOAccelMemoryMap@GOTPCREL(%rip), %r11\\n\\tjmpq *304(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e65fe4",
+        "target_offset": 350642148,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 22,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN16IOAccelMemoryMap15matchOptionBitsEj",
+          "value": 350642148,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365122480
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN16IOAccelResource223getMemoryAllocParameterEv",
+      "derived_class": "NVResource",
+      "base_vtable": "IOAccelResource2",
+      "vtable_symbol": "__ZTV16IOAccelResource2",
+      "vtable_address": 350787264,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350787920,
+      "byte_offset": 488,
+      "slot_index_excluding_header": 59,
+      "file_offset": 350787752,
+      "source_line": 92,
+      "source_text": "__attribute__((naked)) uint64_t NVResource::getMemoryAllocParameter() { __asm__(\"movq __ZTV16IOAccelResource2@GOTPCREL(%rip), %r11\\n\\tjmpq *488(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e3b436",
+        "target_offset": 350467126,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 12,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN16IOAccelResource223getMemoryAllocParameterEv",
+          "value": 350467126,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365120592
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN16IOAccelResource26pageonEP12IOAccelEventb",
+      "derived_class": "NVResource",
+      "base_vtable": "IOAccelResource2",
+      "vtable_symbol": "__ZTV16IOAccelResource2",
+      "vtable_address": 350787264,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350787920,
+      "byte_offset": 448,
+      "slot_index_excluding_header": 54,
+      "file_offset": 350787712,
+      "source_line": 89,
+      "source_text": "__attribute__((naked)) void NVResource::pageon(IOAccelEvent* a0, bool a1) { __asm__(\"movq __ZTV16IOAccelResource2@GOTPCREL(%rip), %r11\\n\\tjmpq *448(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e3b406",
+        "target_offset": 350467078,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 12,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN16IOAccelResource26pageonEP12IOAccelEventb",
+          "value": 350467078,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365120528
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN16IOAccelResource26pageonEP12IOAccelEventby",
+      "derived_class": "NVResource",
+      "base_vtable": "IOAccelResource2",
+      "vtable_symbol": "__ZTV16IOAccelResource2",
+      "vtable_address": 350787264,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350787920,
+      "byte_offset": 456,
+      "slot_index_excluding_header": 55,
+      "file_offset": 350787720,
+      "source_line": 90,
+      "source_text": "__attribute__((naked)) void NVResource::pageon(IOAccelEvent* a0, bool a1, unsigned long long a2) { __asm__(\"movq __ZTV16IOAccelResource2@GOTPCREL(%rip), %r11\\n\\tjmpq *456(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e3b40c",
+        "target_offset": 350467084,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 12,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN16IOAccelResource26pageonEP12IOAccelEventby",
+          "value": 350467084,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365120544
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN16IOAccelResource27pageoffEP12IOAccelEventbPb",
+      "derived_class": "NVResource",
+      "base_vtable": "IOAccelResource2",
+      "vtable_symbol": "__ZTV16IOAccelResource2",
+      "vtable_address": 350787264,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350787920,
+      "byte_offset": 464,
+      "slot_index_excluding_header": 56,
+      "file_offset": 350787728,
+      "source_line": 91,
+      "source_text": "__attribute__((naked)) void NVResource::pageoff(IOAccelEvent* a0, bool a1, bool* a2) { __asm__(\"movq __ZTV16IOAccelResource2@GOTPCREL(%rip), %r11\\n\\tjmpq *464(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e3b41e",
+        "target_offset": 350467102,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 12,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN16IOAccelResource27pageoffEP12IOAccelEventbPb",
+          "value": 350467102,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365120560
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN16IOAccelSysMemory6getTagEv",
+      "derived_class": "NVSysMemory",
+      "base_vtable": "IOAccelSysMemory",
+      "vtable_symbol": "__ZTV16IOAccelSysMemory",
+      "vtable_address": 350827872,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350828424,
+      "byte_offset": 384,
+      "slot_index_excluding_header": 46,
+      "file_offset": 350828256,
+      "source_line": 95,
+      "source_text": "__attribute__((naked)) uint64_t NVSysMemory::getTag() { __asm__(\"movq __ZTV16IOAccelSysMemory@GOTPCREL(%rip), %r11\\n\\tjmpq *384(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e68e36",
+        "target_offset": 350654006,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 22,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN16IOAccelSysMemory6getTagEv",
+          "value": 350654006,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365122704
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN16IOAccelSysMemory6setTagEj",
+      "derived_class": "NVSysMemory",
+      "base_vtable": "IOAccelSysMemory",
+      "vtable_symbol": "__ZTV16IOAccelSysMemory",
+      "vtable_address": 350827872,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350828424,
+      "byte_offset": 376,
+      "slot_index_excluding_header": 45,
+      "file_offset": 350828248,
+      "source_line": 94,
+      "source_text": "__attribute__((naked)) uint64_t NVSysMemory::setTag(unsigned int a0) { __asm__(\"movq __ZTV16IOAccelSysMemory@GOTPCREL(%rip), %r11\\n\\tjmpq *376(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e68e1e",
+        "target_offset": 350653982,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 22,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN16IOAccelSysMemory6setTagEj",
+          "value": 350653982,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365122688
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN16IOAccelVidMemory6getTagEv",
+      "derived_class": "NVVidMemory",
+      "base_vtable": "IOAccelVidMemory",
+      "vtable_symbol": "__ZTV16IOAccelVidMemory",
+      "vtable_address": 350828672,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350829248,
+      "byte_offset": 384,
+      "slot_index_excluding_header": 46,
+      "file_offset": 350829056,
+      "source_line": 98,
+      "source_text": "__attribute__((naked)) uint64_t NVVidMemory::getTag() { __asm__(\"movq __ZTV16IOAccelVidMemory@GOTPCREL(%rip), %r11\\n\\tjmpq *384(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e69646",
+        "target_offset": 350656070,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 22,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN16IOAccelVidMemory6getTagEv",
+          "value": 350656070,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365122816
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN16IOAccelVidMemory6setTagEj",
+      "derived_class": "NVVidMemory",
+      "base_vtable": "IOAccelVidMemory",
+      "vtable_symbol": "__ZTV16IOAccelVidMemory",
+      "vtable_address": 350828672,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350829248,
+      "byte_offset": 376,
+      "slot_index_excluding_header": 45,
+      "file_offset": 350829048,
+      "source_line": 97,
+      "source_text": "__attribute__((naked)) uint64_t NVVidMemory::setTag(unsigned int a0) { __asm__(\"movq __ZTV16IOAccelVidMemory@GOTPCREL(%rip), %r11\\n\\tjmpq *376(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e6963a",
+        "target_offset": 350656058,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 22,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN16IOAccelVidMemory6setTagEj",
+          "value": 350656058,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365122800
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN17IOAccelSubmitter218setSubmissionErrorEj",
+      "derived_class": "NVGLContext",
+      "base_vtable": "IOAccelGLContext2",
+      "vtable_symbol": "__ZTV17IOAccelGLContext2",
+      "vtable_address": 350774496,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350777504,
+      "byte_offset": 2480,
+      "slot_index_excluding_header": 308,
+      "file_offset": 350776976,
+      "source_line": 110,
+      "source_text": "__attribute__((naked)) void NVGLContext::setSubmissionError(unsigned int a0) { __asm__(\"movq __ZTV17IOAccelGLContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2480(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e2eb2a",
+        "target_offset": 350415658,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 9,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN17IOAccelSubmitter218setSubmissionErrorEj",
+          "value": 350415658,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365119728
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN17IOAccelSubmitter218setSubmissionErrorEj",
+      "derived_class": "NV2DContext",
+      "base_vtable": "IOAccel2DContext2",
+      "vtable_symbol": "__ZTV17IOAccel2DContext2",
+      "vtable_address": 350740800,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350743768,
+      "byte_offset": 2480,
+      "slot_index_excluding_header": 308,
+      "file_offset": 350743280,
+      "source_line": 122,
+      "source_text": "__attribute__((naked)) void NV2DContext::setSubmissionError(unsigned int a0) { __asm__(\"movq __ZTV17IOAccel2DContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2480(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e16b96",
+        "target_offset": 350317462,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 1,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN17IOAccelSubmitter218setSubmissionErrorEj",
+          "value": 350317462,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365117904
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN17IOAccelSubmitter218setSubmissionErrorEj",
+      "derived_class": "NVCLContext",
+      "base_vtable": "IOAccelCLContext2",
+      "vtable_symbol": "__ZTV17IOAccelCLContext2",
+      "vtable_address": 350746752,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350749704,
+      "byte_offset": 2480,
+      "slot_index_excluding_header": 308,
+      "file_offset": 350749232,
+      "source_line": 133,
+      "source_text": "__attribute__((naked)) void NVCLContext::setSubmissionError(unsigned int a0) { __asm__(\"movq __ZTV17IOAccelCLContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2480(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e18c1e",
+        "target_offset": 350325790,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 3,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN17IOAccelSubmitter218setSubmissionErrorEj",
+          "value": 350325790,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365118400
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN17IOAccelSubmitter218setSubmissionErrorEj",
+      "derived_class": "NVVideoContext",
+      "base_vtable": "IOAccelVideoContext2",
+      "vtable_symbol": "__ZTV20IOAccelVideoContext2",
+      "vtable_address": 350805088,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350808040,
+      "byte_offset": 2480,
+      "slot_index_excluding_header": 308,
+      "file_offset": 350807568,
+      "source_line": 144,
+      "source_text": "__attribute__((naked)) void NVVideoContext::setSubmissionError(unsigned int a0) { __asm__(\"movq __ZTV20IOAccelVideoContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2480(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e4d60a",
+        "target_offset": 350541322,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 17,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN17IOAccelSubmitter218setSubmissionErrorEj",
+          "value": 350541322,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365121472
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN17IOAccelSubmitter219retireCommandBufferEP17IOAccelEventFence",
+      "derived_class": "NVGLContext",
+      "base_vtable": "IOAccelGLContext2",
+      "vtable_symbol": "__ZTV17IOAccelGLContext2",
+      "vtable_address": 350774496,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350777504,
+      "byte_offset": 2448,
+      "slot_index_excluding_header": 304,
+      "file_offset": 350776944,
+      "source_line": 109,
+      "source_text": "__attribute__((naked)) void NVGLContext::retireCommandBuffer(IOAccelEventFence* a0) { __asm__(\"movq __ZTV17IOAccelGLContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2448(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e2eb24",
+        "target_offset": 350415652,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 9,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN17IOAccelSubmitter219retireCommandBufferEP17IOAccelEventFence",
+          "value": 350415652,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365119712
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN17IOAccelSubmitter219retireCommandBufferEP17IOAccelEventFence",
+      "derived_class": "NV2DContext",
+      "base_vtable": "IOAccel2DContext2",
+      "vtable_symbol": "__ZTV17IOAccel2DContext2",
+      "vtable_address": 350740800,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350743768,
+      "byte_offset": 2448,
+      "slot_index_excluding_header": 304,
+      "file_offset": 350743248,
+      "source_line": 121,
+      "source_text": "__attribute__((naked)) void NV2DContext::retireCommandBuffer(IOAccelEventFence* a0) { __asm__(\"movq __ZTV17IOAccel2DContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2448(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e16b90",
+        "target_offset": 350317456,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 1,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN17IOAccelSubmitter219retireCommandBufferEP17IOAccelEventFence",
+          "value": 350317456,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365117888
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN17IOAccelSubmitter219retireCommandBufferEP17IOAccelEventFence",
+      "derived_class": "NVCLContext",
+      "base_vtable": "IOAccelCLContext2",
+      "vtable_symbol": "__ZTV17IOAccelCLContext2",
+      "vtable_address": 350746752,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350749704,
+      "byte_offset": 2448,
+      "slot_index_excluding_header": 304,
+      "file_offset": 350749200,
+      "source_line": 132,
+      "source_text": "__attribute__((naked)) void NVCLContext::retireCommandBuffer(IOAccelEventFence* a0) { __asm__(\"movq __ZTV17IOAccelCLContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2448(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e18c18",
+        "target_offset": 350325784,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 3,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN17IOAccelSubmitter219retireCommandBufferEP17IOAccelEventFence",
+          "value": 350325784,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365118384
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN17IOAccelSubmitter219retireCommandBufferEP17IOAccelEventFence",
+      "derived_class": "NVVideoContext",
+      "base_vtable": "IOAccelVideoContext2",
+      "vtable_symbol": "__ZTV20IOAccelVideoContext2",
+      "vtable_address": 350805088,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350808040,
+      "byte_offset": 2448,
+      "slot_index_excluding_header": 304,
+      "file_offset": 350807536,
+      "source_line": 143,
+      "source_text": "__attribute__((naked)) void NVVideoContext::retireCommandBuffer(IOAccelEventFence* a0) { __asm__(\"movq __ZTV20IOAccelVideoContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2448(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e4d604",
+        "target_offset": 350541316,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 17,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN17IOAccelSubmitter219retireCommandBufferEP17IOAccelEventFence",
+          "value": 350541316,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365121456
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN20IOAccelEventMachine227collectAllLiveEventIfNeededEv",
+      "derived_class": "NVEventMachine",
+      "base_vtable": "IOAccelEventMachineFast2",
+      "vtable_symbol": "__ZTV24IOAccelEventMachineFast2",
+      "vtable_address": 350796080,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350796864,
+      "byte_offset": 576,
+      "slot_index_excluding_header": 70,
+      "file_offset": 350796656,
+      "source_line": 151,
+      "source_text": "__attribute__((naked)) void NVEventMachine::collectAllLiveEventIfNeeded() { __asm__(\"movq __ZTV24IOAccelEventMachineFast2@GOTPCREL(%rip), %r11\\n\\tjmpq *576(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e451ae",
+        "target_offset": 350507438,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 14,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN20IOAccelEventMachine227collectAllLiveEventIfNeededEv",
+          "value": 350507438,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365121040
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN20IOAccelLegacySurface12submitUpdateEjP13IOAccelBoundsj",
+      "derived_class": "NVSurface",
+      "base_vtable": "IOAccelLegacySurface",
+      "vtable_symbol": "__ZTV20IOAccelLegacySurface",
+      "vtable_address": 350768752,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350771448,
+      "byte_offset": 2664,
+      "slot_index_excluding_header": 331,
+      "file_offset": 350771416,
+      "source_line": 104,
+      "source_text": "__attribute__((naked)) void NVSurface::submitUpdate(unsigned int a0, IOAccelBounds* a1, unsigned int a2) { __asm__(\"movq __ZTV20IOAccelLegacySurface@GOTPCREL(%rip), %r11\\n\\tjmpq *2664(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e2b51c",
+        "target_offset": 350401820,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 8,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN20IOAccelLegacySurface12submitUpdateEjP13IOAccelBoundsj",
+          "value": 350401820,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365119440
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN20IOAccelLegacySurface17submitCopyForwardEP12IOAccelEventjP16IOAccelResource2S3_PK13IOAccelBoundsj",
+      "derived_class": "NVSurface",
+      "base_vtable": "IOAccelLegacySurface",
+      "vtable_symbol": "__ZTV20IOAccelLegacySurface",
+      "vtable_address": 350768752,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350771448,
+      "byte_offset": 2656,
+      "slot_index_excluding_header": 330,
+      "file_offset": 350771408,
+      "source_line": 103,
+      "source_text": "__attribute__((naked)) void NVSurface::submitCopyForward(IOAccelEvent* a0, unsigned int a1, IOAccelResource2* a2, IOAccelResource2* a3, IOAccelBounds const* a4, unsigned int a5) { __asm__(\"movq __ZTV20IOAccelLegacySurface@GOTPCREL(%rip), %r11\\n\\tjmpq *2656(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e2b510",
+        "target_offset": 350401808,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 8,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN20IOAccelLegacySurface17submitCopyForwardEP12IOAccelEventjP16IOAccelResource2S3_PK13IOAccelBoundsj",
+          "value": 350401808,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365119424
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN22IOGraphicsAccelerator212tmpTotalVRAMEv",
+      "derived_class": "NVAccel",
+      "base_vtable": "IOGraphicsAccelerator2",
+      "vtable_symbol": "__ZTV22IOGraphicsAccelerator2",
+      "vtable_address": 350808288,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350811112,
+      "byte_offset": 2160,
+      "slot_index_excluding_header": 268,
+      "file_offset": 350810448,
+      "source_line": 155,
+      "source_text": "__attribute__((naked)) uint64_t NVAccel::tmpTotalVRAM() { __asm__(\"movq __ZTV22IOGraphicsAccelerator2@GOTPCREL(%rip), %r11\\n\\tjmpq *2160(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e568cc",
+        "target_offset": 350578892,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 18,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN22IOGraphicsAccelerator212tmpTotalVRAMEv",
+          "value": 350578892,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365121744
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZN22IOGraphicsAccelerator218totalTextureMemoryEv",
+      "derived_class": "NVAccel",
+      "base_vtable": "IOGraphicsAccelerator2",
+      "vtable_symbol": "__ZTV22IOGraphicsAccelerator2",
+      "vtable_address": 350808288,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350811112,
+      "byte_offset": 2168,
+      "slot_index_excluding_header": 269,
+      "file_offset": 350810456,
+      "source_line": 156,
+      "source_text": "__attribute__((naked)) uint64_t NVAccel::totalTextureMemory() { __asm__(\"movq __ZTV22IOGraphicsAccelerator2@GOTPCREL(%rip), %r11\\n\\tjmpq *2168(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e568d8",
+        "target_offset": 350578904,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 18,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZN22IOGraphicsAccelerator218totalTextureMemoryEv",
+          "value": 350578904,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365121760
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZNK13IOAccelMemory9getLengthEv",
+      "derived_class": "NVSysMemory",
+      "base_vtable": "IOAccelSysMemory",
+      "vtable_symbol": "__ZTV16IOAccelSysMemory",
+      "vtable_address": 350827872,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350828424,
+      "byte_offset": 304,
+      "slot_index_excluding_header": 36,
+      "file_offset": 350828176,
+      "source_line": 93,
+      "source_text": "__attribute__((naked)) uint64_t NVSysMemory::getLength() const { __asm__(\"movq __ZTV16IOAccelSysMemory@GOTPCREL(%rip), %r11\\n\\tjmpq *304(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e68e14",
+        "target_offset": 350653972,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 22,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZNK13IOAccelMemory9getLengthEv",
+          "value": 350653972,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365122672
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZNK13IOAccelMemory9getLengthEv",
+      "derived_class": "NVVidMemory",
+      "base_vtable": "IOAccelVidMemory",
+      "vtable_symbol": "__ZTV16IOAccelVidMemory",
+      "vtable_address": 350828672,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350829248,
+      "byte_offset": 304,
+      "slot_index_excluding_header": 36,
+      "file_offset": 350828976,
+      "source_line": 96,
+      "source_text": "__attribute__((naked)) uint64_t NVVidMemory::getLength() const { __asm__(\"movq __ZTV16IOAccelVidMemory@GOTPCREL(%rip), %r11\\n\\tjmpq *304(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e69630",
+        "target_offset": 350656048,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 22,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZNK13IOAccelMemory9getLengthEv",
+          "value": 350656048,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365122784
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZNK15IOAccelContext210getGPUTaskEv",
+      "derived_class": "NVGLContext",
+      "base_vtable": "IOAccelGLContext2",
+      "vtable_symbol": "__ZTV17IOAccelGLContext2",
+      "vtable_address": 350774496,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350777504,
+      "byte_offset": 2424,
+      "slot_index_excluding_header": 301,
+      "file_offset": 350776920,
+      "source_line": 107,
+      "source_text": "__attribute__((naked)) void * NVGLContext::getGPUTask() const { __asm__(\"movq __ZTV17IOAccelGLContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2424(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e2eb0a",
+        "target_offset": 350415626,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 9,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZNK15IOAccelContext210getGPUTaskEv",
+          "value": 350415626,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365119680
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZNK15IOAccelContext210getGPUTaskEv",
+      "derived_class": "NV2DContext",
+      "base_vtable": "IOAccel2DContext2",
+      "vtable_symbol": "__ZTV17IOAccel2DContext2",
+      "vtable_address": 350740800,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350743768,
+      "byte_offset": 2424,
+      "slot_index_excluding_header": 301,
+      "file_offset": 350743224,
+      "source_line": 119,
+      "source_text": "__attribute__((naked)) void * NV2DContext::getGPUTask() const { __asm__(\"movq __ZTV17IOAccel2DContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2424(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e16b76",
+        "target_offset": 350317430,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 1,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZNK15IOAccelContext210getGPUTaskEv",
+          "value": 350317430,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365117856
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZNK15IOAccelContext210getGPUTaskEv",
+      "derived_class": "NVCLContext",
+      "base_vtable": "IOAccelCLContext2",
+      "vtable_symbol": "__ZTV17IOAccelCLContext2",
+      "vtable_address": 350746752,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350749704,
+      "byte_offset": 2424,
+      "slot_index_excluding_header": 301,
+      "file_offset": 350749176,
+      "source_line": 130,
+      "source_text": "__attribute__((naked)) void * NVCLContext::getGPUTask() const { __asm__(\"movq __ZTV17IOAccelCLContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2424(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e18bfe",
+        "target_offset": 350325758,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 3,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZNK15IOAccelContext210getGPUTaskEv",
+          "value": 350325758,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365118352
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZNK15IOAccelContext210getGPUTaskEv",
+      "derived_class": "NVVideoContext",
+      "base_vtable": "IOAccelVideoContext2",
+      "vtable_symbol": "__ZTV20IOAccelVideoContext2",
+      "vtable_address": 350805088,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350808040,
+      "byte_offset": 2424,
+      "slot_index_excluding_header": 301,
+      "file_offset": 350807512,
+      "source_line": 141,
+      "source_text": "__attribute__((naked)) void * NVVideoContext::getGPUTask() const { __asm__(\"movq __ZTV20IOAccelVideoContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2424(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e4d5ea",
+        "target_offset": 350541290,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 17,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZNK15IOAccelContext210getGPUTaskEv",
+          "value": 350541290,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365121424
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZNK15IOAccelContext213getOwningTaskEv",
+      "derived_class": "NVGLContext",
+      "base_vtable": "IOAccelGLContext2",
+      "vtable_symbol": "__ZTV17IOAccelGLContext2",
+      "vtable_address": 350774496,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350777504,
+      "byte_offset": 2416,
+      "slot_index_excluding_header": 300,
+      "file_offset": 350776912,
+      "source_line": 106,
+      "source_text": "__attribute__((naked)) void * NVGLContext::getOwningTask() const { __asm__(\"movq __ZTV17IOAccelGLContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2416(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e2eafc",
+        "target_offset": 350415612,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 9,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZNK15IOAccelContext213getOwningTaskEv",
+          "value": 350415612,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365119664
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZNK15IOAccelContext213getOwningTaskEv",
+      "derived_class": "NV2DContext",
+      "base_vtable": "IOAccel2DContext2",
+      "vtable_symbol": "__ZTV17IOAccel2DContext2",
+      "vtable_address": 350740800,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350743768,
+      "byte_offset": 2416,
+      "slot_index_excluding_header": 300,
+      "file_offset": 350743216,
+      "source_line": 118,
+      "source_text": "__attribute__((naked)) void * NV2DContext::getOwningTask() const { __asm__(\"movq __ZTV17IOAccel2DContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2416(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e16b68",
+        "target_offset": 350317416,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 1,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZNK15IOAccelContext213getOwningTaskEv",
+          "value": 350317416,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365117840
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZNK15IOAccelContext213getOwningTaskEv",
+      "derived_class": "NVCLContext",
+      "base_vtable": "IOAccelCLContext2",
+      "vtable_symbol": "__ZTV17IOAccelCLContext2",
+      "vtable_address": 350746752,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350749704,
+      "byte_offset": 2416,
+      "slot_index_excluding_header": 300,
+      "file_offset": 350749168,
+      "source_line": 129,
+      "source_text": "__attribute__((naked)) void * NVCLContext::getOwningTask() const { __asm__(\"movq __ZTV17IOAccelCLContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2416(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e18bf0",
+        "target_offset": 350325744,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 3,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZNK15IOAccelContext213getOwningTaskEv",
+          "value": 350325744,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365118336
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZNK15IOAccelContext213getOwningTaskEv",
+      "derived_class": "NVVideoContext",
+      "base_vtable": "IOAccelVideoContext2",
+      "vtable_symbol": "__ZTV20IOAccelVideoContext2",
+      "vtable_address": 350805088,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350808040,
+      "byte_offset": 2416,
+      "slot_index_excluding_header": 300,
+      "file_offset": 350807504,
+      "source_line": 140,
+      "source_text": "__attribute__((naked)) void * NVVideoContext::getOwningTask() const { __asm__(\"movq __ZTV20IOAccelVideoContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2416(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e4d5dc",
+        "target_offset": 350541276,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 17,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZNK15IOAccelContext213getOwningTaskEv",
+          "value": 350541276,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365121408
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZNK15IOAccelContext216getOwningTaskPidEv",
+      "derived_class": "NVGLContext",
+      "base_vtable": "IOAccelGLContext2",
+      "vtable_symbol": "__ZTV17IOAccelGLContext2",
+      "vtable_address": 350774496,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350777504,
+      "byte_offset": 2432,
+      "slot_index_excluding_header": 302,
+      "file_offset": 350776928,
+      "source_line": 108,
+      "source_text": "__attribute__((naked)) void NVGLContext::getOwningTaskPid() const { __asm__(\"movq __ZTV17IOAccelGLContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2432(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e2eb18",
+        "target_offset": 350415640,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 9,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZNK15IOAccelContext216getOwningTaskPidEv",
+          "value": 350415640,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365119696
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZNK15IOAccelContext216getOwningTaskPidEv",
+      "derived_class": "NV2DContext",
+      "base_vtable": "IOAccel2DContext2",
+      "vtable_symbol": "__ZTV17IOAccel2DContext2",
+      "vtable_address": 350740800,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350743768,
+      "byte_offset": 2432,
+      "slot_index_excluding_header": 302,
+      "file_offset": 350743232,
+      "source_line": 120,
+      "source_text": "__attribute__((naked)) void NV2DContext::getOwningTaskPid() const { __asm__(\"movq __ZTV17IOAccel2DContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2432(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e16b84",
+        "target_offset": 350317444,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 1,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZNK15IOAccelContext216getOwningTaskPidEv",
+          "value": 350317444,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365117872
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZNK15IOAccelContext216getOwningTaskPidEv",
+      "derived_class": "NVCLContext",
+      "base_vtable": "IOAccelCLContext2",
+      "vtable_symbol": "__ZTV17IOAccelCLContext2",
+      "vtable_address": 350746752,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350749704,
+      "byte_offset": 2432,
+      "slot_index_excluding_header": 302,
+      "file_offset": 350749184,
+      "source_line": 131,
+      "source_text": "__attribute__((naked)) void NVCLContext::getOwningTaskPid() const { __asm__(\"movq __ZTV17IOAccelCLContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2432(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e18c0c",
+        "target_offset": 350325772,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 3,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZNK15IOAccelContext216getOwningTaskPidEv",
+          "value": 350325772,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365118368
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZNK15IOAccelContext216getOwningTaskPidEv",
+      "derived_class": "NVVideoContext",
+      "base_vtable": "IOAccelVideoContext2",
+      "vtable_symbol": "__ZTV20IOAccelVideoContext2",
+      "vtable_address": 350805088,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350808040,
+      "byte_offset": 2432,
+      "slot_index_excluding_header": 302,
+      "file_offset": 350807520,
+      "source_line": 142,
+      "source_text": "__attribute__((naked)) void NVVideoContext::getOwningTaskPid() const { __asm__(\"movq __ZTV20IOAccelVideoContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2432(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e4d5f8",
+        "target_offset": 350541304,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 17,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZNK15IOAccelContext216getOwningTaskPidEv",
+          "value": 350541304,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365121440
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZNK16IOAccelMemoryMap9getLengthEv",
+      "derived_class": "NVMemoryMap",
+      "base_vtable": "IOAccelMemoryMap",
+      "vtable_symbol": "__ZTV16IOAccelMemoryMap",
+      "vtable_address": 350826456,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350826936,
+      "byte_offset": 376,
+      "slot_index_excluding_header": 45,
+      "file_offset": 350826832,
+      "source_line": 154,
+      "source_text": "__attribute__((naked)) unsigned long long NVMemoryMap::getLength() const { __asm__(\"movq __ZTV16IOAccelMemoryMap@GOTPCREL(%rip), %r11\\n\\tjmpq *376(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e65fec",
+        "target_offset": 350642156,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 22,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZNK16IOAccelMemoryMap9getLengthEv",
+          "value": 350642156,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365122496
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZNK17IOAccelSubmitter223isOpportunisticWorkloadEv",
+      "derived_class": "NVGLContext",
+      "base_vtable": "IOAccelGLContext2",
+      "vtable_symbol": "__ZTV17IOAccelGLContext2",
+      "vtable_address": 350774496,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350777504,
+      "byte_offset": 2536,
+      "slot_index_excluding_header": 315,
+      "file_offset": 350777032,
+      "source_line": 111,
+      "source_text": "__attribute__((naked)) bool NVGLContext::isOpportunisticWorkload() const { __asm__(\"movq __ZTV17IOAccelGLContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2536(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e2eb30",
+        "target_offset": 350415664,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 9,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZNK17IOAccelSubmitter223isOpportunisticWorkloadEv",
+          "value": 350415664,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365119744
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZNK17IOAccelSubmitter223isOpportunisticWorkloadEv",
+      "derived_class": "NV2DContext",
+      "base_vtable": "IOAccel2DContext2",
+      "vtable_symbol": "__ZTV17IOAccel2DContext2",
+      "vtable_address": 350740800,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350743768,
+      "byte_offset": 2536,
+      "slot_index_excluding_header": 315,
+      "file_offset": 350743336,
+      "source_line": 123,
+      "source_text": "__attribute__((naked)) bool NV2DContext::isOpportunisticWorkload() const { __asm__(\"movq __ZTV17IOAccel2DContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2536(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e16b9c",
+        "target_offset": 350317468,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 1,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZNK17IOAccelSubmitter223isOpportunisticWorkloadEv",
+          "value": 350317468,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365117920
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZNK17IOAccelSubmitter223isOpportunisticWorkloadEv",
+      "derived_class": "NVCLContext",
+      "base_vtable": "IOAccelCLContext2",
+      "vtable_symbol": "__ZTV17IOAccelCLContext2",
+      "vtable_address": 350746752,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350749704,
+      "byte_offset": 2536,
+      "slot_index_excluding_header": 315,
+      "file_offset": 350749288,
+      "source_line": 134,
+      "source_text": "__attribute__((naked)) bool NVCLContext::isOpportunisticWorkload() const { __asm__(\"movq __ZTV17IOAccelCLContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2536(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e18c24",
+        "target_offset": 350325796,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 3,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZNK17IOAccelSubmitter223isOpportunisticWorkloadEv",
+          "value": 350325796,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365118416
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    },
+    {
+      "symbol": "__ZNK17IOAccelSubmitter223isOpportunisticWorkloadEv",
+      "derived_class": "NVVideoContext",
+      "base_vtable": "IOAccelVideoContext2",
+      "vtable_symbol": "__ZTV20IOAccelVideoContext2",
+      "vtable_address": 350805088,
+      "vtable_external_section_observed": true,
+      "next_named_definition_upper_bound": 350808040,
+      "byte_offset": 2536,
+      "slot_index_excluding_header": 315,
+      "file_offset": 350807624,
+      "source_line": 145,
+      "source_text": "__attribute__((naked)) bool NVVideoContext::isOpportunisticWorkload() const { __asm__(\"movq __ZTV20IOAccelVideoContext2@GOTPCREL(%rip), %r11\\n\\tjmpq *2536(%r11)\"); } \\",
+      "node": {
+        "raw_word": "0x40000054e4d610",
+        "target_offset": 350541328,
+        "cache_level": 1,
+        "next_bytes": 8,
+        "page": 17,
+        "segment_index": 1
+      },
+      "definitions": [
+        {
+          "name": "__ZNK17IOAccelSubmitter223isOpportunisticWorkloadEv",
+          "value": 350541328,
+          "section": 1,
+          "n_type": 14,
+          "nlist_offset": 365121488
+        }
+      ],
+      "function_section": true,
+      "matched": true,
+      "calling_abi": "UNVERIFIED",
+      "loader_resolution": "UNVERIFIED"
+    }
+  ],
+  "method_names": 27,
+  "total_routes": 61,
+  "matched_routes": 61,
+  "vtables": {
+    "IOAccelGLContext2": {
+      "symbol": "__ZTV17IOAccelGLContext2",
+      "records": [
+        {
+          "name": "__ZTV17IOAccelGLContext2",
+          "value": 350774496,
+          "section": 8,
+          "n_type": 15,
+          "nlist_offset": 365182512
+        }
+      ],
+      "external_section_observed": true
+    },
+    "IOAccel2DContext2": {
+      "symbol": "__ZTV17IOAccel2DContext2",
+      "records": [
+        {
+          "name": "__ZTV17IOAccel2DContext2",
+          "value": 350740800,
+          "section": 8,
+          "n_type": 15,
+          "nlist_offset": 365182448
+        }
+      ],
+      "external_section_observed": true
+    },
+    "IOAccelCLContext2": {
+      "symbol": "__ZTV17IOAccelCLContext2",
+      "records": [
+        {
+          "name": "__ZTV17IOAccelCLContext2",
+          "value": 350746752,
+          "section": 8,
+          "n_type": 15,
+          "nlist_offset": 365182480
+        }
+      ],
+      "external_section_observed": true
+    },
+    "IOAccelVideoContext2": {
+      "symbol": "__ZTV20IOAccelVideoContext2",
+      "records": [
+        {
+          "name": "__ZTV20IOAccelVideoContext2",
+          "value": 350805088,
+          "section": 8,
+          "n_type": 15,
+          "nlist_offset": 365182736
+        }
+      ],
+      "external_section_observed": true
+    },
+    "IOAccelMemoryMap": {
+      "symbol": "__ZTV16IOAccelMemoryMap",
+      "records": [
+        {
+          "name": "__ZTV16IOAccelMemoryMap",
+          "value": 350826456,
+          "section": 8,
+          "n_type": 15,
+          "nlist_offset": 365182368
+        }
+      ],
+      "external_section_observed": true
+    },
+    "IOAccelResource2": {
+      "symbol": "__ZTV16IOAccelResource2",
+      "records": [
+        {
+          "name": "__ZTV16IOAccelResource2",
+          "value": 350787264,
+          "section": 8,
+          "n_type": 15,
+          "nlist_offset": 365182400
+        }
+      ],
+      "external_section_observed": true
+    },
+    "IOAccelSysMemory": {
+      "symbol": "__ZTV16IOAccelSysMemory",
+      "records": [
+        {
+          "name": "__ZTV16IOAccelSysMemory",
+          "value": 350827872,
+          "section": 8,
+          "n_type": 15,
+          "nlist_offset": 365182416
+        }
+      ],
+      "external_section_observed": true
+    },
+    "IOAccelVidMemory": {
+      "symbol": "__ZTV16IOAccelVidMemory",
+      "records": [
+        {
+          "name": "__ZTV16IOAccelVidMemory",
+          "value": 350828672,
+          "section": 8,
+          "n_type": 15,
+          "nlist_offset": 365182432
+        }
+      ],
+      "external_section_observed": true
+    },
+    "IOAccelEventMachineFast2": {
+      "symbol": "__ZTV24IOAccelEventMachineFast2",
+      "records": [
+        {
+          "name": "__ZTV24IOAccelEventMachineFast2",
+          "value": 350796080,
+          "section": 8,
+          "n_type": 15,
+          "nlist_offset": 365182896
+        }
+      ],
+      "external_section_observed": true
+    },
+    "IOAccelLegacySurface": {
+      "symbol": "__ZTV20IOAccelLegacySurface",
+      "records": [
+        {
+          "name": "__ZTV20IOAccelLegacySurface",
+          "value": 350768752,
+          "section": 8,
+          "n_type": 15,
+          "nlist_offset": 365182720
+        }
+      ],
+      "external_section_observed": true
+    },
+    "IOGraphicsAccelerator2": {
+      "symbol": "__ZTV22IOGraphicsAccelerator2",
+      "records": [
+        {
+          "name": "__ZTV22IOGraphicsAccelerator2",
+          "value": 350808288,
+          "section": 8,
+          "n_type": 15,
+          "nlist_offset": 365182816
+        }
+      ],
+      "external_section_observed": true
+    }
+  },
+  "controls": [
+    {
+      "name": "wrong_cache_level",
+      "rejected": true
+    },
+    {
+      "name": "missing_chain_node",
+      "rejected": true
+    },
+    {
+      "name": "wrong_target_address",
+      "rejected": true
+    },
+    {
+      "name": "wrong_exact_method",
+      "rejected": true
+    },
+    {
+      "name": "slot_offset_plus_8",
+      "rejected": true
+    }
+  ],
+  "full_abi": "UNVERIFIED",
+  "loader": "UNVERIFIED",
+  "runtime": "NOT_RUN",
+  "go_authorized": false
+}

@@ -1,0 +1,76 @@
+{
+  "status": "EXPERIMENTAL_SOURCE_ONLY_NOT_DARWIN_COMPILED_NOT_INSTALLABLE",
+  "source_pin": "272ccd9da04ff5de95c2791b902fe17a3fa77ce7",
+  "source_license": "PolyForm-Noncommercial-1.0.0",
+  "target_collection_sha256": "2296155f1f12471e7b774020ba70d9fb487d02224c1f85d373130511969c2243",
+  "route_proof_sha256": "f4390b7d099fb4fa63744722ee489c67d1f9b99ec2849187ed36f23a9394004d",
+  "generated_definitions": 61,
+  "methods": 27,
+  "enabled_by": "NM_SEQUOIA_24H32_FWD=1",
+  "global_tahoe_enabled": false,
+  "files": [
+    {
+      "path": "kexts/NVRM/accel/nvrm-accel.cpp",
+      "sha256": "a85ee136752123ab0655dcd2115d3b1c2e91f2a4a7dc5a284b42b89e404af8da",
+      "bytes": 130791
+    },
+    {
+      "path": "build/accel_build.sh",
+      "sha256": "dd9893bfeaf8592e5859f01fc1ed96c2a0c1a38be5b84d9fffe1e9abefdd7df4",
+      "bytes": 2985
+    },
+    {
+      "path": "kexts/NVRM/accel/sequoia24h32_fwd.h",
+      "sha256": "39a64aa396e2f0a47aa110aaea0a332c2b975d345433d52842bb6c674fd7ca31",
+      "bytes": 15347
+    }
+  ],
+  "baseline_blob_sha256": {
+    "kexts/NVRM/accel/nvrm-accel.cpp": "b75dc5b4519deb26b85e88734c94c08b59c4386d6d9896ef6416a22049031dbe",
+    "build/accel_build.sh": "c41fe1d4e3020144bf24bb000dbcf53c395396ea825f93b5b3b3b71e1cc36ce1"
+  },
+  "patch_sha256": "6274415d914865083cd8fd80437b8dfa3f92108fa617a2e988c949eb119338be",
+  "patch_applied_bytes_equal": true,
+  "reverse_patch_check": true,
+  "projected_removed_method_names": [
+    "__ZN15IOAccelContext210invalidateEv",
+    "__ZN15IOAccelContext217getFrameDelimiterEv",
+    "__ZN15IOAccelContext218validateDataBufferEyP24IOBufferMemoryDescriptorP16IOAccelResource2",
+    "__ZN15IOAccelContext220getDataBufferPrivateEP16IOAccelResource2P22IOAccelResourcePrivatey",
+    "__ZN15IOAccelContext220postTokenSanityCheckER24IOAccelCommandStreamInfo",
+    "__ZN16IOAccelMemoryMap15matchOptionBitsEj",
+    "__ZN16IOAccelResource223getMemoryAllocParameterEv",
+    "__ZN16IOAccelResource26pageonEP12IOAccelEventb",
+    "__ZN16IOAccelResource26pageonEP12IOAccelEventby",
+    "__ZN16IOAccelResource27pageoffEP12IOAccelEventbPb",
+    "__ZN16IOAccelSysMemory6getTagEv",
+    "__ZN16IOAccelSysMemory6setTagEj",
+    "__ZN16IOAccelVidMemory6getTagEv",
+    "__ZN16IOAccelVidMemory6setTagEj",
+    "__ZN17IOAccelSubmitter218setSubmissionErrorEj",
+    "__ZN17IOAccelSubmitter219retireCommandBufferEP17IOAccelEventFence",
+    "__ZN20IOAccelEventMachine227collectAllLiveEventIfNeededEv",
+    "__ZN20IOAccelLegacySurface12submitUpdateEjP13IOAccelBoundsj",
+    "__ZN20IOAccelLegacySurface17submitCopyForwardEP12IOAccelEventjP16IOAccelResource2S3_PK13IOAccelBoundsj",
+    "__ZN22IOGraphicsAccelerator212tmpTotalVRAMEv",
+    "__ZN22IOGraphicsAccelerator218totalTextureMemoryEv",
+    "__ZNK13IOAccelMemory9getLengthEv",
+    "__ZNK15IOAccelContext210getGPUTaskEv",
+    "__ZNK15IOAccelContext213getOwningTaskEv",
+    "__ZNK15IOAccelContext216getOwningTaskPidEv",
+    "__ZNK16IOAccelMemoryMap9getLengthEv",
+    "__ZNK17IOAccelSubmitter223isOpportunisticWorkloadEv"
+  ],
+  "projected_new_vtable_names": [
+    "__ZTV16IOAccelSysMemory",
+    "__ZTV17IOAccel2DContext2",
+    "__ZTV17IOAccelCLContext2",
+    "__ZTV17IOAccelGLContext2",
+    "__ZTV20IOAccelLegacySurface",
+    "__ZTV20IOAccelVideoContext2",
+    "__ZTV24IOAccelEventMachineFast2"
+  ],
+  "note": "Projection only: actual object/link import delta and complete ABI need Darwin compile, no symbol-count claim.",
+  "installation_authorized": false,
+  "go_authorized": false
+}

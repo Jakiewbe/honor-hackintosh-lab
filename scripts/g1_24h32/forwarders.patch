@@ -1,0 +1,192 @@
+--- a/kexts/NVRM/accel/nvrm-accel.cpp
++++ b/kexts/NVRM/accel/nvrm-accel.cpp
+@@ -42,7 +42,11 @@
+ #include <libkern/c++/OSSymbol.h>
+ #include "nvrm_vram_abi.h"
+ #include <IOKit/IODeviceMemory.h>
++#if defined(NM_SEQUOIA_24H32_FWD)
++#include "sequoia24h32_fwd.h"
++#else
+ #include "tahoe_fwd.h"   // macOS 26: inherited slots Apple no longer exports, forwarded through its vtables
++#endif
+ #include "nvaccel_stubs.h"
+ #include "nvkms-kapi.h"
+ #include <sys/sysctl.h>
+--- a/build/accel_build.sh
++++ b/build/accel_build.sh
+@@ -1,5 +1,11 @@
+ #!/bin/bash
+ set -uo pipefail
++# Experimental SOURCE candidate only; never enable the global Tahoe path for 24H32.
++case "${NM_SEQUOIA_24H32_FWD:-}" in
++  "") ;;
++  1) [ -z "${NM_TAHOE:-}" ] || { echo "STOP: incompatible forwarder flags" >&2; exit 2; } ;;
++  *) echo "STOP: NM_SEQUOIA_24H32_FWD must be unset or exactly 1" >&2; exit 2 ;;
++esac
+ SRC=$1; OUT=$2; mkdir -p "$OUT/NVAccel.kext/Contents/MacOS"
+ OGKM=${OGKM:-$HOME/ogkm610}; RE=${RE:-$SRC/accel/re}   # the reconstructed IOGraphicsAccelerator2 / IOAccelerator headers ship in the repo
+ SDK=$(xcrun --show-sdk-path); KHDR="$SDK/System/Library/Frameworks/Kernel.framework/Headers"; NV="$OGKM/src/nvidia"; KMS="$OGKM/src/nvidia-modeset"
+@@ -14,7 +20,7 @@
+          -I"$OGKM/src/common/unix/common/inc" -I"$OGKM/src/common/modeset" -I"$OGKM/src/common/unix/common/utils/interface" )
+ RMDEFS=(); while read -r d; do RMDEFS+=("$d"); done < <(head -1 "$NV/_out/Darwin_x86_64/compile_cmds.sh" | tr ' ' '\n' | grep -E '^-D' | sed -e 's/"//g' | grep -v -E '^-D(NVRM|_LANGUAGE_C)$')
+ CFLAGS=( -arch x86_64 -fapple-kext -mkernel -nostdinc -I"$KHDR" -I"$SRC" "${RMINC[@]}" "${KMSINC[@]}"
+-  -DKERNEL -DKERNEL_PRIVATE -DDRIVER_PRIVATE -DAPPLE -DNeXT "${RMDEFS[@]}" ${NM_TAHOE:+-DNM_TAHOE}   # NM_TAHOE=1: the macOS 26 build
++  -DKERNEL -DKERNEL_PRIVATE -DDRIVER_PRIVATE -DAPPLE -DNeXT "${RMDEFS[@]}" ${NM_TAHOE:+-DNM_TAHOE} ${NM_SEQUOIA_24H32_FWD:+-DNM_SEQUOIA_24H32_FWD}   # NM_TAHOE=1: the macOS 26 build
+   -std=c++17 -fno-rtti -fno-exceptions -fno-builtin -fno-common
+   -Wall -Wno-unused-parameter -Wno-inconsistent-missing-override -Wno-unused-function -O2 )
+ xcrun clang++ "${CFLAGS[@]}" -I"$SRC/accel" -I"$SRC/accel/iofam" -I"$RE" -c "$SRC/accel/nvrm-accel.cpp" -o "$OUT/nvrm-accel.o" 2>"$OUT/accel.err" || { grep error "$OUT/accel.err" | head; exit 1; }
+--- /dev/null
++++ b/kexts/NVRM/accel/sequoia24h32_fwd.h
+@@ -0,0 +1,152 @@
++/*
++ * Derived from NullMoth tahoe_fwd.h @ 272ccd9da04ff5de95c2791b902fe17a3fa77ce7.
++ * Copyright (c) 2026 NullMoth Systems.
++ * SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
++ * Experimental 24H32 source candidate: exact slots observed; ABI/loader NOT accepted.
++ * Uses existing NM_TAHOE_FWD call-site names; does NOT enable NM_TAHOE.
++ */
++#pragma once
++#if !defined(NM_SEQUOIA_24H32_FWD) || defined(NM_TAHOE)
++#error "24H32 forwarders require their own opt-in and cannot combine with NM_TAHOE"
++#endif
++#if !defined(__APPLE__) || !defined(__x86_64__) || !defined(KERNEL)
++#error "24H32 candidate is restricted to Darwin x86_64 kernel compilation"
++#endif
++#define NM_TAHOE_FWD_NVResource \
++    void pageon(IOAccelEvent* a0, bool a1) override; \
++    void pageon(IOAccelEvent* a0, bool a1, unsigned long long a2) override; \
++    void pageoff(IOAccelEvent* a0, bool a1, bool* a2) override; \
++    uint64_t getMemoryAllocParameter() override;
++#define NM_TAHOE_FWD_NVSysMemory \
++    uint64_t getLength() const override; \
++    uint64_t setTag(unsigned int a0) override; \
++    uint64_t getTag() override;
++#define NM_TAHOE_FWD_NVVidMemory \
++    uint64_t getLength() const override; \
++    uint64_t setTag(unsigned int a0) override; \
++    uint64_t getTag() override;
++#define NM_TAHOE_FWD_NVSurface \
++    void submitCopyForward(IOAccelEvent* a0, unsigned int a1, IOAccelResource2* a2, IOAccelResource2* a3, IOAccelBounds const* a4, unsigned int a5) override; \
++    void submitUpdate(unsigned int a0, IOAccelBounds* a1, unsigned int a2) override;
++#define NM_TAHOE_FWD_NVDisplayPipe
++#define NM_TAHOE_FWD_NVGLContext \
++    void * getOwningTask() const override; \
++    void * getGPUTask() const override; \
++    void getOwningTaskPid() const override; \
++    void retireCommandBuffer(IOAccelEventFence* a0) override; \
++    void setSubmissionError(unsigned int a0) override; \
++    bool isOpportunisticWorkload() const override; \
++    void postTokenSanityCheck(IOAccelCommandStreamInfo& a0) override; \
++    void getDataBufferPrivate(IOAccelResource2* a0, IOAccelResourcePrivate* a1, unsigned long long a2) override; \
++    void validateDataBuffer(unsigned long long a0, IOBufferMemoryDescriptor* a1, IOAccelResource2* a2) override; \
++    void invalidate() override; \
++    void getFrameDelimiter() override;
++#define NM_TAHOE_FWD_NV2DContext \
++    void * getOwningTask() const override; \
++    void * getGPUTask() const override; \
++    void getOwningTaskPid() const override; \
++    void retireCommandBuffer(IOAccelEventFence* a0) override; \
++    void setSubmissionError(unsigned int a0) override; \
++    bool isOpportunisticWorkload() const override; \
++    void postTokenSanityCheck(IOAccelCommandStreamInfo& a0) override; \
++    void getDataBufferPrivate(IOAccelResource2* a0, IOAccelResourcePrivate* a1, unsigned long long a2) override; \
++    void validateDataBuffer(unsigned long long a0, IOBufferMemoryDescriptor* a1, IOAccelResource2* a2) override; \
++    void invalidate() override; \
++    void getFrameDelimiter() override;
++#define NM_TAHOE_FWD_NVCLContext \
++    void * getOwningTask() const override; \
++    void * getGPUTask() const override; \
++    void getOwningTaskPid() const override; \
++    void retireCommandBuffer(IOAccelEventFence* a0) override; \
++    void setSubmissionError(unsigned int a0) override; \
++    bool isOpportunisticWorkload() const override; \
++    void postTokenSanityCheck(IOAccelCommandStreamInfo& a0) override; \
++    void getDataBufferPrivate(IOAccelResource2* a0, IOAccelResourcePrivate* a1, unsigned long long a2) override; \
++    void validateDataBuffer(unsigned long long a0, IOBufferMemoryDescriptor* a1, IOAccelResource2* a2) override; \
++    void invalidate() override; \
++    void getFrameDelimiter() override;
++#define NM_TAHOE_FWD_NVVideoContext \
++    void * getOwningTask() const override; \
++    void * getGPUTask() const override; \
++    void getOwningTaskPid() const override; \
++    void retireCommandBuffer(IOAccelEventFence* a0) override; \
++    void setSubmissionError(unsigned int a0) override; \
++    bool isOpportunisticWorkload() const override; \
++    void postTokenSanityCheck(IOAccelCommandStreamInfo& a0) override; \
++    void getDataBufferPrivate(IOAccelResource2* a0, IOAccelResourcePrivate* a1, unsigned long long a2) override; \
++    void validateDataBuffer(unsigned long long a0, IOBufferMemoryDescriptor* a1, IOAccelResource2* a2) override; \
++    void invalidate() override; \
++    void getFrameDelimiter() override;
++#define NM_TAHOE_FWD_NVEventMachine \
++    void collectAllLiveEventIfNeeded() override;
++#define NM_TAHOE_FWD_NVDisplayMachine
++#define NM_TAHOE_FWD_NVTask
++#define NM_TAHOE_FWD_NVMemoryMap \
++    bool matchOptionBits(unsigned int a0) override; \
++    unsigned long long getLength() const override;
++#define NM_TAHOE_FWD_NVAccel \
++    uint64_t tmpTotalVRAM() override; \
++    uint64_t totalTextureMemory() override;
++#define NM_TAHOE_FWD(cls) NM_TAHOE_FWD_##cls
++#define NM_TAHOE_FWD_DEFS \
++__attribute__((naked)) void NVResource::pageon(IOAccelEvent* a0, bool a1) { __asm__("movq __ZTV16IOAccelResource2@GOTPCREL(%rip), %r11\n\tjmpq *448(%r11)"); } \
++__attribute__((naked)) void NVResource::pageon(IOAccelEvent* a0, bool a1, unsigned long long a2) { __asm__("movq __ZTV16IOAccelResource2@GOTPCREL(%rip), %r11\n\tjmpq *456(%r11)"); } \
++__attribute__((naked)) void NVResource::pageoff(IOAccelEvent* a0, bool a1, bool* a2) { __asm__("movq __ZTV16IOAccelResource2@GOTPCREL(%rip), %r11\n\tjmpq *464(%r11)"); } \
++__attribute__((naked)) uint64_t NVResource::getMemoryAllocParameter() { __asm__("movq __ZTV16IOAccelResource2@GOTPCREL(%rip), %r11\n\tjmpq *488(%r11)"); } \
++__attribute__((naked)) uint64_t NVSysMemory::getLength() const { __asm__("movq __ZTV16IOAccelSysMemory@GOTPCREL(%rip), %r11\n\tjmpq *304(%r11)"); } \
++__attribute__((naked)) uint64_t NVSysMemory::setTag(unsigned int a0) { __asm__("movq __ZTV16IOAccelSysMemory@GOTPCREL(%rip), %r11\n\tjmpq *376(%r11)"); } \
++__attribute__((naked)) uint64_t NVSysMemory::getTag() { __asm__("movq __ZTV16IOAccelSysMemory@GOTPCREL(%rip), %r11\n\tjmpq *384(%r11)"); } \
++__attribute__((naked)) uint64_t NVVidMemory::getLength() const { __asm__("movq __ZTV16IOAccelVidMemory@GOTPCREL(%rip), %r11\n\tjmpq *304(%r11)"); } \
++__attribute__((naked)) uint64_t NVVidMemory::setTag(unsigned int a0) { __asm__("movq __ZTV16IOAccelVidMemory@GOTPCREL(%rip), %r11\n\tjmpq *376(%r11)"); } \
++__attribute__((naked)) uint64_t NVVidMemory::getTag() { __asm__("movq __ZTV16IOAccelVidMemory@GOTPCREL(%rip), %r11\n\tjmpq *384(%r11)"); } \
++__attribute__((naked)) void NVSurface::submitCopyForward(IOAccelEvent* a0, unsigned int a1, IOAccelResource2* a2, IOAccelResource2* a3, IOAccelBounds const* a4, unsigned int a5) { __asm__("movq __ZTV20IOAccelLegacySurface@GOTPCREL(%rip), %r11\n\tjmpq *2656(%r11)"); } \
++__attribute__((naked)) void NVSurface::submitUpdate(unsigned int a0, IOAccelBounds* a1, unsigned int a2) { __asm__("movq __ZTV20IOAccelLegacySurface@GOTPCREL(%rip), %r11\n\tjmpq *2664(%r11)"); } \
++__attribute__((naked)) void * NVGLContext::getOwningTask() const { __asm__("movq __ZTV17IOAccelGLContext2@GOTPCREL(%rip), %r11\n\tjmpq *2416(%r11)"); } \
++__attribute__((naked)) void * NVGLContext::getGPUTask() const { __asm__("movq __ZTV17IOAccelGLContext2@GOTPCREL(%rip), %r11\n\tjmpq *2424(%r11)"); } \
++__attribute__((naked)) void NVGLContext::getOwningTaskPid() const { __asm__("movq __ZTV17IOAccelGLContext2@GOTPCREL(%rip), %r11\n\tjmpq *2432(%r11)"); } \
++__attribute__((naked)) void NVGLContext::retireCommandBuffer(IOAccelEventFence* a0) { __asm__("movq __ZTV17IOAccelGLContext2@GOTPCREL(%rip), %r11\n\tjmpq *2448(%r11)"); } \
++__attribute__((naked)) void NVGLContext::setSubmissionError(unsigned int a0) { __asm__("movq __ZTV17IOAccelGLContext2@GOTPCREL(%rip), %r11\n\tjmpq *2480(%r11)"); } \
++__attribute__((naked)) bool NVGLContext::isOpportunisticWorkload() const { __asm__("movq __ZTV17IOAccelGLContext2@GOTPCREL(%rip), %r11\n\tjmpq *2536(%r11)"); } \
++__attribute__((naked)) void NVGLContext::postTokenSanityCheck(IOAccelCommandStreamInfo& a0) { __asm__("movq __ZTV17IOAccelGLContext2@GOTPCREL(%rip), %r11\n\tjmpq *2608(%r11)"); } \
++__attribute__((naked)) void NVGLContext::getDataBufferPrivate(IOAccelResource2* a0, IOAccelResourcePrivate* a1, unsigned long long a2) { __asm__("movq __ZTV17IOAccelGLContext2@GOTPCREL(%rip), %r11\n\tjmpq *2696(%r11)"); } \
++__attribute__((naked)) void NVGLContext::validateDataBuffer(unsigned long long a0, IOBufferMemoryDescriptor* a1, IOAccelResource2* a2) { __asm__("movq __ZTV17IOAccelGLContext2@GOTPCREL(%rip), %r11\n\tjmpq *2704(%r11)"); } \
++__attribute__((naked)) void NVGLContext::invalidate() { __asm__("movq __ZTV17IOAccelGLContext2@GOTPCREL(%rip), %r11\n\tjmpq *2744(%r11)"); } \
++__attribute__((naked)) void NVGLContext::getFrameDelimiter() { __asm__("movq __ZTV17IOAccelGLContext2@GOTPCREL(%rip), %r11\n\tjmpq *2752(%r11)"); } \
++__attribute__((naked)) void * NV2DContext::getOwningTask() const { __asm__("movq __ZTV17IOAccel2DContext2@GOTPCREL(%rip), %r11\n\tjmpq *2416(%r11)"); } \
++__attribute__((naked)) void * NV2DContext::getGPUTask() const { __asm__("movq __ZTV17IOAccel2DContext2@GOTPCREL(%rip), %r11\n\tjmpq *2424(%r11)"); } \
++__attribute__((naked)) void NV2DContext::getOwningTaskPid() const { __asm__("movq __ZTV17IOAccel2DContext2@GOTPCREL(%rip), %r11\n\tjmpq *2432(%r11)"); } \
++__attribute__((naked)) void NV2DContext::retireCommandBuffer(IOAccelEventFence* a0) { __asm__("movq __ZTV17IOAccel2DContext2@GOTPCREL(%rip), %r11\n\tjmpq *2448(%r11)"); } \
++__attribute__((naked)) void NV2DContext::setSubmissionError(unsigned int a0) { __asm__("movq __ZTV17IOAccel2DContext2@GOTPCREL(%rip), %r11\n\tjmpq *2480(%r11)"); } \
++__attribute__((naked)) bool NV2DContext::isOpportunisticWorkload() const { __asm__("movq __ZTV17IOAccel2DContext2@GOTPCREL(%rip), %r11\n\tjmpq *2536(%r11)"); } \
++__attribute__((naked)) void NV2DContext::postTokenSanityCheck(IOAccelCommandStreamInfo& a0) { __asm__("movq __ZTV17IOAccel2DContext2@GOTPCREL(%rip), %r11\n\tjmpq *2608(%r11)"); } \
++__attribute__((naked)) void NV2DContext::getDataBufferPrivate(IOAccelResource2* a0, IOAccelResourcePrivate* a1, unsigned long long a2) { __asm__("movq __ZTV17IOAccel2DContext2@GOTPCREL(%rip), %r11\n\tjmpq *2696(%r11)"); } \
++__attribute__((naked)) void NV2DContext::validateDataBuffer(unsigned long long a0, IOBufferMemoryDescriptor* a1, IOAccelResource2* a2) { __asm__("movq __ZTV17IOAccel2DContext2@GOTPCREL(%rip), %r11\n\tjmpq *2704(%r11)"); } \
++__attribute__((naked)) void NV2DContext::invalidate() { __asm__("movq __ZTV17IOAccel2DContext2@GOTPCREL(%rip), %r11\n\tjmpq *2744(%r11)"); } \
++__attribute__((naked)) void NV2DContext::getFrameDelimiter() { __asm__("movq __ZTV17IOAccel2DContext2@GOTPCREL(%rip), %r11\n\tjmpq *2752(%r11)"); } \
++__attribute__((naked)) void * NVCLContext::getOwningTask() const { __asm__("movq __ZTV17IOAccelCLContext2@GOTPCREL(%rip), %r11\n\tjmpq *2416(%r11)"); } \
++__attribute__((naked)) void * NVCLContext::getGPUTask() const { __asm__("movq __ZTV17IOAccelCLContext2@GOTPCREL(%rip), %r11\n\tjmpq *2424(%r11)"); } \
++__attribute__((naked)) void NVCLContext::getOwningTaskPid() const { __asm__("movq __ZTV17IOAccelCLContext2@GOTPCREL(%rip), %r11\n\tjmpq *2432(%r11)"); } \
++__attribute__((naked)) void NVCLContext::retireCommandBuffer(IOAccelEventFence* a0) { __asm__("movq __ZTV17IOAccelCLContext2@GOTPCREL(%rip), %r11\n\tjmpq *2448(%r11)"); } \
++__attribute__((naked)) void NVCLContext::setSubmissionError(unsigned int a0) { __asm__("movq __ZTV17IOAccelCLContext2@GOTPCREL(%rip), %r11\n\tjmpq *2480(%r11)"); } \
++__attribute__((naked)) bool NVCLContext::isOpportunisticWorkload() const { __asm__("movq __ZTV17IOAccelCLContext2@GOTPCREL(%rip), %r11\n\tjmpq *2536(%r11)"); } \
++__attribute__((naked)) void NVCLContext::postTokenSanityCheck(IOAccelCommandStreamInfo& a0) { __asm__("movq __ZTV17IOAccelCLContext2@GOTPCREL(%rip), %r11\n\tjmpq *2608(%r11)"); } \
++__attribute__((naked)) void NVCLContext::getDataBufferPrivate(IOAccelResource2* a0, IOAccelResourcePrivate* a1, unsigned long long a2) { __asm__("movq __ZTV17IOAccelCLContext2@GOTPCREL(%rip), %r11\n\tjmpq *2696(%r11)"); } \
++__attribute__((naked)) void NVCLContext::validateDataBuffer(unsigned long long a0, IOBufferMemoryDescriptor* a1, IOAccelResource2* a2) { __asm__("movq __ZTV17IOAccelCLContext2@GOTPCREL(%rip), %r11\n\tjmpq *2704(%r11)"); } \
++__attribute__((naked)) void NVCLContext::invalidate() { __asm__("movq __ZTV17IOAccelCLContext2@GOTPCREL(%rip), %r11\n\tjmpq *2744(%r11)"); } \
++__attribute__((naked)) void NVCLContext::getFrameDelimiter() { __asm__("movq __ZTV17IOAccelCLContext2@GOTPCREL(%rip), %r11\n\tjmpq *2752(%r11)"); } \
++__attribute__((naked)) void * NVVideoContext::getOwningTask() const { __asm__("movq __ZTV20IOAccelVideoContext2@GOTPCREL(%rip), %r11\n\tjmpq *2416(%r11)"); } \
++__attribute__((naked)) void * NVVideoContext::getGPUTask() const { __asm__("movq __ZTV20IOAccelVideoContext2@GOTPCREL(%rip), %r11\n\tjmpq *2424(%r11)"); } \
++__attribute__((naked)) void NVVideoContext::getOwningTaskPid() const { __asm__("movq __ZTV20IOAccelVideoContext2@GOTPCREL(%rip), %r11\n\tjmpq *2432(%r11)"); } \
++__attribute__((naked)) void NVVideoContext::retireCommandBuffer(IOAccelEventFence* a0) { __asm__("movq __ZTV20IOAccelVideoContext2@GOTPCREL(%rip), %r11\n\tjmpq *2448(%r11)"); } \
++__attribute__((naked)) void NVVideoContext::setSubmissionError(unsigned int a0) { __asm__("movq __ZTV20IOAccelVideoContext2@GOTPCREL(%rip), %r11\n\tjmpq *2480(%r11)"); } \
++__attribute__((naked)) bool NVVideoContext::isOpportunisticWorkload() const { __asm__("movq __ZTV20IOAccelVideoContext2@GOTPCREL(%rip), %r11\n\tjmpq *2536(%r11)"); } \
++__attribute__((naked)) void NVVideoContext::postTokenSanityCheck(IOAccelCommandStreamInfo& a0) { __asm__("movq __ZTV20IOAccelVideoContext2@GOTPCREL(%rip), %r11\n\tjmpq *2608(%r11)"); } \
++__attribute__((naked)) void NVVideoContext::getDataBufferPrivate(IOAccelResource2* a0, IOAccelResourcePrivate* a1, unsigned long long a2) { __asm__("movq __ZTV20IOAccelVideoContext2@GOTPCREL(%rip), %r11\n\tjmpq *2696(%r11)"); } \
++__attribute__((naked)) void NVVideoContext::validateDataBuffer(unsigned long long a0, IOBufferMemoryDescriptor* a1, IOAccelResource2* a2) { __asm__("movq __ZTV20IOAccelVideoContext2@GOTPCREL(%rip), %r11\n\tjmpq *2704(%r11)"); } \
++__attribute__((naked)) void NVVideoContext::invalidate() { __asm__("movq __ZTV20IOAccelVideoContext2@GOTPCREL(%rip), %r11\n\tjmpq *2744(%r11)"); } \
++__attribute__((naked)) void NVVideoContext::getFrameDelimiter() { __asm__("movq __ZTV20IOAccelVideoContext2@GOTPCREL(%rip), %r11\n\tjmpq *2752(%r11)"); } \
++__attribute__((naked)) void NVEventMachine::collectAllLiveEventIfNeeded() { __asm__("movq __ZTV24IOAccelEventMachineFast2@GOTPCREL(%rip), %r11\n\tjmpq *576(%r11)"); } \
++__attribute__((naked)) bool NVMemoryMap::matchOptionBits(unsigned int a0) { __asm__("movq __ZTV16IOAccelMemoryMap@GOTPCREL(%rip), %r11\n\tjmpq *304(%r11)"); } \
++__attribute__((naked)) unsigned long long NVMemoryMap::getLength() const { __asm__("movq __ZTV16IOAccelMemoryMap@GOTPCREL(%rip), %r11\n\tjmpq *376(%r11)"); } \
++__attribute__((naked)) uint64_t NVAccel::tmpTotalVRAM() { __asm__("movq __ZTV22IOGraphicsAccelerator2@GOTPCREL(%rip), %r11\n\tjmpq *2160(%r11)"); } \
++__attribute__((naked)) uint64_t NVAccel::totalTextureMemory() { __asm__("movq __ZTV22IOGraphicsAccelerator2@GOTPCREL(%rip), %r11\n\tjmpq *2168(%r11)"); }
