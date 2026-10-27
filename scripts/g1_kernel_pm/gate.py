@@ -109,6 +109,12 @@ def binding_source(label,tree,binding,m,tu=REL):
     return expected
 
 TUS=(REL,KMS)
+
+def expected_delta(tu):
+    # The hook's C import changes with the three-valued API; its real provider
+    # must be defined by the companion NVRM object. All other imports stay fixed.
+    return (dict(added=['_nv_xnu_pm_admit'],removed=['_nv_xnu_pm_enter'])
+            if tu==KMS else dict(added=[],removed=[]))
 def complete(r):
     want={(l,t) for l in ('baseline','candidate') for t in TUS}
     return (not r['errors'] and r['compiler_failures']==0
@@ -117,8 +123,9 @@ def complete(r):
         and {(x['label'],x['source']) for x in r['format_links']}==want
         and all(x['exit']==0 and x['filetype']==1 and x['source_bound'] for x in r['objects'])
         and all(x['exit']==0 and x['filetype']==11 for x in r['format_links'])
-        and all(r.get(k)==dict(added=[],removed=[]) for k in
-                [n+'_import_delta_'+t.split('/')[-1] for n in ('object','linked') for t in TUS]))
+        and r.get('admission_provider_linkage') is True
+        and all(r.get(n+'_import_delta_'+t.split('/')[-1])==expected_delta(t)
+                for n in ('object','linked') for t in TUS))
 
 def run(workspace,out,tools):
     r=dict(status='FAILED',level='DARWIN_COMPLETE_TWO_TU_AND_KEXT_FORMAT_ONLY',pins=PINS,
@@ -146,7 +153,7 @@ def run(workspace,out,tools):
             '-nostdinc','-I'+str(khdr),'-DKERNEL','-DKERNEL_PRIVATE','-DDRIVER_PRIVATE','-DAPPLE','-DNeXT',
             *profile['rm_definitions'],'-std=c++17','-fno-rtti','-fno-exceptions','-fno-builtin','-fno-common',
             '-O2','-Wall','-Wno-unused-parameter','-Wno-inconsistent-missing-override','-Wno-unused-function']
-        obj_imports={};link_imports={}
+        obj_imports={};link_imports={};definitions={}
         a=admission_manifest()
         for tu in (REL,KMS):
             key=tu.split('/')[-1]
@@ -164,7 +171,9 @@ def run(workspace,out,tools):
                 digest=binding_source(label,tree,binding,a,tu)
                 record.update(shared.macho(obj,1),source_bound=True,source_sha256=digest)
                 obj_imports[label,key]=imports(tools.capture(['/usr/bin/xcrun','nm','-u','-j',str(obj)],out,label+'-'+key+'-undefined').strip())
-                tools.capture(['/usr/bin/xcrun','nm','-gU',str(obj)],out,label+'-'+key+'-defined')
+                defined=tools.capture(['/usr/bin/xcrun','nm','-gU',str(obj)],out,label+'-'+key+'-defined')
+                definitions[label,key]={p[-1] for line in defined.splitlines()
+                                        if len(p:=line.split())>=2 and p[-2]=='T'}
                 tools.capture(['/usr/bin/xcrun','otool','-rv',str(obj)],out,label+'-'+key+'-relocations')
                 binary=out/(label+'-'+key+'-TU-format-only')
                 link=[clang,'-arch','x86_64','-mmacosx-version-min=15.5','-isysroot',str(sdk),'-fapple-kext',
@@ -181,6 +190,12 @@ def run(workspace,out,tools):
                 r[name+'_import_delta_'+key]=dict(added=sorted(s['candidate']-s['baseline']),removed=sorted(s['baseline']-s['candidate']))
         r['object_import_counts']={k[0]+':'+k[1]:len(v) for k,v in obj_imports.items()}
         r['linked_import_counts']={k[0]+':'+k[1]:len(v) for k,v in link_imports.items()}
+        r['admission_provider_linkage']=(
+            '_nv_xnu_pm_enter' in definitions['baseline','NVRM.cpp']
+            and '_nv_xnu_pm_admit' in definitions['candidate','NVRM.cpp']
+            and '_nv_xnu_pm_enter' not in definitions['candidate','NVRM.cpp']
+            and '_nv_xnu_pm_enter' in obj_imports['baseline','os-nvkms-xnu.cpp']
+            and '_nv_xnu_pm_admit' in obj_imports['candidate','os-nvkms-xnu.cpp'])
         verify_inputs(workspace,inputs)
         if not complete(r):raise ValueError('native acceptance incomplete or unexpected import change')
         r['status']='PM_TWO_TU_OBJECT_AND_KEXT_FORMAT_PASS_NOT_DRIVER_LINK_OR_GO'

@@ -19,7 +19,15 @@ class HostOnlyTools:
         if name.endswith('-macros'):return '#define NVOS_IS_LINUX 1\n' if self.case=='linux' else '#define NVOS_IS_LINUX 0\n'
         if name.endswith('-undefined'):
             drift=self.case=='import-drift' and name=='candidate-NVRM.cpp-undefined'
-            return '_expected_provider\n_extra\n' if drift else '_expected_provider\n'
+            rows=['_expected_provider']
+            if 'os-nvkms-xnu.cpp' in name:
+                rows.append('_nv_xnu_pm_enter' if name.startswith('baseline') or self.case=='old-hook' else '_nv_xnu_pm_admit')
+            if drift or (self.case=='second-import-drift' and name.startswith('candidate-os-')):rows.append('_extra')
+            return '\n'.join(rows)+'\n'
+        if name.endswith('-defined'):
+            if name=='baseline-NVRM.cpp-defined':return '00000010 T _nv_xnu_pm_enter\n'
+            if name=='candidate-NVRM.cpp-defined' and self.case!='missing-admit-provider':return '00000010 T _nv_xnu_pm_admit\n'
+            return ''
         return 'HOST_FIXTURE_NOT_DARWIN'
     def execute(self,argv,cwd,log):
         self.calls.append(argv);log.write_text('HOST_FIXTURE_NOT_DARWIN\n')
@@ -73,7 +81,8 @@ class OrchestrationControls(unittest.TestCase):
             'missing-source-second':'actual compiler did not see reviewed bytes for kexts/NVRM/os-nvkms-xnu.cpp',
             'wrong-source-second':'actual compiler did not see reviewed bytes for kexts/NVRM/os-nvkms-xnu.cpp',
             'link-fail':'kext format link failed','linux':'Darwin preprocess selects Linux',
-            'import-drift':'unexpected import change'}
+            'import-drift':'unexpected import change','second-import-drift':'unexpected import change',
+            'old-hook':'unexpected import change','missing-admit-provider':'unexpected import change'}
         self.assertIn(expected[case],'\n'.join(r['errors']))
         self.assertTrue((self.out/'native-pm-text.zip').is_file())
     def test_labelled_host_fixture_only_reaches_format_status(self):
@@ -103,6 +112,9 @@ class OrchestrationControls(unittest.TestCase):
     def test_native_link_failure_is_rejected(self):self.rejected('link-fail')
     def test_linux_preprocessing_is_rejected(self):self.rejected('linux')
     def test_changed_imports_are_rejected(self):self.rejected('import-drift')
+    def test_unexpected_second_tu_import_is_rejected(self):self.rejected('second-import-drift')
+    def test_legacy_hook_import_is_rejected(self):self.rejected('old-hook')
+    def test_missing_companion_admission_provider_is_rejected(self):self.rejected('missing-admit-provider')
     def test_missing_candidate_is_not_success(self):
         r,_=self.exercise();r['objects'].pop();self.assertFalse(gate.complete(r))
     def test_missing_link_is_not_success(self):
