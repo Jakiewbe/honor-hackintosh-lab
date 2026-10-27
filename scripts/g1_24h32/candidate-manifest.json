@@ -1,5 +1,5 @@
 {
-  "status": "EXPERIMENTAL_SOURCE_ONLY_NOT_DARWIN_COMPILED_NOT_INSTALLABLE",
+  "status": "ENUM_NAME_REPAIR_SOURCE_CANDIDATE_NOT_INSTALLABLE",
   "source_pin": "272ccd9da04ff5de95c2791b902fe17a3fa77ce7",
   "source_license": "PolyForm-Noncommercial-1.0.0",
   "target_collection_sha256": "2296155f1f12471e7b774020ba70d9fb487d02224c1f85d373130511969c2243",
@@ -23,13 +23,19 @@
       "path": "kexts/NVRM/accel/sequoia24h32_fwd.h",
       "sha256": "39a64aa396e2f0a47aa110aaea0a332c2b975d345433d52842bb6c674fd7ca31",
       "bytes": 15347
+    },
+    {
+      "path": "kexts/NVRM/accel/iofam/iofam_types.h",
+      "bytes": 2376,
+      "sha256": "9b6e81caef1de7a8fe4df239eabfaf2e9c4da75abb76062b101f0b27bbf3dee7"
     }
   ],
   "baseline_blob_sha256": {
     "kexts/NVRM/accel/nvrm-accel.cpp": "b75dc5b4519deb26b85e88734c94c08b59c4386d6d9896ef6416a22049031dbe",
-    "build/accel_build.sh": "c41fe1d4e3020144bf24bb000dbcf53c395396ea825f93b5b3b3b71e1cc36ce1"
+    "build/accel_build.sh": "c41fe1d4e3020144bf24bb000dbcf53c395396ea825f93b5b3b3b71e1cc36ce1",
+    "kexts/NVRM/accel/iofam/iofam_types.h": "8bf26aa669b858a895740df074cb5837437c5709e367ab7a20b3c239e1617084"
   },
-  "patch_sha256": "6274415d914865083cd8fd80437b8dfa3f92108fa617a2e988c949eb119338be",
+  "patch_sha256": "e01c0912eb023d58f9d118983b20ded9f30cf815bfd53e95f39a610c6f2b9657",
   "patch_applied_bytes_equal": true,
   "reverse_patch_check": true,
   "projected_removed_method_names": [
@@ -70,7 +76,14 @@
     "__ZTV20IOAccelVideoContext2",
     "__ZTV24IOAccelEventMachineFast2"
   ],
-  "note": "Projection only: actual object/link import delta and complete ABI need Darwin compile, no symbol-count claim.",
+  "note": "Four-byte declarations and exact symbol-name repair; target signedness/full ABI remain unverified.",
   "installation_authorized": false,
-  "go_authorized": false
+  "go_authorized": false,
+  "opaque_enum_names": [
+    "IOAccelStereoMode",
+    "eDoSwap",
+    "eIOAccelSurfaceShapeBits",
+    "eLockType"
+  ],
+  "target_symbol_contract_sha256": "f3dc9c6606acda8fd9bcf15468c031f074092cf9cf9fb1282a583d1719938af3"
 }

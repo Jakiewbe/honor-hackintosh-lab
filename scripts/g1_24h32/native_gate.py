@@ -13,6 +13,7 @@ import tempfile
 import zipfile
 
 from g1_compile_inputs import bound_compile
+from import_contract import check_imports
 
 
 def sha(path):
@@ -69,6 +70,8 @@ class NativeTools:
         return run.stdout.decode('utf-8').strip()
 
 
+# Historical R3 list retained for profile-difference provenance only.
+# Compilation below exclusively uses PROFILE.json's make-derived and explicit extra lists.
 NV_INCLUDES = [
     'src/nvidia/arch/nvalloc/unix/include', 'src/nvidia/arch/nvalloc/common/inc',
     'src/nvidia/arch/nvalloc/common/inc/gsp', 'src/common/sdk/nvidia/inc', 'src/common/sdk/nvidia/inc/hw',
@@ -110,6 +113,10 @@ def run_gate(package, out, tools):
         report['package_manifest_sha256'] = manifest_digest
         profile = json.loads((package/'PROFILE.json').read_text(encoding='utf-8'))
         proof = json.loads((package/'route-proof.json').read_text(encoding='utf-8'))
+        contract = json.loads((package/'target-symbols.json').read_text(encoding='utf-8'))
+        cm = json.loads((package/'forwarder-candidate/MANIFEST.json').read_text(encoding='utf-8'))
+        if sha(package/'target-symbols.json') != cm['target_symbol_contract_sha256']:
+            raise ValueError('target import contract binding failed')
         sdk = Path(tools.capture(['/usr/bin/xcrun', '--sdk', 'macosx', '--show-sdk-path'], out, 'sdk'))
         khdr = sdk/'System/Library/Frameworks/Kernel.framework/Headers'
         if not (khdr/'IOKit/IOService.h').is_file():
@@ -121,7 +128,6 @@ def run_gate(package, out, tools):
         baseline = package/'inputs/nm'
         candidate = out/'candidate'
         shutil.copytree(baseline, candidate)
-        cm = json.loads((package/'forwarder-candidate/MANIFEST.json').read_text(encoding='utf-8'))
         for row in cm['files']:
             source = package/'forwarder-candidate/src'/row['path']
             if sha(source) != row['sha256']:
@@ -132,6 +138,19 @@ def run_gate(package, out, tools):
         definitions = profile['rm_definitions']
         if not definitions or any(not d.startswith('-D') or '\n' in d or 'NM_TAHOE' in d or 'NM_SEQUOIA' in d for d in definitions):
             raise ValueError('invalid explicit reconstruction profile')
+        if any(d.split('=')[0]=='-DNV_LINUX' for d in definitions):
+            raise ValueError('Darwin profile must not inject NV_LINUX')
+        include_names=profile['rm_include_dirs']+profile['nvaccel_extra_include_dirs']
+        if not include_names or len(include_names)!=len(set(include_names)):
+            raise ValueError('missing/duplicate declared profile include dirs')
+        for name in include_names:
+            rel=PurePosixPath(name)
+            if rel.is_absolute() or '..' in rel.parts or '\\' in name:
+                raise ValueError('unsafe profile include path')
+        absent=sorted(name for name in include_names if not (nv/name).is_dir())
+        if absent!=sorted(profile['make_include_directories_absent']):
+            raise ValueError('profile include-directory existence differs from pinned source')
+        report['include_directories_absent_as_in_make']=absent
         report['profile'] = profile
         base_flags = ['-arch','x86_64','-mmacosx-version-min=15.5','-isysroot',str(sdk),
                       '-fapple-kext','-mkernel','-nostdinc','-I'+str(khdr),
@@ -143,9 +162,15 @@ def run_gate(package, out, tools):
         for label, tree in [('baseline',baseline), ('candidate',candidate)]:
             obj = out/(label+'.o')
             source = tree/'kexts/NVRM/accel/nvrm-accel.cpp'
-            inc = [nv/p for p in NV_INCLUDES]+[tree/'kexts/NVRM', source.parent, source.parent/'iofam', source.parent/'re']
+            inc = [nv/p for p in include_names]+[tree/'kexts/NVRM', source.parent, source.parent/'iofam', source.parent/'re']
             flags = [*base_flags,*['-I'+str(p) for p in inc]]
             if label == 'candidate': flags.append('-DNM_SEQUOIA_24H32_FWD=1')
+            if label == 'baseline':
+                macros=tools.capture([str(clang),*flags,'-dM','-E',str(source)],out,'darwin-macros')
+                lines=set(macros.splitlines())
+                if '#define NVOS_IS_LINUX 0' not in lines or any(s.startswith('#define NV_LINUX ') for s in lines):
+                    raise ValueError('actual Darwin preprocessing still selects Linux OS')
+                report['darwin_macro_check']=dict(NVOS_IS_LINUX=0,NV_LINUX_defined=False)
             argv = [str(clang),*flags,'-c',str(source),'-o',str(obj)]
             record = dict(label=label, source_sha256=sha(source), command=argv, status='FAILED')
             report['objects'].append(record)
@@ -167,7 +192,8 @@ def run_gate(package, out, tools):
                 if rc: raise ValueError(label+' link failed')
                 entry.update(validate_macho(binary,11))
                 tools.capture(['/usr/bin/xcrun','otool','-l',str(binary)],out,label+'-load-commands')
-                tools.capture(['/usr/bin/xcrun','nm','-u','-j',str(binary)],out,label+'-linked-undefined')
+                linked=imports(tools.capture(['/usr/bin/xcrun','nm','-u','-j',str(binary)],out,label+'-linked-undefined'))
+                if linked!=nm_imports[label]: raise ValueError('linked/object import set differs: '+label)
             except (ValueError, OSError) as e:
                 report['errors'].append(str(e))
         if set(nm_imports) == {'baseline','candidate'}:
@@ -175,6 +201,10 @@ def run_gate(package, out, tools):
             added = nm_imports['candidate']-nm_imports['baseline']
             removed = nm_imports['baseline']-nm_imports['candidate']
             provider_names = {r['symbol'] for r in proof['vtables'].values() if r['external_section_observed']}
+            provider_names |= set(contract['enum_renames'].values())
+            report['target_import_observation']=check_imports(nm_imports['candidate'],contract)
+            if not report['target_import_observation']['passed']:
+                report['errors'].append('complete candidate import-name observation failed')
             report['import_delta'] = dict(added=sorted(added),removed=sorted(removed),
                 methods_still_undefined=sorted(methods & nm_imports['candidate']),
                 added_without_source_provider_observation=sorted(added-provider_names),

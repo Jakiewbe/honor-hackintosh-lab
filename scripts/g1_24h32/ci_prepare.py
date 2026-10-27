@@ -45,6 +45,8 @@ def prepare(nm, ogkm, package):
         raise ValueError('patch pin/digest mismatch')
     if hashlib.sha256(proof).hexdigest() != manifest['route_proof_sha256']:
         raise ValueError('target route proof changed')
+    if hashlib.sha256((HERE/'target-symbols.json').read_bytes()).hexdigest() != manifest['target_symbol_contract_sha256']:
+        raise ValueError('target symbol observations changed')
     profile = json.loads((HERE/'PROFILE.json').read_text(encoding='utf-8'))
     if profile['pins'] != PINS: raise ValueError('profile pins changed')
     for rel,expected in manifest['baseline_blob_sha256'].items():
@@ -65,7 +67,7 @@ def prepare(nm, ogkm, package):
             raise ValueError('patched source differs from reviewed candidate')
         target = destination/'src'/row['path']
         target.parent.mkdir(parents=True,exist_ok=True); target.write_bytes(raw)
-    for name in ('native_gate.py','g1_compile_inputs.py','PROFILE.json','route-proof.json'):
+    for name in ('native_gate.py','g1_compile_inputs.py','import_contract.py','PROFILE.json','route-proof.json','target-symbols.json'):
         shutil.copyfile(HERE/name,package/name)
     files = []
     for p in sorted(package.rglob('*')):

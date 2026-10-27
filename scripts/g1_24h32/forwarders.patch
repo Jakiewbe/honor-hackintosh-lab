@@ -190,3 +190,34 @@
 +__attribute__((naked)) unsigned long long NVMemoryMap::getLength() const { __asm__("movq __ZTV16IOAccelMemoryMap@GOTPCREL(%rip), %r11\n\tjmpq *376(%r11)"); } \
 +__attribute__((naked)) uint64_t NVAccel::tmpTotalVRAM() { __asm__("movq __ZTV22IOGraphicsAccelerator2@GOTPCREL(%rip), %r11\n\tjmpq *2160(%r11)"); } \
 +__attribute__((naked)) uint64_t NVAccel::totalTextureMemory() { __asm__("movq __ZTV22IOGraphicsAccelerator2@GOTPCREL(%rip), %r11\n\tjmpq *2168(%r11)"); }
+--- a/kexts/NVRM/accel/iofam/iofam_types.h
++++ b/kexts/NVRM/accel/iofam/iofam_types.h
+@@ -7,10 +7,10 @@
+ #pragma once
+ #include <libkern/c++/OSObject.h>
+ #include <IOKit/IOService.h>
+-typedef unsigned int IOAccelStereoMode;
+-typedef unsigned int eDoSwap;
+-typedef unsigned int eIOAccelSurfaceShapeBits;
+-typedef unsigned int eLockType;
++enum IOAccelStereoMode : unsigned int;
++enum eDoSwap : unsigned int;
++enum eIOAccelSurfaceShapeBits : unsigned int;
++enum eLockType : unsigned int;
+ class IOAccelAllocationInfo;
+ class IOAccelBounds;
+ class IOAccelChannel2;
+@@ -57,3 +57,13 @@
+ class IOAccelTask;
+ class IOAccelVidMemory;
+ class IOAccelVideoContext2;
++
++// Preserve the declared representation; target ABI still needs independent validation.
++static_assert(sizeof(IOAccelStereoMode) == sizeof(unsigned int), "enum size");
++static_assert(alignof(IOAccelStereoMode) == alignof(unsigned int), "enum alignment");
++static_assert(sizeof(eDoSwap) == sizeof(unsigned int), "enum size");
++static_assert(alignof(eDoSwap) == alignof(unsigned int), "enum alignment");
++static_assert(sizeof(eIOAccelSurfaceShapeBits) == sizeof(unsigned int), "enum size");
++static_assert(alignof(eIOAccelSurfaceShapeBits) == alignof(unsigned int), "enum alignment");
++static_assert(sizeof(eLockType) == sizeof(unsigned int), "enum size");
++static_assert(alignof(eLockType) == alignof(unsigned int), "enum alignment");
