@@ -5,7 +5,7 @@ on:
       profile:
         description: Fixed source candidate profile; neither profile executes a bundle
         type: choice
-        options: [owner, migration]
+        options: [owner, migration, batching-r2]
         default: owner
 permissions:
   contents: read

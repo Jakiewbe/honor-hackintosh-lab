@@ -47,18 +47,22 @@ class FailureControls(unittest.TestCase):
 
     def deps_fixture(self,omit=None):
         rows=[];deps=[]
-        for name in ('nvmtl_vk.c','nvmtl_vk.h','NVMTLEventSync.m','nvmtl_submit_owner.h'):
+        for name in ('nvmtl_vk.c','nvmtl_vk.h','NVMTLEventSync.m','nvmtl_submit_owner.h','NVMTLObjects.m'):
             p=self.root/'candidate/plugin'/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b'HOST '+name.encode())
             rows.append(dict(path='plugin/'+name,sha256=native.sha(p)))
             if name!=omit: deps.append(dict(resolved_path=str(p.resolve())))
         p=self.root/'snapshot.json';p.write_text(json.dumps(dict(inputs=deps)))
         return dict(path=str(p)),dict(files=rows)
 
-    def test_all_four_patched_files_required_for_full_plugin(self):
+    def test_all_five_patched_files_required_for_full_plugin(self):
         b,m=self.deps_fixture()
-        self.assertEqual(len(native.check_patch_dependencies('candidate','plugin',b,m,self.root)),4)
+        self.assertEqual(len(native.check_patch_dependencies('candidate','plugin',b,m,self.root)),5)
     def test_eventsync_not_seen_by_actual_compiler_rejected(self):
         b,m=self.deps_fixture('NVMTLEventSync.m')
+        with self.assertRaises(ValueError): native.check_patch_dependencies('candidate','plugin',b,m,self.root)
+
+    def test_objects_not_seen_by_actual_compiler_rejected(self):
+        b,m=self.deps_fixture('NVMTLObjects.m')
         with self.assertRaises(ValueError): native.check_patch_dependencies('candidate','plugin',b,m,self.root)
     def test_owner_header_not_seen_by_actual_compiler_rejected(self):
         b,m=self.deps_fixture('nvmtl_submit_owner.h')
