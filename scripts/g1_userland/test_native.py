@@ -62,7 +62,34 @@ class FailureControls(unittest.TestCase):
         with self.assertRaises(ValueError): native.check_patch_dependencies('candidate','plugin',b,m,self.root)
     def test_owner_header_not_seen_by_actual_compiler_rejected(self):
         b,m=self.deps_fixture('nvmtl_submit_owner.h')
+        with self.assertRaises(ValueError): native.check_patch_dependencies('candidate','plugin',b,m,self.root)
+
+    def test_standalone_c_is_not_the_upstream_translation_unit(self):
+        b,m=self.deps_fixture()
         with self.assertRaises(ValueError): native.check_patch_dependencies('candidate','c',b,m,self.root)
+
+    def test_compiled_patched_dependency_bytes_must_match(self):
+        b,m=self.deps_fixture()
+        (self.root/'candidate/plugin/nvmtl_vk.c').write_bytes(b'UNPATCHED')
+        with self.assertRaises(ValueError): native.check_patch_dependencies('candidate','plugin',b,m,self.root)
+
+    def finished(self):
+        return dict(errors=[],objects=[dict(label=n,kind='plugin',status='OBJECT_PASS') for n in ('baseline','candidate')],
+            bundles=[dict(label=n,exit=0) for n in ('baseline','candidate')],bundle_import_delta=dict(added=[],removed=[]))
+
+    def test_two_complete_translation_units_and_links_required(self):
+        r=self.finished();self.assertTrue(native.complete(r))
+        r['objects'].pop();self.assertFalse(native.complete(r))
+    def test_compile_failure_cannot_be_green(self):
+        r=self.finished();r['objects'][1]['status']='FAILED';self.assertFalse(native.complete(r))
+    def test_link_failure_cannot_be_green(self):
+        r=self.finished();r['bundles'][1]['exit']=1;self.assertFalse(native.complete(r))
+    def test_import_drift_cannot_be_green(self):
+        r=self.finished();r['bundle_import_delta']['added']=['_unexpected'];self.assertFalse(native.complete(r))
+    def test_missing_import_review_cannot_be_green(self):
+        r=self.finished();r.pop('bundle_import_delta');self.assertFalse(native.complete(r))
+    def test_duplicate_baseline_cannot_replace_candidate(self):
+        r=self.finished();r['objects'][1]['label']='baseline';self.assertFalse(native.complete(r))
 
 
 if __name__=='__main__': unittest.main()

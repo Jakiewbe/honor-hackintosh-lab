@@ -31,7 +31,7 @@ jobs:
           git -C "$RUNNER_TEMP/vk-owner" remote add origin https://github.com/KhronosGroup/Vulkan-Headers.git
           git -C "$RUNNER_TEMP/vk-owner" fetch --depth=1 origin 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
           git -C "$RUNNER_TEMP/vk-owner" checkout --detach FETCH_HEAD
-      - name: Compile real C and complete Objective-C plugin, link without executing
+      - name: Compile complete upstream plugin translation unit, link without executing
         shell: bash
         run: |
           set -euo pipefail

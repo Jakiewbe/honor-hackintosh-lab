@@ -120,10 +120,11 @@ def macho(path,kind,minos=None):
 
 
 def check_patch_dependencies(label,kind,binding,manifest,workspace):
+    if kind!='plugin': raise ValueError('only the complete upstream plugin translation unit is supported')
     if label!='candidate': return []
     snapshot=json.loads(Path(binding['path']).read_text(encoding='utf-8'))
     actual={Path(r['resolved_path']).resolve() for r in snapshot['inputs']}
-    expected=[r for r in manifest['files'] if kind=='plugin' or r['path']!='plugin/NVMTLEventSync.m']
+    expected=manifest['files']
     for row in expected:
         p=workspace/'candidate'/row['path']
         if p.resolve() not in actual or sha(p)!=row['sha256']:
@@ -131,10 +132,23 @@ def check_patch_dependencies(label,kind,binding,manifest,workspace):
     return [r['path'] for r in expected]
 
 
+def complete(report):
+    """Require both real plugin objects and both linked bundles, with no errors."""
+    return (not report['errors']
+        and len(report['objects'])==2 and len(report['bundles'])==2
+        and {r['label'] for r in report['objects']}=={'baseline','candidate'}
+        and {r['label'] for r in report['bundles']}=={'baseline','candidate'}
+        and all(r['kind']=='plugin' and r['status']=='OBJECT_PASS' for r in report['objects'])
+        and all(r['exit']==0 for r in report['bundles'])
+        and report.get('bundle_import_delta')==dict(added=[],removed=[]))
+
+
 def run_gate(workspace,out,tools):
     report=dict(status='FAILED',level='DARWIN_USERLAND_OBJECT_AND_BUNDLE_ONLY',objects=[],bundles=[],errors=[],
         pins=PINS,compiler_failures=0,runtime='NOT_RUN',gpu='NOT_RUN',device='NO_GO',go_authorized=False,
-        full_external_resource_lifetime='UNVERIFIED',kernel_pm_callback_stop='NOT_IMPLEMENTED_HERE')
+        full_external_resource_lifetime='UNVERIFIED',kernel_pm_callback_stop='NOT_IMPLEMENTED_HERE',
+        production_translation_unit='plugin/NVMTLDevice.m includes nvmtl_vk.c and all plugin implementations',
+        standalone_c='NOT_AN_UPSTREAM_TRANSLATION_UNIT; first failed probe retained separately')
     try:
         inputs=json.loads((workspace/'INPUTS.json').read_text(encoding='utf-8'))
         verify_inputs(workspace,inputs);before=sha(workspace/'INPUTS.json');report['inputs_sha256']=before
@@ -152,41 +166,43 @@ def run_gate(workspace,out,tools):
         imports={}
         for label in ('baseline','candidate'):
             tree=workspace/('nm' if label=='baseline' else label)
-            for kind,name in [('c','nvmtl_vk.c'),('plugin','NVMTLDevice.m')]:
-                obj=out/(label+'-'+kind+'.o');stem=obj.stem
-                flags=['-std=gnu11'] if kind=='c' else ['-fobjc-arc','-Wno-protocol','-Wno-incomplete-implementation']
-                argv=[clang,*common,*flags,'-c',str(tree/'plugin'/name),'-o',str(obj)]
-                record=dict(label=label,kind=kind,source_sha256=sha(tree/'plugin'/name),status='FAILED')
-                report['objects'].append(record)
-                try:
-                    rc,binding,actual=bound_compile(argv,tree,out/(stem+'-compile.txt'),out/(stem+'-deps'),tools.execute)
-                    record['exit']=rc
-                    if rc: report['compiler_failures']+=1;raise ValueError(stem+' compile failed')
-                    record.update(macho(obj,1,15<<16),binding=binding,command=actual)
-                    record['patched_dependency_files']=check_patch_dependencies(label,kind,binding,manifest,workspace)
-                    record['status']='OBJECT_PASS'
-                    undef=tools.capture(['/usr/bin/xcrun','nm','-u','-j',str(obj)],out,stem+'-undefined')
-                    tools.capture(['/usr/bin/xcrun','nm','-gU',str(obj)],out,stem+'-defined')
-                    if kind!='plugin': continue
-                    binary=out/(label+'-NVMTLDriver')
-                    link=[clang,'-arch','x86_64','-mmacosx-version-min=15.0','-isysroot',sdk,'-bundle',str(obj)]
-                    for framework in FRAMEWORKS: link+=['-framework',framework]
-                    link+=['-o',str(binary)]
-                    code=tools.execute(link,out,out/(label+'-link.txt'))
-                    entry=dict(label=label,exit=code,command=link);report['bundles'].append(entry)
-                    if code: raise ValueError(label+' bundle link failed')
-                    entry.update(macho(binary,8,15<<16))
-                    imports[label]=set(tools.capture(['/usr/bin/xcrun','nm','-u','-j',str(binary)],out,label+'-bundle-undefined').splitlines())
-                    tools.capture(['/usr/bin/xcrun','otool','-L',str(binary)],out,label+'-libraries')
-                    tools.capture(['/usr/bin/xcrun','otool','-l',str(binary)],out,label+'-load-commands')
-                except (ValueError,OSError,subprocess.SubprocessError) as e: report['errors'].append(str(e))
+            # build_plugin_release.sh compiles one amalgamated Objective-C TU.
+            # nvmtl_vk.c relies on preceding ObjC types/static declarations and
+            # is not independently compilable C; compile it through the real TU.
+            kind,name='plugin','NVMTLDevice.m'
+            obj=out/(label+'-'+kind+'.o');stem=obj.stem
+            flags=['-fobjc-arc','-Wno-protocol','-Wno-incomplete-implementation']
+            argv=[clang,*common,*flags,'-c',str(tree/'plugin'/name),'-o',str(obj)]
+            record=dict(label=label,kind=kind,source_sha256=sha(tree/'plugin'/name),status='FAILED')
+            report['objects'].append(record)
+            try:
+                rc,binding,actual=bound_compile(argv,tree,out/(stem+'-compile.txt'),out/(stem+'-deps'),tools.execute)
+                record['exit']=rc
+                if rc: report['compiler_failures']+=1;raise ValueError(stem+' compile failed')
+                record.update(macho(obj,1,15<<16),binding=binding,command=actual)
+                record['patched_dependency_files']=check_patch_dependencies(label,kind,binding,manifest,workspace)
+                record['status']='OBJECT_PASS'
+                undef=tools.capture(['/usr/bin/xcrun','nm','-u','-j',str(obj)],out,stem+'-undefined')
+                tools.capture(['/usr/bin/xcrun','nm','-gU',str(obj)],out,stem+'-defined')
+                binary=out/(label+'-NVMTLDriver')
+                link=[clang,'-arch','x86_64','-mmacosx-version-min=15.0','-isysroot',sdk,'-bundle',str(obj)]
+                for framework in FRAMEWORKS: link+=['-framework',framework]
+                link+=['-o',str(binary)]
+                code=tools.execute(link,out,out/(label+'-link.txt'))
+                entry=dict(label=label,exit=code,command=link);report['bundles'].append(entry)
+                if code: raise ValueError(label+' bundle link failed')
+                entry.update(macho(binary,8,15<<16))
+                imports[label]=set(tools.capture(['/usr/bin/xcrun','nm','-u','-j',str(binary)],out,label+'-bundle-undefined').splitlines())
+                tools.capture(['/usr/bin/xcrun','otool','-L',str(binary)],out,label+'-libraries')
+                tools.capture(['/usr/bin/xcrun','otool','-l',str(binary)],out,label+'-load-commands')
+            except (ValueError,OSError,subprocess.SubprocessError) as e: report['errors'].append(str(e))
         if set(imports)=={'baseline','candidate'}:
             report['bundle_import_delta']=dict(added=sorted(imports['candidate']-imports['baseline']),removed=sorted(imports['baseline']-imports['candidate']))
             if report['bundle_import_delta']['added'] or report['bundle_import_delta']['removed']:
                 report['errors'].append('unexpected bundle dependency symbol delta')
         verify_inputs(workspace,inputs)
         if sha(workspace/'INPUTS.json')!=before: raise ValueError('input manifest changed during build')
-        if not report['errors'] and len(report['objects'])==4 and len(report['bundles'])==2 and all(r['status']=='OBJECT_PASS' for r in report['objects']):
+        if complete(report):
             report['status']='USERLAND_OBJECT_AND_BUNDLE_PASS_NOT_GO'
     except (ValueError,OSError,KeyError,TypeError,subprocess.SubprocessError) as e: report['errors'].append(str(e))
     finally:
