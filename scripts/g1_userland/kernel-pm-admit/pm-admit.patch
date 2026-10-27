@@ -1,0 +1,183 @@
+--- a/kexts/NVRM/NVRM.cpp
++++ b/kexts/NVRM/NVRM.cpp
+@@ -167,22 +167,38 @@
+ static bool     gNvPmClosed;
+ static thread_t gNvPmOwner;
+ static SInt64   gNvPmWaited;
++static SInt64   gNvPmDenied;
+ SYSCTL_QUAD(_debug, OID_AUTO, nvrm_pm_waited, CTLFLAG_RD, &gNvPmWaited, "RM calls that waited for a GPU resume");
+-extern "C" int nv_xnu_pm_enter(void)
+-{
+-    if (!gNvPmGate || current_thread() == gNvPmOwner) return 0;
++SYSCTL_QUAD(_debug, OID_AUTO, nvrm_pm_denied, CTLFLAG_RD, &gNvPmDenied, "RM calls refused at the sleep gate");
++extern "C" enum NvPmAdmit nv_xnu_pm_admit(uint32_t waitMs)
++{
++    if (!gNvPmGate || current_thread() == gNvPmOwner) return kNvPmUncounted;
++    uint64_t deadline = 0;
++    if (waitMs) clock_interval_to_deadline(waitMs, kMillisecondScale, &deadline);
+     IOLockLock(gNvPmGate);
+     if (gNvPmClosed) {
+         OSIncrementAtomic64(&gNvPmWaited);
+-        while (gNvPmClosed) IOLockSleep(gNvPmGate, &gNvPmClosed, THREAD_UNINT);
++        while (gNvPmClosed) {
++            const int wr = waitMs ? IOLockSleepDeadline(gNvPmGate, &gNvPmClosed, deadline, THREAD_UNINT)
++                                  : IOLockSleep(gNvPmGate, &gNvPmClosed, THREAD_UNINT);
++            if (wr == THREAD_TIMED_OUT) break;
++        }
++        if (gNvPmClosed) {
++            // Still shut after the bound. The suspend has either not finished or not started its rollback, and a
++            // legitimate nvKmsSuspend has no upper bound of its own, so this is a refusal to keep waiting - not a
++            // claim that the GPU is gone. The caller must not enter RM and must not record anything as done.
++            OSIncrementAtomic64(&gNvPmDenied);
++            IOLockUnlock(gNvPmGate);
++            return kNvPmDenied;
++        }
+     }
+     gNvPmUsers++;
+     IOLockUnlock(gNvPmGate);
+-    return 1;
+-}
+-extern "C" void nv_xnu_pm_exit(int counted)
+-{
+-    if (!counted || !gNvPmGate) return;
++    return kNvPmCounted;
++}
++extern "C" void nv_xnu_pm_exit(enum NvPmAdmit how)
++{
++    if (how != kNvPmCounted || !gNvPmGate) return;
+     IOLockLock(gNvPmGate);
+     if (--gNvPmUsers == 0 && gNvPmClosed) IOLockWakeup(gNvPmGate, &gNvPmUsers, false);
+     IOLockUnlock(gNvPmGate);
+@@ -428,6 +444,7 @@
+             sysctl_register_oid(&sysctl__debug_nvrm_isr_count); sysctl_register_oid(&sysctl__debug_nvrm_isr_handled);
+             sysctl_register_oid(&sysctl__debug_nvrm_evt_posts); sysctl_register_oid(&sysctl__debug_nvrm_evt_waits);
+             sysctl_register_oid(&sysctl__debug_nvrm_pm_waited);
++            sysctl_register_oid(&sysctl__debug_nvrm_pm_denied);
+         }
+     }
+     UInt8 bus = fPCI->getBusNumber(), dev = fPCI->getDeviceNumber(), fn = fPCI->getFunctionNumber();
+@@ -1695,6 +1712,8 @@
+         const bool rmCall = fn->isEqualTo(NVRM_GPUVA_FN_ALLOC) || fn->isEqualTo(NVRM_GPUVA_FN_MAP) || fn->isEqualTo(NVRM_GPUVA_FN_FREE)
+                          || fn->isEqualTo(NVRM_SS_FN_RM) || fn->isEqualTo(NVRM_SS_FN_PAGEOFF);
+         NvXnuPmUse pmUse(rmCall);
++        // Only the RM calls can be refused; a non-RM platform function still runs while the GPU is asleep, as before.
++        if (pmUse.denied()) return kIOReturnNotReady;   // RM is not entered and the request is left untouched
+         struct NVRMGpuVaRequest *g = (struct NVRMGpuVaRequest *)p1;
+         if (fn->isEqualTo(NVRM_GPUVA_FN_ALLOC))
+             return nvrm_gpuva_alloc(g) ? kIOReturnIOError : kIOReturnSuccess;
+@@ -1778,7 +1797,16 @@
+     if (OSCompareAndSwap(0, 1, &fCleaned)) {
+         Gate g(fGate);
+         if (gNvClientsLock && fFd >= 0) { IOLockLock(gNvClientsLock); gNvClients[fFd] = NULL; nv_pm_close(fPm); IOLockUnlock(gNvClientsLock); }
+-        if (fOwner) { NvXnuPmUse pmUse; rm_cleanup_file_private(NULL, nvState(), &fNvfp); }
++        if (fOwner) {
++            NvXnuPmUse pmUse;
++            // A refusal is NOT a completed teardown. Claiming success and dropping the only reference to the file
++            // private would lose it silently, so the fact that RM was never asked is recorded instead. Retrying the
++            // teardown (and the retirement of the owner) is separate work and is not done here.
++            if (pmUse.denied()) {
++                fOwner->setProperty("nvrm-close-refused", "RM was not admitted; the file private was NOT cleaned up");
++                LOG("client fd %d closed while the GPU was asleep: rm_cleanup_file_private was NOT called", fFd);
++            } else rm_cleanup_file_private(NULL, nvState(), &fNvfp);
++        }
+         // The ranges are NOT freed here. clientClose can run while another thread is inside
+         // clientMemoryForType, which reads this array and hands its entries to
+         // IOMemoryDescriptor::withPhysicalAddress - so freeing it here let a process map whatever
+@@ -1994,6 +2022,15 @@
+     if (!fOwner || fOwner->fPassDone < 2) { static bool once; if (!once) { once = true; kprintf("NVRM-xnu: esc 0x%x refused: adapter not up (run nvrmctl go 2)\n", cmd); } return kIOReturnNotReady; }
+     nv_state_t *nv = nvState();
+     NvXnuPmUse pmUse;
++    if (pmUse.denied()) {
++        // Every escape below reaches RM, so this is the only point that keeps one out of a GPU that is asleep.
++        // kIOReturnNotReady is the same code the "adapter not up" refusal above returns, which callers already retry.
++        static volatile SInt32 refused;
++        const unsigned n = (unsigned)OSIncrementAtomic(&refused) + 1;
++        if (n <= 8 || (n % 64) == 0)
++            kprintf("NVRM-xnu: esc 0x%x refused (#%u): RM was not admitted while the GPU was in standby\n", cmd, n);
++        return kIOReturnNotReady;
++    }
+     switch (cmd) {
+     case NV_ESC_CARD_INFO: {
+         if (!fIsCtl) return kIOReturnBadArgument;
+--- a/kexts/NVRM/nv-xnu.h
++++ b/kexts/NVRM/nv-xnu.h
+@@ -34,12 +34,24 @@
+ void *kern_os_malloc(size_t size);
+ void  kern_os_free(void *addr);
+ // System sleep gate (NVRM.cpp), the nv_system_pm_lock of nv.c: macOS does not freeze processes for sleep, so every
+-// call into RM made for a client waits here while the GPU is in standby. Returns whether the caller was counted.
+-int  nv_xnu_pm_enter(void);
+-void nv_xnu_pm_exit(int counted);
++// call into RM made for a client waits here while the GPU is in standby. The verdict is a separate value per outcome:
++// the old int could not express a refusal at all, and its 0 already meant three things that MUST be let through (the
++// PM thread itself, a driver that never joined PM, and RAII use=false). waitMs bounds the wait; 0 means no bound.
++enum NvPmAdmit {
++    kNvPmDenied    = 0,   // not admitted: RM must not be entered and nothing may be recorded as done
++    kNvPmCounted   = 1,   // admitted and counted: nv_xnu_pm_exit must balance it
++    kNvPmUncounted = 2,   // admitted without counting: the PM owner, no gate at all, or use=false
++};
++enum NvPmAdmit nv_xnu_pm_admit(uint32_t waitMs);
++void nv_xnu_pm_exit(enum NvPmAdmit how);
+ }
++// The bound NVKMS already uses for its own wait on a resume (kKmsPmWaitMs in os-nvkms-xnu.cpp). A denial therefore
++// means "not admitted within 30 s", which can still be a slow but legitimate suspend: it is retryable, not "GPU dead".
++#define NV_XNU_PM_WAIT_MS 30000u
+ struct NvXnuPmUse {
+-    int counted;
+-    explicit NvXnuPmUse(bool use = true) : counted(use ? nv_xnu_pm_enter() : 0) {}
+-    ~NvXnuPmUse() { nv_xnu_pm_exit(counted); }
++    enum NvPmAdmit admit;
++    explicit NvXnuPmUse(bool use = true, uint32_t waitMs = NV_XNU_PM_WAIT_MS)
++        : admit(use ? nv_xnu_pm_admit(waitMs) : kNvPmUncounted) {}
++    ~NvXnuPmUse() { nv_xnu_pm_exit(admit); }
++    bool denied() const { return admit == kNvPmDenied; }
+ };
+--- a/kexts/NVRM/os-nvkms-xnu.cpp
++++ b/kexts/NVRM/os-nvkms-xnu.cpp
+@@ -239,6 +239,30 @@
+ NvBool nvkms_debug_logging(void)                { return NV_FALSE; }
+ 
+ static bool gKmsTraceRm = true;
++// Write the refusal into the single status field that this op's NVKMS caller reads back (nvkms-rmapi-dgpu.c returns
++// ops.params.<op>.status). False means the op has no status word known here, i.e. the refusal cannot be reported at
++// all - a gap, to be logged as one rather than papered over.
++static bool nvkms_rm_refuse_status(nvidia_kernel_rmapi_ops_t *o, NvU32 status)
++{
++    switch (o->op) {
++    case NV01_FREE:                o->params.free.status = status; return true;
++    case NV01_ALLOC_MEMORY:        o->params.allocMemory64.status = status; return true;
++    case NV04_ALLOC:               o->params.alloc.status = status; return true;
++    case NV04_VID_HEAP_CONTROL:    if (!o->params.pVidHeapControl) return false;
++                                   o->params.pVidHeapControl->status = status; return true;
++    case NV04_MAP_MEMORY:          o->params.mapMemory.status = status; return true;
++    case NV04_UNMAP_MEMORY:        o->params.unmapMemory.status = status; return true;
++    case NV04_ALLOC_CONTEXT_DMA:   o->params.allocContextDma2.status = status; return true;
++    case NV04_MAP_MEMORY_DMA:      o->params.mapMemoryDma.status = status; return true;
++    case NV04_UNMAP_MEMORY_DMA:    o->params.unmapMemoryDma.status = status; return true;
++    case NV04_BIND_CONTEXT_DMA:    o->params.bindContextDma.status = status; return true;
++    case NV04_CONTROL:             o->params.control.status = status; return true;
++    case NV04_DUP_OBJECT:          o->params.dupObject.status = status; return true;
++    case NV04_SHARE:               o->params.share.status = status; return true;
++    case NV04_ADD_VBLANK_CALLBACK: o->params.addVblankCallback.status = status; return true;
++    default:                       return false;
++    }
++}
+ void nvkms_call_rm(void *ops)
+ {
+     nvidia_kernel_rmapi_ops_t *o = (nvidia_kernel_rmapi_ops_t *)ops;
+@@ -246,6 +270,15 @@
+         // KAPI allocations for NVRMFB/NVAccel (WindowServer) reach RM here without an NVKMS ioctl: hold them while the
+         // GPU is in standby. NVKMS's own suspend and resume run on the PM thread, which the gate lets through.
+         NvXnuPmUse pmUse;
++        if (pmUse.denied()) {
++            // This hook returns void, so the caller cannot be told directly: the only channel is the status word it
++            // reads back out of the same ops block. RM is not entered, and the block must not be left looking like
++            // success - a zeroed status reads as NV_OK, which would turn the refusal into a silent success.
++            if (!nvkms_rm_refuse_status(o, NV_ERR_NOT_READY))
++                kprintf("NVRM-xnu: NVKMS RM op 0x%x refused, and it has no status field to report that in\n",
++                        (unsigned)o->op);
++            return;
++        }
+         rm_kernel_rmapi_op(NULL, ops);
+     }
+     if (!gKmsTraceRm) return;

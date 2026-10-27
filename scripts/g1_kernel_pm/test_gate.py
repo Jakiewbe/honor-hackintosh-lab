@@ -18,7 +18,8 @@ class HostOnlyTools:
         if name=='compiler-path':return '/HOST_FIXTURE/clang++'
         if name.endswith('-macros'):return '#define NVOS_IS_LINUX 1\n' if self.case=='linux' else '#define NVOS_IS_LINUX 0\n'
         if name.endswith('-undefined'):
-            return '_expected_provider\n_extra\n' if self.case=='import-drift' and name=='candidate-undefined' else '_expected_provider\n'
+            drift=self.case=='import-drift' and name=='candidate-NVRM.cpp-undefined'
+            return '_expected_provider\n_extra\n' if drift else '_expected_provider\n'
         return 'HOST_FIXTURE_NOT_DARWIN'
     def execute(self,argv,cwd,log):
         self.calls.append(argv);log.write_text('HOST_FIXTURE_NOT_DARWIN\n')
@@ -33,39 +34,68 @@ class OrchestrationControls(unittest.TestCase):
         self.sdk=self.root/'sdk';(self.sdk/'System/Library/Frameworks/Kernel.framework/Headers/IOKit').mkdir(parents=True)
         (self.sdk/'System/Library/Frameworks/Kernel.framework/Headers/IOKit/IOService.h').write_text('HOST')
         for name in ('nm','candidate'):
-            p=self.workspace/name/gate.REL;p.parent.mkdir(parents=True);p.write_text(name)
+            for tu in gate.TUS:
+                p=self.workspace/name/tu;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(name+tu)
         (self.workspace/'INPUTS.json').write_text(json.dumps(dict(source_files={'nm':0,'ogkm':0})))
+        # Two manifests now: the rollback one covers one TU, the admission one covers both plus a header.
         self.m=dict(baseline_sha256={gate.REL:gate.sha(self.workspace/'nm'/gate.REL)},
-                    files=[dict(path=gate.REL,sha256=gate.sha(self.workspace/'candidate'/gate.REL))])
+                    files=[dict(path=gate.REL,sha256='1'*64)])
+        self.a=dict(baseline_sha256={tu:gate.sha(self.workspace/'nm'/tu) for tu in gate.TUS},
+                    files=[dict(path=tu,sha256=gate.sha(self.workspace/'candidate'/tu)) for tu in gate.TUS])
     def tearDown(self):self.tmp.cleanup()
     def exercise(self,case='success'):
         tools=HostOnlyTools(self.sdk,case)
         def bound(argv,tree,log,dep,execute):
             log.write_text('HOST_FIXTURE_NOT_DARWIN\n')
-            rc=1 if case=='compile-fail' else 0
-            if case!='missing-object':Path(argv[-1]).write_bytes(struct.pack('<8I',0xfeedfacf,0x01000007,0,1,0,0,0,0))
+            # Which TU this call is for, taken from the source path the gate actually passed.
+            tu=next(t for t in gate.TUS if argv[argv.index('-c')+1].endswith(t.replace('/',__import__('os').sep)))
+            rc=1 if case in ('compile-fail','compile-fail-second') and (case=='compile-fail' or tu==gate.KMS) else 0
+            missing=case=='missing-object' or (case=='missing-object-second' and tu==gate.KMS)
+            if not missing:Path(argv[-1]).write_bytes(struct.pack('<8I',0xfeedfacf,0x01000007,0,1,0,0,0,0))
             dep.mkdir();p=dep/'snapshot.json'
-            row=dict(resolved_path=str((tree/gate.REL).resolve()),sha256=gate.sha(tree/gate.REL))
-            if case=='wrong-source':row['sha256']='0'*64
-            p.write_text(json.dumps(dict(inputs=[] if case=='missing-source' else [row])))
+            row=dict(resolved_path=str((tree/tu).resolve()),sha256=gate.sha(tree/tu))
+            if case=='wrong-source'or(case=='wrong-source-second'and tu==gate.KMS):row['sha256']='0'*64
+            absent=case=='missing-source' or (case=='missing-source-second' and tu==gate.KMS)
+            p.write_text(json.dumps(dict(inputs=[] if absent else [row])))
             return rc,dict(path=str(p),sha256=gate.sha(p)),argv
         with patch.object(gate,'verify_inputs'),patch.object(gate,'patch_manifest',return_value=self.m),\
+             patch.object(gate,'admission_manifest',return_value=self.a),\
              patch.object(gate,'config',return_value=(dict(rm_definitions=[],make_include_directories_absent=[]),[])),\
              patch.object(gate,'bound_compile',side_effect=bound):
             result=gate.run(self.workspace,self.out,tools)
         return result,tools
     def rejected(self,case):
         r,_=self.exercise(case);self.assertEqual(r['status'],'FAILED');self.assertFalse(gate.complete(r));self.assertTrue(r['errors'])
-        expected={'compile-fail':'actual TU compilation failed','missing-object':'baseline.o',
-            'missing-source':'actual compiler did not see reviewed PM bytes','wrong-source':'actual compiler did not see reviewed PM bytes',
+        expected={'compile-fail':'actual TU compilation failed','missing-object':'baseline-NVRM.cpp.o',
+            'missing-source':'actual compiler did not see reviewed','wrong-source':'actual compiler did not see reviewed',
+            'compile-fail-second':'os-nvkms-xnu.cpp actual TU compilation failed',
+            'missing-object-second':'baseline-os-nvkms-xnu.cpp.o',
+            'missing-source-second':'actual compiler did not see reviewed bytes for kexts/NVRM/os-nvkms-xnu.cpp',
+            'wrong-source-second':'actual compiler did not see reviewed bytes for kexts/NVRM/os-nvkms-xnu.cpp',
             'link-fail':'kext format link failed','linux':'Darwin preprocess selects Linux',
             'import-drift':'unexpected import change'}
         self.assertIn(expected[case],'\n'.join(r['errors']))
         self.assertTrue((self.out/'native-pm-text.zip').is_file())
     def test_labelled_host_fixture_only_reaches_format_status(self):
         r,t=self.exercise();self.assertTrue(gate.complete(r));self.assertEqual(r['complete_driver_link'],'NOT_ATTEMPTED')
-        self.assertEqual(r['rm_admission_denial'],'NOT_IMPLEMENTED_BY_THIS_PATCH');self.assertFalse(r['go_authorized'])
+        # The admission verdict exists now, but its completion bound and every native level do not.
+        self.assertEqual(r['rm_admission_denial'],'IMPLEMENTED_SOURCE_HOST_ONLY_NOT_DARWIN_NOT_DEVICE')
+        self.assertEqual(r['rm_admission_bound'],'NOT_PROVEN');self.assertFalse(r['go_authorized'])
         self.assertTrue(all('dynamic_lookup' not in a for c in t.calls for a in c))
+    def test_both_translation_units_are_compiled(self):
+        r,_=self.exercise()
+        self.assertEqual({(x['label'],x['source']) for x in r['objects']},
+                         {(l,t) for l in ('baseline','candidate') for t in gate.TUS})
+    def test_final_nvrm_is_bound_to_admission_not_intermediate_rollback(self):
+        r,_=self.exercise()
+        final=next(x for x in r['objects'] if x['label']=='candidate' and x['source']==gate.REL)
+        self.assertTrue(gate.complete(r))
+        self.assertEqual(final['source_sha256'],self.a['files'][0]['sha256'])
+        self.assertNotEqual(final['source_sha256'],self.m['files'][0]['sha256'])
+    def test_second_tu_compile_failure_is_rejected(self):self.rejected('compile-fail-second')
+    def test_second_tu_missing_object_is_rejected(self):self.rejected('missing-object-second')
+    def test_second_tu_missing_dependency_is_rejected(self):self.rejected('missing-source-second')
+    def test_second_tu_wrong_dependency_hash_is_rejected(self):self.rejected('wrong-source-second')
     def test_compile_failure_keeps_failed_report(self):self.rejected('compile-fail')
     def test_missing_object_after_zero_exit_is_rejected(self):self.rejected('missing-object')
     def test_missing_actual_source_dependency_is_rejected(self):self.rejected('missing-source')

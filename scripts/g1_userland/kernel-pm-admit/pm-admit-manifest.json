@@ -1,0 +1,40 @@
+{
+  "status": "EXPERIMENTAL_SOURCE_ONLY_NOT_INSTALLABLE",
+  "pin": "272ccd9da04ff5de95c2791b902fe17a3fa77ce7",
+  "admission_patch_sha256": "6413efa717fb72ca290661ab803971eade06fab840af02f99f987abc93a8c32a",
+  "base_patch": {
+    "path": "kernel-pm/pm.patch",
+    "sha256": "e49e201028320e0be67d3a8fcf9c6b5118de05c53f9fdaabc1929d91bfc8f2c1"
+  },
+  "baseline_sha256": {
+    "kexts/NVRM/NVRM.cpp": "f1d682a36b4896ddb79c547947bcd3f890343cb8c753ea94bcd17511576af295",
+    "kexts/NVRM/nv-xnu.h": "410711cdf0f0cd6dee51e6ae0f0b78faaba31a67dd79d992ea6cdd05c6f0d6cc",
+    "kexts/NVRM/os-nvkms-xnu.cpp": "e77953575b5563d47731808f2a0411a2f52b35c2db40d9c83b4ecb12b29381c6"
+  },
+  "files": [
+    {
+      "path": "kexts/NVRM/NVRM.cpp",
+      "bytes": 121783,
+      "sha256": "752b1515f98aa920cbe3b8788a701c4f195189faa019f985c6265878b5ebad88"
+    },
+    {
+      "path": "kexts/NVRM/nv-xnu.h",
+      "bytes": 2422,
+      "sha256": "a0325c09fb346831909cd533fda919aa4c45d619ae9f25944aae37c422040747"
+    },
+    {
+      "path": "kexts/NVRM/os-nvkms-xnu.cpp",
+      "bytes": 27189,
+      "sha256": "abace5e32d9ef2a4355daefc5d676186740bb5d86f565b60995882c9c4f56c31"
+    }
+  ],
+  "limitations": [
+    "Source only: no Darwin compile, no KEXT-LINK, no loader, no GPU runtime",
+    "A denial means \"not admitted within 30 s\"; the suspend itself has no proven completion bound",
+    "clientClose records the refusal but does not retry: the RM file private is still leaked on that path",
+    "nvkms_call_rm reports a refusal through the ops status word only; the hook signature is unchanged",
+    "IOKit still cuts the power slot, so the admission verdict cannot stop a real sleep (R24)",
+    "No device, USB, NVRAM, EFI or Metal work of any kind"
+  ],
+  "go_authorized": false
+}

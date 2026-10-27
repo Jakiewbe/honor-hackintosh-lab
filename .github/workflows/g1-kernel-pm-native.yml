@@ -1,4 +1,4 @@
-name: HONOR G1 PM complete NVRM TU and kext format gate
+name: HONOR G1 PM complete NVRM + NVKMS RM-hook TUs and kext format gate
 on:
   workflow_dispatch:
 permissions:
@@ -31,7 +31,7 @@ jobs:
           git -C "$RUNNER_TEMP/pm-ogkm" remote add origin https://github.com/NVIDIA/open-gpu-kernel-modules.git
           git -C "$RUNNER_TEMP/pm-ogkm" fetch --depth=1 origin e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb
           git -C "$RUNNER_TEMP/pm-ogkm" checkout --detach FETCH_HEAD
-      - name: Compile complete baseline and PM candidate TU; link kext format only
+      - name: Compile complete baseline and PM candidate TUs; link kext format only
         run: |
           python3 -B scripts/g1_kernel_pm/gate.py \
             --nm "$RUNNER_TEMP/pm-nm" --ogkm "$RUNNER_TEMP/pm-ogkm" \
