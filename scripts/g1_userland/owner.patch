@@ -1,0 +1,269 @@
+--- a/plugin/nvmtl_vk.c
++++ b/plugin/nvmtl_vk.c
+@@ -5636,9 +5636,7 @@
+     for (unsigned i = 0; i < p->nhold; i++) if (p->hold[i] && nvmtl_pre_release_hook) nvmtl_pre_release_hook(p->hold[i]);
+     p->nhold = 0;
+ }
+-struct nvmtl_inflight { nvk_cmdbuf *c; VkFence fence; nvmtl_prologue pre; uint64_t pt[8]; };
+-nvmtl_inflight *nvmtl_vk_inflight_new(void) { return calloc(1, sizeof(nvmtl_inflight)); }
+-void nvmtl_vk_inflight_free(nvmtl_inflight *f) { free(f); }
++#include "nvmtl_submit_owner.h"
+ void nvmtl_vk_gsub_nvk_stats(uint64_t *out, unsigned n)
+ {
+     static void (*fn)(uint64_t *, unsigned); static int looked;
+@@ -5673,14 +5671,21 @@
+ }
+ int nvmtl_vk_submit_wait_at(nvk_cmdbuf *c, const char *who)
+ {
+-    nvmtl_inflight f;
+-    const int r = nvmtl_vk_submit_begin_at(c, &f, who);
+-    return r ? r : nvmtl_vk_submit_finish(&f);
+-}
++    nvmtl_inflight *f = nvmtl_vk_inflight_new();
++    if (!f) return -1;
++    const int r = nvmtl_vk_submit_begin_at(c, f, who);
++    const int result = r ? r : nvmtl_vk_submit_finish(f);
++    nvmtl_vk_inflight_free(f); /* registered uncertain owners are not freed */
++    return result;
++}
++static int nvmtl_vk_submit_begin_owned_at(nvk_cmdbuf *c, nvmtl_inflight *f, const char *who, void *aux);
+ int nvmtl_vk_submit_begin_at(nvk_cmdbuf *c, nvmtl_inflight *f, const char *who)
+-{
++{ return nvmtl_vk_submit_begin_owned_at(c, f, who, NULL); }
++static int nvmtl_vk_submit_begin_owned_at(nvk_cmdbuf *c, nvmtl_inflight *f, const char *who, void *aux)
++{
++    if (!f || nvmtl_vk_inflight_pending(f)) return -2;
+     nvmtl_subwho_note(who, 0);
+-    memset(f, 0, sizeof *f); f->c = c;
++    memset(f, 0, sizeof *f); f->c = c; f->retained_aux = aux;
+     uint64_t *const pt = f->pt;
+     if (g_state != 1 || !c || !c->cb) return -2;
+     if (c->counter_error || nvmtl_counter_flush(c)) { nvmtl_cmd_retire(c); return -1; }
+@@ -5705,6 +5710,7 @@
+     if (result != VK_SUCCESS) { nvmtl_cmd_retire(c); return -1; }
+     nvmtl_prologue *const pre = &f->pre;
+     pthread_mutex_lock(&nvmtl_submit_mutex);
++    nvmtl_owner_register_locked(f, fence);
+     if (pro && nvmtl_pre_submit_hook) {
+         nvmtl_prologue *const up = g_pre_cur; g_pre_cur = pre;
+         const int k0 = g_perf_kind; g_perf_kind |= 1; nvmtl_pre_submit_hook(); g_perf_kind = k0;
+@@ -5732,20 +5738,25 @@
+     nvmtl_wit_control(wseq);
+     const uint64_t sE = nvmtl_perf_now();
+     if (pt[0]) { pt[1] = pt[0] + (sA - pt[0]) + (sD - sC); pt[2] = pt[1] + (sB - sA) + (sE - sD); pt[3] = pt[2] + (sC - sB); }
+-    result = g_state == 1 ? pvkQueueSubmit(g_queue, 1, &si, fence) : VK_ERROR_DEVICE_LOST;
++    if (g_state == 1) {
++        f->phase = NVMTL_OWNER_ATTEMPTED;
++        result = pvkQueueSubmit(g_queue, 1, &si, fence);
++        if (result == VK_SUCCESS) f->phase = NVMTL_OWNER_SUBMITTED;
++    } else result = VK_ERROR_DEVICE_LOST;
+     pthread_mutex_unlock(&nvmtl_submit_mutex);
+     pt[4] = nvmtl_perf_now();
+     g_cmd_submitted++;
+     if (result != VK_SUCCESS) {
+         g_state = -1;
+         nvlog("vk: queue submit -> %d; disabling backend and retaining uncertain in-flight resources", result);
++        nvmtl_owner_retain(f);
+         return -2;
+     }
+-    f->fence = fence;
+     return 0;
+ }
+ int nvmtl_vk_submit_finish(nvmtl_inflight *f)
+ {
++    if (!f || !nvmtl_vk_inflight_pending(f) || f->unresolved || f->phase != NVMTL_OWNER_SUBMITTED) return -2;
+     nvk_cmdbuf *const c = f->c; const VkFence fence = f->fence; uint64_t *const pt = f->pt;
+     nvmtl_prologue *const pre = &f->pre;
+     const long budget_ms = nvmtl_gpu_wait_budget_ms();
+@@ -5784,13 +5795,15 @@
+     }
+     if (wr != VK_SUCCESS || g_state != 1) {
+         g_state = -1;
+-        nvlog("vk: fence wait -> %d after %ld ms (budget %ld ms); the device is lost, disabling backend without retiring in-flight resources", wr, waited_ms, budget_ms);
++        nvlog("vk: fence wait -> %d after %ld ms (budget %ld ms); disabling backend; completion remains unproven", wr, waited_ms, budget_ms);
++        nvmtl_owner_retain(f);
+         return -2;
+     }
+     if (c->wseq && c->wseq != NVMTL_WSEQ_BLIND) {
+         if (nvmtl_keep_verdict(c->wseq) < 0) {
+             g_state = -1;
+             nvlog("vk: completion witness missing; disabling backend and retaining all in-flight resources");
++            nvmtl_owner_retain(f);
+             return -2;
+         }
+         c->wseq = 0;
+@@ -5838,6 +5851,7 @@
+     nvmtl_cmd_retire(c);
+     pt[7] = nvmtl_perf_now();
+     nvmtl_perf_submit(perf_sets, pt);
++    nvmtl_owner_completed(f);
+     return 0;
+ }
+ 
+@@ -6331,7 +6345,7 @@
+ {
+     if (!token) return;
+     nvmtl_asyncup *au = (nvmtl_asyncup *)(uintptr_t)token;
+-    nvmtl_vk_submit_finish(&au->infl);
++    if (nvmtl_vk_submit_finish(&au->infl)) return; /* ledger owns au and staging on uncertainty */
+     nvmtl_vk_buffer_destroy(&au->stage);
+     free(au);
+ }
+@@ -6383,7 +6397,10 @@
+     if (au) {
+         // submit without waiting; queue order + the SHADER_READ barrier above order the copy before any later
+         // draw that samples this image, and the handle is finished before a readback, destroy or re-upload.
+-        if (nvmtl_vk_submit_begin_at(c, &au->infl, "tex upload async")) { nvmtl_vk_buffer_destroy(&au->stage); free(au); return -1; }
++        if (nvmtl_vk_submit_begin_owned_at(c, &au->infl, "tex upload async", au)) {
++            if (!nvmtl_vk_inflight_pending(&au->infl)) { nvmtl_vk_buffer_destroy(&au->stage); free(au); }
++            return -1;
++        }
+         nvmtl_asyncup_store(img, (uint64_t)(uintptr_t)au);
+         return 0;
+     }
+--- a/plugin/nvmtl_vk.h
++++ b/plugin/nvmtl_vk.h
+@@ -189,6 +189,8 @@
+ typedef struct nvmtl_inflight nvmtl_inflight;
+ nvmtl_inflight *nvmtl_vk_inflight_new(void);
+ void nvmtl_vk_inflight_free(nvmtl_inflight *f);
++/* Registry membership means ownership is retained, not GPU completion. */
++int nvmtl_vk_inflight_pending(const nvmtl_inflight *f);
+ int nvmtl_vk_image_reback(nvk_image *i, int to_sysmem, int a8);
+ void nvmtl_vk_res1_stats(uint64_t out[6]);
+ int nvmtl_vk_image_migrate(nvk_image *i, int to_sysmem, int a8, nvk_image *old_out);
+--- a/plugin/NVMTLEventSync.m
++++ b/plugin/NVMTLEventSync.m
+@@ -29,10 +29,12 @@
+ static NSMutableArray *nvmtl_quarantined_parts;
+ static int nvmtl_gsub_finish(NVMTLSubmissionPart *part) {
+     nvmtl_inflight *const f = part->inflight;
+-    part->inflight = NULL;
+     const int r = nvmtl_vk_submit_finish(f);
+-    atomic_fetch_sub(&gsub_inflight, 1);
+-    if (r == 0) nvmtl_vk_inflight_free(f);
++    if (r == 0) {
++        part->inflight = NULL;
++        atomic_fetch_sub(&gsub_inflight, 1);
++        nvmtl_vk_inflight_free(f);
++    }
+     return r;
+ }
+ @interface NVMTLPendingSurfaceWrite : NSObject {
+@@ -573,16 +575,20 @@
+         for (NVMTLBuffer *buffer in part->copyInputs) nvmtl_buffer_sync_in(buffer);
+         [self nvmtlMarkScheduled];
+         if (!_legacyKernelStart) _legacyKernelStart = clock_gettime_nsec_np(CLOCK_UPTIME_RAW) / 1e9;
++        part->inflight = f;
++        const unsigned long long n = atomic_fetch_add(&gsub_inflight, 1) + 1;
+         const int r = nvmtl_vk_submit_begin(&part->commands, f);
+         _nextSubmit++;
+         if (r) {
+-            nvmtl_vk_inflight_free(f);
++            if (!nvmtl_vk_inflight_pending(f)) {
++                part->inflight = NULL;
++                atomic_fetch_sub(&gsub_inflight, 1);
++                nvmtl_vk_inflight_free(f);
++            }
+             part->aheadFailed = r;
+             return NO;
+         }
+-        part->inflight = f;
+         nvmtl_evfold_promise_part(part);
+-        const unsigned long long n = atomic_fetch_add(&gsub_inflight, 1) + 1;
+         if (n > atomic_load(&gsub_peak)) atomic_store(&gsub_peak, n);
+         atomic_fetch_add(&gsub_ahead, 1);
+         nvmtl_gsub_census();
+@@ -637,8 +643,8 @@
+         [self nvmtlMarkScheduled];
+         if (!_legacyKernelStart) _legacyKernelStart = clock_gettime_nsec_np(CLOCK_UPTIME_RAW) / 1e9;
+         int result;
+-        if (part->inflight) result = nvmtl_gsub_finish(part);
+-        else if (part->aheadFailed) result = part->aheadFailed;
++        if (part->aheadFailed) result = part->aheadFailed;
++        else if (part->inflight) result = nvmtl_gsub_finish(part);
+         else {
+             nvmtl_prepare_submission_copies(part);
+             for (NVMTLBuffer *buffer in part->copyInputs) nvmtl_buffer_sync_in(buffer);
+--- /dev/null
++++ b/plugin/nvmtl_submit_owner.h
+@@ -0,0 +1,79 @@
++/* Experimental local candidate derived alongside NullMoth 272ccd9.
++ * SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
++ * Include after nvmtl_prologue and nvmtl_submit_mutex. No stop/reset proof here.
++ */
++enum nvmtl_submit_phase {
++    NVMTL_OWNER_NOT_SUBMITTED = 1,
++    NVMTL_OWNER_ATTEMPTED = 2,
++    NVMTL_OWNER_SUBMITTED = 3
++};
++struct nvmtl_inflight {
++    nvk_cmdbuf *c;
++    VkFence fence;
++    nvmtl_prologue pre;
++    uint64_t pt[8];
++    struct nvmtl_inflight *owner_next;
++    nvk_cmdbuf retained_c;
++    void *retained_aux;
++    uint64_t owner_id;
++    unsigned phase, unresolved;
++};
++static nvmtl_inflight *nvmtl_submit_owners;
++static uint64_t nvmtl_submit_owner_sequence;
++
++static int nvmtl_owner_contains_locked(const nvmtl_inflight *f)
++{
++    for (nvmtl_inflight *p = nvmtl_submit_owners; p; p = p->owner_next)
++        if (p == f) return 1;
++    return 0;
++}
++int nvmtl_vk_inflight_pending(const nvmtl_inflight *f)
++{
++    pthread_mutex_lock(&nvmtl_submit_mutex);
++    const int pending = nvmtl_owner_contains_locked(f);
++    pthread_mutex_unlock(&nvmtl_submit_mutex);
++    return pending;
++}
++static void nvmtl_owner_register_locked(nvmtl_inflight *f, VkFence fence)
++{
++    f->fence = fence;
++    f->phase = NVMTL_OWNER_NOT_SUBMITTED;
++    f->owner_id = ++nvmtl_submit_owner_sequence;
++    f->owner_next = nvmtl_submit_owners;
++    nvmtl_submit_owners = f;
++}
++static void nvmtl_owner_retain(nvmtl_inflight *f)
++{
++    pthread_mutex_lock(&nvmtl_submit_mutex);
++    if (nvmtl_owner_contains_locked(f) && !f->unresolved) {
++        /* Move the owning aggregate, including its allocated arrays, off caller
++         * stacks. External ObjC resources still need the submission-part owner.
++         * This is an ownership transfer, never two independently freed copies. */
++        f->retained_c = *f->c;
++        memset(f->c, 0, sizeof *f->c);
++        f->c = &f->retained_c;
++        f->unresolved = 1;
++    }
++    pthread_mutex_unlock(&nvmtl_submit_mutex);
++}
++static void nvmtl_owner_completed(nvmtl_inflight *f)
++{
++    pthread_mutex_lock(&nvmtl_submit_mutex);
++    nvmtl_inflight **p = &nvmtl_submit_owners;
++    while (*p && *p != f) p = &(*p)->owner_next;
++    if (*p == f && !f->unresolved && f->phase == NVMTL_OWNER_SUBMITTED) {
++        *p = f->owner_next;
++        f->owner_next = NULL;
++        f->fence = VK_NULL_HANDLE;
++    }
++    pthread_mutex_unlock(&nvmtl_submit_mutex);
++}
++nvmtl_inflight *nvmtl_vk_inflight_new(void) { return calloc(1, sizeof(nvmtl_inflight)); }
++void nvmtl_vk_inflight_free(nvmtl_inflight *f)
++{
++    if (!f) return;
++    pthread_mutex_lock(&nvmtl_submit_mutex);
++    const int pending = nvmtl_owner_contains_locked(f);
++    if (!pending) free(f);
++    pthread_mutex_unlock(&nvmtl_submit_mutex);
++}

@@ -1,0 +1,51 @@
+name: HONOR G1 userland owner full plugin native gate
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native:
+    runs-on: macos-15-intel
+    timeout-minutes: 25
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Host failure controls, not native success evidence
+        run: python3 -B scripts/g1_userland/test_native.py
+      - name: Verify environment and fetch fixed source commits
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$(uname -m)" == x86_64 ]]
+          [[ "$(xcrun --show-sdk-version)" == 15.5 ]]
+          git init "$RUNNER_TEMP/nm-owner"
+          git -C "$RUNNER_TEMP/nm-owner" remote add origin https://github.com/nullmoth/nvidia-macos-driver.git
+          git -C "$RUNNER_TEMP/nm-owner" fetch --depth=1 origin 272ccd9da04ff5de95c2791b902fe17a3fa77ce7
+          git -C "$RUNNER_TEMP/nm-owner" checkout --detach FETCH_HEAD
+          git init "$RUNNER_TEMP/vk-owner"
+          git -C "$RUNNER_TEMP/vk-owner" remote add origin https://github.com/KhronosGroup/Vulkan-Headers.git
+          git -C "$RUNNER_TEMP/vk-owner" fetch --depth=1 origin 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+          git -C "$RUNNER_TEMP/vk-owner" checkout --detach FETCH_HEAD
+      - name: Compile real C and complete Objective-C plugin, link without executing
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -B scripts/g1_userland/native.py \
+            --nm "$RUNNER_TEMP/nm-owner" --vk "$RUNNER_TEMP/vk-owner" \
+            --workspace "$RUNNER_TEMP/owner-inputs" --out "$RUNNER_TEMP/owner-text"
+      - name: Retain text diagnostics even after failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g1-userland-owner-native-text
+          path: |
+            ${{ runner.temp }}/owner-text/native-userland-text.zip
+            ${{ runner.temp }}/owner-text/*.json
+            ${{ runner.temp }}/owner-text/*ERROR.txt
+          if-no-files-found: error
+          retention-days: 14

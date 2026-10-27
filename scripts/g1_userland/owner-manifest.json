@@ -1,0 +1,39 @@
+{
+  "status": "EXPERIMENTAL_SOURCE_ONLY_NOT_INSTALLABLE",
+  "pin": "272ccd9da04ff5de95c2791b902fe17a3fa77ce7",
+  "files": [
+    {
+      "path": "plugin/nvmtl_vk.c",
+      "sha256": "7f09c8733f3e5b2d5b0c71259c8d91c9e0bd8f105d300ac8bac249f229cd9866",
+      "bytes": 509780
+    },
+    {
+      "path": "plugin/nvmtl_vk.h",
+      "sha256": "aee7c947f8d88e6baaeac1c5305395f17c8dc299602a73035bc765738f74233d",
+      "bytes": 29017
+    },
+    {
+      "path": "plugin/NVMTLEventSync.m",
+      "sha256": "3262bc7ba70560b41abd793a164563f27be8f12c7380c1baeeefea168b526b1b",
+      "bytes": 47307
+    },
+    {
+      "path": "plugin/nvmtl_submit_owner.h",
+      "sha256": "f3206ff46c1f3b429e031520a47fb8a3cd7eaf88345c98b6ff3b8162c94a139c",
+      "bytes": 2691
+    }
+  ],
+  "baseline_sha256": {
+    "plugin/nvmtl_vk.c": "eaefe8910278dfe3ea8129d976a58e857c40ed12f5fc08999e011dcb3ca2dcc1",
+    "plugin/nvmtl_vk.h": "47e3e73980aff42112fd5b91fe139799bee458f0abe1277aa2f24c9698d2305a",
+    "plugin/NVMTLEventSync.m": "65272c6b7890f4b6440a6a7de35ed438bcce94d82ee681a0420c2c2b3531bc5c"
+  },
+  "patch_sha256": "e79092ea1c6c53a0779a3bf700feec510494da5cb157d223d5dde3ef299e9f7e",
+  "limitations": [
+    "No device drain proof",
+    "No full external-resource pinning proof",
+    "No kernel PM/headless lifecycle repair",
+    "No Darwin compile"
+  ],
+  "go_authorized": false
+}
