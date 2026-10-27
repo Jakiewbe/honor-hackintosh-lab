@@ -44,7 +44,7 @@ class OrchestrationControls(unittest.TestCase):
         for name in ('nm','candidate'):
             for tu in gate.TUS:
                 p=self.workspace/name/tu;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(name+tu)
-        (self.workspace/'INPUTS.json').write_text(json.dumps(dict(source_files={'nm':0,'ogkm':0})))
+        (self.workspace/'INPUTS.json').write_text(json.dumps(dict(source_files={'nm':0,'ogkm':0},build_portability='HOST_FIXTURE')))
         # Two manifests now: the rollback one covers one TU, the admission one covers both plus a header.
         self.m=dict(baseline_sha256={gate.REL:gate.sha(self.workspace/'nm'/gate.REL)},
                     files=[dict(path=gate.REL,sha256='1'*64)])
@@ -88,7 +88,7 @@ class OrchestrationControls(unittest.TestCase):
     def test_labelled_host_fixture_only_reaches_format_status(self):
         r,t=self.exercise();self.assertTrue(gate.complete(r));self.assertEqual(r['complete_driver_link'],'NOT_ATTEMPTED')
         # The admission verdict exists now, but its completion bound and every native level do not.
-        self.assertEqual(r['rm_admission_denial'],'IMPLEMENTED_SOURCE_HOST_ONLY_NOT_DARWIN_NOT_DEVICE')
+        self.assertEqual(r['rm_admission_denial'],'IMPLEMENTED_IN_CANDIDATE_NOT_DEVICE_VERIFIED')
         self.assertEqual(r['rm_admission_bound'],'NOT_PROVEN');self.assertFalse(r['go_authorized'])
         self.assertTrue(all('dynamic_lookup' not in a for c in t.calls for a in c))
     def test_both_translation_units_are_compiled(self):
@@ -130,6 +130,24 @@ class OrchestrationControls(unittest.TestCase):
             self.assertTrue(z.namelist());self.assertTrue(all(Path(n).suffix in ('.json','.txt','.d') for n in z.namelist()))
 
 class IdentityControls(unittest.TestCase):
+    def test_real_portability_patch_identity(self):
+        self.assertEqual(gate.portability_manifest()['path'],'src/common/inc/nvUnixVersion.h')
+    def test_portability_changes_only_the_platform_guard(self):
+        lines=(gate.PORT/'darwin-version.patch').read_text().splitlines()
+        removed=[s[1:] for s in lines if s.startswith('-') and not s.startswith('---')]
+        added=[s[1:] for s in lines if s.startswith('+') and not s.startswith('+++')]
+        self.assertEqual(len(removed),1);self.assertEqual(len(added),1)
+        self.assertEqual(added[0],removed[0].replace('#if ', '#if defined(NV_MACINTOSH) || ',1))
+    def test_tampered_portability_patch_rejected(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d)
+            for n in ('darwin-version.patch','darwin-version-manifest.json'):(root/n).write_bytes((gate.PORT/n).read_bytes())
+            (root/'darwin-version.patch').write_bytes(b'bad')
+            with patch.object(gate,'PORT',root),self.assertRaises(ValueError):gate.portability_manifest()
+    def test_wrong_version_header_baseline_rejected(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d);p=root/'src/common/inc/nvUnixVersion.h';p.parent.mkdir(parents=True);p.write_bytes(b'wrong')
+            with self.assertRaisesRegex(ValueError,'version-header baseline differs'):gate.apply_portability(root)
     def test_real_patch_manifest_identity(self):
         self.assertEqual([r['path'] for r in gate.patch_manifest()['files']],[gate.REL])
     def test_tampered_patch_rejected_without_editing_shared_profile(self):

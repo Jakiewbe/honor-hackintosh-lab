@@ -1,0 +1,9 @@
+{
+  "pin": "e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb",
+  "path": "src/common/inc/nvUnixVersion.h",
+  "baseline_sha256": "fa5b6e9cb0aeed297155df6b2bc16656d21b6cabd826fd9270292ba253fddc7a",
+  "candidate_sha256": "2b78f5f91a615b888b683787fc088894626fb4e99e485f68be8d9c8b9f8ac87c",
+  "patch_sha256": "5fe27b5cffb8b4107a46f3621db64892d66c7cd051546324a32a96b8c42952cc",
+  "purpose": "Version-string-only Darwin guard portability; applied identically to baseline and candidate, no version value change",
+  "go_authorized": false
+}

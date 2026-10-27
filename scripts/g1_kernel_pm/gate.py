@@ -28,8 +28,25 @@ KMS='kexts/NVRM/os-nvkms-xnu.cpp'
 PM=ROOT/'scripts/g1_userland/kernel-pm'
 ADMIT=ROOT/'scripts/g1_userland/kernel-pm-admit'
 PROFILE=ROOT/'scripts/g1_24h32/PROFILE.json'
+PORT=Path(__file__).resolve().parent
 
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+
+def portability_manifest():
+    m=json.loads((PORT/'darwin-version-manifest.json').read_text(encoding='utf-8'))
+    if (m['pin']!=PINS['ogkm'] or m['path']!='src/common/inc/nvUnixVersion.h'
+            or m['patch_sha256']!=sha(PORT/'darwin-version.patch')):
+        raise ValueError('Darwin version-header portability identity differs')
+    return m
+
+def apply_portability(ogkm):
+    m=portability_manifest();header=ogkm/m['path']
+    if sha(header)!=m['baseline_sha256']:raise ValueError('version-header baseline differs')
+    for flags in (['--check'],[]):
+        subprocess.run(['git','-c','core.autocrlf=false','apply',*flags,str(PORT/'darwin-version.patch')],cwd=ogkm,check=True)
+    if sha(header)!=m['candidate_sha256']:raise ValueError('version-header patched bytes differ')
+    subprocess.run(['git','-c','core.autocrlf=false','apply','--reverse','--check',str(PORT/'darwin-version.patch')],cwd=ogkm,check=True)
+    return m
 
 def patch_manifest():
     m=json.loads((PM/'pm-manifest.json').read_text(encoding='utf-8'))
@@ -61,6 +78,7 @@ def config():
 def prepare(nm,ogkm,workspace):
     m=patch_manifest();a=admission_manifest();workspace.mkdir(parents=True,exist_ok=False)
     counts={k:shared.export(tree,PINS[k],workspace/k) for k,tree in [('nm',nm),('ogkm',ogkm)]}
+    port=apply_portability(workspace/'ogkm')
     baseline=workspace/'nm'
     for rel,digest in a['baseline_sha256'].items():
         if sha(baseline/rel)!=digest:raise ValueError('admission baseline differs: '+rel)
@@ -79,7 +97,8 @@ def prepare(nm,ogkm,workspace):
            for p in sorted(workspace.rglob('*')) if p.is_file()]
     result=dict(pins=PINS,source_files=counts,files=files,pm_manifest_sha256=sha(PM/'pm-manifest.json'),
         admission_manifest_sha256=sha(ADMIT/'pm-admit-manifest.json'),
-        profile_sha256=sha(PROFILE),go_authorized=False)
+        profile_sha256=sha(PROFILE),build_portability=port,
+        portability_manifest_sha256=sha(PORT/'darwin-version-manifest.json'),go_authorized=False)
     (workspace/'INPUTS.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
     return result
 
@@ -89,6 +108,9 @@ def verify_inputs(workspace,inputs):
         raise ValueError('reviewed PM manifest/profile changed')
     if inputs['admission_manifest_sha256']!=sha(ADMIT/'pm-admit-manifest.json'):
         raise ValueError('reviewed admission manifest changed')
+    if (inputs['portability_manifest_sha256']!=sha(PORT/'darwin-version-manifest.json')
+            or inputs['build_portability']!=portability_manifest()):
+        raise ValueError('reviewed build portability changed')
     patch_manifest();admission_manifest()
 
 def imports(text):
@@ -133,12 +155,12 @@ def run(workspace,out,tools):
         dependency_provider_closure='NOT_VERIFIED',
         # This patch now implements an admission verdict; what it still cannot do is make IOPM keep the
         # slot powered (R24), and the refusal's own completion bound is not proven.
-        rm_admission_denial='IMPLEMENTED_SOURCE_HOST_ONLY_NOT_DARWIN_NOT_DEVICE',
+        rm_admission_denial='IMPLEMENTED_IN_CANDIDATE_NOT_DEVICE_VERIFIED',
         rm_admission_bound='NOT_PROVEN',
         full_abi='UNVERIFIED',loader='NOT_RUN',gpu='NOT_RUN',runtime='NOT_RUN',go_authorized=False)
     try:
         inputs=json.loads((workspace/'INPUTS.json').read_text(encoding='utf-8'));verify_inputs(workspace,inputs)
-        profile,dirs=config();r.update(source_files=inputs['source_files'],profile=profile)
+        profile,dirs=config();r.update(source_files=inputs['source_files'],profile=profile,build_portability=inputs['build_portability'])
         sdk=Path(tools.capture(['/usr/bin/xcrun','--show-sdk-path'],out,'sdk').strip())
         version=tools.capture(['/usr/bin/xcrun','--show-sdk-version'],out,'sdk-version').strip()
         if version!='15.5':raise ValueError('expected SDK 15.5')
