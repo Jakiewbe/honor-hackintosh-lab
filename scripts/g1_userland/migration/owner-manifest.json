@@ -1,0 +1,40 @@
+{
+  "status": "EXPERIMENTAL_SOURCE_ONLY_NOT_INSTALLABLE",
+  "pin": "272ccd9da04ff5de95c2791b902fe17a3fa77ce7",
+  "patch_sha256": "4c32ecb12d96f02ddee754328b8a7552675faeffe67af1eb5aef6dfeb3909920",
+  "baseline_sha256": {
+    "plugin/nvmtl_vk.c": "eaefe8910278dfe3ea8129d976a58e857c40ed12f5fc08999e011dcb3ca2dcc1",
+    "plugin/nvmtl_vk.h": "47e3e73980aff42112fd5b91fe139799bee458f0abe1277aa2f24c9698d2305a",
+    "plugin/NVMTLEventSync.m": "65272c6b7890f4b6440a6a7de35ed438bcce94d82ee681a0420c2c2b3531bc5c"
+  },
+  "files": [
+    {
+      "path": "plugin/nvmtl_vk.c",
+      "bytes": 511606,
+      "sha256": "0fe9b081c54d6f42fd26bdb9e45af3b7f47fee39bb4031d39aca2dedc0d8a8a0"
+    },
+    {
+      "path": "plugin/nvmtl_vk.h",
+      "bytes": 29486,
+      "sha256": "83561818e3211f70c62e81aafd6709dadd5cdd533052175d132339b2e2d10bca"
+    },
+    {
+      "path": "plugin/NVMTLEventSync.m",
+      "bytes": 47307,
+      "sha256": "3262bc7ba70560b41abd793a164563f27be8f12c7380c1baeeefea168b526b1b"
+    },
+    {
+      "path": "plugin/nvmtl_submit_owner.h",
+      "bytes": 3100,
+      "sha256": "9d4a8cf9288f6b2a9bb0a8413551cc13c9e4135135057e7e8206ee1d5999529a"
+    }
+  ],
+  "limitations": [
+    "No complete source-resource pinning",
+    "No batched-migration repair",
+    "No staging repair",
+    "No stop/reset reclamation",
+    "No full ABI/loader/device evidence"
+  ],
+  "go_authorized": false
+}

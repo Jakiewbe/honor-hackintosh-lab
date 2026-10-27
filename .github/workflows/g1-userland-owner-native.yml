@@ -1,6 +1,12 @@
 name: HONOR G1 userland owner full plugin native gate
 on:
   workflow_dispatch:
+    inputs:
+      profile:
+        description: Fixed source candidate profile; neither profile executes a bundle
+        type: choice
+        options: [owner, migration]
+        default: owner
 permissions:
   contents: read
 jobs:
@@ -33,9 +39,11 @@ jobs:
           git -C "$RUNNER_TEMP/vk-owner" checkout --detach FETCH_HEAD
       - name: Compile complete upstream plugin translation unit, link without executing
         shell: bash
+        env:
+          G1_NATIVE_PROFILE: ${{ inputs.profile }}
         run: |
           set -euo pipefail
-          python3 -B scripts/g1_userland/native.py \
+          python3 -B scripts/g1_userland/native.py --profile "$G1_NATIVE_PROFILE" \
             --nm "$RUNNER_TEMP/nm-owner" --vk "$RUNNER_TEMP/vk-owner" \
             --workspace "$RUNNER_TEMP/owner-inputs" --out "$RUNNER_TEMP/owner-text"
       - name: Retain text diagnostics even after failure

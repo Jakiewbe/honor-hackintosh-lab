@@ -147,6 +147,7 @@ def run_gate(workspace,out,tools):
     report=dict(status='FAILED',level='DARWIN_USERLAND_OBJECT_AND_BUNDLE_ONLY',objects=[],bundles=[],errors=[],
         pins=PINS,compiler_failures=0,runtime='NOT_RUN',gpu='NOT_RUN',device='NO_GO',go_authorized=False,
         full_external_resource_lifetime='UNVERIFIED',kernel_pm_callback_stop='NOT_IMPLEMENTED_HERE',
+        candidate_profile=HERE.name,
         production_translation_unit='plugin/NVMTLDevice.m includes nvmtl_vk.c and all plugin implementations',
         standalone_c='NOT_AN_UPSTREAM_TRANSLATION_UNIT; first failed probe retained separately')
     try:
@@ -217,7 +218,9 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--nm',type=Path,required=True);p.add_argument('--vk',type=Path,required=True)
     p.add_argument('--workspace',type=Path,required=True);p.add_argument('--out',type=Path,required=True)
+    p.add_argument('--profile',choices=('owner','migration'),default='owner')
     p.add_argument('--prepare-only',action='store_true');a=p.parse_args()
+    if a.profile=='migration': HERE=HERE/'migration'
     a.out.mkdir(parents=True,exist_ok=False)
     try:
         inputs=prepare(a.nm,a.vk,a.workspace)
