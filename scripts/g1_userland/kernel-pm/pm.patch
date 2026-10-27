@@ -1,0 +1,97 @@
+--- a/kexts/NVRM/NVRM.cpp
++++ b/kexts/NVRM/NVRM.cpp
+@@ -128,7 +128,8 @@
+         UInt32 bar[6]; UInt16 cmd;
+         IOPCIDevice *rp; UInt32 rpWin[6]; UInt16 rpCmd;   // root port 0x18..0x2c and command
+     } fPciSave = {};
+-    void gpuSuspend();
++    // False when the GPU could not be made safe to power down: the caller must leave it running.
++    bool gpuSuspend();
+     void gpuResume();
+     void pciSaveForSleep();
+     bool pciRestoreAfterWake();
+@@ -187,6 +188,7 @@
+     IOLockUnlock(gNvPmGate);
+ }
+ // Close the gate and wait up to waitMs for the calls already inside RM. Returns how many were still inside.
++// A nonzero result means the gate is closed over calls that never left: the GPU must then NOT be stood down.
+ static int nv_xnu_pm_close(uint32_t waitMs)
+ {
+     if (!gNvPmGate) return 0;
+@@ -199,6 +201,17 @@
+     const int left = gNvPmUsers;
+     IOLockUnlock(gNvPmGate);
+     return left;
++}
++// Reopen the gate after a sleep that was abandoned. The PM owner is cleared so later RM calls are admitted again;
++// this is the exact inverse of nv_xnu_pm_close() and is the only rollback path a failed suspend uses.
++static void nv_xnu_pm_abort(void)
++{
++    if (!gNvPmGate) return;
++    IOLockLock(gNvPmGate);
++    gNvPmClosed = false;
++    gNvPmOwner = NULL;
++    IOLockWakeup(gNvPmGate, &gNvPmClosed, false);
++    IOLockUnlock(gNvPmGate);
+ }
+ // System wake runs on another PM thread than the sleep that closed the gate: hand it the gate before RM and NVKMS
+ // resume (nvKmsResume's RM calls waited at the gate on the wake thread until the 180 s wake watchdog panicked).
+@@ -1432,7 +1445,14 @@
+ {
+     nv_xnu_power_refresh();        // a wake can be a change of power source; this runs before the firmware asks
+     const SInt32 pm = OSAddAtomic(0, &fGpuPm);
+-    if (ordinal == 0 && pm == kGpuPmRunning && fAdapter) gpuSuspend();
++    // IOKit has no way to refuse a sleep: kIOPMAckImplied and negative returns all complete at once
++    // (IOServicePM.cpp), so the refusal is real only inside this driver. A refused suspend leaves fGpuPm RUNNING,
++    // which is what keeps NVRMGpuReady true and every later RM call admitted.
++    if (ordinal == 0 && pm == kGpuPmRunning && fAdapter) {
++        if (!gpuSuspend())
++            LOG("power: setPowerState %lu - the GPU was NOT powered down; IOKit will still cut the slot, and that "
++                "is the documented unrepairable case (R24)", ordinal);
++    }
+     else if (ordinal != 0 && pm == kGpuPmSuspended) gpuResume();
+     else LOG("power: setPowerState %lu (gpu %s, adapter %s) - nothing to do", ordinal,
+              pm == kGpuPmRunning ? "running" : pm == kGpuPmSuspended ? "suspended" : "lost", fAdapter ? "up" : "down");
+@@ -1441,7 +1461,7 @@
+ 
+ // Linux order (nvidia_suspend): NVKMS first, while the GPU still serves the core channel, then RM standby. RM saves
+ // what it must keep from VRAM to system memory and unloads GSP-RM; the GPU then loses power with the slot.
+-void NVRM::gpuSuspend()
++bool NVRM::gpuSuspend()
+ {
+     uint64_t t0 = mach_absolute_time();
+     fPmCycles++;
+@@ -1450,10 +1470,23 @@
+     LOG("sleep #%u: suspending the GPU (NVKMS, then RM standby)", fPmCycles);
+     notifyFramebuffers(0);
+     // NVKMS first: once it is suspended no thread is inside it, so none can hold gKmsLock while it waits at the RM
+-    // gate (closing the gate first deadlocked against an NVKMS ioctl calling into RM).
++    // gate (closing the gate first deadlocked against an NVKMS ioctl calling into RM). That ordering is kept.
+     nvkms_xnu_suspend(fNv.gpu_id);
+     const int busy = nv_xnu_pm_close(10000);
+-    if (busy) LOG("sleep #%u: %d RM call(s) still running after 10 s - suspending anyway", fPmCycles, busy);
++    if (busy) {
++        // A call never left RM, so the GPU cannot be stood down. WAS: logged this and went on to standby, having
++        // already published SUSPENDED, so that call met powered-down hardware and every later command buffer was
++        // refused. Now the whole sleep is undone in the reverse order it was applied.
++        nv_xnu_pm_abort();
++        nvkms_xnu_resume(fNv.gpu_id, NV_TRUE);
++        notifyFramebuffers(1);
++        OSCompareAndSwap(kGpuPmSuspended, kGpuPmRunning, &fGpuPm);
++        setProperty("nvrm-pm", "sleep-refused (RM busy)");
++        setProperty("nvrm-pm-violation", "a driver thread was still inside RM after 10 s");
++        LOG("sleep #%u: REFUSED - %d RM call(s) still running after 10 s; NVKMS and the published state were rolled "
++            "back and nothing was powered down", fPmCycles, busy);
++        return false;
++    }
+     // nv_preempt_user_channels(): with every VRAM allocation preserved, user channels must be idle and stopped
+     // while their memory is copied out, and restarted once it is back.
+     NV_STATUS cst = rm_stop_user_channels(NULL, &fNv);
+@@ -1463,6 +1496,7 @@
+     uint64_t ns = 0; absolutetime_to_nanoseconds(mach_absolute_time() - t0, &ns);
+     LOG("sleep #%u: user channels stopped -> 0x%x; rm_power_management(STANDBY) -> 0x%x in %llu ms%s", fPmCycles,
+         (unsigned)cst, (unsigned)st, ns / 1000000ULL, st == NV_OK ? "" : " - resume will still be tried, as on Linux");
++    return true;
+ }
+ 
+ // The slot is powered again and IOPCIFamily restored the config space it shadowed. Put back what it does not know

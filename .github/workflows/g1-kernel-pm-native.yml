@@ -1,0 +1,48 @@
+name: HONOR G1 PM complete NVRM TU and kext format gate
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native:
+    runs-on: macos-15-intel
+    timeout-minutes: 25
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Host acceptance failure controls (not Darwin evidence)
+        run: python3 -B scripts/g1_kernel_pm/test_gate.py
+      - name: Fetch fixed source without running upstream scripts
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$(uname -m)" == x86_64 ]]
+          [[ "$(xcrun --show-sdk-version)" == 15.5 ]]
+          git init "$RUNNER_TEMP/pm-nm"
+          git -C "$RUNNER_TEMP/pm-nm" remote add origin https://github.com/nullmoth/nvidia-macos-driver.git
+          git -C "$RUNNER_TEMP/pm-nm" fetch --depth=1 origin 272ccd9da04ff5de95c2791b902fe17a3fa77ce7
+          git -C "$RUNNER_TEMP/pm-nm" checkout --detach FETCH_HEAD
+          git init "$RUNNER_TEMP/pm-ogkm"
+          git -C "$RUNNER_TEMP/pm-ogkm" remote add origin https://github.com/NVIDIA/open-gpu-kernel-modules.git
+          git -C "$RUNNER_TEMP/pm-ogkm" fetch --depth=1 origin e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb
+          git -C "$RUNNER_TEMP/pm-ogkm" checkout --detach FETCH_HEAD
+      - name: Compile complete baseline and PM candidate TU; link kext format only
+        run: |
+          python3 -B scripts/g1_kernel_pm/gate.py \
+            --nm "$RUNNER_TEMP/pm-nm" --ogkm "$RUNNER_TEMP/pm-ogkm" \
+            --workspace "$RUNNER_TEMP/pm-inputs" --out "$RUNNER_TEMP/pm-text"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: g1-kernel-pm-native-text
+          path: |
+            ${{ runner.temp }}/pm-text/native-pm-text.zip
+            ${{ runner.temp }}/pm-text/*.json
+            ${{ runner.temp }}/pm-text/*ERROR.txt
+          if-no-files-found: error
+          retention-days: 14

@@ -1,0 +1,22 @@
+{
+  "status": "EXPERIMENTAL_SOURCE_ONLY_NOT_INSTALLABLE",
+  "pin": "272ccd9da04ff5de95c2791b902fe17a3fa77ce7",
+  "patch_sha256": "e49e201028320e0be67d3a8fcf9c6b5118de05c53f9fdaabc1929d91bfc8f2c1",
+  "baseline_sha256": {
+    "kexts/NVRM/NVRM.cpp": "f1d682a36b4896ddb79c547947bcd3f890343cb8c753ea94bcd17511576af295"
+  },
+  "files": [
+    {
+      "path": "kexts/NVRM/NVRM.cpp",
+      "bytes": 119288,
+      "sha256": "fbe9a331c42daa66707c8f340414a7ac0eaac08794d6bc6170809fbf26f35f9b"
+    }
+  ],
+  "limitations": [
+    "One file only: the framebuffer setPowerState paths are untouched",
+    "No proof a refused sleep keeps IOKit from cutting the slot (R24: it does not, and cannot)",
+    "No KEXT-LINK, loader, GPU-RUNTIME or stop/reset evidence",
+    "gpuResume is unchanged: a failed resume still leaves the GPU LOST"
+  ],
+  "go_authorized": false
+}
